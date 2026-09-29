@@ -32,9 +32,11 @@ jobs:
         id: release
         run: python scripts/prepare_ci_release.py
       - name: Build ZIP without publishing
-        uses: BigWigsMods/packager@v2
-        with:
-          args: -c -o -e -l -u -d -n ${{ steps.release.outputs.name }}:${{ steps.release.outputs.name }}
+        env:
+          RELEASE_NAME: ${{ steps.release.outputs.name }}
+        run: |
+          python scripts/package_release.py --output .release
+          python -c "import os, sys; from pathlib import Path; sys.path.insert(0, 'scripts'); from package_release import manifest; Path('.release/HardcoreBuddy-' + manifest()[0] + '.zip').rename(Path('.release') / (os.environ['RELEASE_NAME'] + '.zip'))"
       - name: Test packaged addon and media
         run: python tests/run_release.py ".release/${{ steps.release.outputs.name }}.zip"
       - uses: actions/upload-artifact@v4
