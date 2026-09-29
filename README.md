@@ -1,0 +1,225 @@
+# HardcoreBuddy
+
+A standalone companion for **WoW Classic Era / official Hardcore, levels 1–60**.
+No libraries, other addons, website or network connection are required.
+
+## Open your field kit
+
+Use `/hcb` or `/hardcorebuddy`, or click the skull-and-shield minimap emblem.
+Drag the minimap button to reposition it. Escape closes the window. `/hcb reset`
+centers it; `/hcb help` lists commands.
+
+## Dungeons and raids
+
+The **Dungeons** and **Raids** tabs contain 28 dungeon routes/wings and all seven
+Classic Era raids. Search by instance or zone, or filter by level band or raid
+size. Each entry shows its suggested level range and a compact list of items
+to bring, with icons, requirements, tooltips and live bag counts. Item rows name
+the relevant mobs and abilities, including whether to use a potion before an
+effect or to cleanse afterward. Everyday
+supplies link directly to the relevant field-kit category.
+Suggested levels are planning guidance, not entrance requirements.
+
+While inside an instance, **Current Dungeon** or **Current Raid** appears above
+the content on every tab. Click it to open the packing list. Shared instances such as
+Scarlet Monastery open a wing chooser. Detection follows your actual location
+even while editing a planned character. Zygor and DBM are not required.
+
+## Death journal and alerts
+
+**Death Journal > Options** defaults to **Original (Deathlog default)**, the
+native WoW raid-warning sound used before the custom bell. It uses WoW's Master
+volume; the Play alert sound checkbox mutes it. The custom bell and five Deathlog
+clips (Hero Fallen, Arugal, Dread Hunger, Hunger Games and Golf Clap) retain the
+independent alert volume slider. Use the arrows to choose; click the name to listen.
+Deathlog does not need to be installed. Credits and original sources are in
+`Media/Deaths/Deathlog/README.md`.
+
+HardcoreDeaths is built into HardcoreBuddy. Select the **Death Journal** tab in the main
+window, right-click the shared minimap button, or use `/hcb deaths`. The `/hd` and
+`/hardcoredeaths` aliases also open this page.
+
+Reports, player details and death options appear in the right-hand content
+area. Use the left sidebar for Reports and Options.
+The main window controls positioning and scale; compact feed and alert overlays
+keep their separate position/scale settings.
+
+The journal uses separate Level, Adventurer, Location, Cause, Source and When
+columns, plus summary statistics and search/minimum-level controls. Leading
+"a"/"an" is omitted from displayed causes; original reports remain in details.
+Under **Death Journal > Options**, set **Alert display duration** from 1 to 30
+seconds (default 3). Press Enter or leave the field to save; Escape cancels an
+edit. The alert remains visible for that duration, then fades for half a second.
+The setting applies to new alerts and previews and survives login.
+Sound is enabled by default; an existing saved sound choice is preserved.
+**Supplies > User**, after Optional, lets you add personal items by dragging them
+from your bags anywhere onto the content page. Drops add immediately. Set their
+Carry quantities and track bag counts. Click a user item to open its details,
+then choose Remove item to remove it from your list. The list
+is saved per character. Uncached items display their ID until their name loads.
+
+**Supplies > Scrolls** lists the highest usable rank of Agility, Strength,
+Stamina, Intellect, Spirit and Protection scrolls. Recommendations follow your
+live or planned level, with exact-item bag counts, editable carry quantities
+and item details. The catalog covers all 24 Classic Era ranks.
+
+The **Alerts** tab (`/hcb health`) controls a flashing red **LOW HEALTH!** warning
+with an air horn. It defaults to below 40% health, matching the existing aura;
+the threshold, warning and sound are configurable. The alarm plays once on entry
+and the warning clears on recovery or death. Preview runs for three seconds.
+It works independently of death alerts, planning mode and menu visibility.
+Disable the old Low Health WeakAura to avoid duplicate warnings. WeakAuras is
+not required; distribute `Media/Health/` with its attribution and font license.
+
+Level-ups that change the field kit show an eight-second **Field Kit Updated**
+notification with changed supplies. Click it to open the live kit; the complete
+list is also printed in chat. Unchanged levels stay quiet, and preview settings
+do not affect detection.
+
+Death alerts use a symmetrical iron-and-silver banner, with centered character and level
+above a concise cause/location line. The banner scales down on smaller screens.
+
+The journal includes searchable history for your realm, level filters, player details, statistics, and Deathlog history import. The compact
+live feed uses a 360 x 218 panel with six compact, unframed reports, prominent levels,
+separate name, location and age columns, plus a feed-status indicator and Open journal button.
+Drag its header to move it; the minus button hides the feed without stopping
+death tracking. Only Blizzard's
+Hardcore death announcement is replaced; ordinary raid warnings remain enabled.
+The journal records reports received while you play, not a complete realm history.
+Optional community reports are off by default and labeled unverified.
+
+- `/hcb deaths settings`: feed, alert, sound, position lock, scale and level options.
+- `/hcb deaths mini`: show or hide the compact feed.
+- `/hcb deaths test`: preview the newest saved report for your realm (or the newest saved report
+  from another realm). An example is used only when history is empty; previews
+  never add history.
+- `/hcb deaths import`: import history from a loaded Deathlog addon.
+- `/hcb deaths resetposition`: reset death-window positions.
+
+For this installation, HardcoreDeaths now loads after HardcoreBuddy and yields
+its event handling and UI. Leave both enabled for one login to automatically
+copy the old history, settings and positions into
+`HardcoreBuddyDB.deaths`. The original saved data is left intact. After that
+login, the separate HardcoreDeaths addon can be disabled; HardcoreBuddy runs
+independently. Existing HardcoreBuddy death settings take precedence on later
+imports. If distributing HardcoreBuddy alongside an unmodified HardcoreDeaths,
+disable the standalone addon to avoid two active receivers.
+
+The window has a fixed **1040 × 660** wide layout. Drag its header to move it.
+On smaller screens it scales down uniformly while retaining that layout.
+Use the mouse wheel or scrollbar for longer lists. There is no resize grip.
+
+## Supplies and item details
+
+Supplies opens to Food & drink. Recommendations show exact **In bags** quantities,
+editable **Carry** targets and per-item stock status.
+Healing/mana potions are under Emergency; elixirs are under Buffs.
+All combines Food & drink, Buffs, Emergency and Optional into one scrolling list
+with category headings and no pages. Supplies has no search, Missing-only button
+or stock-summary strip, so the item list starts directly below navigation.
+The category sidebar stays visible on item, profession and pet detail pages;
+choose a category there to return directly to its list.
+
+Click a Carry number, type an amount and press Enter. Zero disables that target;
+clearing it restores the suggestion. Bag counts exclude bank stock and update
+when items are looted, bought, used or moved. Unavailable counts stay Unknown.
+
+Hover an item row or icon for its native tooltip, with an embedded-description
+fallback for uncached items. Click for acquisition, requirements and alternatives;
+Back sits above the right content area and restores the previous category.
+The Carry field has its own editing
+help. Sources buttons, URL export and runtime research metadata are removed.
+Item details use labeled fields for effects, crafting profession and skill,
+profession rank and its character-level gate, recipe acquisition, Auction House
+eligibility, materials and use requirements. Recipe and finished-item trading
+are distinguished. Recipe eligibility does not mean the character knows it.
+
+## Your character and planning
+
+Class, level, faction and active pet level are detected automatically. Exclusive
+quest rewards and routes appear only for the correct faction. Shared/tradable
+items stay available with appropriate local/trading guidance. Unknown faction
+suppresses exclusive recommendations and shows a notice.
+
+**Plan another character** opens class/level controls below the artwork;
+**Return to my character** restores live guidance. Planning still uses the actual
+character's faction, bags, professions and training level gates. A planned Hunter
+pet is explicitly assumed to match the planned level; live pet level is detected.
+
+## Profession upgrades
+
+Bandages, anti-venom and target dummies automatically track the strongest recipe
+you know and can craft at your First Aid or Engineering skill. Recipe/skill changes
+update that choice. Old manual pins are ignored; exact-item Carry targets persist.
+
+Click a profession row for its next upgrade, required skill, acquisition and
+recipe-item AH eligibility. Guidance prefers the strongest missing recipe you
+can currently craft; otherwise it shows the next future tier. It distinguishes
+trainer recipes, tradable manuals and bind-on-pickup recipes. AH eligibility does
+not imply current listings, and Self Found characters cannot use the AH.
+
+Companion includes First Aid, Engineering and Cooking progression. These cover
+skill-cap trainers, Expert books, faction-specific Triage routes and Clamlette
+Surprise requirements/ingredients. Optional introductory quests are distinguished
+from required training. Recipe/manual rows have their own native item tooltips.
+Crafting materials/tools, auction listings and quest objectives are not tracked.
+Unknown skill/recipe information is labeled. Crafting and use requirements remain
+separate; training always uses the actual character, including while planning.
+
+## Companion and Pet Guide
+
+Companion offers class advice, pet training, demon utility and professions.
+Hunter Pet Guide is an offline searchable index of **17 families, 21 abilities /
+111 ranks, 559 creatures and 145 appearances**, plus five care guides.
+Routine Hunter routes favor accessible early zones for the current faction.
+The complete wild-creature catalog stays available: beasts are not faction-locked
+by their home zone. Rare, elite, group and unavailable entries are labeled.
+Learned pet/demon abilities are not assumed.
+
+The factual pet index was researched from Petopia Classic. Attribution and
+research records remain in `docs/PROVENANCE.md` and `reference/`; website images,
+logos and full articles are never loaded by the game.
+
+## Saved preferences and artwork
+
+`HardcoreBuddyDB` saves planning choices, mode, position, visibility and minimap
+angle, plus death history and preferences under `deaths`.
+`HardcoreBuddyCharacterDB` saves each character's Carry targets. Actual
+character data is read fresh. The field kit and death journal stay closed until
+opened; the compact death feed is visible by default.
+
+The field kit uses a campsite banner filling the header, a larger vertically
+centered skull shield, flat dark
+background and status-colored item rows. Embedded TGAs need no external downloads.
+Original generated PNGs, prompts and import steps are in `docs/ARTWORK.md`.
+This is an independent addon, not an official Blizzard product.
+
+## Development and distribution
+
+The Death Journal also records the official Hardcore death-chat channel,
+independently of Blizzard's raid-warning selection. With chat set to everyone
+and warnings set to guild, received chat deaths enter the journal and compact
+feed silently; native warnings still produce alerts once. Both event orders
+are deduplicated. This does not change your chat or warning settings and cannot
+recover earlier messages that were never recorded.
+
+`python scripts/generate.py` rebuilds five Lua datasets from reviewed JSON,
+stripping research URLs while preserving gameplay creature sources.
+`Data/FactionRules.lua`, `Data/Crafting.lua` and `Data/ProfessionProgression.lua` contain reviewed
+route and training rules. Research/provenance remains outside runtime data.
+
+`python tests/run.py` uses Python, `lupa.lua51` and Node.js for development checks.
+`python tests/run_deaths.py` checks death behavior, migration, shared controls,
+full TOC loading and saved-data persistence with Lua 5.1.
+`python tests/render_layout.py` also uses Pillow and Windows fonts for labeled
+layout simulations, not game screenshots. None are runtime dependencies.
+
+Build the first beta with `python scripts/package_release.py`. The builder uses
+an explicit runtime manifest, verifies TOC entries and version consistency, and
+includes required audio credits, licenses and source clips. It excludes tests,
+research, preview images, source artwork, caches and retired media. The ZIP has
+one top-level `HardcoreBuddy` folder, ready to extract into `Interface/AddOns`.
+
+Use `/reload` to load changes. The TOC targets interface 11509. Automated checks
+do not certify native rendering/focus; see `docs/VALIDATION.md` for results and
+remaining in-game checks.

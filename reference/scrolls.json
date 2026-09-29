@@ -1,0 +1,460 @@
+{
+  "items": [
+    {
+      "id": "classic-scroll-of-agility",
+      "itemId": 3012,
+      "name": "Scroll of Agility",
+      "family": "scroll-agility",
+      "group": "Scrolls",
+      "level": 10,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_02.jpg",
+      "short": "Agility by 5 for 30 min.",
+      "detail": "Use: Increases the target's Agility by 5 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=3012"
+    },
+    {
+      "id": "classic-scroll-of-agility-ii",
+      "itemId": 1477,
+      "name": "Scroll of Agility II",
+      "family": "scroll-agility",
+      "group": "Scrolls",
+      "level": 25,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_02.jpg",
+      "short": "Agility by 9 for 30 min.",
+      "detail": "Use: Increases the target's Agility by 9 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=1477"
+    },
+    {
+      "id": "classic-scroll-of-agility-iii",
+      "itemId": 4425,
+      "name": "Scroll of Agility III",
+      "family": "scroll-agility",
+      "group": "Scrolls",
+      "level": 40,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_02.jpg",
+      "short": "Agility by 13 for 30 min.",
+      "detail": "Use: Increases the target's Agility by 13 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=4425"
+    },
+    {
+      "id": "classic-scroll-of-agility-iv",
+      "itemId": 10309,
+      "name": "Scroll of Agility IV",
+      "family": "scroll-agility",
+      "group": "Scrolls",
+      "level": 55,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_02.jpg",
+      "short": "Agility by 17 for 30 min.",
+      "detail": "Use: Increases the target's Agility by 17 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=10309"
+    },
+    {
+      "id": "classic-scroll-of-strength",
+      "itemId": 954,
+      "name": "Scroll of Strength",
+      "family": "scroll-strength",
+      "group": "Scrolls",
+      "level": 10,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_02.jpg",
+      "short": "Strength by 5 for 30 min.",
+      "detail": "Use: Increases the target's Strength by 5 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=954"
+    },
+    {
+      "id": "classic-scroll-of-strength-ii",
+      "itemId": 2289,
+      "name": "Scroll of Strength II",
+      "family": "scroll-strength",
+      "group": "Scrolls",
+      "level": 25,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_02.jpg",
+      "short": "Strength by 9 for 30 min.",
+      "detail": "Use: Increases the target's Strength by 9 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=2289"
+    },
+    {
+      "id": "classic-scroll-of-strength-iii",
+      "itemId": 4426,
+      "name": "Scroll of Strength III",
+      "family": "scroll-strength",
+      "group": "Scrolls",
+      "level": 40,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_02.jpg",
+      "short": "Strength by 13 for 30 min.",
+      "detail": "Use: Increases the target's Strength by 13 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=4426"
+    },
+    {
+      "id": "classic-scroll-of-strength-iv",
+      "itemId": 10310,
+      "name": "Scroll of Strength IV",
+      "family": "scroll-strength",
+      "group": "Scrolls",
+      "level": 55,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_02.jpg",
+      "short": "Strength by 17 for 30 min.",
+      "detail": "Use: Increases the target's Strength by 17 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=10310"
+    },
+    {
+      "id": "classic-scroll-of-stamina",
+      "itemId": 1180,
+      "name": "Scroll of Stamina",
+      "family": "scroll-stamina",
+      "group": "Scrolls",
+      "level": 5,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_07.jpg",
+      "short": "Stamina by 4 for 30 min.",
+      "detail": "Use: Increases the target's Stamina by 4 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=1180"
+    },
+    {
+      "id": "classic-scroll-of-stamina-ii",
+      "itemId": 1711,
+      "name": "Scroll of Stamina II",
+      "family": "scroll-stamina",
+      "group": "Scrolls",
+      "level": 20,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_07.jpg",
+      "short": "Stamina by 8 for 30 min.",
+      "detail": "Use: Increases the target's Stamina by 8 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=1711"
+    },
+    {
+      "id": "classic-scroll-of-stamina-iii",
+      "itemId": 4422,
+      "name": "Scroll of Stamina III",
+      "family": "scroll-stamina",
+      "group": "Scrolls",
+      "level": 35,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_07.jpg",
+      "short": "Stamina by 12 for 30 min.",
+      "detail": "Use: Increases the target's Stamina by 12 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=4422"
+    },
+    {
+      "id": "classic-scroll-of-stamina-iv",
+      "itemId": 10307,
+      "name": "Scroll of Stamina IV",
+      "family": "scroll-stamina",
+      "group": "Scrolls",
+      "level": 50,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_07.jpg",
+      "short": "Stamina by 16 for 30 min.",
+      "detail": "Use: Increases the target's Stamina by 16 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=10307"
+    },
+    {
+      "id": "classic-scroll-of-intellect",
+      "itemId": 955,
+      "name": "Scroll of Intellect",
+      "family": "scroll-intellect",
+      "group": "Scrolls",
+      "level": 5,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_01.jpg",
+      "short": "Intellect by 4 for 30 min.",
+      "detail": "Use: Increases the target's Intellect by 4 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=955"
+    },
+    {
+      "id": "classic-scroll-of-intellect-ii",
+      "itemId": 2290,
+      "name": "Scroll of Intellect II",
+      "family": "scroll-intellect",
+      "group": "Scrolls",
+      "level": 20,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_01.jpg",
+      "short": "Intellect by 8 for 30 min.",
+      "detail": "Use: Increases the target's Intellect by 8 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=2290"
+    },
+    {
+      "id": "classic-scroll-of-intellect-iii",
+      "itemId": 4419,
+      "name": "Scroll of Intellect III",
+      "family": "scroll-intellect",
+      "group": "Scrolls",
+      "level": 35,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_01.jpg",
+      "short": "Intellect by 12 for 30 min.",
+      "detail": "Use: Increases the target's Intellect by 12 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=4419"
+    },
+    {
+      "id": "classic-scroll-of-intellect-iv",
+      "itemId": 10308,
+      "name": "Scroll of Intellect IV",
+      "family": "scroll-intellect",
+      "group": "Scrolls",
+      "level": 50,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_01.jpg",
+      "short": "Intellect by 16 for 30 min.",
+      "detail": "Use: Increases the target's Intellect by 16 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=10308"
+    },
+    {
+      "id": "classic-scroll-of-spirit",
+      "itemId": 1181,
+      "name": "Scroll of Spirit",
+      "family": "scroll-spirit",
+      "group": "Scrolls",
+      "level": 1,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_01.jpg",
+      "short": "Spirit by 3 for 30 min.",
+      "detail": "Use: Increases the target's Spirit by 3 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=1181"
+    },
+    {
+      "id": "classic-scroll-of-spirit-ii",
+      "itemId": 1712,
+      "name": "Scroll of Spirit II",
+      "family": "scroll-spirit",
+      "group": "Scrolls",
+      "level": 15,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_01.jpg",
+      "short": "Spirit by 7 for 30 min.",
+      "detail": "Use: Increases the target's Spirit by 7 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=1712"
+    },
+    {
+      "id": "classic-scroll-of-spirit-iii",
+      "itemId": 4424,
+      "name": "Scroll of Spirit III",
+      "family": "scroll-spirit",
+      "group": "Scrolls",
+      "level": 30,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_01.jpg",
+      "short": "Spirit by 11 for 30 min.",
+      "detail": "Use: Increases the target's Spirit by 11 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=4424"
+    },
+    {
+      "id": "classic-scroll-of-spirit-iv",
+      "itemId": 10306,
+      "name": "Scroll of Spirit IV",
+      "family": "scroll-spirit",
+      "group": "Scrolls",
+      "level": 45,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_01.jpg",
+      "short": "Spirit by 15 for 30 min.",
+      "detail": "Use: Increases the target's Spirit by 15 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=10306"
+    },
+    {
+      "id": "classic-scroll-of-protection",
+      "itemId": 3013,
+      "name": "Scroll of Protection",
+      "family": "scroll-protection",
+      "group": "Scrolls",
+      "level": 1,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_07.jpg",
+      "short": "Armor by 60 for 30 min.",
+      "detail": "Use: Increases the target's Armor by 60 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=3013"
+    },
+    {
+      "id": "classic-scroll-of-protection-ii",
+      "itemId": 1478,
+      "name": "Scroll of Protection II",
+      "family": "scroll-protection",
+      "group": "Scrolls",
+      "level": 15,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_07.jpg",
+      "short": "Armor by 120 for 30 min.",
+      "detail": "Use: Increases the target's Armor by 120 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=1478"
+    },
+    {
+      "id": "classic-scroll-of-protection-iii",
+      "itemId": 4421,
+      "name": "Scroll of Protection III",
+      "family": "scroll-protection",
+      "group": "Scrolls",
+      "level": 30,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_07.jpg",
+      "short": "Armor by 180 for 30 min.",
+      "detail": "Use: Increases the target's Armor by 180 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=4421"
+    },
+    {
+      "id": "classic-scroll-of-protection-iv",
+      "itemId": 10305,
+      "name": "Scroll of Protection IV",
+      "family": "scroll-protection",
+      "group": "Scrolls",
+      "level": 45,
+      "classes": [
+        "All"
+      ],
+      "ease": 2,
+      "binding": false,
+      "icon": "/images/hcclassic/inv_scroll_07.jpg",
+      "short": "Armor by 240 for 30 min.",
+      "detail": "Use: Increases the target's Armor by 240 for 30 min.",
+      "route": "Check loot, scroll vendors, or the Auction House where trading is allowed.",
+      "caution": "Optional buff. Check your current buffs before using a scroll.",
+      "reference": "https://www.wowhead.com/classic/item=10305"
+    }
+  ]
+}

@@ -1,0 +1,6202 @@
+{
+  "2": {
+    "name": "Spawn Point (Only GM can see it)",
+    "family": 0,
+    "flags": 0
+  },
+  "30": {
+    "name": "Forest Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "43": {
+    "name": "Mine Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "69": {
+    "name": "Timber Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "113": {
+    "name": "Stonetusk Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "118": {
+    "name": "Prowler",
+    "family": 1,
+    "flags": 1
+  },
+  "119": {
+    "name": "Longsnout",
+    "family": 5,
+    "flags": 1
+  },
+  "154": {
+    "name": "Greater Fleshripper",
+    "family": 7,
+    "flags": 1
+  },
+  "157": {
+    "name": "Goretusk",
+    "family": 5,
+    "flags": 1
+  },
+  "199": {
+    "name": "Young Fleshripper",
+    "family": 7,
+    "flags": 1
+  },
+  "213": {
+    "name": "Starving Dire Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "217": {
+    "name": "Venom Web Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "284": {
+    "name": "Riding Horse (Brown)",
+    "family": 0,
+    "flags": 0
+  },
+  "299": {
+    "name": "Young Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "305": {
+    "name": "Riding Horse (White Stallion)",
+    "family": 0,
+    "flags": 0
+  },
+  "306": {
+    "name": "Riding Horse (Palomino)",
+    "family": 0,
+    "flags": 0
+  },
+  "307": {
+    "name": "Riding Horse (Pinto)",
+    "family": 0,
+    "flags": 0
+  },
+  "308": {
+    "name": "Riding Horse (Black Stallion)",
+    "family": 0,
+    "flags": 0
+  },
+  "330": {
+    "name": "Princess",
+    "family": 5,
+    "flags": 1
+  },
+  "345": {
+    "name": "Bellygrub",
+    "family": 5,
+    "flags": 1
+  },
+  "356": {
+    "name": "Riding Wolf (Black)",
+    "family": 0,
+    "flags": 0
+  },
+  "358": {
+    "name": "Riding Wolf (Brown)",
+    "family": 0,
+    "flags": 0
+  },
+  "359": {
+    "name": "Riding Wolf (Winter)",
+    "family": 0,
+    "flags": 0
+  },
+  "390": {
+    "name": "Porcine Entourage",
+    "family": 5,
+    "flags": 1
+  },
+  "428": {
+    "name": "Dire Condor",
+    "family": 7,
+    "flags": 1
+  },
+  "442": {
+    "name": "Tarantula",
+    "family": 3,
+    "flags": 1
+  },
+  "454": {
+    "name": "Young Goretusk",
+    "family": 5,
+    "flags": 1
+  },
+  "462": {
+    "name": "Vultros",
+    "family": 7,
+    "flags": 1
+  },
+  "471": {
+    "name": "Mother Fang",
+    "family": 3,
+    "flags": 1
+  },
+  "505": {
+    "name": "Greater Tarantula",
+    "family": 3,
+    "flags": 1
+  },
+  "521": {
+    "name": "Lupos",
+    "family": 1,
+    "flags": 1
+  },
+  "524": {
+    "name": "Rockhide Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "525": {
+    "name": "Mangy Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "539": {
+    "name": "Pygmy Venom Web Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "541": {
+    "name": "Riding Gryphon",
+    "family": 0,
+    "flags": 0
+  },
+  "547": {
+    "name": "Great Goretusk",
+    "family": 5,
+    "flags": 1
+  },
+  "565": {
+    "name": "Rabid Dire Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "569": {
+    "name": "Green Recluse",
+    "family": 3,
+    "flags": 1
+  },
+  "574": {
+    "name": "Naraxis",
+    "family": 3,
+    "flags": 1
+  },
+  "616": {
+    "name": "Chatter",
+    "family": 3,
+    "flags": 1
+  },
+  "628": {
+    "name": "Black Ravager",
+    "family": 1,
+    "flags": 1
+  },
+  "659": {
+    "name": "El Pollo Grande",
+    "family": 0,
+    "flags": 0
+  },
+  "681": {
+    "name": "Young Stranglethorn Tiger",
+    "family": 2,
+    "flags": 1
+  },
+  "682": {
+    "name": "Stranglethorn Tiger",
+    "family": 2,
+    "flags": 1
+  },
+  "683": {
+    "name": "Young Panther",
+    "family": 2,
+    "flags": 1
+  },
+  "684": {
+    "name": "Shadowmaw Panther",
+    "family": 2,
+    "flags": 1
+  },
+  "685": {
+    "name": "Stranglethorn Raptor",
+    "family": 11,
+    "flags": 1
+  },
+  "686": {
+    "name": "Lashtail Raptor",
+    "family": 11,
+    "flags": 1
+  },
+  "687": {
+    "name": "Jungle Stalker",
+    "family": 11,
+    "flags": 1
+  },
+  "688": {
+    "name": "Stone Maw Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "689": {
+    "name": "Crystal Spine Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "690": {
+    "name": "Cold Eye Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "698": {
+    "name": "Bloodscalp Tiger",
+    "family": 2,
+    "flags": 1
+  },
+  "704": {
+    "name": "Ragged Timber Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "705": {
+    "name": "Ragged Young Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "708": {
+    "name": "Small Crag Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "728": {
+    "name": "Bhag'thera",
+    "family": 2,
+    "flags": 1
+  },
+  "729": {
+    "name": "Sin'Dall",
+    "family": 2,
+    "flags": 1
+  },
+  "730": {
+    "name": "Tethis",
+    "family": 11,
+    "flags": 1
+  },
+  "731": {
+    "name": "King Bangalash",
+    "family": 2,
+    "flags": 1
+  },
+  "736": {
+    "name": "Panther",
+    "family": 2,
+    "flags": 1
+  },
+  "756": {
+    "name": "Skullsplitter Panther",
+    "family": 2,
+    "flags": 1
+  },
+  "767": {
+    "name": "Swamp Jaguar",
+    "family": 2,
+    "flags": 1
+  },
+  "768": {
+    "name": "Shadow Panther",
+    "family": 2,
+    "flags": 1
+  },
+  "769": {
+    "name": "Deathstrike Tarantula",
+    "family": 3,
+    "flags": 1
+  },
+  "772": {
+    "name": "Stranglethorn Tigress",
+    "family": 2,
+    "flags": 1
+  },
+  "822": {
+    "name": "Young Forest Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "830": {
+    "name": "Sand Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "831": {
+    "name": "Sea Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "833": {
+    "name": "Coyote Packleader",
+    "family": 1,
+    "flags": 1
+  },
+  "834": {
+    "name": "Coyote",
+    "family": 1,
+    "flags": 1
+  },
+  "854": {
+    "name": "Young Jungle Stalker",
+    "family": 11,
+    "flags": 1
+  },
+  "855": {
+    "name": "Young Stranglethorn Raptor",
+    "family": 11,
+    "flags": 1
+  },
+  "856": {
+    "name": "Young Lashtail Raptor",
+    "family": 11,
+    "flags": 1
+  },
+  "858": {
+    "name": "Sorrow Spinner",
+    "family": 3,
+    "flags": 1
+  },
+  "905": {
+    "name": "Sharptooth Frenzy",
+    "family": 0,
+    "flags": 0
+  },
+  "922": {
+    "name": "Silt Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "923": {
+    "name": "Young Black Ravager",
+    "family": 1,
+    "flags": 1
+  },
+  "930": {
+    "name": "Black Widow Hatchling",
+    "family": 3,
+    "flags": 1
+  },
+  "949": {
+    "name": "Carrion Recluse",
+    "family": 3,
+    "flags": 1
+  },
+  "976": {
+    "name": "Kurzen War Tiger",
+    "family": 2,
+    "flags": 1
+  },
+  "977": {
+    "name": "Kurzen War Panther",
+    "family": 2,
+    "flags": 1
+  },
+  "1015": {
+    "name": "Highland Raptor",
+    "family": 11,
+    "flags": 1
+  },
+  "1016": {
+    "name": "Highland Lashtail",
+    "family": 11,
+    "flags": 1
+  },
+  "1017": {
+    "name": "Highland Scytheclaw",
+    "family": 11,
+    "flags": 1
+  },
+  "1018": {
+    "name": "Highland Razormaw",
+    "family": 11,
+    "flags": 1
+  },
+  "1019": {
+    "name": "Elder Razormaw",
+    "family": 11,
+    "flags": 1
+  },
+  "1020": {
+    "name": "Mottled Raptor",
+    "family": 11,
+    "flags": 1
+  },
+  "1021": {
+    "name": "Mottled Screecher",
+    "family": 11,
+    "flags": 1
+  },
+  "1022": {
+    "name": "Mottled Scytheclaw",
+    "family": 11,
+    "flags": 1
+  },
+  "1023": {
+    "name": "Mottled Razormaw",
+    "family": 11,
+    "flags": 1
+  },
+  "1082": {
+    "name": "Sawtooth Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "1084": {
+    "name": "Young Sawtooth Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "1085": {
+    "name": "Elder Stranglethorn Tiger",
+    "family": 2,
+    "flags": 1
+  },
+  "1087": {
+    "name": "Sawtooth Snapper",
+    "family": 6,
+    "flags": 1
+  },
+  "1088": {
+    "name": "Monstrous Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "1108": {
+    "name": "Mistvale Gorilla",
+    "family": 9,
+    "flags": 1
+  },
+  "1109": {
+    "name": "Fleshripper",
+    "family": 7,
+    "flags": 1
+  },
+  "1111": {
+    "name": "Leech Stalker",
+    "family": 3,
+    "flags": 1
+  },
+  "1112": {
+    "name": "Leech Widow",
+    "family": 3,
+    "flags": 1
+  },
+  "1114": {
+    "name": "Jungle Thunderer",
+    "family": 9,
+    "flags": 1
+  },
+  "1125": {
+    "name": "Crag Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "1126": {
+    "name": "Large Crag Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "1127": {
+    "name": "Elder Crag Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "1128": {
+    "name": "Young Black Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "1129": {
+    "name": "Black Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "1130": {
+    "name": "Bjarn",
+    "family": 4,
+    "flags": 1
+  },
+  "1131": {
+    "name": "Winter Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "1132": {
+    "name": "Timber",
+    "family": 1,
+    "flags": 1
+  },
+  "1133": {
+    "name": "Starving Winter Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "1138": {
+    "name": "Snow Tracker Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "1140": {
+    "name": "Razormaw Matriarch",
+    "family": 11,
+    "flags": 1
+  },
+  "1150": {
+    "name": "River Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "1151": {
+    "name": "Saltwater Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "1152": {
+    "name": "Snapjaw Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "1184": {
+    "name": "Cliff Lurker",
+    "family": 3,
+    "flags": 1
+  },
+  "1185": {
+    "name": "Wood Lurker",
+    "family": 3,
+    "flags": 1
+  },
+  "1186": {
+    "name": "Elder Black Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "1188": {
+    "name": "Grizzled Black Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "1189": {
+    "name": "Black Bear Patriarch",
+    "family": 4,
+    "flags": 1
+  },
+  "1190": {
+    "name": "Mountain Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "1191": {
+    "name": "Mangy Mountain Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "1192": {
+    "name": "Elder Mountain Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "1193": {
+    "name": "Loch Frenzy",
+    "family": 0,
+    "flags": 0
+  },
+  "1194": {
+    "name": "Mountain Buzzard",
+    "family": 7,
+    "flags": 1
+  },
+  "1195": {
+    "name": "Forest Lurker",
+    "family": 3,
+    "flags": 1
+  },
+  "1196": {
+    "name": "Ice Claw Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "1199": {
+    "name": "Juvenile Snow Leopard",
+    "family": 2,
+    "flags": 1
+  },
+  "1201": {
+    "name": "Snow Leopard",
+    "family": 2,
+    "flags": 1
+  },
+  "1216": {
+    "name": "Shore Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "1224": {
+    "name": "Young Threshadon",
+    "family": 0,
+    "flags": 0
+  },
+  "1225": {
+    "name": "Ol' Sooty",
+    "family": 4,
+    "flags": 1
+  },
+  "1258": {
+    "name": "Black Ravager Mastiff",
+    "family": 1,
+    "flags": 1
+  },
+  "1353": {
+    "name": "Sarltooth",
+    "family": 11,
+    "flags": 1
+  },
+  "1400": {
+    "name": "Wetlands Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "1417": {
+    "name": "Young Wetlands Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "1419": {
+    "name": "Fizzles",
+    "family": 0,
+    "flags": 0
+  },
+  "1504": {
+    "name": "Young Night Web Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "1505": {
+    "name": "Night Web Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "1508": {
+    "name": "Young Scavenger",
+    "family": 1,
+    "flags": 1
+  },
+  "1509": {
+    "name": "Ragged Scavenger",
+    "family": 1,
+    "flags": 1
+  },
+  "1511": {
+    "name": "Enraged Silverback Gorilla",
+    "family": 9,
+    "flags": 1
+  },
+  "1512": {
+    "name": "Duskbat",
+    "family": 24,
+    "flags": 1
+  },
+  "1513": {
+    "name": "Mangy Duskbat",
+    "family": 24,
+    "flags": 1
+  },
+  "1514": {
+    "name": "Mokk the Savage",
+    "family": 0,
+    "flags": 0
+  },
+  "1516": {
+    "name": "Konda",
+    "family": 9,
+    "flags": 1
+  },
+  "1550": {
+    "name": "Thrashtail Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "1551": {
+    "name": "Ironjaw Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "1552": {
+    "name": "Scale Belly",
+    "family": 0,
+    "flags": 0
+  },
+  "1553": {
+    "name": "Greater Duskbat",
+    "family": 24,
+    "flags": 1
+  },
+  "1554": {
+    "name": "Vampiric Duskbat",
+    "family": 24,
+    "flags": 1
+  },
+  "1555": {
+    "name": "Vicious Night Web Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "1557": {
+    "name": "Elder Mistvale Gorilla",
+    "family": 9,
+    "flags": 1
+  },
+  "1558": {
+    "name": "Silverback Patriarch",
+    "family": 9,
+    "flags": 1
+  },
+  "1559": {
+    "name": "King Mukla",
+    "family": 0,
+    "flags": 0
+  },
+  "1688": {
+    "name": "Night Web Matriarch",
+    "family": 3,
+    "flags": 1
+  },
+  "1689": {
+    "name": "Scarred Crag Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "1693": {
+    "name": "Loch Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "1713": {
+    "name": "Elder Shadowmaw Panther",
+    "family": 2,
+    "flags": 1
+  },
+  "1765": {
+    "name": "Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "1766": {
+    "name": "Mottled Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "1778": {
+    "name": "Ferocious Grizzled Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "1780": {
+    "name": "Moss Stalker",
+    "family": 3,
+    "flags": 1
+  },
+  "1781": {
+    "name": "Mist Creeper",
+    "family": 3,
+    "flags": 1
+  },
+  "1797": {
+    "name": "Giant Grizzled Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "1809": {
+    "name": "Carrion Vulture",
+    "family": 7,
+    "flags": 1
+  },
+  "1815": {
+    "name": "Diseased Black Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "1816": {
+    "name": "Diseased Grizzly",
+    "family": 4,
+    "flags": 1
+  },
+  "1817": {
+    "name": "Diseased Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "1821": {
+    "name": "Carrion Lurker",
+    "family": 3,
+    "flags": 1
+  },
+  "1822": {
+    "name": "Venom Mist Lurker",
+    "family": 3,
+    "flags": 1
+  },
+  "1824": {
+    "name": "Plague Lurker",
+    "family": 3,
+    "flags": 1
+  },
+  "1922": {
+    "name": "Gray Forest Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "1923": {
+    "name": "Bloodsnout Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "1961": {
+    "name": "Mangeclaw",
+    "family": 4,
+    "flags": 1
+  },
+  "1984": {
+    "name": "Young Thistle Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "1985": {
+    "name": "Thistle Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "1986": {
+    "name": "Webwood Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "1994": {
+    "name": "Githyiss the Vile",
+    "family": 3,
+    "flags": 1
+  },
+  "1995": {
+    "name": "Strigid Owl",
+    "family": 26,
+    "flags": 1
+  },
+  "1996": {
+    "name": "Strigid Screecher",
+    "family": 26,
+    "flags": 1
+  },
+  "1997": {
+    "name": "Strigid Hunter",
+    "family": 26,
+    "flags": 1
+  },
+  "1998": {
+    "name": "Webwood Lurker",
+    "family": 3,
+    "flags": 1
+  },
+  "1999": {
+    "name": "Webwood Venomfang",
+    "family": 3,
+    "flags": 1
+  },
+  "2000": {
+    "name": "Webwood Silkspinner",
+    "family": 3,
+    "flags": 1
+  },
+  "2001": {
+    "name": "Giant Webwood Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "2031": {
+    "name": "Young Nightsaber",
+    "family": 2,
+    "flags": 1
+  },
+  "2032": {
+    "name": "Mangy Nightsaber",
+    "family": 2,
+    "flags": 1
+  },
+  "2033": {
+    "name": "Elder Nightsaber",
+    "family": 2,
+    "flags": 1
+  },
+  "2034": {
+    "name": "Feral Nightsaber",
+    "family": 2,
+    "flags": 1
+  },
+  "2042": {
+    "name": "Nightsaber",
+    "family": 2,
+    "flags": 1
+  },
+  "2043": {
+    "name": "Nightsaber Stalker",
+    "family": 2,
+    "flags": 1
+  },
+  "2069": {
+    "name": "Moonstalker",
+    "family": 2,
+    "flags": 1
+  },
+  "2070": {
+    "name": "Moonstalker Runt",
+    "family": 2,
+    "flags": 1
+  },
+  "2071": {
+    "name": "Moonstalker Matriarch",
+    "family": 2,
+    "flags": 1
+  },
+  "2089": {
+    "name": "Giant Wetlands Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "2163": {
+    "name": "Thistle Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "2164": {
+    "name": "Rabid Thistle Bear",
+    "family": 0,
+    "flags": 0
+  },
+  "2165": {
+    "name": "Grizzled Thistle Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "2172": {
+    "name": "Strider Clutchmother",
+    "family": 12,
+    "flags": 1
+  },
+  "2173": {
+    "name": "Reef Frenzy",
+    "family": 0,
+    "flags": 0
+  },
+  "2174": {
+    "name": "Coastal Frenzy",
+    "family": 0,
+    "flags": 0
+  },
+  "2175": {
+    "name": "Shadowclaw",
+    "family": 2,
+    "flags": 1
+  },
+  "2185": {
+    "name": "Darkshore Thresher",
+    "family": 0,
+    "flags": 0
+  },
+  "2187": {
+    "name": "Elder Darkshore Thresher",
+    "family": 0,
+    "flags": 0
+  },
+  "2188": {
+    "name": "Deep Sea Threshadon",
+    "family": 0,
+    "flags": 0
+  },
+  "2224": {
+    "name": "Wind Rider",
+    "family": 0,
+    "flags": 0
+  },
+  "2230": {
+    "name": "Umpi",
+    "family": 0,
+    "flags": 0
+  },
+  "2231": {
+    "name": "Pygmy Tide Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "2232": {
+    "name": "Tide Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "2233": {
+    "name": "Encrusted Tide Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "2234": {
+    "name": "Young Reef Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "2235": {
+    "name": "Reef Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "2236": {
+    "name": "Raging Reef Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "2237": {
+    "name": "Moonstalker Sire",
+    "family": 2,
+    "flags": 1
+  },
+  "2274": {
+    "name": "Stanley",
+    "family": 0,
+    "flags": 0
+  },
+  "2275": {
+    "name": "Enraged Stanley",
+    "family": 1,
+    "flags": 1
+  },
+  "2321": {
+    "name": "Foreststrider Fledgling",
+    "family": 12,
+    "flags": 1
+  },
+  "2322": {
+    "name": "Foreststrider",
+    "family": 12,
+    "flags": 1
+  },
+  "2323": {
+    "name": "Giant Foreststrider",
+    "family": 12,
+    "flags": 1
+  },
+  "2347": {
+    "name": "Wild Gryphon",
+    "family": 0,
+    "flags": 0
+  },
+  "2348": {
+    "name": "Elder Moss Creeper",
+    "family": 3,
+    "flags": 1
+  },
+  "2349": {
+    "name": "Giant Moss Creeper",
+    "family": 3,
+    "flags": 1
+  },
+  "2350": {
+    "name": "Forest Moss Creeper",
+    "family": 3,
+    "flags": 1
+  },
+  "2351": {
+    "name": "Gray Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "2354": {
+    "name": "Vicious Gray Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "2356": {
+    "name": "Elder Gray Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "2384": {
+    "name": "Starving Mountain Lion",
+    "family": 2,
+    "flags": 1
+  },
+  "2385": {
+    "name": "Feral Mountain Lion",
+    "family": 2,
+    "flags": 1
+  },
+  "2406": {
+    "name": "Mountain Lion",
+    "family": 2,
+    "flags": 1
+  },
+  "2407": {
+    "name": "Hulking Mountain Lion",
+    "family": 2,
+    "flags": 1
+  },
+  "2408": {
+    "name": "Snapjaw",
+    "family": 21,
+    "flags": 1
+  },
+  "2473": {
+    "name": "Granistad",
+    "family": 0,
+    "flags": 0
+  },
+  "2474": {
+    "name": "Kurdros",
+    "family": 0,
+    "flags": 0
+  },
+  "2476": {
+    "name": "Large Loch Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "2505": {
+    "name": "Saltwater Snapjaw",
+    "family": 21,
+    "flags": 1
+  },
+  "2521": {
+    "name": "Skymane Gorilla",
+    "family": 9,
+    "flags": 1
+  },
+  "2522": {
+    "name": "Jaguero Stalker",
+    "family": 2,
+    "flags": 1
+  },
+  "2544": {
+    "name": "Southern Sand Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "2559": {
+    "name": "Highland Strider",
+    "family": 11,
+    "flags": 1
+  },
+  "2560": {
+    "name": "Highland Thrasher",
+    "family": 11,
+    "flags": 1
+  },
+  "2561": {
+    "name": "Highland Fleshstalker",
+    "family": 11,
+    "flags": 1
+  },
+  "2563": {
+    "name": "Plains Creeper",
+    "family": 3,
+    "flags": 1
+  },
+  "2565": {
+    "name": "Giant Plains Creeper",
+    "family": 3,
+    "flags": 1
+  },
+  "2578": {
+    "name": "Young Mesa Buzzard",
+    "family": 7,
+    "flags": 1
+  },
+  "2579": {
+    "name": "Mesa Buzzard",
+    "family": 7,
+    "flags": 1
+  },
+  "2580": {
+    "name": "Elder Mesa Buzzard",
+    "family": 7,
+    "flags": 1
+  },
+  "2635": {
+    "name": "Elder Saltwater Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "2657": {
+    "name": "Trained Razorbeak",
+    "family": 0,
+    "flags": 0
+  },
+  "2658": {
+    "name": "Razorbeak Gryphon",
+    "family": 0,
+    "flags": 0
+  },
+  "2659": {
+    "name": "Razorbeak Skylord",
+    "family": 0,
+    "flags": 0
+  },
+  "2671": {
+    "name": "Mechanical Squirrel",
+    "family": 0,
+    "flags": 0
+  },
+  "2680": {
+    "name": "Vilebranch Wolf Pup",
+    "family": 1,
+    "flags": 1
+  },
+  "2681": {
+    "name": "Vilebranch Raiding Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "2686": {
+    "name": "Witherbark Broodguard",
+    "family": 3,
+    "flags": 1
+  },
+  "2707": {
+    "name": "Shadra",
+    "family": 0,
+    "flags": 0
+  },
+  "2727": {
+    "name": "Crag Coyote",
+    "family": 1,
+    "flags": 1
+  },
+  "2728": {
+    "name": "Feral Crag Coyote",
+    "family": 1,
+    "flags": 1
+  },
+  "2729": {
+    "name": "Elder Crag Coyote",
+    "family": 1,
+    "flags": 1
+  },
+  "2730": {
+    "name": "Rabid Crag Coyote",
+    "family": 1,
+    "flags": 1
+  },
+  "2731": {
+    "name": "Ridge Stalker",
+    "family": 2,
+    "flags": 1
+  },
+  "2732": {
+    "name": "Ridge Huntress",
+    "family": 2,
+    "flags": 1
+  },
+  "2734": {
+    "name": "Ridge Stalker Patriarch",
+    "family": 2,
+    "flags": 1
+  },
+  "2753": {
+    "name": "Barnabus",
+    "family": 1,
+    "flags": 1
+  },
+  "2829": {
+    "name": "Starving Buzzard",
+    "family": 7,
+    "flags": 1
+  },
+  "2830": {
+    "name": "Buzzard",
+    "family": 7,
+    "flags": 1
+  },
+  "2831": {
+    "name": "Giant Buzzard",
+    "family": 7,
+    "flags": 1
+  },
+  "2850": {
+    "name": "Broken Tooth",
+    "family": 2,
+    "flags": 1
+  },
+  "2923": {
+    "name": "Mangy Silvermane",
+    "family": 1,
+    "flags": 1
+  },
+  "2924": {
+    "name": "Silvermane Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "2925": {
+    "name": "Silvermane Howler",
+    "family": 1,
+    "flags": 1
+  },
+  "2926": {
+    "name": "Silvermane Stalker",
+    "family": 1,
+    "flags": 1
+  },
+  "2931": {
+    "name": "Zaricotl",
+    "family": 7,
+    "flags": 1
+  },
+  "2954": {
+    "name": "Bristleback Battleboar",
+    "family": 5,
+    "flags": 1
+  },
+  "2955": {
+    "name": "Plainstrider",
+    "family": 12,
+    "flags": 1
+  },
+  "2956": {
+    "name": "Adult Plainstrider",
+    "family": 12,
+    "flags": 1
+  },
+  "2957": {
+    "name": "Elder Plainstrider",
+    "family": 12,
+    "flags": 1
+  },
+  "2958": {
+    "name": "Prairie Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "2959": {
+    "name": "Prairie Stalker",
+    "family": 1,
+    "flags": 1
+  },
+  "2960": {
+    "name": "Prairie Wolf Alpha",
+    "family": 1,
+    "flags": 1
+  },
+  "2961": {
+    "name": "Mountain Cougar",
+    "family": 2,
+    "flags": 1
+  },
+  "2966": {
+    "name": "Battleboar",
+    "family": 5,
+    "flags": 1
+  },
+  "2969": {
+    "name": "Wiry Swoop",
+    "family": 7,
+    "flags": 1
+  },
+  "2970": {
+    "name": "Swoop",
+    "family": 7,
+    "flags": 1
+  },
+  "2971": {
+    "name": "Taloned Swoop",
+    "family": 7,
+    "flags": 1
+  },
+  "2972": {
+    "name": "Kodo Calf",
+    "family": 0,
+    "flags": 0
+  },
+  "2973": {
+    "name": "Kodo Bull",
+    "family": 0,
+    "flags": 0
+  },
+  "2974": {
+    "name": "Kodo Matriarch",
+    "family": 0,
+    "flags": 0
+  },
+  "2983": {
+    "name": "The Plains Vision",
+    "family": 0,
+    "flags": 0
+  },
+  "3035": {
+    "name": "Flatland Cougar",
+    "family": 2,
+    "flags": 1
+  },
+  "3056": {
+    "name": "Ghost Howl",
+    "family": 0,
+    "flags": 0
+  },
+  "3058": {
+    "name": "Arra'chea",
+    "family": 0,
+    "flags": 0
+  },
+  "3068": {
+    "name": "Mazzranache",
+    "family": 12,
+    "flags": 1
+  },
+  "3098": {
+    "name": "Mottled Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "3099": {
+    "name": "Dire Mottled Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "3100": {
+    "name": "Elder Mottled Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "3106": {
+    "name": "Pygmy Surf Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "3107": {
+    "name": "Surf Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "3108": {
+    "name": "Encrusted Surf Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "3110": {
+    "name": "Dreadmaw Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "3121": {
+    "name": "Durotar Tiger",
+    "family": 2,
+    "flags": 1
+  },
+  "3122": {
+    "name": "Bloodtalon Taillasher",
+    "family": 11,
+    "flags": 1
+  },
+  "3123": {
+    "name": "Bloodtalon Scythemaw",
+    "family": 11,
+    "flags": 1
+  },
+  "3124": {
+    "name": "Scorpid Worker",
+    "family": 20,
+    "flags": 1
+  },
+  "3125": {
+    "name": "Clattering Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "3126": {
+    "name": "Armored Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "3127": {
+    "name": "Venomtail Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "3130": {
+    "name": "Thunder Lizard",
+    "family": 0,
+    "flags": 0
+  },
+  "3131": {
+    "name": "Lightning Hide",
+    "family": 0,
+    "flags": 0
+  },
+  "3225": {
+    "name": "Corrupted Mottled Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "3226": {
+    "name": "Corrupted Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "3227": {
+    "name": "Corrupted Bloodtalon Scythemaw",
+    "family": 11,
+    "flags": 1
+  },
+  "3228": {
+    "name": "Corrupted Surf Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "3231": {
+    "name": "Corrupted Dreadmaw Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "3234": {
+    "name": "Lost Barrens Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "3235": {
+    "name": "Greater Barrens Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "3236": {
+    "name": "Barrens Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "3237": {
+    "name": "Wooly Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "3238": {
+    "name": "Stormhide",
+    "family": 0,
+    "flags": 0
+  },
+  "3239": {
+    "name": "Thunderhead",
+    "family": 0,
+    "flags": 0
+  },
+  "3240": {
+    "name": "Stormsnout",
+    "family": 0,
+    "flags": 0
+  },
+  "3241": {
+    "name": "Savannah Patriarch",
+    "family": 2,
+    "flags": 1
+  },
+  "3242": {
+    "name": "Zhevra Runner",
+    "family": 0,
+    "flags": 0
+  },
+  "3243": {
+    "name": "Savannah Highmane",
+    "family": 2,
+    "flags": 1
+  },
+  "3244": {
+    "name": "Greater Plainstrider",
+    "family": 12,
+    "flags": 1
+  },
+  "3245": {
+    "name": "Ornery Plainstrider",
+    "family": 12,
+    "flags": 1
+  },
+  "3246": {
+    "name": "Fleeting Plainstrider",
+    "family": 12,
+    "flags": 1
+  },
+  "3247": {
+    "name": "Thunderhawk Hatchling",
+    "family": 27,
+    "flags": 1
+  },
+  "3248": {
+    "name": "Barrens Giraffe",
+    "family": 0,
+    "flags": 0
+  },
+  "3249": {
+    "name": "Greater Thunderhawk",
+    "family": 27,
+    "flags": 1
+  },
+  "3250": {
+    "name": "Silithid Creeper",
+    "family": 20,
+    "flags": 1
+  },
+  "3251": {
+    "name": "Silithid Grub",
+    "family": 0,
+    "flags": 0
+  },
+  "3252": {
+    "name": "Silithid Swarmer",
+    "family": 20,
+    "flags": 1
+  },
+  "3254": {
+    "name": "Sunscale Lashtail",
+    "family": 11,
+    "flags": 1
+  },
+  "3255": {
+    "name": "Sunscale Screecher",
+    "family": 11,
+    "flags": 1
+  },
+  "3256": {
+    "name": "Sunscale Scytheclaw",
+    "family": 11,
+    "flags": 1
+  },
+  "3257": {
+    "name": "Ishamuhale",
+    "family": 11,
+    "flags": 1
+  },
+  "3281": {
+    "name": "Sarkoth",
+    "family": 20,
+    "flags": 1
+  },
+  "3415": {
+    "name": "Savannah Huntress",
+    "family": 2,
+    "flags": 1
+  },
+  "3416": {
+    "name": "Savannah Matriarch",
+    "family": 2,
+    "flags": 1
+  },
+  "3424": {
+    "name": "Thunderhawk Cloudscraper",
+    "family": 27,
+    "flags": 1
+  },
+  "3425": {
+    "name": "Savannah Prowler",
+    "family": 2,
+    "flags": 1
+  },
+  "3426": {
+    "name": "Zhevra Charger",
+    "family": 0,
+    "flags": 0
+  },
+  "3450": {
+    "name": "Defias Companion",
+    "family": 0,
+    "flags": 0
+  },
+  "3461": {
+    "name": "Oasis Snapjaw",
+    "family": 21,
+    "flags": 1
+  },
+  "3463": {
+    "name": "Wandering Barrens Giraffe",
+    "family": 0,
+    "flags": 0
+  },
+  "3466": {
+    "name": "Zhevra Courser",
+    "family": 0,
+    "flags": 0
+  },
+  "3472": {
+    "name": "Washte Pawne",
+    "family": 27,
+    "flags": 1
+  },
+  "3473": {
+    "name": "Owatanka",
+    "family": 0,
+    "flags": 0
+  },
+  "3474": {
+    "name": "Lakota'mani",
+    "family": 0,
+    "flags": 0
+  },
+  "3475": {
+    "name": "Echeyakee",
+    "family": 2,
+    "flags": 1
+  },
+  "3476": {
+    "name": "Isha Awak",
+    "family": 0,
+    "flags": 0
+  },
+  "3503": {
+    "name": "Silithid Protector",
+    "family": 8,
+    "flags": 1
+  },
+  "3524": {
+    "name": "Spirit Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "3566": {
+    "name": "Flatland Prowler",
+    "family": 2,
+    "flags": 1
+  },
+  "3568": {
+    "name": "Mist",
+    "family": 0,
+    "flags": 0
+  },
+  "3574": {
+    "name": "Riding Bat",
+    "family": 0,
+    "flags": 0
+  },
+  "3581": {
+    "name": "Sewer Beast",
+    "family": 6,
+    "flags": 1
+  },
+  "3619": {
+    "name": "Ghost Saber",
+    "family": 2,
+    "flags": 1
+  },
+  "3630": {
+    "name": "Deviate Coiler",
+    "family": 27,
+    "flags": 1
+  },
+  "3631": {
+    "name": "Deviate Stinglash",
+    "family": 27,
+    "flags": 1
+  },
+  "3632": {
+    "name": "Deviate Creeper",
+    "family": 11,
+    "flags": 1
+  },
+  "3633": {
+    "name": "Deviate Slayer",
+    "family": 11,
+    "flags": 1
+  },
+  "3634": {
+    "name": "Deviate Stalker",
+    "family": 11,
+    "flags": 1
+  },
+  "3636": {
+    "name": "Deviate Ravager",
+    "family": 11,
+    "flags": 1
+  },
+  "3637": {
+    "name": "Deviate Guardian",
+    "family": 11,
+    "flags": 1
+  },
+  "3641": {
+    "name": "Deviate Lurker",
+    "family": 0,
+    "flags": 0
+  },
+  "3653": {
+    "name": "Kresh",
+    "family": 21,
+    "flags": 1
+  },
+  "3674": {
+    "name": "Skum",
+    "family": 0,
+    "flags": 0
+  },
+  "3680": {
+    "name": "Serpentbloom Snake",
+    "family": 0,
+    "flags": 0
+  },
+  "3695": {
+    "name": "Grimclaw",
+    "family": 0,
+    "flags": 0
+  },
+  "3809": {
+    "name": "Ashenvale Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "3810": {
+    "name": "Elder Ashenvale Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "3811": {
+    "name": "Giant Ashenvale Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "3812": {
+    "name": "Clattering Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "3814": {
+    "name": "Spined Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "3816": {
+    "name": "Wild Buck",
+    "family": 0,
+    "flags": 0
+  },
+  "3817": {
+    "name": "Shadowhorn Stag",
+    "family": 0,
+    "flags": 0
+  },
+  "3818": {
+    "name": "Elder Shadowhorn Stag",
+    "family": 0,
+    "flags": 0
+  },
+  "3819": {
+    "name": "Wildthorn Stalker",
+    "family": 3,
+    "flags": 1
+  },
+  "3820": {
+    "name": "Wildthorn Venomspitter",
+    "family": 3,
+    "flags": 1
+  },
+  "3821": {
+    "name": "Wildthorn Lurker",
+    "family": 3,
+    "flags": 1
+  },
+  "3823": {
+    "name": "Ghostpaw Runner",
+    "family": 1,
+    "flags": 1
+  },
+  "3824": {
+    "name": "Ghostpaw Howler",
+    "family": 1,
+    "flags": 1
+  },
+  "3825": {
+    "name": "Ghostpaw Alpha",
+    "family": 1,
+    "flags": 1
+  },
+  "3837": {
+    "name": "Riding Hippogryph",
+    "family": 0,
+    "flags": 0
+  },
+  "3861": {
+    "name": "Bleak Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "3862": {
+    "name": "Slavering Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "3864": {
+    "name": "Fel Steed",
+    "family": 0,
+    "flags": 0
+  },
+  "3865": {
+    "name": "Shadow Charger",
+    "family": 0,
+    "flags": 0
+  },
+  "3866": {
+    "name": "Vile Bat",
+    "family": 24,
+    "flags": 1
+  },
+  "3868": {
+    "name": "Blood Seeker",
+    "family": 24,
+    "flags": 1
+  },
+  "3888": {
+    "name": "Korra",
+    "family": 0,
+    "flags": 0
+  },
+  "3915": {
+    "name": "Dagri",
+    "family": 0,
+    "flags": 0
+  },
+  "3939": {
+    "name": "Razormane Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "4005": {
+    "name": "Deepmoss Creeper",
+    "family": 3,
+    "flags": 1
+  },
+  "4006": {
+    "name": "Deepmoss Webspinner",
+    "family": 3,
+    "flags": 1
+  },
+  "4007": {
+    "name": "Deepmoss Venomspitter",
+    "family": 3,
+    "flags": 1
+  },
+  "4008": {
+    "name": "Cliff Stormer",
+    "family": 0,
+    "flags": 0
+  },
+  "4009": {
+    "name": "Raging Cliff Stormer",
+    "family": 0,
+    "flags": 0
+  },
+  "4011": {
+    "name": "Young Pridewing",
+    "family": 0,
+    "flags": 0
+  },
+  "4012": {
+    "name": "Pridewing Wyvern",
+    "family": 0,
+    "flags": 0
+  },
+  "4013": {
+    "name": "Pridewing Skyhunter",
+    "family": 0,
+    "flags": 0
+  },
+  "4014": {
+    "name": "Pridewing Consort",
+    "family": 0,
+    "flags": 0
+  },
+  "4015": {
+    "name": "Pridewing Patriarch",
+    "family": 0,
+    "flags": 0
+  },
+  "4018": {
+    "name": "Antlered Courser",
+    "family": 0,
+    "flags": 0
+  },
+  "4019": {
+    "name": "Great Courser",
+    "family": 0,
+    "flags": 0
+  },
+  "4031": {
+    "name": "Fledgling Chimaera",
+    "family": 0,
+    "flags": 0
+  },
+  "4032": {
+    "name": "Young Chimaera",
+    "family": 0,
+    "flags": 0
+  },
+  "4040": {
+    "name": "Cave Stalker",
+    "family": 3,
+    "flags": 1
+  },
+  "4041": {
+    "name": "Scorched Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "4042": {
+    "name": "Singed Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "4044": {
+    "name": "Blackened Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "4067": {
+    "name": "Twilight Runner",
+    "family": 2,
+    "flags": 1
+  },
+  "4068": {
+    "name": "Serpent Messenger",
+    "family": 0,
+    "flags": 0
+  },
+  "4107": {
+    "name": "Highperch Wyvern",
+    "family": 0,
+    "flags": 0
+  },
+  "4109": {
+    "name": "Highperch Consort",
+    "family": 0,
+    "flags": 0
+  },
+  "4110": {
+    "name": "Highperch Patriarch",
+    "family": 0,
+    "flags": 0
+  },
+  "4117": {
+    "name": "Cloud Serpent",
+    "family": 27,
+    "flags": 1
+  },
+  "4118": {
+    "name": "Venomous Cloud Serpent",
+    "family": 27,
+    "flags": 1
+  },
+  "4119": {
+    "name": "Elder Cloud Serpent",
+    "family": 27,
+    "flags": 1
+  },
+  "4124": {
+    "name": "Needles Cougar",
+    "family": 2,
+    "flags": 1
+  },
+  "4126": {
+    "name": "Crag Stalker",
+    "family": 2,
+    "flags": 1
+  },
+  "4127": {
+    "name": "Hecklefang Hyena",
+    "family": 25,
+    "flags": 1
+  },
+  "4128": {
+    "name": "Hecklefang Stalker",
+    "family": 25,
+    "flags": 1
+  },
+  "4129": {
+    "name": "Hecklefang Snarler",
+    "family": 25,
+    "flags": 1
+  },
+  "4139": {
+    "name": "Scorpid Terror",
+    "family": 20,
+    "flags": 1
+  },
+  "4140": {
+    "name": "Scorpid Reaver",
+    "family": 20,
+    "flags": 1
+  },
+  "4142": {
+    "name": "Sparkleshell Tortoise",
+    "family": 21,
+    "flags": 1
+  },
+  "4143": {
+    "name": "Sparkleshell Snapper",
+    "family": 21,
+    "flags": 1
+  },
+  "4144": {
+    "name": "Sparkleshell Borer",
+    "family": 21,
+    "flags": 1
+  },
+  "4147": {
+    "name": "Saltstone Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "4150": {
+    "name": "Saltstone Gazer",
+    "family": 0,
+    "flags": 0
+  },
+  "4151": {
+    "name": "Saltstone Crystalhide",
+    "family": 0,
+    "flags": 0
+  },
+  "4154": {
+    "name": "Salt Flats Scavenger",
+    "family": 7,
+    "flags": 1
+  },
+  "4158": {
+    "name": "Salt Flats Vulture",
+    "family": 7,
+    "flags": 1
+  },
+  "4242": {
+    "name": "Frostsaber Companion",
+    "family": 0,
+    "flags": 0
+  },
+  "4243": {
+    "name": "Nightshade",
+    "family": 0,
+    "flags": 0
+  },
+  "4244": {
+    "name": "Shadow",
+    "family": 0,
+    "flags": 0
+  },
+  "4248": {
+    "name": "Pesterhide Hyena",
+    "family": 25,
+    "flags": 1
+  },
+  "4249": {
+    "name": "Pesterhide Snarler",
+    "family": 25,
+    "flags": 1
+  },
+  "4250": {
+    "name": "Galak Packhound",
+    "family": 25,
+    "flags": 1
+  },
+  "4253": {
+    "name": "Bear Form (Night Elf Druid)",
+    "family": 0,
+    "flags": 0
+  },
+  "4261": {
+    "name": "Bear Form (Tauren Druid)",
+    "family": 0,
+    "flags": 0
+  },
+  "4263": {
+    "name": "Deepmoss Hatchling",
+    "family": 3,
+    "flags": 1
+  },
+  "4264": {
+    "name": "Deepmoss Matriarch",
+    "family": 3,
+    "flags": 1
+  },
+  "4268": {
+    "name": "Riding Wolf (Gray)",
+    "family": 0,
+    "flags": 0
+  },
+  "4269": {
+    "name": "Riding Horse (Chestnut)",
+    "family": 0,
+    "flags": 0
+  },
+  "4270": {
+    "name": "Riding Wolf (Red)",
+    "family": 0,
+    "flags": 0
+  },
+  "4271": {
+    "name": "Riding Wolf (DarkGray)",
+    "family": 0,
+    "flags": 0
+  },
+  "4272": {
+    "name": "Riding Wolf (DarkBrown)",
+    "family": 0,
+    "flags": 0
+  },
+  "4274": {
+    "name": "Fenrus the Devourer",
+    "family": 0,
+    "flags": 0
+  },
+  "4304": {
+    "name": "Scarlet Tracking Hound",
+    "family": 25,
+    "flags": 1
+  },
+  "4316": {
+    "name": "Kolkar Packhound",
+    "family": 25,
+    "flags": 1
+  },
+  "4341": {
+    "name": "Drywallow Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "4342": {
+    "name": "Drywallow Vicejaw",
+    "family": 6,
+    "flags": 1
+  },
+  "4343": {
+    "name": "Drywallow Snapper",
+    "family": 6,
+    "flags": 1
+  },
+  "4344": {
+    "name": "Mottled Drywallow Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "4345": {
+    "name": "Drywallow Daggermaw",
+    "family": 6,
+    "flags": 1
+  },
+  "4346": {
+    "name": "Noxious Flayer",
+    "family": 27,
+    "flags": 1
+  },
+  "4347": {
+    "name": "Noxious Reaver",
+    "family": 27,
+    "flags": 1
+  },
+  "4348": {
+    "name": "Noxious Shredder",
+    "family": 27,
+    "flags": 1
+  },
+  "4351": {
+    "name": "Bloodfen Raptor",
+    "family": 11,
+    "flags": 1
+  },
+  "4352": {
+    "name": "Bloodfen Screecher",
+    "family": 11,
+    "flags": 1
+  },
+  "4355": {
+    "name": "Bloodfen Scytheclaw",
+    "family": 11,
+    "flags": 1
+  },
+  "4356": {
+    "name": "Bloodfen Razormaw",
+    "family": 11,
+    "flags": 1
+  },
+  "4357": {
+    "name": "Bloodfen Lashtail",
+    "family": 11,
+    "flags": 1
+  },
+  "4376": {
+    "name": "Darkmist Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "4377": {
+    "name": "Darkmist Lurker",
+    "family": 3,
+    "flags": 1
+  },
+  "4378": {
+    "name": "Darkmist Recluse",
+    "family": 3,
+    "flags": 1
+  },
+  "4379": {
+    "name": "Darkmist Silkspinner",
+    "family": 3,
+    "flags": 1
+  },
+  "4380": {
+    "name": "Darkmist Widow",
+    "family": 3,
+    "flags": 1
+  },
+  "4388": {
+    "name": "Young Murk Thresher",
+    "family": 0,
+    "flags": 0
+  },
+  "4389": {
+    "name": "Murk Thresher",
+    "family": 0,
+    "flags": 0
+  },
+  "4390": {
+    "name": "Elder Murk Thresher",
+    "family": 0,
+    "flags": 0
+  },
+  "4396": {
+    "name": "Mudrock Tortoise",
+    "family": 21,
+    "flags": 1
+  },
+  "4397": {
+    "name": "Mudrock Spikeshell",
+    "family": 21,
+    "flags": 1
+  },
+  "4398": {
+    "name": "Mudrock Burrower",
+    "family": 21,
+    "flags": 1
+  },
+  "4399": {
+    "name": "Mudrock Borer",
+    "family": 21,
+    "flags": 1
+  },
+  "4400": {
+    "name": "Mudrock Snapjaw",
+    "family": 21,
+    "flags": 1
+  },
+  "4408": {
+    "name": "Aquatic Form (Night Elf Druid)",
+    "family": 0,
+    "flags": 0
+  },
+  "4410": {
+    "name": "Aquatic Form (Tauren Druid)",
+    "family": 0,
+    "flags": 0
+  },
+  "4411": {
+    "name": "Darkfang Lurker",
+    "family": 3,
+    "flags": 1
+  },
+  "4412": {
+    "name": "Darkfang Creeper",
+    "family": 3,
+    "flags": 1
+  },
+  "4413": {
+    "name": "Darkfang Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "4414": {
+    "name": "Darkfang Venomspitter",
+    "family": 3,
+    "flags": 1
+  },
+  "4415": {
+    "name": "Giant Darkfang Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "4422": {
+    "name": "Agathelos the Raging",
+    "family": 0,
+    "flags": 0
+  },
+  "4425": {
+    "name": "Blind Hunter",
+    "family": 24,
+    "flags": 1
+  },
+  "4511": {
+    "name": "Agam'ar",
+    "family": 5,
+    "flags": 1
+  },
+  "4512": {
+    "name": "Rotting Agam'ar",
+    "family": 5,
+    "flags": 1
+  },
+  "4514": {
+    "name": "Raging Agam'ar",
+    "family": 5,
+    "flags": 1
+  },
+  "4534": {
+    "name": "Tamed Hyena",
+    "family": 25,
+    "flags": 1
+  },
+  "4535": {
+    "name": "Tamed Battleboar",
+    "family": 5,
+    "flags": 1
+  },
+  "4538": {
+    "name": "Kraul Bat",
+    "family": 24,
+    "flags": 1
+  },
+  "4539": {
+    "name": "Greater Kraul Bat",
+    "family": 24,
+    "flags": 1
+  },
+  "4548": {
+    "name": "Steelsnap",
+    "family": 25,
+    "flags": 1
+  },
+  "4660": {
+    "name": "Maraudine Bonepaw",
+    "family": 25,
+    "flags": 1
+  },
+  "4662": {
+    "name": "Magram Bonepaw",
+    "family": 25,
+    "flags": 1
+  },
+  "4688": {
+    "name": "Bonepaw Hyena",
+    "family": 25,
+    "flags": 1
+  },
+  "4689": {
+    "name": "Starving Bonepaw",
+    "family": 25,
+    "flags": 1
+  },
+  "4690": {
+    "name": "Rabid Bonepaw",
+    "family": 25,
+    "flags": 1
+  },
+  "4692": {
+    "name": "Dread Swoop",
+    "family": 7,
+    "flags": 1
+  },
+  "4693": {
+    "name": "Dread Flyer",
+    "family": 7,
+    "flags": 1
+  },
+  "4694": {
+    "name": "Dread Ripper",
+    "family": 7,
+    "flags": 1
+  },
+  "4695": {
+    "name": "Carrion Horror",
+    "family": 7,
+    "flags": 1
+  },
+  "4696": {
+    "name": "Scorpashi Snapper",
+    "family": 20,
+    "flags": 1
+  },
+  "4697": {
+    "name": "Scorpashi Lasher",
+    "family": 20,
+    "flags": 1
+  },
+  "4699": {
+    "name": "Scorpashi Venomlash",
+    "family": 20,
+    "flags": 1
+  },
+  "4700": {
+    "name": "Aged Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "4701": {
+    "name": "Dying Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "4702": {
+    "name": "Ancient Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "4710": {
+    "name": "Riding Ram (Gray)",
+    "family": 0,
+    "flags": 0
+  },
+  "4726": {
+    "name": "Raging Thunder Lizard",
+    "family": 0,
+    "flags": 0
+  },
+  "4727": {
+    "name": "Elder Thunder Lizard",
+    "family": 0,
+    "flags": 0
+  },
+  "4728": {
+    "name": "Gritjaw Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "4729": {
+    "name": "Hulking Gritjaw Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "4777": {
+    "name": "Riding Ram (White)",
+    "family": 0,
+    "flags": 0
+  },
+  "4778": {
+    "name": "Riding Ram (Blue)",
+    "family": 0,
+    "flags": 0
+  },
+  "4779": {
+    "name": "Riding Ram (Brown)",
+    "family": 0,
+    "flags": 0
+  },
+  "4780": {
+    "name": "Riding Ram (Black)",
+    "family": 0,
+    "flags": 0
+  },
+  "4781": {
+    "name": "Snufflenose Gopher",
+    "family": 0,
+    "flags": 0
+  },
+  "4821": {
+    "name": "Skittering Crustacean",
+    "family": 8,
+    "flags": 1
+  },
+  "4822": {
+    "name": "Snapping Crustacean",
+    "family": 8,
+    "flags": 1
+  },
+  "4823": {
+    "name": "Barbed Crustacean",
+    "family": 8,
+    "flags": 1
+  },
+  "4824": {
+    "name": "Aku'mai Fisher",
+    "family": 21,
+    "flags": 1
+  },
+  "4825": {
+    "name": "Aku'mai Snapjaw",
+    "family": 21,
+    "flags": 1
+  },
+  "4827": {
+    "name": "Deep Pool Threshfin",
+    "family": 0,
+    "flags": 0
+  },
+  "4830": {
+    "name": "Old Serra'kis",
+    "family": 0,
+    "flags": 0
+  },
+  "4841": {
+    "name": "Deadmire",
+    "family": 6,
+    "flags": 1
+  },
+  "4861": {
+    "name": "Shrike Bat",
+    "family": 24,
+    "flags": 1
+  },
+  "4863": {
+    "name": "Jadespine Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "4887": {
+    "name": "Ghamoo-ra",
+    "family": 21,
+    "flags": 1
+  },
+  "4950": {
+    "name": "Spot",
+    "family": 1,
+    "flags": 1
+  },
+  "5048": {
+    "name": "Deviate Adder",
+    "family": 0,
+    "flags": 0
+  },
+  "5053": {
+    "name": "Deviate Crocolisk",
+    "family": 6,
+    "flags": 1
+  },
+  "5056": {
+    "name": "Deviate Dreadfang",
+    "family": 27,
+    "flags": 1
+  },
+  "5058": {
+    "name": "Wolfguard Worg",
+    "family": 1,
+    "flags": 0
+  },
+  "5185": {
+    "name": "Hammerhead Shark",
+    "family": 0,
+    "flags": 0
+  },
+  "5186": {
+    "name": "Basking Shark",
+    "family": 0,
+    "flags": 0
+  },
+  "5194": {
+    "name": "Black Riding Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "5195": {
+    "name": "Brown Riding Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "5196": {
+    "name": "Gray Riding Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "5197": {
+    "name": "Red Riding Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "5198": {
+    "name": "Arctic Riding Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "5224": {
+    "name": "Murk Slitherer",
+    "family": 0,
+    "flags": 0
+  },
+  "5225": {
+    "name": "Murk Spitter",
+    "family": 0,
+    "flags": 0
+  },
+  "5226": {
+    "name": "Murk Worm",
+    "family": 0,
+    "flags": 0
+  },
+  "5260": {
+    "name": "Groddoc Ape",
+    "family": 9,
+    "flags": 1
+  },
+  "5262": {
+    "name": "Groddoc Thunderer",
+    "family": 9,
+    "flags": 1
+  },
+  "5268": {
+    "name": "Ironfur Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "5272": {
+    "name": "Grizzled Ironfur Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "5274": {
+    "name": "Ironfur Patriarch",
+    "family": 4,
+    "flags": 1
+  },
+  "5286": {
+    "name": "Longtooth Runner",
+    "family": 1,
+    "flags": 1
+  },
+  "5287": {
+    "name": "Longtooth Howler",
+    "family": 1,
+    "flags": 1
+  },
+  "5288": {
+    "name": "Rabid Longtooth",
+    "family": 1,
+    "flags": 1
+  },
+  "5291": {
+    "name": "Hakkari Frostwing",
+    "family": 27,
+    "flags": 1
+  },
+  "5300": {
+    "name": "Frayfeather Hippogryph",
+    "family": 0,
+    "flags": 0
+  },
+  "5304": {
+    "name": "Frayfeather Stagwing",
+    "family": 0,
+    "flags": 0
+  },
+  "5305": {
+    "name": "Frayfeather Skystormer",
+    "family": 0,
+    "flags": 0
+  },
+  "5306": {
+    "name": "Frayfeather Patriarch",
+    "family": 0,
+    "flags": 0
+  },
+  "5307": {
+    "name": "Vale Screecher",
+    "family": 27,
+    "flags": 1
+  },
+  "5308": {
+    "name": "Rogue Vale Screecher",
+    "family": 27,
+    "flags": 1
+  },
+  "5347": {
+    "name": "Antilus the Soarer",
+    "family": 0,
+    "flags": 0
+  },
+  "5349": {
+    "name": "Arash-ethis",
+    "family": 27,
+    "flags": 1
+  },
+  "5352": {
+    "name": "Old Grizzlegut",
+    "family": 4,
+    "flags": 1
+  },
+  "5356": {
+    "name": "Snarler",
+    "family": 1,
+    "flags": 1
+  },
+  "5403": {
+    "name": "White Stallion",
+    "family": 0,
+    "flags": 0
+  },
+  "5404": {
+    "name": "Black Stallion",
+    "family": 0,
+    "flags": 0
+  },
+  "5405": {
+    "name": "Pinto",
+    "family": 0,
+    "flags": 0
+  },
+  "5406": {
+    "name": "Palomino",
+    "family": 0,
+    "flags": 0
+  },
+  "5409": {
+    "name": "Harvester Swarm",
+    "family": 0,
+    "flags": 0
+  },
+  "5419": {
+    "name": "Glasshide Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "5420": {
+    "name": "Glasshide Gazer",
+    "family": 0,
+    "flags": 0
+  },
+  "5421": {
+    "name": "Glasshide Petrifier",
+    "family": 0,
+    "flags": 0
+  },
+  "5422": {
+    "name": "Scorpid Hunter",
+    "family": 20,
+    "flags": 1
+  },
+  "5423": {
+    "name": "Scorpid Tail Lasher",
+    "family": 20,
+    "flags": 1
+  },
+  "5424": {
+    "name": "Scorpid Dunestalker",
+    "family": 20,
+    "flags": 1
+  },
+  "5425": {
+    "name": "Starving Blisterpaw",
+    "family": 25,
+    "flags": 1
+  },
+  "5426": {
+    "name": "Blisterpaw Hyena",
+    "family": 25,
+    "flags": 1
+  },
+  "5427": {
+    "name": "Rabid Blisterpaw",
+    "family": 25,
+    "flags": 1
+  },
+  "5428": {
+    "name": "Roc",
+    "family": 7,
+    "flags": 1
+  },
+  "5429": {
+    "name": "Fire Roc",
+    "family": 7,
+    "flags": 1
+  },
+  "5430": {
+    "name": "Searing Roc",
+    "family": 7,
+    "flags": 1
+  },
+  "5431": {
+    "name": "Surf Glider",
+    "family": 21,
+    "flags": 1
+  },
+  "5432": {
+    "name": "Giant Surf Glider",
+    "family": 21,
+    "flags": 1
+  },
+  "5434": {
+    "name": "Coral Shark",
+    "family": 0,
+    "flags": 0
+  },
+  "5435": {
+    "name": "Sand Shark",
+    "family": 0,
+    "flags": 0
+  },
+  "5523": {
+    "name": "War Party Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "5708": {
+    "name": "Spawn of Hakkar",
+    "family": 27,
+    "flags": 1
+  },
+  "5755": {
+    "name": "Deviate Viper",
+    "family": 0,
+    "flags": 0
+  },
+  "5756": {
+    "name": "Deviate Venomwing",
+    "family": 27,
+    "flags": 1
+  },
+  "5762": {
+    "name": "Deviate Moccasin",
+    "family": 0,
+    "flags": 0
+  },
+  "5766": {
+    "name": "Savannah Cub",
+    "family": 2,
+    "flags": 1
+  },
+  "5774": {
+    "name": "Riding Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "5807": {
+    "name": "The Rake",
+    "family": 2,
+    "flags": 1
+  },
+  "5823": {
+    "name": "Death Flayer",
+    "family": 20,
+    "flags": 1
+  },
+  "5827": {
+    "name": "Brontus",
+    "family": 0,
+    "flags": 0
+  },
+  "5828": {
+    "name": "Humar the Pridelord",
+    "family": 2,
+    "flags": 1
+  },
+  "5829": {
+    "name": "Snort the Heckler",
+    "family": 25,
+    "flags": 1
+  },
+  "5831": {
+    "name": "Swiftmane",
+    "family": 0,
+    "flags": 0
+  },
+  "5832": {
+    "name": "Thunderstomp",
+    "family": 0,
+    "flags": 0
+  },
+  "5833": {
+    "name": "Margol the Rager",
+    "family": 0,
+    "flags": 0
+  },
+  "5834": {
+    "name": "Azzere the Skyblade",
+    "family": 27,
+    "flags": 1
+  },
+  "5842": {
+    "name": "Takk the Leaper",
+    "family": 11,
+    "flags": 1
+  },
+  "5856": {
+    "name": "Glassweb Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "5857": {
+    "name": "Searing Lava Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "5858": {
+    "name": "Greater Lava Spider",
+    "family": 3,
+    "flags": 1
+  },
+  "5865": {
+    "name": "Dishu",
+    "family": 2,
+    "flags": 1
+  },
+  "5872": {
+    "name": "Serpent Form",
+    "family": 0,
+    "flags": 0
+  },
+  "5918": {
+    "name": "Owl Form",
+    "family": 0,
+    "flags": 0
+  },
+  "5928": {
+    "name": "Sorrow Wing",
+    "family": 0,
+    "flags": 0
+  },
+  "5934": {
+    "name": "Heartrazor",
+    "family": 0,
+    "flags": 0
+  },
+  "5935": {
+    "name": "Ironeye the Invincible",
+    "family": 0,
+    "flags": 0
+  },
+  "5937": {
+    "name": "Vile Sting",
+    "family": 20,
+    "flags": 1
+  },
+  "5955": {
+    "name": "Tooga",
+    "family": 0,
+    "flags": 0
+  },
+  "5982": {
+    "name": "Black Slayer",
+    "family": 7,
+    "flags": 1
+  },
+  "5983": {
+    "name": "Bonepicker",
+    "family": 7,
+    "flags": 1
+  },
+  "5984": {
+    "name": "Starving Snickerfang",
+    "family": 25,
+    "flags": 1
+  },
+  "5985": {
+    "name": "Snickerfang Hyena",
+    "family": 25,
+    "flags": 1
+  },
+  "5988": {
+    "name": "Scorpok Stinger",
+    "family": 20,
+    "flags": 1
+  },
+  "5990": {
+    "name": "Redstone Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "5991": {
+    "name": "Redstone Crystalhide",
+    "family": 0,
+    "flags": 0
+  },
+  "5992": {
+    "name": "Ashmane Boar",
+    "family": 5,
+    "flags": 1
+  },
+  "6013": {
+    "name": "Wayward Buzzard",
+    "family": 7,
+    "flags": 1
+  },
+  "6015": {
+    "name": "Torta",
+    "family": 0,
+    "flags": 0
+  },
+  "6021": {
+    "name": "Boar Spirit",
+    "family": 0,
+    "flags": 0
+  },
+  "6074": {
+    "name": "Riding Tiger (White Striped)",
+    "family": 0,
+    "flags": 0
+  },
+  "6075": {
+    "name": "Riding Raptor (Emerald)",
+    "family": 0,
+    "flags": 0
+  },
+  "6076": {
+    "name": "Riding Tallstrider (Ivory)",
+    "family": 0,
+    "flags": 0
+  },
+  "6139": {
+    "name": "Highperch Soarer",
+    "family": 0,
+    "flags": 0
+  },
+  "6141": {
+    "name": "Pridewing Soarer",
+    "family": 0,
+    "flags": 0
+  },
+  "6167": {
+    "name": "Chimaera Matriarch",
+    "family": 0,
+    "flags": 0
+  },
+  "6215": {
+    "name": "Chomper",
+    "family": 0,
+    "flags": 0
+  },
+  "6250": {
+    "name": "Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "6352": {
+    "name": "Coralshell Lurker",
+    "family": 21,
+    "flags": 1
+  },
+  "6369": {
+    "name": "Coralshell Tortoise",
+    "family": 21,
+    "flags": 1
+  },
+  "6375": {
+    "name": "Thunderhead Hippogryph",
+    "family": 0,
+    "flags": 0
+  },
+  "6377": {
+    "name": "Thunderhead Stagwing",
+    "family": 0,
+    "flags": 0
+  },
+  "6378": {
+    "name": "Thunderhead Skystormer",
+    "family": 0,
+    "flags": 0
+  },
+  "6379": {
+    "name": "Thunderhead Patriarch",
+    "family": 0,
+    "flags": 0
+  },
+  "6380": {
+    "name": "Thunderhead Consort",
+    "family": 0,
+    "flags": 0
+  },
+  "6498": {
+    "name": "Devilsaur",
+    "family": 0,
+    "flags": 0
+  },
+  "6499": {
+    "name": "Ironhide Devilsaur",
+    "family": 0,
+    "flags": 0
+  },
+  "6500": {
+    "name": "Tyrant Devilsaur",
+    "family": 0,
+    "flags": 0
+  },
+  "6501": {
+    "name": "Stegodon",
+    "family": 0,
+    "flags": 0
+  },
+  "6502": {
+    "name": "Plated Stegodon",
+    "family": 0,
+    "flags": 0
+  },
+  "6503": {
+    "name": "Spiked Stegodon",
+    "family": 0,
+    "flags": 0
+  },
+  "6504": {
+    "name": "Thunderstomp Stegodon",
+    "family": 0,
+    "flags": 0
+  },
+  "6505": {
+    "name": "Ravasaur",
+    "family": 0,
+    "flags": 0
+  },
+  "6506": {
+    "name": "Ravasaur Runner",
+    "family": 0,
+    "flags": 0
+  },
+  "6507": {
+    "name": "Ravasaur Hunter",
+    "family": 0,
+    "flags": 0
+  },
+  "6508": {
+    "name": "Venomhide Ravasaur",
+    "family": 0,
+    "flags": 0
+  },
+  "6513": {
+    "name": "Un'Goro Stomper",
+    "family": 9,
+    "flags": 1
+  },
+  "6514": {
+    "name": "Un'Goro Gorilla",
+    "family": 9,
+    "flags": 1
+  },
+  "6516": {
+    "name": "Un'Goro Thunderer",
+    "family": 9,
+    "flags": 1
+  },
+  "6571": {
+    "name": "Cat Form (Night Elf Druid)",
+    "family": 4,
+    "flags": 0
+  },
+  "6572": {
+    "name": "Cat Form (Tauren Druid)",
+    "family": 4,
+    "flags": 0
+  },
+  "6573": {
+    "name": "Travel Form (Druid)",
+    "family": 4,
+    "flags": 0
+  },
+  "6581": {
+    "name": "Ravasaur Matriarch",
+    "family": 0,
+    "flags": 0
+  },
+  "6583": {
+    "name": "Gruff",
+    "family": 0,
+    "flags": 0
+  },
+  "6584": {
+    "name": "King Mosh",
+    "family": 0,
+    "flags": 0
+  },
+  "6585": {
+    "name": "Uhk'loc",
+    "family": 9,
+    "flags": 1
+  },
+  "6648": {
+    "name": "Antilos",
+    "family": 0,
+    "flags": 0
+  },
+  "6728": {
+    "name": "Narnie",
+    "family": 0,
+    "flags": 0
+  },
+  "6788": {
+    "name": "Den Mother",
+    "family": 4,
+    "flags": 1
+  },
+  "6789": {
+    "name": "Thistle Cub",
+    "family": 4,
+    "flags": 1
+  },
+  "6867": {
+    "name": "Tracking Hound",
+    "family": 25,
+    "flags": 1
+  },
+  "7022": {
+    "name": "Venomlash Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "7055": {
+    "name": "Blackrock Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "7078": {
+    "name": "Cleft Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "7097": {
+    "name": "Ironbeak Owl",
+    "family": 26,
+    "flags": 1
+  },
+  "7098": {
+    "name": "Ironbeak Screecher",
+    "family": 26,
+    "flags": 1
+  },
+  "7099": {
+    "name": "Ironbeak Hunter",
+    "family": 26,
+    "flags": 1
+  },
+  "7167": {
+    "name": "Polly",
+    "family": 0,
+    "flags": 0
+  },
+  "7168": {
+    "name": " Polly",
+    "family": 0,
+    "flags": 0
+  },
+  "7268": {
+    "name": "Sandfury Guardian",
+    "family": 0,
+    "flags": 0
+  },
+  "7269": {
+    "name": "Scarab",
+    "family": 0,
+    "flags": 0
+  },
+  "7319": {
+    "name": "Lady Sathrah",
+    "family": 3,
+    "flags": 1
+  },
+  "7322": {
+    "name": "Riding Tiger (Black)",
+    "family": 0,
+    "flags": 0
+  },
+  "7376": {
+    "name": "Sky Shadow",
+    "family": 0,
+    "flags": 0
+  },
+  "7380": {
+    "name": "Siamese",
+    "family": 0,
+    "flags": 0
+  },
+  "7381": {
+    "name": "Silver Tabby",
+    "family": 0,
+    "flags": 0
+  },
+  "7382": {
+    "name": "Orange Tabby",
+    "family": 0,
+    "flags": 0
+  },
+  "7383": {
+    "name": "Black Tabby",
+    "family": 0,
+    "flags": 0
+  },
+  "7384": {
+    "name": "Cornish Rex",
+    "family": 0,
+    "flags": 0
+  },
+  "7385": {
+    "name": "Bombay",
+    "family": 0,
+    "flags": 0
+  },
+  "7386": {
+    "name": "White Kitten",
+    "family": 0,
+    "flags": 0
+  },
+  "7387": {
+    "name": "Green Wing Macaw",
+    "family": 0,
+    "flags": 0
+  },
+  "7389": {
+    "name": "Senegal",
+    "family": 0,
+    "flags": 0
+  },
+  "7390": {
+    "name": "Cockatiel",
+    "family": 0,
+    "flags": 0
+  },
+  "7391": {
+    "name": "Hyacinth Macaw",
+    "family": 0,
+    "flags": 0
+  },
+  "7392": {
+    "name": "Prairie Chicken",
+    "family": 0,
+    "flags": 0
+  },
+  "7394": {
+    "name": "Ancona Chicken",
+    "family": 0,
+    "flags": 0
+  },
+  "7395": {
+    "name": "Cockroach",
+    "family": 0,
+    "flags": 0
+  },
+  "7405": {
+    "name": "Deadly Cleft Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "7411": {
+    "name": "Spirit of Sathrah",
+    "family": 0,
+    "flags": 0
+  },
+  "7430": {
+    "name": "Frostsaber Cub",
+    "family": 2,
+    "flags": 1
+  },
+  "7431": {
+    "name": "Frostsaber",
+    "family": 2,
+    "flags": 1
+  },
+  "7432": {
+    "name": "Frostsaber Stalker",
+    "family": 2,
+    "flags": 1
+  },
+  "7433": {
+    "name": "Frostsaber Huntress",
+    "family": 2,
+    "flags": 1
+  },
+  "7434": {
+    "name": "Frostsaber Pride Watcher",
+    "family": 2,
+    "flags": 1
+  },
+  "7443": {
+    "name": "Shardtooth Mauler",
+    "family": 4,
+    "flags": 1
+  },
+  "7444": {
+    "name": "Shardtooth Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "7445": {
+    "name": "Elder Shardtooth",
+    "family": 4,
+    "flags": 1
+  },
+  "7446": {
+    "name": "Rabid Shardtooth",
+    "family": 4,
+    "flags": 1
+  },
+  "7447": {
+    "name": "Fledgling Chillwind",
+    "family": 0,
+    "flags": 0
+  },
+  "7448": {
+    "name": "Chillwind Chimaera",
+    "family": 0,
+    "flags": 0
+  },
+  "7449": {
+    "name": "Chillwind Ravager",
+    "family": 0,
+    "flags": 0
+  },
+  "7455": {
+    "name": "Winterspring Owl",
+    "family": 26,
+    "flags": 1
+  },
+  "7456": {
+    "name": "Winterspring Screecher",
+    "family": 26,
+    "flags": 1
+  },
+  "7543": {
+    "name": "Dark Whelpling",
+    "family": 0,
+    "flags": 0
+  },
+  "7544": {
+    "name": "Crimson Whelpling",
+    "family": 0,
+    "flags": 0
+  },
+  "7545": {
+    "name": "Emerald Whelpling",
+    "family": 0,
+    "flags": 0
+  },
+  "7547": {
+    "name": "Azure Whelpling",
+    "family": 0,
+    "flags": 0
+  },
+  "7548": {
+    "name": "Faeling",
+    "family": 0,
+    "flags": 0
+  },
+  "7549": {
+    "name": "Tree Frog",
+    "family": 0,
+    "flags": 0
+  },
+  "7550": {
+    "name": "Wood Frog",
+    "family": 0,
+    "flags": 0
+  },
+  "7551": {
+    "name": "Dart Frog",
+    "family": 0,
+    "flags": 0
+  },
+  "7552": {
+    "name": "Island Frog",
+    "family": 0,
+    "flags": 0
+  },
+  "7553": {
+    "name": "Great Horned Owl",
+    "family": 0,
+    "flags": 0
+  },
+  "7554": {
+    "name": "Snowy Owl",
+    "family": 0,
+    "flags": 0
+  },
+  "7555": {
+    "name": "Hawk Owl",
+    "family": 0,
+    "flags": 0
+  },
+  "7556": {
+    "name": "Eagle Owl",
+    "family": 0,
+    "flags": 0
+  },
+  "7558": {
+    "name": "Cottontail Rabbit",
+    "family": 0,
+    "flags": 0
+  },
+  "7559": {
+    "name": "Spotted Rabbit",
+    "family": 0,
+    "flags": 0
+  },
+  "7560": {
+    "name": "Snowshoe Rabbit",
+    "family": 0,
+    "flags": 0
+  },
+  "7561": {
+    "name": "Albino Snake",
+    "family": 0,
+    "flags": 0
+  },
+  "7562": {
+    "name": "Brown Snake",
+    "family": 0,
+    "flags": 0
+  },
+  "7565": {
+    "name": "Black Kingsnake",
+    "family": 0,
+    "flags": 0
+  },
+  "7566": {
+    "name": "Scarlet Snake",
+    "family": 0,
+    "flags": 0
+  },
+  "7567": {
+    "name": "Crimson Snake",
+    "family": 0,
+    "flags": 0
+  },
+  "7568": {
+    "name": "Ribbon Snake",
+    "family": 0,
+    "flags": 0
+  },
+  "7569": {
+    "name": "Green Water Snake",
+    "family": 0,
+    "flags": 0
+  },
+  "7570": {
+    "name": "Elven Wisp",
+    "family": 0,
+    "flags": 0
+  },
+  "7684": {
+    "name": "Riding Tiger (Yellow)",
+    "family": 0,
+    "flags": 0
+  },
+  "7686": {
+    "name": "Riding Tiger (Red)",
+    "family": 0,
+    "flags": 0
+  },
+  "7687": {
+    "name": "Riding Tiger (White Spotted)",
+    "family": 0,
+    "flags": 0
+  },
+  "7689": {
+    "name": "Riding Tiger (BlackSpotted)",
+    "family": 0,
+    "flags": 0
+  },
+  "7690": {
+    "name": "Riding Tiger (BlackStriped)",
+    "family": 0,
+    "flags": 0
+  },
+  "7703": {
+    "name": "Riding Raptor (Obsidian)",
+    "family": 0,
+    "flags": 0
+  },
+  "7704": {
+    "name": "Riding Raptor (Crimson)",
+    "family": 0,
+    "flags": 0
+  },
+  "7706": {
+    "name": "Riding Raptor (Ivory)",
+    "family": 0,
+    "flags": 0
+  },
+  "7707": {
+    "name": "Riding Raptor (Turquoise)",
+    "family": 0,
+    "flags": 0
+  },
+  "7708": {
+    "name": "Riding Raptor (Violet)",
+    "family": 0,
+    "flags": 0
+  },
+  "7709": {
+    "name": "Riding Tallstrider (Brown)",
+    "family": 0,
+    "flags": 0
+  },
+  "7710": {
+    "name": "Riding Tallstrider (Gray)",
+    "family": 0,
+    "flags": 0
+  },
+  "7711": {
+    "name": "Riding Tallstrider (Pink)",
+    "family": 0,
+    "flags": 0
+  },
+  "7712": {
+    "name": "Riding Tallstrider (Purple)",
+    "family": 0,
+    "flags": 0
+  },
+  "7713": {
+    "name": "Riding Tallstrider (Turquoise)",
+    "family": 0,
+    "flags": 0
+  },
+  "7803": {
+    "name": "Scorpid Duneburrower",
+    "family": 20,
+    "flags": 1
+  },
+  "7903": {
+    "name": "Jewel",
+    "family": 0,
+    "flags": 0
+  },
+  "7904": {
+    "name": "Jacob",
+    "family": 0,
+    "flags": 0
+  },
+  "7977": {
+    "name": "Gammerita",
+    "family": 0,
+    "flags": 0
+  },
+  "8023": {
+    "name": "Sharpbeak",
+    "family": 0,
+    "flags": 0
+  },
+  "8024": {
+    "name": "Sharpbeak's Father",
+    "family": 0,
+    "flags": 0
+  },
+  "8025": {
+    "name": "Sharpbeak's Mother",
+    "family": 0,
+    "flags": 0
+  },
+  "8095": {
+    "name": "Sul'lithuz Sandcrawler",
+    "family": 0,
+    "flags": 0
+  },
+  "8207": {
+    "name": "Greater Firebird",
+    "family": 7,
+    "flags": 1
+  },
+  "8208": {
+    "name": "Murderous Blisterpaw",
+    "family": 25,
+    "flags": 1
+  },
+  "8211": {
+    "name": "Old Cliff Jumper",
+    "family": 1,
+    "flags": 1
+  },
+  "8213": {
+    "name": "Ironback",
+    "family": 21,
+    "flags": 1
+  },
+  "8236": {
+    "name": "Muck Frenzy",
+    "family": 0,
+    "flags": 0
+  },
+  "8276": {
+    "name": "Soaring Razorbeak",
+    "family": 0,
+    "flags": 0
+  },
+  "8277": {
+    "name": "Rekk'tilac",
+    "family": 3,
+    "flags": 1
+  },
+  "8299": {
+    "name": "Spiteflayer",
+    "family": 7,
+    "flags": 1
+  },
+  "8300": {
+    "name": "Ravage",
+    "family": 25,
+    "flags": 1
+  },
+  "8301": {
+    "name": "Clack the Reaver",
+    "family": 20,
+    "flags": 1
+  },
+  "8302": {
+    "name": "Deatheye",
+    "family": 0,
+    "flags": 0
+  },
+  "8303": {
+    "name": "Grunter",
+    "family": 5,
+    "flags": 1
+  },
+  "8311": {
+    "name": "Slime Maggot",
+    "family": 0,
+    "flags": 0
+  },
+  "8336": {
+    "name": "Hakkari Sapper",
+    "family": 27,
+    "flags": 1
+  },
+  "8376": {
+    "name": "Mechanical Chicken",
+    "family": 0,
+    "flags": 0
+  },
+  "8600": {
+    "name": "Plaguebat",
+    "family": 24,
+    "flags": 1
+  },
+  "8601": {
+    "name": "Noxious Plaguebat",
+    "family": 24,
+    "flags": 1
+  },
+  "8602": {
+    "name": "Monstrous Plaguebat",
+    "family": 24,
+    "flags": 1
+  },
+  "8603": {
+    "name": "Carrion Grub",
+    "family": 0,
+    "flags": 0
+  },
+  "8605": {
+    "name": "Carrion Devourer",
+    "family": 0,
+    "flags": 0
+  },
+  "8612": {
+    "name": "Screecher Spirit",
+    "family": 0,
+    "flags": 0
+  },
+  "8660": {
+    "name": "The Evalcharr",
+    "family": 0,
+    "flags": 0
+  },
+  "8759": {
+    "name": "Mosshoof Runner",
+    "family": 0,
+    "flags": 0
+  },
+  "8760": {
+    "name": "Mosshoof Stag",
+    "family": 0,
+    "flags": 0
+  },
+  "8761": {
+    "name": "Mosshoof Courser",
+    "family": 0,
+    "flags": 0
+  },
+  "8762": {
+    "name": "Timberweb Recluse",
+    "family": 3,
+    "flags": 1
+  },
+  "8763": {
+    "name": "Mistwing Rogue",
+    "family": 0,
+    "flags": 0
+  },
+  "8764": {
+    "name": "Mistwing Ravager",
+    "family": 0,
+    "flags": 0
+  },
+  "8882": {
+    "name": "Riding Tiger",
+    "family": 0,
+    "flags": 0
+  },
+  "8883": {
+    "name": "Riding Horse",
+    "family": 0,
+    "flags": 0
+  },
+  "8885": {
+    "name": "Riding Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "8886": {
+    "name": "Deviate Python",
+    "family": 0,
+    "flags": 0
+  },
+  "8925": {
+    "name": "Dredge Worm",
+    "family": 0,
+    "flags": 0
+  },
+  "8926": {
+    "name": "Deep Stinger",
+    "family": 20,
+    "flags": 1
+  },
+  "8927": {
+    "name": "Dark Screecher",
+    "family": 24,
+    "flags": 1
+  },
+  "8928": {
+    "name": "Burrowing Thundersnout",
+    "family": 0,
+    "flags": 0
+  },
+  "8932": {
+    "name": "Borer Beetle",
+    "family": 0,
+    "flags": 0
+  },
+  "8933": {
+    "name": "Cave Creeper",
+    "family": 3,
+    "flags": 1
+  },
+  "8956": {
+    "name": "Angerclaw Bear",
+    "family": 4,
+    "flags": 1
+  },
+  "8957": {
+    "name": "Angerclaw Grizzly",
+    "family": 4,
+    "flags": 1
+  },
+  "8958": {
+    "name": "Angerclaw Mauler",
+    "family": 4,
+    "flags": 1
+  },
+  "8959": {
+    "name": "Felpaw Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "8960": {
+    "name": "Felpaw Scavenger",
+    "family": 1,
+    "flags": 1
+  },
+  "8961": {
+    "name": "Felpaw Ravager",
+    "family": 1,
+    "flags": 1
+  },
+  "9032": {
+    "name": "Hedrum the Creeper",
+    "family": 0,
+    "flags": 0
+  },
+  "9158": {
+    "name": "Riding Horse (Warhorse)",
+    "family": 0,
+    "flags": 0
+  },
+  "9162": {
+    "name": "Young Diemetradon",
+    "family": 0,
+    "flags": 0
+  },
+  "9163": {
+    "name": "Diemetradon",
+    "family": 0,
+    "flags": 0
+  },
+  "9164": {
+    "name": "Elder Diemetradon",
+    "family": 0,
+    "flags": 0
+  },
+  "9165": {
+    "name": "Fledgling Pterrordax",
+    "family": 0,
+    "flags": 0
+  },
+  "9166": {
+    "name": "Pterrordax",
+    "family": 0,
+    "flags": 0
+  },
+  "9167": {
+    "name": "Frenzied Pterrordax",
+    "family": 0,
+    "flags": 0
+  },
+  "9256": {
+    "name": "Farm Chicken",
+    "family": 0,
+    "flags": 0
+  },
+  "9274": {
+    "name": "Dadanga",
+    "family": 0,
+    "flags": 0
+  },
+  "9297": {
+    "name": "Enraged Wyvern",
+    "family": 0,
+    "flags": 0
+  },
+  "9318": {
+    "name": "Incendosaur",
+    "family": 0,
+    "flags": 0
+  },
+  "9416": {
+    "name": "Scarshield Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "9521": {
+    "name": "Enraged Felbat",
+    "family": 0,
+    "flags": 0
+  },
+  "9526": {
+    "name": "Enraged Gryphon",
+    "family": 0,
+    "flags": 0
+  },
+  "9527": {
+    "name": "Enraged Hippogryph",
+    "family": 0,
+    "flags": 0
+  },
+  "9622": {
+    "name": "U'cha",
+    "family": 9,
+    "flags": 1
+  },
+  "9656": {
+    "name": "Tiny Walking Bomb",
+    "family": 0,
+    "flags": 0
+  },
+  "9657": {
+    "name": "Lil' Smoky",
+    "family": 0,
+    "flags": 0
+  },
+  "9662": {
+    "name": "Sprite Darter Hatchling",
+    "family": 0,
+    "flags": 0
+  },
+  "9683": {
+    "name": "Lar'korwi Mate",
+    "family": 0,
+    "flags": 0
+  },
+  "9684": {
+    "name": "Lar'korwi",
+    "family": 0,
+    "flags": 0
+  },
+  "9690": {
+    "name": "Ember Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "9691": {
+    "name": "Venomtip Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "9694": {
+    "name": "Slavering Ember Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "9695": {
+    "name": "Deathlash Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "9696": {
+    "name": "Bloodaxe Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "9697": {
+    "name": "Giant Ember Worg",
+    "family": 1,
+    "flags": 1
+  },
+  "9698": {
+    "name": "Firetail Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "9701": {
+    "name": "Spire Scorpid",
+    "family": 0,
+    "flags": 0
+  },
+  "9936": {
+    "name": "Corrupted Kitten",
+    "family": 0,
+    "flags": 0
+  },
+  "9937": {
+    "name": "Common Kitten",
+    "family": 0,
+    "flags": 0
+  },
+  "10042": {
+    "name": "Corrupted Saber",
+    "family": 0,
+    "flags": 0
+  },
+  "10077": {
+    "name": "Deathmaw",
+    "family": 1,
+    "flags": 1
+  },
+  "10177": {
+    "name": "Spire Scarab",
+    "family": 0,
+    "flags": 0
+  },
+  "10200": {
+    "name": "Rak'shiri",
+    "family": 2,
+    "flags": 1
+  },
+  "10204": {
+    "name": "Misha",
+    "family": 0,
+    "flags": 8
+  },
+  "10220": {
+    "name": "Halycon",
+    "family": 0,
+    "flags": 0
+  },
+  "10221": {
+    "name": "Bloodaxe Worg Pup",
+    "family": 1,
+    "flags": 1
+  },
+  "10259": {
+    "name": "Worg Pup",
+    "family": 0,
+    "flags": 0
+  },
+  "10262": {
+    "name": "Opus",
+    "family": 0,
+    "flags": 0
+  },
+  "10268": {
+    "name": "Gizrul the Slavener",
+    "family": 0,
+    "flags": 0
+  },
+  "10322": {
+    "name": "Riding Tiger (White)",
+    "family": 0,
+    "flags": 0
+  },
+  "10336": {
+    "name": "Riding Tiger (Leopard)",
+    "family": 0,
+    "flags": 0
+  },
+  "10337": {
+    "name": "Riding Tiger (Orange)",
+    "family": 0,
+    "flags": 0
+  },
+  "10338": {
+    "name": "Riding Tiger (Gold)",
+    "family": 0,
+    "flags": 0
+  },
+  "10357": {
+    "name": "Ressan the Needler",
+    "family": 24,
+    "flags": 1
+  },
+  "10359": {
+    "name": "Sri'skulk",
+    "family": 3,
+    "flags": 1
+  },
+  "10374": {
+    "name": "Spire Spider",
+    "family": 0,
+    "flags": 0
+  },
+  "10375": {
+    "name": "Spire Spiderling",
+    "family": 3,
+    "flags": 1
+  },
+  "10376": {
+    "name": "Crystal Fang",
+    "family": 0,
+    "flags": 0
+  },
+  "10430": {
+    "name": "The Beast",
+    "family": 0,
+    "flags": 8
+  },
+  "10577": {
+    "name": "Crypt Scarab",
+    "family": 0,
+    "flags": 0
+  },
+  "10581": {
+    "name": "Young Arikara",
+    "family": 27,
+    "flags": 1
+  },
+  "10596": {
+    "name": "Mother Smolderweb",
+    "family": 0,
+    "flags": 0
+  },
+  "10598": {
+    "name": "Smolderweb Hatchling",
+    "family": 0,
+    "flags": 0
+  },
+  "10619": {
+    "name": "Glacier",
+    "family": 0,
+    "flags": 0
+  },
+  "10636": {
+    "name": "Pack Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "10644": {
+    "name": "Mist Howler",
+    "family": 1,
+    "flags": 1
+  },
+  "10657": {
+    "name": "Corrupted Cat",
+    "family": 0,
+    "flags": 0
+  },
+  "10658": {
+    "name": "Winna's Kitten",
+    "family": 0,
+    "flags": 0
+  },
+  "10717": {
+    "name": "Temporal Parasite",
+    "family": 0,
+    "flags": 0
+  },
+  "10737": {
+    "name": "Shy-Rotam",
+    "family": 2,
+    "flags": 1
+  },
+  "10741": {
+    "name": "Sian-Rotam",
+    "family": 2,
+    "flags": 1
+  },
+  "10806": {
+    "name": "Ursius",
+    "family": 4,
+    "flags": 1
+  },
+  "10807": {
+    "name": "Brumeran",
+    "family": 0,
+    "flags": 0
+  },
+  "10882": {
+    "name": "Arikara",
+    "family": 27,
+    "flags": 1
+  },
+  "10942": {
+    "name": "Nessy",
+    "family": 0,
+    "flags": 0
+  },
+  "10979": {
+    "name": "Scarlet Hound",
+    "family": 25,
+    "flags": 1
+  },
+  "10981": {
+    "name": "Frostwolf",
+    "family": 1,
+    "flags": 1
+  },
+  "10988": {
+    "name": "Kodo Spirit",
+    "family": 0,
+    "flags": 2
+  },
+  "10990": {
+    "name": "Alterac Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "10992": {
+    "name": "Enraged Panther",
+    "family": 2,
+    "flags": 0
+  },
+  "11021": {
+    "name": "Riding Tiger (Winterspring)",
+    "family": 0,
+    "flags": 0
+  },
+  "11024": {
+    "name": "Della",
+    "family": 1,
+    "flags": 0
+  },
+  "11181": {
+    "name": "Shi'alune",
+    "family": 0,
+    "flags": 0
+  },
+  "11236": {
+    "name": "Blood Parrot",
+    "family": 0,
+    "flags": 0
+  },
+  "11320": {
+    "name": "Earthborer",
+    "family": 0,
+    "flags": 0
+  },
+  "11325": {
+    "name": "Panda Cub",
+    "family": 0,
+    "flags": 0
+  },
+  "11327": {
+    "name": "Zergling",
+    "family": 0,
+    "flags": 0
+  },
+  "11357": {
+    "name": "Son of Hakkar",
+    "family": 27,
+    "flags": 1
+  },
+  "11359": {
+    "name": "Soulflayer",
+    "family": 27,
+    "flags": 9
+  },
+  "11360": {
+    "name": "Zulian Cub",
+    "family": 2,
+    "flags": 9
+  },
+  "11361": {
+    "name": "Zulian Tiger",
+    "family": 2,
+    "flags": 9
+  },
+  "11365": {
+    "name": "Zulian Panther",
+    "family": 2,
+    "flags": 9
+  },
+  "11368": {
+    "name": "Bloodseeker Bat",
+    "family": 24,
+    "flags": 9
+  },
+  "11370": {
+    "name": "Razzashi Broodwidow",
+    "family": 3,
+    "flags": 9
+  },
+  "11371": {
+    "name": "Razzashi Serpent",
+    "family": 0,
+    "flags": 8
+  },
+  "11372": {
+    "name": "Razzashi Adder",
+    "family": 0,
+    "flags": 8
+  },
+  "11373": {
+    "name": "Razzashi Cobra",
+    "family": 0,
+    "flags": 8
+  },
+  "11374": {
+    "name": "Hooktooth Frenzy",
+    "family": 0,
+    "flags": 8
+  },
+  "11497": {
+    "name": "The Razza",
+    "family": 0,
+    "flags": 8
+  },
+  "11521": {
+    "name": "Kodo Apparition",
+    "family": 0,
+    "flags": 0
+  },
+  "11564": {
+    "name": "Gizelton Caravan Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "11614": {
+    "name": "Bloodshot",
+    "family": 1,
+    "flags": 0
+  },
+  "11627": {
+    "name": "Tamed Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "11671": {
+    "name": "Core Hound",
+    "family": 0,
+    "flags": 8
+  },
+  "11672": {
+    "name": "Core Rager",
+    "family": 0,
+    "flags": 8
+  },
+  "11673": {
+    "name": "Ancient Core Hound",
+    "family": 0,
+    "flags": 8
+  },
+  "11689": {
+    "name": "Riding Kodo (Brown)",
+    "family": 0,
+    "flags": 0
+  },
+  "11710": {
+    "name": "Mirador",
+    "family": 0,
+    "flags": 0
+  },
+  "11735": {
+    "name": "Stonelash Scorpid",
+    "family": 20,
+    "flags": 1
+  },
+  "11736": {
+    "name": "Stonelash Pincer",
+    "family": 20,
+    "flags": 1
+  },
+  "11737": {
+    "name": "Stonelash Flayer",
+    "family": 20,
+    "flags": 1
+  },
+  "11738": {
+    "name": "Sand Skitterer",
+    "family": 3,
+    "flags": 1
+  },
+  "11739": {
+    "name": "Rock Stalker",
+    "family": 3,
+    "flags": 1
+  },
+  "11740": {
+    "name": "Dredge Striker",
+    "family": 0,
+    "flags": 0
+  },
+  "11741": {
+    "name": "Dredge Crusher",
+    "family": 0,
+    "flags": 0
+  },
+  "11785": {
+    "name": "Ambereye Basilisk",
+    "family": 0,
+    "flags": 0
+  },
+  "11786": {
+    "name": "Ambereye Reaver",
+    "family": 0,
+    "flags": 0
+  },
+  "11787": {
+    "name": "Rock Borer",
+    "family": 0,
+    "flags": 0
+  },
+  "11788": {
+    "name": "Rock Worm",
+    "family": 0,
+    "flags": 0
+  },
+  "11789": {
+    "name": "Deep Borer",
+    "family": 0,
+    "flags": 0
+  },
+  "11836": {
+    "name": "Captured Rabid Thistle Bear",
+    "family": 0,
+    "flags": 0
+  },
+  "11871": {
+    "name": "Grinning Dog",
+    "family": 1,
+    "flags": 0
+  },
+  "11884": {
+    "name": "Obi",
+    "family": 0,
+    "flags": 0
+  },
+  "11885": {
+    "name": "Blighthound",
+    "family": 0,
+    "flags": 0
+  },
+  "11896": {
+    "name": "Borelgore",
+    "family": 0,
+    "flags": 0
+  },
+  "11897": {
+    "name": "Duskwing",
+    "family": 0,
+    "flags": 0
+  },
+  "11921": {
+    "name": "Besseleth",
+    "family": 3,
+    "flags": 1
+  },
+  "11956": {
+    "name": "Great Bear Spirit",
+    "family": 0,
+    "flags": 0
+  },
+  "11957": {
+    "name": "Great Cat Spirit",
+    "family": 0,
+    "flags": 0
+  },
+  "11982": {
+    "name": "Magmadar",
+    "family": 0,
+    "flags": 108
+  },
+  "12037": {
+    "name": "Ursol'lok",
+    "family": 4,
+    "flags": 1
+  },
+  "12121": {
+    "name": "Draka",
+    "family": 0,
+    "flags": 0
+  },
+  "12122": {
+    "name": "Duros",
+    "family": 0,
+    "flags": 0
+  },
+  "12123": {
+    "name": "Reef Shark",
+    "family": 0,
+    "flags": 0
+  },
+  "12124": {
+    "name": "Great Shark",
+    "family": 0,
+    "flags": 0
+  },
+  "12125": {
+    "name": "Mammoth Shark",
+    "family": 0,
+    "flags": 0
+  },
+  "12145": {
+    "name": "Riding Kodo (Black)",
+    "family": 0,
+    "flags": 0
+  },
+  "12146": {
+    "name": "Riding Kodo (Olive)",
+    "family": 0,
+    "flags": 0
+  },
+  "12147": {
+    "name": "Riding Kodo (White)",
+    "family": 0,
+    "flags": 0
+  },
+  "12148": {
+    "name": "Riding Kodo (Teal)",
+    "family": 0,
+    "flags": 0
+  },
+  "12149": {
+    "name": "Riding Kodo (Gray)",
+    "family": 0,
+    "flags": 0
+  },
+  "12150": {
+    "name": "Riding Kodo (Purple)",
+    "family": 0,
+    "flags": 0
+  },
+  "12151": {
+    "name": "Riding Kodo (Green)",
+    "family": 0,
+    "flags": 0
+  },
+  "12202": {
+    "name": "Human Skull",
+    "family": 0,
+    "flags": 0
+  },
+  "12218": {
+    "name": "Vile Larva",
+    "family": 0,
+    "flags": 0
+  },
+  "12257": {
+    "name": "Mechanical Yeti",
+    "family": 0,
+    "flags": 0
+  },
+  "12345": {
+    "name": "Mottled Red Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "12346": {
+    "name": "Emerald Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "12347": {
+    "name": "Enraged Reef Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "12348": {
+    "name": "Ivory Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "12349": {
+    "name": "Turquoise Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "12350": {
+    "name": "Violet Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "12351": {
+    "name": "Dire Riding Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "12353": {
+    "name": "Timber Riding Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "12354": {
+    "name": "Brown Riding Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "12355": {
+    "name": "Gray Riding Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "12356": {
+    "name": "Green Riding Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "12357": {
+    "name": "Teal Riding Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "12358": {
+    "name": "Riding Striped Frostsaber",
+    "family": 0,
+    "flags": 0
+  },
+  "12359": {
+    "name": "Riding Spotted Frostsaber",
+    "family": 0,
+    "flags": 0
+  },
+  "12360": {
+    "name": "Riding Striped Nightsaber",
+    "family": 0,
+    "flags": 0
+  },
+  "12361": {
+    "name": "Riding Nightsaber",
+    "family": 0,
+    "flags": 0
+  },
+  "12362": {
+    "name": "Riding Frostsaber",
+    "family": 0,
+    "flags": 0
+  },
+  "12370": {
+    "name": "Black Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "12371": {
+    "name": "Frost Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "12372": {
+    "name": "Brown Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "12373": {
+    "name": "Gray Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "12374": {
+    "name": "White Riding Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "12375": {
+    "name": "Chestnut Mare",
+    "family": 0,
+    "flags": 0
+  },
+  "12376": {
+    "name": "Brown Horse",
+    "family": 0,
+    "flags": 0
+  },
+  "12418": {
+    "name": "Gordok Hyena",
+    "family": 0,
+    "flags": 0
+  },
+  "12419": {
+    "name": "Lifelike Toad",
+    "family": 0,
+    "flags": 0
+  },
+  "12431": {
+    "name": "Gorefang",
+    "family": 1,
+    "flags": 1
+  },
+  "12432": {
+    "name": "Old Vicejaw",
+    "family": 4,
+    "flags": 1
+  },
+  "12433": {
+    "name": "Krethis Shadowspinner",
+    "family": 3,
+    "flags": 1
+  },
+  "12581": {
+    "name": "Mercutio",
+    "family": 0,
+    "flags": 0
+  },
+  "12676": {
+    "name": "Sharptalon",
+    "family": 0,
+    "flags": 0
+  },
+  "12677": {
+    "name": "Shadumbra",
+    "family": 0,
+    "flags": 0
+  },
+  "12678": {
+    "name": "Ursangous",
+    "family": 0,
+    "flags": 0
+  },
+  "12800": {
+    "name": "Chimaerok",
+    "family": 0,
+    "flags": 0
+  },
+  "12801": {
+    "name": "Arcane Chimaerok",
+    "family": 0,
+    "flags": 0
+  },
+  "12802": {
+    "name": "Chimaerok Devourer",
+    "family": 0,
+    "flags": 0
+  },
+  "12803": {
+    "name": "Lord Lakmaeran",
+    "family": 0,
+    "flags": 8
+  },
+  "13036": {
+    "name": "Gordok Mastiff",
+    "family": 0,
+    "flags": 0
+  },
+  "13160": {
+    "name": "Carrion Swarmer",
+    "family": 0,
+    "flags": 0
+  },
+  "13161": {
+    "name": "Aerie Gryphon",
+    "family": 0,
+    "flags": 0
+  },
+  "13178": {
+    "name": "War Rider",
+    "family": 0,
+    "flags": 0
+  },
+  "13221": {
+    "name": "Ryson's Eye in the Sky",
+    "family": 0,
+    "flags": 0
+  },
+  "13323": {
+    "name": "Subterranean Diemetradon",
+    "family": 0,
+    "flags": 0
+  },
+  "13533": {
+    "name": "Spewed Larva",
+    "family": 0,
+    "flags": 0
+  },
+  "13596": {
+    "name": "Rotgrip",
+    "family": 0,
+    "flags": 0
+  },
+  "13599": {
+    "name": "Stolid Snapjaw",
+    "family": 21,
+    "flags": 1
+  },
+  "13602": {
+    "name": "The Abominable Greench",
+    "family": 0,
+    "flags": 0
+  },
+  "13618": {
+    "name": "Stabled Frostwolf",
+    "family": 0,
+    "flags": 0
+  },
+  "13676": {
+    "name": "Stabled Alterac Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "13837": {
+    "name": "Captured Stallion",
+    "family": 0,
+    "flags": 0
+  },
+  "13896": {
+    "name": "Scalebeard",
+    "family": 21,
+    "flags": 0
+  },
+  "14123": {
+    "name": "Steeljaw Snapper",
+    "family": 21,
+    "flags": 1
+  },
+  "14222": {
+    "name": "Araga",
+    "family": 2,
+    "flags": 1
+  },
+  "14223": {
+    "name": "Cranky Benj",
+    "family": 21,
+    "flags": 1
+  },
+  "14227": {
+    "name": "Hissperak",
+    "family": 0,
+    "flags": 0
+  },
+  "14228": {
+    "name": "Giggler",
+    "family": 25,
+    "flags": 1
+  },
+  "14232": {
+    "name": "Dart",
+    "family": 11,
+    "flags": 1
+  },
+  "14233": {
+    "name": "Ripscale",
+    "family": 6,
+    "flags": 1
+  },
+  "14234": {
+    "name": "Hayoc",
+    "family": 27,
+    "flags": 1
+  },
+  "14237": {
+    "name": "Oozeworm",
+    "family": 0,
+    "flags": 0
+  },
+  "14266": {
+    "name": "Shanda the Spinner",
+    "family": 3,
+    "flags": 1
+  },
+  "14268": {
+    "name": "Lord Condar",
+    "family": 7,
+    "flags": 1
+  },
+  "14274": {
+    "name": "Winterax Tracker",
+    "family": 1,
+    "flags": 0
+  },
+  "14279": {
+    "name": "Creepthess",
+    "family": 3,
+    "flags": 1
+  },
+  "14280": {
+    "name": "Big Samras",
+    "family": 4,
+    "flags": 1
+  },
+  "14282": {
+    "name": "Frostwolf Bloodhound",
+    "family": 1,
+    "flags": 0
+  },
+  "14283": {
+    "name": "Stormpike Owl",
+    "family": 26,
+    "flags": 1
+  },
+  "14306": {
+    "name": "Eskhandar",
+    "family": 0,
+    "flags": 0
+  },
+  "14308": {
+    "name": "Ferra",
+    "family": 0,
+    "flags": 0
+  },
+  "14329": {
+    "name": "Black War Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "14330": {
+    "name": "Black War Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "14332": {
+    "name": "Black War Steed",
+    "family": 0,
+    "flags": 0
+  },
+  "14333": {
+    "name": "Black War Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "14335": {
+    "name": "Black War Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "14336": {
+    "name": "Black War Saber",
+    "family": 0,
+    "flags": 0
+  },
+  "14339": {
+    "name": "Death Howl",
+    "family": 1,
+    "flags": 1
+  },
+  "14343": {
+    "name": "Olm the Wise",
+    "family": 26,
+    "flags": 1
+  },
+  "14344": {
+    "name": "Mongress",
+    "family": 4,
+    "flags": 1
+  },
+  "14356": {
+    "name": "Sawfin Frenzy",
+    "family": 0,
+    "flags": 0
+  },
+  "14357": {
+    "name": "Lake Thresher",
+    "family": 0,
+    "flags": 0
+  },
+  "14421": {
+    "name": "Brown Prairie Dog",
+    "family": 0,
+    "flags": 0
+  },
+  "14430": {
+    "name": "Duskstalker",
+    "family": 2,
+    "flags": 1
+  },
+  "14472": {
+    "name": "Gretheer",
+    "family": 3,
+    "flags": 1
+  },
+  "14476": {
+    "name": "Krellack",
+    "family": 20,
+    "flags": 1
+  },
+  "14477": {
+    "name": "Grubthor",
+    "family": 0,
+    "flags": 0
+  },
+  "14490": {
+    "name": "Rippa",
+    "family": 0,
+    "flags": 0
+  },
+  "14491": {
+    "name": "Kurmokk",
+    "family": 9,
+    "flags": 1
+  },
+  "14532": {
+    "name": "Razzashi Venombrood",
+    "family": 3,
+    "flags": 9
+  },
+  "14539": {
+    "name": "Swift Timber Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "14540": {
+    "name": "Swift Brown Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "14541": {
+    "name": "Swift Gray Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "14542": {
+    "name": "Great White Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "14543": {
+    "name": "Swift Olive Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "14544": {
+    "name": "Swift Orange Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "14545": {
+    "name": "Swift Blue Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "14546": {
+    "name": "Swift Brown Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "14547": {
+    "name": "Swift White Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "14548": {
+    "name": "Swift Gray Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "14549": {
+    "name": "Great Brown Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "14550": {
+    "name": "Great Gray Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "14555": {
+    "name": "Swift Mistsaber",
+    "family": 0,
+    "flags": 0
+  },
+  "14556": {
+    "name": "Swift Frostsaber",
+    "family": 0,
+    "flags": 0
+  },
+  "14557": {
+    "name": "Swift Dawnsaber",
+    "family": 0,
+    "flags": 0
+  },
+  "14559": {
+    "name": "Swift Palamino",
+    "family": 0,
+    "flags": 0
+  },
+  "14560": {
+    "name": "Swift White Steed",
+    "family": 0,
+    "flags": 0
+  },
+  "14561": {
+    "name": "Swift Brown Steed",
+    "family": 0,
+    "flags": 0
+  },
+  "14565": {
+    "name": "Riding Horse (Charger)",
+    "family": 0,
+    "flags": 0
+  },
+  "14566": {
+    "name": "Ancient Equine Spirit",
+    "family": 0,
+    "flags": 0
+  },
+  "14568": {
+    "name": "Darkreaver's Fallen Charger",
+    "family": 0,
+    "flags": 0
+  },
+  "14602": {
+    "name": "Swift Stormsaber",
+    "family": 0,
+    "flags": 0
+  },
+  "14629": {
+    "name": "Loggerhead Snapjaw",
+    "family": 0,
+    "flags": 0
+  },
+  "14630": {
+    "name": "Leatherback Snapjaw",
+    "family": 0,
+    "flags": 0
+  },
+  "14631": {
+    "name": "Olive Snapjaw",
+    "family": 0,
+    "flags": 0
+  },
+  "14632": {
+    "name": "Hawksbill Snapjaw",
+    "family": 0,
+    "flags": 0
+  },
+  "14633": {
+    "name": "Albino Snapjaw",
+    "family": 0,
+    "flags": 0
+  },
+  "14744": {
+    "name": "Frostwolf Riding Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "14745": {
+    "name": "Stormpike Riding Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "14755": {
+    "name": "Tiny Green Dragon",
+    "family": 0,
+    "flags": 0
+  },
+  "14756": {
+    "name": "Tiny Red Dragon",
+    "family": 0,
+    "flags": 0
+  },
+  "14821": {
+    "name": "Razzashi Raptor",
+    "family": 11,
+    "flags": 9
+  },
+  "14864": {
+    "name": "Khaz Modan Ram",
+    "family": 0,
+    "flags": 0
+  },
+  "14865": {
+    "name": "Felinni",
+    "family": 2,
+    "flags": 0
+  },
+  "14866": {
+    "name": "Flik's Frog",
+    "family": 0,
+    "flags": 0
+  },
+  "14867": {
+    "name": "Jubjub",
+    "family": 0,
+    "flags": 0
+  },
+  "14868": {
+    "name": "Hornsley",
+    "family": 0,
+    "flags": 0
+  },
+  "14869": {
+    "name": "Pygmy Cockatrice",
+    "family": 0,
+    "flags": 0
+  },
+  "14878": {
+    "name": "Jubling",
+    "family": 0,
+    "flags": 0
+  },
+  "14880": {
+    "name": "Razzashi Skitterer",
+    "family": 3,
+    "flags": 8
+  },
+  "14884": {
+    "name": "Parasitic Serpent",
+    "family": 0,
+    "flags": 0
+  },
+  "14943": {
+    "name": "Guse's War Rider",
+    "family": 0,
+    "flags": 0
+  },
+  "14944": {
+    "name": "Jeztor's War Rider",
+    "family": 0,
+    "flags": 0
+  },
+  "14945": {
+    "name": "Mulverick's War Rider",
+    "family": 0,
+    "flags": 0
+  },
+  "14946": {
+    "name": "Slidore's Gryphon",
+    "family": 0,
+    "flags": 0
+  },
+  "14947": {
+    "name": "Ichman's Gryphon",
+    "family": 0,
+    "flags": 0
+  },
+  "14948": {
+    "name": "Vipore's Gryphon",
+    "family": 0,
+    "flags": 0
+  },
+  "14965": {
+    "name": "Frenzied Bloodseeker Bat",
+    "family": 24,
+    "flags": 9
+  },
+  "14988": {
+    "name": "Ohgan",
+    "family": 11,
+    "flags": 12
+  },
+  "15041": {
+    "name": "Spawn of Mar'li",
+    "family": 3,
+    "flags": 9
+  },
+  "15043": {
+    "name": "Zulian Crocolisk",
+    "family": 6,
+    "flags": 9
+  },
+  "15067": {
+    "name": "Zulian Stalker",
+    "family": 2,
+    "flags": 9
+  },
+  "15068": {
+    "name": "Zulian Guardian",
+    "family": 2,
+    "flags": 8
+  },
+  "15090": {
+    "name": "Swift Razzashi Raptor",
+    "family": 0,
+    "flags": 0
+  },
+  "15101": {
+    "name": "Zulian Prowler",
+    "family": 2,
+    "flags": 9
+  },
+  "15104": {
+    "name": "Swift Zulian Tiger",
+    "family": 0,
+    "flags": 0
+  },
+  "15109": {
+    "name": "Primal Blessing Visual",
+    "family": 0,
+    "flags": 0
+  },
+  "15118": {
+    "name": "Master Angler Form",
+    "family": 0,
+    "flags": 0
+  },
+  "15172": {
+    "name": "Glibb",
+    "family": 0,
+    "flags": 0
+  },
+  "15186": {
+    "name": "Murky",
+    "family": 0,
+    "flags": 0
+  },
+  "15196": {
+    "name": "Deathclasp",
+    "family": 0,
+    "flags": 0
+  },
+  "15204": {
+    "name": "High Marshal Whirlaxis",
+    "family": 0,
+    "flags": 12
+  },
+  "15220": {
+    "name": "The Duke of Zephyrs",
+    "family": 0,
+    "flags": 8
+  },
+  "15333": {
+    "name": "Silicate Feeder",
+    "family": 0,
+    "flags": 8
+  },
+  "15429": {
+    "name": "Disgusting Oozeling",
+    "family": 0,
+    "flags": 0
+  },
+  "15505": {
+    "name": "Canal Frenzy",
+    "family": 0,
+    "flags": 8
+  },
+  "15517": {
+    "name": "Ouro",
+    "family": 0,
+    "flags": 76
+  },
+  "15520": {
+    "name": "O'Reily",
+    "family": 0,
+    "flags": 0
+  },
+  "15524": {
+    "name": "Temporary Reindeer",
+    "family": 0,
+    "flags": 0
+  },
+  "15543": {
+    "name": "Princess Yauj",
+    "family": 0,
+    "flags": 76
+  },
+  "15544": {
+    "name": "Vem",
+    "family": 0,
+    "flags": 76
+  },
+  "15554": {
+    "name": "Number Two",
+    "family": 0,
+    "flags": 0
+  },
+  "15571": {
+    "name": "Maws",
+    "family": 0,
+    "flags": 12
+  },
+  "15630": {
+    "name": "Spawn of Fankriss",
+    "family": 0,
+    "flags": 8
+  },
+  "15664": {
+    "name": "Metzen the Reindeer",
+    "family": 0,
+    "flags": 0
+  },
+  "15698": {
+    "name": "Father Winter's Helper",
+    "family": 0,
+    "flags": 0
+  },
+  "15699": {
+    "name": "Tranquil Mechanical Yeti",
+    "family": 0,
+    "flags": 0
+  },
+  "15706": {
+    "name": "Winter Reindeer",
+    "family": 0,
+    "flags": 0
+  },
+  "15710": {
+    "name": "Tiny Snowman",
+    "family": 0,
+    "flags": 0
+  },
+  "15721": {
+    "name": "Mechanical Greench",
+    "family": 0,
+    "flags": 0
+  },
+  "15952": {
+    "name": "Maexxna",
+    "family": 0,
+    "flags": 76
+  },
+  "15962": {
+    "name": "Vekniss Hatchling",
+    "family": 0,
+    "flags": 8
+  },
+  "15974": {
+    "name": "Dread Creeper",
+    "family": 0,
+    "flags": 8
+  },
+  "15975": {
+    "name": "Carrion Spinner",
+    "family": 0,
+    "flags": 8
+  },
+  "15976": {
+    "name": "Venom Stalker",
+    "family": 0,
+    "flags": 8
+  },
+  "15977": {
+    "name": "Infectious Skitterer",
+    "family": 0,
+    "flags": 8
+  },
+  "16036": {
+    "name": "Frenzied Bat",
+    "family": 0,
+    "flags": 8
+  },
+  "16037": {
+    "name": "Plagued Bat",
+    "family": 0,
+    "flags": 8
+  },
+  "16056": {
+    "name": "Diseased Maggot",
+    "family": 0,
+    "flags": 8
+  },
+  "16057": {
+    "name": "Rotting Maggot",
+    "family": 0,
+    "flags": 8
+  },
+  "16069": {
+    "name": "Gurky",
+    "family": 0,
+    "flags": 0
+  },
+  "16095": {
+    "name": "Gnashjaw",
+    "family": 0,
+    "flags": 0
+  },
+  "16098": {
+    "name": "Empyrean",
+    "family": 0,
+    "flags": 0
+  },
+  "16117": {
+    "name": "Plagued Swine",
+    "family": 5,
+    "flags": 1
+  },
+  "16225": {
+    "name": "Pack Mule",
+    "family": 0,
+    "flags": 0
+  },
+  "16232": {
+    "name": "Caravan Mule",
+    "family": 0,
+    "flags": 0
+  },
+  "16371": {
+    "name": "Polymorphed Pig",
+    "family": 0,
+    "flags": 0
+  },
+  "16374": {
+    "name": "Polymorphed Cockroach",
+    "family": 0,
+    "flags": 0
+  },
+  "16377": {
+    "name": "Polymorphed Turtle",
+    "family": 0,
+    "flags": 0
+  },
+  "16448": {
+    "name": "Plagued Deathhound",
+    "family": 0,
+    "flags": 8
+  },
+  "16453": {
+    "name": "Necro Stalker",
+    "family": 0,
+    "flags": 8
+  },
+  "16508": {
+    "name": "Argent Horse",
+    "family": 0,
+    "flags": 0
+  },
+  "16547": {
+    "name": "Speedy",
+    "family": 0,
+    "flags": 0
+  },
+  "16548": {
+    "name": "Mr. Wiggles",
+    "family": 0,
+    "flags": 0
+  },
+  "16549": {
+    "name": "Whiskers the Rat",
+    "family": 0,
+    "flags": 0
+  },
+  "16701": {
+    "name": "Spirit of Summer",
+    "family": 0,
+    "flags": 0
+  },
+  "17055": {
+    "name": "Maexxna Spiderling",
+    "family": 0,
+    "flags": 0
+  },
+  "17266": {
+    "name": "Riding Turtle",
+    "family": 0,
+    "flags": 0
+  },
+  "17660": {
+    "name": "Skeletal Gryphon",
+    "family": 0,
+    "flags": 0
+  },
+  "106": {
+    "name": "Kodo Beast",
+    "family": 0,
+    "flags": 0
+  },
+  "107": {
+    "name": "Raptor",
+    "family": 11,
+    "flags": 1
+  },
+  "120": {
+    "name": "Forest Stalker",
+    "family": 3,
+    "flags": 1
+  },
+  "303": {
+    "name": "Placeholder Interactive Doodad - jk",
+    "family": 0,
+    "flags": 0
+  },
+  "393": {
+    "name": "Tame Wolf",
+    "family": 0,
+    "flags": 0
+  },
+  "444": {
+    "name": "[UNUSED] Goreripper",
+    "family": 0,
+    "flags": 0
+  },
+  "700": {
+    "name": "Bloodscalp Panther",
+    "family": 2,
+    "flags": 1
+  },
+  "758": {
+    "name": "Skullsplitter Tiger",
+    "family": 2,
+    "flags": 1
+  },
+  "924": {
+    "name": "[UNUSED] Lesser Arachnid",
+    "family": 0,
+    "flags": 0
+  },
+  "995": {
+    "name": "Nahr'ek's Pack",
+    "family": 1,
+    "flags": 1
+  },
+  "1066": {
+    "name": "Mottled Riptooth",
+    "family": 0,
+    "flags": 0
+  },
+  "1392": {
+    "name": "Xon",
+    "family": 0,
+    "flags": 0
+  },
+  "1401": {
+    "name": "Test Squirrel",
+    "family": 0,
+    "flags": 0
+  },
+  "1757": {
+    "name": "Mega Rabbit",
+    "family": 0,
+    "flags": 1
+  },
+  "1810": {
+    "name": "Rotting Condor",
+    "family": 7,
+    "flags": 1
+  },
+  "1811": {
+    "name": "Plaguewing Vulture",
+    "family": 7,
+    "flags": 1
+  },
+  "1979": {
+    "name": "TEST WOLF (ALPHA FIRST)",
+    "family": 1,
+    "flags": 1
+  },
+  "1980": {
+    "name": "TEST WOLF (ALPHA SECOND)",
+    "family": 1,
+    "flags": 1
+  },
+  "1987": {
+    "name": "Webwood Creeper UNUSED",
+    "family": 0,
+    "flags": 0
+  },
+  "2052": {
+    "name": "Nag",
+    "family": 0,
+    "flags": 0
+  },
+  "2809": {
+    "name": "Boar",
+    "family": 0,
+    "flags": 0
+  },
+  "3460": {
+    "name": "Mud Crawler",
+    "family": 8,
+    "flags": 1
+  },
+  "3462": {
+    "name": "Elder Barrens Giraffe",
+    "family": 0,
+    "flags": 0
+  },
+  "3642": {
+    "name": "Deviate Horror",
+    "family": 0,
+    "flags": 0
+  },
+  "3826": {
+    "name": "Rabid Ghostpaw",
+    "family": 1,
+    "flags": 1
+  },
+  "4245": {
+    "name": "Mistrunner",
+    "family": 0,
+    "flags": 0
+  },
+  "4246": {
+    "name": "Moonprowler",
+    "family": 0,
+    "flags": 0
+  },
+  "4247": {
+    "name": "Stonepaw",
+    "family": 0,
+    "flags": 0
+  },
+  "4482": {
+    "name": "Vilebranch Wolf",
+    "family": 1,
+    "flags": 1
+  },
+  "4491": {
+    "name": "Woof",
+    "family": 0,
+    "flags": 0
+  },
+  "4691": {
+    "name": "Murderous Bonepaw",
+    "family": 25,
+    "flags": 1
+  },
+  "4703": {
+    "name": "Raging Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "4724": {
+    "name": "Sandstrider",
+    "family": 12,
+    "flags": 1
+  },
+  "4725": {
+    "name": "Crazed Sandstrider",
+    "family": 12,
+    "flags": 1
+  },
+  "4862": {
+    "name": "Rabid Shrike Bat",
+    "family": 24,
+    "flags": 1
+  },
+  "5264": {
+    "name": "Groddoc Chestpounder",
+    "family": 9,
+    "flags": 1
+  },
+  "5433": {
+    "name": "Tamed Bear",
+    "family": 4,
+    "flags": 0
+  },
+  "5436": {
+    "name": "Tamed Bird",
+    "family": 7,
+    "flags": 0
+  },
+  "5437": {
+    "name": "Tamed Boar",
+    "family": 5,
+    "flags": 0
+  },
+  "5438": {
+    "name": "Tamed Cat",
+    "family": 0,
+    "flags": 0
+  },
+  "5439": {
+    "name": "Tamed Crawler",
+    "family": 8,
+    "flags": 0
+  },
+  "5440": {
+    "name": "Tamed Crocolisk",
+    "family": 6,
+    "flags": 0
+  },
+  "5442": {
+    "name": "Tamed Gorilla",
+    "family": 9,
+    "flags": 0
+  },
+  "5443": {
+    "name": "Tamed Zhevra",
+    "family": 0,
+    "flags": 0
+  },
+  "5444": {
+    "name": "Tamed Raptor",
+    "family": 11,
+    "flags": 0
+  },
+  "5445": {
+    "name": "Tamed Scorpid",
+    "family": 20,
+    "flags": 0
+  },
+  "5446": {
+    "name": "Tamed Spider",
+    "family": 3,
+    "flags": 0
+  },
+  "5447": {
+    "name": "Tamed Tallstrider",
+    "family": 12,
+    "flags": 0
+  },
+  "5448": {
+    "name": "Tamed Turtle",
+    "family": 21,
+    "flags": 0
+  },
+  "5449": {
+    "name": "Tamed Wolf",
+    "family": 1,
+    "flags": 0
+  },
+  "5521": {
+    "name": "Glenrunner",
+    "family": 0,
+    "flags": 0
+  },
+  "5522": {
+    "name": "Ironclaw",
+    "family": 0,
+    "flags": 0
+  },
+  "5525": {
+    "name": "Caravan Packhorse",
+    "family": 0,
+    "flags": 0
+  },
+  "5554": {
+    "name": "[PH] PVP Wildlife",
+    "family": 0,
+    "flags": 0
+  },
+  "5555": {
+    "name": "[PH] Ogre Caravan Packhorse",
+    "family": 0,
+    "flags": 0
+  },
+  "5596": {
+    "name": "Twain Test Prop",
+    "family": 1,
+    "flags": 1
+  },
+  "5796": {
+    "name": "Ben",
+    "family": 0,
+    "flags": 0
+  },
+  "5936": {
+    "name": "Orca",
+    "family": 0,
+    "flags": 0
+  },
+  "5945": {
+    "name": "Owl Companion",
+    "family": 0,
+    "flags": 0
+  },
+  "5986": {
+    "name": "Rabid Snickerfang",
+    "family": 25,
+    "flags": 1
+  },
+  "5987": {
+    "name": "Scorpok Snapper",
+    "family": 20,
+    "flags": 1
+  },
+  "5989": {
+    "name": "Scorpok Lasher",
+    "family": 20,
+    "flags": 1
+  },
+  "6772": {
+    "name": "Attack Hound",
+    "family": 1,
+    "flags": 0
+  },
+  "6773": {
+    "name": "Shadowhawk",
+    "family": 7,
+    "flags": 0
+  },
+  "7094": {
+    "name": "Crazed Stag",
+    "family": 0,
+    "flags": 0
+  },
+  "7095": {
+    "name": "Maddened Stag",
+    "family": 0,
+    "flags": 0
+  },
+  "7096": {
+    "name": "Corrupt Courser",
+    "family": 0,
+    "flags": 0
+  },
+  "7377": {
+    "name": "Doomhound Ravager",
+    "family": 0,
+    "flags": 0
+  },
+  "7378": {
+    "name": "Doomhound Mastiff",
+    "family": 0,
+    "flags": 0
+  },
+  "7388": {
+    "name": "Cockatoo",
+    "family": 0,
+    "flags": 0
+  },
+  "7393": {
+    "name": "White Plymouth Rock",
+    "family": 0,
+    "flags": 0
+  },
+  "7563": {
+    "name": "Blue Racer",
+    "family": 0,
+    "flags": 0
+  },
+  "9577": {
+    "name": "[UNUSED] Gorilla Test",
+    "family": 9,
+    "flags": 1
+  },
+  "11358": {
+    "name": "[UNUSED] Daughter of Hakkar",
+    "family": 0,
+    "flags": 0
+  },
+  "11364": {
+    "name": "[UNUSED] Zulian Tigress",
+    "family": 2,
+    "flags": 1
+  },
+  "11366": {
+    "name": "[UNUSED] Zulian Matriarch",
+    "family": 2,
+    "flags": 1
+  },
+  "11367": {
+    "name": "[UNUSED] Zulian Patriarch",
+    "family": 2,
+    "flags": 1
+  },
+  "11369": {
+    "name": "[UNUSED] Hidden Bloodseeker",
+    "family": 24,
+    "flags": 1
+  },
+  "11375": {
+    "name": "[UNUSED] Zath",
+    "family": 0,
+    "flags": 0
+  },
+  "11376": {
+    "name": "[UNUSED] Lor'khan",
+    "family": 2,
+    "flags": 1
+  },
+  "11377": {
+    "name": "[UNUSED] Hak'tharr the Mindhunter",
+    "family": 0,
+    "flags": 0
+  },
+  "11379": {
+    "name": "[UNUSED] Nik'reesh",
+    "family": 24,
+    "flags": 4
+  },
+  "11385": {
+    "name": "[UNUSED] Mogwhi the Ruthless",
+    "family": 0,
+    "flags": 0
+  },
+  "11386": {
+    "name": "[UNUSED] Janook the Bladefury",
+    "family": 0,
+    "flags": 0
+  },
+  "11597": {
+    "name": "Cheveyo",
+    "family": 0,
+    "flags": 0
+  },
+  "11742": {
+    "name": "Silt Grub",
+    "family": 0,
+    "flags": 0
+  },
+  "11743": {
+    "name": "Silt Devourer",
+    "family": 0,
+    "flags": 0
+  },
+  "12054": {
+    "name": "Dawnchaser",
+    "family": 0,
+    "flags": 0
+  },
+  "12176": {
+    "name": "Tame Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "14406": {
+    "name": "Roving Kodo",
+    "family": 0,
+    "flags": 0
+  },
+  "15332": {
+    "name": "[UNUSED] Crystal Feeder",
+    "family": 0,
+    "flags": 8
+  },
+  "15361": {
+    "name": "Murki",
+    "family": 0,
+    "flags": 0
+  },
+  "15661": {
+    "name": "Baby Shark",
+    "family": 0,
+    "flags": 0
+  },
+  "16038": {
+    "name": "Deathhound",
+    "family": 0,
+    "flags": 0
+  },
+  "16041": {
+    "name": "Shadowhound",
+    "family": 0,
+    "flags": 0
+  },
+  "16081": {
+    "name": "Spectral Gryphon",
+    "family": 0,
+    "flags": 0
+  },
+  "16445": {
+    "name": "Terky",
+    "family": 0,
+    "flags": 0
+  },
+  "16456": {
+    "name": "Poley",
+    "family": 0,
+    "flags": 0
+  },
+  "16509": {
+    "name": "Argent Warhorse",
+    "family": 0,
+    "flags": 0
+  },
+  "16510": {
+    "name": "Argent Charger",
+    "family": 0,
+    "flags": 0
+  },
+  "17254": {
+    "name": "White Tiger Cub",
+    "family": 0,
+    "flags": 0
+  },
+  "17255": {
+    "name": "Hippogryph Hatchling",
+    "family": 0,
+    "flags": 0
+  }
+}

@@ -1,0 +1,51 @@
+Hardcore Buddy final validation evidence
+Date: 2026-09-28
+
+Final tests/run.py stdout, exit 0. Includes the simplified Supplies view, removed Supplies search/Missing controls and stock strip, content-pane Back, full-header crop, larger centered emblem, grouped All list, persistent navigation, structured crafting fields and native item tooltips. Search/Missing references below include retained direct model tests; only Pet Guide exposes search in the UI.
+
+PASS: 540 carry profiles match website rows, ordering, options, progression, next unlocks and extra groups.
+PASS: All 60 Hunter, Warlock and quiver plans match full website fixtures.
+PASS: 1,830 independent Hunter/pet level pairs and 60 unknown-pet cases respect both gates.
+PASS: 1,080 compact/detailed guide models preserve section order, all dummy ranks and family coverage without a Sources formatter.
+PASS: Profile normalization, source checksums and standalone TOC.
+PASS: SavedVariables restore into a fresh Lua runtime; unsupported live class has explicit fallback.
+PASS: Existing profiles migrate to automatic class/level detection; subsequent explicit Preview choices persist.
+PASS: A new character has independent carry targets and profession-rank selections.
+PASS: 28 supply and inventory checks cover carried stacks, bank exclusion, unknown state, targets, rank counts and emergency potions.
+PASS: 74 profession checks cover exact craft thresholds, learned recipes, localized skills, collapsed headers, reentry and unknown APIs.
+PASS: 69 profession progression checks cover faction routes, recipe books, AH eligibility, unknown knowledge and actual skill/level training gates.
+PASS: 452 crafting catalog checks cover all items, exact skill/rank requirements, recipe binding, faction sources and separate finished-item AH eligibility.
+PASS: 1972 faction checks cover exclusive rewards, local vendors, shared supplies, recursive alternatives, routine pet routes, full creature lookup and profession guidance.
+PASS: 540 categorized continuous supply dashboards with complete All/search/Missing rows; all item details have labeled fields; 17 families, 111 ranks, 559 creatures, 145 looks and 5 care guides render; pet search, level gates and catalog pagination verified.
+PASS: Real-position planning clicks, fixed 1040x660 geometry and small-screen scaling, whole-row native item tooltips with uncached fallback, removed Sources routes, live bag updates, editable targets, stock filters, Pet Guide, persistence and 38 class/view/faction layouts.
+PASS: 242 automatic profession UI/event assertions: bandages, dummies and anti-venom follow skill/recipe updates; missing-book fallback, exact-item bag counts, live professions in Preview, legacy pins ignored, Carry independence, read-only references, unknown/unlearned states and hidden-window refresh.
+PASS: Actual UI menu handlers: 6456 row/icon opens, 3722 passive-row clicks, 1438 pages, 12696 tooltip hovers, 3348 native item tooltip checks, and 111730 pooled-row checks and 28253 structured-field checks; removed Sources and manual Use controls remain absent. All 9 classes and 98 reachable item recommendations; 17 families, 21 abilities, 111 ranks, 559 creatures, 145 looks, 5 care guides; coordinate row clicks and scroll clipping.
+PASS: 21772 redesign assertions across 144 fixed-window screen/mode/view combinations and two font metrics; fixed 1040x660 geometry, uniform screen fitting, planning/search text bounds and real clicks, complete supply rows, banner bounds, removed Sources, native backdrop hooks, immediate bevel resizing and non-overlapping class dropdown.
+
+Final-state focused tests/redesign.lua through tests/render_layout.py boot(), using measured Windows fonts and a wider/taller proxy, followed by Lua syntax checks. Active artwork validation remains valid for the unchanged shipped assets.
+
+PASS: 21772 redesign assertions across 144 fixed-window screen/mode/view combinations and two font metrics; fixed 1040x660 geometry, uniform screen fitting, planning/search text bounds and real clicks, complete supply rows, banner bounds, removed Sources, native backdrop hooks, immediate bevel resizing and non-overlapping class dropdown.
+PASS: All 30 Lua files compile under Lua 5.1.
+PASS: All 4 active TGAs validate dimensions, uncompressed type2, 32-bit BGRA, top-left origin, full payload and preserved source PNGs; shield transparency verified.
+
+Final tests/render_layout.py stdout, exit 0: seventeen actual-frame-tree layout simulations with shipped artwork. Native font rendering is approximated; these are not game-client screenshots.
+
+Rendered redesign-all
+Rendered redesign-greater-defense
+Rendered redesign-restorative
+Rendered redesign-supplies
+Rendered redesign-emergency
+Rendered redesign-preview
+Rendered redesign-small-screen
+Rendered redesign-ranks
+Rendered redesign-engineering
+Rendered redesign-antivenom
+Rendered redesign-item-detail
+Rendered redesign-pet-guide
+Rendered redesign-companion
+Rendered redesign-horde
+Rendered redesign-unknown-faction
+Rendered redesign-cooking
+Rendered redesign-triage
+Custom artwork rendered: Media\FieldBackdrop.tga, Media\JourneyBanner.tga, Media\SupplyRow.tga, Media\SurvivorShield.tga
+Native texture placeholders: 0

@@ -1,0 +1,824 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "https://www.w3.org/TR/html4/loose.dtd">
+<html lang="en" class="petopia_html classic">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta name="description" content="A visual guide to hunter pets in World of Warcraft Classic.">
+<meta name="keywords" content="Warcraft WoW Classic hunter pet guide">
+<link rel="home" title="Home" href="https://wow-petopia.com/classic/" />
+<link rel="shortcut icon" href="/css/saber.ico" type="image/vnd.microsoft.icon" />
+<link rel="stylesheet" type="text/css" href="https://yui-s.yahooapis.com/2.9.0/build/container/assets/container.css" />
+<link rel="stylesheet" type="text/css" href="/css/styles.css" media="all" />
+<title>Petopia Classic: Pet Attack Speed</title>
+</head>
+<body rel='body2' class='petopia_body classic attackspeed classic' id='menu_id_skills'>
+
+
+
+<div id='adBannerLeft'>
+<!-- Google AdSense -->
+    <!-- AD FOR MANIA AND BRASH -->
+      <script type="text/javascript"><!--
+              google_ad_client = "pub-0138084981327234";
+      /* Petopia - 160x600 */
+              google_ad_slot = "3782962173";
+              google_ad_width = 160;
+              google_ad_height = 600;
+         //-->
+      </script>
+      <script type="text/javascript"
+              src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+  </div>
+
+
+<div id="wrapper2" class="petopia_wrapper classic">
+<!--
+<script type="text/javascript">document.getElementById("wrapper").className = "js";</script>
+-->
+
+<div id="header" class="petopia_header classic"><a href="/classic/" title="Home"><img class='petopia_header_image classic' src="/images/PetopiaClassicLogo500.jpg" alt="Petopia Classic: A complete guide to hunter pets in World of Warcraft Classic." /></a></div>
+
+
+<!-- The following advert is only visible on narrow-width devices / smart phones -->
+<!-- Google AdSense -->
+    <!-- AD FOR WAIN -->
+    <div id='ad_header_leaderboard'>
+      <script type="text/javascript">
+              google_ad_client = "ca-pub-4717297389852361";
+              google_ad_slot = "6168577331";
+              google_ad_width = 728;
+              google_ad_height = 90;
+      </script>
+      <!-- Petopia Footer 728x90 -->
+      <script type="text/javascript"
+              src="//pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  
+<nav id="navbar2" class="petopia_navbar classic">
+  <form id="navmenu2" class="navmenu classic">
+    <span class="navmenuitem classic">
+      <input type='radio' id="menu_id_pets" value="menu_id_pets" name="nav_menu_item">
+      <label for="menu_id_pets" class="navlabel classic">Find Pets<span class='headermenuarrow'>&#xFE40;</span></label>
+      <input type='radio' id="menu_id_pets_dummy" value="menu_id_pets_dummy" name="nav_menu_item">
+      <label for="menu_id_pets_dummy" class="navlabel navdummy">Find Pets<span class='headermenuarrow'>&#xFE40;</span></label>
+      <ul>
+        <li id="menu_id_search"><a href="/classic/search.php" title="Search for the exact WoW Classic hunter pet you need">&#x1F50E;&#xFE0E; Search for Pets</a></li>
+        <li id="menu_id_gallery"><a href="/classic/gallery.php?id=available" title="View all tameable WoW Classic hunter pet looks at once">Tameable Looks Gallery</a></li>
+        <li id="menu_id_gallery"><a href="/classic/gallery.php?id=unavailable" title="View all untameable & unused pet looks">Unavailable Looks Gallery</a></li>
+        <li id="menu_id_special"><a href="/classic/browse.php" title="Browse special hunter pets: rare, elite, spawned, etc.">Rare & Special</a></li>
+      </ul>
+    </span>
+    <span class="navmenuitem classic">
+      <input type='radio' id="menu_id_skills" value="menu_id_skills" name="nav_menu_item">
+      <label for="menu_id_skills" class="navlabel classic">Pet Guides<span class='headermenuarrow'>&#xFE40;</span></label>
+      <input type='radio' id="menu_id_skills_dummy" value="menu_id_skills_dummy" name="nav_menu_item">
+      <label for="menu_id_skills_dummy" class="navlabel navdummy">Pet Guides<span class='headermenuarrow'>&#xFE40;</span></label>
+      <ul>
+        <li id="menu_id_diffs"><a href="/classic/differences.php" title="A summary of pet differences between Classic and BfA">Pet Differences in Classic</a></li>
+        <li id="menu_id_skill_list"><a href="/classic/abilities.php" title="Learn all about the abilities your pets can learn">Pet Abilities</a></li>
+        <li id="menu_id_training"><a href="/classic/training.php" title="How to train your pet">How to Train Your Pet</a></li>
+        <li id="menu_id_attackspeed"><a href="/classic/attackspeed.php" title="Search for pets with different attack speeds">Pet Attack Speeds</a></li>
+        <li id="menu_id_casterpets"><a href="/classic/casterpets.php" title="Pets with \"caster\" attributes">"Caster" Pets</a></li>
+<!--
+        <li id="menu_id_talents"><a href="/specs.php" title="Learn all about pet family specializations">Family Specializations</a></li>
+-->
+      </ul>
+    </span>
+        <span class="navmenuitem classic">
+      <input type='radio' id="menu_id_versions" value="menu_id_versions" name="nav_menu_item">
+      <label for="menu_id_versions" class="navlabel">Game Version<span class='headermenuarrow'>&#xFE40;</span></label>
+      <input type='radio' id="menu_id_versions_dummy" value="menu_id_versions_dummy" name="nav_menu_item">
+      <label for="menu_id_versions_dummy" class="navlabel navdummy">Game Version<span class='headermenuarrow'>&#xFE40;</span></label>
+      <ul>
+        <li id="menu_id_classic"><a href="/" title="Visit our Main / The War Within site.">The War Within</a></li>
+        <li id="menu_id_classic_lk"><a href="/classic_lk/" title="Visit our Wrath of the Lich King Classic site.">Wrath of the Lich King Classic</a></li>
+      </ul>
+    </span>
+<!--
+    <span class="navmenuitem">
+      <input type='radio' id="menu_id_guides" value="menu_id_guides" name="nav_menu_item">
+      <label for="menu_id_guides" class="navlabel classic">Guides<span class='headermenuarrow'>&#xFE40;</span></label>
+      <input type='radio' id="menu_id_guides_dummy" value="menu_id_guides_dummy" name="nav_menu_item">
+      <label for="menu_id_guides_dummy" class="navlabel navdummy">Guides<span class='headermenuarrow'>&#xFE40;</span></label>
+      <ul>
+        <li id="menu_id_starter"><a href="/faq.php?id=starterpets" title="Guide to level 1 starter pets">Starter Pets</a></li>
+        <li id="menu_id_starterchart"><a href="/guides/starterpetchart.php" title="Chart of all starting pets, by race">Starter Pet Chart</a></li>
+        <li id="menu_id_choose"><a href="/guides/choose.php" title="Guide to choosing the best pet for your hunter">Choosing a pet</a></li>
+        <li id="menu_id_callpet"><a href="/faq.php?id=callpet" title="Calling your pet to your side">Calling Your Pet</a></li>
+        <li id="menu_id_stable"><a href="/faq.php?id=stable" title="Guide to using the pet stables in WoW">Using the Stable</a></li>
+        <li id="menu_id_diet"><a href="/faq.php?id=diet" title="Guide to feeding your WoW hunter pet">Feeding your pet</a></li>
+        <li id="menu_id_dietchart"><a href="/guides/dietchart.php" title="Chart of pet diets, by family">Pet Diet Chart</a></li>
+        <li id="menu_id_stablelist"><a href="/guides/stablelist.php" title="Locations of stable masters in WoW">Stable Master List</a></li>
+      </ul>
+    </span>
+-->
+
+    <span class="navmenuitem link classic">
+      <input type='radio' id="menu_id_forum" value="menu_id_forum" name="nav_menu_item">
+      <label for="menu_id_forum" class="navlabel classic"><a href="https://forums.wow-petopia.com/index.php" title="Please come join us on our discussion forums!"><img class='navbarimage forumlogo' src='/images/saber-35px.png'>Forums<span class='headerlinkarrow'>&#x3009;</span></a></label>
+    </span>
+    <!--
+    <span class="navmenuitem link classic">
+      <input type='radio' id="menu_id_mainsite" value="menu_id_mainsite" name="nav_menu_item">
+      <label for="menu_id_mainsite" class="navlabel classic"><a href="/" title="Petopia, Shadowlands - Visit Our Main Site."><img class='navbarimage mainsitelogo' src='/images/ShadowlandsMiniLogo80.png'>Petopia<span class='headerlinkarrow'>&#x3009;</span></a></label>
+    </span>
+    -->
+  </form>
+</nav> <!-- id="navbar" -->
+
+<!-- WOWHEAD TOOLTIPS -->
+<script>var whTooltips = {colorLinks: true};</script>
+<script src="//wow.zamimg.com/widgets/power.js"></script>
+
+<div id="content2" class="petopia_content classic">
+<noscript>
+    <p>You appear to have JavaScript disabled. Although you should be able to use Petopia without JavaScript, you may be missing out on some of the snazzier features.</p>
+</noscript>
+
+<div id="cse"></div>
+<h1 class='guide_heading classic'>Pet Attack Speeds</h1>
+<p>In WoW Classic, pets retain their native attack speeds when tamed. This means that two pets tamed from different wild NPCs may have different attack speeds, even though they're physically identical.</p><p><i>So, how does this affect your pet's performance?</i></p><p>One thing it <i><strong>doesn't</strong></i> affect is its damage per second (DPS), as faster pets (in a specific family) may attack more frequently but they do proportionally less damage per hit (than slower pets in the same family). Likewise, pets from families with higher DPS will do more damage than pets from families with lower DPS, even if they have the same attack speed.</p><p>Where it may come most in handy is player-vs-player combat, where rapid, frequent hits may outpace your opponent, especially if it allows you to interrupt a caster.</p>
+<div class='guideindexsection classic'>
+<div class='guideindex border classic'>
+<h4 class='guide_index_heading classic'>Possible Attack Speeds:</h2>
+<ul class='indexlist attackspeed classic'>
+<li><a class='indexlink classic' href='#attackspeed_1.0'>1.0</a></li>
+<li><a class='indexlink classic' href='#attackspeed_1.2'>1.2</a></li>
+<li><a class='indexlink classic' href='#attackspeed_1.3'>1.3</a></li>
+<li><a class='indexlink classic' href='#attackspeed_1.4'>1.4</a></li>
+<li><a class='indexlink classic' href='#attackspeed_1.5'>1.5</a></li>
+<li><a class='indexlink classic' href='#attackspeed_1.6'>1.6</a></li>
+<li><a class='indexlink classic' href='#attackspeed_1.7'>1.7</a></li>
+<li><a class='indexlink classic' href='#attackspeed_2.0'>2.0</a></li>
+<li><a class='indexlink classic' href='#attackspeed_2.4'>2.4</a></li>
+<li><a class='indexlink classic' href='#attackspeed_2.5'>2.5</a></li>
+</ul>
+</div>
+</div>
+<hr class='guidedivide classic'>
+<h1 class='guide_heading classic smaller'>How do you check a creature's attack speed</h1>
+<p>I use the following macro, which you can either type into your chat window, or create a macro button with it (hit ESC, then select 'Macros'):</p>
+<code class='codebox classic'>/run mainSpeed, offSpeed = UnitAttackSpeed("target") print(format("%s: attack speed = %.2f", GetUnitName("target"), mainSpeed))</code><p>Then you simply target any creature of interest and use the macro.</p>
+<hr class='guidedivide classic'>
+<h4 class='guideheading attackspeed classic' id='attackspeed_1.0'>Attack Speed 1.0 :</h4>
+<ul class='guidenpclist attackspeed classic'>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11368'>Bloodseeker Bat</a> (Bat, 60, Zul'Gurub (Raid))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2850'>Broken Tooth</a> (Cat, 37, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14965'>Frenzied Bloodseeker Bat</a> (Bat, 60, Zul'Gurub (Raid))</li>
+</ul>
+<h4 class='guideheading attackspeed classic' id='attackspeed_1.2'>Attack Speed 1.2 :</h4>
+<ul class='guidenpclist attackspeed classic'>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10077'>Deathmaw</a> (Wolf, 53, Burning Steppes)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2385'>Feral Mountain Lion</a> (Cat, 27-28, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4124'>Needles Cougar</a> (Cat, 27-28, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3862'>Slavering Worg</a> (Wolf, 18-19, Shadowfang Keep (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8299'>Spiteflayer</a> (Carrion Bird, 52, Blasted Lands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2384'>Starving Mountain Lion</a> (Cat, 23-24, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=767'>Swamp Jaguar</a> (Cat, 36-37, Swamp of Sorrows)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5807'>The Rake</a> (Cat, 10, Mulgore)</li>
+</ul>
+<h4 class='guideheading attackspeed classic' id='attackspeed_1.3'>Attack Speed 1.3 :</h4>
+<ul class='guidenpclist attackspeed classic'>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3121'>Durotar Tiger</a> (Cat, 7-8, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1085'>Elder Stranglethorn Tiger</a> (Cat, 34-35, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2275'>Enraged Stanley</a> (Wolf, 24, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3825'>Ghostpaw Alpha</a> (Wolf, 27-28, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5828'>Humar The Pridelord</a> (Cat, 23, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=977'>Kurzen War Panther</a> (Cat, 32-33, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=976'>Kurzen War Tiger</a> (Cat, 32-33, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10644'>Mist Howler</a> (Wolf, 22, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2069'>Moonstalker</a> (Cat, 14-15, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2071'>Moonstalker Matriarch</a> (Cat, 19-20, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2070'>Moonstalker Runt</a> (Cat, 10-11, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2237'>Moonstalker Sire</a> (Cat, 17-18, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3245'>Ornery Plainstrider</a> (Tallstrider, 16-17, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=736'>Panther</a> (Cat, 32-33, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8300'>Ravage</a> (Hyena, 51, Blasted Lands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2731'>Ridge Stalker</a> (Cat, 36-37, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2734'>Ridge Stalker Patriarch</a> (Cat, 40-41, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3241'>Savannah Patriarch</a> (Cat, 15-16, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=729'>Sin'Dall</a> (Cat, 37, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=682'>Stranglethorn Tiger</a> (Cat, 32-33, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=772'>Stranglethorn Tigress</a> (Cat, 37-38, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4067'>Twilight Runner</a> (Cat, 23-24, Stonetalon Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=683'>Young Panther</a> (Cat, 30-31, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=681'>Young Stranglethorn Tiger</a> (Cat, 30-31, Stranglethorn Vale)</li>
+</ul>
+<h4 class='guideheading attackspeed classic' id='attackspeed_1.4'>Attack Speed 1.4 :</h4>
+<ul class='guidenpclist attackspeed classic'>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14222'>Araga</a> (Cat, 35, Alterac Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14430'>Duskstalker</a> (Cat, 9, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2033'>Elder Nightsaber</a> (Cat, 8-9, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2407'>Hulking Mountain Lion</a> (Cat, 33-34, Alterac Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=731'>King Bangalash</a> (Cat, 43, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2406'>Mountain Lion</a> (Cat, 32-33, Alterac Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2042'>Nightsaber</a> (Cat, 5-6, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2043'>Nightsaber Stalker</a> (Cat, 7-8, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2960'>Prairie Wolf Alpha</a> (Wolf, 9-10, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3425'>Savannah Prowler</a> (Cat, 14-15, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=15041'>Spawn of Mar'li</a> (Spider, 60, Zul'Gurub (Raid))</li>
+</ul>
+<h4 class='guideheading attackspeed classic' id='attackspeed_1.5'>Attack Speed 1.5 :</h4>
+<ul class='guidenpclist attackspeed classic'>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=728'>Bhag'thera</a> (Cat, 40, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=9696'>Bloodaxe Worg</a> (Wolf, 56-57, Blackrock Spire (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5865'>Dishu</a> (Cat, 13, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1713'>Elder Shadowmaw Panther</a> (Cat, 42-43, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2034'>Feral Nightsaber</a> (Cat, 10-11, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7431'>Frostsaber</a> (Cat, 56-57, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7430'>Frostsaber Cub</a> (Cat, 55-56, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7433'>Frostsaber Huntress</a> (Cat, 58-59, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7434'>Frostsaber Pride Watcher</a> (Cat, 59-60, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7432'>Frostsaber Stalker</a> (Cat, 59-60, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4250'>Galak Packhound</a> (Hyena, 24, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1199'>Juvenile Snow Leopard</a> (Cat, 5-6, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2959'>Prairie Stalker</a> (Wolf, 7-8, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2958'>Prairie Wolf</a> (Wolf, 5-6, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=118'>Prowler</a> (Wolf, 9-10, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10200'>Rak'Shiri</a> (Cat, 57, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3243'>Savannah Highmane</a> (Cat, 12-13, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3415'>Savannah Huntress</a> (Cat, 11-12, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4304'>Scarlet Tracking Hound</a> (Hyena, 33-34, Scarlet Monastery (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=9416'>Scarshield Worg</a> (Wolf, 53-54, Blackrock Spire (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2175'>Shadowclaw</a> (Cat, 13, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=684'>Shadowmaw Panther</a> (Cat, 37-38, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10737'>Shy-Rotam</a> (Cat, 60, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10375'>Spire Spiderling</a> (Spider, 55-56, Blackrock Spire (Dungeon))</li>
+</ul>
+<h4 class='guideheading attackspeed classic' id='attackspeed_1.6'>Attack Speed 1.6 :</h4>
+<ul class='guidenpclist attackspeed classic'>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4126'>Crag Stalker</a> (Cat, 25-26, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5823'>Death Flayer</a> (Scorpid, 11, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=768'>Shadow Panther</a> (Cat, 39-40, Swamp of Sorrows)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=15101'>Zulian Prowler</a> (Cat, 60, Zul'Gurub (Raid))</li>
+</ul>
+<h4 class='guideheading attackspeed classic' id='attackspeed_1.7'>Attack Speed 1.7 :</h4>
+<ul class='guidenpclist attackspeed classic'>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1922'>Gray Forest Wolf</a> (Wolf, 7-8, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=525'>Mangy Wolf</a> (Wolf, 5-6, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3416'>Savannah Matriarch</a> (Cat, 17-18, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2681'>Vilebranch Raiding Wolf</a> (Wolf, 50-51, The Hinterlands)</li>
+</ul>
+<h4 class='guideheading attackspeed classic' id='attackspeed_2.0'>Attack Speed 2.0 :</h4>
+<ul class='guidenpclist attackspeed classic'>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2956'>Adult Plainstrider</a> (Tallstrider, 6-7, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4511'>Agam'ar</a> (Boar, 24-25, Razorfen Kraul (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4824'>Aku'mai Fisher</a> (Turtle, 23-24, Blackfathom Deeps (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4825'>Aku'mai Snapjaw</a> (Turtle, 26-27, Blackfathom Deeps (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8956'>Angerclaw Bear</a> (Bear, 47-48, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8957'>Angerclaw Grizzly</a> (Bear, 51-52, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8958'>Angerclaw Mauler</a> (Bear, 49-50, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5349'>Arash-ethis</a> (Wind Serpent, 49, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10882'>Arikara</a> (Wind Serpent, 28, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3126'>Armored Scorpid</a> (Scorpid, 7-8, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3809'>Ashenvale Bear</a> (Bear, 21-22, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5992'>Ashmane Boar</a> (Boar, 48-49, Blasted Lands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5834'>Azzere the Skyblade</a> (Wind Serpent, 25, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4823'>Barbed Crustacean</a> (Crab, 25-26, Blackfathom Deeps (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2753'>Barnabus</a> (Wolf, 38, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2966'>Battleboar</a> (Boar, 3-4, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=345'>Bellygrub</a> (Boar, 24, Redridge Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11921'>Besseleth</a> (Spider, 21, Stonetalon Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14280'>Big Samras</a> (Bear, 27, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1130'>Bjarn</a> (Bear, 12, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1189'>Black Bear Patriarch</a> (Bear, 16-17, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=628'>Black Ravager</a> (Wolf, 24-25, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1258'>Black Ravager Mastiff</a> (Wolf, 25-26, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5982'>Black Slayer</a> (Carrion Bird, 46-48, Blasted Lands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=930'>Black Widow Hatchling</a> (Spider, 24-25, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7055'>Blackrock Worg</a> (Wolf, 54-55, Burning Steppes)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3861'>Bleak Worg</a> (Wolf, 18-19, Shadowfang Keep (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4425'>Blind Hunter</a> (Bat, 32, Razorfen Kraul (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5426'>Blisterpaw Hyena</a> (Hyena, 44-45, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3868'>Blood Seeker</a> (Bat, 23-24, Shadowfang Keep (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10221'>Bloodaxe Worg Pup</a> (Wolf, 52-53, Blackrock Spire (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4357'>Bloodfen Lashtail</a> (Raptor, 40-41, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4351'>Bloodfen Raptor</a> (Raptor, 35-36, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4356'>Bloodfen Razormaw</a> (Raptor, 39-40, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4352'>Bloodfen Screecher</a> (Raptor, 36-37, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4355'>Bloodfen Scytheclaw</a> (Raptor, 37-38, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1923'>Bloodsnout Worg</a> (Wolf, 16-17, Silverpine Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3123'>Bloodtalon Scythemaw</a> (Raptor, 8-10, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3122'>Bloodtalon Taillasher</a> (Raptor, 6-8, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4688'>Bonepaw Hyena</a> (Hyena, 33-35, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2954'>Bristleback Battleboar</a> (Boar, 4-5, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2830'>Buzzard</a> (Carrion Bird, 37-39, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4695'>Carrion Horror</a> (Carrion Bird, 35-37, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1821'>Carrion Lurker</a> (Spider, 52-53, Western Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=949'>Carrion Recluse</a> (Spider, 25-26, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1809'>Carrion Vulture</a> (Carrion Bird, 50-52, Western Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8933'>Cave Creeper</a> (Spider, 50-52, Blackrock Depths (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4040'>Cave Stalker</a> (Spider, 21-22, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=616'>Chatter</a> (Spider, 23, Redridge Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8301'>Clack the Reaver</a> (Scorpid, 53, Blasted Lands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3812'>Clattering Crawler</a> (Crab, 19-20, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3125'>Clattering Scorpid</a> (Scorpid, 5-6, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7078'>Cleft Scorpid</a> (Scorpid, 35-36, Uldaman (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1184'>Cliff Lurker</a> (Spider, 13-14, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4117'>Cloud Serpent</a> (Wind Serpent, 25-26, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=6352'>Coralshell Lurker</a> (Turtle, 53-54, Azshara)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=6369'>Coralshell Tortoise</a> (Turtle, 50-52, Azshara)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3227'>Corrupted Bloodtalon Scythemaw</a> (Raptor, 10-11, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3231'>Corrupted Dreadmaw Crocolisk</a> (Crocolisk, 11-12, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3225'>Corrupted Mottled Boar</a> (Boar, 10-11, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3226'>Corrupted Scorpid</a> (Scorpid, 10-11, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3228'>Corrupted Surf Crawler</a> (Crab, 10-11, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=834'>Coyote</a> (Wolf, 10-11, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=833'>Coyote Packleader</a> (Wolf, 11-12, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1125'>Crag Boar</a> (Boar, 5-6, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2727'>Crag Coyote</a> (Wolf, 35-36, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14223'>Cranky Benj</a> (Turtle, 32, Alterac Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14279'>Creepthess</a> (Spider, 24, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8927'>Dark Screecher</a> (Bat, 50-52, Blackrock Depths (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4412'>Darkfang Creeper</a> (Spider, 38-39, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4411'>Darkfang Lurker</a> (Spider, 36-37, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4413'>Darkfang Spider</a> (Spider, 35-36, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4414'>Darkfang Venomspitter</a> (Spider, 37-38, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4377'>Darkmist Lurker</a> (Spider, 37-38, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4378'>Darkmist Recluse</a> (Spider, 36-37, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4379'>Darkmist Silkspinner</a> (Spider, 38-39, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4376'>Darkmist Spider</a> (Spider, 35-36, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4380'>Darkmist Widow</a> (Spider, 40, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14232'>Dart</a> (Raptor, 38, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7405'>Deadly Cleft Scorpid</a> (Scorpid, 42-43, Uldaman (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4841'>Deadmire</a> (Crocolisk, 45, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14339'>Death Howl</a> (Wolf, 49, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=9695'>Deathlash Scorpid</a> (Scorpid, 54-55, Burning Steppes)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=769'>Deathstrike Tarantula</a> (Spider, 40-41, Swamp of Sorrows)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8926'>Deep Stinger</a> (Scorpid, 50-52, Blackrock Depths (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4005'>Deepmoss Creeper</a> (Spider, 16-17, Stonetalon Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4263'>Deepmoss Hatchling</a> (Spider, 14, Stonetalon Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4264'>Deepmoss Matriarch</a> (Spider, 22, Stonetalon Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4007'>Deepmoss Venomspitter</a> (Spider, 17-18, Stonetalon Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4006'>Deepmoss Webspinner</a> (Spider, 19-20, Stonetalon Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=6788'>Den Mother</a> (Bear, 18-19, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3630'>Deviate Coiler</a> (Wind Serpent, 15-16, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3632'>Deviate Creeper</a> (Raptor, 15-16, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5053'>Deviate Crocolisk</a> (Crocolisk, 18-19, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5056'>Deviate Dreadfang</a> (Wind Serpent, 20-21, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3637'>Deviate Guardian</a> (Raptor, 18-19, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3636'>Deviate Ravager</a> (Raptor, 18-19, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3633'>Deviate Slayer</a> (Raptor, 16-17, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3634'>Deviate Stalker</a> (Raptor, 15-17, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3631'>Deviate Stinglash</a> (Wind Serpent, 16-17, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5756'>Deviate Venomwing</a> (Wind Serpent, 20-21, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=428'>Dire Condor</a> (Carrion Bird, 18-19, Redridge Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3099'>Dire Mottled Boar</a> (Boar, 6-7, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1815'>Diseased Black Bear</a> (Bear, 51-52, Western Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1816'>Diseased Grizzly</a> (Bear, 55-56, Western Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1817'>Diseased Wolf</a> (Wolf, 53-54, Western Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4693'>Dread Flyer</a> (Carrion Bird, 36-37, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4694'>Dread Ripper</a> (Carrion Bird, 39-40, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4692'>Dread Swoop</a> (Carrion Bird, 32-33, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3110'>Dreadmaw Crocolisk</a> (Crocolisk, 9-11, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4341'>Drywallow Crocolisk</a> (Crocolisk, 35-36, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4345'>Drywallow Daggermaw</a> (Crocolisk, 40-41, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4343'>Drywallow Snapper</a> (Crocolisk, 37-38, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4342'>Drywallow Vicejaw</a> (Crocolisk, 36-37, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1512'>Duskbat</a> (Bat, 1-2, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3475'>Echeyakee</a> (Cat, 16, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3810'>Elder Ashenvale Bear</a> (Bear, 25-26, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1186'>Elder Black Bear</a> (Bear, 11-12, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4119'>Elder Cloud Serpent</a> (Wind Serpent, 27-29, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1127'>Elder Crag Boar</a> (Boar, 7-8, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2729'>Elder Crag Coyote</a> (Wolf, 39-40, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2356'>Elder Gray Bear</a> (Bear, 25-26, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2580'>Elder Mesa Buzzard</a> (Carrion Bird, 37-38, Arathi Highlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1557'>Elder Mistvale Gorilla</a> (Gorilla, 40-41, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2348'>Elder Moss Creeper</a> (Spider, 26-27, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3100'>Elder Mottled Boar</a> (Boar, 8-9, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1192'>Elder Mountain Boar</a> (Boar, 16-17, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2957'>Elder Plainstrider</a> (Tallstrider, 8-9, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1019'>Elder Razormaw</a> (Raptor, 29, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2635'>Elder Saltwater Crocolisk</a> (Crocolisk, 38, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7445'>Elder Shardtooth</a> (Bear, 57-58, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=9690'>Ember Worg</a> (Wolf, 51-52, Burning Steppes)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3108'>Encrusted Surf Crawler</a> (Crab, 9-10, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2233'>Encrusted Tide Crawler</a> (Crab, 18-20, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=12347'>Enraged Reef Crawler</a> (Crab, 30-32, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1511'>Enraged Silverback Gorilla</a> (Gorilla, 41-42, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8961'>Felpaw Ravager</a> (Wolf, 51-52, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8960'>Felpaw Scavenger</a> (Wolf, 49-50, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8959'>Felpaw Wolf</a> (Wolf, 47-48, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2728'>Feral Crag Coyote</a> (Wolf, 37-38, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1778'>Ferocious Grizzled Bear</a> (Bear, 11-12, Silverpine Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5429'>Fire Roc</a> (Carrion Bird, 43-45, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=9698'>Firetail Scorpid</a> (Scorpid, 56-57, Burning Steppes)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3035'>Flatland Cougar</a> (Cat, 7-8, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3566'>Flatland Prowler</a> (Cat, 9, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3246'>Fleeting Plainstrider</a> (Tallstrider, 12-13, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1109'>Fleshripper</a> (Carrion Bird, 13-14, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1195'>Forest Lurker</a> (Spider, 10-11, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2350'>Forest Moss Creeper</a> (Spider, 20-21, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=30'>Forest Spider</a> (Spider, 5-6, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2322'>Foreststrider</a> (Tallstrider, 14-16, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2321'>Foreststrider Fledgling</a> (Tallstrider, 11-13, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10981'>Frostwolf</a> (Wolf, 50-51, Alterac Valley (Battleground))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4887'>Ghamoo-ra</a> (Turtle, 25, Blackfathom Deeps (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3619'>Ghost Saber</a> (Cat, 19-20, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3824'>Ghostpaw Howler</a> (Wolf, 23-24, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3823'>Ghostpaw Runner</a> (Wolf, 19-20, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3811'>Giant Ashenvale Bear</a> (Bear, 29-30, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2831'>Giant Buzzard</a> (Carrion Bird, 39-41, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4415'>Giant Darkfang Spider</a> (Spider, 40-41, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=9697'>Giant Ember Worg</a> (Wolf, 55-56, Burning Steppes)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2323'>Giant Foreststrider</a> (Tallstrider, 17-19, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1797'>Giant Grizzled Bear</a> (Bear, 12-13, Silverpine Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2349'>Giant Moss Creeper</a> (Spider, 24-25, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2565'>Giant Plains Creeper</a> (Spider, 35-36, Arathi Highlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2001'>Giant Webwood Spider</a> (Spider, 10-11, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2089'>Giant Wetlands Crocolisk</a> (Crocolisk, 25-26, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14228'>Giggler</a> (Hyena, 34, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1994'>Githyiss the Vile</a> (Spider, 5, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5856'>Glassweb Spider</a> (Spider, 43-45, Searing Gorge)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=12431'>Gorefang</a> (Wolf, 13, Silverpine Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=157'>Goretusk</a> (Boar, 14-15, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2351'>Gray Bear</a> (Bear, 21-22, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=547'>Great Goretusk</a> (Boar, 16-17, Redridge Mountains; Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1553'>Greater Duskbat</a> (Bat, 6-7, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8207'>Greater Firebird</a> (Carrion Bird, 46, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=154'>Greater Fleshripper</a> (Carrion Bird, 16-17, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4539'>Greater Kraul Bat</a> (Bat, 32, Razorfen Kraul (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5858'>Greater Lava Spider</a> (Spider, 47-49, Searing Gorge)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3244'>Greater Plainstrider</a> (Tallstrider, 11-12, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=505'>Greater Tarantula</a> (Spider, 19-20, Redridge Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3249'>Greater Thunderhawk</a> (Wind Serpent, 23-24, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=569'>Green Recluse</a> (Spider, 21-22, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14472'>Gretheer</a> (Spider, 57, Silithus)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1188'>Grizzled Black Bear</a> (Bear, 13-14, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5272'>Grizzled Ironfur Bear</a> (Bear, 44-45, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2165'>Grizzled Thistle Bear</a> (Bear, 16-17, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5260'>Groddoc Ape</a> (Gorilla, 42-43, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5262'>Groddoc Thunderer</a> (Gorilla, 49-50, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8303'>Grunter</a> (Boar, 50, Blasted Lands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5291'>Hakkari Frostwing</a> (Wind Serpent, 49-50, The Temple of Atal'Hakkar (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8336'>Hakkari Sapper</a> (Wind Serpent, 49-50, The Temple of Atal'Hakkar (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14234'>Hayoc</a> (Wind Serpent, 41, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4127'>Hecklefang Hyena</a> (Hyena, 15-16, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4129'>Hecklefang Snarler</a> (Hyena, 18-19, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4128'>Hecklefang Stalker</a> (Hyena, 22-23, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2561'>Highland Fleshstalker</a> (Raptor, 36-37, Arathi Highlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1016'>Highland Lashtail</a> (Raptor, 24-25, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1015'>Highland Raptor</a> (Raptor, 23-24, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1018'>Highland Razormaw</a> (Raptor, 27-28, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1017'>Highland Scytheclaw</a> (Raptor, 25-26, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2559'>Highland Strider</a> (Raptor, 30-31, Arathi Highlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2560'>Highland Thrasher</a> (Raptor, 33-34, Arathi Highlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1196'>Ice Claw Bear</a> (Bear, 7-8, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8213'>Ironback</a> (Turtle, 51, The Hinterlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7099'>Ironbeak Hunter</a> (Owl, 50-51, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7097'>Ironbeak Owl</a> (Owl, 48-49, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7098'>Ironbeak Screecher</a> (Owl, 52-53, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5268'>Ironfur Bear</a> (Bear, 41-42, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5274'>Ironfur Patriarch</a> (Bear, 48-49, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3257'>Ishamuhale</a> (Raptor, 19, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2522'>Jaguero Stalker</a> (Cat, 50, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=687'>Jungle Stalker</a> (Raptor, 40-41, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1114'>Jungle Thunderer</a> (Gorilla, 37-38, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4316'>Kolkar Packhound</a> (Hyena, 13, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1516'>Konda</a> (Gorilla, 43, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4538'>Kraul Bat</a> (Bat, 30-31, Razorfen Kraul (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14476'>Krellack</a> (Scorpid, 56, Silithus)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3653'>Kresh</a> (Turtle, 20, Wailing Caverns (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=12433'>Krethis Shadowspinner</a> (Spider, 15, Silverpine Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14491'>Kurmokk</a> (Gorilla, 42, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7319'>Lady Sathrah</a> (Spider, 12, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1126'>Large Crag Boar</a> (Boar, 6-7, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2476'>Large Loch Crocolisk</a> (Crocolisk, 22, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=686'>Lashtail Raptor</a> (Raptor, 35-36, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1111'>Leech Stalker</a> (Spider, 21-22, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1112'>Leech Widow</a> (Spider, 24, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1693'>Loch Crocolisk</a> (Crocolisk, 14-15, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=119'>Longsnout</a> (Boar, 10-11, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5287'>Longtooth Howler</a> (Wolf, 43-44, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5286'>Longtooth Runner</a> (Wolf, 40-41, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14268'>Lord Condar</a> (Carrion Bird, 15-16, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=521'>Lupos</a> (Wolf, 23, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4662'>Magram Bonepaw</a> (Hyena, 37-38, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1961'>Mangeclaw</a> (Bear, 11, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1513'>Mangy Duskbat</a> (Bat, 3-4, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1191'>Mangy Mountain Boar</a> (Boar, 14-15, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2032'>Mangy Nightsaber</a> (Cat, 2, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2923'>Mangy Silvermane</a> (Wolf, 41-42, The Hinterlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4660'>Maraudine Bonepaw</a> (Hyena, 37-38, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3068'>Mazzranache</a> (Tallstrider, 9, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2579'>Mesa Buzzard</a> (Carrion Bird, 34-35, Arathi Highlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=43'>Mine Spider</a> (Spider, 8-9, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1781'>Mist Creeper</a> (Spider, 13-14, Silverpine Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1108'>Mistvale Gorilla</a> (Gorilla, 32-33, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14344'>Mongress</a> (Bear, 50, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1088'>Monstrous Crawler</a> (Crab, 43-44, Swamp of Sorrows)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8602'>Monstrous Plaguebat</a> (Bat, 56-58, Eastern Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1780'>Moss Stalker</a> (Spider, 12-13, Silverpine Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=471'>Mother Fang</a> (Spider, 10, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3098'>Mottled Boar</a> (Boar, 1-2, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4344'>Mottled Drywallow Crocolisk</a> (Crocolisk, 38-39, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1020'>Mottled Raptor</a> (Raptor, 22-23, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1023'>Mottled Razormaw</a> (Raptor, 26-27, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1021'>Mottled Screecher</a> (Raptor, 24-25, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1022'>Mottled Scytheclaw</a> (Raptor, 25-26, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1766'>Mottled Worg</a> (Wolf, 11-12, Silverpine Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1190'>Mountain Boar</a> (Boar, 10-11, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1194'>Mountain Buzzard</a> (Carrion Bird, 15-16, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2961'>Mountain Cougar</a> (Cat, 3, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4399'>Mudrock Borer</a> (Turtle, 42-43, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4398'>Mudrock Burrower</a> (Turtle, 39-40, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4400'>Mudrock Snapjaw</a> (Turtle, 41-42, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4397'>Mudrock Spikeshell</a> (Turtle, 37-38, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4396'>Mudrock Tortoise</a> (Turtle, 36-37, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8208'>Murderous Blisterpaw</a> (Hyena, 43, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=574'>Naraxis</a> (Spider, 27, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1688'>Night Web Matriarch</a> (Spider, 5, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1505'>Night Web Spider</a> (Spider, 3-4, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8601'>Noxious Plaguebat</a> (Bat, 54-56, Eastern Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3461'>Oasis Snapjaw</a> (Turtle, 15-16, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1225'>Ol' Sooty</a> (Bear, 20, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8211'>Old Cliff Jumper</a> (Wolf, 42, The Hinterlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5352'>Old Grizzlegut</a> (Bear, 43, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=12432'>Old Vicejaw</a> (Bear, 14, Silverpine Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14343'>Olm the Wise</a> (Owl, 52, Felwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4248'>Pesterhide Hyena</a> (Hyena, 26-27, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4249'>Pesterhide Snarler</a> (Hyena, 28-29, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1824'>Plague Lurker</a> (Spider, 54-55, Western Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8600'>Plaguebat</a> (Bat, 53-55, Eastern Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=16117'>Plagued Swine</a> (Boar, 60, Eastern Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2563'>Plains Creeper</a> (Spider, 32-33, Arathi Highlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2955'>Plainstrider</a> (Tallstrider, 1-2, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=390'>Porcine Entourage</a> (Boar, 7, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=330'>Princess</a> (Boar, 9, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3106'>Pygmy Surf Crawler</a> (Crab, 5-6, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2231'>Pygmy Tide Crawler</a> (Crab, 9-10, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=539'>Pygmy Venom Web Spider</a> (Spider, 18-19, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5427'>Rabid Blisterpaw</a> (Hyena, 47-48, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4690'>Rabid Bonepaw</a> (Hyena, 36-38, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2730'>Rabid Crag Coyote</a> (Wolf, 42-43, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=565'>Rabid Dire Wolf</a> (Wolf, 20-21, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5288'>Rabid Longtooth</a> (Wolf, 47-48, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7446'>Rabid Shardtooth</a> (Bear, 59-60, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1509'>Ragged Scavenger</a> (Wolf, 2-3, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=704'>Ragged Timber Wolf</a> (Wolf, 2, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=705'>Ragged Young Wolf</a> (Wolf, 1, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4514'>Raging Agam'ar</a> (Boar, 25-26, Razorfen Kraul (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2236'>Raging Reef Crawler</a> (Crab, 20-21, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1140'>Razormaw Matriarch</a> (Raptor, 31, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14821'>Razzashi Raptor</a> (Raptor, 60, Zul'Gurub (Raid))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14532'>Razzashi Venombrood</a> (Spider, 60, Zul'Gurub (Raid))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2235'>Reef Crawler</a> (Crab, 15-17, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8277'>Rekk'tilac</a> (Spider, 48, Searing Gorge)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10357'>Ressan the Needler</a> (Bat, 11, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2732'>Ridge Huntress</a> (Cat, 38-39, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14233'>Ripscale</a> (Crocolisk, 39, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1150'>River Crocolisk</a> (Crocolisk, 30-31, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5428'>Roc</a> (Carrion Bird, 42-43, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11739'>Rock Stalker</a> (Spider, 57-58, Silithus)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=524'>Rockhide Boar</a> (Boar, 7-8, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5308'>Rogue Vale Screecher</a> (Wind Serpent, 44-46, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4512'>Rotting Agam'ar</a> (Boar, 28, Razorfen Kraul (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4154'>Salt Flats Scavenger</a> (Carrion Bird, 30-32, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4158'>Salt Flats Vulture</a> (Carrion Bird, 32-34, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1151'>Saltwater Crocolisk</a> (Crocolisk, 35-36, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2505'>Saltwater Snapjaw</a> (Turtle, 49-50, The Hinterlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=830'>Sand Crawler</a> (Crab, 13-14, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11738'>Sand Skitterer</a> (Spider, 55-56, Silithus)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3281'>Sarkoth</a> (Scorpid, 4, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1353'>Sarltooth</a> (Raptor, 29, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1082'>Sawtooth Crocolisk</a> (Crocolisk, 38-39, Swamp of Sorrows)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1087'>Sawtooth Snapper</a> (Crocolisk, 41-42, Swamp of Sorrows)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1689'>Scarred Crag Boar</a> (Boar, 9-10, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4697'>Scorpashi Lasher</a> (Scorpid, 34-35, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4696'>Scorpashi Snapper</a> (Scorpid, 30-31, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4699'>Scorpashi Venomlash</a> (Scorpid, 38-39, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7803'>Scorpid Duneburrower</a> (Scorpid, 46-47, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5424'>Scorpid Dunestalker</a> (Scorpid, 46-47, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5422'>Scorpid Hunter</a> (Scorpid, 40-41, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4140'>Scorpid Reaver</a> (Scorpid, 31-32, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5423'>Scorpid Tail Lasher</a> (Scorpid, 43-44, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4139'>Scorpid Terror</a> (Scorpid, 33-34, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3124'>Scorpid Worker</a> (Scorpid, 3, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5988'>Scorpok Stinger</a> (Scorpid, 50-51, Blasted Lands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=831'>Sea Crawler</a> (Crab, 15-16, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5857'>Searing Lava Spider</a> (Spider, 45-47, Searing Gorge)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5430'>Searing Roc</a> (Carrion Bird, 47-49, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3581'>Sewer Beast</a> (Crocolisk, 50, Stormwind City)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14266'>Shanda the Spinner</a> (Spider, 19, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7444'>Shardtooth Bear</a> (Bear, 53-54, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7443'>Shardtooth Mauler</a> (Bear, 55-56, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1216'>Shore Crawler</a> (Crab, 17-18, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4861'>Shrike Bat</a> (Bat, 38-39, Uldaman (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10741'>Sian-Rotam</a> (Cat, 60, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3250'>Silithid Creeper</a> (Scorpid, 20-21, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3503'>Silithid Protector</a> (Crab, 18-19, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3252'>Silithid Swarmer</a> (Scorpid, 21-22, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=922'>Silt Crawler</a> (Crab, 40-41, Swamp of Sorrows)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1558'>Silverback Patriarch</a> (Gorilla, 42-43, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2925'>Silvermane Howler</a> (Wolf, 45-46, The Hinterlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2926'>Silvermane Stalker</a> (Wolf, 47-48, The Hinterlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2924'>Silvermane Wolf</a> (Wolf, 43-44, The Hinterlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4821'>Skittering Crustacean</a> (Crab, 22-23, Blackfathom Deeps (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2521'>Skymane Gorilla</a> (Gorilla, 50, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=9694'>Slavering Ember Worg</a> (Wolf, 53-54, Burning Steppes)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=708'>Small Crag Boar</a> (Boar, 3, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2408'>Snapjaw</a> (Turtle, 30-31, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1152'>Snapjaw Crocolisk</a> (Crocolisk, 35-36, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4822'>Snapping Crustacean</a> (Crab, 23-24, Blackfathom Deeps (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5356'>Snarler</a> (Wolf, 42, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5985'>Snickerfang Hyena</a> (Hyena, 49-50, Blasted Lands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5829'>Snort the Heckler</a> (Hyena, 17, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1201'>Snow Leopard</a> (Cat, 7-8, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1138'>Snow Tracker Wolf</a> (Wolf, 6-7, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11357'>Son of Hakkar</a> (Wind Serpent, 60, Zul'Gurub (Raid))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=858'>Sorrow Spinner</a> (Spider, 36-37, Swamp of Sorrows)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2544'>Southern Sand Crawler</a> (Crab, 40-41, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4144'>Sparkleshell Borer</a> (Turtle, 32-33, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4143'>Sparkleshell Snapper</a> (Turtle, 34-35, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4142'>Sparkleshell Tortoise</a> (Turtle, 30-31, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5708'>Spawn of Hakkar</a> (Wind Serpent, 51, The Temple of Atal'Hakkar (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3814'>Spined Crawler</a> (Crab, 20-21, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4950'>Spot</a> (Wolf, 35, Dustwallow Marsh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10359'>Sri'skulk</a> (Spider, 13, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5425'>Starving Blisterpaw</a> (Hyena, 41-42, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4689'>Starving Bonepaw</a> (Hyena, 30-32, Desolace)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2829'>Starving Buzzard</a> (Carrion Bird, 35-37, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=213'>Starving Dire Wolf</a> (Wolf, 19-20, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5984'>Starving Snickerfang</a> (Hyena, 45-46, Blasted Lands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1133'>Starving Winter Wolf</a> (Wolf, 8-9, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14123'>Steeljaw Snapper</a> (Turtle, 42-43, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4548'>Steelsnap</a> (Hyena, 30, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=13599'>Stolid Snapjaw</a> (Turtle, 46-47, Maraudon (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11737'>Stonelash Flayer</a> (Scorpid, 58-59, Silithus)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11736'>Stonelash Pincer</a> (Scorpid, 56-57, Silithus)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11735'>Stonelash Scorpid</a> (Scorpid, 54-55, Silithus)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=113'>Stonetusk Boar</a> (Boar, 7-8, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=14283'>Stormpike Owl</a> (Owl, 53-54, Alterac Valley (Battleground))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=685'>Stranglethorn Raptor</a> (Raptor, 33-34, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2172'>Strider Clutchmother</a> (Tallstrider, 20, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1997'>Strigid Hunter</a> (Owl, 8-9, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1995'>Strigid Owl</a> (Owl, 5-6, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1996'>Strigid Screecher</a> (Owl, 7-8, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3254'>Sunscale Lashtail</a> (Raptor, 11-13, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3255'>Sunscale Screecher</a> (Raptor, 13-15, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3256'>Sunscale Scytheclaw</a> (Raptor, 16-18, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3107'>Surf Crawler</a> (Crab, 7-8, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5431'>Surf Glider</a> (Turtle, 48-50, Tanaris)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2970'>Swoop</a> (Carrion Bird, 7-9, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5842'>Takk the Leaper</a> (Raptor, 19, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2971'>Taloned Swoop</a> (Carrion Bird, 8-10, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=442'>Tarantula</a> (Spider, 15-16, Redridge Mountains)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=730'>Tethis</a> (Raptor, 43, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2163'>Thistle Bear</a> (Bear, 11-12, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1985'>Thistle Boar</a> (Boar, 2-3, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=6789'>Thistle Cub</a> (Bear, 9-10, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3424'>Thunderhawk Cloudscraper</a> (Wind Serpent, 20-22, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3247'>Thunderhawk Hatchling</a> (Wind Serpent, 18-20, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2232'>Tide Crawler</a> (Crab, 12-14, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1132'>Timber</a> (Wolf, 10, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=69'>Timber Wolf</a> (Wolf, 2, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=8762'>Timberweb Recluse</a> (Spider, 47-48, Azshara)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=9622'>U'cha</a> (Gorilla, 55, Un'Goro Crater)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=6585'>Uhk'loc</a> (Gorilla, 52, Un'Goro Crater)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=6514'>Un'Goro Gorilla</a> (Gorilla, 50-51, Un'Goro Crater)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=6513'>Un'Goro Stomper</a> (Gorilla, 51-52, Un'Goro Crater)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=6516'>Un'Goro Thunderer</a> (Gorilla, 52-53, Un'Goro Crater)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=12037'>Ursol'lok</a> (Bear, 31, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5307'>Vale Screecher</a> (Wind Serpent, 41-43, Feralas)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1554'>Vampiric Duskbat</a> (Bat, 8-9, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1822'>Venom Mist Lurker</a> (Spider, 50-51, Western Plaguelands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=217'>Venom Web Spider</a> (Spider, 19-20, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7022'>Venomlash Scorpid</a> (Scorpid, 39-40, Uldaman (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=4118'>Venomous Cloud Serpent</a> (Wind Serpent, 26-28, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3127'>Venomtail Scorpid</a> (Scorpid, 9-10, Durotar)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=9691'>Venomtip Scorpid</a> (Scorpid, 52-53, Burning Steppes)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2354'>Vicious Gray Bear</a> (Bear, 22-23, Hillsbrad Foothills)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1555'>Vicious Night Web Spider</a> (Spider, 9-10, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3866'>Vile Bat</a> (Bat, 22-23, Shadowfang Keep (Dungeon))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=5937'>Vile Sting</a> (Scorpid, 35, Thousand Needles)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2680'>Vilebranch Wolf Pup</a> (Wolf, 46-47, The Hinterlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=462'>Vultros</a> (Carrion Bird, 26, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3472'>Washte Pawne</a> (Wind Serpent, 25, The Barrens)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=6013'>Wayward Buzzard</a> (Carrion Bird, 35-37, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1998'>Webwood Lurker</a> (Spider, 5-6, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2000'>Webwood Silkspinner</a> (Spider, 8-9, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1986'>Webwood Spider</a> (Spider, 3-4, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1999'>Webwood Venomfang</a> (Spider, 7-8, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1400'>Wetlands Crocolisk</a> (Crocolisk, 23-24, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3821'>Wildthorn Lurker</a> (Spider, 28-29, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3819'>Wildthorn Stalker</a> (Spider, 20-21, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=3820'>Wildthorn Venomspitter</a> (Spider, 24-25, Ashenvale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1131'>Winter Wolf</a> (Wolf, 7-8, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7455'>Winterspring Owl</a> (Owl, 54-56, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=7456'>Winterspring Screecher</a> (Owl, 57-59, Winterspring)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2969'>Wiry Swoop</a> (Carrion Bird, 5-7, Mulgore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2686'>Witherbark Broodguard</a> (Spider, 44-45, The Hinterlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1185'>Wood Lurker</a> (Spider, 17-18, Loch Modan)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1765'>Worg</a> (Wolf, 10-11, Silverpine Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1128'>Young Black Bear</a> (Bear, 5-6, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=923'>Young Black Ravager</a> (Wolf, 23-24, Duskwood)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=199'>Young Fleshripper</a> (Carrion Bird, 10-11, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=454'>Young Goretusk</a> (Boar, 12-13, Westfall)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=854'>Young Jungle Stalker</a> (Raptor, 36-37, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=856'>Young Lashtail Raptor</a> (Raptor, 33-34, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2578'>Young Mesa Buzzard</a> (Carrion Bird, 31-32, Arathi Highlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1504'>Young Night Web Spider</a> (Spider, 2-3, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2031'>Young Nightsaber</a> (Cat, 1, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2234'>Young Reef Crawler</a> (Crab, 10-11, Darkshore)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1084'>Young Sawtooth Crocolisk</a> (Crocolisk, 35-36, Swamp of Sorrows)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1508'>Young Scavenger</a> (Wolf, 1, Tirisfal Glades)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=855'>Young Stranglethorn Raptor</a> (Raptor, 30-31, Stranglethorn Vale)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1984'>Young Thistle Boar</a> (Boar, 1-2, Teldrassil)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1417'>Young Wetlands Crocolisk</a> (Crocolisk, 21-22, Wetlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=299'>Young Wolf</a> (Wolf, 1, Elwynn Forest)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=2931'>Zaricotl</a> (Carrion Bird, 55, Badlands)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=15043'>Zulian Crocolisk</a> (Crocolisk, 60, Zul'Gurub (Raid))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11360'>Zulian Cub</a> (Cat, 60, Zul'Gurub (Raid))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11365'>Zulian Panther</a> (Cat, 60, Zul'Gurub (Raid))</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=11361'>Zulian Tiger</a> (Cat, 60, Zul'Gurub (Raid))</li>
+</ul>
+<h4 class='guideheading attackspeed classic' id='attackspeed_2.4'>Attack Speed 2.4 :</h4>
+<ul class='guidenpclist attackspeed classic'>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=10806'>Ursius</a> (Bear, 56, Winterspring)</li>
+</ul>
+<h4 class='guideheading attackspeed classic' id='attackspeed_2.5'>Attack Speed 2.5 :</h4>
+<ul class='guidenpclist attackspeed classic'>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=1129'>Black Bear</a> (Bear, 6-7, Dun Morogh)</li>
+<li class='attackspeednpc classic'><a class='npclink classic' href='https://classic.wowhead.com/npc=822'>Young Forest Bear</a> (Bear, 8-9, Elwynn Forest)</li>
+</ul>
+</div><!-- end of "content" -->
+
+<!-- Google AdSense -->
+    <!-- AD FOR WAIN -->
+    <div id='ad_footer_leaderboard'>
+      <script type="text/javascript">
+              google_ad_client = "ca-pub-4717297389852361";
+              google_ad_slot = "6168577331";
+              google_ad_width = 728;
+              google_ad_height = 90;
+      </script>
+      <!-- Petopia Footer 728x90 -->
+      <script type="text/javascript"
+              src="//pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+  
+
+<div id="footer">
+
+<p>
+    &copy; 2004-2026 - <a href='/about.php'>About Petopia</a><br/>
+    All rights reserved. World of Warcraft and Blizzard Entertainment are trademarks
+    or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other
+    countries. All other trademarks are the property of their respective owners.
+</p>
+
+</div><!-- end of "footer" -->
+
+
+<div id="cse-search-form">Loading</div>
+<script src="https://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+  google.load('search', '1', {language : 'en'});
+  google.setOnLoadCallback(function() {
+    var customSearchControl = new google.search.CustomSearchControl('009731007406007265763:vprme7mnzj4');
+    customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
+    var options = new google.search.DrawOptions();
+    options.setSearchFormRoot('cse-search-form');
+
+    options.setAutoComplete(true);
+    customSearchControl.draw('cse', options);
+  }, true);
+</script>
+
+</div> <!-- end of "wrapper" -->
+
+<div id='adBannerRight'>
+<!-- Google AdSense -->
+    <!-- AD FOR MANIA AND BRASH -->
+      <script type="text/javascript"><!--
+              google_ad_client = "pub-0138084981327234";
+      /* Petopia - 160x600 */
+              google_ad_slot = "3782962173";
+              google_ad_width = 160;
+              google_ad_height = 600;
+         //-->
+      </script>
+      <script type="text/javascript"
+              src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+  </div>
+
+
+
+
+
+<!-- And Google Analytics comes in right before the body end tag, just as it prefers. -->
+<script src="https://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+_uacct = "UA-2152871-2";
+urchinTracker();
+</script>
+<!-- end of Google Analytics -->
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "revision": "1092449ed714e70ddfdc6111e575e15a27589933",
+  "sources": [
+    {
+      "name": "HeroFallen",
+      "sha256": "4dff98343b088b0cac807dcda2fe0010c99dc12d001cb8fe7556b3c157d7533d",
+      "url": "https://github.com/aaronma37/Deathlog/blob/1092449ed714e70ddfdc6111e575e15a27589933/Libs/DeathNotificationLib/Sounds/HeroFallen.ogg"
+    },
+    {
+      "name": "Arugal",
+      "sha256": "3bb92f0139c6fd60567dac44d69e179360df65ea9054defa7f0606e2eda2094c",
+      "url": "https://github.com/aaronma37/Deathlog/blob/1092449ed714e70ddfdc6111e575e15a27589933/Libs/DeathNotificationLib/Sounds/Arugal.ogg"
+    },
+    {
+      "name": "Dread_Hunger",
+      "sha256": "a547da1e4f9467ea3483d16f7da9a85efac93af2c6649b47964c3b726876f6f5",
+      "url": "https://github.com/aaronma37/Deathlog/blob/1092449ed714e70ddfdc6111e575e15a27589933/Libs/DeathNotificationLib/Sounds/Dread_Hunger.ogg"
+    },
+    {
+      "name": "hunger_games",
+      "sha256": "20fcc0872ea824d175d961646c226ef05f112002427209611fc642140e738bee",
+      "url": "https://github.com/aaronma37/Deathlog/blob/1092449ed714e70ddfdc6111e575e15a27589933/Libs/DeathNotificationLib/Sounds/hunger_games.ogg"
+    },
+    {
+      "name": "golfclap",
+      "sha256": "2d44d0afb956491a381a5bf7dc8f4a893c175c850c806cd74e07374fca3c10ef",
+      "url": "https://github.com/aaronma37/Deathlog/blob/1092449ed714e70ddfdc6111e575e15a27589933/Libs/DeathNotificationLib/Sounds/golfclap.ogg"
+    }
+  ]
+}

@@ -1,0 +1,2587 @@
+{
+  "classes": [
+    "Druid",
+    "Hunter",
+    "Mage",
+    "Paladin",
+    "Priest",
+    "Rogue",
+    "Shaman",
+    "Warlock",
+    "Warrior"
+  ],
+  "ease": [
+    "Vendor",
+    "Simple craft",
+    "Recipe / travel",
+    "Farm / limited",
+    "Special access"
+  ],
+  "classNotes": {
+    "Druid": "Stamina food is the safe all-round choice. Feral builds can use Agility or Strength food; Balance and Restoration can favor mana regeneration. Keep water for healing between pulls.",
+    "Hunter": "Stamina food is dependable while leveling; mana food reduces downtime and Grilled Squid supports damage later. Carry separate food your pet accepts—pet diet and level matter, and pet feeding does not grant food stat buffs.",
+    "Mage": "Conjure your own food and water when the trained rank is sufficient; the vendor tiers below are dependable alternatives. Stamina food adds a buffer, while mana food helps longer sessions.",
+    "Paladin": "Stamina food suits general leveling and tanking. Use mana food for healing or mana-heavy play, and Strength food for Retribution. Hardcore disables Divine Shield plus Hearthstone escape.",
+    "Priest": "Stamina food adds a health buffer; Sagefish and Nightfin are useful mana alternatives. Bandages can conserve mana even when you can heal yourself.",
+    "Rogue": "Stamina food supports safe leveling; Grilled Squid is a seasonal damage alternative. Keep Thistle Tea and the reagents for your trained escape abilities.",
+    "Shaman": "Stamina food is a useful baseline. Enhancement can use Strength food; Elemental and Restoration often value mana regeneration. Match your elixir stat to your build.",
+    "Warlock": "Stamina food supports a larger health buffer; mana food can reduce downtime. Create your Healthstone before leaving safety. The listed stone follows your creation-spell level.",
+    "Warrior": "Stamina food gives a dependable safety buffer. Strength food helps melee damage later; Grilled Squid is another damage alternative. Bandages and escape tools are especially valuable without self-healing."
+  },
+  "nameOrder": [
+    "Advanced Target Dummy",
+    "Anti-Venom",
+    "Baked Salmon",
+    "Big Bear Steak",
+    "Blinding Powder",
+    "Boiled Clams",
+    "Brilliant Smallfish",
+    "Bristle Whisker Catfish",
+    "Cooked Crab Claw",
+    "Coyote Steak",
+    "Crab Cake",
+    "Cured Ham Steak",
+    "Curiously Tasty Omelet",
+    "Dirge's Kickin' Chimaerok Chops",
+    "Dry Pork Ribs",
+    "Elixir of Agility",
+    "Elixir of Defense",
+    "Elixir of Fortitude",
+    "Elixir of Giants",
+    "Elixir of Greater Agility",
+    "Elixir of Greater Defense",
+    "Elixir of Greater Intellect",
+    "Elixir of Lesser Agility",
+    "Elixir of Lion's Strength",
+    "Elixir of Minor Agility",
+    "Elixir of Minor Defense",
+    "Elixir of Minor Fortitude",
+    "Elixir of Ogre's Strength",
+    "Elixir of Superior Defense",
+    "Elixir of Wisdom",
+    "Flash Powder",
+    "Flask of Petrification",
+    "Free Action Potion",
+    "Goblin Deviled Clams",
+    "Greater Healing Potion",
+    "Greater Healthstone",
+    "Greater Mana Potion",
+    "Grilled Squid",
+    "Haunch of Meat",
+    "Healing Potion",
+    "Healthstone",
+    "Heavy Crocolisk Stew",
+    "Heavy Linen Bandage",
+    "Heavy Mageweave Bandage",
+    "Heavy Runecloth Bandage",
+    "Heavy Silk Bandage",
+    "Heavy Wool Bandage",
+    "Herb Baked Egg",
+    "Hot Wolf Ribs",
+    "Ice Cold Milk",
+    "Invisibility Potion",
+    "Jungle Remedy",
+    "Jungle Stew",
+    "Lesser Healing Potion",
+    "Lesser Healthstone",
+    "Lesser Invisibility Potion",
+    "Lesser Mana Potion",
+    "Light Feather",
+    "Light of Elune",
+    "Limited Invulnerability Potion",
+    "Linen Bandage",
+    "Living Action Potion",
+    "Longjaw Mud Snapper",
+    "Mageweave Bandage",
+    "Magic Dust",
+    "Major Healing Potion",
+    "Major Healthstone",
+    "Major Mana Potion",
+    "Major Troll's Blood Potion",
+    "Mana Agate",
+    "Mana Citrine",
+    "Mana Jade",
+    "Mana Potion",
+    "Mana Ruby",
+    "Masterwork Target Dummy",
+    "Melon Juice",
+    "Mighty Troll's Blood Potion",
+    "Minor Healing Potion",
+    "Minor Healthstone",
+    "Minor Mana Potion",
+    "Mithril Head Trout",
+    "Monster Omelet",
+    "Moonberry Juice",
+    "Morning Glory Dew",
+    "Mutton Chop",
+    "Night Dragon's Breath",
+    "Nightfin Soup",
+    "Powerful Anti-Venom",
+    "Purification Potion",
+    "Really Sticky Glue",
+    "Redridge Goulash",
+    "Refreshing Spring Water",
+    "Restorative Potion",
+    "Roast Raptor",
+    "Roasted Quail",
+    "Runecloth Bandage",
+    "Runn Tum Tuber Surprise",
+    "Sagefish Delight",
+    "Silk Bandage",
+    "Slumber Sand",
+    "Smoked Desert Dumplings",
+    "Smoked Sagefish",
+    "Spiced Wolf Meat",
+    "Spider Sausage",
+    "Spotted Yellowtail",
+    "Strong Anti-Venom",
+    "Strong Troll's Blood Potion",
+    "Superior Healing Potion",
+    "Superior Mana Potion",
+    "Sweet Nectar",
+    "Swiftness Potion",
+    "Swim Speed Potion",
+    "Target Dummy",
+    "Tender Wolf Steak",
+    "Thistle Tea",
+    "Tough Jerky",
+    "Weak Troll's Blood Potion",
+    "Whipper Root Tuber",
+    "Wild Hog Shank",
+    "Wool Bandage"
+  ],
+  "quiverTiers": [
+    {
+      "level": 1,
+      "ids": [
+        5439,
+        5441
+      ],
+      "route": "Ammo / general-goods vendors"
+    },
+    {
+      "level": 10,
+      "ids": [
+        11362,
+        11363
+      ],
+      "route": "Ammo / general-goods vendors · storage upgrade; same firing speed"
+    },
+    {
+      "level": 30,
+      "ids": [
+        7371,
+        7372
+      ],
+      "route": "Leatherworker or Auction House · self-found: craft with Leatherworking"
+    },
+    {
+      "level": 40,
+      "ids": [
+        8217,
+        8218
+      ],
+      "route": "Leatherworker or Auction House · self-found: craft with Leatherworking"
+    }
+  ],
+  "demonSources": {
+    "guide": "https://www.wowhead.com/classic/guide/wow-classic-warlock-demon-pets",
+    "leveling": "https://www.wowhead.com/classic/guide/classes/warlock/leveling-tips",
+    "hardcore": "https://www.wowhead.com/classic/guide/classes/warlock/hardcore-leveling-tips",
+    "spellLock": "https://www.wowhead.com/classic/item=16388",
+    "sacrifice": "https://www.wowhead.com/classic/item=16351"
+  },
+  "warlockPlans": [
+    {
+      "primary": "Imp",
+      "reason": "Early questing damage. Complete your starting Imp quest; the summon needs no Soul Shard.",
+      "next": "Level 10 · Voidwalker class quest",
+      "alternatives": [],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Imp",
+      "reason": "Early questing damage. Complete your starting Imp quest; the summon needs no Soul Shard.",
+      "next": "Level 10 · Voidwalker class quest",
+      "alternatives": [],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Imp",
+      "reason": "Early questing damage. Complete your starting Imp quest; the summon needs no Soul Shard.",
+      "next": "Level 10 · Voidwalker class quest",
+      "alternatives": [],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Imp",
+      "reason": "Early questing damage. Complete your starting Imp quest; the summon needs no Soul Shard.",
+      "next": "Level 10 · Voidwalker class quest",
+      "alternatives": [],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 1
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Imp",
+      "reason": "Early questing damage. Complete your starting Imp quest; the summon needs no Soul Shard.",
+      "next": "Level 10 · Voidwalker class quest",
+      "alternatives": [],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 1
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Imp",
+      "reason": "Early questing damage. Complete your starting Imp quest; the summon needs no Soul Shard.",
+      "next": "Level 10 · Voidwalker class quest",
+      "alternatives": [],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 1
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Imp",
+      "reason": "Early questing damage. Complete your starting Imp quest; the summon needs no Soul Shard.",
+      "next": "Level 10 · Voidwalker class quest",
+      "alternatives": [],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 1
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Imp",
+      "reason": "Early questing damage. Complete your starting Imp quest; the summon needs no Soul Shard.",
+      "next": "Level 10 · Voidwalker class quest",
+      "alternatives": [],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Imp",
+      "reason": "Early questing damage. Complete your starting Imp quest; the summon needs no Soul Shard.",
+      "next": "Level 10 · Voidwalker class quest",
+      "alternatives": [],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 20 · Succubus / Incubus class quest",
+      "alternatives": [
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 1
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 20 · Succubus / Incubus class quest",
+      "alternatives": [
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 1
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 20 · Succubus / Incubus class quest",
+      "alternatives": [
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 1
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 20 · Succubus / Incubus class quest",
+      "alternatives": [
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 1
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 20 · Succubus / Incubus class quest",
+      "alternatives": [
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 20 · Succubus / Incubus class quest",
+      "alternatives": [
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": false,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 20 · Succubus / Incubus class quest",
+      "alternatives": [
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 1
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": true,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 20 · Succubus / Incubus class quest",
+      "alternatives": [
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 1
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": true,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 20 · Succubus / Incubus class quest",
+      "alternatives": [
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 1
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": true,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 20 · Succubus / Incubus class quest",
+      "alternatives": [
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 1
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": true,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 30 · Felhunter class quest",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 2
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": true,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 30 · Felhunter class quest",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 2
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": true,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 30 · Felhunter class quest",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 2
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": true,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 30 · Felhunter class quest",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 2
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 1
+        }
+      ],
+      "sacrifice": true,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 30 · Felhunter class quest",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 2
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 2
+        }
+      ],
+      "sacrifice": true,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 30 · Felhunter class quest",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 2
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 2
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 2
+        }
+      ],
+      "sacrifice": true,
+      "seduction": false,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 30 · Felhunter class quest",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 2
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 2
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 30 · Felhunter class quest",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 2
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 2
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 30 · Felhunter class quest",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 2
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 2
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 30 · Felhunter class quest",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 2
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 2
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 36 · Spell Lock grimoire",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Magic dispel",
+          "text": "Devour Magic is available; Spell Lock does not unlock until level 36."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 3
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 2
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 36 · Spell Lock grimoire",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Magic dispel",
+          "text": "Devour Magic is available; Spell Lock does not unlock until level 36."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 3
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 2
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 36 · Spell Lock grimoire",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Magic dispel",
+          "text": "Devour Magic is available; Spell Lock does not unlock until level 36."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 3
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 3
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 36 · Spell Lock grimoire",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Magic dispel",
+          "text": "Devour Magic is available; Spell Lock does not unlock until level 36."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 3
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 3
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 36 · Spell Lock grimoire",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Magic dispel",
+          "text": "Devour Magic is available; Spell Lock does not unlock until level 36."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 3
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 3
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": "Level 36 · Spell Lock grimoire",
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Magic dispel",
+          "text": "Devour Magic is available; Spell Lock does not unlock until level 36."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 3
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 3
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": false
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 3
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 3
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 3
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 3
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 3
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 3
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 3
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 3
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 3
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 4
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 4
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 4
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 4
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 4
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 4
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 4
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 4
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 4
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 4
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 4
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 4
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 4
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 4
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 4
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 4
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 6
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 4
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 5
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 6
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 4
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 4
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 5
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 6
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 5
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 5
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 6
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 5
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 5
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 6
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 5
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 5
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 6
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 5
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 5
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 6
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 5
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 5
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 6
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 5
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 5
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 6
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 5
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 6
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 6
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 5
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 6
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 7
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 5
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 6
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 7
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 5
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 6
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    },
+    {
+      "primary": "Voidwalker",
+      "reason": "Cautious solo leveling: let Torment establish threat before applying heavy damage. Your damage can still pull aggro.",
+      "next": null,
+      "alternatives": [
+        {
+          "name": "Succubus / Incubus",
+          "role": "Faster single-target leveling",
+          "text": "Higher damage for an Affliction / drain-tanking playstyle where you can take the hits. Keep Voidwalker for harder pulls and its shield."
+        },
+        {
+          "name": "Felhunter",
+          "role": "Caster control / magic dispel",
+          "text": "Use Devour Magic for dispellable magic and manually interrupt dangerous casts with trained Spell Lock."
+        },
+        {
+          "name": "Imp",
+          "role": "Group stamina / ranged damage",
+          "text": "Use Blood Pact when your group benefits. Keep it passive when only the buff is needed; manage its position and attacks."
+        }
+      ],
+      "skills": [
+        {
+          "name": "Firebolt",
+          "demon": "Imp",
+          "rank": 7
+        },
+        {
+          "name": "Blood Pact",
+          "demon": "Imp",
+          "rank": 5
+        },
+        {
+          "name": "Torment",
+          "demon": "Voidwalker",
+          "rank": 6
+        },
+        {
+          "name": "Sacrifice",
+          "demon": "Voidwalker",
+          "rank": 6
+        }
+      ],
+      "sacrifice": true,
+      "seduction": true,
+      "spellLock": true
+    }
+  ]
+}

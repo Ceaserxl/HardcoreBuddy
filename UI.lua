@@ -1,0 +1,846 @@
+local _, addon = ...
+local P, C, Skin = addon.Planner, addon.Companion, addon.Skin
+local GOLD, WHITE, MUTED = Skin.colors.gold, Skin.colors.white, Skin.colors.muted
+local STOCK_COLORS={ready={0.42,0.83,0.60},low={1,0.76,0.32},missing={0.96,0.48,0.39},unknown=MUTED,choose=GOLD,off=MUTED}
+
+function addon:InsertUserItemLink(link)
+    local entry=self.window and self.window.userEntry
+    if not entry or not entry:IsVisible() or not entry.input:HasFocus() then return end
+    if type(link)~="string" or not link:match("item:%d+") then return end
+    entry.input:SetText(link)
+end
+
+if type(hooksecurefunc)=="function" and type(ChatEdit_InsertLink)=="function" then
+    hooksecurefunc("ChatEdit_InsertLink",function(link) addon:InsertUserItemLink(link) end)
+end
+local function font(parent, size, color)
+    local f = parent:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    f:SetFont(STANDARD_TEXT_FONT, size, "")
+    f:SetJustifyH("LEFT"); f:SetJustifyV("TOP"); f:SetWordWrap(true)
+    f:SetTextColor(unpack(color or WHITE))
+    f:SetShadowColor(0,0,0,0.95); f:SetShadowOffset(1,-1)
+    return f
+end
+local function backdrop(frame, r, g, b)
+    frame:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8x8", edgeFile="Interface\\Buttons\\WHITE8x8", edgeSize=1})
+    frame:SetBackdropColor(r, g, b, 0.98)
+    frame:SetBackdropBorderColor(0.29, 0.26, 0.20, 1)
+end
+local function button(parent, label, width, callback)
+    local b = CreateFrame("Button", nil, parent, "BackdropTemplate")
+    b:SetSize(width, 28)
+    b.label = font(b, 12, GOLD); b.label:SetAllPoints(); b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE"); b.label:SetText(label)
+    Skin.Button(b,"utility")
+    b:SetScript("OnClick", callback)
+    b:SetScript("OnEnter", function(self) self.hovered=true; Skin.ButtonState(self,self.active,true,false) end)
+    b:SetScript("OnLeave", function(self) self.hovered=false; Skin.ButtonState(self,self.active,false,false) end)
+    b:SetScript("OnMouseDown", function(self) Skin.ButtonState(self,self.active,self.hovered,true) end)
+    b:SetScript("OnMouseUp", function(self) Skin.ButtonState(self,self.active,self.hovered,false) end)
+    return b
+end
+local function enabled(frame, value)
+    frame:SetEnabled(value); frame:SetAlpha(value and 1 or 0.45)
+    if frame.label then Skin.ButtonState(frame,frame.active,frame.hovered,false) end
+end
+local function active(frame,value)
+    frame.active=value; Skin.ButtonState(frame,value,frame.hovered,false)
+end
+local function measure(label, text, width, x, y)
+    label:ClearAllPoints(); label:SetPoint("TOPLEFT", x, -y); label:SetWidth(math.max(20, width))
+    -- Pooled supply labels have fixed heights. Release those bounds before
+    -- measuring a new row, especially multi-line reference notes.
+    label:SetHeight(0); label:SetWordWrap(true)
+    label:SetText(text or "")
+    local height=text and text ~= "" and math.ceil(label:GetStringHeight()) or 0
+    label:SetHeight(height)
+    return height
+end
+local function tooltip(self)
+    local block = self.block
+    if not block then return end
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:ClearLines()
+    if block.itemId then
+        local ok=pcall(GameTooltip.SetHyperlink,GameTooltip,"item:"..block.itemId)
+        if ok and GameTooltip:NumLines()>0 then GameTooltip:Show(); return end
+        GameTooltip:ClearLines()
+    end
+    GameTooltip:SetText(block.title or "Reference", 0.83, 0.69, 0.43, 1, true)
+    if block.body then GameTooltip:AddLine(block.body, 0.94, 0.92, 0.87, true) end
+    if block.meta then GameTooltip:AddLine(block.meta, 0.72, 0.73, 0.75, true) end
+    if block.supply then
+        GameTooltip:AddLine(block.autoRank and "The best learned recipe is selected automatically from your character's profession skill. Materials are not checked."
+            or block.groupSupply and "Bag count includes all listed ranks. Open to choose the rank you use."
+            or "Counts include carried bags only. Carry targets are editable suggestions; they do not check profession or recipe requirements.",0.72,0.73,0.75,true)
+    end
+    if block.action then GameTooltip:AddLine("Click for details", 0.83, 0.69, 0.43, true) end
+    GameTooltip:Show()
+end
+local function newBlock(parent)
+    local frame = CreateFrame("Button", nil, parent,"BackdropTemplate")
+    frame:SetScript("OnClick", function(self) if self.block and self.block.action then addon:Activate(self.block.action) end end)
+    frame.title, frame.body, frame.meta = font(frame, 14, WHITE), font(frame, 11, MUTED), font(frame, 11, GOLD)
+    frame.icon = frame:CreateTexture(nil, "ARTWORK"); frame.icon:SetSize(34, 34); frame.icon:SetPoint("TOPLEFT", 8, -8)
+    frame.icon:SetTexCoord(0.07,0.93,0.07,0.93)
+    Skin.Unsnap(frame.icon)
+    frame.iconBorder=Skin.IconBorder(frame,frame.icon)
+    frame.rule=Skin.Divider(frame); frame.rule:SetPoint("BOTTOMLEFT",8,0); frame.rule:SetPoint("BOTTOMRIGHT",-8,0)
+    frame.statusBorder={}
+    for _,edge in ipairs({{"TOPLEFT","TOPRIGHT",true},{"BOTTOMLEFT","BOTTOMRIGHT",true},
+        {"TOPLEFT","BOTTOMLEFT",false},{"TOPRIGHT","BOTTOMRIGHT",false}}) do
+        local line=frame:CreateTexture(nil,"ARTWORK",nil,1)
+        line:SetTexture("Interface\\Buttons\\WHITE8x8")
+        Skin.Unsnap(line)
+        line:SetPoint(edge[1],frame,edge[1],0,0); line:SetPoint(edge[2],frame,edge[2],0,0)
+        if edge[3] then line:SetHeight(1) else line:SetWidth(1) end
+        frame.statusBorder[#frame.statusBorder+1]=line
+    end
+    frame.chevron=font(frame,17,GOLD); frame.chevron:SetSize(15,22); frame.chevron:SetPoint("RIGHT",-10,0); frame.chevron:SetText(">")
+    frame.iconHit = CreateFrame("Button", nil, frame); frame.iconHit:SetAllPoints(frame.icon); frame.iconHit:EnableMouse(true)
+    frame.iconHit:SetScript("OnClick", function() if frame.block and frame.block.action then addon:Activate(frame.block.action) end end)
+    frame.iconHit:SetScript("OnEnter", function(self)
+        tooltip(frame)
+    end)
+    frame.iconHit:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    frame:EnableMouse(true)
+    frame:SetScript("OnEnter",function(self)
+        tooltip(self)
+    end)
+    frame:SetScript("OnLeave",function() GameTooltip:Hide() end)
+    frame.columns = {}
+    frame.fields = {}
+    frame.count=font(frame,14,WHITE); frame.count:SetJustifyH("CENTER")
+    frame.stock=font(frame,12,MUTED)
+    frame.stockTrack=frame:CreateTexture(nil,"ARTWORK",nil,-1); frame.stockTrack:SetTexture("Interface\\Buttons\\WHITE8x8")
+    frame.stockTrack:SetVertexColor(0.06,0.07,0.055,1); frame.stockTrack:SetSize(60,3)
+    frame.stockFill=frame:CreateTexture(nil,"ARTWORK"); frame.stockFill:SetTexture("Interface\\Buttons\\WHITE8x8"); frame.stockFill:SetHeight(3)
+    frame.choose=button(frame,"Use",74,function()
+        addon:CommitInputs(); addon:SelectSupplyRank(frame.block.rankFamily,frame.block.itemId)
+    end)
+    frame.quantity=CreateFrame("EditBox",nil,frame,"BackdropTemplate")
+    local edit=frame.quantity
+    Skin.Paint(edit,"edit"); edit:SetFont(STANDARD_TEXT_FONT,14,""); edit:SetTextColor(unpack(WHITE))
+    edit:SetAutoFocus(false); edit:SetNumeric(true); edit:SetMaxLetters(3); edit:SetJustifyH("CENTER")
+    edit:SetScript("OnEditFocusLost",function(self)
+        if not self.cancelCommit then addon:SetCarryTarget(self.targetKey,self:GetText()) end
+    end)
+    edit:SetScript("OnEnterPressed",function(self) self:ClearFocus(); addon:Refresh() end)
+    edit:SetScript("OnEscapePressed",function(self)
+        self.cancelCommit=true; self:ClearFocus(); self.cancelCommit=nil; addon:Refresh()
+    end)
+    edit:SetScript("OnEnter",function(self)
+        GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetText("Carry target",0.83,0.69,0.43,1,true)
+        GameTooltip:AddLine("Type a quantity and press Enter. Use 0 to skip restocking; clear the box to restore the suggested amount.",0.94,0.92,0.87,true); GameTooltip:Show()
+    end)
+    edit:SetScript("OnLeave",function() GameTooltip:Hide() end)
+    return frame
+end
+local renderBlocks
+local function renderBlock(frame, block, width)
+    frame.block = block; frame:SetWidth(width); frame:Show()
+    frame.body:SetFont(STANDARD_TEXT_FONT,block.guideTone and 12 or 11,"")
+    frame.body:SetTextColor(unpack(block.guideTone and WHITE or MUTED))
+    if frame.quantity:HasFocus() and (frame.quantity.targetKey~=block.targetKey
+        or block.readOnlyTarget or block.groupSupply or not block.supply) then frame.quantity:ClearFocus() end
+    frame.count:SetShown(block.supply); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.supply and not block.groupSupply and not block.readOnlyTarget)
+    frame.choose:SetShown(block.supply and block.pickRank)
+    local paintedRow=block.supply or (block.action and not block.columns)
+    Skin.Paint(frame,paintedRow and "row" or "note")
+    frame.rule:Hide()
+    for _,edge in ipairs(frame.statusBorder) do edge:SetShown(block.supply) end
+    frame.chevron:SetShown(block.action and not block.supply and not block.columns)
+    frame.stockTrack:SetShown(block.supply and not block.groupSupply and not block.readOnlyTarget)
+    frame.stockFill:Hide()
+    frame.title:SetTextColor(unpack(block.action and GOLD or WHITE))
+    if block.action then
+        frame:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
+    else
+        frame:ClearHighlightTexture()
+    end
+    for _, col in ipairs(frame.columns) do col:Hide() end
+    for _, field in ipairs(frame.fields) do field:Hide() end
+    if block.columns then
+        frame.title:Hide(); frame.body:Hide(); frame.meta:Hide(); frame.icon:Hide(); frame.iconHit:Hide(); frame.iconBorder:Hide()
+        local count = width >= 570 and #block.columns or 1
+        local colWidth = (width - (count - 1) * 14) / count
+        local y, rowHeight = 0, 0
+        for index, entries in ipairs(block.columns) do
+            local column = frame.columns[index]
+            if not column then column=CreateFrame("Frame", nil, frame); column.blocks={}; frame.columns[index]=column end
+            column:Show(); column:ClearAllPoints(); column:SetPoint("TOPLEFT", ((index - 1) % count) * (colWidth + 14), -y)
+            column:SetWidth(colWidth)
+            local height = renderBlocks(column, entries, colWidth)
+            column:SetHeight(height); rowHeight=math.max(rowHeight, height)
+            if index % count == 0 or index == #block.columns then
+                -- Keep paired guide tiles the same height despite wrapped text.
+                for previous=math.floor((index-1)/count)*count+1,index do
+                    local columnFrame=frame.columns[previous]
+                    local entriesHere=block.columns[previous]
+                    if #entriesHere==1 and entriesHere[1].guideTone=="link" then
+                        columnFrame:SetHeight(rowHeight)
+                        columnFrame.blocks[1]:SetHeight(rowHeight-4)
+                    end
+                end
+                y=y+rowHeight+8; rowHeight=0
+            end
+        end
+        frame:SetHeight(y); return y
+    end
+    frame.title:Show(); frame.body:Show(); frame.meta:Show()
+    local icon = block.itemId ~= nil
+    frame.icon:SetShown(icon); frame.iconHit:SetShown(icon); frame.iconBorder:SetShown(icon)
+    if icon then
+        local texture = block.icon and block.icon:match("([^/]+)%.%w+$")
+        local native
+        local getIcon=C_Item and C_Item.GetItemIconByID or GetItemIcon
+        if getIcon then local ok,value=pcall(getIcon,block.itemId); if ok then native=value end end
+        native=native or (texture and ("Interface\\Icons\\" .. texture)) or "Interface\\Icons\\INV_Misc_QuestionMark"
+        if not frame.icon:SetTexture(native) then frame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark") end
+    end
+    local x = (icon and 52 or 12) + (block.child and 8 or 0)
+    local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), 8
+    frame.title:SetTextColor(unpack(block.supply and WHITE or block.action and GOLD or WHITE))
+    local height
+    if block.supply then
+        local nameWidth=math.floor(available*0.42)
+        local titleHeight=measure(frame.title,block.title,nameWidth,x,y)
+        local bodyHeight=measure(frame.body,block.body,available-nameWidth-16,x+nameWidth+16,y)
+        y=y+math.max(titleHeight,bodyHeight)+3
+    else
+        height=measure(frame.title, block.title, available, x, y); if height>0 then y=y+height+3 end
+        height=measure(frame.body, block.body, available, x, y); if height>0 then y=y+height+3 end
+    end
+    height=measure(frame.meta, block.meta, available, x, y); if height>0 then y=y+height+2 end
+    if block.fields then
+        local gap, fieldWidth, column, rowHeight = 20, (width-44)/2, 0, 0
+        y=y+4
+        for index, data in ipairs(block.fields) do
+            local field=frame.fields[index]
+            if not field then
+                field=CreateFrame("Frame",nil,frame)
+                field.label=font(field,11,GOLD); field.value=font(field,12,WHITE)
+                field:SetScript("OnEnter",tooltip)
+                field:SetScript("OnLeave",function() GameTooltip:Hide() end)
+                frame.fields[index]=field
+            end
+            local wide=data.wide or data.label=="Effect" or data.label=="Materials" or data.label=="Notes"
+            if wide and column>0 then y=y+rowHeight+14; column=0; rowHeight=0 end
+            local cellWidth=wide and width-24 or fieldWidth
+            field:Show(); field:ClearAllPoints(); field:SetPoint("TOPLEFT",12+column*(fieldWidth+gap),-y)
+            field:SetWidth(cellWidth)
+            field.block={title=data.label,body=data.value,itemId=data.itemId}
+            field:EnableMouse(data.itemId~=nil)
+            local fieldHeight=measure(field.label,data.label,cellWidth,0,0)+4
+            fieldHeight=fieldHeight+measure(field.value,data.value,cellWidth,0,fieldHeight)
+            field:SetHeight(fieldHeight)
+            rowHeight=math.max(rowHeight,fieldHeight); column=column+1
+            if wide or column==2 then y=y+rowHeight+14; column=0; rowHeight=0 end
+        end
+        if column>0 then y=y+rowHeight+14 end
+    end
+    if block.supply then
+        local color=STOCK_COLORS[block.status] or MUTED
+        frame.count:ClearAllPoints(); frame.count:SetPoint("TOPLEFT",width-204,-12); frame.count:SetSize(52,22)
+        frame.count:SetTextColor(unpack(block.count and block.count>0 and WHITE or MUTED))
+        frame.count:SetText(block.count~=nil and tostring(block.count) or "?")
+        frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",width-142,-8); frame.quantity:SetSize(42,28)
+        frame.quantity.targetKey=block.targetKey
+        if not frame.quantity:HasFocus() then frame.quantity:SetText(tostring(block.target or "")) end
+        local label=block.status=="ready" and "Ready" or block.status=="missing" and "Missing"
+            or block.status=="low" and ("Need "..block.missing) or block.status=="off" and "Not tracked"
+            or block.status=="choose" and "Choose rank >" or "Unknown"
+        frame.stock:SetTextColor(unpack(color)); measure(frame.stock,label,84,width-88,9)
+        for _,edge in ipairs(frame.statusBorder) do edge:SetVertexColor(color[1],color[2],color[3],0.7) end
+        frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("TOPLEFT",width-88,-29)
+        if block.target and block.target>0 and block.count and block.count>0 and not block.readOnlyTarget then
+            frame.stockFill:Show(); frame.stockFill:ClearAllPoints(); frame.stockFill:SetPoint("TOPLEFT",frame.stockTrack,"TOPLEFT",0,0)
+            frame.stockFill:SetWidth(60*math.min(1,block.count/block.target)); frame.stockFill:SetVertexColor(color[1],color[2],color[3],0.9)
+        end
+        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPLEFT",width-86,-8)
+    end
+    y=block.supply and 46 or (math.max(block.action and 40 or icon and 42 or 0, y)+9)
+    frame:SetHeight(y)
+    frame.icon:ClearAllPoints()
+    if block.supply then
+        frame.title:SetHeight(math.min(frame.title:GetHeight(),y-4))
+        frame.body:SetHeight(math.min(frame.body:GetHeight(),y-4))
+        frame.stock:SetHeight(math.min(frame.stock:GetHeight(),y-10))
+        frame.icon:SetPoint("LEFT",frame,"LEFT",6,0)
+        local function center(element,left,offset)
+            element:ClearAllPoints(); element:SetPoint("LEFT",frame,"LEFT",left,offset or 0)
+        end
+        center(frame.title,x)
+        center(frame.body,x+math.floor(available*0.42)+16)
+        center(frame.count,width-204)
+        center(frame.quantity,width-142)
+        center(frame.choose,width-86)
+        center(frame.stock,width-88,frame.stockTrack:IsShown() and 3.5 or 0)
+        frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("TOPLEFT",frame.stock,"BOTTOMLEFT",0,-4)
+    else
+        frame.icon:SetPoint("TOPLEFT",8,-8)
+    end
+    -- Pooled rows may retain the same size, so OnSizeChanged is not guaranteed.
+    -- Lay out the artwork only after the row's final height and anchors settle.
+    if paintedRow then Skin.RowArtwork(frame) end
+    if block.guideTone then
+        local tone=block.guideTone
+        local color=tone=="danger" and {0.96,0.55,0.40} or tone=="tool" and {0.48,0.78,0.73} or GOLD
+        frame.title:SetTextColor(unpack(color))
+        if tone~="plain" then
+            frame:SetBackdropColor(tone=="danger" and 0.115 or 0.045,tone=="danger" and 0.055 or 0.075,tone=="danger" and 0.04 or 0.085,1)
+            for i,edge in ipairs(frame.statusBorder) do
+                edge:Show(); edge:SetVertexColor(color[1],color[2],color[3],0.3)
+            end
+        end
+    end
+    return y
+end
+renderBlocks = function(parent, blocks, width, beforeSupply)
+    local y=0
+    local headingShown=false
+    for index, block in ipairs(blocks) do
+        if beforeSupply and block.supply and not headingShown then
+            y=y+beforeSupply(y); headingShown=true
+        end
+        local frame=parent.blocks[index]
+        if not frame then frame=newBlock(parent); parent.blocks[index]=frame end
+        frame:ClearAllPoints(); frame:SetPoint("TOPLEFT", 0, -y)
+        y=y+renderBlock(frame, block, width)+4
+        if block.supply then
+            local shade=index%2==0 and 0.075 or 0.045
+            frame:SetBackdropColor(shade,shade+0.009,shade+0.014,1)
+        end
+    end
+    for index=#blocks+1,#parent.blocks do parent.blocks[index]:Hide() end
+    return math.max(1, y)
+end
+local function renderCard(frame, data, width, compactSupplies)
+    frame:Show(); frame:SetWidth(width)
+    local compactHeader=compactSupplies and data.supplyTable
+    frame.title:SetShown(not compactHeader); frame.note:SetShown(not compactHeader)
+    local y=compactHeader and 4 or 14
+    if not compactHeader then
+        y=y+measure(frame.title, data.title, width-28, 14, y)+5
+        y=y+measure(frame.note, data.note, width-28, 14, y)+12
+    end
+    frame.headers=frame.headers or {}
+    for _,label in ipairs(frame.headers) do label:Hide() end
+    local beforeSupply
+    if data.supplyTable then
+        local contentWidth=width-24
+        beforeSupply=function(offset)
+            local headerHeight=compactHeader and 18 or 25
+            local descriptionX=52+math.floor((contentWidth-262)*0.42)+16
+            for i,entry in ipairs({{"Item",0,descriptionX-16},{"Description",descriptionX,contentWidth-210-descriptionX},{"In bags",contentWidth-204,52},{"Carry",contentWidth-144,48},{"Status",contentWidth-88,88}}) do
+                local label=frame.headers[i] or font(frame,11,MUTED); frame.headers[i]=label; label:Show()
+                measure(label,entry[1],entry[3],12+entry[2],y+offset)
+                if compactHeader then headerHeight=math.max(headerHeight,math.ceil(label:GetStringHeight())+4) end
+            end
+            return headerHeight
+        end
+    end
+    frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT", 12, -y); frame.content:SetWidth(width-24)
+    local height=renderBlocks(frame.content, data.blocks, width-24,beforeSupply)
+    frame.content:SetHeight(height); y=y+height+8; frame:SetHeight(y)
+    return y
+end
+
+function addon:SaveWindow()
+    if not self.window or not self.db then return end
+    local f, w = self.window, self.db.window
+    w.width, w.height = f:GetWidth(), f:GetHeight()
+    local x, y = f:GetCenter(); local cx, cy = UIParent:GetCenter()
+    local scale=f:GetEffectiveScale()/UIParent:GetEffectiveScale()
+    if x and cx then w.x, w.y = x*scale-cx, y*scale-cy end
+end
+function addon:RestoreWindow()
+    local f, w = self.window, self.db.window
+    if not f then return end
+    local function finite(n, fallback) return type(n)=="number" and n==n and math.abs(n)<100000 and n or fallback end
+    local scale=math.max(0.1,math.min(1,(UIParent:GetWidth()-24)/Skin.windowWidth,(UIParent:GetHeight()-24)/Skin.windowHeight))
+    f:SetScale(scale); f:SetSize(Skin.windowWidth,Skin.windowHeight)
+    w.width,w.height=Skin.windowWidth,Skin.windowHeight
+    f:ClearAllPoints(); f:SetPoint("CENTER", UIParent, "CENTER", finite(w.x,0)/scale, finite(w.y,0)/scale)
+end
+function addon:CreateWindow()
+    if self.window then return end
+    local f=CreateFrame("Frame", "HardcoreBuddyWindow", UIParent, "BackdropTemplate")
+    self.window=f
+    f:Hide(); f:SetFrameStrata("DIALOG"); f:SetClampedToScreen(true); f:SetMovable(true); f:SetResizable(false); f:EnableMouse(true)
+    Skin.Paint(f,"window"); f.chrome=Skin.DecorateWindow(f)
+    f.title=font(f, 26, GOLD); f.title:SetText("HardcoreBuddy")
+    f.subtitle=font(f, 12, WHITE)
+    f.motto=font(f,10,MUTED); f.motto:SetText("ONE LIFE. STAY PREPARED.")
+    local drag=CreateFrame("Frame",nil,f); f.drag=drag; drag:SetPoint("TOPLEFT"); drag:SetSize(1,57)
+    drag:EnableMouse(true); drag:RegisterForDrag("LeftButton")
+    drag:SetScript("OnDragStart",function() f:StartMoving() end)
+    drag:SetScript("OnDragStop",function() f:StopMovingOrSizing(); self:SaveWindow() end)
+    f.close=button(f,"X",26,function() f:Hide() end); f.close:SetPoint("TOPRIGHT",-17,-17)
+    f.mode=button(f,"Edit Character",184,function() self:TogglePreview() end)
+    f.mode.label:SetWordWrap(false)
+    f.class=button(f,"Hunter",104,function() f.classMenu:SetShown(not f.classMenu:IsShown()) end)
+    f.classLabel=font(f.class,12,GOLD); f.classLabel:SetText("Class")
+    f.classLabel:SetSize(104,16); f.classLabel:SetPoint("BOTTOM",f.class,"TOP",0,3); f.classLabel:SetJustifyH("CENTER")
+    f.levelGroup=CreateFrame("Frame",nil,f); f.levelGroup:SetSize(142,26)
+    f.levelLabel=font(f.levelGroup,12,GOLD); f.levelLabel:SetSize(44,16); f.levelLabel:SetWordWrap(false); f.levelLabel:SetJustifyH("CENTER"); f.levelLabel:SetText("Level")
+    f.minus=button(f.levelGroup,"-",25,function() self:CommitInputs(); self:SetLevel(self.db.profile.level-1) end); f.minus:SetPoint("TOPLEFT",36,0)
+    f.plus=button(f.levelGroup,"+",25,function() self:CommitInputs(); self:SetLevel(self.db.profile.level+1) end); f.plus:SetPoint("TOPLEFT",117,0)
+    f.level=CreateFrame("EditBox",nil,f.levelGroup,"BackdropTemplate"); f.level:SetSize(38,28); f.level:SetPoint("TOPLEFT",70,0); f.level:SetAutoFocus(false)
+    f.levelLabel:SetPoint("BOTTOM",f.level,"TOP",0,3)
+    Skin.Paint(f.level,"edit"); f.level:SetFont(STANDARD_TEXT_FONT,13,""); f.level:SetTextColor(unpack(WHITE))
+    f.level:SetNumeric(true); f.level:SetMaxLetters(3); f.level:SetJustifyH("CENTER")
+    local function commit(edit)
+        if self.db.profile.mode == "preview" then self:SetLevel(edit:GetText()) end
+    end
+    f.level:SetScript("OnEnterPressed",function(edit) commit(edit); edit:ClearFocus() end)
+    f.level:SetScript("OnEditFocusLost",commit)
+    f.level:SetScript("OnEscapePressed",function(edit) edit:SetText(tostring(self:GetContext().level)); edit:ClearFocus() end)
+    f.level:SetScript("OnArrowPressed",function(_,key)
+        if self.db.profile.mode == "preview" and (key=="UP" or key=="DOWN") then commit(f.level); self:SetLevel(self.db.profile.level+(key=="UP" and 1 or -1)) end
+    end)
+    f.tabs={}
+    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"petguide","Pet Guide",100},{"deaths","Death Journal",122},{"alerts","Alerts",100},{"dungeons","Dungeons",100},{"raids","Raids",100}}) do
+        local id=tab[1]
+        local b=button(f,tab[2],tab[3],function() self:Navigate(id) end); b.view=id; Skin.Button(b,"tab"); f.tabs[#f.tabs+1]=b
+    end
+    f.back=button(f,"< Back",80,function() self:Back() end)
+    f.currentInstance=button(f,"",500,function() self:OpenCurrentInstance() end)
+    f.currentInstance.label:Hide()
+    f.currentInstance.heading=font(f.currentInstance,11,GOLD)
+    f.currentInstance.heading:SetPoint("TOPLEFT",14,-7)
+    f.currentInstance.name=font(f.currentInstance,15,WHITE)
+    f.currentInstance.name:SetPoint("TOPLEFT",14,-23)
+    f.currentInstance.hint=font(f.currentInstance,12,GOLD)
+    f.currentInstance.hint:SetPoint("RIGHT",-14,0)
+    f.currentInstance.hint:SetSize(146,18); f.currentInstance.hint:SetJustifyH("RIGHT")
+    f.currentInstance:Hide()
+    f.filters={}
+    f.sidebar=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(f.sidebar,"card")
+    f.sidebarTitle=font(f.sidebar,11,GOLD); f.sidebarTitle:SetPoint("TOPLEFT",12,-12); f.sidebarTitle:SetSize(120,18)
+    f.sidebarNote=font(f.sidebar,11,MUTED); f.sidebarNote:SetPoint("BOTTOMLEFT",12,14); f.sidebarNote:SetPoint("BOTTOMRIGHT",-12,14); f.sidebarNote:SetHeight(48)
+    f.searchLabel=font(f,12,MUTED); f.searchLabel:SetText("Search")
+    f.searchLabel:SetWordWrap(false); f.searchLabel:SetJustifyV("MIDDLE")
+    f.search=CreateFrame("EditBox",nil,f,"BackdropTemplate"); f.search:SetAutoFocus(false); f.search:SetMaxLetters(100)
+    Skin.Paint(f.search,"edit"); f.search:SetFont(STANDARD_TEXT_FONT,12,""); f.search:SetTextColor(unpack(WHITE)); f.search:SetTextInsets(8,8,0,0)
+    f.search:SetScript("OnTextChanged",function(edit,userInput)
+        if userInput then self.state.query=edit:GetText(); self.state.page=1; self:Refresh(true) end
+    end)
+    f.search:SetScript("OnEscapePressed",function(edit) edit:ClearFocus() end)
+    f.clear=button(f,"Clear",54,function() self.state.query=""; f.search:SetText(""); self.state.page=1; self:Refresh(true) end)
+    f.atLevel=button(f,"Any level",112,function() self.state.atLevel=not self.state.atLevel; self.state.page=1; self:Refresh(true) end)
+    f.previous=button(f,"<",28,function() self.state.page=math.max(1,(self.document.page or 1)-1); self:Refresh(true) end)
+    f.nextPage=button(f,">",28,function() self.state.page=math.min(self.document.pages or 1,(self.document.page or 1)+1); self:Refresh(true) end)
+    f.pageText=font(f,11,MUTED)
+
+    f.classMenu=CreateFrame("Frame",nil,f,"BackdropTemplate"); f.classMenu:SetSize(132,9*30+12)
+    f.classMenu:SetPoint("TOPLEFT",f.class,"BOTTOMLEFT",0,-2); f.classMenu:SetFrameStrata("FULLSCREEN_DIALOG"); Skin.Paint(f.classMenu,"menu"); f.classMenu:Hide()
+    for index,class in ipairs(P.classes) do
+        local b=button(f.classMenu,class,120,function() f.classMenu:Hide(); self:SetProfile("characterClass",class) end)
+        b:SetPoint("TOPLEFT",6,-6-(index-1)*30)
+    end
+    f.context=font(f,12,WHITE)
+    f.scroll=CreateFrame("ScrollFrame", "HardcoreBuddyScrollFrame", f,"UIPanelScrollFrameTemplate")
+    f.scroll:EnableMouseWheel(true)
+    f.scroll:SetScript("OnMouseWheel",function(scroll,delta)
+        scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*65)))
+    end)
+    f.content=CreateFrame("Frame",nil,f.scroll); f.content:SetSize(1,1); f.scroll:SetScrollChild(f.content); f.cards={}
+    f.footer=font(f,10,MUTED); f.footer:SetPoint("BOTTOMLEFT",22,17); f.footer:SetPoint("BOTTOMRIGHT",-208,17)
+    f.footer:SetText("Author CeaserXL (CXL) | Version "..addon.version)
+    f.userEntry=CreateFrame("Frame",nil,f); f.userEntry:SetHeight(30)
+    local entry=f.userEntry
+    entry.input=CreateFrame("EditBox",nil,entry,"BackdropTemplate")
+    entry.input:SetSize(300,28); entry.input:SetPoint("TOPLEFT",0,0)
+    Skin.Paint(entry.input,"edit"); entry.input:SetFont(STANDARD_TEXT_FONT,13,"")
+    entry.input:SetAutoFocus(false); entry.input:SetMaxLetters(512); entry.input:SetTextInsets(8,8,0,0)
+    entry.hint=font(entry,12,MUTED); entry.hint:SetPoint("TOPLEFT",0,-4); entry.hint:SetWidth(680)
+    local dropHint="Drag an item from your bags anywhere onto this page to add it."
+    entry.hint:SetText(dropHint)
+    local function receiveItem(box)
+        if not entry:IsVisible() or type(GetCursorInfo)~="function" then return end
+        local kind,id,link=GetCursorInfo()
+        if kind~="item" or not self:UserItemID(id) then return end
+        box:SetText(type(link)=="string" and self:UserItemID(link)==id and link or tostring(id))
+        box:SetFocus()
+        ClearCursor()
+    end
+    entry.input:EnableMouse(true)
+    entry.input:SetScript("OnReceiveDrag",receiveItem)
+    entry.input:SetScript("OnMouseDown",receiveItem)
+    local function editUser(remove)
+        local ok,message=self:EditUserItem(entry.input:GetText(),remove)
+        entry.hint:SetText(ok and dropHint or message)
+        if ok then entry.input:SetText(""); entry.input:ClearFocus() end
+    end
+    entry.add=button(entry,"Add item",100,function() editUser(false) end)
+    entry.add:SetPoint("TOPLEFT",entry.input,"TOPRIGHT",8,0)
+    entry.input:Hide(); entry.add:Hide()
+    -- Cover the entire content page only while carrying an item. Ordinary row
+    -- clicks, scrolling and Carry edits continue to reach their normal frames.
+    local drop=CreateFrame("Frame",nil,f)
+    f.userDrop=drop; drop:SetFrameLevel(f:GetFrameLevel()+100); drop:EnableMouse(true); drop:Hide()
+    local function acceptDrop()
+        if not entry:IsVisible() or type(GetCursorInfo)~="function" then return end
+        local kind,id=GetCursorInfo()
+        if kind~="item" or not self:UserItemID(id) then return end
+        local ok,message=self:EditUserItem(tostring(id),false)
+        ClearCursor(); drop:Hide()
+        entry.hint:SetText(ok and dropHint or message)
+    end
+    drop:SetScript("OnReceiveDrag",acceptDrop)
+    drop:SetScript("OnMouseDown",acceptDrop)
+    f.userRemove=button(f,"Remove item",110,function()
+        local item=self.state and self.state.detail and self.state.detail.item
+        if item and item.userItem then
+            self:EditUserItem(tostring(item.itemId),true)
+            self.state={view="supplies",filter="User",page=1}; self.history={}; self:Refresh(true)
+        end
+    end)
+    entry.input:SetScript("OnEnterPressed",function() editUser(false) end)
+    entry.input:SetScript("OnEscapePressed",function(box) box:ClearFocus() end)
+    entry:SetScript("OnHide",function() entry.input:ClearFocus() end)
+    f:HookScript("OnSizeChanged",function() if self.db then self.needsLayout=true end end)
+    f:SetScript("OnUpdate",function(_,elapsed)
+        if f.refreshScrollGeometry then
+            f.refreshScrollGeometry=nil
+            f.scroll:UpdateScrollChildRect()
+        end
+        local cursorKind=type(GetCursorInfo)=="function" and GetCursorInfo() or nil
+        drop:SetShown(entry:IsVisible() and cursorKind=="item")
+        if self.needsRefresh then self.needsRefresh=false; self:Refresh() end
+        if self.needsLayout then
+            self.layoutElapsed=(self.layoutElapsed or 0)+elapsed
+            if self.layoutElapsed>=0.08 then self.layoutElapsed=0; self.needsLayout=false; self:Layout() end
+        end
+    end)
+    f:SetScript("OnHide",function()
+        if self.db then self.db.window.visible=false; self:SaveWindow() end
+        self:CommitInputs(); f.search:ClearFocus(); f.classMenu:Hide(); GameTooltip:Hide()
+    end)
+    f:SetScript("OnShow",function() if self.db then self.db.window.visible=true; self:Refresh() end end)
+    UISpecialFrames[#UISpecialFrames+1]="HardcoreBuddyWindow"
+    self:RestoreWindow()
+end
+function addon:ToggleWindow()
+    self:CreateWindow(); self.window:SetShown(not self.window:IsShown())
+end
+function addon:CommitInputs()
+    local f=self.window
+    if not f then return end
+    f.level:ClearFocus()
+    for _,c in ipairs(f.cards or {}) do
+        for _,block in ipairs(c.content.blocks or {}) do if block.quantity then block.quantity:ClearFocus() end end
+    end
+end
+function addon:OpenDeaths(section, record)
+    self:CreateWindow()
+    self:CommitInputs()
+    self.state={view="deaths",filter=section=="Options" and "Options" or "Reports",deathRecord=record,page=1}
+    self.history={}
+    self.window.classMenu:Hide()
+    self.window:Show()
+    self:Refresh(true)
+end
+function addon:Navigate(view)
+    self:CommitInputs()
+    self.state={view=view=="now" and "supplies" or view,filter=(view=="supplies" or view=="now") and "Food & drink" or nil,page=1}; self.history={}
+    self.window.classMenu:Hide()
+    self.window.search:ClearFocus(); self:Refresh(true)
+end
+function addon:OpenCurrentInstance()
+    local current=self.Instances.Current()
+    if not current then return end
+    self:CommitInputs(); self.window.classMenu:Hide(); self.window.search:ClearFocus()
+    self.history=self.history or {}; self.history[#self.history+1]=self.state
+    if #current.guides==1 then
+        self.state={view=current.view,instance=current.guides[1].id,page=1}
+    else
+        self.state={view=current.view,currentMap=current.map,currentName=current.name,
+            unknownInstance=#current.guides==0,filter=current.view=="raids" and "All raids" or "All dungeons",page=1}
+    end
+    self:Refresh(true)
+end
+function addon:Activate(action)
+    self:CommitInputs(); self.window.classMenu:Hide()
+    self.history=self.history or {}; self.history[#self.history+1]=self.state
+    if action.kind=="instance" then
+        local g=self.Instances.byId[action.id]
+        if not g then table.remove(self.history); return end
+        self.state={view=g.kind,instance=g.id,page=1}
+    elseif action.view then self.state={view=action.view,filter=action.filter,query=action.query,page=1}
+    else self.state={view=self.state.view,filter=self.state.filter,query=self.state.query,detail=action,page=1} end
+    self.window.search:ClearFocus(); self:Refresh(true)
+end
+function addon:Back()
+    self:CommitInputs(); self.window.classMenu:Hide()
+    if self.history and #self.history>0 then self.state=table.remove(self.history); self:Refresh(true) end
+end
+function addon:Refresh(resetScroll)
+    if not self.window then return end
+    local context=self:GetContext()
+    if self.lastClass and self.lastClass~=context.characterClass and not (self.state and
+        (self.state.view=="deaths" or self.state.view=="dungeons" or self.state.view=="raids")) then self.state=nil; self.history={} end
+    self.lastClass=context.characterClass
+    self.state=self.state or {view="supplies",filter="Food & drink",page=1}; self.history=self.history or {}
+    -- Supplies has no hidden search or shortage filter after its controls were
+    -- removed. Back navigation and old in-memory state must show the full kit.
+    if self.state.view=="supplies" or self.state.view=="now" then self.state.query=nil; self.state.stock=nil end
+    self.document=(self.state.view=="deaths" or self.state.view=="alerts") and {context=context,view=self.state.view,cards={}} or C.Build(context,self.state)
+    self:Layout()
+    if resetScroll then self.window.scroll:SetVerticalScroll(0) end
+end
+local FILTER_ICONS={
+    ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
+    ["Reports"]="INV_Misc_Book_09",Options="Trade_Engineering",["All"]="INV_Misc_Bag_08",["Food & drink"]="INV_Misc_Food_11",Buffs="INV_Potion_27",
+    Emergency="INV_Misc_Bandage_12",Potions="INV_Potion_54",Class="INV_Misc_Rune_01",Optional="INV_Misc_PocketWatch_01",User="INV_Misc_Note_01",Scrolls="INV_Scroll_03",Families="Ability_Hunter_BeastTaming",
+    Abilities="Ability_Hunter_BeastCall",Pets="Ability_Hunter_Pet_Bear",Looks="Ability_Hunter_EagleEye",Care="Ability_Hunter_MendPet",
+    Overview="INV_Misc_Book_09",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",
+}
+function addon:Layout()
+    local f,doc=self.window,self.document
+    if not f or not doc then return end
+    local context,width,height=doc.context,f:GetWidth(),f:GetHeight()
+    local compact=width<740 or height<500
+    local short=height<500
+    f.headerHeight=short and 64 or compact and 78 or 106
+    if context.mode=="preview" then f.headerHeight=math.max(96,f.headerHeight) end
+    Skin.LayoutWindow(f,width,height,compact)
+    local titleX=compact and 94 or 122
+    f.title:ClearAllPoints(); f.title:SetPoint("TOPLEFT",titleX,short and -16 or compact and -20 or -25)
+    f.title:SetFont(STANDARD_TEXT_FONT,compact and 21 or 27,"")
+    f.title:SetWordWrap(false); f.title:SetSize(math.max(140,width-titleX-60),short and 27 or 32)
+    f.subtitle:ClearAllPoints(); f.subtitle:SetPoint("TOPLEFT",titleX,short and -43 or compact and -48 or -59)
+    f.subtitle:SetWordWrap(false); f.subtitle:SetSize(width-titleX-24,18)
+    f.subtitle:SetText(context.characterClass.."  |  Level "..context.level
+        ..(context.faction and ("  |  "..context.faction) or "  |  Faction unknown")
+        ..(context.mode=="preview" and "  |  Planning" or "")
+        ..(context.characterClass=="Hunter" and (context.petLevel and ((context.mode=="preview" and "  |  Planned pet " or "  |  Pet ")..context.petLevel) or "  |  No pet") or ""))
+    f.motto:SetShown(not compact); f.motto:ClearAllPoints(); f.motto:SetPoint("TOPLEFT",titleX+2,-82); f.motto:SetSize(240,14)
+    f.drag:SetWidth(math.max(1,width-58)); f.drag:SetHeight(f.headerHeight-6)
+    local preview=context.mode=="preview"
+    f.mode.label:SetText(preview and "Return" or "Edit Character")
+    local modeWidth=math.max(154,math.ceil(f.mode.label:GetStringWidth())+22)
+    f.mode:SetSize(modeWidth,28)
+    local x,y=22,f.headerHeight+4
+    local right=width-22
+    for _,b in ipairs(f.tabs) do
+        b:SetShown(b.view~="petguide" or context.characterClass=="Hunter")
+        if b:IsShown() then
+            if x+(compact and 94 or 114)>right then x=22; y=y+36 end
+            b:SetSize(compact and 94 or 114,30); b:ClearAllPoints(); b:SetPoint("TOPLEFT",x,-y)
+            x=x+b:GetWidth()+6; active(b,doc.view==b.view)
+        end
+    end
+    local modeInTabs=x+modeWidth<=right
+    if modeInTabs then
+        f.mode:ClearAllPoints(); f.mode:SetPoint("TOPRIGHT",-22,-y)
+    end
+    y=y+36
+
+    -- Only overflow navigation uses the utility row below the tabs.
+    local utilityUsed=false
+    x=22
+    local function utility(control,controlWidth)
+        if x+controlWidth>right then x=22; y=y+34 end
+        control:ClearAllPoints(); control:SetPoint("TOPLEFT",x,-y)
+        x=x+controlWidth+8; utilityUsed=true
+    end
+    f.class:SetShown(preview); f.levelGroup:SetShown(preview)
+    f.class.label:SetText(context.characterClass)
+    f.class:SetWidth(math.max(compact and 88 or 104,math.ceil(f.class.label:GetStringWidth())+22))
+    local levelLabelWidth=math.max(42,math.ceil(f.levelLabel:GetStringWidth())+8)
+    f.levelLabel:SetSize(levelLabelWidth,20)
+    f.classLabel:SetWidth(f.class:GetWidth())
+    local minusX=0
+    local levelX=minusX+31
+    local plusX=levelX+44
+    f.levelGroup:SetSize(plusX+25,28)
+    f.minus:ClearAllPoints(); f.minus:SetPoint("TOPLEFT",minusX,0)
+    f.level:ClearAllPoints(); f.level:SetPoint("TOPLEFT",levelX,0)
+    f.plus:ClearAllPoints(); f.plus:SetPoint("TOPLEFT",plusX,0)
+    if preview then
+        f.levelGroup:ClearAllPoints()
+        f.levelGroup:SetPoint("TOPRIGHT",f,"TOPRIGHT",-22,-f.headerHeight+36)
+        f.class:ClearAllPoints()
+        f.class:SetPoint("RIGHT",f.levelGroup,"LEFT",-8,0)
+        f.class:SetFrameLevel(f.drag:GetFrameLevel()+2)
+        f.levelGroup:SetFrameLevel(f.drag:GetFrameLevel()+2)
+        -- Keep the subtitle clear of the planning controls in compact windows.
+        local textWidth=width-titleX-22-f.class:GetWidth()-8-f.levelGroup:GetWidth()-12
+        f.subtitle:SetWidth(math.max(1,textWidth))
+    end
+    if not modeInTabs then utility(f.mode,modeWidth) end
+    f.back:SetShown(#self.history>0)
+    if utilityUsed then y=y+34 end
+    if not f.level:HasFocus() then f.level:SetText(tostring(context.level)) end
+    enabled(f.class,preview); enabled(f.minus,preview and context.level>1); enabled(f.plus,preview and context.level<60)
+    f.level:EnableMouse(preview); f.level:EnableKeyboard(preview)
+    if not preview then f.classMenu:Hide() end
+    local notice=context.liveUnavailable and "Character details unavailable; showing your saved plan." or nil
+    if context.factionUnknown then
+        notice=(notice and (notice.."\n") or "").."Faction unavailable; faction-specific recommendations are hidden."
+    end
+    if WOW_PROJECT_ID and WOW_PROJECT_CLASSIC and WOW_PROJECT_ID~=WOW_PROJECT_CLASSIC then notice="Classic Era / Hardcore reference." end
+    f.context:SetShown(notice~=nil)
+    if notice then y=y+measure(f.context,notice,width-44,22,y)+8 end
+    local current=self.Instances.Current()
+    f.currentInstance:SetShown(current~=nil)
+    if current then
+        local strip=f.currentInstance
+        strip:ClearAllPoints(); strip:SetPoint("TOPLEFT",22,-y); strip:SetSize(width-44,48)
+        strip.heading:SetText(current.view=="raids" and "CURRENT RAID" or "CURRENT DUNGEON")
+        strip.heading:SetSize(width-220,14)
+        strip.name:SetText(current.name); strip.name:SetSize(width-220,20); strip.name:SetWordWrap(false)
+        strip.hint:SetText(#current.guides>1 and "Choose your wing  >" or "Items to bring  >")
+        y=y+56
+    end
+    local instancePage=doc.view=="dungeons" or doc.view=="raids"
+    local navigation=instancePage and self.Instances.Navigation(self.state)
+        or doc.view=="alerts" and {"Low Health","Rares","Elites"} or doc.view=="deaths" and {"Reports","Options"}
+        or doc.view=="training" and {"Overview","First Aid","Engineering","Cooking"}
+        or doc.view=="petguide" and {"Families","Abilities","Pets","Looks","Care"}
+        or addon.Supplies.categories
+    local sidebar=true
+    local left=sidebar and 184 or 22
+    local bodyWidth=width-left-40
+    f.sidebar:SetShown(sidebar)
+    if sidebar then
+        f.sidebar:ClearAllPoints(); f.sidebar:SetPoint("TOPLEFT",20,-y); f.sidebar:SetPoint("BOTTOMLEFT",20,46); f.sidebar:SetWidth(148)
+        f.sidebarTitle:SetText(instancePage and (doc.view=="raids" and "RAIDS" or "DUNGEONS") or doc.view=="alerts" and "ALERTS" or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or "FIELD KIT")
+        f.sidebarNote:SetText(instancePage and "Levels and\nitems to bring." or doc.view=="alerts" and "Stay alert.\nStay alive." or doc.view=="deaths" and "Every journey\nleaves a story." or doc.view=="petguide" and "Find a companion.\nLearn its strengths." or "Pack with purpose.\nEvery slot matters.")
+        f.sidebarNote:SetShown(height-y-46>35+#navigation*41+70)
+    end
+    x=22
+    local filterY=y
+    for i,label in ipairs(navigation) do
+        local b=f.filters[i]
+        if not b then
+            b=button(f,label,78,function(self)
+                addon:CommitInputs(); addon.window.classMenu:Hide()
+                addon.state.detail=nil; addon.state.deathRecord=nil; addon.history={}; addon.state.page=1
+                if addon.state.view=="dungeons" or addon.state.view=="raids" then
+                    addon.state.filter=self.filter
+                    addon.state.currentMap=nil; addon.state.currentName=nil; addon.state.unknownInstance=nil
+                    addon.state.instance=nil
+                    addon.state.query=nil
+                    addon:Refresh(true); return
+                end
+                if addon.state.view=="training" then
+                    addon.state.filter=nil
+                    local family=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[self.filter]
+                    if family then addon:Activate({kind="profession",family=family}); return end
+                else
+                    addon.state.filter=self.filter
+                end
+                addon:Refresh(true)
+            end)
+            Skin.Button(b,"category")
+            b.navIcon=b:CreateTexture(nil,"ARTWORK"); b.navIcon:SetSize(18,18); b.navIcon:SetPoint("LEFT",9,0)
+            b.navIcon:SetTexCoord(0.08,0.92,0.08,0.92)
+            f.filters[i]=b
+        end
+        local tabWidth=label=="Food & drink" and 98 or label=="Emergency" and 94 or label=="All" and 44 or label=="Buffs" and 62 or 74
+        b.filter=label; b.label:SetText(label); b.label:SetFont(STANDARD_TEXT_FONT,instancePage and 11 or 12,""); b:Show(); b:ClearAllPoints()
+        local iconPath=FILTER_ICONS[label] or "INV_Misc_Book_09"
+        if not iconPath:find("\\",1,true) then iconPath="Interface\\Icons\\"..iconPath end
+        b.navIcon:SetTexture(iconPath); b.navIcon:SetShown(sidebar)
+        b.label:ClearAllPoints()
+        if sidebar then
+            local step=math.min(41,math.floor((height-filterY-86)/math.max(1,#navigation)))
+            b:SetSize(132,math.min(36,step-4)); b:SetPoint("TOPLEFT",28,-filterY-35-(i-1)*step)
+            b.label:SetPoint("TOPLEFT",32,0); b.label:SetPoint("BOTTOMRIGHT",-5,0); b.label:SetJustifyH("LEFT")
+        else
+            if x+tabWidth>width-20 then x=22; y=y+32 end
+            b:SetSize(tabWidth,27); b:SetPoint("TOPLEFT",x,-y); x=x+tabWidth+5
+            b.label:SetAllPoints(); b.label:SetJustifyH("CENTER")
+        end
+        local selected=self.state.filter or navigation[1]
+        if doc.view=="training" then
+            local family=self.state.detail and self.state.detail.family
+            selected=family=="bandage" and "First Aid" or family=="antivenom" and "First Aid"
+                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or "Overview"
+        end
+        active(b,selected==label)
+    end
+    for i=#navigation+1,#f.filters do f.filters[i]:Hide() end
+    if doc.filters and not sidebar then y=y+34 end
+    if #self.history>0 then
+        f.back:ClearAllPoints(); f.back:SetPoint("TOPLEFT",left,-y); y=y+34
+    end
+    local customDetail=doc.isDetail and self.state.detail and self.state.detail.item and self.state.detail.item.userItem
+    f.userRemove:SetShown(customDetail and true or false)
+    if customDetail then
+        f.userRemove:ClearAllPoints(); f.userRemove:SetPoint("TOPLEFT",f.back,"TOPRIGHT",8,0)
+    end
+    local userPage=doc.view=="supplies" and self.state.filter=="User" and not doc.isDetail
+    f.userEntry:SetShown(userPage)
+    if userPage then
+        f.userEntry:ClearAllPoints(); f.userEntry:SetPoint("TOPLEFT",left,-y); f.userEntry:SetWidth(bodyWidth)
+        f.userDrop:ClearAllPoints(); f.userDrop:SetPoint("TOPLEFT",left,-y); f.userDrop:SetPoint("BOTTOMRIGHT",-40,46)
+        y=y+30
+    else
+        f.userDrop:Hide()
+    end
+    local searchable=(doc.view=="petguide" or instancePage) and doc.searchable
+    f.search:SetShown(searchable); f.searchLabel:SetShown(searchable); f.clear:SetShown(searchable)
+    f.atLevel:SetShown(searchable and doc.levelFilter)
+    if searchable then
+        local extra=doc.levelFilter
+        f.atLevel.label:SetText(self.state.atLevel and "Within my level" or "Any level")
+        local extraButton=f.atLevel
+        if extra then extraButton:SetWidth(math.max(112,math.ceil(extraButton.label:GetStringWidth())+22)) end
+        local labelWidth=math.ceil(f.searchLabel:GetStringWidth())+6
+        local rowHeight=math.max(28,math.ceil(f.searchLabel:GetStringHeight())+8)
+        local extraWidth=extra and extraButton:GetWidth()+6 or 0
+        local searchWidth=bodyWidth-labelWidth-8-f.clear:GetWidth()-6-extraWidth
+        local wrapExtra=extra and searchWidth<80
+        if wrapExtra then searchWidth=searchWidth+extraWidth; extraWidth=0 end
+        f.searchLabel:ClearAllPoints(); f.searchLabel:SetPoint("TOPLEFT",left,-y)
+        f.searchLabel:SetSize(labelWidth,rowHeight)
+        f.search:ClearAllPoints(); f.search:SetPoint("TOPLEFT",left+labelWidth+8,-y)
+        f.search:SetSize(math.max(50,searchWidth),rowHeight)
+        if f.search:GetText()~=(self.state.query or "") then f.search:SetText(self.state.query or "") end
+        f.clear:ClearAllPoints(); f.clear:SetPoint("TOPRIGHT",-40-extraWidth,-y)
+        f.clear:SetHeight(rowHeight)
+        f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("TOPRIGHT",-40,-y-(wrapExtra and rowHeight+6 or 0))
+        active(f.atLevel,self.state.atLevel)
+        y=y+rowHeight+8+(wrapExtra and 34 or 0)
+    end
+    local deathPage=doc.view=="deaths"
+    f.scroll:SetShown(not deathPage and doc.view~="alerts")
+    local alertSection=self.state.filter or "Low Health"
+    if self.LowHealth then self.LowHealth:LayoutSettings(f,left,y,bodyWidth,height-y-46,doc.view=="alerts" and alertSection=="Low Health") end
+    local creaturePage=doc.view=="alerts" and (alertSection=="Rares" or alertSection=="Elites")
+    if self.CreatureAlerts then self.CreatureAlerts:LayoutSettings(f,left,y,bodyWidth,height-y-46,alertSection,creaturePage) end
+    if self.Deaths and self.Deaths.host then
+        self.Deaths.host:SetShown(deathPage)
+        if deathPage then self.Deaths:LayoutPage(f,left,y,bodyWidth,height-y-46,self.state) end
+    end
+    f.scroll:ClearAllPoints(); f.scroll:SetPoint("TOPLEFT",left,-y); f.scroll:SetPoint("BOTTOMRIGHT",-40,46)
+    local contentWidth=math.max(250,bodyWidth); f.content:SetWidth(contentWidth)
+    local top=0
+    for index,data in ipairs(doc.cards) do
+        local c=f.cards[index]
+        if not c then
+            c=CreateFrame("Frame",nil,f.content,"BackdropTemplate"); Skin.Paint(c,"card")
+            c.title=font(c,17,GOLD); c.note=font(c,12,MUTED)
+            c.content=CreateFrame("Frame",nil,c); c.content.blocks={}; f.cards[index]=c
+        end
+        c:ClearAllPoints(); c:SetPoint("TOPLEFT",0,-top)
+        top=top+renderCard(c,data,contentWidth,short and doc.view=="supplies" and not doc.isDetail)+10
+    end
+    for i=#doc.cards+1,#f.cards do f.cards[i]:Hide() end
+    f.content:SetHeight(math.max(1,top)); f.scroll:UpdateScrollChildRect()
+    f.scroll:SetVerticalScroll(math.min(f.scroll:GetVerticalScroll(),math.max(0,top-f.scroll:GetHeight())))
+    -- WoW resolves nested texture/frame anchors after this layout pass. Refresh
+    -- the scroll child's cached geometry next frame, as scrolling would do.
+    f.refreshScrollGeometry=true
+    local pages=doc.pages or 1
+    f.previous:SetShown(pages>1); f.nextPage:SetShown(pages>1); f.pageText:SetShown(pages>1)
+    f.previous:ClearAllPoints(); f.previous:SetPoint("BOTTOMRIGHT",-176,12)
+    f.pageText:ClearAllPoints(); f.pageText:SetPoint("BOTTOMRIGHT",-70,19); f.pageText:SetSize(100,16)
+    f.pageText:SetText((doc.page or 1).." / "..pages)
+    f.nextPage:ClearAllPoints(); f.nextPage:SetPoint("BOTTOMRIGHT",-40,12)
+    enabled(f.previous,(doc.page or 1)>1); enabled(f.nextPage,(doc.page or 1)<pages)
+    f.footer:SetText("Author CeaserXL (CXL) | Version "..addon.version)
+end

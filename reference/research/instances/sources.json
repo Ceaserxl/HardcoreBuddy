@@ -1,0 +1,829 @@
+{
+  "reviewed": "2026-09-28",
+  "localSources": [
+    {
+      "path": "C:\\World of Warcraft\\_classic_era_\\Interface\\AddOns\\ZygorGuidesViewerClassic\\Data-Classic\\Dungeons.lua",
+      "sha256": "320cbace0eacd3395f7d6b09915b08d5b59c68af1fdabd92162ab01a79e3ddf4"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_classic_era_\\Interface\\AddOns\\ZygorGuidesViewerClassic\\Guides-Classic\\Dungeons\\ZygorDungeonAllianceCLASSIC.lua",
+      "sha256": "33bfd7713e3c0dd0e0879d8460dcf631c3893f54b5c73c98fb08bcae765d434a"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_classic_era_\\Interface\\AddOns\\ZygorGuidesViewerClassic\\Guides-Classic\\Dungeons\\ZygorDungeonHordeCLASSIC.lua",
+      "sha256": "9254fd04d6dcdaf43c76c695e3b42fd488fc259d50be252cd4a68810bb6860db"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\DBM-Party-Vanilla_Vanilla.toc",
+      "sha256": "20121032e722c0e54601bdd51bf57106a4e3181aaa663b69468bc1f083dac691"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\BlackfathomDeeps\\Akumai.lua",
+      "sha256": "3b1ffe22805d4d02fd2c3693a5985156e274ec8bdcbba84ec87994ab11de5352"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\BlackfathomDeeps\\Gelihast.lua",
+      "sha256": "6cdf68e31a776ce4e8970b562b15679b5aadb07d68643a059acb67a17abfa108"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\BlackfathomDeeps\\GhamooRa.lua",
+      "sha256": "29c88775ab193e419fc0fb2150950f3cbd17c8c85f2c42510cfa523118c3cf66"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\BlackfathomDeeps\\LadySerevess.lua",
+      "sha256": "a882f335696b69f5ae9258f56385bc907fd484312bbed5d2082b8d0736a63ba2"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\BlackfathomDeeps\\OldSerrakis.lua",
+      "sha256": "e82c6f79a4b51dee703e864ae7177adda8e9575dbd783060ec8a45d38e55b995"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\BlackfathomDeeps\\TwilightLordKelris.lua",
+      "sha256": "08afcaee2649bd2062874b835c7bde205dad5a3eba410cdce12a72471a4e7bfb"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\localization.br.lua",
+      "sha256": "779bb571a40fefecea6182224440bb3893c079a065b9fe66df4488b65207aab7"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\localization.cn.lua",
+      "sha256": "4223e21a8b0d79840a4c5cecd9f2384c6cfe78bb58545ee15c82f40488ea14f9"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\localization.de.lua",
+      "sha256": "4b9ab4babbe8e2b7de53065e1f1bc84590b3954c60af41eaea97aa660c789d66"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\localization.en.lua",
+      "sha256": "2db108c401904eec63fb39d128f50885a9fc42fd0d359025b79e6b3e135d311f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\localization.es.lua",
+      "sha256": "04246416d67f09d80b4652f49337f3db6c952cbcc4f944325564a1acb81ee1c4"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\localization.fr.lua",
+      "sha256": "376fefdf2b7e0bb568767792d645939aa852a8c829b48572d63fc680be46e5aa"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\localization.kr.lua",
+      "sha256": "9327be24fafaac6f064b8db542f8b53991ddfe6a907ca442c8d74df9dec8f6d1"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\localization.mx.lua",
+      "sha256": "604b0e9ca0e675cfeef0089789fecbbed2bbb2399b10ca86b31093ce713168fd"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\localization.ru.lua",
+      "sha256": "943bdbe636c47f58eda5391dee0ee813b3ca2482318b6579bf065487d4afe6b1"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\localization.tw.lua",
+      "sha256": "45d62ef4973901d31a071a8f1e0f6d13ec62aaf4861da877c0be697910bb2d64"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RagefireChasm\\Bazzalan.lua",
+      "sha256": "3c7b6f4c2a9976ecda38b36bebc9b744e85254f8e06c4f50d7314296d20779b9"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RagefireChasm\\Jergosh.lua",
+      "sha256": "2af0f725daa0c86d4a824dc9c15ee91a6c1737b70c4bb9b6b25fc21ad936b13b"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RagefireChasm\\Oggleflint.lua",
+      "sha256": "eb96a2f7f1cf6dc1812070210646a21f8cd3bdaefb2a363b79e243b5c22f46a7"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RagefireChasm\\Taragaman.lua",
+      "sha256": "3d6f9a33cb6d9f1a6bee85647a400929c596821cf9e4b4c8a4987fa302453474"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenDowns\\AmnennartheColdbringer.lua",
+      "sha256": "7464be56febfb104c73ff5dcf1cd1fc892a0fb89d4ed1ce6324dde48126be5a2"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenDowns\\Glutton.lua",
+      "sha256": "729f0f907df489953ce31c8248ff1b1c28a37874d510094ed0db8f495e4172df"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenDowns\\MordreshFireEye.lua",
+      "sha256": "36130fd084f190c2ce182cb771b688b9a996c114593750350d90439f55f773af"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenDowns\\PlaguemawtheRotting.lua",
+      "sha256": "dc6feca499619772e3d2785579f0923bf5cd5c214292a78e5e3bfcc8b6e9c12c"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenDowns\\Ragglesnout.lua",
+      "sha256": "9756734e3b038d1f6287873e04e74c149496fee27b194d63272df80ba8c007fc"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenDowns\\Tutenkash.lua",
+      "sha256": "1618ab6cfd3585ab393f011e99367815866ca348d400157e3038347d6d5cc9f1"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenKraul\\AgathelostheRaging.lua",
+      "sha256": "20f79858e6808ba394652c7d77a871e34d4d28435c28ca175778a1df72900923"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenKraul\\AggemThorncurse.lua",
+      "sha256": "fdf6089b20f7f2fcb96bbe1c75c39d43216338a56377bc496acd6faf27fe9b4f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenKraul\\BlindHunter.lua",
+      "sha256": "8f8ddd889e95d6bfb43f23f6130278caa6ff7431cdfafa4edc1827cde4164032"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenKraul\\CharlgaRazorflank.lua",
+      "sha256": "5dba175eac3f7fdbf6ac5c58c81be93665d7d89598cdf1d7e7817958416bb7e6"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenKraul\\DeathSpeakerJargba.lua",
+      "sha256": "51598d2404606da3bd0b953ac8545b2319c6bfb93bf25f66f35f7acd8fb9406e"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenKraul\\EarthcallerHalmgar.lua",
+      "sha256": "3385f9848496dc2863e719b426c1e54b73781c0a401ab3b52309e76077aecf19"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenKraul\\OverlordRamtusk.lua",
+      "sha256": "2b7faa68a8bb1fbe7b2c0c4e96308f6bb205d58b52ce6a54dc40d4a1f76b0a70"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\RazorfenKraul\\Roogug.lua",
+      "sha256": "b4f9434293e77303d359f046f287991dfcf9921d5ec5f38b078c6e5b3b755b3b"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\Shadowfangkeep\\ArchmageArugal.lua",
+      "sha256": "264230879c007442a77961a70784e5d37bcd24b6687e7500c044b60a83eac23b"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\Shadowfangkeep\\BaronSilverlaine.lua",
+      "sha256": "e3651ef1114ddd23989fd5a2128d0505bdc0adc5106a5bb0847eb159ea0ba4ae"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\Shadowfangkeep\\CommanderSpringvale.lua",
+      "sha256": "254142adf7c0e5c031cf5247e2417b2cc7dd0f2b438307b8d626936afc4ea01a"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\Shadowfangkeep\\DeathswornCaptain.lua",
+      "sha256": "c7a7fdbfedb273678df3ef936db52ffb90ccc5d4b5b2bff4c673d93a906ac8c1"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\Shadowfangkeep\\FenrustheDevourer.lua",
+      "sha256": "4c7068eb14fa52120577352b656c2492e8b178c644f9cf0f3b72932867279b0e"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\Shadowfangkeep\\OdotheBlindwatcher.lua",
+      "sha256": "0b28a410ed9a180891a8aede99250a6c1a59667f52894a5a1fb3e76b1ae201c0"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\Shadowfangkeep\\RazorclawtheButcher.lua",
+      "sha256": "0139729273c1adb38504ddb8e08ec0582052f27912c684833cee0f1910b2ba55"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\Shadowfangkeep\\Rethilgore.lua",
+      "sha256": "260f42c4d8456251a28bf219a87e059f2c62006e45462e62753b50b3d9782933"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\Shadowfangkeep\\WolfMasterNandos.lua",
+      "sha256": "6a29f9d87036aecd2edc0d60e8fea6585f5115ab6d62c0c404693eee6a0f2bfe"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_DemonFallCanyon\\Azgaloth.lua",
+      "sha256": "99091d2f1d24cfc1c7184326d3f4fd6a9b88d9a64498d1e3fa3a34358ee359b4"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_DemonFallCanyon\\DestructorsWraith.lua",
+      "sha256": "dbc8e0cc5f376f30c2a47b915e7cad39bd95914b4989f8a7f7b1e38c21f2dbb8"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_DemonFallCanyon\\Diathorus.lua",
+      "sha256": "db52167edb39e9feffb710a83ae7482e3e16e555487fa5a5ec4cd4e38738db32"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_DemonFallCanyon\\Grimroot.lua",
+      "sha256": "1cd5baddacc91714e71d008ec0fad3c46f18ca3c13c93dd5c2d16798ff23706f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_DemonFallCanyon\\HellscreamsPhantom.lua",
+      "sha256": "3dcfda69eedda6dc2d003e641cbe688d7f007db82fbbf4c89f186374a56cba6f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_DemonFallCanyon\\Pyranis.lua",
+      "sha256": "b00e25572d304b8f38f037a3facef3bf8a4f11834b120a0f6100bd81051a5053"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_DemonFallCanyon\\Zilbagob.lua",
+      "sha256": "011169f59b2091c22a8a72b7b9afeec0961535846d467fe8aa214458d3d6b6c3"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_KarazhanCrypts\\Apprentice.lua",
+      "sha256": "b6a231b821c1698d9fc613cbdb29c08342ca13854782a2bb8a490ad6dc5bfe13"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_KarazhanCrypts\\CreepingMalison.lua",
+      "sha256": "0a029e075414ce226e4176806df5e113227402e2efa118a7938b64dc95533ab5"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_KarazhanCrypts\\DarkRider.lua",
+      "sha256": "e2cb6e896362439ee448f58d363935910686653cdb7cd783c24d3ce6fd0cc713"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_KarazhanCrypts\\HarbingerOfSin.lua",
+      "sha256": "6d14fd15207e0eaa675900792d2cb3e730f6e1d8338f1da0a2cc0c9b43505d3a"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_KarazhanCrypts\\KCTrash.lua",
+      "sha256": "d7e6ecc1e36b6cae9afe79a54a9ed85adf7bf2917de350d90f34ddbd42bd2428"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_KarazhanCrypts\\Kharon.lua",
+      "sha256": "df39d0cfbfbcacbd194f26cece3fa45e671d8c7ffa311204790e836db5774b76"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_KarazhanCrypts\\OperaOfMalediction.lua",
+      "sha256": "198bc2e3117f5232815197cfd976035f431ac840ff16cf2e5a3df6c58d84775d"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\SOD_KarazhanCrypts\\Unkomon.lua",
+      "sha256": "6f265b20ba81870ad6e22388e11f815e241473ff99a2957a0981f8bb9469bf42"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\StormwindStockaid\\BazilThredd.lua",
+      "sha256": "afb3b44d64601255b449c3361ce1d785aa7f839ced3bf12841356673ae841209"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\StormwindStockaid\\BruegalIronknuckle.lua",
+      "sha256": "2ac79369bea0463c68a2ccecda256952801e9e5dc38294e5805ed65cb566be96"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\StormwindStockaid\\DextrenWard.lua",
+      "sha256": "535c7407c1fd2926b1032013f039d2548ca038eb0a20ce4b4d8cc1ee7209fb16"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\StormwindStockaid\\Hamhock.lua",
+      "sha256": "cb6af49bedaa9a21b4282d2ef61b6f0e1dd72a996268a64a72007d58c6732895"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\StormwindStockaid\\KamDeepfury.lua",
+      "sha256": "a69acf46eb8795aad18b89d6a1bbafaadc633ccc4c8adeb55d3d080a42f58807"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\StormwindStockaid\\Targorr.lua",
+      "sha256": "2cfec51d0fe69e3216a9fa4f3a4568dad87bb44abfe3ad9ebcadb91ed79d032a"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\UpperBlackrockSpire\\GeneralDrakkisath.lua",
+      "sha256": "3f71f2dfb2d263372e58e4e472a3a8638b6edbdcd3392aa40f0a7ca2d5afc996"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\UpperBlackrockSpire\\GoralukAnvilcrack.lua",
+      "sha256": "043583c9dc323b50c7ecb1f3f893b1f4c12af93fbc8051909b1c80761e9ebe86"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\UpperBlackrockSpire\\JedRunewatcher.lua",
+      "sha256": "deb831a70d641400a4f20c209b50d64c93cf8e39d9abc41283fffdf1e4deecf4"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\UpperBlackrockSpire\\LordValthalak.lua",
+      "sha256": "4a66c1e19f7a4c2a94499a21c0a2eb496de6175ffe1d243aaaf6d434afa8fbf0"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\UpperBlackrockSpire\\PyroguardEmberseer.lua",
+      "sha256": "f60aeae80b285902e7f87b7a7ea655903658656d7b186731ae9149d80c7e5748"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\UpperBlackrockSpire\\SolakarFlamewreath.lua",
+      "sha256": "9ca62d60f96f4dc637718f4820c91caaf346caf3b05081b5f0d664cf4490ad51"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\UpperBlackrockSpire\\TheBeast.lua",
+      "sha256": "eb35e3ea4c28fb8eabb2715c9aec08648848fcada35cfe83481a521d79bb517b"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Classic\\UpperBlackrockSpire\\WarchiefRendBlackhand.lua",
+      "sha256": "a8673a97940c601c71b0c8074e79db895fc28509fe9746eedbe8711397a51f2d"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\AmbassadorFlamelash.lua",
+      "sha256": "9ed7626489c4fef3667c1015b1677da1146bc7befb0a377ea7bfb5303112cfbd"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\BaelGar.lua",
+      "sha256": "6199c5f67fdf24978e12c2b94fb7a228f72cf46c5863b3b0bf0f66b1a13bf604"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\EmperorDagranThaurissan.lua",
+      "sha256": "348bbfce621d3b1523c86fadc8561395d185377e9cc52cb073221e133e43e68c"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\FineousDarkvire.lua",
+      "sha256": "db4861ecbcebcc8f9b492f3a8fd17c4dc804c58426da5d7f5c170e9e2333e729"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\GeneralAngerforge.lua",
+      "sha256": "905bb3ec4d841e40f7754e8c6af12bd75720eafd06a86f34e8bc89cd048ca082"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\Gerstahn.lua",
+      "sha256": "d5318c526be3adc6096311fe7561af5c4fa6036f306c7a48804447434b497d29"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\GolemLordArgelmach.lua",
+      "sha256": "fd0f122a26b0b82ac77f77b1dabf18554c878b399a01660c3ef9837b1a4aa1d3"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\HoundmasterGrebmar.lua",
+      "sha256": "7787080fa80989bf92edbf8d9cb00a1954989a1af3e033f46df2c071032f4244"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\HurleyBlackbreath.lua",
+      "sha256": "52767e060a3c270e0ffc3eb4f45a95a71077f90c60021fb1f866b3e517e9ed2e"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\LordIncendius.lua",
+      "sha256": "23bc67b138cad730b85d60293b08a598ddedeb6b121b19707d046760eb48a352"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\LordRoccor.lua",
+      "sha256": "6688a4b4fc083b79f2222ab12822c1165fc56fc6244b52494844556ceb87d625"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\Magmus.lua",
+      "sha256": "bf0d1d86d921b02891334fd9296857b9835933c065d785d4665c20ca6afb0288"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\Phalanx.lua",
+      "sha256": "ee8276c8b5d81f4d08bc37a43b30f119e0da1156b2bd328830372a2f036378a0"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\PluggerSpazzring.lua",
+      "sha256": "d2c0bb3cfa22a0b2ffeb71b83bbb00eca759a4ae673d47e25f549b0314961a05"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\PyromancerLoregrain.lua",
+      "sha256": "7e3156e91295220336da6aed11fdb699a4ea23be911a92e97aa6e742c056cb45"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\RingofLaw.lua",
+      "sha256": "7e936598ad09457da235939deacd9c6553272da93982ad37ec055464e98a3bd9"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\TheSeven.lua",
+      "sha256": "eedad9af0d04eb9ea4b992ccc67bfad97e2c71d96f9e6512c08ba80282055b0f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\BlackrockDepths\\WardenStilgiss.lua",
+      "sha256": "e8df32c70f3a4c19ef16b54d12bdfdb27f0dc375c662099f6ba8e69c32e89b99"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Deadmines\\CaptainGreenskin.lua",
+      "sha256": "a6d50d0d9993923451ee2b360da047cb81deba9ed9567fcd03910b31356b0c2f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Deadmines\\Cookie.lua",
+      "sha256": "a98a507b8bb207684415f0b6496c26fd9f19528aee3289ed2755ac0d46fed198"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Deadmines\\EdwinVanCleef.lua",
+      "sha256": "f450b58624f3ec7898f1e2063faee6af19f3abd34940c60cd006b308f72603ea"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Deadmines\\Gilnid.lua",
+      "sha256": "99bb90fe0ff7f54afe1d4ab018a67fbd15649614130a2cbd49cc5d7e5c9dbf65"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Deadmines\\MinerJohnson.lua",
+      "sha256": "9453f33ef0e0916c2ff119b97caeedaa9367d251ca93f2ca7384a9aea1e238f9"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Deadmines\\MrSmite.lua",
+      "sha256": "0185437a1f72ad019ec975ed10833bf48058db3ef02feaa8610cb31a3e018627"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Deadmines\\RhahkZor.lua",
+      "sha256": "7980f0cf3ca59fec745b5c394c736842397f125e19b2d9b993fb4aedcde4dc0a"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Deadmines\\SneedsShredder.lua",
+      "sha256": "e87731a1faa7533e5c3c9b13242da977c5fd4442ab0e26f5bb15021eeeb4daef"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\Alzzin.lua",
+      "sha256": "415d9d7390e36f4779a3aa6d87ba9e31c0f08eabeb64fd55a14fa349505bdb37"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\CaptainKromcrush.lua",
+      "sha256": "256152c6bba6a05d4bd7e5d5e51ca1fbcf76fbde5aad574c67d66577a405696b"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\ChoRush.lua",
+      "sha256": "58fb1b503066b6b01feb6abc0f16be9fa307976f04736b1e2baf459a43941077"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\GuardFengus.lua",
+      "sha256": "2af0ec1b69e026b3c137f12545e350090b0f2a4d0e70150a9324df251ca5541e"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\GuardMoldar.lua",
+      "sha256": "13daa5099bfdcfe2d0a99da7e1ae2aa7d88e22470289fdacf2aa758ade0452fa"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\GuardSlipkik.lua",
+      "sha256": "dea0ac940400207dafe32a1a9288ae8c123a4829f4140c8264f8fd7d4debf2f7"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\Hydrospawn.lua",
+      "sha256": "4d6cb251c7495462a31824a72c1b01c0e0caf6b60c22c37c5d3be8fd564260a9"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\IllyannaRavensoak.lua",
+      "sha256": "104f3110b946653925091bce3b5da396d0cad8b7b30b7e336acb9f6775572385"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\Immolthar.lua",
+      "sha256": "bd96489f454ffb7d9f2234b614da97ebded83b01426e02a6c22b5eb78d517c92"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\KingGordok.lua",
+      "sha256": "0cf78d25ba2bbff6d7df6e094ab176243ba0fbaac3a7d63c2905da8576316307"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\Lethtendris.lua",
+      "sha256": "abb751540a74604f4d9793a1e866c2b46e2dff970a2fe589da1f6b00165b0db1"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\MagisterKelendris.lua",
+      "sha256": "a149d280779d47292e4d064aa7beef9bdbd53348c99d19efbfb6b4b7e7d3ce1e"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\PrinceTortheldrin.lua",
+      "sha256": "57be5d35dfb294fa1fbf0c04f4ad3a2b18b0da00255963bbae007295de123104"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\StomperKreeg.lua",
+      "sha256": "6abfbc9807a2790dc7aaec87f97c69fd4fefa32dbbb85cebc3d119352965a014"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\TendrisWarpwood.lua",
+      "sha256": "57e30ac5ce97f1eb06b603de89992c4c2a385322220e1a1da9ebe0ed2bc1b352"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\DireMaul\\ZevrimThornhoof.lua",
+      "sha256": "07ffb5eb60156ec5b85073e043774e6a5f8648c71d5cbffb06239b57ecc16873"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Gnomeregan\\CrowdPummeler.lua",
+      "sha256": "a2c60a897e00d1293071a12a322641071d2b30e6f0f6e5178172872f48eedeb4"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Gnomeregan\\Electrocutioner6000.lua",
+      "sha256": "294f4623c55ff3a1f432eebc30381aae07914f3d50b42f246eade6fb4271f0fc"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Gnomeregan\\Grubbis.lua",
+      "sha256": "31c074f4c3f71edb3422cfd3af9070f196a4e1ee818754f0970baeb92f01e635"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Gnomeregan\\MekgineerThermaplugg.lua",
+      "sha256": "b3369da10673ac7a6d045556e121211ea9e80b6cb8b7f96b1813d435c08a6910"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Gnomeregan\\ViscousFallout.lua",
+      "sha256": "0ae82d4f9a5f862cc2abe384e02e35af9f49f0acbc3f8f6519d903cef18c8c12"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\LowerBlackrockSpire\\Gizrul.lua",
+      "sha256": "e50af3decbec2c69f2854d566e7ed49c8ea62b9c9e27031688a19934ca468f94"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\LowerBlackrockSpire\\Halycon.lua",
+      "sha256": "de82524cbf150cfffb9ac8ec6e82198229734a77b3547e8b26987c9d085d2ba3"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\LowerBlackrockSpire\\HighlordOmokk.lua",
+      "sha256": "92877ddfded6f9f41f4f1c0ca6844396dc8f1d126856257a6b5f414cd43b7984"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\LowerBlackrockSpire\\MotherSmolderweb.lua",
+      "sha256": "53a1f63025e3f43fdcb5b23707d8de08f8afb80e9551a59352b44de4fdb0f645"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\LowerBlackrockSpire\\OverlordWyrmthalak.lua",
+      "sha256": "6e926c5e5d284e4fe4cbd1b77128ef0d0b495bece56b5f932577945858fe05c4"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\LowerBlackrockSpire\\QuartermasterZigris.lua",
+      "sha256": "a68724e562fad9182db8e0dc78be9f3646486aedd62f7addd99c2d5e95d7e6cf"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\LowerBlackrockSpire\\ShadowHunterVoshgajin.lua",
+      "sha256": "8a05ac8da5ea33dd2631aa35ce895cacf0d9ee92a83f87635ad1b7513e330092"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\LowerBlackrockSpire\\UrokDoomhowl.lua",
+      "sha256": "fd56fa2a42e9e169a936ce9e9632b79633036ee193c0fbf26f741f06db9ec6f5"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\LowerBlackrockSpire\\WarMasterVoone.lua",
+      "sha256": "4d6d70d0ba73e9e972b37743d8bb1f8c645eb52180484b1a5693ec3df2a87301"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Maraudon\\CelebrastheCursed.lua",
+      "sha256": "e93b58cc401ce62c5ebd3747fbce052433e15829a49f2d01790f5b49a0d3d1a7"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Maraudon\\Landslide.lua",
+      "sha256": "06fdfeb12cb86778d303b67e5132f1b83cb151a1e106696a74d0431ba708e06b"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Maraudon\\LordVyletongue.lua",
+      "sha256": "f78e0086c2f78a1aeec21381e4f43353f12ac13942119f05aa17dfed0992975f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Maraudon\\Noxxion.lua",
+      "sha256": "da699aa49e4a6dfc548110e26c12b17633f8434dba02735fa9be7fac7d6d2b9b"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Maraudon\\PrincessTheradras.lua",
+      "sha256": "35a90070094ecc1a5e5e82a656dbbcdf32367578c8c4546acda3a0dedc4e330e"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Maraudon\\Razorlash.lua",
+      "sha256": "6988dc331448c7ba534d99da4863d1b54e9835226673f474d70886144cf16dd2"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Maraudon\\Rotgrip.lua",
+      "sha256": "e7345d11ee1e03fa6394ddfce7e8122e4b4ad648cfc9ada29f4360ce0badeca2"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Maraudon\\TinkererGizlock.lua",
+      "sha256": "a0c15857ba85a01dd5566d026104383aca9630c2aca7f9bb3760b2bd8d9f4e96"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ScarletMonastery_Old\\ArcanistDoan.lua",
+      "sha256": "93d17a8b3ae9f7ae46dc9897678f0d54ba5484eaba640c9f06d9917ffcac809a"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ScarletMonastery_Old\\BloodmageThalnos.lua",
+      "sha256": "f5c304b703cea641da8dd1c83ee92dde39d5153922a692ca5eb1314130af8a34"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ScarletMonastery_Old\\Herod.lua",
+      "sha256": "a2a0aba88bf2a263ed575ecf0d616ee4634c974459399d0f11e784c3e11d4df0"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ScarletMonastery_Old\\HighInquisitorFairbanks.lua",
+      "sha256": "acd2a7975f432eb02dd1753feab57097a9508bcc92420a03a0a1b9e440730002"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ScarletMonastery_Old\\HoundmasterLoksey.lua",
+      "sha256": "b8d7810cbe98d827c7fb1d3c9fabd9cba790b46203beb72869e4c530157ee474"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ScarletMonastery_Old\\InterrogatorVishas.lua",
+      "sha256": "bb37ab42c7ce8a7fee798778a071c31e1dad4e56423f726e46624c21d0623e67"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ScarletMonastery_Old\\Mograine_and_Whitemane.lua",
+      "sha256": "464194dc0a3167a88d98d8369b278efbe0771ade206bb5f30f1619064038cf5f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\DarkmasterGandling.lua",
+      "sha256": "9f565d4bb767aafbc95ef88a4f69ae0e611c2396d4c04b2d480c8fa2a914504e"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\DoctorTheolenKrastinov.lua",
+      "sha256": "66a153cc92498c33020366a4ece7f8d52bc611ca09d6533163eb78dd75e7c8f2"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\InstructorMalicia.lua",
+      "sha256": "ca707abeb8d8ec70ee4d36e98fb4c8ef6e1d81892f921413aa0b27e22d63bd33"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\JandiceBarov.lua",
+      "sha256": "05fa16bde3d5599383c6e101e9afaea89b7bc60a8c538d03108c6f6875c29758"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\KirtonostheHerald.lua",
+      "sha256": "776e6c8f1834813ecbfa89854317375ce7ae05265d3e5f06e118f91a1032f313"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\LadyIlluciaBarov.lua",
+      "sha256": "cc0bcad6425254cae8c25d39d289d340224926a048d71d36876b27a573ec880d"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\LordAlexeiBarov.lua",
+      "sha256": "563993008376bcbe089ab7a9880a0e4c713328494c542c4cabf1ad58f3105f33"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\LorekeeperPolkelt.lua",
+      "sha256": "f3d6c9a2dededca7f3b8143c3cb8f498945275143794d6a5b54b529e704997a0"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\MardukBlackpool.lua",
+      "sha256": "d7998d62de95118fdec221e09a923d6a566075d92fb8bd71ea8d142655c19af9"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\RasFrostwhisper.lua",
+      "sha256": "f34ecc87626f716762f7605d7eac552449593405de687160b1eae3eed099635b"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\Rattlegore.lua",
+      "sha256": "7d09ebdd43e0ae09ac4357589b295359088cc909a492f7f26d575381cd9398e1"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\TheRavenian.lua",
+      "sha256": "3b2f82a408a83a0588ffc16a375fd96a89ef9861f55685f7d20c664554c6845b"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Scholomance_Old\\Vectus.lua",
+      "sha256": "28b8e965cdb4887975494266841f1bd434994088f068e733e5059e1e30137f87"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\Balnazzar.lua",
+      "sha256": "6661c38a044c30024168dfa787275d143d51364360b7bf99095c525981c7b0bc"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\BaronessAnastari.lua",
+      "sha256": "4dd38424d0904409acd0bca0b08d4c746731050ed9e8352f559876053d465f31"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\CommanderMalor.lua",
+      "sha256": "2df7bbb38049e94344d729f62e50dd0dce328a3b409b5109e985ab604e5f069c"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\HearthsingerForresten.lua",
+      "sha256": "48cd38eca78a9c899f6c779776393abdc8666f94a64109386270fdf45fda3d15"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\InstructorGalford.lua",
+      "sha256": "2f47a66b02bdf94c1c0678841c5c41925fc84f20ea53cb573c3ee8398938cc51"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\LordAuriusRivendare.lua",
+      "sha256": "b916a2559c3efa229847159300b7b2cfcb928bda49baeac24971997cc8a75e6f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\MagistrateBarthilas.lua",
+      "sha256": "923fbecf6f29e89cd20c770352d0389be9cdbddb724e26d0e8acbae0b68aff5f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\MalekithePallid.lua",
+      "sha256": "df154513eb9dbc4ecd6759b2ae20bf2201ff913423ad17a289ffea85914eeee6"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\Narubenkan.lua",
+      "sha256": "c4addca058a1eb292aab3e6ffeda4d485238a72f776e2e66c490d13d4df84de3"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\PostmasterMalown.lua",
+      "sha256": "70b2dc3926e2d66a3148fc8927ad873d483bd459e0bcb14635e01da2eb17cb16"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\RamsteintheGorger.lua",
+      "sha256": "fe0e7f2872f45fd1263b0907f3c1154e66be0457ab82bca94b7e8e5bfb63953b"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\TheUnforgiven.lua",
+      "sha256": "3e1be4bf1b5031719d7e02da33a1b614657c680d7dfe94ca794446a44ae4e655"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\TimmytheCruel.lua",
+      "sha256": "6d1de25cb8df1da5d1ffbac4015f89470499cf76cbbd7a44fab14659cc4f6b27"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Stratholme\\WilleyHopebreaker.lua",
+      "sha256": "45432c4436d0d845e378459a428b92f111c9a8629336748f1866f9ed172b321d"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\SunkenTemple\\AvatarofHakkar.lua",
+      "sha256": "307c26c786eb3181c7566fbeb3950a251ed7364964088096f88b545aa9bd2af6"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\SunkenTemple\\Dreamscythe.lua",
+      "sha256": "d9a0d31d78ffbc7b17ca11ea8497de29efa676f0d981d2f844dcba72d78b0e27"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\SunkenTemple\\Hazzas.lua",
+      "sha256": "5e11701446eed58ac1320caa4368a57481e73d9679a2bb537571e482414286a7"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\SunkenTemple\\JammalantheProphet.lua",
+      "sha256": "600baafa87d0121420efb3fd56e83d0461cbceeb45fc7f7fb29fd49ef3b5cd87"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\SunkenTemple\\Morphaz.lua",
+      "sha256": "850cc197ee86ebed045a50f17f050d4fe60dbc07bc6c33d2fcfd94c3ad7d27e1"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\SunkenTemple\\ShadeofEranikus.lua",
+      "sha256": "d43c7bada40bec1008d2253eedb1da136497f492e727f91d4e9a0c1e34f77ca3"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\SunkenTemple\\Weaver.lua",
+      "sha256": "0012352ae87413b886c921b89d50e5a2354c8413d096446e77d22541a7092666"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Uldaman\\AncientStoneKeeper.lua",
+      "sha256": "5852a4066a9a1c5354dd25aeec8acc960d698c539408dc274dbf337856ca80cd"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Uldaman\\Archaedas.lua",
+      "sha256": "e1233b7be2b4e02d6659175f9a6e5f079b8da69b1650922889cf176276748449"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Uldaman\\GalgannFirehammer.lua",
+      "sha256": "123765b01e919a78476515aacebaabb294b8c0bc17af0b15ba36c980e4f83a29"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Uldaman\\Grimlok.lua",
+      "sha256": "6d137ce2e53d9032a53ee1b2618d4a56541c5bed7b408da622835bd5419d3341"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Uldaman\\Ironaya.lua",
+      "sha256": "6f606c470c1c3714dad703a967771fe589c057795f078892a4dbd72ccd85c5f3"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Uldaman\\ObsidianSentinel.lua",
+      "sha256": "72f99970a0b520c3cc6cd377bc540916e42809efc7f9fc586c8e117cd761c9b4"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Uldaman\\Revelosh.lua",
+      "sha256": "a62f96b92c7a8ba65710e26c06c212e2df740e41a62e9b646b8bdb7a4d5409ce"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\Uldaman\\TheLostDwarves.lua",
+      "sha256": "ac94dddfc7425fef6f765d2480e4109ac5993d525fc8c5c73ac41ea5c181e0d9"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\WailingCaverns\\DeviateFaerieDragon.lua",
+      "sha256": "329032b2783def5bfc4cb30653e63e7564b51b1ce10eb1fff107a8756410dbdf"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\WailingCaverns\\Kresh.lua",
+      "sha256": "d8ad0ce9c48390697d45617813b02933e597978c4491aa2d6f94877d368ce885"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\WailingCaverns\\LadyAnacondra.lua",
+      "sha256": "bb17bcbd890fcbec1d2c6f0c77607e909e2ccde6f7b73ba06c0dd59864e89ba1"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\WailingCaverns\\LordCobrahn.lua",
+      "sha256": "641ea282576c146ce8f7110cde200bcdcff81460093edffade9e918896ee2040"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\WailingCaverns\\LordPythas.lua",
+      "sha256": "366d1bbeda8a2889b77561018899ffeb83729772d49b5b3a678ae3a6844e710f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\WailingCaverns\\LordSerpentis.lua",
+      "sha256": "f486f672cd8e8396e645d32be9f1026d32f27151ec752ed731e699ac851b4ebf"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\WailingCaverns\\MutanustheDevourer.lua",
+      "sha256": "57a5d824091491396b69b373487d4a1366daef588c6d49d01acc67f7764bfee8"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\WailingCaverns\\Skum.lua",
+      "sha256": "07854b7acfbe8dca86e6e0addbfe6dc965b71036155f2d78143d6f6882ad92d7"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\WailingCaverns\\VerantheEverliving.lua",
+      "sha256": "95de6048d1284f68fd0063e26e624e5916a63d948641753fe0d00005695e9f6f"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ZulFarrak\\Antusul.lua",
+      "sha256": "7018ba5caa753663ee453bd48539e6e4f4de12847511511bd2541f106364ad3a"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ZulFarrak\\ChiefUkorzSandscalp.lua",
+      "sha256": "add33ce4314134f3700045c5a65c41e9be5941b7af6af5d61c6c2a63200f55bf"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ZulFarrak\\Gahzrilla.lua",
+      "sha256": "7803a027d78a63f997030a7444aa29b3070aac289d19dc71677fba562215fb4a"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ZulFarrak\\HydromancerVelrath.lua",
+      "sha256": "326017df69d210b14358203d44c7701b6c1c9555d1a4839b7aff17aa32db3b2a"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ZulFarrak\\Nekrum_Sezzziz.lua",
+      "sha256": "b8abe05ec4c2cbb73b76db958a064dc59da041b61b0584236ea863e0c0b28482"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ZulFarrak\\ThekatheMartyr.lua",
+      "sha256": "97548dc47889aad8fc4c7fdd5da8d1996c835d64d0896c3e17bcaade56f98588"
+    },
+    {
+      "path": "C:\\World of Warcraft\\_anniversary_\\Interface\\AddOns\\DBM-Party-Vanilla\\Shared\\ZulFarrak\\WitchDoctorZumrah.lua",
+      "sha256": "8d91eb1611003e237e4d3650f7b39627e7105c2fb5f94f2a25c1506d7b1b91ef"
+    }
+  ],
+  "raidRepository": "https://github.com/DeadlyBossMods/DBM-Vanilla",
+  "raidCommit": "25d051c8474355ebe59af0975d79a0cdac3c77b1",
+  "raidCache": "hardcorebuddy-tools/instances-dbm-raids-25d051c",
+  "notes": "Original third-party source is not loaded or distributed with runtime addon files."
+}

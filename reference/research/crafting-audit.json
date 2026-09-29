@@ -1,0 +1,3928 @@
+{
+  "checkedOn": "2026-09-28",
+  "itemCount": 120,
+  "professionCrafted": 89,
+  "classCreated": 9,
+  "poisonCreated": 1,
+  "noncraft": 21,
+  "records": {
+    "6290": {
+      "name": "Brilliant Smallfish",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          1,
+          45,
+          65,
+          85
+        ],
+        "creates": [
+          6290,
+          1,
+          1
+        ],
+        "id": 7751,
+        "learnedat": 1,
+        "level": 0,
+        "name": "Brilliant Smallfish",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            6291,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=7751",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=6325",
+      "recipeBinding": "unbound"
+    },
+    "4592": {
+      "name": "Longjaw Mud Snapper",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          50,
+          90,
+          110,
+          130
+        ],
+        "creates": [
+          4592,
+          1,
+          1
+        ],
+        "id": 7753,
+        "learnedat": 50,
+        "level": 0,
+        "name": "Longjaw Mud Snapper",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            6289,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=7753",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=6328",
+      "recipeBinding": "unbound"
+    },
+    "4593": {
+      "name": "Bristle Whisker Catfish",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          100,
+          140,
+          160,
+          180
+        ],
+        "creates": [
+          4593,
+          1,
+          1
+        ],
+        "id": 7755,
+        "learnedat": 100,
+        "level": 0,
+        "name": "Bristle Whisker Catfish",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            6308,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=7755",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=6330",
+      "recipeBinding": "unbound"
+    },
+    "8364": {
+      "name": "Mithril Head Trout",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          175,
+          215,
+          235,
+          255
+        ],
+        "creates": [
+          8364,
+          1,
+          1
+        ],
+        "id": 20916,
+        "learnedat": 175,
+        "level": 0,
+        "name": "Mithril Headed Trout",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            8365,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=20916",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=17062",
+      "recipeBinding": "unbound"
+    },
+    "6887": {
+      "name": "Spotted Yellowtail",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          225,
+          265,
+          285,
+          305
+        ],
+        "creates": [
+          6887,
+          1,
+          1
+        ],
+        "id": 18238,
+        "learnedat": 225,
+        "level": 0,
+        "name": "Spotted Yellowtail",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            4603,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=18238",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=13939",
+      "recipeBinding": "unbound"
+    },
+    "13935": {
+      "name": "Baked Salmon",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          275,
+          315,
+          335,
+          355
+        ],
+        "creates": [
+          13935,
+          1,
+          1
+        ],
+        "id": 18247,
+        "learnedat": 275,
+        "level": 0,
+        "name": "Baked Salmon",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            13889,
+            1
+          ],
+          [
+            3713,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=18247",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=13949",
+      "recipeBinding": "unbound"
+    },
+    "6888": {
+      "name": "Herb Baked Egg",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          1,
+          45,
+          65,
+          85
+        ],
+        "creates": [
+          6888,
+          1,
+          1
+        ],
+        "id": 8604,
+        "learnedat": 1,
+        "level": 0,
+        "name": "Herb Baked Egg",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            6889,
+            1
+          ],
+          [
+            2678,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=8604",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "2680": {
+      "name": "Spiced Wolf Meat",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          10,
+          50,
+          70,
+          90
+        ],
+        "creates": [
+          2680,
+          1,
+          1
+        ],
+        "id": 2539,
+        "learnedat": 10,
+        "level": 0,
+        "name": "Spiced Wolf Meat",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2672,
+            1
+          ],
+          [
+            2678,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 50
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2539",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "5525": {
+      "name": "Boiled Clams",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          50,
+          90,
+          110,
+          130
+        ],
+        "creates": [
+          5525,
+          1,
+          1
+        ],
+        "id": 6499,
+        "learnedat": 50,
+        "level": 0,
+        "name": "Boiled Clams",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            5503,
+            1
+          ],
+          [
+            159,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 100
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=6499",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "2684": {
+      "name": "Coyote Steak",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          50,
+          90,
+          110,
+          130
+        ],
+        "creates": [
+          2684,
+          1,
+          1
+        ],
+        "id": 2541,
+        "learnedat": 50,
+        "level": 0,
+        "name": "Coyote Steak",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2673,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 100
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2541",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "2683": {
+      "name": "Crab Cake",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          75,
+          115,
+          135,
+          155
+        ],
+        "creates": [
+          2683,
+          1,
+          1
+        ],
+        "id": 2544,
+        "learnedat": 75,
+        "level": 0,
+        "name": "Crab Cake",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2674,
+            1
+          ],
+          [
+            2678,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 200
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2544",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "2687": {
+      "name": "Dry Pork Ribs",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          80,
+          120,
+          140,
+          160
+        ],
+        "creates": [
+          2687,
+          1,
+          1
+        ],
+        "id": 2546,
+        "learnedat": 80,
+        "level": 0,
+        "name": "Dry Pork Ribs",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2677,
+            1
+          ],
+          [
+            2678,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 150
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2546",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "1082": {
+      "name": "Redridge Goulash",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          100,
+          135,
+          155,
+          175
+        ],
+        "creates": [
+          1082,
+          1,
+          1
+        ],
+        "id": 2547,
+        "learnedat": 100,
+        "level": 0,
+        "name": "Redridge Goulash",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            1081,
+            1
+          ],
+          [
+            1080,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2547",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=2699",
+      "recipeBinding": "unbound"
+    },
+    "5527": {
+      "name": "Goblin Deviled Clams",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          125,
+          165,
+          185,
+          205
+        ],
+        "creates": [
+          5527,
+          1,
+          1
+        ],
+        "id": 6500,
+        "learnedat": 125,
+        "level": 0,
+        "name": "Goblin Deviled Clams",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            5504,
+            1
+          ],
+          [
+            2692,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 300
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=6500",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3726": {
+      "name": "Big Bear Steak",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          110,
+          150,
+          170,
+          190
+        ],
+        "creates": [
+          3726,
+          1,
+          1
+        ],
+        "id": 3397,
+        "learnedat": 110,
+        "level": 0,
+        "name": "Big Bear Steak",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3730,
+            1
+          ],
+          [
+            2692,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3397",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=3734",
+      "recipeBinding": "unbound"
+    },
+    "3665": {
+      "name": "Curiously Tasty Omelet",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          130,
+          170,
+          190,
+          210
+        ],
+        "creates": [
+          3665,
+          1,
+          1
+        ],
+        "id": 3376,
+        "learnedat": 130,
+        "level": 0,
+        "name": "Curiously Tasty Omelet",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3685,
+            1
+          ],
+          [
+            2692,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3376",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=3682",
+      "recipeBinding": "unbound"
+    },
+    "20074": {
+      "name": "Heavy Crocolisk Stew",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          150,
+          160,
+          180,
+          200
+        ],
+        "creates": [
+          20074,
+          1,
+          1
+        ],
+        "id": 24418,
+        "learnedat": 150,
+        "level": 0,
+        "name": "Heavy Crocolisk Stew",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3667,
+            2
+          ],
+          [
+            3713,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=24418",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=20075",
+      "recipeBinding": "unbound"
+    },
+    "12210": {
+      "name": "Roast Raptor",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          175,
+          215,
+          235,
+          255
+        ],
+        "creates": [
+          12210,
+          1,
+          1
+        ],
+        "id": 15855,
+        "learnedat": 175,
+        "level": 0,
+        "name": "Roast Raptor",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            12184,
+            1
+          ],
+          [
+            2692,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=15855",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=12228",
+      "recipeBinding": "unbound"
+    },
+    "13851": {
+      "name": "Hot Wolf Ribs",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          175,
+          215,
+          235,
+          255
+        ],
+        "creates": [
+          13851,
+          1,
+          1
+        ],
+        "id": 15856,
+        "learnedat": 175,
+        "level": 0,
+        "name": "Hot Wolf Ribs",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            12203,
+            1
+          ],
+          [
+            2692,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=15856",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=12229",
+      "recipeBinding": "unbound"
+    },
+    "12212": {
+      "name": "Jungle Stew",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          175,
+          215,
+          235,
+          255
+        ],
+        "creates": [
+          12212,
+          2,
+          2
+        ],
+        "id": 15861,
+        "learnedat": 175,
+        "level": 0,
+        "name": "Jungle Stew",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            12202,
+            1
+          ],
+          [
+            159,
+            1
+          ],
+          [
+            4536,
+            2
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=15861",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=12231",
+      "recipeBinding": "unbound"
+    },
+    "17222": {
+      "name": "Spider Sausage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          200,
+          240,
+          260,
+          280
+        ],
+        "creates": [
+          17222,
+          1,
+          1
+        ],
+        "id": 21175,
+        "learnedat": 200,
+        "level": 0,
+        "name": "Spider Sausage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            12205,
+            2
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 4000
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=21175",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "18045": {
+      "name": "Tender Wolf Steak",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          225,
+          265,
+          285,
+          305
+        ],
+        "creates": [
+          18045,
+          1,
+          1
+        ],
+        "id": 22480,
+        "learnedat": 225,
+        "level": 0,
+        "name": "Tender Wolf Steak",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            12208,
+            1
+          ],
+          [
+            3713,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=22480",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=18046",
+      "recipeBinding": "unbound"
+    },
+    "12218": {
+      "name": "Monster Omelet",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          225,
+          265,
+          285,
+          305
+        ],
+        "creates": [
+          12218,
+          1,
+          1
+        ],
+        "id": 15933,
+        "learnedat": 225,
+        "level": 0,
+        "name": "Monster Omelet",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            12207,
+            1
+          ],
+          [
+            3713,
+            2
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=15933",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=16110",
+      "recipeBinding": "unbound"
+    },
+    "21023": {
+      "name": "Dirge's Kickin' Chimaerok Chops",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          300,
+          325,
+          345,
+          365
+        ],
+        "creates": [
+          21023,
+          5,
+          5
+        ],
+        "id": 25659,
+        "learnedat": 300,
+        "level": 0,
+        "name": "Dirge's Kickin' Chimaerok Chops",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2692,
+            1
+          ],
+          [
+            9061,
+            1
+          ],
+          [
+            8150,
+            1
+          ],
+          [
+            21024,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=25659",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=21025",
+      "recipeBinding": "unbound"
+    },
+    "21072": {
+      "name": "Smoked Sagefish",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          80,
+          120,
+          140,
+          160
+        ],
+        "creates": [
+          21072,
+          1,
+          1
+        ],
+        "id": 25704,
+        "learnedat": 80,
+        "level": 0,
+        "name": "Smoked Sagefish",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            21071,
+            1
+          ],
+          [
+            2678,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=25704",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=21099",
+      "recipeBinding": "unbound"
+    },
+    "21217": {
+      "name": "Sagefish Delight",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          175,
+          215,
+          235,
+          255
+        ],
+        "creates": [
+          21217,
+          1,
+          1
+        ],
+        "id": 25954,
+        "learnedat": 175,
+        "level": 0,
+        "name": "Sagefish Delight",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            21153,
+            1
+          ],
+          [
+            2692,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=25954",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=21219",
+      "recipeBinding": "unbound"
+    },
+    "13931": {
+      "name": "Nightfin Soup",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          250,
+          290,
+          310,
+          330
+        ],
+        "creates": [
+          13931,
+          1,
+          1
+        ],
+        "id": 18243,
+        "learnedat": 250,
+        "level": 0,
+        "name": "Nightfin Soup",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            13759,
+            1
+          ],
+          [
+            159,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=18243",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=13945",
+      "recipeBinding": "unbound"
+    },
+    "13928": {
+      "name": "Grilled Squid",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          240,
+          280,
+          300,
+          320
+        ],
+        "creates": [
+          13928,
+          1,
+          1
+        ],
+        "id": 18240,
+        "learnedat": 240,
+        "level": 0,
+        "name": "Grilled Squid",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            13755,
+            1
+          ],
+          [
+            3713,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=18240",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=13942",
+      "recipeBinding": "unbound"
+    },
+    "18254": {
+      "name": "Runn Tum Tuber Surprise",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          275,
+          315,
+          335,
+          355
+        ],
+        "creates": [
+          18254,
+          1,
+          1
+        ],
+        "id": 22761,
+        "learnedat": 275,
+        "level": 0,
+        "name": "Runn Tum Tuber Surprise",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            18255,
+            1
+          ],
+          [
+            3713,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=22761",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=18267",
+      "recipeBinding": "pickup"
+    },
+    "20452": {
+      "name": "Smoked Desert Dumplings",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          285,
+          325,
+          345,
+          365
+        ],
+        "creates": [
+          20452,
+          1,
+          1
+        ],
+        "id": 24801,
+        "learnedat": 285,
+        "level": 0,
+        "name": "Smoked Desert Dumplings",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            20424,
+            1
+          ],
+          [
+            3713,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=24801",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "2682": {
+      "name": "Cooked Crab Claw",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          85,
+          125,
+          145,
+          165
+        ],
+        "creates": [
+          2682,
+          1,
+          1
+        ],
+        "id": 2545,
+        "learnedat": 85,
+        "level": 0,
+        "name": "Cooked Crab Claw",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2675,
+            1
+          ],
+          [
+            2678,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2545",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=2698",
+      "recipeBinding": "unbound"
+    },
+    "118": {
+      "name": "Minor Healing Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          1,
+          55,
+          75,
+          95
+        ],
+        "creates": [
+          118,
+          1,
+          1
+        ],
+        "id": 2330,
+        "learnedat": 1,
+        "level": 0,
+        "name": "Minor Healing Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2447,
+            1
+          ],
+          [
+            765,
+            1
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2330",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "858": {
+      "name": "Lesser Healing Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          55,
+          85,
+          105,
+          125
+        ],
+        "creates": [
+          858,
+          1,
+          1
+        ],
+        "id": 2337,
+        "learnedat": 55,
+        "level": 0,
+        "name": "Lesser Healing Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            118,
+            1
+          ],
+          [
+            2450,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 1000
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2337",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "929": {
+      "name": "Healing Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          110,
+          135,
+          155,
+          175
+        ],
+        "creates": [
+          929,
+          1,
+          1
+        ],
+        "id": 3447,
+        "learnedat": 110,
+        "level": 0,
+        "name": "Healing Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2453,
+            1
+          ],
+          [
+            2450,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 4000
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3447",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "1710": {
+      "name": "Greater Healing Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          155,
+          175,
+          195,
+          215
+        ],
+        "creates": [
+          1710,
+          1,
+          1
+        ],
+        "id": 7181,
+        "learnedat": 155,
+        "level": 0,
+        "name": "Greater Healing Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3357,
+            1
+          ],
+          [
+            3356,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 5000
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=7181",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3928": {
+      "name": "Superior Healing Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          215,
+          230,
+          250,
+          270
+        ],
+        "creates": [
+          3928,
+          1,
+          1
+        ],
+        "id": 11457,
+        "learnedat": 215,
+        "level": 0,
+        "name": "Superior Healing Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            8838,
+            1
+          ],
+          [
+            3358,
+            1
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 9000
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=11457",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "13446": {
+      "name": "Major Healing Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          275,
+          290,
+          310,
+          330
+        ],
+        "creates": [
+          13446,
+          1,
+          1
+        ],
+        "id": 17556,
+        "learnedat": 275,
+        "level": 0,
+        "name": "Major Healing Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            13464,
+            2
+          ],
+          [
+            13465,
+            1
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=17556",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=13480",
+      "recipeBinding": "unbound"
+    },
+    "2455": {
+      "name": "Minor Mana Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          25,
+          65,
+          85,
+          105
+        ],
+        "creates": [
+          2455,
+          1,
+          1
+        ],
+        "id": 2331,
+        "learnedat": 25,
+        "level": 0,
+        "name": "Minor Mana Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            785,
+            1
+          ],
+          [
+            765,
+            1
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 100
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2331",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3385": {
+      "name": "Lesser Mana Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          120,
+          145,
+          165,
+          185
+        ],
+        "creates": [
+          3385,
+          1,
+          1
+        ],
+        "id": 3173,
+        "learnedat": 120,
+        "level": 0,
+        "name": "Lesser Mana Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            785,
+            1
+          ],
+          [
+            3820,
+            1
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 1500
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3173",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3827": {
+      "name": "Mana Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          160,
+          180,
+          200,
+          220
+        ],
+        "creates": [
+          3827,
+          1,
+          1
+        ],
+        "id": 3452,
+        "learnedat": 160,
+        "level": 0,
+        "name": "Mana Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3820,
+            1
+          ],
+          [
+            3356,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 5000
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3452",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "6149": {
+      "name": "Greater Mana Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          205,
+          220,
+          240,
+          260
+        ],
+        "creates": [
+          6149,
+          1,
+          1
+        ],
+        "id": 11448,
+        "learnedat": 205,
+        "level": 0,
+        "name": "Greater Mana Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3358,
+            1
+          ],
+          [
+            3821,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 8100
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=11448",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "13443": {
+      "name": "Superior Mana Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          260,
+          275,
+          295,
+          315
+        ],
+        "creates": [
+          13443,
+          1,
+          1
+        ],
+        "id": 17553,
+        "learnedat": 260,
+        "level": 0,
+        "name": "Superior Mana Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            8838,
+            2
+          ],
+          [
+            8839,
+            2
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=17553",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=13477",
+      "recipeBinding": "unbound"
+    },
+    "13444": {
+      "name": "Major Mana Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          295,
+          310,
+          330,
+          350
+        ],
+        "creates": [
+          13444,
+          1,
+          1
+        ],
+        "id": 17580,
+        "learnedat": 295,
+        "level": 0,
+        "name": "Major Mana Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            13463,
+            3
+          ],
+          [
+            13467,
+            2
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=17580",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=13501",
+      "recipeBinding": "pickup"
+    },
+    "3382": {
+      "name": "Weak Troll's Blood Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          15,
+          60,
+          80,
+          100
+        ],
+        "creates": [
+          3382,
+          1,
+          1
+        ],
+        "id": 3170,
+        "learnedat": 15,
+        "level": 0,
+        "name": "Weak Troll's Blood Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2447,
+            1
+          ],
+          [
+            2449,
+            2
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 50
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3170",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3388": {
+      "name": "Strong Troll's Blood Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          125,
+          150,
+          170,
+          190
+        ],
+        "creates": [
+          3388,
+          1,
+          1
+        ],
+        "id": 3176,
+        "learnedat": 125,
+        "level": 0,
+        "name": "Strong Troll's Blood Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2453,
+            2
+          ],
+          [
+            2450,
+            2
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 1500
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3176",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3826": {
+      "name": "Mighty Troll's Blood Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          180,
+          200,
+          220,
+          240
+        ],
+        "creates": [
+          3826,
+          1,
+          1
+        ],
+        "id": 3451,
+        "learnedat": 180,
+        "level": 0,
+        "name": "Mighty Troll's Blood Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3357,
+            1
+          ],
+          [
+            2453,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3451",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=3831",
+      "recipeBinding": "unbound"
+    },
+    "20004": {
+      "name": "Major Troll's Blood Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          290,
+          305,
+          325,
+          345
+        ],
+        "creates": [
+          20004,
+          1,
+          1
+        ],
+        "id": 24368,
+        "learnedat": 290,
+        "level": 0,
+        "name": "Major Troll's Blood Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            8846,
+            1
+          ],
+          [
+            13466,
+            2
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=24368",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=20014",
+      "recipeBinding": "pickup"
+    },
+    "5997": {
+      "name": "Elixir of Minor Defense",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          1,
+          55,
+          75,
+          95
+        ],
+        "creates": [
+          5997,
+          1,
+          1
+        ],
+        "id": 7183,
+        "learnedat": 1,
+        "level": 0,
+        "name": "Elixir of Minor Defense",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            765,
+            2
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=7183",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3389": {
+      "name": "Elixir of Defense",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          130,
+          155,
+          175,
+          195
+        ],
+        "creates": [
+          3389,
+          1,
+          1
+        ],
+        "id": 3177,
+        "learnedat": 130,
+        "level": 0,
+        "name": "Elixir of Defense",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3355,
+            1
+          ],
+          [
+            3820,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 2000
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3177",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "8951": {
+      "name": "Elixir of Greater Defense",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          195,
+          215,
+          235,
+          255
+        ],
+        "creates": [
+          8951,
+          1,
+          1
+        ],
+        "id": 11450,
+        "learnedat": 195,
+        "level": 0,
+        "name": "Elixir of Greater Defense",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3355,
+            1
+          ],
+          [
+            3821,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 6750
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=11450",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "13445": {
+      "name": "Elixir of Superior Defense",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          265,
+          280,
+          300,
+          320
+        ],
+        "creates": [
+          13445,
+          1,
+          1
+        ],
+        "id": 17554,
+        "learnedat": 265,
+        "level": 0,
+        "name": "Elixir of Superior Defense",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            13423,
+            2
+          ],
+          [
+            8838,
+            1
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=17554",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=13478",
+      "recipeBinding": "unbound"
+    },
+    "2458": {
+      "name": "Elixir of Minor Fortitude",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          50,
+          80,
+          100,
+          120
+        ],
+        "creates": [
+          2458,
+          1,
+          1
+        ],
+        "id": 2334,
+        "learnedat": 50,
+        "level": 0,
+        "name": "Elixir of Minor Fortitude",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2449,
+            2
+          ],
+          [
+            2447,
+            1
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 250
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2334",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3825": {
+      "name": "Elixir of Fortitude",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          175,
+          195,
+          215,
+          235
+        ],
+        "creates": [
+          3825,
+          1,
+          1
+        ],
+        "id": 3450,
+        "learnedat": 175,
+        "level": 0,
+        "name": "Elixir of Fortitude",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3355,
+            1
+          ],
+          [
+            3821,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 5400
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3450",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=3830",
+      "recipeBinding": "unbound"
+    },
+    "2457": {
+      "name": "Elixir of Minor Agility",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          50,
+          80,
+          100,
+          120
+        ],
+        "creates": [
+          2457,
+          1,
+          1
+        ],
+        "id": 3230,
+        "learnedat": 50,
+        "level": 0,
+        "name": "Elixir of Minor Agility",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2452,
+            1
+          ],
+          [
+            765,
+            1
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3230",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=2553",
+      "recipeBinding": "unbound"
+    },
+    "3390": {
+      "name": "Elixir of Lesser Agility",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          140,
+          165,
+          185,
+          205
+        ],
+        "creates": [
+          3390,
+          1,
+          1
+        ],
+        "id": 2333,
+        "learnedat": 140,
+        "level": 0,
+        "name": "Elixir of Lesser Agility",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3355,
+            1
+          ],
+          [
+            2452,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2333",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=3396",
+      "recipeBinding": "unbound"
+    },
+    "8949": {
+      "name": "Elixir of Agility",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          185,
+          205,
+          225,
+          245
+        ],
+        "creates": [
+          8949,
+          1,
+          1
+        ],
+        "id": 11449,
+        "learnedat": 185,
+        "level": 0,
+        "name": "Elixir of Agility",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3820,
+            1
+          ],
+          [
+            3821,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 5850
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=11449",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "9187": {
+      "name": "Elixir of Greater Agility",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          240,
+          255,
+          275,
+          295
+        ],
+        "creates": [
+          9187,
+          1,
+          1
+        ],
+        "id": 11467,
+        "learnedat": 240,
+        "level": 0,
+        "name": "Elixir of Greater Agility",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            8838,
+            1
+          ],
+          [
+            3821,
+            1
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 10800
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=11467",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "2454": {
+      "name": "Elixir of Lion's Strength",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          1,
+          55,
+          75,
+          95
+        ],
+        "creates": [
+          2454,
+          1,
+          1
+        ],
+        "id": 2329,
+        "learnedat": 1,
+        "level": 0,
+        "name": "Elixir of Lion's Strength",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2449,
+            1
+          ],
+          [
+            765,
+            1
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2329",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3391": {
+      "name": "Elixir of Ogre's Strength",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          150,
+          175,
+          195,
+          215
+        ],
+        "creates": [
+          3391,
+          1,
+          1
+        ],
+        "id": 3188,
+        "learnedat": 150,
+        "level": 0,
+        "name": "Elixir of Ogre's Strength",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2449,
+            1
+          ],
+          [
+            3356,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3188",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=6211",
+      "recipeBinding": "unbound"
+    },
+    "9206": {
+      "name": "Elixir of Giants",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          245,
+          260,
+          280,
+          300
+        ],
+        "creates": [
+          9206,
+          1,
+          1
+        ],
+        "id": 11472,
+        "learnedat": 245,
+        "level": 0,
+        "name": "Elixir of Giants",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            8838,
+            1
+          ],
+          [
+            8846,
+            1
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=11472",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=9298",
+      "recipeBinding": "unbound"
+    },
+    "3383": {
+      "name": "Elixir of Wisdom",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          90,
+          120,
+          140,
+          160
+        ],
+        "creates": [
+          3383,
+          1,
+          1
+        ],
+        "id": 3171,
+        "learnedat": 90,
+        "level": 0,
+        "name": "Elixir of Wisdom",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            785,
+            1
+          ],
+          [
+            2450,
+            2
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 500
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3171",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "9179": {
+      "name": "Elixir of Greater Intellect",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          235,
+          250,
+          270,
+          290
+        ],
+        "creates": [
+          9179,
+          1,
+          1
+        ],
+        "id": 11465,
+        "learnedat": 235,
+        "level": 0,
+        "name": "Elixir of Greater Intellect",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            8839,
+            1
+          ],
+          [
+            3358,
+            1
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 10800
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=11465",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "2459": {
+      "name": "Swiftness Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          60,
+          90,
+          110,
+          130
+        ],
+        "creates": [
+          2459,
+          1,
+          1
+        ],
+        "id": 2335,
+        "learnedat": 60,
+        "level": 0,
+        "name": "Swiftness Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2452,
+            1
+          ],
+          [
+            2450,
+            1
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=2335",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=2555",
+      "recipeBinding": "unbound"
+    },
+    "6372": {
+      "name": "Swim Speed Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          100,
+          130,
+          150,
+          170
+        ],
+        "creates": [
+          6372,
+          1,
+          1
+        ],
+        "id": 7841,
+        "learnedat": 100,
+        "level": 0,
+        "name": "Swim Speed Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2452,
+            1
+          ],
+          [
+            6370,
+            1
+          ],
+          [
+            3371,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 1000
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=7841",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "5634": {
+      "name": "Free Action Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          150,
+          175,
+          195,
+          215
+        ],
+        "creates": [
+          5634,
+          1,
+          1
+        ],
+        "id": 6624,
+        "learnedat": 150,
+        "level": 0,
+        "name": "Free Action Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            6370,
+            2
+          ],
+          [
+            3820,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=6624",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=5642",
+      "recipeBinding": "unbound"
+    },
+    "3823": {
+      "name": "Lesser Invisibility Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          165,
+          185,
+          205,
+          225
+        ],
+        "creates": [
+          3823,
+          1,
+          1
+        ],
+        "id": 3448,
+        "learnedat": 165,
+        "level": 0,
+        "name": "Lesser Invisibility Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            3818,
+            1
+          ],
+          [
+            3355,
+            1
+          ],
+          [
+            3372,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 4500
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3448",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "9172": {
+      "name": "Invisibility Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          235,
+          250,
+          270,
+          290
+        ],
+        "creates": [
+          9172,
+          1,
+          1
+        ],
+        "id": 11464,
+        "learnedat": 235,
+        "level": 0,
+        "name": "Invisibility Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            8845,
+            1
+          ],
+          [
+            8838,
+            1
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=11464",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=9295",
+      "recipeBinding": "unbound"
+    },
+    "3387": {
+      "name": "Limited Invulnerability Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          250,
+          275,
+          295,
+          315
+        ],
+        "creates": [
+          3387,
+          1,
+          1
+        ],
+        "id": 3175,
+        "learnedat": 250,
+        "level": 0,
+        "name": "Limited Invulnerability Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            8839,
+            2
+          ],
+          [
+            8845,
+            1
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3175",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=3395",
+      "recipeBinding": "unbound"
+    },
+    "9030": {
+      "name": "Restorative Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          215,
+          225,
+          245,
+          265
+        ],
+        "creates": [
+          9030,
+          1,
+          1
+        ],
+        "id": 11452,
+        "learnedat": 215,
+        "level": 0,
+        "name": "Restorative Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            7067,
+            1
+          ],
+          [
+            3821,
+            1
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=11452",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "20008": {
+      "name": "Living Action Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          285,
+          300,
+          320,
+          340
+        ],
+        "creates": [
+          20008,
+          1,
+          1
+        ],
+        "id": 24367,
+        "learnedat": 285,
+        "level": 0,
+        "name": "Living Action Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            13467,
+            2
+          ],
+          [
+            13465,
+            2
+          ],
+          [
+            10286,
+            2
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=24367",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=20013",
+      "recipeBinding": "pickup"
+    },
+    "13462": {
+      "name": "Purification Potion",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          285,
+          300,
+          320,
+          340
+        ],
+        "creates": [
+          13462,
+          1,
+          1
+        ],
+        "id": 17572,
+        "learnedat": 285,
+        "level": 0,
+        "name": "Purification Potion",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            13467,
+            2
+          ],
+          [
+            13466,
+            2
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=17572",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=13492",
+      "recipeBinding": "unbound"
+    },
+    "13506": {
+      "name": "Flask of Petrification",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          300,
+          315,
+          322,
+          330
+        ],
+        "creates": [
+          13506,
+          1,
+          1
+        ],
+        "id": 17634,
+        "learnedat": 300,
+        "level": 0,
+        "name": "Flask of Petrification",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            13423,
+            30
+          ],
+          [
+            13465,
+            10
+          ],
+          [
+            13468,
+            1
+          ],
+          [
+            8925,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          171
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=17634",
+      "skillSource": "https://www.wowhead.com/classic/skill=171",
+      "recipeSource": "https://www.wowhead.com/classic/item=13518",
+      "recipeBinding": "unbound"
+    },
+    "1251": {
+      "name": "Linen Bandage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          1,
+          30,
+          45,
+          60
+        ],
+        "creates": [
+          1251,
+          1,
+          1
+        ],
+        "id": 3275,
+        "learnedat": 1,
+        "level": 0,
+        "name": "Linen Bandage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2589,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3275",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "2581": {
+      "name": "Heavy Linen Bandage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          40,
+          50,
+          75,
+          100
+        ],
+        "creates": [
+          2581,
+          1,
+          1
+        ],
+        "id": 3276,
+        "learnedat": 40,
+        "level": 0,
+        "name": "Heavy Linen Bandage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2589,
+            2
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3276",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3530": {
+      "name": "Wool Bandage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          80,
+          80,
+          115,
+          150
+        ],
+        "creates": [
+          3530,
+          1,
+          1
+        ],
+        "id": 3277,
+        "learnedat": 80,
+        "level": 0,
+        "name": "Wool Bandage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2592,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 250
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3277",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "3531": {
+      "name": "Heavy Wool Bandage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          115,
+          115,
+          150,
+          185
+        ],
+        "creates": [
+          3531,
+          1,
+          1
+        ],
+        "id": 3278,
+        "learnedat": 115,
+        "level": 0,
+        "name": "Heavy Wool Bandage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2592,
+            2
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 1000
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3278",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "6450": {
+      "name": "Silk Bandage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          150,
+          150,
+          180,
+          210
+        ],
+        "creates": [
+          6450,
+          1,
+          1
+        ],
+        "id": 7928,
+        "learnedat": 150,
+        "level": 0,
+        "name": "Silk Bandage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            4306,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 5000
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=7928",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "6451": {
+      "name": "Heavy Silk Bandage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          180,
+          180,
+          210,
+          240
+        ],
+        "creates": [
+          6451,
+          1,
+          1
+        ],
+        "id": 7929,
+        "learnedat": 180,
+        "level": 0,
+        "name": "Heavy Silk Bandage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            4306,
+            2
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=7929",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": "https://www.wowhead.com/classic/item=16112",
+      "recipeBinding": "unbound"
+    },
+    "8544": {
+      "name": "Mageweave Bandage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          210,
+          210,
+          240,
+          270
+        ],
+        "creates": [
+          8544,
+          1,
+          1
+        ],
+        "id": 10840,
+        "learnedat": 210,
+        "level": 0,
+        "name": "Mageweave Bandage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            4338,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=10840",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": "https://www.wowhead.com/classic/item=16113",
+      "recipeBinding": "unbound"
+    },
+    "8545": {
+      "name": "Heavy Mageweave Bandage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          240,
+          240,
+          270,
+          300
+        ],
+        "creates": [
+          8545,
+          1,
+          1
+        ],
+        "id": 10841,
+        "learnedat": 240,
+        "level": 0,
+        "name": "Heavy Mageweave Bandage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            4338,
+            2
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=10841",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "14529": {
+      "name": "Runecloth Bandage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          260,
+          260,
+          290,
+          320
+        ],
+        "creates": [
+          14529,
+          1,
+          1
+        ],
+        "id": 18629,
+        "learnedat": 260,
+        "level": 0,
+        "name": "Runecloth Bandage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            14047,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=18629",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "14530": {
+      "name": "Heavy Runecloth Bandage",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          290,
+          290,
+          320,
+          350
+        ],
+        "creates": [
+          14530,
+          1,
+          1
+        ],
+        "id": 18630,
+        "learnedat": 290,
+        "level": 0,
+        "name": "Heavy Runecloth Bandage",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            14047,
+            2
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=18630",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "6452": {
+      "name": "Anti-Venom",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          80,
+          80,
+          115,
+          150
+        ],
+        "creates": [
+          6452,
+          3,
+          3
+        ],
+        "id": 7934,
+        "learnedat": 80,
+        "level": 0,
+        "name": "Anti-Venom",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            1475,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 250
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=7934",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "6453": {
+      "name": "Strong Anti-Venom",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          130,
+          130,
+          165,
+          200
+        ],
+        "creates": [
+          6453,
+          3,
+          3
+        ],
+        "id": 7935,
+        "learnedat": 130,
+        "level": 0,
+        "name": "Strong Anti-Venom",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            1288,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=7935",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": "https://www.wowhead.com/classic/item=6454",
+      "recipeBinding": "unbound"
+    },
+    "19440": {
+      "name": "Powerful Anti-Venom",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          300,
+          300,
+          330,
+          360
+        ],
+        "creates": [
+          19440,
+          1,
+          1
+        ],
+        "id": 23787,
+        "learnedat": 300,
+        "level": 0,
+        "name": "Powerful Anti-Venom",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            19441,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          129
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=23787",
+      "skillSource": "https://www.wowhead.com/classic/skill=129",
+      "recipeSource": "https://www.wowhead.com/classic/item=19442",
+      "recipeBinding": "pickup"
+    },
+    "4366": {
+      "name": "Target Dummy",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          85,
+          115,
+          130,
+          145
+        ],
+        "creates": [
+          4366,
+          1,
+          1
+        ],
+        "id": 3932,
+        "learnedat": 85,
+        "level": 0,
+        "name": "Target Dummy",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            4363,
+            1
+          ],
+          [
+            4359,
+            2
+          ],
+          [
+            2841,
+            1
+          ],
+          [
+            2592,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          202
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 300
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3932",
+      "skillSource": "https://www.wowhead.com/classic/skill=202",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "4392": {
+      "name": "Advanced Target Dummy",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          185,
+          185,
+          205,
+          225
+        ],
+        "creates": [
+          4392,
+          1,
+          1
+        ],
+        "id": 3965,
+        "learnedat": 185,
+        "level": 0,
+        "name": "Advanced Target Dummy",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            4387,
+            1
+          ],
+          [
+            4382,
+            1
+          ],
+          [
+            4389,
+            1
+          ],
+          [
+            4234,
+            4
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          202
+        ],
+        "source": [
+          6
+        ],
+        "trainingcost": 1200
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=3965",
+      "skillSource": "https://www.wowhead.com/classic/skill=202",
+      "recipeSource": null,
+      "recipeBinding": null
+    },
+    "16023": {
+      "name": "Masterwork Target Dummy",
+      "spell": {
+        "cat": 11,
+        "colors": [
+          275,
+          295,
+          305,
+          315
+        ],
+        "creates": [
+          16023,
+          1,
+          1
+        ],
+        "id": 19814,
+        "learnedat": 275,
+        "level": 0,
+        "name": "Masterwork Target Dummy",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            10561,
+            1
+          ],
+          [
+            16000,
+            1
+          ],
+          [
+            15994,
+            2
+          ],
+          [
+            6037,
+            1
+          ],
+          [
+            8170,
+            2
+          ],
+          [
+            14047,
+            4
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          202
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=19814",
+      "skillSource": "https://www.wowhead.com/classic/skill=202",
+      "recipeSource": "https://www.wowhead.com/classic/item=16046",
+      "recipeBinding": "unbound"
+    },
+    "7676": {
+      "name": "Thistle Tea",
+      "spell": {
+        "cat": 9,
+        "colors": [
+          60,
+          100,
+          120,
+          140
+        ],
+        "creates": [
+          7676,
+          1,
+          1
+        ],
+        "id": 9513,
+        "learnedat": 60,
+        "level": 0,
+        "name": "Thistle Tea",
+        "nskillup": 1,
+        "quality": 1,
+        "reagents": [
+          [
+            2452,
+            1
+          ],
+          [
+            159,
+            1
+          ]
+        ],
+        "schools": 1,
+        "skill": [
+          185
+        ]
+      },
+      "spellSource": "https://www.wowhead.com/classic/spell=9513",
+      "skillSource": "https://www.wowhead.com/classic/skill=185",
+      "recipeSource": "https://www.wowhead.com/classic/item=7678",
+      "recipeBinding": "unbound"
+    }
+  },
+  "extraSources": [
+    "https://www.wowhead.com/classic/quest=2501",
+    "https://www.wowhead.com/classic/quest=2203",
+    "https://www.wowhead.com/classic/quest=2500",
+    "https://www.wowhead.com/classic/quest=2202",
+    "https://www.wowhead.com/classic/quest=8307",
+    "https://www.wowhead.com/classic/quest=8313",
+    "https://www.wowhead.com/classic/spell=6510"
+  ]
+}

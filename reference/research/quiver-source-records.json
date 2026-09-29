@@ -1,0 +1,119 @@
+[
+  {
+    "id": 5439,
+    "name": "Small Quiver",
+    "level": 1,
+    "slots": 8,
+    "speed": 10,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/5439",
+    "tooltip": "     Small Quiver      Item Level  5     8 Slot Quiver                 Equip:   Increases ranged attack speed by 10%.         Sell Price:  25     "
+  },
+  {
+    "id": 5441,
+    "name": "Small Shot Pouch",
+    "level": 1,
+    "slots": 8,
+    "speed": 10,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/5441",
+    "tooltip": "     Small Shot Pouch      Item Level  5     8 Slot Ammo Pouch                 Equip:   Increases ranged attack speed by 10%.         Sell Price:  2   50     "
+  },
+  {
+    "id": 11362,
+    "name": "Medium Quiver",
+    "level": 10,
+    "slots": 10,
+    "speed": 10,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/11362",
+    "tooltip": "     Medium Quiver      Item Level  15     10 Slot Quiver              Requires Level  10    Equip:   Increases ranged attack speed by 10%.         Sell Price:  2   50     "
+  },
+  {
+    "id": 11363,
+    "name": "Medium Shot Pouch",
+    "level": 10,
+    "slots": 10,
+    "speed": 10,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/11363",
+    "tooltip": "     Medium Shot Pouch      Item Level  15     10 Slot Ammo Pouch              Requires Level  10    Equip:   Increases ranged attack speed by 10%.         Sell Price:  2   50     "
+  },
+  {
+    "id": 7371,
+    "name": "Heavy Quiver",
+    "level": 30,
+    "slots": 14,
+    "speed": 12,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/7371",
+    "tooltip": "     Heavy Quiver      Item Level  35     14 Slot Quiver              Requires Level  30    Equip:   Increases ranged attack speed by 12%.         Sell Price:  5     "
+  },
+  {
+    "id": 7372,
+    "name": "Heavy Leather Ammo Pouch",
+    "level": 30,
+    "slots": 14,
+    "speed": 12,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/7372",
+    "tooltip": "     Heavy Leather Ammo Pouch      Item Level  35     14 Slot Ammo Pouch              Requires Level  30    Equip:   Increases ranged attack speed by 12%.         Sell Price:  5     "
+  },
+  {
+    "id": 8217,
+    "name": "Quickdraw Quiver",
+    "level": 40,
+    "slots": 16,
+    "speed": 13,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/8217",
+    "tooltip": "     Quickdraw Quiver      Item Level  45     16 Slot Quiver              Requires Level  40    Equip:   Increases ranged attack speed by 13%.         Sell Price:  10     "
+  },
+  {
+    "id": 8218,
+    "name": "Thick Leather Ammo Pouch",
+    "level": 40,
+    "slots": 16,
+    "speed": 13,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/8218",
+    "tooltip": "     Thick Leather Ammo Pouch      Item Level  45     16 Slot Ammo Pouch              Requires Level  40    Equip:   Increases ranged attack speed by 13%.         Sell Price:  10     "
+  },
+  {
+    "id": 3605,
+    "name": "Quiver of the Night Watch",
+    "level": 1,
+    "slots": 12,
+    "speed": 11,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/3605",
+    "tooltip": "     Quiver of the Night Watch      Item Level  25   Binds when picked up Unique   12 Slot Quiver                 Equip:   Increases ranged attack speed by 11%.         Sell Price:  5     "
+  },
+  {
+    "id": 3604,
+    "name": "Bandolier of the Night Watch",
+    "level": 1,
+    "slots": 12,
+    "speed": 11,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/3604",
+    "tooltip": "     Bandolier of the Night Watch      Item Level  25   Binds when picked up Unique   12 Slot Ammo Pouch                 Equip:   Increases ranged attack speed by 11%.         Sell Price:  5     "
+  },
+  {
+    "id": 2662,
+    "name": "Ribbly's Quiver",
+    "level": 50,
+    "slots": 16,
+    "speed": 14,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/2662",
+    "tooltip": "     Ribbly's Quiver      Item Level  55   Binds when picked up Unique   16 Slot Quiver              Requires Level  50    Equip:   Increases ranged attack speed by 14%.         Sell Price:  87   50     "
+  },
+  {
+    "id": 2663,
+    "name": "Ribbly's Bandolier",
+    "level": 50,
+    "slots": 16,
+    "speed": 14,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/2663",
+    "tooltip": "     Ribbly's Bandolier      Item Level  55   Binds when picked up Unique   16 Slot Ammo Pouch              Requires Level  50    Equip:   Increases ranged attack speed by 14%.         Sell Price:  87   50     "
+  },
+  {
+    "id": 18714,
+    "name": "Ancient Sinew Wrapped Lamina",
+    "level": 60,
+    "slots": 18,
+    "speed": 15,
+    "source": "https://nether.wowhead.com/classic/tooltip/item/18714",
+    "tooltip": "     Ancient Sinew Wrapped Lamina      Item Level  75   Binds when picked up Unique   18 Slot Quiver         Classes:  Hunter        Requires Level  60    Equip:   Increases ranged attack speed by 15%.           "
+  }
+]

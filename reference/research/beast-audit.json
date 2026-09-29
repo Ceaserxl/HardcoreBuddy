@@ -1,0 +1,7588 @@
+{
+  "checkedOn": "2026-09-28",
+  "scope": "Classic Era / Hardcore; not Season of Discovery",
+  "total": 1222,
+  "tamable": 587,
+  "unknownSkillSets": [
+    698,
+    756,
+    3939,
+    4346,
+    4347,
+    4348,
+    4534,
+    4535,
+    5432,
+    5766,
+    5983,
+    6250,
+    6867,
+    10581,
+    10979,
+    11359,
+    11370,
+    15067,
+    107,
+    120,
+    700,
+    758,
+    995,
+    1810,
+    1811,
+    3460,
+    3826,
+    4482,
+    4691,
+    4724,
+    4725,
+    4862,
+    5264,
+    5986,
+    5987,
+    5989,
+    166359
+  ],
+  "excludedSeasonalIds": [
+    201722,
+    205382,
+    205383,
+    205422,
+    205423,
+    208124,
+    208127,
+    208128,
+    208158,
+    208638,
+    208809,
+    208810,
+    208811,
+    208812,
+    208843,
+    209524,
+    209548,
+    209797,
+    209928,
+    209939,
+    209940,
+    209941,
+    210107,
+    210482,
+    210533,
+    210750,
+    210887,
+    211736,
+    211951,
+    211965,
+    211967,
+    212159,
+    212330,
+    212458,
+    212463,
+    213795,
+    214612,
+    215068,
+    215108,
+    216854,
+    216931,
+    217703,
+    217711,
+    217836,
+    217945,
+    217956,
+    220142,
+    220170,
+    220174,
+    220178,
+    221168,
+    221169,
+    221230,
+    221257,
+    221258,
+    221312,
+    221324,
+    221328,
+    221330,
+    221333,
+    221334,
+    221364,
+    221740,
+    221832,
+    221928,
+    222243,
+    222367,
+    222376,
+    222406,
+    222416,
+    222418,
+    222495,
+    222522,
+    222573,
+    222580,
+    222699,
+    222703,
+    223068,
+    223264,
+    223265,
+    224244,
+    227493,
+    227746,
+    227938,
+    228430,
+    228442,
+    228770,
+    228814,
+    228835,
+    228907,
+    229001,
+    229009,
+    229037,
+    229057,
+    229390,
+    229425,
+    229984,
+    230069,
+    230513,
+    231852,
+    231979,
+    231980,
+    231982,
+    231984,
+    231990,
+    231991,
+    231992,
+    231996,
+    232000,
+    232467,
+    232568,
+    232630,
+    232634,
+    232638,
+    232741,
+    232799,
+    232816,
+    232817,
+    232818,
+    232854,
+    232892,
+    232921,
+    232923,
+    232926,
+    232928,
+    232946,
+    232961,
+    232993,
+    233017,
+    233027,
+    233029,
+    233031,
+    234193,
+    235326,
+    235880,
+    235881,
+    237604,
+    238024,
+    238244,
+    238245,
+    238374,
+    238425,
+    238426,
+    238427,
+    238556,
+    238627,
+    238628,
+    238629,
+    240122,
+    240247,
+    240780,
+    241906,
+    242010,
+    242093,
+    242108,
+    242137,
+    242141,
+    242142,
+    242158,
+    242159,
+    242160,
+    243012,
+    243013,
+    243014,
+    243015,
+    243016,
+    243017,
+    243018,
+    244477,
+    244480,
+    244481,
+    244482,
+    244495
+  ],
+  "conflicts": [
+    {
+      "npcId": 4011,
+      "name": "Young Pridewing",
+      "vanilla": false,
+      "wowhead": true,
+      "resolution": "vanilla"
+    },
+    {
+      "npcId": 11671,
+      "name": "Core Hound",
+      "vanilla": false,
+      "wowhead": true,
+      "resolution": "vanilla"
+    },
+    {
+      "npcId": 11672,
+      "name": "Core Rager",
+      "vanilla": false,
+      "wowhead": true,
+      "resolution": "vanilla"
+    },
+    {
+      "npcId": 11673,
+      "name": "Ancient Core Hound",
+      "vanilla": false,
+      "wowhead": true,
+      "resolution": "vanilla"
+    },
+    {
+      "npcId": 4950,
+      "name": "Spot",
+      "vanilla": true,
+      "petopia": false,
+      "resolution": "petopia-classic"
+    },
+    {
+      "npcId": 14283,
+      "name": "Stormpike Owl",
+      "vanilla": true,
+      "petopia": false,
+      "resolution": "petopia-classic"
+    }
+  ],
+  "records": {
+    "30": {
+      "name": "Forest Spider",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "43": {
+      "name": "Mine Spider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "69": {
+      "name": "Timber Wolf",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "113": {
+      "name": "Stonetusk Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "118": {
+      "name": "Prowler",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "119": {
+      "name": "Longsnout",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "154": {
+      "name": "Greater Fleshripper",
+      "tameable": true,
+      "abilities": [
+        "Screech 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "157": {
+      "name": "Goretusk",
+      "tameable": true,
+      "abilities": [
+        "Charge 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "199": {
+      "name": "Young Fleshripper",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "213": {
+      "name": "Starving Dire Wolf",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "217": {
+      "name": "Venom Web Spider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "284": {
+      "name": "Riding Horse (Brown)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "299": {
+      "name": "Young Wolf",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "305": {
+      "name": "Riding Horse (White Stallion)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "306": {
+      "name": "Riding Horse (Palomino)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "307": {
+      "name": "Riding Horse (Pinto)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "308": {
+      "name": "Riding Horse (Black Stallion)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "330": {
+      "name": "Princess",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "345": {
+      "name": "Bellygrub",
+      "tameable": true,
+      "abilities": [
+        "Charge 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "356": {
+      "name": "Riding Wolf (Black)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "358": {
+      "name": "Riding Wolf (Brown)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "359": {
+      "name": "Riding Wolf (Winter)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "390": {
+      "name": "Porcine Entourage",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "428": {
+      "name": "Dire Condor",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "442": {
+      "name": "Tarantula",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "454": {
+      "name": "Young Goretusk",
+      "tameable": true,
+      "abilities": [
+        "Charge 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "462": {
+      "name": "Vultros",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "471": {
+      "name": "Mother Fang",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "505": {
+      "name": "Greater Tarantula",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "521": {
+      "name": "Lupos",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "524": {
+      "name": "Rockhide Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "525": {
+      "name": "Mangy Wolf",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "539": {
+      "name": "Pygmy Venom Web Spider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "541": {
+      "name": "Riding Gryphon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "547": {
+      "name": "Great Goretusk",
+      "tameable": true,
+      "abilities": [
+        "Charge 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "565": {
+      "name": "Rabid Dire Wolf",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "569": {
+      "name": "Green Recluse",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "574": {
+      "name": "Naraxis",
+      "tameable": true,
+      "abilities": [
+        "Bite 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "616": {
+      "name": "Chatter",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "628": {
+      "name": "Black Ravager",
+      "tameable": true,
+      "abilities": [
+        "Bite 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "659": {
+      "name": "El Pollo Grande",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "681": {
+      "name": "Young Stranglethorn Tiger",
+      "tameable": true,
+      "abilities": [
+        "Cower 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "682": {
+      "name": "Stranglethorn Tiger",
+      "tameable": true,
+      "abilities": [
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "683": {
+      "name": "Young Panther",
+      "tameable": true,
+      "abilities": [
+        "Cower 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "684": {
+      "name": "Shadowmaw Panther",
+      "tameable": true,
+      "abilities": [
+        "Prowl 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "685": {
+      "name": "Stranglethorn Raptor",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "686": {
+      "name": "Lashtail Raptor",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "687": {
+      "name": "Jungle Stalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "688": {
+      "name": "Stone Maw Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "689": {
+      "name": "Crystal Spine Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "690": {
+      "name": "Cold Eye Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "698": {
+      "name": "Bloodscalp Tiger",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "704": {
+      "name": "Ragged Timber Wolf",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "705": {
+      "name": "Ragged Young Wolf",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "708": {
+      "name": "Small Crag Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "728": {
+      "name": "Bhag'thera",
+      "tameable": true,
+      "abilities": [
+        "Dash 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "729": {
+      "name": "Sin'Dall",
+      "tameable": true,
+      "abilities": [
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "730": {
+      "name": "Tethis",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "731": {
+      "name": "King Bangalash",
+      "tameable": true,
+      "abilities": [
+        "Claw 6",
+        "Dash 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "736": {
+      "name": "Panther",
+      "tameable": true,
+      "abilities": [
+        "Cower 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "756": {
+      "name": "Skullsplitter Panther",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "767": {
+      "name": "Swamp Jaguar",
+      "tameable": true,
+      "abilities": [
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "768": {
+      "name": "Shadow Panther",
+      "tameable": true,
+      "abilities": [
+        "Prowl 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "769": {
+      "name": "Deathstrike Tarantula",
+      "tameable": true,
+      "abilities": [
+        "Bite 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "772": {
+      "name": "Stranglethorn Tigress",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "822": {
+      "name": "Young Forest Bear",
+      "tameable": true,
+      "abilities": [
+        "Claw 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "830": {
+      "name": "Sand Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "831": {
+      "name": "Sea Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "833": {
+      "name": "Coyote Packleader",
+      "tameable": true,
+      "abilities": [
+        "Bite 2",
+        "Furious Howl 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "834": {
+      "name": "Coyote",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "854": {
+      "name": "Young Jungle Stalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "855": {
+      "name": "Young Stranglethorn Raptor",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "856": {
+      "name": "Young Lashtail Raptor",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "858": {
+      "name": "Sorrow Spinner",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "905": {
+      "name": "Sharptooth Frenzy",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "922": {
+      "name": "Silt Crawler",
+      "tameable": true,
+      "abilities": [
+        "Claw 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "923": {
+      "name": "Young Black Ravager",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "930": {
+      "name": "Black Widow Hatchling",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "949": {
+      "name": "Carrion Recluse",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "976": {
+      "name": "Kurzen War Tiger",
+      "tameable": true,
+      "abilities": [
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "977": {
+      "name": "Kurzen War Panther",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1015": {
+      "name": "Highland Raptor",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1016": {
+      "name": "Highland Lashtail",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1017": {
+      "name": "Highland Scytheclaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1018": {
+      "name": "Highland Razormaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1019": {
+      "name": "Elder Razormaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1020": {
+      "name": "Mottled Raptor",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1021": {
+      "name": "Mottled Screecher",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1022": {
+      "name": "Mottled Scytheclaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1023": {
+      "name": "Mottled Razormaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1082": {
+      "name": "Sawtooth Crocolisk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1084": {
+      "name": "Young Sawtooth Crocolisk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1085": {
+      "name": "Elder Stranglethorn Tiger",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1087": {
+      "name": "Sawtooth Snapper",
+      "tameable": true,
+      "abilities": [
+        "Bite 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "1088": {
+      "name": "Monstrous Crawler",
+      "tameable": true,
+      "abilities": [
+        "Claw 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "1108": {
+      "name": "Mistvale Gorilla",
+      "tameable": true,
+      "abilities": [
+        "Thunderstomp 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1109": {
+      "name": "Fleshripper",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1111": {
+      "name": "Leech Stalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1112": {
+      "name": "Leech Widow",
+      "tameable": true,
+      "abilities": [
+        "Bite 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "1114": {
+      "name": "Jungle Thunderer",
+      "tameable": true,
+      "abilities": [
+        "Thunderstomp 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1125": {
+      "name": "Crag Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1126": {
+      "name": "Large Crag Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1127": {
+      "name": "Elder Crag Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1128": {
+      "name": "Young Black Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1129": {
+      "name": "Black Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1130": {
+      "name": "Bjarn",
+      "tameable": true,
+      "abilities": [
+        "Claw 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1131": {
+      "name": "Winter Wolf",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1132": {
+      "name": "Timber",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1133": {
+      "name": "Starving Winter Wolf",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1138": {
+      "name": "Snow Tracker Wolf",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1140": {
+      "name": "Razormaw Matriarch",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1150": {
+      "name": "River Crocolisk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1151": {
+      "name": "Saltwater Crocolisk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1152": {
+      "name": "Snapjaw Crocolisk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1184": {
+      "name": "Cliff Lurker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1185": {
+      "name": "Wood Lurker",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "1186": {
+      "name": "Elder Black Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1188": {
+      "name": "Grizzled Black Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1189": {
+      "name": "Black Bear Patriarch",
+      "tameable": true,
+      "abilities": [
+        "Claw 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "1190": {
+      "name": "Mountain Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1191": {
+      "name": "Mangy Mountain Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1192": {
+      "name": "Elder Mountain Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1193": {
+      "name": "Loch Frenzy",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1194": {
+      "name": "Mountain Buzzard",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1195": {
+      "name": "Forest Lurker",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1196": {
+      "name": "Ice Claw Bear",
+      "tameable": true,
+      "abilities": [
+        "Claw 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1199": {
+      "name": "Juvenile Snow Leopard",
+      "tameable": true,
+      "abilities": [
+        "Cower 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1201": {
+      "name": "Snow Leopard",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1216": {
+      "name": "Shore Crawler",
+      "tameable": true,
+      "abilities": [
+        "Claw 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "1224": {
+      "name": "Young Threshadon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1225": {
+      "name": "Ol' Sooty",
+      "tameable": true,
+      "abilities": [
+        "Claw 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "1258": {
+      "name": "Black Ravager Mastiff",
+      "tameable": true,
+      "abilities": [
+        "Bite 4",
+        "Furious Howl 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1353": {
+      "name": "Sarltooth",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1400": {
+      "name": "Wetlands Crocolisk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1417": {
+      "name": "Young Wetlands Crocolisk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1419": {
+      "name": "Fizzles",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1504": {
+      "name": "Young Night Web Spider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1505": {
+      "name": "Night Web Spider",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1508": {
+      "name": "Young Scavenger",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1509": {
+      "name": "Ragged Scavenger",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1511": {
+      "name": "Enraged Silverback Gorilla",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1512": {
+      "name": "Duskbat",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1513": {
+      "name": "Mangy Duskbat",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1514": {
+      "name": "Mokk the Savage",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1516": {
+      "name": "Konda",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1550": {
+      "name": "Thrashtail Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1551": {
+      "name": "Ironjaw Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1552": {
+      "name": "Scale Belly",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1553": {
+      "name": "Greater Duskbat",
+      "tameable": true,
+      "abilities": [
+        "Cower 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1554": {
+      "name": "Vampiric Duskbat",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1555": {
+      "name": "Vicious Night Web Spider",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1557": {
+      "name": "Elder Mistvale Gorilla",
+      "tameable": true,
+      "abilities": [
+        "Thunderstomp 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1558": {
+      "name": "Silverback Patriarch",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1559": {
+      "name": "King Mukla",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1688": {
+      "name": "Night Web Matriarch",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1689": {
+      "name": "Scarred Crag Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1693": {
+      "name": "Loch Crocolisk",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1713": {
+      "name": "Elder Shadowmaw Panther",
+      "tameable": true,
+      "abilities": [
+        "Dash 2",
+        "Prowl 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1765": {
+      "name": "Worg",
+      "tameable": true,
+      "abilities": [
+        "Bite 2",
+        "Furious Howl 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1766": {
+      "name": "Mottled Worg",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1778": {
+      "name": "Ferocious Grizzled Bear",
+      "tameable": true,
+      "abilities": [
+        "Claw 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1780": {
+      "name": "Moss Stalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1781": {
+      "name": "Mist Creeper",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1797": {
+      "name": "Giant Grizzled Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1809": {
+      "name": "Carrion Vulture",
+      "tameable": true,
+      "abilities": [
+        "Dive 3",
+        "Screech 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "1815": {
+      "name": "Diseased Black Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1816": {
+      "name": "Diseased Grizzly",
+      "tameable": true,
+      "abilities": [
+        "Claw 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "1817": {
+      "name": "Diseased Wolf",
+      "tameable": true,
+      "abilities": [
+        "Bite 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "1821": {
+      "name": "Carrion Lurker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1822": {
+      "name": "Venom Mist Lurker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1824": {
+      "name": "Plague Lurker",
+      "tameable": true,
+      "abilities": [
+        "Bite 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "1922": {
+      "name": "Gray Forest Wolf",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1923": {
+      "name": "Bloodsnout Worg",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "1961": {
+      "name": "Mangeclaw",
+      "tameable": true,
+      "abilities": [
+        "Claw 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1984": {
+      "name": "Young Thistle Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1985": {
+      "name": "Thistle Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1986": {
+      "name": "Webwood Spider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1994": {
+      "name": "Githyiss the Vile",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1995": {
+      "name": "Strigid Owl",
+      "tameable": true,
+      "abilities": [
+        "Claw 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "1996": {
+      "name": "Strigid Screecher",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1997": {
+      "name": "Strigid Hunter",
+      "tameable": true,
+      "abilities": [
+        "Claw 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "1998": {
+      "name": "Webwood Lurker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "1999": {
+      "name": "Webwood Venomfang",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2000": {
+      "name": "Webwood Silkspinner",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2001": {
+      "name": "Giant Webwood Spider",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2031": {
+      "name": "Young Nightsaber",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2032": {
+      "name": "Mangy Nightsaber",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2033": {
+      "name": "Elder Nightsaber",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2034": {
+      "name": "Feral Nightsaber",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2042": {
+      "name": "Nightsaber",
+      "tameable": true,
+      "abilities": [
+        "Cower 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2043": {
+      "name": "Nightsaber Stalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2069": {
+      "name": "Moonstalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2070": {
+      "name": "Moonstalker Runt",
+      "tameable": true,
+      "abilities": [
+        "Cower 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2071": {
+      "name": "Moonstalker Matriarch",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2089": {
+      "name": "Giant Wetlands Crocolisk",
+      "tameable": true,
+      "abilities": [
+        "Bite 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "2163": {
+      "name": "Thistle Bear",
+      "tameable": true,
+      "abilities": [
+        "Claw 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2164": {
+      "name": "Rabid Thistle Bear",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2165": {
+      "name": "Grizzled Thistle Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2172": {
+      "name": "Strider Clutchmother",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2173": {
+      "name": "Reef Frenzy",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2174": {
+      "name": "Coastal Frenzy",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2175": {
+      "name": "Shadowclaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2185": {
+      "name": "Darkshore Thresher",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2187": {
+      "name": "Elder Darkshore Thresher",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2188": {
+      "name": "Deep Sea Threshadon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2224": {
+      "name": "Wind Rider",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2230": {
+      "name": "Umpi",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2231": {
+      "name": "Pygmy Tide Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2232": {
+      "name": "Tide Crawler",
+      "tameable": true,
+      "abilities": [
+        "Claw 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2233": {
+      "name": "Encrusted Tide Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2234": {
+      "name": "Young Reef Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2235": {
+      "name": "Reef Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2236": {
+      "name": "Raging Reef Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2237": {
+      "name": "Moonstalker Sire",
+      "tameable": true,
+      "abilities": [
+        "Cower 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2274": {
+      "name": "Stanley",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2275": {
+      "name": "Enraged Stanley",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2321": {
+      "name": "Foreststrider Fledgling",
+      "tameable": true,
+      "abilities": [
+        "Cower 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2322": {
+      "name": "Foreststrider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2323": {
+      "name": "Giant Foreststrider",
+      "tameable": true,
+      "abilities": [
+        "Cower 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2347": {
+      "name": "Wild Gryphon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2348": {
+      "name": "Elder Moss Creeper",
+      "tameable": true,
+      "abilities": [
+        "Bite 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "2349": {
+      "name": "Giant Moss Creeper",
+      "tameable": true,
+      "abilities": [
+        "Bite 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "2350": {
+      "name": "Forest Moss Creeper",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "2351": {
+      "name": "Gray Bear",
+      "tameable": true,
+      "abilities": [
+        "Claw 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "2354": {
+      "name": "Vicious Gray Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2356": {
+      "name": "Elder Gray Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2384": {
+      "name": "Starving Mountain Lion",
+      "tameable": true,
+      "abilities": [
+        "Cower 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2385": {
+      "name": "Feral Mountain Lion",
+      "tameable": true,
+      "abilities": [
+        "Cower 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "2406": {
+      "name": "Mountain Lion",
+      "tameable": true,
+      "abilities": [
+        "Prowl 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2407": {
+      "name": "Hulking Mountain Lion",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2408": {
+      "name": "Snapjaw",
+      "tameable": true,
+      "abilities": [
+        "Bite 4",
+        "Shell Shield 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2473": {
+      "name": "Granistad",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2474": {
+      "name": "Kurdros",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2476": {
+      "name": "Large Loch Crocolisk",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "2505": {
+      "name": "Saltwater Snapjaw",
+      "tameable": true,
+      "abilities": [
+        "Bite 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "2521": {
+      "name": "Skymane Gorilla",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2522": {
+      "name": "Jaguero Stalker",
+      "tameable": true,
+      "abilities": [
+        "Cower 5",
+        "Prowl 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "2544": {
+      "name": "Southern Sand Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2559": {
+      "name": "Highland Strider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2560": {
+      "name": "Highland Thrasher",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2561": {
+      "name": "Highland Fleshstalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2563": {
+      "name": "Plains Creeper",
+      "tameable": true,
+      "abilities": [
+        "Bite 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "2565": {
+      "name": "Giant Plains Creeper",
+      "tameable": true,
+      "abilities": [
+        "Bite 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "2578": {
+      "name": "Young Mesa Buzzard",
+      "tameable": true,
+      "abilities": [
+        "Dive 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2579": {
+      "name": "Mesa Buzzard",
+      "tameable": true,
+      "abilities": [
+        "Dive 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2580": {
+      "name": "Elder Mesa Buzzard",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2635": {
+      "name": "Elder Saltwater Crocolisk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2657": {
+      "name": "Trained Razorbeak",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2658": {
+      "name": "Razorbeak Gryphon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2659": {
+      "name": "Razorbeak Skylord",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2671": {
+      "name": "Mechanical Squirrel",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2680": {
+      "name": "Vilebranch Wolf Pup",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2681": {
+      "name": "Vilebranch Raiding Wolf",
+      "tameable": true,
+      "abilities": [
+        "Bite 7",
+        "Dash 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "2686": {
+      "name": "Witherbark Broodguard",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2707": {
+      "name": "Shadra",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2727": {
+      "name": "Crag Coyote",
+      "tameable": true,
+      "abilities": [
+        "Bite 5",
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2728": {
+      "name": "Feral Crag Coyote",
+      "tameable": true,
+      "abilities": [
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2729": {
+      "name": "Elder Crag Coyote",
+      "tameable": true,
+      "abilities": [
+        "Dash 1",
+        "Furious Howl 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2730": {
+      "name": "Rabid Crag Coyote",
+      "tameable": true,
+      "abilities": [
+        "Dash 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2731": {
+      "name": "Ridge Stalker",
+      "tameable": true,
+      "abilities": [
+        "Cower 4",
+        "Prowl 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2732": {
+      "name": "Ridge Huntress",
+      "tameable": true,
+      "abilities": [
+        "Cower 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "2734": {
+      "name": "Ridge Stalker Patriarch",
+      "tameable": true,
+      "abilities": [
+        "Dash 2",
+        "Prowl 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2753": {
+      "name": "Barnabus",
+      "tameable": true,
+      "abilities": [
+        "Bite 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "2829": {
+      "name": "Starving Buzzard",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2830": {
+      "name": "Buzzard",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2831": {
+      "name": "Giant Buzzard",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2850": {
+      "name": "Broken Tooth",
+      "tameable": true,
+      "abilities": [
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2923": {
+      "name": "Mangy Silvermane",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2924": {
+      "name": "Silvermane Wolf",
+      "tameable": true,
+      "abilities": [
+        "Furious Howl 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "2925": {
+      "name": "Silvermane Howler",
+      "tameable": true,
+      "abilities": [
+        "Furious Howl 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2926": {
+      "name": "Silvermane Stalker",
+      "tameable": true,
+      "abilities": [
+        "Dash 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "2931": {
+      "name": "Zaricotl",
+      "tameable": true,
+      "abilities": [
+        "Dive 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "2954": {
+      "name": "Bristleback Battleboar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2955": {
+      "name": "Plainstrider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2956": {
+      "name": "Adult Plainstrider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2957": {
+      "name": "Elder Plainstrider",
+      "tameable": true,
+      "abilities": [
+        "Cower 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2958": {
+      "name": "Prairie Wolf",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2959": {
+      "name": "Prairie Stalker",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2960": {
+      "name": "Prairie Wolf Alpha",
+      "tameable": true,
+      "abilities": [
+        "Bite 2",
+        "Furious Howl 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2961": {
+      "name": "Mountain Cougar",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2966": {
+      "name": "Battleboar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "2969": {
+      "name": "Wiry Swoop",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2970": {
+      "name": "Swoop",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2971": {
+      "name": "Taloned Swoop",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "2972": {
+      "name": "Kodo Calf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2973": {
+      "name": "Kodo Bull",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2974": {
+      "name": "Kodo Matriarch",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2983": {
+      "name": "The Plains Vision",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3035": {
+      "name": "Flatland Cougar",
+      "tameable": true,
+      "abilities": [
+        "Cower 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3056": {
+      "name": "Ghost Howl",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3058": {
+      "name": "Arra'chea",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3068": {
+      "name": "Mazzranache",
+      "tameable": true,
+      "abilities": [
+        "Cower 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3098": {
+      "name": "Mottled Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3099": {
+      "name": "Dire Mottled Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3100": {
+      "name": "Elder Mottled Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3106": {
+      "name": "Pygmy Surf Crawler",
+      "tameable": true,
+      "abilities": [
+        "Claw 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3107": {
+      "name": "Surf Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3108": {
+      "name": "Encrusted Surf Crawler",
+      "tameable": true,
+      "abilities": [
+        "Claw 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "3110": {
+      "name": "Dreadmaw Crocolisk",
+      "tameable": true,
+      "abilities": [
+        "Bite 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3121": {
+      "name": "Durotar Tiger",
+      "tameable": true,
+      "abilities": [
+        "Cower 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3122": {
+      "name": "Bloodtalon Taillasher",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3123": {
+      "name": "Bloodtalon Scythemaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3124": {
+      "name": "Scorpid Worker",
+      "tameable": true,
+      "abilities": [
+        "Claw 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3125": {
+      "name": "Clattering Scorpid",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3126": {
+      "name": "Armored Scorpid",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3127": {
+      "name": "Venomtail Scorpid",
+      "tameable": true,
+      "abilities": [
+        "Claw 2",
+        "Scorpid Poison 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3130": {
+      "name": "Thunder Lizard",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3131": {
+      "name": "Lightning Hide",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3225": {
+      "name": "Corrupted Mottled Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3226": {
+      "name": "Corrupted Scorpid",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3227": {
+      "name": "Corrupted Bloodtalon Scythemaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3228": {
+      "name": "Corrupted Surf Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3231": {
+      "name": "Corrupted Dreadmaw Crocolisk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3234": {
+      "name": "Lost Barrens Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3235": {
+      "name": "Greater Barrens Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3236": {
+      "name": "Barrens Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3237": {
+      "name": "Wooly Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3238": {
+      "name": "Stormhide",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3239": {
+      "name": "Thunderhead",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3240": {
+      "name": "Stormsnout",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3241": {
+      "name": "Savannah Patriarch",
+      "tameable": true,
+      "abilities": [
+        "Cower 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "3242": {
+      "name": "Zhevra Runner",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3243": {
+      "name": "Savannah Highmane",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3244": {
+      "name": "Greater Plainstrider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3245": {
+      "name": "Ornery Plainstrider",
+      "tameable": true,
+      "abilities": [
+        "Cower 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "3246": {
+      "name": "Fleeting Plainstrider",
+      "tameable": true,
+      "abilities": [
+        "Cower 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3247": {
+      "name": "Thunderhawk Hatchling",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "3248": {
+      "name": "Barrens Giraffe",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3249": {
+      "name": "Greater Thunderhawk",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "3250": {
+      "name": "Silithid Creeper",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3251": {
+      "name": "Silithid Grub",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3252": {
+      "name": "Silithid Swarmer",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3254": {
+      "name": "Sunscale Lashtail",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3255": {
+      "name": "Sunscale Screecher",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3256": {
+      "name": "Sunscale Scytheclaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3257": {
+      "name": "Ishamuhale",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3281": {
+      "name": "Sarkoth",
+      "tameable": true,
+      "abilities": [
+        "Claw 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3415": {
+      "name": "Savannah Huntress",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3416": {
+      "name": "Savannah Matriarch",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3424": {
+      "name": "Thunderhawk Cloudscraper",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "3425": {
+      "name": "Savannah Prowler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3426": {
+      "name": "Zhevra Charger",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3450": {
+      "name": "Defias Companion",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3461": {
+      "name": "Oasis Snapjaw",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "3463": {
+      "name": "Wandering Barrens Giraffe",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3466": {
+      "name": "Zhevra Courser",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3472": {
+      "name": "Washte Pawne",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "3473": {
+      "name": "Owatanka",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3474": {
+      "name": "Lakota'mani",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3475": {
+      "name": "Echeyakee",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3476": {
+      "name": "Isha Awak",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3503": {
+      "name": "Silithid Protector",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3524": {
+      "name": "Spirit Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3566": {
+      "name": "Flatland Prowler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3568": {
+      "name": "Mist",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3574": {
+      "name": "Riding Bat",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3581": {
+      "name": "Sewer Beast",
+      "tameable": true,
+      "abilities": [
+        "Bite 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "3619": {
+      "name": "Ghost Saber",
+      "tameable": true,
+      "abilities": [
+        "Claw 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "3630": {
+      "name": "Deviate Coiler",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "3631": {
+      "name": "Deviate Stinglash",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "3632": {
+      "name": "Deviate Creeper",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3633": {
+      "name": "Deviate Slayer",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3634": {
+      "name": "Deviate Stalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3636": {
+      "name": "Deviate Ravager",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3637": {
+      "name": "Deviate Guardian",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3641": {
+      "name": "Deviate Lurker",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3653": {
+      "name": "Kresh",
+      "tameable": true,
+      "abilities": [
+        "Bite 3",
+        "Shell Shield 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "3674": {
+      "name": "Skum",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3680": {
+      "name": "Serpentbloom Snake",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3695": {
+      "name": "Grimclaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3809": {
+      "name": "Ashenvale Bear",
+      "tameable": true,
+      "abilities": [
+        "Claw 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "3810": {
+      "name": "Elder Ashenvale Bear",
+      "tameable": true,
+      "abilities": [
+        "Claw 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "3811": {
+      "name": "Giant Ashenvale Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3812": {
+      "name": "Clattering Crawler",
+      "tameable": true,
+      "abilities": [
+        "Claw 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "3814": {
+      "name": "Spined Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3816": {
+      "name": "Wild Buck",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3817": {
+      "name": "Shadowhorn Stag",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3818": {
+      "name": "Elder Shadowhorn Stag",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3819": {
+      "name": "Wildthorn Stalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3820": {
+      "name": "Wildthorn Venomspitter",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3821": {
+      "name": "Wildthorn Lurker",
+      "tameable": true,
+      "abilities": [
+        "Bite 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "3823": {
+      "name": "Ghostpaw Runner",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "3824": {
+      "name": "Ghostpaw Howler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3825": {
+      "name": "Ghostpaw Alpha",
+      "tameable": true,
+      "abilities": [
+        "Bite 4",
+        "Furious Howl 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "3837": {
+      "name": "Riding Hippogryph",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3861": {
+      "name": "Bleak Worg",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3862": {
+      "name": "Slavering Worg",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3864": {
+      "name": "Fel Steed",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3865": {
+      "name": "Shadow Charger",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3866": {
+      "name": "Vile Bat",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3868": {
+      "name": "Blood Seeker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "3888": {
+      "name": "Korra",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3915": {
+      "name": "Dagri",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3939": {
+      "name": "Razormane Wolf",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4005": {
+      "name": "Deepmoss Creeper",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4006": {
+      "name": "Deepmoss Webspinner",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4007": {
+      "name": "Deepmoss Venomspitter",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4008": {
+      "name": "Cliff Stormer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4009": {
+      "name": "Raging Cliff Stormer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4011": {
+      "name": "Young Pridewing",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4012": {
+      "name": "Pridewing Wyvern",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4013": {
+      "name": "Pridewing Skyhunter",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4014": {
+      "name": "Pridewing Consort",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4015": {
+      "name": "Pridewing Patriarch",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4018": {
+      "name": "Antlered Courser",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4019": {
+      "name": "Great Courser",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4031": {
+      "name": "Fledgling Chimaera",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4032": {
+      "name": "Young Chimaera",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4040": {
+      "name": "Cave Stalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4041": {
+      "name": "Scorched Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4042": {
+      "name": "Singed Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4044": {
+      "name": "Blackened Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4067": {
+      "name": "Twilight Runner",
+      "tameable": true,
+      "abilities": [
+        "Cower 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "4068": {
+      "name": "Serpent Messenger",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4107": {
+      "name": "Highperch Wyvern",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4109": {
+      "name": "Highperch Consort",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4110": {
+      "name": "Highperch Patriarch",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4117": {
+      "name": "Cloud Serpent",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4118": {
+      "name": "Venomous Cloud Serpent",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4119": {
+      "name": "Elder Cloud Serpent",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4124": {
+      "name": "Needles Cougar",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4126": {
+      "name": "Crag Stalker",
+      "tameable": true,
+      "abilities": [
+        "Cower 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4127": {
+      "name": "Hecklefang Hyena",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4128": {
+      "name": "Hecklefang Stalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4129": {
+      "name": "Hecklefang Snarler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4139": {
+      "name": "Scorpid Terror",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "4140": {
+      "name": "Scorpid Reaver",
+      "tameable": true,
+      "abilities": [
+        "Claw 4",
+        "Scorpid Poison 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "4142": {
+      "name": "Sparkleshell Tortoise",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4143": {
+      "name": "Sparkleshell Snapper",
+      "tameable": true,
+      "abilities": [
+        "Bite 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "4144": {
+      "name": "Sparkleshell Borer",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4147": {
+      "name": "Saltstone Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4150": {
+      "name": "Saltstone Gazer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4151": {
+      "name": "Saltstone Crystalhide",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4154": {
+      "name": "Salt Flats Scavenger",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4158": {
+      "name": "Salt Flats Vulture",
+      "tameable": true,
+      "abilities": [
+        "Screech 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "4242": {
+      "name": "Frostsaber Companion",
+      "tameable": false,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4243": {
+      "name": "Nightshade",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4244": {
+      "name": "Shadow",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4248": {
+      "name": "Pesterhide Hyena",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4249": {
+      "name": "Pesterhide Snarler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4250": {
+      "name": "Galak Packhound",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4253": {
+      "name": "Bear Form (Night Elf Druid)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4261": {
+      "name": "Bear Form (Tauren Druid)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4263": {
+      "name": "Deepmoss Hatchling",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4264": {
+      "name": "Deepmoss Matriarch",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4268": {
+      "name": "Riding Wolf (Gray)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4269": {
+      "name": "Riding Horse (Chestnut)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4270": {
+      "name": "Riding Wolf (Red)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4271": {
+      "name": "Riding Wolf (DarkGray)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4272": {
+      "name": "Riding Wolf (DarkBrown)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4274": {
+      "name": "Fenrus the Devourer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4304": {
+      "name": "Scarlet Tracking Hound",
+      "tameable": true,
+      "abilities": [
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "4316": {
+      "name": "Kolkar Packhound",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4341": {
+      "name": "Drywallow Crocolisk",
+      "tameable": true,
+      "abilities": [
+        "Bite 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "4342": {
+      "name": "Drywallow Vicejaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4343": {
+      "name": "Drywallow Snapper",
+      "tameable": true,
+      "abilities": [
+        "Claw 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "4344": {
+      "name": "Mottled Drywallow Crocolisk",
+      "tameable": true,
+      "abilities": [
+        "Bite 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "4345": {
+      "name": "Drywallow Daggermaw",
+      "tameable": true,
+      "abilities": [
+        "Bite 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "4346": {
+      "name": "Noxious Flayer",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4347": {
+      "name": "Noxious Reaver",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4348": {
+      "name": "Noxious Shredder",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4351": {
+      "name": "Bloodfen Raptor",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4352": {
+      "name": "Bloodfen Screecher",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4355": {
+      "name": "Bloodfen Scytheclaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4356": {
+      "name": "Bloodfen Razormaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4357": {
+      "name": "Bloodfen Lashtail",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4376": {
+      "name": "Darkmist Spider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4377": {
+      "name": "Darkmist Lurker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4378": {
+      "name": "Darkmist Recluse",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4379": {
+      "name": "Darkmist Silkspinner",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4380": {
+      "name": "Darkmist Widow",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4388": {
+      "name": "Young Murk Thresher",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4389": {
+      "name": "Murk Thresher",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4390": {
+      "name": "Elder Murk Thresher",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4396": {
+      "name": "Mudrock Tortoise",
+      "tameable": true,
+      "abilities": [
+        "Bite 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "4397": {
+      "name": "Mudrock Spikeshell",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4398": {
+      "name": "Mudrock Burrower",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4399": {
+      "name": "Mudrock Borer",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4400": {
+      "name": "Mudrock Snapjaw",
+      "tameable": true,
+      "abilities": [
+        "Bite 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "4408": {
+      "name": "Aquatic Form (Night Elf Druid)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4410": {
+      "name": "Aquatic Form (Tauren Druid)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4411": {
+      "name": "Darkfang Lurker",
+      "tameable": true,
+      "abilities": [
+        "Bite 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "4412": {
+      "name": "Darkfang Creeper",
+      "tameable": true,
+      "abilities": [
+        "Bite 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "4413": {
+      "name": "Darkfang Spider",
+      "tameable": true,
+      "abilities": [
+        "Bite 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "4414": {
+      "name": "Darkfang Venomspitter",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4415": {
+      "name": "Giant Darkfang Spider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4422": {
+      "name": "Agathelos the Raging",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4425": {
+      "name": "Blind Hunter",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4511": {
+      "name": "Agam'ar",
+      "tameable": true,
+      "abilities": [
+        "Charge 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4512": {
+      "name": "Rotting Agam'ar",
+      "tameable": true,
+      "abilities": [
+        "Charge 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4514": {
+      "name": "Raging Agam'ar",
+      "tameable": true,
+      "abilities": [
+        "Charge 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4534": {
+      "name": "Tamed Hyena",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4535": {
+      "name": "Tamed Battleboar",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4538": {
+      "name": "Kraul Bat",
+      "tameable": true,
+      "abilities": [
+        "Cower 3",
+        "Dive 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "4539": {
+      "name": "Greater Kraul Bat",
+      "tameable": true,
+      "abilities": [
+        "Cower 3",
+        "Dive 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "4548": {
+      "name": "Steelsnap",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4660": {
+      "name": "Maraudine Bonepaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4662": {
+      "name": "Magram Bonepaw",
+      "tameable": true,
+      "abilities": [
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "4688": {
+      "name": "Bonepaw Hyena",
+      "tameable": true,
+      "abilities": [
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "4689": {
+      "name": "Starving Bonepaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4690": {
+      "name": "Rabid Bonepaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4692": {
+      "name": "Dread Swoop",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4693": {
+      "name": "Dread Flyer",
+      "tameable": true,
+      "abilities": [
+        "Dive 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "4694": {
+      "name": "Dread Ripper",
+      "tameable": true,
+      "abilities": [
+        "Screech 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "4695": {
+      "name": "Carrion Horror",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "4696": {
+      "name": "Scorpashi Snapper",
+      "tameable": true,
+      "abilities": [
+        "Claw 4",
+        "Scorpid Poison 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "4697": {
+      "name": "Scorpashi Lasher",
+      "tameable": true,
+      "abilities": [
+        "Claw 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "4699": {
+      "name": "Scorpashi Venomlash",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "4700": {
+      "name": "Aged Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4701": {
+      "name": "Dying Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4702": {
+      "name": "Ancient Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4710": {
+      "name": "Riding Ram (Gray)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4726": {
+      "name": "Raging Thunder Lizard",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4727": {
+      "name": "Elder Thunder Lizard",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4728": {
+      "name": "Gritjaw Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4729": {
+      "name": "Hulking Gritjaw Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4777": {
+      "name": "Riding Ram (White)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4778": {
+      "name": "Riding Ram (Blue)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4779": {
+      "name": "Riding Ram (Brown)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4780": {
+      "name": "Riding Ram (Black)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4781": {
+      "name": "Snufflenose Gopher",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4821": {
+      "name": "Skittering Crustacean",
+      "tameable": true,
+      "abilities": [
+        "Claw 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4822": {
+      "name": "Snapping Crustacean",
+      "tameable": true,
+      "abilities": [
+        "Claw 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "4823": {
+      "name": "Barbed Crustacean",
+      "tameable": true,
+      "abilities": [
+        "Claw 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "4824": {
+      "name": "Aku'mai Fisher",
+      "tameable": true,
+      "abilities": [
+        "Bite 3",
+        "Shell Shield 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "4825": {
+      "name": "Aku'mai Snapjaw",
+      "tameable": true,
+      "abilities": [
+        "Bite 4",
+        "Shell Shield 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "4827": {
+      "name": "Deep Pool Threshfin",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4830": {
+      "name": "Old Serra'kis",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4841": {
+      "name": "Deadmire",
+      "tameable": true,
+      "abilities": [
+        "Bite 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "4861": {
+      "name": "Shrike Bat",
+      "tameable": true,
+      "abilities": [
+        "Cower 4",
+        "Dive 1",
+        "Screech 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "4863": {
+      "name": "Jadespine Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4887": {
+      "name": "Ghamoo-ra",
+      "tameable": true,
+      "abilities": [
+        "Bite 4",
+        "Shell Shield 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "4950": {
+      "name": "Spot",
+      "tameable": false,
+      "abilities": [
+        "Dash 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "5048": {
+      "name": "Deviate Adder",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5053": {
+      "name": "Deviate Crocolisk",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "5056": {
+      "name": "Deviate Dreadfang",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5058": {
+      "name": "Wolfguard Worg",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5185": {
+      "name": "Hammerhead Shark",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5186": {
+      "name": "Basking Shark",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5194": {
+      "name": "Black Riding Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5195": {
+      "name": "Brown Riding Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5196": {
+      "name": "Gray Riding Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5197": {
+      "name": "Red Riding Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5198": {
+      "name": "Arctic Riding Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5224": {
+      "name": "Murk Slitherer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5225": {
+      "name": "Murk Spitter",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5226": {
+      "name": "Murk Worm",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5260": {
+      "name": "Groddoc Ape",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5262": {
+      "name": "Groddoc Thunderer",
+      "tameable": true,
+      "abilities": [
+        "Thunderstomp 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5268": {
+      "name": "Ironfur Bear",
+      "tameable": true,
+      "abilities": [
+        "Claw 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "5272": {
+      "name": "Grizzled Ironfur Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5274": {
+      "name": "Ironfur Patriarch",
+      "tameable": true,
+      "abilities": [
+        "Claw 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "5286": {
+      "name": "Longtooth Runner",
+      "tameable": true,
+      "abilities": [
+        "Bite 6",
+        "Dash 2",
+        "Furious Howl 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "5287": {
+      "name": "Longtooth Howler",
+      "tameable": true,
+      "abilities": [
+        "Furious Howl 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5288": {
+      "name": "Rabid Longtooth",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5291": {
+      "name": "Hakkari Frostwing",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "5300": {
+      "name": "Frayfeather Hippogryph",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5304": {
+      "name": "Frayfeather Stagwing",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5305": {
+      "name": "Frayfeather Skystormer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5306": {
+      "name": "Frayfeather Patriarch",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5307": {
+      "name": "Vale Screecher",
+      "tameable": true,
+      "abilities": [
+        "Dive 2",
+        "Lightning Breath 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "5308": {
+      "name": "Rogue Vale Screecher",
+      "tameable": true,
+      "abilities": [
+        "Dive 2",
+        "Lightning Breath 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "5347": {
+      "name": "Antilus the Soarer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5349": {
+      "name": "Arash-ethis",
+      "tameable": true,
+      "abilities": [
+        "Dive 2",
+        "Lightning Breath 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "5352": {
+      "name": "Old Grizzlegut",
+      "tameable": true,
+      "abilities": [
+        "Claw 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "5356": {
+      "name": "Snarler",
+      "tameable": true,
+      "abilities": [
+        "Bite 6",
+        "Furious Howl 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "5403": {
+      "name": "White Stallion",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5404": {
+      "name": "Black Stallion",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5405": {
+      "name": "Pinto",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5406": {
+      "name": "Palomino",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5409": {
+      "name": "Harvester Swarm",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5419": {
+      "name": "Glasshide Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5420": {
+      "name": "Glasshide Gazer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5421": {
+      "name": "Glasshide Petrifier",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5422": {
+      "name": "Scorpid Hunter",
+      "tameable": true,
+      "abilities": [
+        "Claw 6",
+        "Scorpid Poison 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "5423": {
+      "name": "Scorpid Tail Lasher",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "5424": {
+      "name": "Scorpid Dunestalker",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "5425": {
+      "name": "Starving Blisterpaw",
+      "tameable": true,
+      "abilities": [
+        "Dash 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5426": {
+      "name": "Blisterpaw Hyena",
+      "tameable": true,
+      "abilities": [
+        "Dash 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5427": {
+      "name": "Rabid Blisterpaw",
+      "tameable": true,
+      "abilities": [
+        "Dash 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5428": {
+      "name": "Roc",
+      "tameable": true,
+      "abilities": [
+        "Dive 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5429": {
+      "name": "Fire Roc",
+      "tameable": true,
+      "abilities": [
+        "Dive 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5430": {
+      "name": "Searing Roc",
+      "tameable": true,
+      "abilities": [
+        "Dive 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5431": {
+      "name": "Surf Glider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5432": {
+      "name": "Giant Surf Glider",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "5434": {
+      "name": "Coral Shark",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5435": {
+      "name": "Sand Shark",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5523": {
+      "name": "War Party Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5708": {
+      "name": "Spawn of Hakkar",
+      "tameable": true,
+      "abilities": [
+        "Dive 3",
+        "Lightning Breath 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "5755": {
+      "name": "Deviate Viper",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5756": {
+      "name": "Deviate Venomwing",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5762": {
+      "name": "Deviate Moccasin",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5766": {
+      "name": "Savannah Cub",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "5774": {
+      "name": "Riding Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5807": {
+      "name": "The Rake",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5823": {
+      "name": "Death Flayer",
+      "tameable": true,
+      "abilities": [
+        "Claw 2",
+        "Scorpid Poison 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "5827": {
+      "name": "Brontus",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5828": {
+      "name": "Humar The Pridelord",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5829": {
+      "name": "Snort the Heckler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5831": {
+      "name": "Swiftmane",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5832": {
+      "name": "Thunderstomp",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5833": {
+      "name": "Margol the Rager",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5834": {
+      "name": "Azzere the Skyblade",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5842": {
+      "name": "Takk the Leaper",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5856": {
+      "name": "Glassweb Spider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5857": {
+      "name": "Searing Lava Spider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5858": {
+      "name": "Greater Lava Spider",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5865": {
+      "name": "Dishu",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5872": {
+      "name": "Serpent Form",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5918": {
+      "name": "Owl Form",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5928": {
+      "name": "Sorrow Wing",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5934": {
+      "name": "Heartrazor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5935": {
+      "name": "Ironeye the Invincible",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5937": {
+      "name": "Vile Sting",
+      "tameable": true,
+      "abilities": [
+        "Claw 5",
+        "Scorpid Poison 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "5955": {
+      "name": "Tooga",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5982": {
+      "name": "Black Slayer",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5983": {
+      "name": "Bonepicker",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "5984": {
+      "name": "Starving Snickerfang",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5985": {
+      "name": "Snickerfang Hyena",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "5988": {
+      "name": "Scorpok Stinger",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "5990": {
+      "name": "Redstone Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5991": {
+      "name": "Redstone Crystalhide",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5992": {
+      "name": "Ashmane Boar",
+      "tameable": true,
+      "abilities": [
+        "Charge 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "6013": {
+      "name": "Wayward Buzzard",
+      "tameable": true,
+      "abilities": [
+        "Dive 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "6015": {
+      "name": "Torta",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6021": {
+      "name": "Boar Spirit",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6074": {
+      "name": "Riding Tiger (White Striped)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6075": {
+      "name": "Riding Raptor (Emerald)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6076": {
+      "name": "Riding Tallstrider (Ivory)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6139": {
+      "name": "Highperch Soarer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6141": {
+      "name": "Pridewing Soarer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6167": {
+      "name": "Chimaera Matriarch",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6215": {
+      "name": "Chomper",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6250": {
+      "name": "Crawler",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "6352": {
+      "name": "Coralshell Lurker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "6369": {
+      "name": "Coralshell Tortoise",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "6375": {
+      "name": "Thunderhead Hippogryph",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6377": {
+      "name": "Thunderhead Stagwing",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6378": {
+      "name": "Thunderhead Skystormer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6379": {
+      "name": "Thunderhead Patriarch",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6380": {
+      "name": "Thunderhead Consort",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6498": {
+      "name": "Devilsaur",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6499": {
+      "name": "Ironhide Devilsaur",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6500": {
+      "name": "Tyrant Devilsaur",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6501": {
+      "name": "Stegodon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6502": {
+      "name": "Plated Stegodon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6503": {
+      "name": "Spiked Stegodon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6504": {
+      "name": "Thunderstomp Stegodon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6505": {
+      "name": "Ravasaur",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6506": {
+      "name": "Ravasaur Runner",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6507": {
+      "name": "Ravasaur Hunter",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6508": {
+      "name": "Venomhide Ravasaur",
+      "tameable": false,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "6513": {
+      "name": "Un'Goro Stomper",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "6514": {
+      "name": "Un'Goro Gorilla",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "6516": {
+      "name": "Un'Goro Thunderer",
+      "tameable": true,
+      "abilities": [
+        "Thunderstomp 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "6571": {
+      "name": "Cat Form (Night Elf Druid)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6572": {
+      "name": "Cat Form (Tauren Druid)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6573": {
+      "name": "Travel Form (Druid)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6581": {
+      "name": "Ravasaur Matriarch",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6583": {
+      "name": "Gruff",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6584": {
+      "name": "King Mosh",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6585": {
+      "name": "Uhk'loc",
+      "tameable": true,
+      "abilities": [
+        "Bite 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "6648": {
+      "name": "Antilos",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6728": {
+      "name": "Narnie",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6788": {
+      "name": "Den Mother",
+      "tameable": true,
+      "abilities": [
+        "Claw 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "6789": {
+      "name": "Thistle Cub",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "6867": {
+      "name": "Tracking Hound",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "7022": {
+      "name": "Venomlash Scorpid",
+      "tameable": true,
+      "abilities": [
+        "Claw 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "7055": {
+      "name": "Blackrock Worg",
+      "tameable": true,
+      "abilities": [
+        "Dash 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "7078": {
+      "name": "Cleft Scorpid",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "7097": {
+      "name": "Ironbeak Owl",
+      "tameable": true,
+      "abilities": [
+        "Dive 2",
+        "Screech 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "7098": {
+      "name": "Ironbeak Screecher",
+      "tameable": true,
+      "abilities": [
+        "Dive 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "7099": {
+      "name": "Ironbeak Hunter",
+      "tameable": true,
+      "abilities": [
+        "Claw 7",
+        "Dive 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "7167": {
+      "name": "Polly",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7168": {
+      "name": " Polly",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7268": {
+      "name": "Sandfury Guardian",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7269": {
+      "name": "Scarab",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7319": {
+      "name": "Lady Sathrah",
+      "tameable": true,
+      "abilities": [
+        "Bite 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "7322": {
+      "name": "Riding Tiger (Black)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7376": {
+      "name": "Sky Shadow",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7380": {
+      "name": "Siamese",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7381": {
+      "name": "Silver Tabby",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7382": {
+      "name": "Orange Tabby",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7383": {
+      "name": "Black Tabby",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7384": {
+      "name": "Cornish Rex",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7385": {
+      "name": "Bombay",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7386": {
+      "name": "White Kitten",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7387": {
+      "name": "Green Wing Macaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7389": {
+      "name": "Senegal",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7390": {
+      "name": "Cockatiel",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7391": {
+      "name": "Hyacinth Macaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7392": {
+      "name": "Prairie Chicken",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7394": {
+      "name": "Ancona Chicken",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7395": {
+      "name": "Cockroach",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7405": {
+      "name": "Deadly Cleft Scorpid",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "7411": {
+      "name": "Spirit of Sathrah",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7430": {
+      "name": "Frostsaber Cub",
+      "tameable": true,
+      "abilities": [
+        "Cower 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "7431": {
+      "name": "Frostsaber",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "7432": {
+      "name": "Frostsaber Stalker",
+      "tameable": true,
+      "abilities": [
+        "Dash 3",
+        "Prowl 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "7433": {
+      "name": "Frostsaber Huntress",
+      "tameable": true,
+      "abilities": [
+        "Dash 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "7434": {
+      "name": "Frostsaber Pride Watcher",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "7443": {
+      "name": "Shardtooth Mauler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "7444": {
+      "name": "Shardtooth Bear",
+      "tameable": true,
+      "abilities": [
+        "Claw 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "7445": {
+      "name": "Elder Shardtooth",
+      "tameable": true,
+      "abilities": [
+        "Claw 8"
+      ],
+      "source": "petopia-classic"
+    },
+    "7446": {
+      "name": "Rabid Shardtooth",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "7447": {
+      "name": "Fledgling Chillwind",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7448": {
+      "name": "Chillwind Chimaera",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7449": {
+      "name": "Chillwind Ravager",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7455": {
+      "name": "Winterspring Owl",
+      "tameable": true,
+      "abilities": [
+        "Claw 7",
+        "Dive 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "7456": {
+      "name": "Winterspring Screecher",
+      "tameable": true,
+      "abilities": [
+        "Claw 8",
+        "Dive 3",
+        "Screech 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "7543": {
+      "name": "Dark Whelpling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7544": {
+      "name": "Crimson Whelpling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7545": {
+      "name": "Emerald Whelpling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7547": {
+      "name": "Azure Whelpling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7548": {
+      "name": "Faeling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7549": {
+      "name": "Tree Frog",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7550": {
+      "name": "Wood Frog",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7551": {
+      "name": "Dart Frog",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7552": {
+      "name": "Island Frog",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7553": {
+      "name": "Great Horned Owl",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7554": {
+      "name": "Snowy Owl",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7555": {
+      "name": "Hawk Owl",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7556": {
+      "name": "Eagle Owl",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7558": {
+      "name": "Cottontail Rabbit",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7559": {
+      "name": "Spotted Rabbit",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7560": {
+      "name": "Snowshoe Rabbit",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7561": {
+      "name": "Albino Snake",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7562": {
+      "name": "Brown Snake",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7565": {
+      "name": "Black Kingsnake",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7566": {
+      "name": "Scarlet Snake",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7567": {
+      "name": "Crimson Snake",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7568": {
+      "name": "Ribbon Snake",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7569": {
+      "name": "Green Water Snake",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7570": {
+      "name": "Elven Wisp",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7684": {
+      "name": "Riding Tiger (Yellow)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7686": {
+      "name": "Riding Tiger (Red)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7687": {
+      "name": "Riding Tiger (White Spotted)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7689": {
+      "name": "Riding Tiger (BlackSpotted)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7690": {
+      "name": "Riding Tiger (BlackStriped)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7703": {
+      "name": "Riding Raptor (Obsidian)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7704": {
+      "name": "Riding Raptor (Crimson)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7706": {
+      "name": "Riding Raptor (Ivory)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7707": {
+      "name": "Riding Raptor (Turquoise)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7708": {
+      "name": "Riding Raptor (Violet)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7709": {
+      "name": "Riding Tallstrider (Brown)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7710": {
+      "name": "Riding Tallstrider (Gray)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7711": {
+      "name": "Riding Tallstrider (Pink)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7712": {
+      "name": "Riding Tallstrider (Purple)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7713": {
+      "name": "Riding Tallstrider (Turquoise)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7803": {
+      "name": "Scorpid Duneburrower",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "7903": {
+      "name": "Jewel",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7904": {
+      "name": "Jacob",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7977": {
+      "name": "Gammerita",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8023": {
+      "name": "Sharpbeak",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8024": {
+      "name": "Sharpbeak's Father",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8025": {
+      "name": "Sharpbeak's Mother",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8095": {
+      "name": "Sul'lithuz Sandcrawler",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8207": {
+      "name": "Greater Firebird",
+      "tameable": true,
+      "abilities": [
+        "Dive 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "8208": {
+      "name": "Murderous Blisterpaw",
+      "tameable": true,
+      "abilities": [
+        "Dash 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "8211": {
+      "name": "Old Cliff Jumper",
+      "tameable": true,
+      "abilities": [
+        "Bite 6",
+        "Dash 2"
+      ],
+      "source": "petopia-classic"
+    },
+    "8213": {
+      "name": "Ironback",
+      "tameable": true,
+      "abilities": [
+        "Bite 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "8236": {
+      "name": "Muck Frenzy",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8276": {
+      "name": "Soaring Razorbeak",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8277": {
+      "name": "Rekk'tilac",
+      "tameable": true,
+      "abilities": [
+        "Bite 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "8299": {
+      "name": "Spiteflayer",
+      "tameable": true,
+      "abilities": [
+        "Dive 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "8300": {
+      "name": "Ravage",
+      "tameable": true,
+      "abilities": [
+        "Dash 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "8301": {
+      "name": "Clack the Reaver",
+      "tameable": true,
+      "abilities": [
+        "Claw 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "8302": {
+      "name": "Deatheye",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8303": {
+      "name": "Grunter",
+      "tameable": true,
+      "abilities": [
+        "Charge 5",
+        "Dash 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "8311": {
+      "name": "Slime Maggot",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8336": {
+      "name": "Hakkari Sapper",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "8376": {
+      "name": "Mechanical Chicken",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8600": {
+      "name": "Plaguebat",
+      "tameable": true,
+      "abilities": [
+        "Cower 5",
+        "Dive 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "8601": {
+      "name": "Noxious Plaguebat",
+      "tameable": true,
+      "abilities": [
+        "Cower 5"
+      ],
+      "source": "petopia-classic"
+    },
+    "8602": {
+      "name": "Monstrous Plaguebat",
+      "tameable": true,
+      "abilities": [
+        "Cower 6",
+        "Screech 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "8603": {
+      "name": "Carrion Grub",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8605": {
+      "name": "Carrion Devourer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8612": {
+      "name": "Screecher Spirit",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8660": {
+      "name": "The Evalcharr",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8759": {
+      "name": "Mosshoof Runner",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8760": {
+      "name": "Mosshoof Stag",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8761": {
+      "name": "Mosshoof Courser",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8762": {
+      "name": "Timberweb Recluse",
+      "tameable": true,
+      "abilities": [
+        "Bite 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "8763": {
+      "name": "Mistwing Rogue",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8764": {
+      "name": "Mistwing Ravager",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8882": {
+      "name": "Riding Tiger",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8883": {
+      "name": "Riding Horse",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8885": {
+      "name": "Riding Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8886": {
+      "name": "Deviate Python",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8925": {
+      "name": "Dredge Worm",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8926": {
+      "name": "Deep Stinger",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "8927": {
+      "name": "Dark Screecher",
+      "tameable": true,
+      "abilities": [
+        "Dive 3",
+        "Screech 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "8928": {
+      "name": "Burrowing Thundersnout",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8932": {
+      "name": "Borer Beetle",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "8933": {
+      "name": "Cave Creeper",
+      "tameable": true,
+      "abilities": [
+        "Bite 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "8956": {
+      "name": "Angerclaw Bear",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "8957": {
+      "name": "Angerclaw Grizzly",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "8958": {
+      "name": "Angerclaw Mauler",
+      "tameable": true,
+      "abilities": [
+        "Claw 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "8959": {
+      "name": "Felpaw Wolf",
+      "tameable": true,
+      "abilities": [
+        "Bite 6",
+        "Furious Howl 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "8960": {
+      "name": "Felpaw Scavenger",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "8961": {
+      "name": "Felpaw Ravager",
+      "tameable": true,
+      "abilities": [
+        "Bite 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "9032": {
+      "name": "Hedrum the Creeper",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9158": {
+      "name": "Riding Horse (Warhorse)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9162": {
+      "name": "Young Diemetradon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9163": {
+      "name": "Diemetradon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9164": {
+      "name": "Elder Diemetradon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9165": {
+      "name": "Fledgling Pterrordax",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9166": {
+      "name": "Pterrordax",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9167": {
+      "name": "Frenzied Pterrordax",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9256": {
+      "name": "Farm Chicken",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9274": {
+      "name": "Dadanga",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9297": {
+      "name": "Enraged Wyvern",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9318": {
+      "name": "Incendosaur",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9416": {
+      "name": "Scarshield Worg",
+      "tameable": true,
+      "abilities": [
+        "Dash 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "9521": {
+      "name": "Enraged Felbat",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9526": {
+      "name": "Enraged Gryphon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9527": {
+      "name": "Enraged Hippogryph",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9622": {
+      "name": "U'cha",
+      "tameable": true,
+      "abilities": [
+        "Thunderstomp 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "9656": {
+      "name": "Tiny Walking Bomb",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9657": {
+      "name": "Lil' Smoky",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9662": {
+      "name": "Sprite Darter Hatchling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9683": {
+      "name": "Lar'korwi Mate",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9684": {
+      "name": "Lar'korwi",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9690": {
+      "name": "Ember Worg",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "9691": {
+      "name": "Venomtip Scorpid",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "9694": {
+      "name": "Slavering Ember Worg",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "9695": {
+      "name": "Deathlash Scorpid",
+      "tameable": true,
+      "abilities": [
+        "Claw 7",
+        "Scorpid Poison 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "9696": {
+      "name": "Bloodaxe Worg",
+      "tameable": true,
+      "abilities": [
+        "Bite 8",
+        "Dash 3",
+        "Furious Howl 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "9697": {
+      "name": "Giant Ember Worg",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "9698": {
+      "name": "Firetail Scorpid",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "9701": {
+      "name": "Spire Scorpid",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9936": {
+      "name": "Corrupted Kitten",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "9937": {
+      "name": "Common Kitten",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10042": {
+      "name": "Corrupted Saber",
+      "tameable": false,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10077": {
+      "name": "Deathmaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10177": {
+      "name": "Spire Scarab",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10200": {
+      "name": "Rak'Shiri",
+      "tameable": true,
+      "abilities": [
+        "Dash 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "10204": {
+      "name": "Misha",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10220": {
+      "name": "Halycon",
+      "tameable": false,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10221": {
+      "name": "Bloodaxe Worg Pup",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10259": {
+      "name": "Worg Pup",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10262": {
+      "name": "Opus",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10268": {
+      "name": "Gizrul the Slavener",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10322": {
+      "name": "Riding Tiger (White)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10336": {
+      "name": "Riding Tiger (Leopard)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10337": {
+      "name": "Riding Tiger (Orange)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10338": {
+      "name": "Riding Tiger (Gold)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10357": {
+      "name": "Ressan the Needler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10359": {
+      "name": "Sri'skulk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10374": {
+      "name": "Spire Spider",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10375": {
+      "name": "Spire Spiderling",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10376": {
+      "name": "Crystal Fang",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10430": {
+      "name": "The Beast",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10577": {
+      "name": "Crypt Scarab",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10581": {
+      "name": "Young Arikara",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "10596": {
+      "name": "Mother Smolderweb",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10598": {
+      "name": "Smolderweb Hatchling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10619": {
+      "name": "Glacier",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10636": {
+      "name": "Pack Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10644": {
+      "name": "Mist Howler",
+      "tameable": true,
+      "abilities": [
+        "Furious Howl 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "10657": {
+      "name": "Corrupted Cat",
+      "tameable": false,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10658": {
+      "name": "Winna's Kitten",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10717": {
+      "name": "Temporal Parasite",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10737": {
+      "name": "Shy-Rotam",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10741": {
+      "name": "Sian-Rotam",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10806": {
+      "name": "Ursius",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10807": {
+      "name": "Brumeran",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10882": {
+      "name": "Arikara",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10942": {
+      "name": "Nessy",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10979": {
+      "name": "Scarlet Hound",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "10981": {
+      "name": "Frostwolf",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "10988": {
+      "name": "Kodo Spirit",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10990": {
+      "name": "Alterac Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "10992": {
+      "name": "Enraged Panther",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11021": {
+      "name": "Riding Tiger (Winterspring)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11024": {
+      "name": "Della",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11181": {
+      "name": "Shi'alune",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11236": {
+      "name": "Blood Parrot",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11320": {
+      "name": "Earthborer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11325": {
+      "name": "Panda Cub",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11327": {
+      "name": "Zergling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11357": {
+      "name": "Son of Hakkar",
+      "tameable": true,
+      "abilities": [
+        "Lightning Breath 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "11359": {
+      "name": "Soulflayer",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "11360": {
+      "name": "Zulian Cub",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "11361": {
+      "name": "Zulian Tiger",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "11365": {
+      "name": "Zulian Panther",
+      "tameable": true,
+      "abilities": [
+        "Dash 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "11368": {
+      "name": "Bloodseeker Bat",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "11370": {
+      "name": "Razzashi Broodwidow",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "11371": {
+      "name": "Razzashi Serpent",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11372": {
+      "name": "Razzashi Adder",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11373": {
+      "name": "Razzashi Cobra",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11374": {
+      "name": "Hooktooth Frenzy",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11497": {
+      "name": "The Razza",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11521": {
+      "name": "Kodo Apparition",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11564": {
+      "name": "Gizelton Caravan Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11614": {
+      "name": "Bloodshot",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11627": {
+      "name": "Tamed Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11671": {
+      "name": "Core Hound",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11672": {
+      "name": "Core Rager",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11673": {
+      "name": "Ancient Core Hound",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11689": {
+      "name": "Riding Kodo (Brown)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11710": {
+      "name": "Mirador",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11735": {
+      "name": "Stonelash Scorpid",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "11736": {
+      "name": "Stonelash Pincer",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "11737": {
+      "name": "Stonelash Flayer",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "11738": {
+      "name": "Sand Skitterer",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "11739": {
+      "name": "Rock Stalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "11740": {
+      "name": "Dredge Striker",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11741": {
+      "name": "Dredge Crusher",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11785": {
+      "name": "Ambereye Basilisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11786": {
+      "name": "Ambereye Reaver",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11787": {
+      "name": "Rock Borer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11788": {
+      "name": "Rock Worm",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11789": {
+      "name": "Deep Borer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11836": {
+      "name": "Captured Rabid Thistle Bear",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11871": {
+      "name": "Grinning Dog",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11884": {
+      "name": "Obi",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11885": {
+      "name": "Blighthound",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11896": {
+      "name": "Borelgore",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11897": {
+      "name": "Duskwing",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11921": {
+      "name": "Besseleth",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "11956": {
+      "name": "Great Bear Spirit",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11957": {
+      "name": "Great Cat Spirit",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11982": {
+      "name": "Magmadar",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12037": {
+      "name": "Ursol'lok",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "12121": {
+      "name": "Draka",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12122": {
+      "name": "Duros",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12123": {
+      "name": "Reef Shark",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12124": {
+      "name": "Great Shark",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12125": {
+      "name": "Mammoth Shark",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12145": {
+      "name": "Riding Kodo (Black)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12146": {
+      "name": "Riding Kodo (Olive)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12147": {
+      "name": "Riding Kodo (White)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12148": {
+      "name": "Riding Kodo (Teal)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12149": {
+      "name": "Riding Kodo (Gray)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12150": {
+      "name": "Riding Kodo (Purple)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12151": {
+      "name": "Riding Kodo (Green)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12202": {
+      "name": "Human Skull",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12218": {
+      "name": "Vile Larva",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12257": {
+      "name": "Mechanical Yeti",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12345": {
+      "name": "Mottled Red Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12346": {
+      "name": "Emerald Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12347": {
+      "name": "Enraged Reef Crawler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "12348": {
+      "name": "Ivory Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12349": {
+      "name": "Turquoise Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12350": {
+      "name": "Violet Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12351": {
+      "name": "Dire Riding Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12353": {
+      "name": "Timber Riding Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12354": {
+      "name": "Brown Riding Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12355": {
+      "name": "Gray Riding Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12356": {
+      "name": "Green Riding Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12357": {
+      "name": "Teal Riding Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12358": {
+      "name": "Riding Striped Frostsaber",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12359": {
+      "name": "Riding Spotted Frostsaber",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12360": {
+      "name": "Riding Striped Nightsaber",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12361": {
+      "name": "Riding Nightsaber",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12362": {
+      "name": "Riding Frostsaber",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12370": {
+      "name": "Black Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12371": {
+      "name": "Frost Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12372": {
+      "name": "Brown Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12373": {
+      "name": "Gray Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12374": {
+      "name": "White Riding Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12375": {
+      "name": "Chestnut Mare",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12376": {
+      "name": "Brown Horse",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12418": {
+      "name": "Gordok Hyena",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12419": {
+      "name": "Lifelike Toad",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12431": {
+      "name": "Gorefang",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "12432": {
+      "name": "Old Vicejaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "12433": {
+      "name": "Krethis Shadowspinner",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "12581": {
+      "name": "Mercutio",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12676": {
+      "name": "Sharptalon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12677": {
+      "name": "Shadumbra",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12678": {
+      "name": "Ursangous",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12800": {
+      "name": "Chimaerok",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12801": {
+      "name": "Arcane Chimaerok",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12802": {
+      "name": "Chimaerok Devourer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12803": {
+      "name": "Lord Lakmaeran",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13036": {
+      "name": "Gordok Mastiff",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13160": {
+      "name": "Carrion Swarmer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13161": {
+      "name": "Aerie Gryphon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13178": {
+      "name": "War Rider",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13221": {
+      "name": "Ryson's Eye in the Sky",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13323": {
+      "name": "Subterranean Diemetradon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13533": {
+      "name": "Spewed Larva",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13596": {
+      "name": "Rotgrip",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13599": {
+      "name": "Stolid Snapjaw",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "13602": {
+      "name": "The Abominable Greench",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13618": {
+      "name": "Stabled Frostwolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13676": {
+      "name": "Stabled Alterac Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13837": {
+      "name": "Captured Stallion",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "13896": {
+      "name": "Scalebeard",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14123": {
+      "name": "Steeljaw Snapper",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14222": {
+      "name": "Araga",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14223": {
+      "name": "Cranky Benj",
+      "tameable": true,
+      "abilities": [
+        "Bite 4",
+        "Shell Shield 1"
+      ],
+      "source": "petopia-classic"
+    },
+    "14227": {
+      "name": "Hissperak",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14228": {
+      "name": "Giggler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14232": {
+      "name": "Dart",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14233": {
+      "name": "Ripscale",
+      "tameable": true,
+      "abilities": [
+        "Bite 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "14234": {
+      "name": "Hayoc",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14237": {
+      "name": "Oozeworm",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14266": {
+      "name": "Shanda the Spinner",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "14268": {
+      "name": "Lord Condar",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14274": {
+      "name": "Winterax Tracker",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14279": {
+      "name": "Creepthess",
+      "tameable": true,
+      "abilities": [
+        "Bite 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "14280": {
+      "name": "Big Samras",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14282": {
+      "name": "Frostwolf Bloodhound",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14283": {
+      "name": "Stormpike Owl",
+      "tameable": false,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14306": {
+      "name": "Eskhandar",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14308": {
+      "name": "Ferra",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14329": {
+      "name": "Black War Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14330": {
+      "name": "Black War Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14332": {
+      "name": "Black War Steed",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14333": {
+      "name": "Black War Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14335": {
+      "name": "Black War Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14336": {
+      "name": "Black War Saber",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14339": {
+      "name": "Death Howl",
+      "tameable": true,
+      "abilities": [
+        "Bite 6",
+        "Furious Howl 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "14343": {
+      "name": "Olm the Wise",
+      "tameable": true,
+      "abilities": [
+        "Claw 7",
+        "Dive 3"
+      ],
+      "source": "petopia-classic"
+    },
+    "14344": {
+      "name": "Mongress",
+      "tameable": true,
+      "abilities": [
+        "Claw 7"
+      ],
+      "source": "petopia-classic"
+    },
+    "14356": {
+      "name": "Sawfin Frenzy",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14357": {
+      "name": "Lake Thresher",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14421": {
+      "name": "Brown Prairie Dog",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14430": {
+      "name": "Duskstalker",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14472": {
+      "name": "Gretheer",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14476": {
+      "name": "Krellack",
+      "tameable": true,
+      "abilities": [
+        "Scorpid Poison 4"
+      ],
+      "source": "petopia-classic"
+    },
+    "14477": {
+      "name": "Grubthor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14490": {
+      "name": "Rippa",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14491": {
+      "name": "Kurmokk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14532": {
+      "name": "Razzashi Venombrood",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14539": {
+      "name": "Swift Timber Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14540": {
+      "name": "Swift Brown Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14541": {
+      "name": "Swift Gray Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14542": {
+      "name": "Great White Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14543": {
+      "name": "Swift Olive Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14544": {
+      "name": "Swift Orange Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14545": {
+      "name": "Swift Blue Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14546": {
+      "name": "Swift Brown Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14547": {
+      "name": "Swift White Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14548": {
+      "name": "Swift Gray Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14549": {
+      "name": "Great Brown Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14550": {
+      "name": "Great Gray Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14555": {
+      "name": "Swift Mistsaber",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14556": {
+      "name": "Swift Frostsaber",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14557": {
+      "name": "Swift Dawnsaber",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14559": {
+      "name": "Swift Palamino",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14560": {
+      "name": "Swift White Steed",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14561": {
+      "name": "Swift Brown Steed",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14565": {
+      "name": "Riding Horse (Charger)",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14566": {
+      "name": "Ancient Equine Spirit",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14568": {
+      "name": "Darkreaver's Fallen Charger",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14602": {
+      "name": "Swift Stormsaber",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14629": {
+      "name": "Loggerhead Snapjaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14630": {
+      "name": "Leatherback Snapjaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14631": {
+      "name": "Olive Snapjaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14632": {
+      "name": "Hawksbill Snapjaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14633": {
+      "name": "Albino Snapjaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14744": {
+      "name": "Frostwolf Riding Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14745": {
+      "name": "Stormpike Riding Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14755": {
+      "name": "Tiny Green Dragon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14756": {
+      "name": "Tiny Red Dragon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14821": {
+      "name": "Razzashi Raptor",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14864": {
+      "name": "Khaz Modan Ram",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14865": {
+      "name": "Felinni",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14866": {
+      "name": "Flik's Frog",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14867": {
+      "name": "Jubjub",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14868": {
+      "name": "Hornsley",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14869": {
+      "name": "Pygmy Cockatrice",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14878": {
+      "name": "Jubling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14880": {
+      "name": "Razzashi Skitterer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14884": {
+      "name": "Parasitic Serpent",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14943": {
+      "name": "Guse's War Rider",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14944": {
+      "name": "Jeztor's War Rider",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14945": {
+      "name": "Mulverick's War Rider",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14946": {
+      "name": "Slidore's Gryphon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14947": {
+      "name": "Ichman's Gryphon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14948": {
+      "name": "Vipore's Gryphon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14965": {
+      "name": "Frenzied Bloodseeker Bat",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "14988": {
+      "name": "Ohgan",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15041": {
+      "name": "Spawn of Mar'li",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "15043": {
+      "name": "Zulian Crocolisk",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "15067": {
+      "name": "Zulian Stalker",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "15068": {
+      "name": "Zulian Guardian",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15090": {
+      "name": "Swift Razzashi Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15101": {
+      "name": "Zulian Prowler",
+      "tameable": true,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "15104": {
+      "name": "Swift Zulian Tiger",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15109": {
+      "name": "Primal Blessing Visual",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15118": {
+      "name": "Master Angler Form",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15172": {
+      "name": "Glibb",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15186": {
+      "name": "Murky",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15196": {
+      "name": "Deathclasp",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15204": {
+      "name": "High Marshal Whirlaxis",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15220": {
+      "name": "The Duke of Zephyrs",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15333": {
+      "name": "Silicate Feeder",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15429": {
+      "name": "Disgusting Oozeling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15505": {
+      "name": "Canal Frenzy",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15517": {
+      "name": "Ouro",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15520": {
+      "name": "O'Reily",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15524": {
+      "name": "Temporary Reindeer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15543": {
+      "name": "Princess Yauj",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15544": {
+      "name": "Vem",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15554": {
+      "name": "Number Two",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15571": {
+      "name": "Maws",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15630": {
+      "name": "Spawn of Fankriss",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15664": {
+      "name": "Metzen the Reindeer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15698": {
+      "name": "Father Winter's Helper",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15699": {
+      "name": "Tranquil Mechanical Yeti",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15706": {
+      "name": "Winter Reindeer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15710": {
+      "name": "Tiny Snowman",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15721": {
+      "name": "Mechanical Greench",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15952": {
+      "name": "Maexxna",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15962": {
+      "name": "Vekniss Hatchling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15974": {
+      "name": "Dread Creeper",
+      "tameable": false,
+      "abilities": [],
+      "source": "petopia-classic"
+    },
+    "15975": {
+      "name": "Carrion Spinner",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15976": {
+      "name": "Venom Stalker",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15977": {
+      "name": "Infectious Skitterer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16036": {
+      "name": "Frenzied Bat",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16037": {
+      "name": "Plagued Bat",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16056": {
+      "name": "Diseased Maggot",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16057": {
+      "name": "Rotting Maggot",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16069": {
+      "name": "Gurky",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16095": {
+      "name": "Gnashjaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16098": {
+      "name": "Empyrean",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16117": {
+      "name": "Plagued Swine",
+      "tameable": true,
+      "abilities": [
+        "Charge 6"
+      ],
+      "source": "petopia-classic"
+    },
+    "16225": {
+      "name": "Pack Mule",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16232": {
+      "name": "Caravan Mule",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16371": {
+      "name": "Polymorphed Pig",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16374": {
+      "name": "Polymorphed Cockroach",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16377": {
+      "name": "Polymorphed Turtle",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16448": {
+      "name": "Plagued Deathhound",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16453": {
+      "name": "Necro Stalker",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16508": {
+      "name": "Argent Horse",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16547": {
+      "name": "Speedy",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16548": {
+      "name": "Mr. Wiggles",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16549": {
+      "name": "Whiskers the Rat",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16701": {
+      "name": "Spirit of Summer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "17055": {
+      "name": "Maexxna Spiderling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "17266": {
+      "name": "Riding Turtle",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "17660": {
+      "name": "Skeletal Gryphon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "106": {
+      "name": "Kodo Beast",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "107": {
+      "name": "Raptor",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "120": {
+      "name": "Forest Stalker",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "303": {
+      "name": "Placeholder Interactive Doodad - jk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "393": {
+      "name": "Tame Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "700": {
+      "name": "Bloodscalp Panther",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "758": {
+      "name": "Skullsplitter Tiger",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "995": {
+      "name": "Nahr'ek's Pack",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "1066": {
+      "name": "Mottled Riptooth",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1392": {
+      "name": "Xon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1757": {
+      "name": "Mega Rabbit",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "1810": {
+      "name": "Rotting Condor",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "1811": {
+      "name": "Plaguewing Vulture",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "1987": {
+      "name": "Webwood Creeper UNUSED",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2052": {
+      "name": "Nag",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "2809": {
+      "name": "Boar",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3460": {
+      "name": "Mud Crawler",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "3462": {
+      "name": "Elder Barrens Giraffe",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3642": {
+      "name": "Deviate Horror",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "3826": {
+      "name": "Rabid Ghostpaw",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4245": {
+      "name": "Mistrunner",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4246": {
+      "name": "Moonprowler",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4247": {
+      "name": "Stonepaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4482": {
+      "name": "Vilebranch Wolf",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4491": {
+      "name": "Woof",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4691": {
+      "name": "Murderous Bonepaw",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4703": {
+      "name": "Raging Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "4724": {
+      "name": "Sandstrider",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4725": {
+      "name": "Crazed Sandstrider",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "4862": {
+      "name": "Rabid Shrike Bat",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "5264": {
+      "name": "Groddoc Chestpounder",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "5433": {
+      "name": "Tamed Bear",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5436": {
+      "name": "Tamed Bird",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5437": {
+      "name": "Tamed Boar",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5438": {
+      "name": "Tamed Cat",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5439": {
+      "name": "Tamed Crawler",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5440": {
+      "name": "Tamed Crocolisk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5442": {
+      "name": "Tamed Gorilla",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5443": {
+      "name": "Tamed Zhevra",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5444": {
+      "name": "Tamed Raptor",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5445": {
+      "name": "Tamed Scorpid",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5446": {
+      "name": "Tamed Spider",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5447": {
+      "name": "Tamed Tallstrider",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5448": {
+      "name": "Tamed Turtle",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5449": {
+      "name": "Tamed Wolf",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5521": {
+      "name": "Glenrunner",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5522": {
+      "name": "Ironclaw",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5525": {
+      "name": "Caravan Packhorse",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5554": {
+      "name": "[PH] PVP Wildlife",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5555": {
+      "name": "[PH] Ogre Caravan Packhorse",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5796": {
+      "name": "Ben",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5936": {
+      "name": "Orca",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5945": {
+      "name": "Owl Companion",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "5986": {
+      "name": "Rabid Snickerfang",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "5987": {
+      "name": "Scorpok Snapper",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "5989": {
+      "name": "Scorpok Lasher",
+      "tameable": true,
+      "source": "vanilla"
+    },
+    "6772": {
+      "name": "Attack Hound",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "6773": {
+      "name": "Shadowhawk",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7094": {
+      "name": "Crazed Stag",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7095": {
+      "name": "Maddened Stag",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7096": {
+      "name": "Corrupt Courser",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7377": {
+      "name": "Doomhound Ravager",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7378": {
+      "name": "Doomhound Mastiff",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7388": {
+      "name": "Cockatoo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7393": {
+      "name": "White Plymouth Rock",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "7563": {
+      "name": "Blue Racer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11597": {
+      "name": "Cheveyo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11742": {
+      "name": "Silt Grub",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "11743": {
+      "name": "Silt Devourer",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12054": {
+      "name": "Dawnchaser",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "12176": {
+      "name": "Tame Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "14406": {
+      "name": "Roving Kodo",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15361": {
+      "name": "Murki",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "15661": {
+      "name": "Baby Shark",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16038": {
+      "name": "Deathhound",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16041": {
+      "name": "Shadowhound",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16081": {
+      "name": "Spectral Gryphon",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16445": {
+      "name": "Terky",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16456": {
+      "name": "Poley",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16509": {
+      "name": "Argent Warhorse",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "16510": {
+      "name": "Argent Charger",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "17254": {
+      "name": "White Tiger Cub",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "17255": {
+      "name": "Hippogryph Hatchling",
+      "tameable": false,
+      "source": "vanilla"
+    },
+    "166359": {
+      "name": "Zulian Tiger",
+      "tameable": true,
+      "source": "wowhead-pre-sod"
+    },
+    "184367": {
+      "name": "Core Hound",
+      "tameable": false,
+      "source": "wowhead-pre-sod"
+    }
+  },
+  "sources": [
+    "https://www.wow-petopia.com/classic/",
+    "https://www.wowhead.com/classic/npcs/beasts?filter=52;-2323;0",
+    "https://www.wowhead.com/classic/npcs/beasts?filter=52;-2324;0",
+    "https://github.com/cmangos/classic-db/blob/master/Full_DB/ClassicDB_1_12_1_z2815.sql.gz"
+  ]
+}

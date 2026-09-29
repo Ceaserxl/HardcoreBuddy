@@ -1,0 +1,1619 @@
+{
+  "checkedOn": "2026-09-27",
+  "families": [
+    {
+      "id": "bat",
+      "name": "Bats",
+      "role": "Offense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.00 (Low), Damage: 1.07 (High)",
+      "abilities": [
+        "bite",
+        "cower",
+        "dive",
+        "growl",
+        "screech"
+      ],
+      "diet": "Fruit - Fungus"
+    },
+    {
+      "id": "bear",
+      "name": "Bears",
+      "role": "Defense",
+      "modifiers": "Health: 1.08 (High), Armor: 1.05 (Medium), Damage: 0.91 (Low)",
+      "abilities": [
+        "bite",
+        "claw",
+        "cower",
+        "growl"
+      ],
+      "diet": "Bread - Cheese - Fish - Fruit - Fungus - Meat"
+    },
+    {
+      "id": "boar",
+      "name": "Boars",
+      "role": "Defense",
+      "modifiers": "Health: 1.04 (High), Armor: 1.09 (Medium), Damage: 0.90 (Low)",
+      "abilities": [
+        "bite",
+        "charge",
+        "cower",
+        "dash",
+        "growl"
+      ],
+      "diet": "Bread - Cheese - Fish - Fruit - Fungus - Meat"
+    },
+    {
+      "id": "carrionbird",
+      "name": "Carrion Birds",
+      "role": "General",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.05 (Medium), Damage: 1.00 (Medium)",
+      "abilities": [
+        "bite",
+        "claw",
+        "cower",
+        "dive",
+        "growl",
+        "screech"
+      ],
+      "diet": "Fish - Meat"
+    },
+    {
+      "id": "cat",
+      "name": "Cats",
+      "role": "Offense",
+      "modifiers": "Health: 0.98 (Medium), Armor: 1.00 (Low), Damage: 1.10 (High)",
+      "abilities": [
+        "bite",
+        "claw",
+        "cower",
+        "dash",
+        "growl",
+        "prowl"
+      ],
+      "diet": "Fish - Meat"
+    },
+    {
+      "id": "crab",
+      "name": "Crabs",
+      "role": "Defense",
+      "modifiers": "Health: 0.96 (Low), Armor: 1.13 (High), Damage: 0.95 (Low)",
+      "abilities": [
+        "claw",
+        "cower",
+        "growl"
+      ],
+      "diet": "Bread - Fish - Fruit - Fungus"
+    },
+    {
+      "id": "crocolisk",
+      "name": "Crocolisks",
+      "role": "Defense",
+      "modifiers": "Health: 0.95 (Low), Armor: 1.10 (High), Damage: 1.00 (Medium)",
+      "abilities": [
+        "bite",
+        "cower",
+        "growl"
+      ],
+      "diet": "Fish - Meat"
+    },
+    {
+      "id": "gorilla",
+      "name": "Gorillas",
+      "role": "Defense",
+      "modifiers": "Health: 1.04 (High), Armor: 1.00 (Low), Damage: 1.02 (Medium)",
+      "abilities": [
+        "bite",
+        "cower",
+        "growl",
+        "thunderstomp"
+      ],
+      "diet": "Fruit - Fungus"
+    },
+    {
+      "id": "hyena",
+      "name": "Hyenas",
+      "role": "General",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.05 (Medium), Damage: 1.00 (Medium)",
+      "abilities": [
+        "bite",
+        "cower",
+        "dash",
+        "growl"
+      ],
+      "diet": "Fruit - Meat"
+    },
+    {
+      "id": "owl",
+      "name": "Owls",
+      "role": "Offense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.00 (Low), Damage: 1.07 (High)",
+      "abilities": [
+        "claw",
+        "cower",
+        "dive",
+        "growl",
+        "screech"
+      ],
+      "diet": "Meat"
+    },
+    {
+      "id": "raptor",
+      "name": "Raptors",
+      "role": "Offense",
+      "modifiers": "Health: 0.95 (Low), Armor: 1.03 (Low), Damage: 1.10 (High)",
+      "abilities": [
+        "bite",
+        "claw",
+        "cower",
+        "growl"
+      ],
+      "diet": "Meat"
+    },
+    {
+      "id": "scorpid",
+      "name": "Scorpids",
+      "role": "Defense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.10 (High), Damage: 0.94 (Low)",
+      "abilities": [
+        "claw",
+        "cower",
+        "growl",
+        "scorpidpoison"
+      ],
+      "diet": "Meat"
+    },
+    {
+      "id": "spider",
+      "name": "Spiders",
+      "role": "Offense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.00 (Low), Damage: 1.07 (High)",
+      "abilities": [
+        "bite",
+        "cower",
+        "growl"
+      ],
+      "diet": "Meat"
+    },
+    {
+      "id": "tallstrider",
+      "name": "Tallstriders",
+      "role": "Defense",
+      "modifiers": "Health: 1.05 (High), Armor: 1.00 (Low), Damage: 1.00 (Medium)",
+      "abilities": [
+        "bite",
+        "cower",
+        "dash",
+        "growl"
+      ],
+      "diet": "Cheese - Fruit - Fungus"
+    },
+    {
+      "id": "turtle",
+      "name": "Turtles",
+      "role": "Defense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.13 (High), Damage: 0.90 (Low)",
+      "abilities": [
+        "bite",
+        "cower",
+        "growl",
+        "shellshield"
+      ],
+      "diet": "Fish - Fruit - Fungus"
+    },
+    {
+      "id": "windserpent",
+      "name": "Wind Serpents",
+      "role": "Offense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.00 (Low), Damage: 1.07 (High)",
+      "abilities": [
+        "bite",
+        "cower",
+        "dive",
+        "growl",
+        "lightningbreath"
+      ],
+      "diet": "Bread - Cheese - Fish"
+    },
+    {
+      "id": "wolf",
+      "name": "Wolves",
+      "role": "General",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.05 (Medium), Damage: 1.00 (Medium)",
+      "abilities": [
+        "bite",
+        "cower",
+        "dash",
+        "furioushowl",
+        "growl"
+      ],
+      "diet": "Meat"
+    }
+  ],
+  "abilityNames": {
+    "arcaneresistance": "Arcane Resistance",
+    "bite": "Bite",
+    "charge": "Charge",
+    "claw": "Claw",
+    "cower": "Cower",
+    "dash": "Dash",
+    "dive": "Dive",
+    "fireresistance": "Fire Resistance",
+    "frostresistance": "Frost Resistance",
+    "furioushowl": "Furious Howl",
+    "greatstamina": "Great Stamina",
+    "growl": "Growl",
+    "lightningbreath": "Lightning Breath",
+    "naturalarmor": "Natural Armor",
+    "natureresistance": "Nature Resistance",
+    "prowl": "Prowl",
+    "scorpidpoison": "Scorpid Poison",
+    "screech": "Screech",
+    "shadowresistance": "Shadow Resistance",
+    "shellshield": "Shell Shield",
+    "thunderstomp": "Thunderstomp"
+  },
+  "abilities": [
+    {
+      "id": "bite",
+      "name": "Bite",
+      "families": [
+        "bat",
+        "bear",
+        "boar",
+        "carrionbird",
+        "cat",
+        "crocolisk",
+        "gorilla",
+        "hyena",
+        "raptor",
+        "spider",
+        "tallstrider",
+        "turtle",
+        "windserpent",
+        "wolf"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 1,
+          "trainingPoints": 1,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Prairie Wolf",
+              "npcId": 2958,
+              "family": "Wolf",
+              "minLevel": 5,
+              "maxLevel": 6,
+              "zone": "Mulgore",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=2958",
+              "reference": "https://www.wowhead.com/classic/npc=2958",
+              "routine": true
+            },
+            {
+              "name": "Forest Spider",
+              "npcId": 30,
+              "family": "Spider",
+              "minLevel": 5,
+              "maxLevel": 6,
+              "zone": "Elwynn Forest",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=30",
+              "reference": "https://www.wowhead.com/classic/npc=30",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 8,
+          "trainingPoints": 4,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Starving Winter Wolf",
+              "npcId": 1133,
+              "family": "Wolf",
+              "minLevel": 8,
+              "maxLevel": 9,
+              "zone": "Dun Morogh",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1133",
+              "reference": "https://www.wowhead.com/classic/npc=1133",
+              "routine": true
+            },
+            {
+              "name": "Prairie Wolf Alpha",
+              "npcId": 2960,
+              "family": "Wolf",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Mulgore",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=2960",
+              "reference": "https://www.wowhead.com/classic/npc=2960",
+              "routine": true
+            },
+            {
+              "name": "Prowler",
+              "npcId": 118,
+              "family": "Wolf",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Elwynn Forest",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=118",
+              "reference": "https://www.wowhead.com/classic/npc=118",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 16,
+          "trainingPoints": 7,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Bloodsnout Worg",
+              "npcId": 1923,
+              "family": "Wolf",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Silverpine Forest",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1923",
+              "reference": "https://www.wowhead.com/classic/npc=1923",
+              "routine": true
+            },
+            {
+              "name": "Deepmoss Creeper",
+              "npcId": 4005,
+              "family": "Spider",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Stonetalon Mountains",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=4005",
+              "reference": "https://www.wowhead.com/classic/npc=4005",
+              "routine": true
+            },
+            {
+              "name": "Wood Lurker",
+              "npcId": 1185,
+              "family": "Spider",
+              "minLevel": 17,
+              "maxLevel": 18,
+              "zone": "Loch Modan",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1185",
+              "reference": "https://www.wowhead.com/classic/npc=1185",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 24,
+          "trainingPoints": 10,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Giant Moss Creeper",
+              "npcId": 2349,
+              "family": "Spider",
+              "minLevel": 24,
+              "maxLevel": 25,
+              "zone": "Hillsbrad Foothills",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=2349",
+              "reference": "https://www.wowhead.com/classic/npc=2349",
+              "routine": true
+            },
+            {
+              "name": "Black Ravager",
+              "npcId": 628,
+              "family": "Wolf",
+              "minLevel": 24,
+              "maxLevel": 25,
+              "zone": "Duskwood",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=628",
+              "reference": "https://www.wowhead.com/classic/npc=628",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "petLevel": 32,
+          "trainingPoints": 13,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Plains Creeper",
+              "npcId": 2563,
+              "family": "Spider",
+              "minLevel": 32,
+              "maxLevel": 33,
+              "zone": "Arathi Highlands",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=2563",
+              "reference": "https://www.wowhead.com/classic/npc=2563",
+              "routine": true
+            },
+            {
+              "name": "Sparkleshell Snapper",
+              "npcId": 4143,
+              "family": "Turtle",
+              "minLevel": 34,
+              "maxLevel": 35,
+              "zone": "Thousand Needles",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=4143",
+              "reference": "https://www.wowhead.com/classic/npc=4143",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "petLevel": 40,
+          "trainingPoints": 17,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Longtooth Runner",
+              "npcId": 5286,
+              "family": "Wolf",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Feralas",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=5286",
+              "reference": "https://www.wowhead.com/classic/npc=5286",
+              "routine": true
+            },
+            {
+              "name": "Drywallow Daggermaw",
+              "npcId": 4345,
+              "family": "Crocolisk",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Dustwallow Marsh",
+              "classification": "Elite",
+              "classificationSource": "https://classicdb.ch/?npc=4345",
+              "reference": "https://www.wowhead.com/classic/npc=4345",
+              "routine": false
+            }
+          ]
+        },
+        {
+          "rank": 7,
+          "petLevel": 48,
+          "trainingPoints": 21,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Saltwater Snapjaw",
+              "npcId": 2505,
+              "family": "Turtle",
+              "minLevel": 49,
+              "maxLevel": 50,
+              "zone": "The Hinterlands",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=2505",
+              "reference": "https://www.wowhead.com/classic/npc=2505",
+              "routine": true
+            },
+            {
+              "name": "Felpaw Ravager",
+              "npcId": 8961,
+              "family": "Wolf",
+              "minLevel": 51,
+              "maxLevel": 52,
+              "zone": "Felwood",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=8961",
+              "reference": "https://www.wowhead.com/classic/npc=8961",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 8,
+          "petLevel": 56,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Bloodaxe Worg",
+              "npcId": 9696,
+              "family": "Wolf",
+              "minLevel": 56,
+              "maxLevel": 57,
+              "zone": "Blackrock Spire (Dungeon)",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=9696",
+              "reference": "https://www.wowhead.com/classic/npc=9696",
+              "routine": false
+            }
+          ]
+        }
+      ],
+      "reference": "https://www.wow-petopia.com/classic/abilities.php#bite"
+    },
+    {
+      "id": "charge",
+      "name": "Charge",
+      "families": [
+        "boar"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 1,
+          "trainingPoints": 5,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Elder Mottled Boar",
+              "npcId": 3100,
+              "family": "Boar",
+              "minLevel": 8,
+              "maxLevel": 9,
+              "zone": "Durotar",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=3100",
+              "reference": "https://www.wowhead.com/classic/npc=3100",
+              "routine": true
+            },
+            {
+              "name": "Scarred Crag Boar",
+              "npcId": 1689,
+              "family": "Boar",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Dun Morogh",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1689",
+              "reference": "https://www.wowhead.com/classic/npc=1689",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 12,
+          "trainingPoints": 9,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Young Goretusk",
+              "npcId": 454,
+              "family": "Boar",
+              "minLevel": 12,
+              "maxLevel": 13,
+              "zone": "Westfall",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=454",
+              "reference": "https://www.wowhead.com/classic/npc=454",
+              "routine": true
+            },
+            {
+              "name": "Mangy Mountain Boar",
+              "npcId": 1191,
+              "family": "Boar",
+              "minLevel": 14,
+              "maxLevel": 15,
+              "zone": "Loch Modan",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1191",
+              "reference": "https://www.wowhead.com/classic/npc=1191",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 24,
+          "trainingPoints": 13,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Bellygrub",
+              "npcId": 345,
+              "family": "Boar",
+              "minLevel": 24,
+              "maxLevel": 24,
+              "zone": "Redridge Mountains",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=345",
+              "reference": "https://www.wowhead.com/classic/npc=345",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 36,
+          "trainingPoints": 17,
+          "trainer": false,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 48,
+          "trainingPoints": 21,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Ashmane Boar",
+              "npcId": 5992,
+              "family": "Boar",
+              "minLevel": 48,
+              "maxLevel": 49,
+              "zone": "Blasted Lands",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=5992",
+              "reference": "https://www.wowhead.com/classic/npc=5992",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "petLevel": 60,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Plagued Swine",
+              "npcId": 16117,
+              "family": "Boar",
+              "minLevel": 60,
+              "maxLevel": 60,
+              "zone": "Eastern Plaguelands",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=16117",
+              "reference": "https://www.wowhead.com/classic/npc=16117",
+              "routine": true
+            }
+          ]
+        }
+      ],
+      "reference": "https://www.wow-petopia.com/classic/abilities.php#charge"
+    },
+    {
+      "id": "claw",
+      "name": "Claw",
+      "families": [
+        "bear",
+        "carrionbird",
+        "cat",
+        "crab",
+        "owl",
+        "raptor",
+        "scorpid"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 1,
+          "trainingPoints": 1,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Strigid Owl",
+              "npcId": 1995,
+              "family": "Owl",
+              "minLevel": 5,
+              "maxLevel": 6,
+              "zone": "Teldrassil",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1995",
+              "reference": "https://www.wowhead.com/classic/npc=1995",
+              "routine": true
+            },
+            {
+              "name": "Scorpid Worker",
+              "npcId": 3124,
+              "family": "Scorpid",
+              "minLevel": 3,
+              "maxLevel": 3,
+              "zone": "Durotar",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=3124",
+              "reference": "https://www.wowhead.com/classic/npc=3124",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 8,
+          "trainingPoints": 4,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Strigid Hunter",
+              "npcId": 1997,
+              "family": "Owl",
+              "minLevel": 8,
+              "maxLevel": 9,
+              "zone": "Teldrassil",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1997",
+              "reference": "https://www.wowhead.com/classic/npc=1997",
+              "routine": true
+            },
+            {
+              "name": "Encrusted Surf Crawler",
+              "npcId": 3108,
+              "family": "Crab",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Durotar",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=3108",
+              "reference": "https://www.wowhead.com/classic/npc=3108",
+              "routine": true
+            },
+            {
+              "name": "Young Forest Bear",
+              "npcId": 822,
+              "family": "Bear",
+              "minLevel": 8,
+              "maxLevel": 9,
+              "zone": "Elwynn Forest",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=822",
+              "reference": "https://www.wowhead.com/classic/npc=822",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 16,
+          "trainingPoints": 7,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Black Bear Patriarch",
+              "npcId": 1189,
+              "family": "Bear",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Loch Modan",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1189",
+              "reference": "https://www.wowhead.com/classic/npc=1189",
+              "routine": true
+            },
+            {
+              "name": "Shore Crawler",
+              "npcId": 1216,
+              "family": "Crab",
+              "minLevel": 17,
+              "maxLevel": 18,
+              "zone": "Westfall",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1216",
+              "reference": "https://www.wowhead.com/classic/npc=1216",
+              "routine": true
+            },
+            {
+              "name": "Clattering Crawler",
+              "npcId": 3812,
+              "family": "Crab",
+              "minLevel": 19,
+              "maxLevel": 20,
+              "zone": "Ashenvale",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=3812",
+              "reference": "https://www.wowhead.com/classic/npc=3812",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 24,
+          "trainingPoints": 10,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Elder Ashenvale Bear",
+              "npcId": 3810,
+              "family": "Bear",
+              "minLevel": 25,
+              "maxLevel": 26,
+              "zone": "Ashenvale",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=3810",
+              "reference": "https://www.wowhead.com/classic/npc=3810",
+              "routine": true
+            },
+            {
+              "name": "Scorpashi Snapper",
+              "npcId": 4696,
+              "family": "Scorpid",
+              "minLevel": 30,
+              "maxLevel": 31,
+              "zone": "Desolace",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=4696",
+              "reference": "https://www.wowhead.com/classic/npc=4696",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "petLevel": 32,
+          "trainingPoints": 13,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Scorpashi Lasher",
+              "npcId": 4697,
+              "family": "Scorpid",
+              "minLevel": 34,
+              "maxLevel": 35,
+              "zone": "Desolace",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=4697",
+              "reference": "https://www.wowhead.com/classic/npc=4697",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "petLevel": 40,
+          "trainingPoints": 17,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Scorpid Hunter",
+              "npcId": 5422,
+              "family": "Scorpid",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Tanaris",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=5422",
+              "reference": "https://www.wowhead.com/classic/npc=5422",
+              "routine": true
+            },
+            {
+              "name": "Silt Crawler",
+              "npcId": 922,
+              "family": "Crab",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Swamp of Sorrows",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=922",
+              "reference": "https://www.wowhead.com/classic/npc=922",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 7,
+          "petLevel": 48,
+          "trainingPoints": 21,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Ironfur Patriarch",
+              "npcId": 5274,
+              "family": "Bear",
+              "minLevel": 48,
+              "maxLevel": 49,
+              "zone": "Feralas",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=5274",
+              "reference": "https://www.wowhead.com/classic/npc=5274",
+              "routine": true
+            },
+            {
+              "name": "Ironbeak Hunter",
+              "npcId": 7099,
+              "family": "Owl",
+              "minLevel": 50,
+              "maxLevel": 51,
+              "zone": "Felwood",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=7099",
+              "reference": "https://www.wowhead.com/classic/npc=7099",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 8,
+          "petLevel": 56,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Winterspring Screecher",
+              "npcId": 7456,
+              "family": "Owl",
+              "minLevel": 57,
+              "maxLevel": 59,
+              "zone": "Winterspring",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=7456",
+              "reference": "https://www.wowhead.com/classic/npc=7456",
+              "routine": true
+            },
+            {
+              "name": "Elder Shardtooth",
+              "npcId": 7445,
+              "family": "Bear",
+              "minLevel": 57,
+              "maxLevel": 58,
+              "zone": "Winterspring",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=7445",
+              "reference": "https://www.wowhead.com/classic/npc=7445",
+              "routine": true
+            }
+          ]
+        }
+      ],
+      "reference": "https://www.wow-petopia.com/classic/abilities.php#claw"
+    },
+    {
+      "id": "dash",
+      "name": "Dash",
+      "families": [
+        "boar",
+        "cat",
+        "hyena",
+        "tallstrider",
+        "wolf"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Stranglethorn Tiger",
+              "npcId": 682,
+              "family": "Cat",
+              "minLevel": 32,
+              "maxLevel": 33,
+              "zone": "Stranglethorn Vale",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=682",
+              "reference": "https://www.wowhead.com/classic/npc=682",
+              "routine": true
+            },
+            {
+              "name": "Crag Coyote",
+              "npcId": 2727,
+              "family": "Wolf",
+              "minLevel": 35,
+              "maxLevel": 36,
+              "zone": "Badlands",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=2727",
+              "reference": "https://www.wowhead.com/classic/npc=2727",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 40,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Longtooth Runner",
+              "npcId": 5286,
+              "family": "Wolf",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Feralas",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=5286",
+              "reference": "https://www.wowhead.com/classic/npc=5286",
+              "routine": true
+            },
+            {
+              "name": "Ridge Stalker Patriarch",
+              "npcId": 2734,
+              "family": "Cat",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Badlands",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=2734",
+              "reference": "https://www.wowhead.com/classic/npc=2734",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 50,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Vilebranch Raiding Wolf",
+              "npcId": 2681,
+              "family": "Wolf",
+              "minLevel": 50,
+              "maxLevel": 51,
+              "zone": "The Hinterlands",
+              "classification": "Elite",
+              "classificationSource": "https://classicdb.ch/?npc=2681",
+              "reference": "https://www.wowhead.com/classic/npc=2681",
+              "routine": false
+            },
+            {
+              "name": "Blackrock Worg",
+              "npcId": 7055,
+              "family": "Wolf",
+              "minLevel": 54,
+              "maxLevel": 55,
+              "zone": "Burning Steppes",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=7055",
+              "reference": "https://www.wowhead.com/classic/npc=7055",
+              "routine": true
+            },
+            {
+              "name": "Frostsaber Huntress",
+              "npcId": 7433,
+              "family": "Cat",
+              "minLevel": 58,
+              "maxLevel": 59,
+              "zone": "Winterspring",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=7433",
+              "reference": "https://www.wowhead.com/classic/npc=7433",
+              "routine": true
+            }
+          ]
+        }
+      ],
+      "reference": "https://www.wow-petopia.com/classic/abilities.php#dash"
+    },
+    {
+      "id": "dive",
+      "name": "Dive",
+      "families": [
+        "bat",
+        "carrionbird",
+        "owl",
+        "windserpent"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Young Mesa Buzzard",
+              "npcId": 2578,
+              "family": "Carrion Bird",
+              "minLevel": 31,
+              "maxLevel": 32,
+              "zone": "Arathi Highlands",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=2578",
+              "reference": "https://www.wowhead.com/classic/npc=2578",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 40,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Vale Screecher",
+              "npcId": 5307,
+              "family": "Wind Serpent",
+              "minLevel": 41,
+              "maxLevel": 43,
+              "zone": "Feralas",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=5307",
+              "reference": "https://www.wowhead.com/classic/npc=5307",
+              "routine": true
+            },
+            {
+              "name": "Roc",
+              "npcId": 5428,
+              "family": "Carrion Bird",
+              "minLevel": 42,
+              "maxLevel": 43,
+              "zone": "Tanaris",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=5428",
+              "reference": "https://www.wowhead.com/classic/npc=5428",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 50,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Ironbeak Hunter",
+              "npcId": 7099,
+              "family": "Owl",
+              "minLevel": 50,
+              "maxLevel": 51,
+              "zone": "Felwood",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=7099",
+              "reference": "https://www.wowhead.com/classic/npc=7099",
+              "routine": true
+            },
+            {
+              "name": "Carrion Vulture",
+              "npcId": 1809,
+              "family": "Carrion Bird",
+              "minLevel": 50,
+              "maxLevel": 52,
+              "zone": "Western Plaguelands",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1809",
+              "reference": "https://www.wowhead.com/classic/npc=1809",
+              "routine": true
+            }
+          ]
+        }
+      ],
+      "reference": "https://www.wow-petopia.com/classic/abilities.php#dive"
+    },
+    {
+      "id": "greatstamina",
+      "name": "Great Stamina",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 10,
+          "trainingPoints": 5,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 12,
+          "trainingPoints": 10,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 18,
+          "trainingPoints": 15,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 24,
+          "trainingPoints": 25,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 30,
+          "trainingPoints": 50,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 6,
+          "petLevel": 36,
+          "trainingPoints": 75,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 7,
+          "petLevel": 42,
+          "trainingPoints": 100,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 8,
+          "petLevel": 48,
+          "trainingPoints": 125,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 9,
+          "petLevel": 54,
+          "trainingPoints": 150,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 10,
+          "petLevel": 60,
+          "trainingPoints": 185,
+          "trainer": true,
+          "sources": []
+        }
+      ],
+      "reference": "https://www.wow-petopia.com/classic/abilities.php#greatstamina"
+    },
+    {
+      "id": "growl",
+      "name": "Growl",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 1,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 10,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 20,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 30,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 40,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 6,
+          "petLevel": 50,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 7,
+          "petLevel": 60,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        }
+      ],
+      "reference": "https://www.wow-petopia.com/classic/abilities.php#growl"
+    },
+    {
+      "id": "naturalarmor",
+      "name": "Natural Armor",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 10,
+          "trainingPoints": 1,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 12,
+          "trainingPoints": 5,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 18,
+          "trainingPoints": 10,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 24,
+          "trainingPoints": 15,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 30,
+          "trainingPoints": 25,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 6,
+          "petLevel": 36,
+          "trainingPoints": 50,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 7,
+          "petLevel": 42,
+          "trainingPoints": 75,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 8,
+          "petLevel": 48,
+          "trainingPoints": 100,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 9,
+          "petLevel": 54,
+          "trainingPoints": 125,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 10,
+          "petLevel": 60,
+          "trainingPoints": 150,
+          "trainer": true,
+          "sources": []
+        }
+      ],
+      "reference": "https://www.wow-petopia.com/classic/abilities.php#naturalarmor"
+    },
+    {
+      "id": "screech",
+      "name": "Screech",
+      "families": [
+        "bat",
+        "carrionbird",
+        "owl"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 8,
+          "trainingPoints": 10,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Greater Fleshripper",
+              "npcId": 154,
+              "family": "Carrion Bird",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Westfall",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=154",
+              "reference": "https://www.wowhead.com/classic/npc=154",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 24,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Salt Flats Vulture",
+              "npcId": 4158,
+              "family": "Carrion Bird",
+              "minLevel": 32,
+              "maxLevel": 34,
+              "zone": "Thousand Needles",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=4158",
+              "reference": "https://www.wowhead.com/classic/npc=4158",
+              "routine": true
+            },
+            {
+              "name": "Dread Ripper",
+              "npcId": 4694,
+              "family": "Carrion Bird",
+              "minLevel": 39,
+              "maxLevel": 40,
+              "zone": "Desolace",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=4694",
+              "reference": "https://www.wowhead.com/classic/npc=4694",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 48,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Ironbeak Owl",
+              "npcId": 7097,
+              "family": "Owl",
+              "minLevel": 48,
+              "maxLevel": 49,
+              "zone": "Felwood",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=7097",
+              "reference": "https://www.wowhead.com/classic/npc=7097",
+              "routine": true
+            },
+            {
+              "name": "Carrion Vulture",
+              "npcId": 1809,
+              "family": "Carrion Bird",
+              "minLevel": 50,
+              "maxLevel": 52,
+              "zone": "Western Plaguelands",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=1809",
+              "reference": "https://www.wowhead.com/classic/npc=1809",
+              "routine": true
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 56,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Monstrous Plaguebat",
+              "npcId": 8602,
+              "family": "Bat",
+              "minLevel": 56,
+              "maxLevel": 58,
+              "zone": "Eastern Plaguelands",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=8602",
+              "reference": "https://www.wowhead.com/classic/npc=8602",
+              "routine": true
+            },
+            {
+              "name": "Winterspring Screecher",
+              "npcId": 7456,
+              "family": "Owl",
+              "minLevel": 57,
+              "maxLevel": 59,
+              "zone": "Winterspring",
+              "classification": "Normal",
+              "classificationSource": "https://classicdb.ch/?npc=7456",
+              "reference": "https://www.wowhead.com/classic/npc=7456",
+              "routine": true
+            }
+          ]
+        }
+      ],
+      "reference": "https://www.wow-petopia.com/classic/abilities.php#screech"
+    }
+  ],
+  "starters": [
+    {
+      "name": "Strigid Hunter",
+      "npcId": 1997,
+      "family": "Owl",
+      "minLevel": 8,
+      "maxLevel": 9,
+      "zone": "Teldrassil",
+      "classification": "Normal",
+      "classificationSource": "https://classicdb.ch/?npc=1997",
+      "reference": "https://www.wowhead.com/classic/npc=1997",
+      "routine": true
+    },
+    {
+      "name": "Durotar Tiger",
+      "npcId": 3121,
+      "family": "Cat",
+      "minLevel": 7,
+      "maxLevel": 8,
+      "zone": "Durotar",
+      "classification": "Normal",
+      "classificationSource": "https://classicdb.ch/?npc=3121",
+      "reference": "https://www.wowhead.com/classic/npc=3121",
+      "routine": true
+    },
+    {
+      "name": "Flatland Cougar",
+      "npcId": 3035,
+      "family": "Cat",
+      "minLevel": 7,
+      "maxLevel": 8,
+      "zone": "Mulgore",
+      "classification": "Normal",
+      "classificationSource": "https://classicdb.ch/?npc=3035",
+      "reference": "https://www.wowhead.com/classic/npc=3035",
+      "routine": true
+    },
+    {
+      "name": "Moonstalker Runt",
+      "npcId": 2070,
+      "family": "Cat",
+      "minLevel": 10,
+      "maxLevel": 11,
+      "zone": "Darkshore",
+      "classification": "Normal",
+      "classificationSource": "https://classicdb.ch/?npc=2070",
+      "reference": "https://www.wowhead.com/classic/npc=2070",
+      "routine": true
+    },
+    {
+      "name": "Greater Fleshripper",
+      "npcId": 154,
+      "family": "Carrion Bird",
+      "minLevel": 16,
+      "maxLevel": 17,
+      "zone": "Westfall",
+      "classification": "Normal",
+      "classificationSource": "https://classicdb.ch/?npc=154",
+      "reference": "https://www.wowhead.com/classic/npc=154",
+      "routine": true
+    },
+    {
+      "name": "Salt Flats Vulture",
+      "npcId": 4158,
+      "family": "Carrion Bird",
+      "minLevel": 32,
+      "maxLevel": 34,
+      "zone": "Thousand Needles",
+      "classification": "Normal",
+      "classificationSource": "https://classicdb.ch/?npc=4158",
+      "reference": "https://www.wowhead.com/classic/npc=4158",
+      "routine": true
+    },
+    {
+      "name": "Ironbeak Owl",
+      "npcId": 7097,
+      "family": "Owl",
+      "minLevel": 48,
+      "maxLevel": 49,
+      "zone": "Felwood",
+      "classification": "Normal",
+      "classificationSource": "https://classicdb.ch/?npc=7097",
+      "reference": "https://www.wowhead.com/classic/npc=7097",
+      "routine": true
+    }
+  ]
+}

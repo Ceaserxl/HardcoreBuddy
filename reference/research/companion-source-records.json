@@ -1,0 +1,4153 @@
+{
+  "checkedOn": "2026-09-27",
+  "sources": [
+    {
+      "url": "https://www.wow-petopia.com/classic/abilities.php",
+      "sha256": "44678c0e13515eb75400c9278de18dbb237b2521bb2e787ea5845fe5f2c10f8e"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/",
+      "sha256": "ebc6e2764a8d4931374257606d9b25b264dfb23d879a31a19ce4e49a58319940"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=bat",
+      "sha256": "f1a5e7eeb20dee7ece95e88de8028bf646ff63345316a86d83e636ef8b5075dd"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=bear",
+      "sha256": "3e6249cbfc91eda0ffd36ddcec64f105937e4c122005da44d6d02eda0d7461f6"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=boar",
+      "sha256": "d2c80cc44d2e1a732ddd377a404c3d61758a0a00a155af5ddb6440c232d174cc"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=carrionbird",
+      "sha256": "b9450e9efb16dc9f79aaaabe28cf0a2d3b69e4cbc0af8d62b9e168e9a2ce3cba"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=cat",
+      "sha256": "a837636cabc9e8d36a033ca575bec2ec6ac4dc75bc1a6e5caa4260bdaf8ac853"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=crab",
+      "sha256": "126b4c36e344ca94756c65e61f773d9805bd4af4101f1be2aa4b8aa65de0f409"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=crocolisk",
+      "sha256": "34c8865cbc44750d0df2d973e3d867189ded236b82fd56e97ac8644b05eda63b"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=gorilla",
+      "sha256": "7e0636eca46f1e0f6004a35926d4000b79de400f8d730e865009eba9ac2d1c92"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=hyena",
+      "sha256": "516625a5fe5ecf47fffbd344b5e9f32a0b3818b109167a888235906ae6e2e51f"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=owl",
+      "sha256": "208d833c35f3838703c7da18b2e3b3ba275f43017531e9e969cda248a51154c9"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=raptor",
+      "sha256": "0c414cfcdf8f53f28de29e46fca271aef564a62aded2512fdc7c057ac6d19eec"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=scorpid",
+      "sha256": "2a84959b42cfe84afc88d4a8f5f09c7d3a9fbb34a1b69ceb01ecb4b026177c61"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=spider",
+      "sha256": "05eaa4ec696b86d9614a977490223baffeb4e616324ab6ebc1ecfb645ac5cb87"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=tallstrider",
+      "sha256": "81106076925a318ba8479546b651073b5c7b7717d5056cfafd21582697f7b0c9"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=turtle",
+      "sha256": "b0b2810cb047b67c5bc1b51b9d94de24ddeab3375dcb08c7215a8f54e019668c"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=windserpent",
+      "sha256": "c20106c364f5f8cdb66c21e0b43a6bb116004b5655bd3c7bfb9e46f7e63cb9ca"
+    },
+    {
+      "url": "https://www.wow-petopia.com/classic/family.php?id=wolf",
+      "sha256": "7dbdc247d6fdd305d0e1669b2a62fed6ec7bc69f470a6fb87c53ecfb3e1d86ea"
+    }
+  ],
+  "families": [
+    {
+      "id": "bat",
+      "name": "Bats",
+      "role": "Offense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.00 (Low), Damage: 1.07 (High)",
+      "abilities": [
+        "bite",
+        "cower",
+        "dive",
+        "growl",
+        "screech"
+      ],
+      "diet": "Fruit - Fungus"
+    },
+    {
+      "id": "bear",
+      "name": "Bears",
+      "role": "Defense",
+      "modifiers": "Health: 1.08 (High), Armor: 1.05 (Medium), Damage: 0.91 (Low)",
+      "abilities": [
+        "bite",
+        "claw",
+        "cower",
+        "growl"
+      ],
+      "diet": "Bread - Cheese - Fish - Fruit - Fungus - Meat"
+    },
+    {
+      "id": "boar",
+      "name": "Boars",
+      "role": "Defense",
+      "modifiers": "Health: 1.04 (High), Armor: 1.09 (Medium), Damage: 0.90 (Low)",
+      "abilities": [
+        "bite",
+        "charge",
+        "cower",
+        "dash",
+        "growl"
+      ],
+      "diet": "Bread - Cheese - Fish - Fruit - Fungus - Meat"
+    },
+    {
+      "id": "carrionbird",
+      "name": "Carrion Birds",
+      "role": "General",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.05 (Medium), Damage: 1.00 (Medium)",
+      "abilities": [
+        "bite",
+        "claw",
+        "cower",
+        "dive",
+        "growl",
+        "screech"
+      ],
+      "diet": "Fish - Meat"
+    },
+    {
+      "id": "cat",
+      "name": "Cats",
+      "role": "Offense",
+      "modifiers": "Health: 0.98 (Medium), Armor: 1.00 (Low), Damage: 1.10 (High)",
+      "abilities": [
+        "bite",
+        "claw",
+        "cower",
+        "dash",
+        "growl",
+        "prowl"
+      ],
+      "diet": "Fish - Meat"
+    },
+    {
+      "id": "crab",
+      "name": "Crabs",
+      "role": "Defense",
+      "modifiers": "Health: 0.96 (Low), Armor: 1.13 (High), Damage: 0.95 (Low)",
+      "abilities": [
+        "claw",
+        "cower",
+        "growl"
+      ],
+      "diet": "Bread - Fish - Fruit - Fungus"
+    },
+    {
+      "id": "crocolisk",
+      "name": "Crocolisks",
+      "role": "Defense",
+      "modifiers": "Health: 0.95 (Low), Armor: 1.10 (High), Damage: 1.00 (Medium)",
+      "abilities": [
+        "bite",
+        "cower",
+        "growl"
+      ],
+      "diet": "Fish - Meat"
+    },
+    {
+      "id": "gorilla",
+      "name": "Gorillas",
+      "role": "Defense",
+      "modifiers": "Health: 1.04 (High), Armor: 1.00 (Low), Damage: 1.02 (Medium)",
+      "abilities": [
+        "bite",
+        "cower",
+        "growl",
+        "thunderstomp"
+      ],
+      "diet": "Fruit - Fungus"
+    },
+    {
+      "id": "hyena",
+      "name": "Hyenas",
+      "role": "General",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.05 (Medium), Damage: 1.00 (Medium)",
+      "abilities": [
+        "bite",
+        "cower",
+        "dash",
+        "growl"
+      ],
+      "diet": "Fruit - Meat"
+    },
+    {
+      "id": "owl",
+      "name": "Owls",
+      "role": "Offense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.00 (Low), Damage: 1.07 (High)",
+      "abilities": [
+        "claw",
+        "cower",
+        "dive",
+        "growl",
+        "screech"
+      ],
+      "diet": "Meat"
+    },
+    {
+      "id": "raptor",
+      "name": "Raptors",
+      "role": "Offense",
+      "modifiers": "Health: 0.95 (Low), Armor: 1.03 (Low), Damage: 1.10 (High)",
+      "abilities": [
+        "bite",
+        "claw",
+        "cower",
+        "growl"
+      ],
+      "diet": "Meat"
+    },
+    {
+      "id": "scorpid",
+      "name": "Scorpids",
+      "role": "Defense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.10 (High), Damage: 0.94 (Low)",
+      "abilities": [
+        "claw",
+        "cower",
+        "growl",
+        "scorpidpoison"
+      ],
+      "diet": "Meat"
+    },
+    {
+      "id": "spider",
+      "name": "Spiders",
+      "role": "Offense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.00 (Low), Damage: 1.07 (High)",
+      "abilities": [
+        "bite",
+        "cower",
+        "growl"
+      ],
+      "diet": "Meat"
+    },
+    {
+      "id": "tallstrider",
+      "name": "Tallstriders",
+      "role": "Defense",
+      "modifiers": "Health: 1.05 (High), Armor: 1.00 (Low), Damage: 1.00 (Medium)",
+      "abilities": [
+        "bite",
+        "cower",
+        "dash",
+        "growl"
+      ],
+      "diet": "Cheese - Fruit - Fungus"
+    },
+    {
+      "id": "turtle",
+      "name": "Turtles",
+      "role": "Defense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.13 (High), Damage: 0.90 (Low)",
+      "abilities": [
+        "bite",
+        "cower",
+        "growl",
+        "shellshield"
+      ],
+      "diet": "Fish - Fruit - Fungus"
+    },
+    {
+      "id": "windserpent",
+      "name": "Wind Serpents",
+      "role": "Offense",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.00 (Low), Damage: 1.07 (High)",
+      "abilities": [
+        "bite",
+        "cower",
+        "dive",
+        "growl",
+        "lightningbreath"
+      ],
+      "diet": "Bread - Cheese - Fish"
+    },
+    {
+      "id": "wolf",
+      "name": "Wolves",
+      "role": "General",
+      "modifiers": "Health: 1.00 (Medium), Armor: 1.05 (Medium), Damage: 1.00 (Medium)",
+      "abilities": [
+        "bite",
+        "cower",
+        "dash",
+        "furioushowl",
+        "growl"
+      ],
+      "diet": "Meat"
+    }
+  ],
+  "abilities": [
+    {
+      "id": "arcaneresistance",
+      "name": "Arcane Resistance",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 20,
+          "trainingPoints": 5,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 40,
+          "trainingPoints": 45,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 50,
+          "trainingPoints": 90,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 60,
+          "trainingPoints": 105,
+          "trainer": true,
+          "sources": []
+        }
+      ]
+    },
+    {
+      "id": "bite",
+      "name": "Bite",
+      "families": [
+        "bat",
+        "bear",
+        "boar",
+        "carrionbird",
+        "cat",
+        "crocolisk",
+        "gorilla",
+        "hyena",
+        "raptor",
+        "spider",
+        "tallstrider",
+        "turtle",
+        "windserpent",
+        "wolf"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 1,
+          "trainingPoints": 1,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Ragged Scavenger",
+              "npcId": 1509,
+              "family": "Wolf",
+              "minLevel": 2,
+              "maxLevel": 3,
+              "zone": "Tirisfal Glades"
+            },
+            {
+              "name": "Night Web Spider",
+              "npcId": 1505,
+              "family": "Spider",
+              "minLevel": 3,
+              "maxLevel": 4,
+              "zone": "Tirisfal Glades"
+            },
+            {
+              "name": "Prairie Wolf",
+              "npcId": 2958,
+              "family": "Wolf",
+              "minLevel": 5,
+              "maxLevel": 6,
+              "zone": "Mulgore"
+            },
+            {
+              "name": "Night Web Matriarch",
+              "npcId": 1688,
+              "family": "Spider",
+              "minLevel": 5,
+              "maxLevel": 5,
+              "zone": "Tirisfal Glades"
+            },
+            {
+              "name": "Githyiss the Vile",
+              "npcId": 1994,
+              "family": "Spider",
+              "minLevel": 5,
+              "maxLevel": 5,
+              "zone": "Teldrassil"
+            },
+            {
+              "name": "Forest Spider",
+              "npcId": 30,
+              "family": "Spider",
+              "minLevel": 5,
+              "maxLevel": 6,
+              "zone": "Elwynn Forest"
+            },
+            {
+              "name": "Snow Tracker Wolf",
+              "npcId": 1138,
+              "family": "Wolf",
+              "minLevel": 6,
+              "maxLevel": 7,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Prairie Stalker",
+              "npcId": 2959,
+              "family": "Wolf",
+              "minLevel": 7,
+              "maxLevel": 8,
+              "zone": "Mulgore"
+            },
+            {
+              "name": "Gray Forest Wolf",
+              "npcId": 1922,
+              "family": "Wolf",
+              "minLevel": 7,
+              "maxLevel": 8,
+              "zone": "Elwynn Forest"
+            },
+            {
+              "name": "Webwood Venomfang",
+              "npcId": 1999,
+              "family": "Spider",
+              "minLevel": 7,
+              "maxLevel": 8,
+              "zone": "Teldrassil"
+            },
+            {
+              "name": "Winter Wolf",
+              "npcId": 1131,
+              "family": "Wolf",
+              "minLevel": 7,
+              "maxLevel": 8,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Dreadmaw Crocolisk",
+              "npcId": 3110,
+              "family": "Crocolisk",
+              "minLevel": 9,
+              "maxLevel": 11,
+              "zone": "Durotar"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 8,
+          "trainingPoints": 4,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Starving Winter Wolf",
+              "npcId": 1133,
+              "family": "Wolf",
+              "minLevel": 8,
+              "maxLevel": 9,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Webwood Silkspinner",
+              "npcId": 2000,
+              "family": "Spider",
+              "minLevel": 8,
+              "maxLevel": 9,
+              "zone": "Teldrassil"
+            },
+            {
+              "name": "Vicious Night Web Spider",
+              "npcId": 1555,
+              "family": "Spider",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Tirisfal Glades"
+            },
+            {
+              "name": "Prowler",
+              "npcId": 118,
+              "family": "Wolf",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Elwynn Forest"
+            },
+            {
+              "name": "Prairie Wolf Alpha",
+              "npcId": 2960,
+              "family": "Wolf",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Mulgore"
+            },
+            {
+              "name": "Forest Lurker",
+              "npcId": 1195,
+              "family": "Spider",
+              "minLevel": 10,
+              "maxLevel": 11,
+              "zone": "Loch Modan"
+            },
+            {
+              "name": "Giant Webwood Spider",
+              "npcId": 2001,
+              "family": "Spider",
+              "minLevel": 10,
+              "maxLevel": 11,
+              "zone": "Teldrassil"
+            },
+            {
+              "name": "Coyote",
+              "npcId": 834,
+              "family": "Wolf",
+              "minLevel": 10,
+              "maxLevel": 11,
+              "zone": "Westfall"
+            },
+            {
+              "name": "Worg",
+              "npcId": 1765,
+              "family": "Wolf",
+              "minLevel": 10,
+              "maxLevel": 11,
+              "zone": "Silverpine Forest"
+            },
+            {
+              "name": "Timber",
+              "npcId": 1132,
+              "family": "Wolf",
+              "minLevel": 10,
+              "maxLevel": 10,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Coyote Packleader",
+              "npcId": 833,
+              "family": "Wolf",
+              "minLevel": 11,
+              "maxLevel": 12,
+              "zone": "Westfall"
+            },
+            {
+              "name": "Lady Sathrah",
+              "npcId": 7319,
+              "family": "Spider",
+              "minLevel": 12,
+              "maxLevel": 12,
+              "zone": "Teldrassil"
+            },
+            {
+              "name": "Loch Crocolisk",
+              "npcId": 1693,
+              "family": "Crocolisk",
+              "minLevel": 14,
+              "maxLevel": 15,
+              "zone": "Loch Modan"
+            },
+            {
+              "name": "Tarantula",
+              "npcId": 442,
+              "family": "Spider",
+              "minLevel": 15,
+              "maxLevel": 16,
+              "zone": "Redridge Mountains"
+            },
+            {
+              "name": "Oasis Snapjaw",
+              "npcId": 3461,
+              "family": "Turtle",
+              "minLevel": 15,
+              "maxLevel": 16,
+              "zone": "The Barrens"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 16,
+          "trainingPoints": 7,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Bloodsnout Worg",
+              "npcId": 1923,
+              "family": "Wolf",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Silverpine Forest"
+            },
+            {
+              "name": "Deepmoss Creeper",
+              "npcId": 4005,
+              "family": "Spider",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Stonetalon Mountains"
+            },
+            {
+              "name": "Wood Lurker",
+              "npcId": 1185,
+              "family": "Spider",
+              "minLevel": 17,
+              "maxLevel": 18,
+              "zone": "Loch Modan"
+            },
+            {
+              "name": "Deviate Crocolisk",
+              "npcId": 5053,
+              "family": "Crocolisk",
+              "minLevel": 18,
+              "maxLevel": 19,
+              "zone": "Wailing Caverns (Dungeon)"
+            },
+            {
+              "name": "Greater Tarantula",
+              "npcId": 505,
+              "family": "Spider",
+              "minLevel": 19,
+              "maxLevel": 20,
+              "zone": "Redridge Mountains"
+            },
+            {
+              "name": "Ghostpaw Runner",
+              "npcId": 3823,
+              "family": "Wolf",
+              "minLevel": 19,
+              "maxLevel": 20,
+              "zone": "Ashenvale"
+            },
+            {
+              "name": "Deepmoss Webspinner",
+              "npcId": 4006,
+              "family": "Spider",
+              "minLevel": 19,
+              "maxLevel": 20,
+              "zone": "Stonetalon Mountains"
+            },
+            {
+              "name": "Shanda the Spinner",
+              "npcId": 14266,
+              "family": "Spider",
+              "minLevel": 19,
+              "maxLevel": 19,
+              "zone": "Loch Modan"
+            },
+            {
+              "name": "Forest Moss Creeper",
+              "npcId": 2350,
+              "family": "Spider",
+              "minLevel": 20,
+              "maxLevel": 21,
+              "zone": "Hillsbrad Foothills"
+            },
+            {
+              "name": "Kresh",
+              "npcId": 3653,
+              "family": "Turtle",
+              "minLevel": 20,
+              "maxLevel": 20,
+              "zone": "Wailing Caverns (Dungeon)"
+            },
+            {
+              "name": "Besseleth",
+              "npcId": 11921,
+              "family": "Spider",
+              "minLevel": 21,
+              "maxLevel": 21,
+              "zone": "Stonetalon Mountains"
+            },
+            {
+              "name": "Green Recluse",
+              "npcId": 569,
+              "family": "Spider",
+              "minLevel": 21,
+              "maxLevel": 22,
+              "zone": "Duskwood"
+            },
+            {
+              "name": "Large Loch Crocolisk",
+              "npcId": 2476,
+              "family": "Crocolisk",
+              "minLevel": 22,
+              "maxLevel": 22,
+              "zone": "Loch Modan"
+            },
+            {
+              "name": "Chatter",
+              "npcId": 616,
+              "family": "Spider",
+              "minLevel": 23,
+              "maxLevel": 23,
+              "zone": "Redridge Mountains"
+            },
+            {
+              "name": "Lupos",
+              "npcId": 521,
+              "family": "Wolf",
+              "minLevel": 23,
+              "maxLevel": 23,
+              "zone": "Duskwood"
+            },
+            {
+              "name": "Aku'mai Fisher",
+              "npcId": 4824,
+              "family": "Turtle",
+              "minLevel": 23,
+              "maxLevel": 24,
+              "zone": "Blackfathom Deeps (Dungeon)"
+            },
+            {
+              "name": "Creepthess",
+              "npcId": 14279,
+              "family": "Spider",
+              "minLevel": 24,
+              "maxLevel": 24,
+              "zone": "Hillsbrad Foothills"
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 24,
+          "trainingPoints": 10,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Leech Widow",
+              "npcId": 1112,
+              "family": "Spider",
+              "minLevel": 24,
+              "maxLevel": 24,
+              "zone": "Wetlands"
+            },
+            {
+              "name": "Giant Moss Creeper",
+              "npcId": 2349,
+              "family": "Spider",
+              "minLevel": 24,
+              "maxLevel": 25,
+              "zone": "Hillsbrad Foothills"
+            },
+            {
+              "name": "Black Ravager",
+              "npcId": 628,
+              "family": "Wolf",
+              "minLevel": 24,
+              "maxLevel": 25,
+              "zone": "Duskwood"
+            },
+            {
+              "name": "Ghamoo-ra",
+              "npcId": 4887,
+              "family": "Turtle",
+              "minLevel": 25,
+              "maxLevel": 25,
+              "zone": "Blackfathom Deeps (Dungeon)"
+            },
+            {
+              "name": "Giant Wetlands Crocolisk",
+              "npcId": 2089,
+              "family": "Crocolisk",
+              "minLevel": 25,
+              "maxLevel": 26,
+              "zone": "Wetlands"
+            },
+            {
+              "name": "Black Ravager Mastiff",
+              "npcId": 1258,
+              "family": "Wolf",
+              "minLevel": 25,
+              "maxLevel": 26,
+              "zone": "Duskwood"
+            },
+            {
+              "name": "Elder Moss Creeper",
+              "npcId": 2348,
+              "family": "Spider",
+              "minLevel": 26,
+              "maxLevel": 27,
+              "zone": "Hillsbrad Foothills"
+            },
+            {
+              "name": "Aku'mai Snapjaw",
+              "npcId": 4825,
+              "family": "Turtle",
+              "minLevel": 26,
+              "maxLevel": 27,
+              "zone": "Blackfathom Deeps (Dungeon)"
+            },
+            {
+              "name": "Naraxis",
+              "npcId": 574,
+              "family": "Spider",
+              "minLevel": 27,
+              "maxLevel": 27,
+              "zone": "Duskwood"
+            },
+            {
+              "name": "Ghostpaw Alpha",
+              "npcId": 3825,
+              "family": "Wolf",
+              "minLevel": 27,
+              "maxLevel": 28,
+              "zone": "Ashenvale"
+            },
+            {
+              "name": "Wildthorn Lurker",
+              "npcId": 3821,
+              "family": "Spider",
+              "minLevel": 28,
+              "maxLevel": 29,
+              "zone": "Ashenvale"
+            },
+            {
+              "name": "Snapjaw",
+              "npcId": 2408,
+              "family": "Turtle",
+              "minLevel": 30,
+              "maxLevel": 31,
+              "zone": "Hillsbrad Foothills"
+            },
+            {
+              "name": "Cranky Benj",
+              "npcId": 14223,
+              "family": "Turtle",
+              "minLevel": 32,
+              "maxLevel": 32,
+              "zone": "Alterac Mountains"
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "petLevel": 32,
+          "trainingPoints": 13,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Plains Creeper",
+              "npcId": 2563,
+              "family": "Spider",
+              "minLevel": 32,
+              "maxLevel": 33,
+              "zone": "Arathi Highlands"
+            },
+            {
+              "name": "Sparkleshell Snapper",
+              "npcId": 4143,
+              "family": "Turtle",
+              "minLevel": 34,
+              "maxLevel": 35,
+              "zone": "Thousand Needles"
+            },
+            {
+              "name": "Crag Coyote",
+              "npcId": 2727,
+              "family": "Wolf",
+              "minLevel": 35,
+              "maxLevel": 36,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Drywallow Crocolisk",
+              "npcId": 4341,
+              "family": "Crocolisk",
+              "minLevel": 35,
+              "maxLevel": 36,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Giant Plains Creeper",
+              "npcId": 2565,
+              "family": "Spider",
+              "minLevel": 35,
+              "maxLevel": 36,
+              "zone": "Arathi Highlands"
+            },
+            {
+              "name": "Darkfang Spider",
+              "npcId": 4413,
+              "family": "Spider",
+              "minLevel": 35,
+              "maxLevel": 36,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Mudrock Tortoise",
+              "npcId": 4396,
+              "family": "Turtle",
+              "minLevel": 36,
+              "maxLevel": 37,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Darkfang Lurker",
+              "npcId": 4411,
+              "family": "Spider",
+              "minLevel": 36,
+              "maxLevel": 37,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Mottled Drywallow Crocolisk",
+              "npcId": 4344,
+              "family": "Crocolisk",
+              "minLevel": 38,
+              "maxLevel": 39,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Darkfang Creeper",
+              "npcId": 4412,
+              "family": "Spider",
+              "minLevel": 38,
+              "maxLevel": 39,
+              "zone": "Dustwallow Marsh"
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "petLevel": 40,
+          "trainingPoints": 17,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Barnabus",
+              "npcId": 2753,
+              "family": "Wolf",
+              "minLevel": 38,
+              "maxLevel": 38,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Ripscale",
+              "npcId": 14233,
+              "family": "Crocolisk",
+              "minLevel": 39,
+              "maxLevel": 39,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Drywallow Daggermaw",
+              "npcId": 4345,
+              "family": "Crocolisk",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Longtooth Runner",
+              "npcId": 5286,
+              "family": "Wolf",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Deathstrike Tarantula",
+              "npcId": 769,
+              "family": "Spider",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Swamp of Sorrows"
+            },
+            {
+              "name": "Sawtooth Snapper",
+              "npcId": 1087,
+              "family": "Crocolisk",
+              "minLevel": 41,
+              "maxLevel": 42,
+              "zone": "Swamp of Sorrows"
+            },
+            {
+              "name": "Mudrock Snapjaw",
+              "npcId": 4400,
+              "family": "Turtle",
+              "minLevel": 41,
+              "maxLevel": 42,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Old Cliff Jumper",
+              "npcId": 8211,
+              "family": "Wolf",
+              "minLevel": 42,
+              "maxLevel": 42,
+              "zone": "The Hinterlands"
+            },
+            {
+              "name": "Snarler",
+              "npcId": 5356,
+              "family": "Wolf",
+              "minLevel": 42,
+              "maxLevel": 42,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Deadmire",
+              "npcId": 4841,
+              "family": "Crocolisk",
+              "minLevel": 45,
+              "maxLevel": 45,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Timberweb Recluse",
+              "npcId": 8762,
+              "family": "Spider",
+              "minLevel": 47,
+              "maxLevel": 48,
+              "zone": "Azshara"
+            },
+            {
+              "name": "Felpaw Wolf",
+              "npcId": 8959,
+              "family": "Wolf",
+              "minLevel": 47,
+              "maxLevel": 48,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Death Howl",
+              "npcId": 14339,
+              "family": "Wolf",
+              "minLevel": 49,
+              "maxLevel": 49,
+              "zone": "Felwood"
+            }
+          ]
+        },
+        {
+          "rank": 7,
+          "petLevel": 48,
+          "trainingPoints": 21,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Rekk'tilac",
+              "npcId": 8277,
+              "family": "Spider",
+              "minLevel": 48,
+              "maxLevel": 48,
+              "zone": "Searing Gorge"
+            },
+            {
+              "name": "Saltwater Snapjaw",
+              "npcId": 2505,
+              "family": "Turtle",
+              "minLevel": 49,
+              "maxLevel": 50,
+              "zone": "The Hinterlands"
+            },
+            {
+              "name": "Cave Creeper",
+              "npcId": 8933,
+              "family": "Spider",
+              "minLevel": 50,
+              "maxLevel": 52,
+              "zone": "Blackrock Depths (Dungeon)"
+            },
+            {
+              "name": "Sewer Beast",
+              "npcId": 3581,
+              "family": "Crocolisk",
+              "minLevel": 50,
+              "maxLevel": 50,
+              "zone": "Stormwind City"
+            },
+            {
+              "name": "Vilebranch Raiding Wolf",
+              "npcId": 2681,
+              "family": "Wolf",
+              "minLevel": 50,
+              "maxLevel": 51,
+              "zone": "The Hinterlands"
+            },
+            {
+              "name": "Felpaw Ravager",
+              "npcId": 8961,
+              "family": "Wolf",
+              "minLevel": 51,
+              "maxLevel": 52,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Ironback",
+              "npcId": 8213,
+              "family": "Turtle",
+              "minLevel": 51,
+              "maxLevel": 51,
+              "zone": "The Hinterlands"
+            },
+            {
+              "name": "Uhk'loc",
+              "npcId": 6585,
+              "family": "Gorilla",
+              "minLevel": 52,
+              "maxLevel": 52,
+              "zone": "Un'Goro Crater"
+            },
+            {
+              "name": "Diseased Wolf",
+              "npcId": 1817,
+              "family": "Wolf",
+              "minLevel": 53,
+              "maxLevel": 54,
+              "zone": "Western Plaguelands"
+            },
+            {
+              "name": "Plague Lurker",
+              "npcId": 1824,
+              "family": "Spider",
+              "minLevel": 54,
+              "maxLevel": 55,
+              "zone": "Western Plaguelands"
+            }
+          ]
+        },
+        {
+          "rank": 8,
+          "petLevel": 56,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Bloodaxe Worg",
+              "npcId": 9696,
+              "family": "Wolf",
+              "minLevel": 56,
+              "maxLevel": 57,
+              "zone": "Blackrock Spire (Dungeon)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "charge",
+      "name": "Charge",
+      "families": [
+        "boar"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 1,
+          "trainingPoints": 5,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Young Thistle Boar",
+              "npcId": 1984,
+              "family": "Boar",
+              "minLevel": 1,
+              "maxLevel": 2,
+              "zone": "Teldrassil"
+            },
+            {
+              "name": "Mottled Boar",
+              "npcId": 3098,
+              "family": "Boar",
+              "minLevel": 1,
+              "maxLevel": 2,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Thistle Boar",
+              "npcId": 1985,
+              "family": "Boar",
+              "minLevel": 2,
+              "maxLevel": 3,
+              "zone": "Teldrassil"
+            },
+            {
+              "name": "Battleboar",
+              "npcId": 2966,
+              "family": "Boar",
+              "minLevel": 3,
+              "maxLevel": 4,
+              "zone": "Mulgore"
+            },
+            {
+              "name": "Small Crag Boar",
+              "npcId": 708,
+              "family": "Boar",
+              "minLevel": 3,
+              "maxLevel": 3,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Bristleback Battleboar",
+              "npcId": 2954,
+              "family": "Boar",
+              "minLevel": 4,
+              "maxLevel": 5,
+              "zone": "Mulgore"
+            },
+            {
+              "name": "Crag Boar",
+              "npcId": 1125,
+              "family": "Boar",
+              "minLevel": 5,
+              "maxLevel": 6,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Dire Mottled Boar",
+              "npcId": 3099,
+              "family": "Boar",
+              "minLevel": 6,
+              "maxLevel": 7,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Large Crag Boar",
+              "npcId": 1126,
+              "family": "Boar",
+              "minLevel": 6,
+              "maxLevel": 7,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Porcine Entourage",
+              "npcId": 390,
+              "family": "Boar",
+              "minLevel": 7,
+              "maxLevel": 7,
+              "zone": "Elwynn Forest"
+            },
+            {
+              "name": "Elder Crag Boar",
+              "npcId": 1127,
+              "family": "Boar",
+              "minLevel": 7,
+              "maxLevel": 8,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Rockhide Boar",
+              "npcId": 524,
+              "family": "Boar",
+              "minLevel": 7,
+              "maxLevel": 8,
+              "zone": "Elwynn Forest"
+            },
+            {
+              "name": "Stonetusk Boar",
+              "npcId": 113,
+              "family": "Boar",
+              "minLevel": 7,
+              "maxLevel": 8,
+              "zone": "Elwynn Forest"
+            },
+            {
+              "name": "Elder Mottled Boar",
+              "npcId": 3100,
+              "family": "Boar",
+              "minLevel": 8,
+              "maxLevel": 9,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Princess",
+              "npcId": 330,
+              "family": "Boar",
+              "minLevel": 9,
+              "maxLevel": 9,
+              "zone": "Elwynn Forest"
+            },
+            {
+              "name": "Scarred Crag Boar",
+              "npcId": 1689,
+              "family": "Boar",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Corrupted Mottled Boar",
+              "npcId": 3225,
+              "family": "Boar",
+              "minLevel": 10,
+              "maxLevel": 11,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Longsnout",
+              "npcId": 119,
+              "family": "Boar",
+              "minLevel": 10,
+              "maxLevel": 11,
+              "zone": "Elwynn Forest"
+            },
+            {
+              "name": "Mountain Boar",
+              "npcId": 1190,
+              "family": "Boar",
+              "minLevel": 10,
+              "maxLevel": 11,
+              "zone": "Loch Modan"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 12,
+          "trainingPoints": 9,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Young Goretusk",
+              "npcId": 454,
+              "family": "Boar",
+              "minLevel": 12,
+              "maxLevel": 13,
+              "zone": "Westfall"
+            },
+            {
+              "name": "Goretusk",
+              "npcId": 157,
+              "family": "Boar",
+              "minLevel": 14,
+              "maxLevel": 15,
+              "zone": "Westfall"
+            },
+            {
+              "name": "Mangy Mountain Boar",
+              "npcId": 1191,
+              "family": "Boar",
+              "minLevel": 14,
+              "maxLevel": 15,
+              "zone": "Loch Modan"
+            },
+            {
+              "name": "Elder Mountain Boar",
+              "npcId": 1192,
+              "family": "Boar",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Loch Modan"
+            },
+            {
+              "name": "Great Goretusk",
+              "npcId": 547,
+              "family": "Boar",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Redridge Mountains; Westfall"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 24,
+          "trainingPoints": 13,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Bellygrub",
+              "npcId": 345,
+              "family": "Boar",
+              "minLevel": 24,
+              "maxLevel": 24,
+              "zone": "Redridge Mountains"
+            },
+            {
+              "name": "Agam'ar",
+              "npcId": 4511,
+              "family": "Boar",
+              "minLevel": 24,
+              "maxLevel": 25,
+              "zone": "Razorfen Kraul (Dungeon)"
+            },
+            {
+              "name": "Raging Agam'ar",
+              "npcId": 4514,
+              "family": "Boar",
+              "minLevel": 25,
+              "maxLevel": 26,
+              "zone": "Razorfen Kraul (Dungeon)"
+            },
+            {
+              "name": "Rotting Agam'ar",
+              "npcId": 4512,
+              "family": "Boar",
+              "minLevel": 28,
+              "maxLevel": 28,
+              "zone": "Razorfen Kraul (Dungeon)"
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 36,
+          "trainingPoints": 17,
+          "trainer": false,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 48,
+          "trainingPoints": 21,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Ashmane Boar",
+              "npcId": 5992,
+              "family": "Boar",
+              "minLevel": 48,
+              "maxLevel": 49,
+              "zone": "Blasted Lands"
+            },
+            {
+              "name": "Grunter",
+              "npcId": 8303,
+              "family": "Boar",
+              "minLevel": 50,
+              "maxLevel": 50,
+              "zone": "Blasted Lands"
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "petLevel": 60,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Plagued Swine",
+              "npcId": 16117,
+              "family": "Boar",
+              "minLevel": 60,
+              "maxLevel": 60,
+              "zone": "Eastern Plaguelands"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "claw",
+      "name": "Claw",
+      "families": [
+        "bear",
+        "carrionbird",
+        "cat",
+        "crab",
+        "owl",
+        "raptor",
+        "scorpid"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 1,
+          "trainingPoints": 1,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Scorpid Worker",
+              "npcId": 3124,
+              "family": "Scorpid",
+              "minLevel": 3,
+              "maxLevel": 3,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Sarkoth",
+              "npcId": 3281,
+              "family": "Scorpid",
+              "minLevel": 4,
+              "maxLevel": 4,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Pygmy Surf Crawler",
+              "npcId": 3106,
+              "family": "Crab",
+              "minLevel": 5,
+              "maxLevel": 6,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Strigid Owl",
+              "npcId": 1995,
+              "family": "Owl",
+              "minLevel": 5,
+              "maxLevel": 6,
+              "zone": "Teldrassil"
+            },
+            {
+              "name": "Ice Claw Bear",
+              "npcId": 1196,
+              "family": "Bear",
+              "minLevel": 7,
+              "maxLevel": 8,
+              "zone": "Dun Morogh"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 8,
+          "trainingPoints": 4,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Young Forest Bear",
+              "npcId": 822,
+              "family": "Bear",
+              "minLevel": 8,
+              "maxLevel": 9,
+              "zone": "Elwynn Forest"
+            },
+            {
+              "name": "Strigid Hunter",
+              "npcId": 1997,
+              "family": "Owl",
+              "minLevel": 8,
+              "maxLevel": 9,
+              "zone": "Teldrassil"
+            },
+            {
+              "name": "Encrusted Surf Crawler",
+              "npcId": 3108,
+              "family": "Crab",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Venomtail Scorpid",
+              "npcId": 3127,
+              "family": "Scorpid",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Mangeclaw",
+              "npcId": 1961,
+              "family": "Bear",
+              "minLevel": 11,
+              "maxLevel": 11,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Death Flayer",
+              "npcId": 5823,
+              "family": "Scorpid",
+              "minLevel": 11,
+              "maxLevel": 11,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Ferocious Grizzled Bear",
+              "npcId": 1778,
+              "family": "Bear",
+              "minLevel": 11,
+              "maxLevel": 12,
+              "zone": "Silverpine Forest"
+            },
+            {
+              "name": "Thistle Bear",
+              "npcId": 2163,
+              "family": "Bear",
+              "minLevel": 11,
+              "maxLevel": 12,
+              "zone": "Darkshore"
+            },
+            {
+              "name": "Bjarn",
+              "npcId": 1130,
+              "family": "Bear",
+              "minLevel": 12,
+              "maxLevel": 12,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Tide Crawler",
+              "npcId": 2232,
+              "family": "Crab",
+              "minLevel": 12,
+              "maxLevel": 14,
+              "zone": "Darkshore"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 16,
+          "trainingPoints": 7,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Black Bear Patriarch",
+              "npcId": 1189,
+              "family": "Bear",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Loch Modan"
+            },
+            {
+              "name": "Shore Crawler",
+              "npcId": 1216,
+              "family": "Crab",
+              "minLevel": 17,
+              "maxLevel": 18,
+              "zone": "Westfall"
+            },
+            {
+              "name": "Den Mother",
+              "npcId": 6788,
+              "family": "Bear",
+              "minLevel": 18,
+              "maxLevel": 19,
+              "zone": "Darkshore"
+            },
+            {
+              "name": "Ghost Saber",
+              "npcId": 3619,
+              "family": "Cat",
+              "minLevel": 19,
+              "maxLevel": 20,
+              "zone": "Darkshore"
+            },
+            {
+              "name": "Clattering Crawler",
+              "npcId": 3812,
+              "family": "Crab",
+              "minLevel": 19,
+              "maxLevel": 20,
+              "zone": "Ashenvale"
+            },
+            {
+              "name": "Ol' Sooty",
+              "npcId": 1225,
+              "family": "Bear",
+              "minLevel": 20,
+              "maxLevel": 20,
+              "zone": "Loch Modan"
+            },
+            {
+              "name": "Gray Bear",
+              "npcId": 2351,
+              "family": "Bear",
+              "minLevel": 21,
+              "maxLevel": 22,
+              "zone": "Hillsbrad Foothills"
+            },
+            {
+              "name": "Ashenvale Bear",
+              "npcId": 3809,
+              "family": "Bear",
+              "minLevel": 21,
+              "maxLevel": 22,
+              "zone": "Ashenvale"
+            },
+            {
+              "name": "Skittering Crustacean",
+              "npcId": 4821,
+              "family": "Crab",
+              "minLevel": 22,
+              "maxLevel": 23,
+              "zone": "Blackfathom Deeps (Dungeon)"
+            },
+            {
+              "name": "Snapping Crustacean",
+              "npcId": 4822,
+              "family": "Crab",
+              "minLevel": 23,
+              "maxLevel": 24,
+              "zone": "Blackfathom Deeps (Dungeon)"
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 24,
+          "trainingPoints": 10,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Elder Ashenvale Bear",
+              "npcId": 3810,
+              "family": "Bear",
+              "minLevel": 25,
+              "maxLevel": 26,
+              "zone": "Ashenvale"
+            },
+            {
+              "name": "Barbed Crustacean",
+              "npcId": 4823,
+              "family": "Crab",
+              "minLevel": 25,
+              "maxLevel": 26,
+              "zone": "Blackfathom Deeps (Dungeon)"
+            },
+            {
+              "name": "Scorpashi Snapper",
+              "npcId": 4696,
+              "family": "Scorpid",
+              "minLevel": 30,
+              "maxLevel": 31,
+              "zone": "Desolace"
+            },
+            {
+              "name": "Scorpid Reaver",
+              "npcId": 4140,
+              "family": "Scorpid",
+              "minLevel": 31,
+              "maxLevel": 32,
+              "zone": "Thousand Needles"
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "petLevel": 32,
+          "trainingPoints": 13,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Scorpashi Lasher",
+              "npcId": 4697,
+              "family": "Scorpid",
+              "minLevel": 34,
+              "maxLevel": 35,
+              "zone": "Desolace"
+            },
+            {
+              "name": "Vile Sting",
+              "npcId": 5937,
+              "family": "Scorpid",
+              "minLevel": 35,
+              "maxLevel": 35,
+              "zone": "Thousand Needles"
+            },
+            {
+              "name": "Drywallow Snapper",
+              "npcId": 4343,
+              "family": "Crocolisk",
+              "minLevel": 37,
+              "maxLevel": 38,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Venomlash Scorpid",
+              "npcId": 7022,
+              "family": "Scorpid",
+              "minLevel": 39,
+              "maxLevel": 40,
+              "zone": "Uldaman (Dungeon)"
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "petLevel": 40,
+          "trainingPoints": 17,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Scorpid Hunter",
+              "npcId": 5422,
+              "family": "Scorpid",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Silt Crawler",
+              "npcId": 922,
+              "family": "Crab",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Swamp of Sorrows"
+            },
+            {
+              "name": "Ironfur Bear",
+              "npcId": 5268,
+              "family": "Bear",
+              "minLevel": 41,
+              "maxLevel": 42,
+              "zone": "Feralas"
+            },
+            {
+              "name": "King Bangalash",
+              "npcId": 731,
+              "family": "Cat",
+              "minLevel": 43,
+              "maxLevel": 43,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Old Grizzlegut",
+              "npcId": 5352,
+              "family": "Bear",
+              "minLevel": 43,
+              "maxLevel": 43,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Monstrous Crawler",
+              "npcId": 1088,
+              "family": "Crab",
+              "minLevel": 43,
+              "maxLevel": 44,
+              "zone": "Swamp of Sorrows"
+            }
+          ]
+        },
+        {
+          "rank": 7,
+          "petLevel": 48,
+          "trainingPoints": 21,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Ironfur Patriarch",
+              "npcId": 5274,
+              "family": "Bear",
+              "minLevel": 48,
+              "maxLevel": 49,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Angerclaw Mauler",
+              "npcId": 8958,
+              "family": "Bear",
+              "minLevel": 49,
+              "maxLevel": 50,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Mongress",
+              "npcId": 14344,
+              "family": "Bear",
+              "minLevel": 50,
+              "maxLevel": 50,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Ironbeak Hunter",
+              "npcId": 7099,
+              "family": "Owl",
+              "minLevel": 50,
+              "maxLevel": 51,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Olm the Wise",
+              "npcId": 14343,
+              "family": "Owl",
+              "minLevel": 52,
+              "maxLevel": 52,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Shardtooth Bear",
+              "npcId": 7444,
+              "family": "Bear",
+              "minLevel": 53,
+              "maxLevel": 54,
+              "zone": "Winterspring"
+            },
+            {
+              "name": "Clack the Reaver",
+              "npcId": 8301,
+              "family": "Scorpid",
+              "minLevel": 53,
+              "maxLevel": 53,
+              "zone": "Blasted Lands"
+            },
+            {
+              "name": "Winterspring Owl",
+              "npcId": 7455,
+              "family": "Owl",
+              "minLevel": 54,
+              "maxLevel": 56,
+              "zone": "Winterspring"
+            },
+            {
+              "name": "Deathlash Scorpid",
+              "npcId": 9695,
+              "family": "Scorpid",
+              "minLevel": 54,
+              "maxLevel": 55,
+              "zone": "Burning Steppes"
+            },
+            {
+              "name": "Diseased Grizzly",
+              "npcId": 1816,
+              "family": "Bear",
+              "minLevel": 55,
+              "maxLevel": 56,
+              "zone": "Western Plaguelands"
+            }
+          ]
+        },
+        {
+          "rank": 8,
+          "petLevel": 56,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Winterspring Screecher",
+              "npcId": 7456,
+              "family": "Owl",
+              "minLevel": 57,
+              "maxLevel": 59,
+              "zone": "Winterspring"
+            },
+            {
+              "name": "Elder Shardtooth",
+              "npcId": 7445,
+              "family": "Bear",
+              "minLevel": 57,
+              "maxLevel": 58,
+              "zone": "Winterspring"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cower",
+      "name": "Cower",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 5,
+          "trainingPoints": 8,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Nightsaber",
+              "npcId": 2042,
+              "family": "Cat",
+              "minLevel": 5,
+              "maxLevel": 6,
+              "zone": "Teldrassil"
+            },
+            {
+              "name": "Juvenile Snow Leopard",
+              "npcId": 1199,
+              "family": "Cat",
+              "minLevel": 5,
+              "maxLevel": 6,
+              "zone": "Dun Morogh"
+            },
+            {
+              "name": "Greater Duskbat",
+              "npcId": 1553,
+              "family": "Bat",
+              "minLevel": 6,
+              "maxLevel": 7,
+              "zone": "Tirisfal Glades"
+            },
+            {
+              "name": "Flatland Cougar",
+              "npcId": 3035,
+              "family": "Cat",
+              "minLevel": 7,
+              "maxLevel": 8,
+              "zone": "Mulgore"
+            },
+            {
+              "name": "Durotar Tiger",
+              "npcId": 3121,
+              "family": "Cat",
+              "minLevel": 7,
+              "maxLevel": 8,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Elder Plainstrider",
+              "npcId": 2957,
+              "family": "Tallstrider",
+              "minLevel": 8,
+              "maxLevel": 9,
+              "zone": "Mulgore"
+            },
+            {
+              "name": "Mazzranache",
+              "npcId": 3068,
+              "family": "Tallstrider",
+              "minLevel": 9,
+              "maxLevel": 9,
+              "zone": "Mulgore"
+            },
+            {
+              "name": "Moonstalker Runt",
+              "npcId": 2070,
+              "family": "Cat",
+              "minLevel": 10,
+              "maxLevel": 11,
+              "zone": "Darkshore"
+            },
+            {
+              "name": "Foreststrider Fledgling",
+              "npcId": 2321,
+              "family": "Tallstrider",
+              "minLevel": 11,
+              "maxLevel": 13,
+              "zone": "Darkshore"
+            },
+            {
+              "name": "Fleeting Plainstrider",
+              "npcId": 3246,
+              "family": "Tallstrider",
+              "minLevel": 12,
+              "maxLevel": 13,
+              "zone": "The Barrens"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 15,
+          "trainingPoints": 10,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Savannah Patriarch",
+              "npcId": 3241,
+              "family": "Cat",
+              "minLevel": 15,
+              "maxLevel": 16,
+              "zone": "The Barrens"
+            },
+            {
+              "name": "Ornery Plainstrider",
+              "npcId": 3245,
+              "family": "Tallstrider",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "The Barrens"
+            },
+            {
+              "name": "Giant Foreststrider",
+              "npcId": 2323,
+              "family": "Tallstrider",
+              "minLevel": 17,
+              "maxLevel": 19,
+              "zone": "Darkshore"
+            },
+            {
+              "name": "Moonstalker Sire",
+              "npcId": 2237,
+              "family": "Cat",
+              "minLevel": 17,
+              "maxLevel": 18,
+              "zone": "Darkshore"
+            },
+            {
+              "name": "Twilight Runner",
+              "npcId": 4067,
+              "family": "Cat",
+              "minLevel": 23,
+              "maxLevel": 24,
+              "zone": "Stonetalon Mountains"
+            },
+            {
+              "name": "Starving Mountain Lion",
+              "npcId": 2384,
+              "family": "Cat",
+              "minLevel": 23,
+              "maxLevel": 24,
+              "zone": "Hillsbrad Foothills"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 25,
+          "trainingPoints": 12,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Crag Stalker",
+              "npcId": 4126,
+              "family": "Cat",
+              "minLevel": 25,
+              "maxLevel": 26,
+              "zone": "Thousand Needles"
+            },
+            {
+              "name": "Feral Mountain Lion",
+              "npcId": 2385,
+              "family": "Cat",
+              "minLevel": 27,
+              "maxLevel": 28,
+              "zone": "Hillsbrad Foothills"
+            },
+            {
+              "name": "Kraul Bat",
+              "npcId": 4538,
+              "family": "Bat",
+              "minLevel": 30,
+              "maxLevel": 31,
+              "zone": "Razorfen Kraul (Dungeon)"
+            },
+            {
+              "name": "Young Panther",
+              "npcId": 683,
+              "family": "Cat",
+              "minLevel": 30,
+              "maxLevel": 31,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Young Stranglethorn Tiger",
+              "npcId": 681,
+              "family": "Cat",
+              "minLevel": 30,
+              "maxLevel": 31,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Greater Kraul Bat",
+              "npcId": 4539,
+              "family": "Bat",
+              "minLevel": 32,
+              "maxLevel": 32,
+              "zone": "Razorfen Kraul (Dungeon)"
+            },
+            {
+              "name": "Panther",
+              "npcId": 736,
+              "family": "Cat",
+              "minLevel": 32,
+              "maxLevel": 33,
+              "zone": "Stranglethorn Vale"
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 35,
+          "trainingPoints": 14,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Ridge Stalker",
+              "npcId": 2731,
+              "family": "Cat",
+              "minLevel": 36,
+              "maxLevel": 37,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Shrike Bat",
+              "npcId": 4861,
+              "family": "Bat",
+              "minLevel": 38,
+              "maxLevel": 39,
+              "zone": "Uldaman (Dungeon)"
+            },
+            {
+              "name": "Ridge Huntress",
+              "npcId": 2732,
+              "family": "Cat",
+              "minLevel": 38,
+              "maxLevel": 39,
+              "zone": "Badlands"
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "petLevel": 45,
+          "trainingPoints": 16,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Jaguero Stalker",
+              "npcId": 2522,
+              "family": "Cat",
+              "minLevel": 50,
+              "maxLevel": 50,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Plaguebat",
+              "npcId": 8600,
+              "family": "Bat",
+              "minLevel": 53,
+              "maxLevel": 55,
+              "zone": "Eastern Plaguelands"
+            },
+            {
+              "name": "Noxious Plaguebat",
+              "npcId": 8601,
+              "family": "Bat",
+              "minLevel": 54,
+              "maxLevel": 56,
+              "zone": "Eastern Plaguelands"
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "petLevel": 55,
+          "trainingPoints": 18,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Frostsaber Cub",
+              "npcId": 7430,
+              "family": "Cat",
+              "minLevel": 55,
+              "maxLevel": 56,
+              "zone": "Winterspring"
+            },
+            {
+              "name": "Monstrous Plaguebat",
+              "npcId": 8602,
+              "family": "Bat",
+              "minLevel": 56,
+              "maxLevel": 58,
+              "zone": "Eastern Plaguelands"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dash",
+      "name": "Dash",
+      "families": [
+        "boar",
+        "cat",
+        "hyena",
+        "tallstrider",
+        "wolf"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Kurzen War Tiger",
+              "npcId": 976,
+              "family": "Cat",
+              "minLevel": 32,
+              "maxLevel": 33,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Stranglethorn Tiger",
+              "npcId": 682,
+              "family": "Cat",
+              "minLevel": 32,
+              "maxLevel": 33,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Bonepaw Hyena",
+              "npcId": 4688,
+              "family": "Hyena",
+              "minLevel": 33,
+              "maxLevel": 35,
+              "zone": "Desolace"
+            },
+            {
+              "name": "Scarlet Tracking Hound",
+              "npcId": 4304,
+              "family": "Hyena",
+              "minLevel": 33,
+              "maxLevel": 34,
+              "zone": "Scarlet Monastery (Dungeon)"
+            },
+            {
+              "name": "Crag Coyote",
+              "npcId": 2727,
+              "family": "Wolf",
+              "minLevel": 35,
+              "maxLevel": 36,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Spot",
+              "npcId": 4950,
+              "family": "Wolf",
+              "minLevel": 35,
+              "maxLevel": 35,
+              "zone": "Dustwallow Marsh"
+            },
+            {
+              "name": "Swamp Jaguar",
+              "npcId": 767,
+              "family": "Cat",
+              "minLevel": 36,
+              "maxLevel": 37,
+              "zone": "Swamp of Sorrows"
+            },
+            {
+              "name": "Magram Bonepaw",
+              "npcId": 4662,
+              "family": "Hyena",
+              "minLevel": 37,
+              "maxLevel": 38,
+              "zone": "Desolace"
+            },
+            {
+              "name": "Feral Crag Coyote",
+              "npcId": 2728,
+              "family": "Wolf",
+              "minLevel": 37,
+              "maxLevel": 38,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Broken Tooth",
+              "npcId": 2850,
+              "family": "Cat",
+              "minLevel": 37,
+              "maxLevel": 37,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Sin'Dall",
+              "npcId": 729,
+              "family": "Cat",
+              "minLevel": 37,
+              "maxLevel": 37,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Elder Crag Coyote",
+              "npcId": 2729,
+              "family": "Wolf",
+              "minLevel": 39,
+              "maxLevel": 40,
+              "zone": "Badlands"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 40,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Longtooth Runner",
+              "npcId": 5286,
+              "family": "Wolf",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Ridge Stalker Patriarch",
+              "npcId": 2734,
+              "family": "Cat",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Bhag'thera",
+              "npcId": 728,
+              "family": "Cat",
+              "minLevel": 40,
+              "maxLevel": 40,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Starving Blisterpaw",
+              "npcId": 5425,
+              "family": "Hyena",
+              "minLevel": 41,
+              "maxLevel": 42,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Rabid Crag Coyote",
+              "npcId": 2730,
+              "family": "Wolf",
+              "minLevel": 42,
+              "maxLevel": 43,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Old Cliff Jumper",
+              "npcId": 8211,
+              "family": "Wolf",
+              "minLevel": 42,
+              "maxLevel": 42,
+              "zone": "The Hinterlands"
+            },
+            {
+              "name": "Elder Shadowmaw Panther",
+              "npcId": 1713,
+              "family": "Cat",
+              "minLevel": 42,
+              "maxLevel": 43,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Murderous Blisterpaw",
+              "npcId": 8208,
+              "family": "Hyena",
+              "minLevel": 43,
+              "maxLevel": 43,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "King Bangalash",
+              "npcId": 731,
+              "family": "Cat",
+              "minLevel": 43,
+              "maxLevel": 43,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Blisterpaw Hyena",
+              "npcId": 5426,
+              "family": "Hyena",
+              "minLevel": 44,
+              "maxLevel": 45,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Silvermane Stalker",
+              "npcId": 2926,
+              "family": "Wolf",
+              "minLevel": 47,
+              "maxLevel": 48,
+              "zone": "The Hinterlands"
+            },
+            {
+              "name": "Rabid Blisterpaw",
+              "npcId": 5427,
+              "family": "Hyena",
+              "minLevel": 47,
+              "maxLevel": 48,
+              "zone": "Tanaris"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 50,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Vilebranch Raiding Wolf",
+              "npcId": 2681,
+              "family": "Wolf",
+              "minLevel": 50,
+              "maxLevel": 51,
+              "zone": "The Hinterlands"
+            },
+            {
+              "name": "Grunter",
+              "npcId": 8303,
+              "family": "Boar",
+              "minLevel": 50,
+              "maxLevel": 50,
+              "zone": "Blasted Lands"
+            },
+            {
+              "name": "Ravage",
+              "npcId": 8300,
+              "family": "Hyena",
+              "minLevel": 51,
+              "maxLevel": 51,
+              "zone": "Blasted Lands"
+            },
+            {
+              "name": "Scarshield Worg",
+              "npcId": 9416,
+              "family": "Wolf",
+              "minLevel": 53,
+              "maxLevel": 54,
+              "zone": "Blackrock Spire (Dungeon)"
+            },
+            {
+              "name": "Blackrock Worg",
+              "npcId": 7055,
+              "family": "Wolf",
+              "minLevel": 54,
+              "maxLevel": 55,
+              "zone": "Burning Steppes"
+            },
+            {
+              "name": "Bloodaxe Worg",
+              "npcId": 9696,
+              "family": "Wolf",
+              "minLevel": 56,
+              "maxLevel": 57,
+              "zone": "Blackrock Spire (Dungeon)"
+            },
+            {
+              "name": "Rak'Shiri",
+              "npcId": 10200,
+              "family": "Cat",
+              "minLevel": 57,
+              "maxLevel": 57,
+              "zone": "Winterspring"
+            },
+            {
+              "name": "Frostsaber Huntress",
+              "npcId": 7433,
+              "family": "Cat",
+              "minLevel": 58,
+              "maxLevel": 59,
+              "zone": "Winterspring"
+            },
+            {
+              "name": "Frostsaber Stalker",
+              "npcId": 7432,
+              "family": "Cat",
+              "minLevel": 59,
+              "maxLevel": 60,
+              "zone": "Winterspring"
+            },
+            {
+              "name": "Zulian Panther",
+              "npcId": 11365,
+              "family": "Cat",
+              "minLevel": 60,
+              "maxLevel": 60,
+              "zone": "Zul'Gurub (Raid)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dive",
+      "name": "Dive",
+      "families": [
+        "bat",
+        "carrionbird",
+        "owl",
+        "windserpent"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Kraul Bat",
+              "npcId": 4538,
+              "family": "Bat",
+              "minLevel": 30,
+              "maxLevel": 31,
+              "zone": "Razorfen Kraul (Dungeon)"
+            },
+            {
+              "name": "Young Mesa Buzzard",
+              "npcId": 2578,
+              "family": "Carrion Bird",
+              "minLevel": 31,
+              "maxLevel": 32,
+              "zone": "Arathi Highlands"
+            },
+            {
+              "name": "Greater Kraul Bat",
+              "npcId": 4539,
+              "family": "Bat",
+              "minLevel": 32,
+              "maxLevel": 32,
+              "zone": "Razorfen Kraul (Dungeon)"
+            },
+            {
+              "name": "Mesa Buzzard",
+              "npcId": 2579,
+              "family": "Carrion Bird",
+              "minLevel": 34,
+              "maxLevel": 35,
+              "zone": "Arathi Highlands"
+            },
+            {
+              "name": "Wayward Buzzard",
+              "npcId": 6013,
+              "family": "Carrion Bird",
+              "minLevel": 35,
+              "maxLevel": 37,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Dread Flyer",
+              "npcId": 4693,
+              "family": "Carrion Bird",
+              "minLevel": 36,
+              "maxLevel": 37,
+              "zone": "Desolace"
+            },
+            {
+              "name": "Shrike Bat",
+              "npcId": 4861,
+              "family": "Bat",
+              "minLevel": 38,
+              "maxLevel": 39,
+              "zone": "Uldaman (Dungeon)"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 40,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Vale Screecher",
+              "npcId": 5307,
+              "family": "Wind Serpent",
+              "minLevel": 41,
+              "maxLevel": 43,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Roc",
+              "npcId": 5428,
+              "family": "Carrion Bird",
+              "minLevel": 42,
+              "maxLevel": 43,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Fire Roc",
+              "npcId": 5429,
+              "family": "Carrion Bird",
+              "minLevel": 43,
+              "maxLevel": 45,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Rogue Vale Screecher",
+              "npcId": 5308,
+              "family": "Wind Serpent",
+              "minLevel": 44,
+              "maxLevel": 46,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Greater Firebird",
+              "npcId": 8207,
+              "family": "Carrion Bird",
+              "minLevel": 46,
+              "maxLevel": 46,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Searing Roc",
+              "npcId": 5430,
+              "family": "Carrion Bird",
+              "minLevel": 47,
+              "maxLevel": 49,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Ironbeak Owl",
+              "npcId": 7097,
+              "family": "Owl",
+              "minLevel": 48,
+              "maxLevel": 49,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Arash-ethis",
+              "npcId": 5349,
+              "family": "Wind Serpent",
+              "minLevel": 49,
+              "maxLevel": 49,
+              "zone": "Feralas"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 50,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Carrion Vulture",
+              "npcId": 1809,
+              "family": "Carrion Bird",
+              "minLevel": 50,
+              "maxLevel": 52,
+              "zone": "Western Plaguelands"
+            },
+            {
+              "name": "Ironbeak Hunter",
+              "npcId": 7099,
+              "family": "Owl",
+              "minLevel": 50,
+              "maxLevel": 51,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Dark Screecher",
+              "npcId": 8927,
+              "family": "Bat",
+              "minLevel": 50,
+              "maxLevel": 52,
+              "zone": "Blackrock Depths (Dungeon)"
+            },
+            {
+              "name": "Spawn of Hakkar",
+              "npcId": 5708,
+              "family": "Wind Serpent",
+              "minLevel": 51,
+              "maxLevel": 51,
+              "zone": "The Temple of Atal'Hakkar (Dungeon)"
+            },
+            {
+              "name": "Spiteflayer",
+              "npcId": 8299,
+              "family": "Carrion Bird",
+              "minLevel": 52,
+              "maxLevel": 52,
+              "zone": "Blasted Lands"
+            },
+            {
+              "name": "Ironbeak Screecher",
+              "npcId": 7098,
+              "family": "Owl",
+              "minLevel": 52,
+              "maxLevel": 53,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Olm the Wise",
+              "npcId": 14343,
+              "family": "Owl",
+              "minLevel": 52,
+              "maxLevel": 52,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Plaguebat",
+              "npcId": 8600,
+              "family": "Bat",
+              "minLevel": 53,
+              "maxLevel": 55,
+              "zone": "Eastern Plaguelands"
+            },
+            {
+              "name": "Winterspring Owl",
+              "npcId": 7455,
+              "family": "Owl",
+              "minLevel": 54,
+              "maxLevel": 56,
+              "zone": "Winterspring"
+            },
+            {
+              "name": "Zaricotl",
+              "npcId": 2931,
+              "family": "Carrion Bird",
+              "minLevel": 55,
+              "maxLevel": 55,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Winterspring Screecher",
+              "npcId": 7456,
+              "family": "Owl",
+              "minLevel": 57,
+              "maxLevel": 59,
+              "zone": "Winterspring"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fireresistance",
+      "name": "Fire Resistance",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 20,
+          "trainingPoints": 5,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 40,
+          "trainingPoints": 45,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 50,
+          "trainingPoints": 90,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 60,
+          "trainingPoints": 105,
+          "trainer": true,
+          "sources": []
+        }
+      ]
+    },
+    {
+      "id": "frostresistance",
+      "name": "Frost Resistance",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 20,
+          "trainingPoints": 5,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 40,
+          "trainingPoints": 45,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 50,
+          "trainingPoints": 90,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 60,
+          "trainingPoints": 105,
+          "trainer": true,
+          "sources": []
+        }
+      ]
+    },
+    {
+      "id": "furioushowl",
+      "name": "Furious Howl",
+      "families": [
+        "wolf"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 10,
+          "trainingPoints": 10,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Prairie Wolf Alpha",
+              "npcId": 2960,
+              "family": "Wolf",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Mulgore"
+            },
+            {
+              "name": "Worg",
+              "npcId": 1765,
+              "family": "Wolf",
+              "minLevel": 10,
+              "maxLevel": 11,
+              "zone": "Silverpine Forest"
+            },
+            {
+              "name": "Coyote Packleader",
+              "npcId": 833,
+              "family": "Wolf",
+              "minLevel": 11,
+              "maxLevel": 12,
+              "zone": "Westfall"
+            },
+            {
+              "name": "Mist Howler",
+              "npcId": 10644,
+              "family": "Wolf",
+              "minLevel": 22,
+              "maxLevel": 22,
+              "zone": "Ashenvale"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 24,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Black Ravager Mastiff",
+              "npcId": 1258,
+              "family": "Wolf",
+              "minLevel": 25,
+              "maxLevel": 26,
+              "zone": "Duskwood"
+            },
+            {
+              "name": "Ghostpaw Alpha",
+              "npcId": 3825,
+              "family": "Wolf",
+              "minLevel": 27,
+              "maxLevel": 28,
+              "zone": "Ashenvale"
+            },
+            {
+              "name": "Elder Crag Coyote",
+              "npcId": 2729,
+              "family": "Wolf",
+              "minLevel": 39,
+              "maxLevel": 40,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Longtooth Howler",
+              "npcId": 5287,
+              "family": "Wolf",
+              "minLevel": 43,
+              "maxLevel": 44,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Silvermane Howler",
+              "npcId": 2925,
+              "family": "Wolf",
+              "minLevel": 45,
+              "maxLevel": 46,
+              "zone": "The Hinterlands"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 40,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Longtooth Runner",
+              "npcId": 5286,
+              "family": "Wolf",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Snarler",
+              "npcId": 5356,
+              "family": "Wolf",
+              "minLevel": 42,
+              "maxLevel": 42,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Silvermane Wolf",
+              "npcId": 2924,
+              "family": "Wolf",
+              "minLevel": 43,
+              "maxLevel": 44,
+              "zone": "The Hinterlands"
+            },
+            {
+              "name": "Felpaw Wolf",
+              "npcId": 8959,
+              "family": "Wolf",
+              "minLevel": 47,
+              "maxLevel": 48,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Death Howl",
+              "npcId": 14339,
+              "family": "Wolf",
+              "minLevel": 49,
+              "maxLevel": 49,
+              "zone": "Felwood"
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 56,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Bloodaxe Worg",
+              "npcId": 9696,
+              "family": "Wolf",
+              "minLevel": 56,
+              "maxLevel": 57,
+              "zone": "Blackrock Spire (Dungeon)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "greatstamina",
+      "name": "Great Stamina",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 10,
+          "trainingPoints": 5,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 12,
+          "trainingPoints": 10,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 18,
+          "trainingPoints": 15,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 24,
+          "trainingPoints": 25,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 30,
+          "trainingPoints": 50,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 6,
+          "petLevel": 36,
+          "trainingPoints": 75,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 7,
+          "petLevel": 42,
+          "trainingPoints": 100,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 8,
+          "petLevel": 48,
+          "trainingPoints": 125,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 9,
+          "petLevel": 54,
+          "trainingPoints": 150,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 10,
+          "petLevel": 60,
+          "trainingPoints": 185,
+          "trainer": true,
+          "sources": []
+        }
+      ]
+    },
+    {
+      "id": "growl",
+      "name": "Growl",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 1,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 10,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 20,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 30,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 40,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 6,
+          "petLevel": 50,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 7,
+          "petLevel": 60,
+          "trainingPoints": 0,
+          "trainer": true,
+          "sources": []
+        }
+      ]
+    },
+    {
+      "id": "lightningbreath",
+      "name": "Lightning Breath",
+      "families": [
+        "windserpent"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 1,
+          "trainingPoints": 1,
+          "trainer": false,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 12,
+          "trainingPoints": 5,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Deviate Coiler",
+              "npcId": 3630,
+              "family": "Wind Serpent",
+              "minLevel": 15,
+              "maxLevel": 16,
+              "zone": "Wailing Caverns (Dungeon)"
+            },
+            {
+              "name": "Deviate Stinglash",
+              "npcId": 3631,
+              "family": "Wind Serpent",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Wailing Caverns (Dungeon)"
+            },
+            {
+              "name": "Thunderhawk Hatchling",
+              "npcId": 3247,
+              "family": "Wind Serpent",
+              "minLevel": 18,
+              "maxLevel": 20,
+              "zone": "The Barrens"
+            },
+            {
+              "name": "Thunderhawk Cloudscraper",
+              "npcId": 3424,
+              "family": "Wind Serpent",
+              "minLevel": 20,
+              "maxLevel": 22,
+              "zone": "The Barrens"
+            },
+            {
+              "name": "Deviate Dreadfang",
+              "npcId": 5056,
+              "family": "Wind Serpent",
+              "minLevel": 20,
+              "maxLevel": 21,
+              "zone": "Wailing Caverns (Dungeon)"
+            },
+            {
+              "name": "Deviate Venomwing",
+              "npcId": 5756,
+              "family": "Wind Serpent",
+              "minLevel": 20,
+              "maxLevel": 21,
+              "zone": "Wailing Caverns (Dungeon)"
+            },
+            {
+              "name": "Greater Thunderhawk",
+              "npcId": 3249,
+              "family": "Wind Serpent",
+              "minLevel": 23,
+              "maxLevel": 24,
+              "zone": "The Barrens"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 24,
+          "trainingPoints": 10,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Washte Pawne",
+              "npcId": 3472,
+              "family": "Wind Serpent",
+              "minLevel": 25,
+              "maxLevel": 25,
+              "zone": "The Barrens"
+            },
+            {
+              "name": "Cloud Serpent",
+              "npcId": 4117,
+              "family": "Wind Serpent",
+              "minLevel": 25,
+              "maxLevel": 26,
+              "zone": "Thousand Needles"
+            },
+            {
+              "name": "Venomous Cloud Serpent",
+              "npcId": 4118,
+              "family": "Wind Serpent",
+              "minLevel": 26,
+              "maxLevel": 28,
+              "zone": "Thousand Needles"
+            },
+            {
+              "name": "Elder Cloud Serpent",
+              "npcId": 4119,
+              "family": "Wind Serpent",
+              "minLevel": 27,
+              "maxLevel": 29,
+              "zone": "Thousand Needles"
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 36,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Vale Screecher",
+              "npcId": 5307,
+              "family": "Wind Serpent",
+              "minLevel": 41,
+              "maxLevel": 43,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Rogue Vale Screecher",
+              "npcId": 5308,
+              "family": "Wind Serpent",
+              "minLevel": 44,
+              "maxLevel": 46,
+              "zone": "Feralas"
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "petLevel": 48,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Hakkari Sapper",
+              "npcId": 8336,
+              "family": "Wind Serpent",
+              "minLevel": 49,
+              "maxLevel": 50,
+              "zone": "The Temple of Atal'Hakkar (Dungeon)"
+            },
+            {
+              "name": "Hakkari Frostwing",
+              "npcId": 5291,
+              "family": "Wind Serpent",
+              "minLevel": 49,
+              "maxLevel": 50,
+              "zone": "The Temple of Atal'Hakkar (Dungeon)"
+            },
+            {
+              "name": "Arash-ethis",
+              "npcId": 5349,
+              "family": "Wind Serpent",
+              "minLevel": 49,
+              "maxLevel": 49,
+              "zone": "Feralas"
+            },
+            {
+              "name": "Spawn of Hakkar",
+              "npcId": 5708,
+              "family": "Wind Serpent",
+              "minLevel": 51,
+              "maxLevel": 51,
+              "zone": "The Temple of Atal'Hakkar (Dungeon)"
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "petLevel": 60,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Son of Hakkar",
+              "npcId": 11357,
+              "family": "Wind Serpent",
+              "minLevel": 60,
+              "maxLevel": 60,
+              "zone": "Zul'Gurub (Raid)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "naturalarmor",
+      "name": "Natural Armor",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 10,
+          "trainingPoints": 1,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 12,
+          "trainingPoints": 5,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 18,
+          "trainingPoints": 10,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 24,
+          "trainingPoints": 15,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 30,
+          "trainingPoints": 25,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 6,
+          "petLevel": 36,
+          "trainingPoints": 50,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 7,
+          "petLevel": 42,
+          "trainingPoints": 75,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 8,
+          "petLevel": 48,
+          "trainingPoints": 100,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 9,
+          "petLevel": 54,
+          "trainingPoints": 125,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 10,
+          "petLevel": 60,
+          "trainingPoints": 150,
+          "trainer": true,
+          "sources": []
+        }
+      ]
+    },
+    {
+      "id": "natureresistance",
+      "name": "Nature Resistance",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 20,
+          "trainingPoints": 5,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 40,
+          "trainingPoints": 45,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 50,
+          "trainingPoints": 90,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 60,
+          "trainingPoints": 105,
+          "trainer": true,
+          "sources": []
+        }
+      ]
+    },
+    {
+      "id": "prowl",
+      "name": "Prowl",
+      "families": [
+        "cat"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Mountain Lion",
+              "npcId": 2406,
+              "family": "Cat",
+              "minLevel": 32,
+              "maxLevel": 33,
+              "zone": "Alterac Mountains"
+            },
+            {
+              "name": "Ridge Stalker",
+              "npcId": 2731,
+              "family": "Cat",
+              "minLevel": 36,
+              "maxLevel": 37,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Shadowmaw Panther",
+              "npcId": 684,
+              "family": "Cat",
+              "minLevel": 37,
+              "maxLevel": 38,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Shadow Panther",
+              "npcId": 768,
+              "family": "Cat",
+              "minLevel": 39,
+              "maxLevel": 40,
+              "zone": "Swamp of Sorrows"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 40,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Ridge Stalker Patriarch",
+              "npcId": 2734,
+              "family": "Cat",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Badlands"
+            },
+            {
+              "name": "Elder Shadowmaw Panther",
+              "npcId": 1713,
+              "family": "Cat",
+              "minLevel": 42,
+              "maxLevel": 43,
+              "zone": "Stranglethorn Vale"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 50,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Jaguero Stalker",
+              "npcId": 2522,
+              "family": "Cat",
+              "minLevel": 50,
+              "maxLevel": 50,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Frostsaber Stalker",
+              "npcId": 7432,
+              "family": "Cat",
+              "minLevel": 59,
+              "maxLevel": 60,
+              "zone": "Winterspring"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scorpidpoison",
+      "name": "Scorpid Poison",
+      "families": [
+        "scorpid"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 8,
+          "trainingPoints": 10,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Venomtail Scorpid",
+              "npcId": 3127,
+              "family": "Scorpid",
+              "minLevel": 9,
+              "maxLevel": 10,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Corrupted Scorpid",
+              "npcId": 3226,
+              "family": "Scorpid",
+              "minLevel": 10,
+              "maxLevel": 11,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Death Flayer",
+              "npcId": 5823,
+              "family": "Scorpid",
+              "minLevel": 11,
+              "maxLevel": 11,
+              "zone": "Durotar"
+            },
+            {
+              "name": "Silithid Creeper",
+              "npcId": 3250,
+              "family": "Scorpid",
+              "minLevel": 20,
+              "maxLevel": 21,
+              "zone": "The Barrens"
+            },
+            {
+              "name": "Silithid Swarmer",
+              "npcId": 3252,
+              "family": "Scorpid",
+              "minLevel": 21,
+              "maxLevel": 22,
+              "zone": "The Barrens"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 24,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Scorpashi Snapper",
+              "npcId": 4696,
+              "family": "Scorpid",
+              "minLevel": 30,
+              "maxLevel": 31,
+              "zone": "Desolace"
+            },
+            {
+              "name": "Scorpid Reaver",
+              "npcId": 4140,
+              "family": "Scorpid",
+              "minLevel": 31,
+              "maxLevel": 32,
+              "zone": "Thousand Needles"
+            },
+            {
+              "name": "Scorpid Terror",
+              "npcId": 4139,
+              "family": "Scorpid",
+              "minLevel": 33,
+              "maxLevel": 34,
+              "zone": "Thousand Needles"
+            },
+            {
+              "name": "Vile Sting",
+              "npcId": 5937,
+              "family": "Scorpid",
+              "minLevel": 35,
+              "maxLevel": 35,
+              "zone": "Thousand Needles"
+            },
+            {
+              "name": "Cleft Scorpid",
+              "npcId": 7078,
+              "family": "Scorpid",
+              "minLevel": 35,
+              "maxLevel": 36,
+              "zone": "Uldaman (Dungeon)"
+            },
+            {
+              "name": "Scorpashi Venomlash",
+              "npcId": 4699,
+              "family": "Scorpid",
+              "minLevel": 38,
+              "maxLevel": 39,
+              "zone": "Desolace"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 40,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Scorpid Hunter",
+              "npcId": 5422,
+              "family": "Scorpid",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Deadly Cleft Scorpid",
+              "npcId": 7405,
+              "family": "Scorpid",
+              "minLevel": 42,
+              "maxLevel": 43,
+              "zone": "Uldaman (Dungeon)"
+            },
+            {
+              "name": "Scorpid Tail Lasher",
+              "npcId": 5423,
+              "family": "Scorpid",
+              "minLevel": 43,
+              "maxLevel": 44,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Scorpid Duneburrower",
+              "npcId": 7803,
+              "family": "Scorpid",
+              "minLevel": 46,
+              "maxLevel": 47,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Scorpid Dunestalker",
+              "npcId": 5424,
+              "family": "Scorpid",
+              "minLevel": 46,
+              "maxLevel": 47,
+              "zone": "Tanaris"
+            },
+            {
+              "name": "Scorpok Stinger",
+              "npcId": 5988,
+              "family": "Scorpid",
+              "minLevel": 50,
+              "maxLevel": 51,
+              "zone": "Blasted Lands"
+            },
+            {
+              "name": "Deep Stinger",
+              "npcId": 8926,
+              "family": "Scorpid",
+              "minLevel": 50,
+              "maxLevel": 52,
+              "zone": "Blackrock Depths (Dungeon)"
+            },
+            {
+              "name": "Venomtip Scorpid",
+              "npcId": 9691,
+              "family": "Scorpid",
+              "minLevel": 52,
+              "maxLevel": 53,
+              "zone": "Burning Steppes"
+            },
+            {
+              "name": "Deathlash Scorpid",
+              "npcId": 9695,
+              "family": "Scorpid",
+              "minLevel": 54,
+              "maxLevel": 55,
+              "zone": "Burning Steppes"
+            },
+            {
+              "name": "Stonelash Scorpid",
+              "npcId": 11735,
+              "family": "Scorpid",
+              "minLevel": 54,
+              "maxLevel": 55,
+              "zone": "Silithus"
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 56,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Krellack",
+              "npcId": 14476,
+              "family": "Scorpid",
+              "minLevel": 56,
+              "maxLevel": 56,
+              "zone": "Silithus"
+            },
+            {
+              "name": "Stonelash Pincer",
+              "npcId": 11736,
+              "family": "Scorpid",
+              "minLevel": 56,
+              "maxLevel": 57,
+              "zone": "Silithus"
+            },
+            {
+              "name": "Firetail Scorpid",
+              "npcId": 9698,
+              "family": "Scorpid",
+              "minLevel": 56,
+              "maxLevel": 57,
+              "zone": "Burning Steppes"
+            },
+            {
+              "name": "Stonelash Flayer",
+              "npcId": 11737,
+              "family": "Scorpid",
+              "minLevel": 58,
+              "maxLevel": 59,
+              "zone": "Silithus"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "screech",
+      "name": "Screech",
+      "families": [
+        "bat",
+        "carrionbird",
+        "owl"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 8,
+          "trainingPoints": 10,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Greater Fleshripper",
+              "npcId": 154,
+              "family": "Carrion Bird",
+              "minLevel": 16,
+              "maxLevel": 17,
+              "zone": "Westfall"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 24,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Salt Flats Vulture",
+              "npcId": 4158,
+              "family": "Carrion Bird",
+              "minLevel": 32,
+              "maxLevel": 34,
+              "zone": "Thousand Needles"
+            },
+            {
+              "name": "Shrike Bat",
+              "npcId": 4861,
+              "family": "Bat",
+              "minLevel": 38,
+              "maxLevel": 39,
+              "zone": "Uldaman (Dungeon)"
+            },
+            {
+              "name": "Dread Ripper",
+              "npcId": 4694,
+              "family": "Carrion Bird",
+              "minLevel": 39,
+              "maxLevel": 40,
+              "zone": "Desolace"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 48,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Ironbeak Owl",
+              "npcId": 7097,
+              "family": "Owl",
+              "minLevel": 48,
+              "maxLevel": 49,
+              "zone": "Felwood"
+            },
+            {
+              "name": "Dark Screecher",
+              "npcId": 8927,
+              "family": "Bat",
+              "minLevel": 50,
+              "maxLevel": 52,
+              "zone": "Blackrock Depths (Dungeon)"
+            },
+            {
+              "name": "Carrion Vulture",
+              "npcId": 1809,
+              "family": "Carrion Bird",
+              "minLevel": 50,
+              "maxLevel": 52,
+              "zone": "Western Plaguelands"
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "petLevel": 56,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Monstrous Plaguebat",
+              "npcId": 8602,
+              "family": "Bat",
+              "minLevel": 56,
+              "maxLevel": 58,
+              "zone": "Eastern Plaguelands"
+            },
+            {
+              "name": "Winterspring Screecher",
+              "npcId": 7456,
+              "family": "Owl",
+              "minLevel": 57,
+              "maxLevel": 59,
+              "zone": "Winterspring"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shadowresistance",
+      "name": "Shadow Resistance",
+      "families": [],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 20,
+          "trainingPoints": 5,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 2,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 3,
+          "petLevel": 40,
+          "trainingPoints": 45,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 4,
+          "petLevel": 50,
+          "trainingPoints": 90,
+          "trainer": true,
+          "sources": []
+        },
+        {
+          "rank": 5,
+          "petLevel": 60,
+          "trainingPoints": 105,
+          "trainer": true,
+          "sources": []
+        }
+      ]
+    },
+    {
+      "id": "shellshield",
+      "name": "Shell Shield",
+      "families": [
+        "turtle"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 20,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Kresh",
+              "npcId": 3653,
+              "family": "Turtle",
+              "minLevel": 20,
+              "maxLevel": 20,
+              "zone": "Wailing Caverns (Dungeon)"
+            },
+            {
+              "name": "Aku'mai Fisher",
+              "npcId": 4824,
+              "family": "Turtle",
+              "minLevel": 23,
+              "maxLevel": 24,
+              "zone": "Blackfathom Deeps (Dungeon)"
+            },
+            {
+              "name": "Ghamoo-ra",
+              "npcId": 4887,
+              "family": "Turtle",
+              "minLevel": 25,
+              "maxLevel": 25,
+              "zone": "Blackfathom Deeps (Dungeon)"
+            },
+            {
+              "name": "Aku'mai Snapjaw",
+              "npcId": 4825,
+              "family": "Turtle",
+              "minLevel": 26,
+              "maxLevel": 27,
+              "zone": "Blackfathom Deeps (Dungeon)"
+            },
+            {
+              "name": "Snapjaw",
+              "npcId": 2408,
+              "family": "Turtle",
+              "minLevel": 30,
+              "maxLevel": 31,
+              "zone": "Hillsbrad Foothills"
+            },
+            {
+              "name": "Cranky Benj",
+              "npcId": 14223,
+              "family": "Turtle",
+              "minLevel": 32,
+              "maxLevel": 32,
+              "zone": "Alterac Mountains"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thunderstomp",
+      "name": "Thunderstomp",
+      "families": [
+        "gorilla"
+      ],
+      "ranks": [
+        {
+          "rank": 1,
+          "petLevel": 30,
+          "trainingPoints": 15,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Mistvale Gorilla",
+              "npcId": 1108,
+              "family": "Gorilla",
+              "minLevel": 32,
+              "maxLevel": 33,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Jungle Thunderer",
+              "npcId": 1114,
+              "family": "Gorilla",
+              "minLevel": 37,
+              "maxLevel": 38,
+              "zone": "Stranglethorn Vale"
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "petLevel": 40,
+          "trainingPoints": 20,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Elder Mistvale Gorilla",
+              "npcId": 1557,
+              "family": "Gorilla",
+              "minLevel": 40,
+              "maxLevel": 41,
+              "zone": "Stranglethorn Vale"
+            },
+            {
+              "name": "Groddoc Thunderer",
+              "npcId": 5262,
+              "family": "Gorilla",
+              "minLevel": 49,
+              "maxLevel": 50,
+              "zone": "Feralas"
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "petLevel": 50,
+          "trainingPoints": 25,
+          "trainer": false,
+          "sources": [
+            {
+              "name": "Un'Goro Thunderer",
+              "npcId": 6516,
+              "family": "Gorilla",
+              "minLevel": 52,
+              "maxLevel": 53,
+              "zone": "Un'Goro Crater"
+            },
+            {
+              "name": "U'cha",
+              "npcId": 9622,
+              "family": "Gorilla",
+              "minLevel": 55,
+              "maxLevel": 55,
+              "zone": "Un'Goro Crater"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
