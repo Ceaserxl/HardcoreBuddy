@@ -76,3 +76,10 @@ jobs:
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set GitHub display title
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_NAME: ${{ steps.release.outputs.name }}
+        shell: bash
+        run: gh release edit "$RELEASE_TAG" --title "${RELEASE_NAME//-/ }" --prerelease=false
