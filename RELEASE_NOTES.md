@@ -1,6 +1,8 @@
-# HardcoreBuddy v0.2.5-beta
+# HardcoreBuddy v0.2.5 Beta
 
-Beta update for WoW Classic Era / Hardcore (interface 11509).
+Release update for WoW Classic Era / Hardcore (interface 11509).
+
+Published as a normal Release. Beta is the pre-1.0 display label only.
 
 - Scroll recommendations now follow the selected class and level.
 - Hunter Supplies > Class shows active pet spell ranks, available upgrades,

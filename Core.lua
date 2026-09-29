@@ -1,7 +1,7 @@
 local addonName, addon = ...
 
 addon.name = addonName
-addon.version = "0.2.5-beta"
+addon.version = "0.2.5"
 local P = addon.Planner
 local classNames = {}
 for _, name in ipairs(P.classes) do classNames[name:upper()] = name end
