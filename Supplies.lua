@@ -122,7 +122,7 @@ function S.Build(context, state)
     -- Keep one current recommendation per scroll type, with exact-rank stock.
     local best,order={},{}
     for _,item in ipairs(addon.Data.Scrolls and addon.Data.Scrolls.items or {}) do
-        if item.level<=context.level then
+        if item.level<=context.level and P.MatchesClass(item,context.characterClass) then
             if not best[item.family] then order[#order+1]=item.family end
             if not best[item.family] or item.level>best[item.family].level then best[item.family]=item end
         end

@@ -8,7 +8,12 @@
       "group": "Scrolls",
       "level": 10,
       "classes": [
-        "All"
+        "Hunter",
+        "Rogue",
+        "Warrior",
+        "Paladin",
+        "Shaman",
+        "Druid"
       ],
       "ease": 2,
       "binding": false,
@@ -27,7 +32,12 @@
       "group": "Scrolls",
       "level": 25,
       "classes": [
-        "All"
+        "Hunter",
+        "Rogue",
+        "Warrior",
+        "Paladin",
+        "Shaman",
+        "Druid"
       ],
       "ease": 2,
       "binding": false,
@@ -46,7 +56,12 @@
       "group": "Scrolls",
       "level": 40,
       "classes": [
-        "All"
+        "Hunter",
+        "Rogue",
+        "Warrior",
+        "Paladin",
+        "Shaman",
+        "Druid"
       ],
       "ease": 2,
       "binding": false,
@@ -65,7 +80,12 @@
       "group": "Scrolls",
       "level": 55,
       "classes": [
-        "All"
+        "Hunter",
+        "Rogue",
+        "Warrior",
+        "Paladin",
+        "Shaman",
+        "Druid"
       ],
       "ease": 2,
       "binding": false,
@@ -84,7 +104,10 @@
       "group": "Scrolls",
       "level": 10,
       "classes": [
-        "All"
+        "Warrior",
+        "Paladin",
+        "Shaman",
+        "Druid"
       ],
       "ease": 2,
       "binding": false,
@@ -103,7 +126,10 @@
       "group": "Scrolls",
       "level": 25,
       "classes": [
-        "All"
+        "Warrior",
+        "Paladin",
+        "Shaman",
+        "Druid"
       ],
       "ease": 2,
       "binding": false,
@@ -122,7 +148,10 @@
       "group": "Scrolls",
       "level": 40,
       "classes": [
-        "All"
+        "Warrior",
+        "Paladin",
+        "Shaman",
+        "Druid"
       ],
       "ease": 2,
       "binding": false,
@@ -141,7 +170,10 @@
       "group": "Scrolls",
       "level": 55,
       "classes": [
-        "All"
+        "Warrior",
+        "Paladin",
+        "Shaman",
+        "Druid"
       ],
       "ease": 2,
       "binding": false,
@@ -236,7 +268,13 @@
       "group": "Scrolls",
       "level": 5,
       "classes": [
-        "All"
+        "Hunter",
+        "Paladin",
+        "Shaman",
+        "Druid",
+        "Mage",
+        "Priest",
+        "Warlock"
       ],
       "ease": 2,
       "binding": false,
@@ -255,7 +293,13 @@
       "group": "Scrolls",
       "level": 20,
       "classes": [
-        "All"
+        "Hunter",
+        "Paladin",
+        "Shaman",
+        "Druid",
+        "Mage",
+        "Priest",
+        "Warlock"
       ],
       "ease": 2,
       "binding": false,
@@ -274,7 +318,13 @@
       "group": "Scrolls",
       "level": 35,
       "classes": [
-        "All"
+        "Hunter",
+        "Paladin",
+        "Shaman",
+        "Druid",
+        "Mage",
+        "Priest",
+        "Warlock"
       ],
       "ease": 2,
       "binding": false,
@@ -293,7 +343,13 @@
       "group": "Scrolls",
       "level": 50,
       "classes": [
-        "All"
+        "Hunter",
+        "Paladin",
+        "Shaman",
+        "Druid",
+        "Mage",
+        "Priest",
+        "Warlock"
       ],
       "ease": 2,
       "binding": false,
@@ -312,7 +368,13 @@
       "group": "Scrolls",
       "level": 1,
       "classes": [
-        "All"
+        "Hunter",
+        "Paladin",
+        "Shaman",
+        "Druid",
+        "Mage",
+        "Priest",
+        "Warlock"
       ],
       "ease": 2,
       "binding": false,
@@ -331,7 +393,13 @@
       "group": "Scrolls",
       "level": 15,
       "classes": [
-        "All"
+        "Hunter",
+        "Paladin",
+        "Shaman",
+        "Druid",
+        "Mage",
+        "Priest",
+        "Warlock"
       ],
       "ease": 2,
       "binding": false,
@@ -350,7 +418,13 @@
       "group": "Scrolls",
       "level": 30,
       "classes": [
-        "All"
+        "Hunter",
+        "Paladin",
+        "Shaman",
+        "Druid",
+        "Mage",
+        "Priest",
+        "Warlock"
       ],
       "ease": 2,
       "binding": false,
@@ -369,7 +443,13 @@
       "group": "Scrolls",
       "level": 45,
       "classes": [
-        "All"
+        "Hunter",
+        "Paladin",
+        "Shaman",
+        "Druid",
+        "Mage",
+        "Priest",
+        "Warlock"
       ],
       "ease": 2,
       "binding": false,

@@ -258,11 +258,17 @@ function C.Build(context,state)
                 local section=card(category,#group==0 and "No matching items in this category." or nil,group)
                 section.supplyTable=true
                 result.cards[#result.cards+1]=section
+                if category=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
+                    result.cards[#result.cards+1]=A.HunterTraining.Card(context)
+                end
             end
             if #rows==0 then result.cards={card("Your supplies",nil,{})} end
         else
             result.cards[1]=card("Your supplies",nil,rows)
             result.cards[1].supplyTable=true
+            if state.filter=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
+                result.cards[#rows==0 and 1 or #result.cards+1]=A.HunterTraining.Card(context)
+            end
         end
         result.searchable,result.stockFilter=false,false
     elseif view=="training" then

@@ -13,6 +13,22 @@ local deathChannels = {
     zhCN = "专家死亡", zhTW = "專家模式玩家死亡",
 }
 local officialChannel = deathChannels[GetLocale and GetLocale() or "enUS"] or deathChannels.enUS
+H.officialChannel = officialChannel
+function H:EnsureOfficialChannel()
+    if not self.db or not GetChannelName or not JoinChannelByName then return end
+    -- Do not create an ordinary custom channel on non-Hardcore realms.
+    if C_GameRules and C_GameRules.IsHardcoreActive and not C_GameRules.IsHardcoreActive() then return end
+    local id = GetChannelName(officialChannel)
+    if type(id) == "number" and id > 0 then
+        self.nextOfficialJoin = nil
+        return
+    end
+    local now = GetTime()
+    if self.nextOfficialJoin and now < self.nextOfficialJoin then return end
+    -- Joining is asynchronous; allow the server time to respond before retrying.
+    self.nextOfficialJoin = now + 60
+    JoinChannelByName(officialChannel)
+end
 local function receive(_, event, ...)
     if event == "ADDON_LOADED" then
         if ... == "HardcoreDeaths" then
@@ -32,7 +48,15 @@ local function receive(_, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
         H:UpdateAnnouncementReplacement()
         H:ApplySettings()
-        C_Timer.After(5, function() H:JoinCommunity() end)
+        if not H.officialJoinScheduled then
+            H.officialJoinScheduled = true
+            C_Timer.After(5, function()
+                H.officialJoinScheduled = nil
+                H.officialChannelReady = true
+                H:EnsureOfficialChannel()
+                H:JoinCommunity()
+            end)
+        end
     elseif event == "DISPLAY_SIZE_CHANGED" or event == "UI_SCALE_CHANGED" then
         H:ApplySettings()
     elseif event == "HARDCORE_DEATHS" then
@@ -90,6 +114,7 @@ frame:SetScript("OnUpdate", function(_, elapsed)
     elapsedTotal = elapsedTotal + elapsed
     if elapsedTotal < 15 then return end
     elapsedTotal = 0
+    if H.officialChannelReady then H:EnsureOfficialChannel() end
     for sender, stamp in pairs(senderTimes) do
         if GetTime() - stamp > 60 then senderTimes[sender] = nil end
     end

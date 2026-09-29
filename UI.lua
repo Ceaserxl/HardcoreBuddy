@@ -187,13 +187,13 @@ local function renderBlock(frame, block, width)
         frame:SetHeight(y); return y
     end
     frame.title:Show(); frame.body:Show(); frame.meta:Show()
-    local icon = block.itemId ~= nil
+    local icon = block.itemId ~= nil or block.icon ~= nil
     frame.icon:SetShown(icon); frame.iconHit:SetShown(icon); frame.iconBorder:SetShown(icon)
     if icon then
         local texture = block.icon and block.icon:match("([^/]+)%.%w+$")
         local native
         local getIcon=C_Item and C_Item.GetItemIconByID or GetItemIcon
-        if getIcon then local ok,value=pcall(getIcon,block.itemId); if ok then native=value end end
+        if getIcon and block.itemId then local ok,value=pcall(getIcon,block.itemId); if ok then native=value end end
         native=native or (texture and ("Interface\\Icons\\" .. texture)) or "Interface\\Icons\\INV_Misc_QuestionMark"
         if not frame.icon:SetTexture(native) then frame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark") end
     end

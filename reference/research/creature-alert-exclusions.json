@@ -1,0 +1,921 @@
+{
+  "policy": "Disabled non-rare rows; never suppress rare/rareelite classifications. If an NPC is enabled anywhere for a faction, keep its alerts. Unknown faction applies only exclusions shared by both.",
+  "sources": {
+    "database.lua": {
+      "sha256": "56c9e92991c124e089cf28eb291d9978493a7a0cccc9acc54dec993a7836b6ff",
+      "disabledNonRare": 188,
+      "source": "../unitscanData/database.lua"
+    },
+    "horde.lua": {
+      "sha256": "62134f38802dcb916547b992020b04f397c082b092b34cad968b3221cc35f3d9",
+      "disabledNonRare": 199,
+      "source": "../unitscanData/horde.lua"
+    }
+  },
+  "entries": {
+    "68": {
+      "name": "Stormwind City Guard",
+      "mask": 1
+    },
+    "234": {
+      "name": "Gryan Stoutmantle",
+      "mask": 3
+    },
+    "349": {
+      "name": "Corporal Keeshan",
+      "mask": 3
+    },
+    "469": {
+      "name": "Lieutenant Doren",
+      "mask": 3
+    },
+    "502": {
+      "name": "Benny Blaanco",
+      "mask": 3
+    },
+    "523": {
+      "name": "Thor",
+      "mask": 3
+    },
+    "727": {
+      "name": "Ironforge Mountaineer",
+      "mask": 1
+    },
+    "832": {
+      "name": "Dust Devil",
+      "mask": 2
+    },
+    "861": {
+      "name": "Stonard Scout",
+      "mask": 2
+    },
+    "862": {
+      "name": "Stonard Explorer",
+      "mask": 2
+    },
+    "863": {
+      "name": "Stonard Hunter",
+      "mask": 2
+    },
+    "864": {
+      "name": "Stonard Orc",
+      "mask": 2
+    },
+    "865": {
+      "name": "Stonard Wayfinder",
+      "mask": 2
+    },
+    "866": {
+      "name": "Stonard Grunt",
+      "mask": 2
+    },
+    "867": {
+      "name": "Stonard Cartographer",
+      "mask": 2
+    },
+    "868": {
+      "name": "Stonard Shaman",
+      "mask": 2
+    },
+    "931": {
+      "name": "Ariena Stormfeather",
+      "mask": 3
+    },
+    "1064": {
+      "name": "Grom'gol Grunt",
+      "mask": 2
+    },
+    "1387": {
+      "name": "Thysta",
+      "mask": 3
+    },
+    "1423": {
+      "name": "Stormwind Guard",
+      "mask": 1
+    },
+    "1434": {
+      "name": "Menethil Sentry",
+      "mask": 1
+    },
+    "1571": {
+      "name": "Shellei Brondir",
+      "mask": 3
+    },
+    "1572": {
+      "name": "Thorgrum Borrelson",
+      "mask": 3
+    },
+    "1891": {
+      "name": "Pyrewood Watcher",
+      "mask": 3
+    },
+    "1894": {
+      "name": "Pyrewood Sentry",
+      "mask": 3
+    },
+    "1895": {
+      "name": "Pyrewood Elder",
+      "mask": 3
+    },
+    "2215": {
+      "name": "High Executor Darthalia",
+      "mask": 3
+    },
+    "2226": {
+      "name": "Karos Razok",
+      "mask": 3
+    },
+    "2276": {
+      "name": "Magistrate Henry Maleb",
+      "mask": 3
+    },
+    "2299": {
+      "name": "Borgus Stoutarm",
+      "mask": 3
+    },
+    "2344": {
+      "name": "Dun Garok Mountaineer",
+      "mask": 3
+    },
+    "2345": {
+      "name": "Dun Garok Rifleman",
+      "mask": 3
+    },
+    "2346": {
+      "name": "Dun Garok Priest",
+      "mask": 3
+    },
+    "2386": {
+      "name": "Southshore Guard",
+      "mask": 1
+    },
+    "2389": {
+      "name": "Zarise",
+      "mask": 3
+    },
+    "2405": {
+      "name": "Tarren Mill Deathguard",
+      "mask": 2
+    },
+    "2409": {
+      "name": "Felicia Maline",
+      "mask": 3
+    },
+    "2432": {
+      "name": "Darla Harris",
+      "mask": 3
+    },
+    "2433": {
+      "name": "Helcular's Remains",
+      "mask": 3
+    },
+    "2464": {
+      "name": "Commander Aggro'gosh",
+      "mask": 3
+    },
+    "2477": {
+      "name": "Gradok",
+      "mask": 2
+    },
+    "2478": {
+      "name": "Haren Swifthoof",
+      "mask": 2
+    },
+    "2583": {
+      "name": "Stromgarde Troll Hunter",
+      "mask": 3
+    },
+    "2584": {
+      "name": "Stromgarde Defender",
+      "mask": 3
+    },
+    "2585": {
+      "name": "Stromgarde Vindicator",
+      "mask": 3
+    },
+    "2607": {
+      "name": "Prince Galen Trollbane",
+      "mask": 3
+    },
+    "2612": {
+      "name": "Lieutenant Valorcall",
+      "mask": 3
+    },
+    "2621": {
+      "name": "Hammerfall Guardian",
+      "mask": 2
+    },
+    "2714": {
+      "name": "Forsaken Courier",
+      "mask": 2
+    },
+    "2721": {
+      "name": "Forsaken Bodyguard",
+      "mask": 2
+    },
+    "2738": {
+      "name": "Stromgarde Cavalryman",
+      "mask": 1
+    },
+    "2780": {
+      "name": "Caretaker Nevlin",
+      "mask": 3
+    },
+    "2781": {
+      "name": "Caretaker Weston",
+      "mask": 3
+    },
+    "2782": {
+      "name": "Caretaker Alaric",
+      "mask": 3
+    },
+    "2794": {
+      "name": "Summoned Guardian",
+      "mask": 3
+    },
+    "2835": {
+      "name": "Cedrik Prose",
+      "mask": 3
+    },
+    "2851": {
+      "name": "Urda",
+      "mask": 3
+    },
+    "2858": {
+      "name": "Gringer",
+      "mask": 3
+    },
+    "2859": {
+      "name": "Gyll",
+      "mask": 3
+    },
+    "2861": {
+      "name": "Gorrik",
+      "mask": 3
+    },
+    "2941": {
+      "name": "Lanie Reed",
+      "mask": 3
+    },
+    "3084": {
+      "name": "Bluffwatcher",
+      "mask": 2
+    },
+    "3296": {
+      "name": "Orgrimmar Grunt",
+      "mask": 2
+    },
+    "3305": {
+      "name": "Grisha",
+      "mask": 3
+    },
+    "3338": {
+      "name": "Sergra Darkthorn",
+      "mask": 3
+    },
+    "3501": {
+      "name": "Horde Guard",
+      "mask": 2
+    },
+    "3528": {
+      "name": "Pyrewood Armorer",
+      "mask": 3
+    },
+    "3529": {
+      "name": "Moonrage Armorer",
+      "mask": 3
+    },
+    "3530": {
+      "name": "Pyrewood Tailor",
+      "mask": 3
+    },
+    "3532": {
+      "name": "Pyrewood Leatherworker",
+      "mask": 3
+    },
+    "3615": {
+      "name": "Devrak",
+      "mask": 3
+    },
+    "3691": {
+      "name": "Raene Wolfrunner",
+      "mask": 3
+    },
+    "3838": {
+      "name": "Vesprystus",
+      "mask": 3
+    },
+    "3841": {
+      "name": "Caylais Moonfeather",
+      "mask": 3
+    },
+    "4050": {
+      "name": "Cenarion Caretaker",
+      "mask": 3
+    },
+    "4052": {
+      "name": "Cenarion Druid",
+      "mask": 3
+    },
+    "4056": {
+      "name": "Mirkfallon Keeper",
+      "mask": 3
+    },
+    "4061": {
+      "name": "Mirkfallon Dryad",
+      "mask": 3
+    },
+    "4262": {
+      "name": "Darnassus Sentinel",
+      "mask": 1
+    },
+    "4267": {
+      "name": "Daelyshia",
+      "mask": 3
+    },
+    "4312": {
+      "name": "Tharm",
+      "mask": 3
+    },
+    "4314": {
+      "name": "Gorkas",
+      "mask": 3
+    },
+    "4317": {
+      "name": "Nyse",
+      "mask": 3
+    },
+    "4319": {
+      "name": "Thyssiana",
+      "mask": 3
+    },
+    "4321": {
+      "name": "Baldruc",
+      "mask": 3
+    },
+    "4407": {
+      "name": "Teloren",
+      "mask": 3
+    },
+    "4409": {
+      "name": "Gatekeeper Kordurus",
+      "mask": 3
+    },
+    "4500": {
+      "name": "Overlord Mok'Morokk",
+      "mask": 3
+    },
+    "4979": {
+      "name": "Theramore Guard",
+      "mask": 1
+    },
+    "5595": {
+      "name": "Ironforge Guard",
+      "mask": 1
+    },
+    "5624": {
+      "name": "Undercity Guardian",
+      "mask": 2
+    },
+    "5797": {
+      "name": "Aean Swiftriver",
+      "mask": 1
+    },
+    "5798": {
+      "name": "Thora Feathermoon",
+      "mask": 1
+    },
+    "5799": {
+      "name": "Hannah Bladeleaf",
+      "mask": 1
+    },
+    "5800": {
+      "name": "Marcus Bel",
+      "mask": 1
+    },
+    "5999": {
+      "name": "Nethergarde Soldier",
+      "mask": 1
+    },
+    "6026": {
+      "name": "Breyk",
+      "mask": 3
+    },
+    "6086": {
+      "name": "Auberdine Sentinel",
+      "mask": 1
+    },
+    "6087": {
+      "name": "Astranaar Sentinel",
+      "mask": 1
+    },
+    "6706": {
+      "name": "Baritanas Skyriver",
+      "mask": 3
+    },
+    "6726": {
+      "name": "Thalon",
+      "mask": 3
+    },
+    "7009": {
+      "name": "Arantir",
+      "mask": 3
+    },
+    "7170": {
+      "name": "Thragomm",
+      "mask": 2
+    },
+    "7489": {
+      "name": "Silverpine Deathguard",
+      "mask": 2
+    },
+    "7730": {
+      "name": "Stonetalon Grunt",
+      "mask": 2
+    },
+    "7823": {
+      "name": "Bera Stonehammer",
+      "mask": 3
+    },
+    "7824": {
+      "name": "Bulkrek Ragefist",
+      "mask": 3
+    },
+    "7851": {
+      "name": "Nethergarde Elite",
+      "mask": 3
+    },
+    "7865": {
+      "name": "Wildhammer Sentry",
+      "mask": 1
+    },
+    "7875": {
+      "name": "Hadoken Swiftstrider",
+      "mask": 3
+    },
+    "7939": {
+      "name": "Feathermoon Sentinel",
+      "mask": 1
+    },
+    "7980": {
+      "name": "Deathguard Elite",
+      "mask": 2
+    },
+    "8015": {
+      "name": "Ashenvale Sentinel",
+      "mask": 1
+    },
+    "8016": {
+      "name": "Barrens Guard",
+      "mask": 2
+    },
+    "8018": {
+      "name": "Guthrum Thunderfist",
+      "mask": 3
+    },
+    "8019": {
+      "name": "Fyldren Moonfeather",
+      "mask": 3
+    },
+    "8020": {
+      "name": "Shyn",
+      "mask": 3
+    },
+    "8055": {
+      "name": "Thelsamar Mountaineer",
+      "mask": 1
+    },
+    "8096": {
+      "name": "Protector of the People",
+      "mask": 1
+    },
+    "8147": {
+      "name": "Camp Mojache Brave",
+      "mask": 2
+    },
+    "8151": {
+      "name": "Nijel's Point Guard",
+      "mask": 1
+    },
+    "8154": {
+      "name": "Ghost Walker Brave",
+      "mask": 2
+    },
+    "8155": {
+      "name": "Kargath Grunt",
+      "mask": 2
+    },
+    "8518": {
+      "name": "Rynthariel the Keymaster",
+      "mask": 3
+    },
+    "8609": {
+      "name": "Alexandra Constantine",
+      "mask": 3
+    },
+    "8610": {
+      "name": "Kroum",
+      "mask": 3
+    },
+    "9520": {
+      "name": "Grark Lorkrub",
+      "mask": 3
+    },
+    "9521": {
+      "name": "Enraged Felbat",
+      "mask": 3
+    },
+    "9525": {
+      "name": "Freewind Brave",
+      "mask": 2
+    },
+    "9526": {
+      "name": "Enraged Gryphon",
+      "mask": 3
+    },
+    "10036": {
+      "name": "Brackenwall Enforcer",
+      "mask": 2
+    },
+    "10037": {
+      "name": "Lakeshire Guard",
+      "mask": 1
+    },
+    "10038": {
+      "name": "Night Watch Guard",
+      "mask": 1
+    },
+    "10079": {
+      "name": "Brave Moonhorn",
+      "mask": 2
+    },
+    "10204": {
+      "name": "Misha",
+      "mask": 3
+    },
+    "10378": {
+      "name": "Omusa Thunderhorn",
+      "mask": 3
+    },
+    "10696": {
+      "name": "Refuge Pointe Defender",
+      "mask": 1
+    },
+    "10897": {
+      "name": "Sindrayl",
+      "mask": 3
+    },
+    "11022": {
+      "name": "Alexi Barov",
+      "mask": 3
+    },
+    "11023": {
+      "name": "Weldon Barov",
+      "mask": 3
+    },
+    "11138": {
+      "name": "Maethrya",
+      "mask": 3
+    },
+    "11139": {
+      "name": "Yugrek",
+      "mask": 3
+    },
+    "11180": {
+      "name": "Bloodvenom Post Brave",
+      "mask": 2
+    },
+    "11878": {
+      "name": "Nathanos Blightcaller",
+      "mask": 3
+    },
+    "11885": {
+      "name": "Blighthound",
+      "mask": 3
+    },
+    "11898": {
+      "name": "Crusader Lord Valdelmar",
+      "mask": 3
+    },
+    "11899": {
+      "name": "Shardi",
+      "mask": 3
+    },
+    "11900": {
+      "name": "Brakkar",
+      "mask": 3
+    },
+    "11901": {
+      "name": "Andruk",
+      "mask": 3
+    },
+    "12338": {
+      "name": "Shadowprey Guardian",
+      "mask": 2
+    },
+    "12425": {
+      "name": "Flint Shadowmore",
+      "mask": 3
+    },
+    "12576": {
+      "name": "Grish Longrunner",
+      "mask": 2
+    },
+    "12577": {
+      "name": "Jarrodenus",
+      "mask": 3
+    },
+    "12578": {
+      "name": "Mishellena",
+      "mask": 3
+    },
+    "12596": {
+      "name": "Bibilfaz Featherwhistle",
+      "mask": 3
+    },
+    "12616": {
+      "name": "Vhulgra",
+      "mask": 3
+    },
+    "12617": {
+      "name": "Khaelyn Steelwing",
+      "mask": 3
+    },
+    "12636": {
+      "name": "Georgia",
+      "mask": 3
+    },
+    "12737": {
+      "name": "Mastok Wrilehiss",
+      "mask": 3
+    },
+    "12740": {
+      "name": "Faustron",
+      "mask": 3
+    },
+    "12836": {
+      "name": "Wandering Protector",
+      "mask": 1
+    },
+    "12859": {
+      "name": "Splintertree Raider",
+      "mask": 2
+    },
+    "12903": {
+      "name": "Splintertree Guard",
+      "mask": 2
+    },
+    "13177": {
+      "name": "Vahgruk",
+      "mask": 3
+    },
+    "13217": {
+      "name": "Thanthaldis Snowgleam",
+      "mask": 3
+    },
+    "13219": {
+      "name": "Jekyll Flandring",
+      "mask": 3
+    },
+    "13776": {
+      "name": "Corporal Teeka Bloodsnarl",
+      "mask": 3
+    },
+    "13777": {
+      "name": "Sergeant Durgen Stormpike",
+      "mask": 3
+    },
+    "13840": {
+      "name": "Warmaster Laggrond",
+      "mask": 3
+    },
+    "13841": {
+      "name": "Lieutenant Haggerdin",
+      "mask": 3
+    },
+    "14390": {
+      "name": "Expeditionary Mountaineer",
+      "mask": 3
+    },
+    "14393": {
+      "name": "Expeditionary Priest",
+      "mask": 3
+    },
+    "14715": {
+      "name": "Silverwing Elite",
+      "mask": 3
+    },
+    "14717": {
+      "name": "Horde Elite",
+      "mask": 3
+    },
+    "14733": {
+      "name": "Sentinel Farsong",
+      "mask": 3
+    },
+    "14753": {
+      "name": "Illiyana Moonblaze",
+      "mask": 3
+    },
+    "14754": {
+      "name": "Kelm Hargunth",
+      "mask": 3
+    },
+    "14781": {
+      "name": "Captain Shatterskull",
+      "mask": 3
+    },
+    "15126": {
+      "name": "Rutherford Twing",
+      "mask": 3
+    },
+    "15127": {
+      "name": "Samuel Hawke",
+      "mask": 3
+    },
+    "15128": {
+      "name": "Defiler Elite",
+      "mask": 3
+    },
+    "15130": {
+      "name": "League of Arathor Elite",
+      "mask": 3
+    },
+    "15136": {
+      "name": "Hammerfall Elite",
+      "mask": 2
+    },
+    "15137": {
+      "name": "Menethil Elite",
+      "mask": 1
+    },
+    "15177": {
+      "name": "Cloud Skydancer",
+      "mask": 3
+    },
+    "15178": {
+      "name": "Runk Windtamer",
+      "mask": 3
+    },
+    "15195": {
+      "name": "Wickerman Guardian",
+      "mask": 2
+    },
+    "15197": {
+      "name": "Darkcaller Yanka",
+      "mask": 3
+    },
+    "15199": {
+      "name": "Sergeant Hartman",
+      "mask": 3
+    },
+    "15414": {
+      "name": "Qiraji Wasp",
+      "mask": 3
+    },
+    "15421": {
+      "name": "Qiraji Drone",
+      "mask": 3
+    },
+    "15422": {
+      "name": "Qiraji Tank",
+      "mask": 3
+    },
+    "15440": {
+      "name": "Captain Blackanvil",
+      "mask": 3
+    },
+    "15442": {
+      "name": "Ironforge Brigade Footman",
+      "mask": 3
+    },
+    "15443": {
+      "name": "Janela Stouthammer",
+      "mask": 3
+    },
+    "15444": {
+      "name": "Arcanist Nozzlespring",
+      "mask": 3
+    },
+    "15612": {
+      "name": "Krug Skullsplit",
+      "mask": 3
+    },
+    "15613": {
+      "name": "Merok Longstride",
+      "mask": 3
+    },
+    "15615": {
+      "name": "Shadow Priestess Shai",
+      "mask": 3
+    },
+    "15616": {
+      "name": "Orgrimmar Legion Grunt",
+      "mask": 3
+    },
+    "15617": {
+      "name": "Orgrimmar Legion Axe Thrower",
+      "mask": 3
+    },
+    "15743": {
+      "name": "Colossal Anubisath Warbringer",
+      "mask": 3
+    },
+    "15744": {
+      "name": "Imperial Qiraji Destroyer",
+      "mask": 3
+    },
+    "15747": {
+      "name": "Qiraji Captain",
+      "mask": 3
+    },
+    "15748": {
+      "name": "Lesser Anubisath Warbringer",
+      "mask": 3
+    },
+    "15750": {
+      "name": "Qiraji Major",
+      "mask": 3
+    },
+    "15751": {
+      "name": "Anubisath Warbringer",
+      "mask": 3
+    },
+    "15753": {
+      "name": "Qiraji Brigadier General",
+      "mask": 3
+    },
+    "15754": {
+      "name": "Greater Anubisath Warbringer",
+      "mask": 3
+    },
+    "15758": {
+      "name": "Supreme Anubisath Warbringer",
+      "mask": 3
+    },
+    "15806": {
+      "name": "Qiraji Lieutenant",
+      "mask": 3
+    },
+    "15807": {
+      "name": "Minor Anubisath Warbringer",
+      "mask": 3
+    },
+    "15810": {
+      "name": "Eroded Anubisath Warbringer",
+      "mask": 3
+    },
+    "15812": {
+      "name": "Qiraji Officer",
+      "mask": 3
+    },
+    "15813": {
+      "name": "Qiraji Officer Zod",
+      "mask": 3
+    },
+    "15814": {
+      "name": "Qiraji Lieutenant Jo-rel",
+      "mask": 3
+    },
+    "15816": {
+      "name": "Qiraji Major He'al-ie",
+      "mask": 3
+    },
+    "15817": {
+      "name": "Qiraji Brigadier General Pax-lish",
+      "mask": 3
+    },
+    "15863": {
+      "name": "Darkspear Shaman",
+      "mask": 3
+    },
+    "15903": {
+      "name": "Sergeant Carnes",
+      "mask": 3
+    },
+    "16096": {
+      "name": "Steamwheedle Bruiser",
+      "mask": 3
+    },
+    "16392": {
+      "name": "Captain Armando Ossex",
+      "mask": 3
+    },
+    "16817": {
+      "name": "Festival Loremaster",
+      "mask": 3
+    },
+    "17765": {
+      "name": "Alliance Silithyst Sentinel",
+      "mask": 3
+    },
+    "17766": {
+      "name": "Horde Silithyst Sentinel",
+      "mask": 3
+    },
+    "133801": {
+      "name": "Xkinger",
+      "mask": 3
+    }
+  }
+}

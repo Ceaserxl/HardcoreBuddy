@@ -59,7 +59,7 @@ then choose Remove item to remove it from your list. The list
 is saved per character. Uncached items display their ID until their name loads.
 
 **Supplies > Scrolls** lists the highest usable rank of Agility, Strength,
-Stamina, Intellect, Spirit and Protection scrolls. Recommendations follow your
+Stamina, Intellect, Spirit and Protection scrolls. Recommendations follow your class and
 live or planned level, with exact-item bag counts, editable carry quantities
 and item details. The catalog covers all 24 Classic Era ranks.
 
@@ -197,7 +197,7 @@ This is an independent addon, not an official Blizzard product.
 ## Development and distribution
 
 GitHub Actions now builds each push and publishes numeric version tags to
-GitHub and CurseForge. Versions below 1.0 display **Beta** while retaining the
+GitHub and CurseForge. Explicit `vX.Y.Z-beta` tags publish beta releases. Numeric versions below 1.0 display **Beta** while retaining the
 normal **Release** type. See [release instructions](docs/RELEASING.md).
 
 The Death Journal also records the official Hardcore death-chat channel,
@@ -227,3 +227,30 @@ one top-level `HardcoreBuddy` folder, ready to extract into `Interface/AddOns`.
 Use `/reload` to load changes. The TOC targets interface 11509. Automated checks
 do not certify native rendering/focus; see `docs/VALIDATION.md` for results and
 remaining in-game checks.
+
+## Hunter pet spell upgrades
+
+**Supplies > Class** shows the active Hunter pet's learned spell ranks and the
+highest obtainable upgrade that meets both Hunter and pet level requirements.
+Each upgrade lists a beast, level range and zone, or directs you to a pet trainer.
+Click a skill to inspect its rank and sources. Normal outdoor beasts and nearby
+faction routes are preferred over elite/group sources. Check Beast Training
+before taming if your Hunter already knows the upgrade. Preview mode and missing
+pet data never imply a learned rank.
+
+Scroll recommendations use class roles: Agility for physical/hybrid classes,
+Strength for melee/hybrid classes, Intellect and Spirit for mana users, and
+Stamina and Protection for everyone. These are suggestions, not use restrictions.
+Custom items can still include any scroll.
+
+HardcoreBuddy automatically checks membership in the official HardcoreDeaths
+channel (localized for your client) after login/reload and rejoins if membership
+is lost. This is independent of optional community reports and death banners.
+Failed join requests are retried at most once per minute.
+
+Creature alerts include 226 NPC-ID exclusions based on the installed Unitscan
+Hardcore default elite/faction lists, including flight masters. Defaults respect
+the actual player faction, including while planning another character. These
+exclusions suppress both alerts and automatic raid markers. Rare and rare-elite
+warnings remain independent; Unitscan's unchecked rare category is not imported.
+The addon embeds its own table and does not require Unitscan to be installed.

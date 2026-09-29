@@ -69,7 +69,7 @@ jobs:
       - name: Stage shipping manifest
         id: release
         run: python scripts/prepare_ci_release.py
-      - name: Publish normal release with display label
+      - name: Publish tagged release with display label
         uses: BigWigsMods/packager@v2
         with:
           args: -c -o -e -l -u -p ${{ vars.CF_PROJECT_ID || secrets.CF_PROJECT_ID }} -n ${{ steps.release.outputs.name }}:${{ steps.release.outputs.name }}
@@ -82,4 +82,7 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
           RELEASE_NAME: ${{ steps.release.outputs.name }}
         shell: bash
-        run: gh release edit "$RELEASE_TAG" --title "${RELEASE_NAME//-/ }" --prerelease=false
+        run: |
+          prerelease=false
+          if [[ "$RELEASE_TAG" == *-beta ]]; then prerelease=true; fi
+          gh release edit "$RELEASE_TAG" --title "HardcoreBuddy $RELEASE_TAG" --prerelease="$prerelease"

@@ -1,7 +1,7 @@
 local addonName, addon = ...
 
 addon.name = addonName
-addon.version = "0.2.0"
+addon.version = "0.2.5-beta"
 local P = addon.Planner
 local classNames = {}
 for _, name in ipairs(P.classes) do classNames[name:upper()] = name end
@@ -245,7 +245,7 @@ function addon:Initialize()
         self:HandleSlashCommand(message)
     end
     for _, event in ipairs({"PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA", "PLAYER_LEVEL_UP", "PLAYER_XP_UPDATE", "UNIT_PET", "UNIT_LEVEL", "UNIT_FACTION", "BAG_UPDATE_DELAYED", "DISPLAY_SIZE_CHANGED", "UI_SCALE_CHANGED",
-        "SKILL_LINES_CHANGED", "SPELLS_CHANGED", "TRADE_SKILL_UPDATE", "TRADE_SKILL_SHOW", "GET_ITEM_INFO_RECEIVED"}) do
+        "PET_BAR_UPDATE", "SKILL_LINES_CHANGED", "SPELLS_CHANGED", "TRADE_SKILL_UPDATE", "TRADE_SKILL_SHOW", "GET_ITEM_INFO_RECEIVED"}) do
         self.events:RegisterEvent(event)
     end
     if self.db.window.visible then self:CreateWindow(); self.window:Show(); self:Refresh() end

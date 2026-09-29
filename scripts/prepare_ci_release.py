@@ -10,12 +10,12 @@ from package_release import ROOT, manifest
 def release_name(version, ref_type, ref_name):
     if ref_type != 'tag':
         return 'HardcoreBuddy-build'
-    match = re.fullmatch(r'v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)', ref_name)
+    match = re.fullmatch(r'v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-beta)?', ref_name)
     if not match:
-        raise ValueError('Release tags must be numeric, such as v0.2.0 or v1.0.0.')
+        raise ValueError('Release tags must be vX.Y.Z or vX.Y.Z-beta.')
     if ref_name[1:] != version:
         raise ValueError('Tag must match the versions in HardcoreBuddy.toc and Core.lua.')
-    suffix = '-Beta' if match[1] == '0' else ''
+    suffix = '-Beta' if match[1] == '0' and not match[4] else ''
     return f'HardcoreBuddy-{ref_name}{suffix}'
 
 

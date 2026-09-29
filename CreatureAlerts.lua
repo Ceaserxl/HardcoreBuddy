@@ -3,6 +3,17 @@ local H={seen={},groups={},plates={},pending={}}
 addon.CreatureAlerts=H
 local names={rare="Rare",rareelite="Rare elite",elite="Elite",worldboss="Boss"}
 
+function H:IsExcluded(unit)
+    local classification=UnitClassification(unit)
+    if classification=="rare" or classification=="rareelite" then return false end
+    local guid=UnitGUID(unit)
+    local id=guid and tonumber(guid:match("^Creature%-[^-]*%-[^-]*%-[^-]*%-[^-]*%-(%d+)%-"))
+    local mask=id and (addon.Data.CreatureAlertExclusions or {})[id]
+    if not mask then return false end
+    local faction=UnitFactionGroup and UnitFactionGroup("player")
+    return mask==3 or (mask==1 and faction=="Alliance") or (mask==2 and faction=="Horde")
+end
+
 function H:Suppressed()
     return (UnitOnTaxi and UnitOnTaxi("player")) or (UnitIsDeadOrGhost and UnitIsDeadOrGhost("player"))
 end
@@ -20,7 +31,7 @@ function H:Present()
     for id,candidate in pairs(self.pending) do
         local _,instanceType=IsInInstance()
         if not UnitExists(candidate.unit) or UnitGUID(candidate.unit)~=candidate.guid or now-candidate.time>2
-            or UnitIsDeadOrGhost(candidate.unit) or not self.settings[candidate.category].enabled
+            or UnitIsDeadOrGhost(candidate.unit) or self:IsExcluded(candidate.unit) or not self.settings[candidate.category].enabled
             or UnitClassification(candidate.unit)~=candidate.classification
             or UnitReaction(candidate.unit,"player")~=candidate.reactionValue
             or (candidate.reaction=="Neutral" and (not self.settings[candidate.category].nonHostile or not UnitCanAttack("player",candidate.unit)))
@@ -50,6 +61,7 @@ function H:Inspect(unit,retryMarker)
     if UnitIsPlayer(unit) or (UnitPlayerControlled and UnitPlayerControlled(unit)) or UnitIsDeadOrGhost(unit) then return end
     local classification=UnitClassification(unit)
     if not names[classification] then return end
+    if self:IsExcluded(unit) then return end
     local reaction=UnitReaction(unit,"player")
     if not reaction then return end
     local hostile=reaction<=3
