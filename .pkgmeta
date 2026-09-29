@@ -1,0 +1,15 @@
+package-as: HardcoreBuddy
+
+manual-changelog:
+  filename: RELEASE_NOTES.md
+  markup-type: markdown
+
+# CI stages the explicit shipping manifest before using packager -c -o.
+# These exclusions also keep common development files out of manual builds.
+ignore:
+  - .github
+  - tests
+  - reference
+  - .gitignore
+  - .release
+

@@ -196,6 +196,10 @@ This is an independent addon, not an official Blizzard product.
 
 ## Development and distribution
 
+GitHub Actions now builds each push and publishes numeric version tags to
+GitHub and CurseForge. Versions below 1.0 display **Beta** while retaining the
+normal **Release** type. See [release instructions](docs/RELEASING.md).
+
 The Death Journal also records the official Hardcore death-chat channel,
 independently of Blizzard's raid-warning selection. With chat set to everyone
 and warnings set to guild, received chat deaths enter the journal and compact

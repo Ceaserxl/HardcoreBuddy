@@ -1,10 +1,12 @@
-# HardcoreBuddy 0.1.0-beta.1
+# HardcoreBuddy v0.2.0 Beta
 
 First public beta for WoW Classic Era / Hardcore (interface 11509).
 
 - Field kit recommendations, editable carry targets and custom items.
 - Character planning, companion guidance and Hunter beast tooltips.
 - Death Journal, compact live feed and configurable death alerts.
+- Official death-chat reports are recorded independently of guild-only raid warnings.
+- Automated release packaging and validation for GitHub and CurseForge.
 - Low-health warnings and separate rare/elite detection alerts.
 - Dungeon and raid level ranges and packing lists with mob-specific item tips.
 

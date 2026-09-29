@@ -1,0 +1,76 @@
+name: Build and release
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        run: python -m pip install lupa Pillow
+      - name: Check release naming
+        run: python tests/release_workflow.py
+      - name: Test death module and Lua syntax
+        run: python tests/run_deaths.py
+      - name: Stage shipping manifest
+        id: release
+        run: python scripts/prepare_ci_release.py
+      - name: Build ZIP without publishing
+        uses: BigWigsMods/packager@v2
+        with:
+          args: -c -o -e -l -u -d -n ${{ steps.release.outputs.name }}:${{ steps.release.outputs.name }}
+      - name: Test packaged addon and media
+        run: python tests/run_release.py ".release/${{ steps.release.outputs.name }}.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HardcoreBuddy-build
+          path: .release/${{ steps.release.outputs.name }}.zip
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check publishing credentials
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_PROJECT_ID: ${{ vars.CF_PROJECT_ID || secrets.CF_PROJECT_ID }}
+        shell: bash
+        run: |
+          test -n "$CF_API_TOKEN" || { echo 'Missing CF_API_TOKEN secret'; exit 1; }
+          [[ "$CF_PROJECT_ID" =~ ^[1-9][0-9]*$ ]] || { echo 'CF_PROJECT_ID must be a numeric project ID'; exit 1; }
+      - name: Stage shipping manifest
+        id: release
+        run: python scripts/prepare_ci_release.py
+      - name: Publish normal release with display label
+        uses: BigWigsMods/packager@v2
+        with:
+          args: -c -o -e -l -u -p ${{ vars.CF_PROJECT_ID || secrets.CF_PROJECT_ID }} -n ${{ steps.release.outputs.name }}:${{ steps.release.outputs.name }}
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
