@@ -15,8 +15,7 @@ def release_name(version, ref_type, ref_name):
         raise ValueError('Release tags must be numeric, such as v0.2.0 or v1.0.0.')
     if ref_name[1:] != version:
         raise ValueError('Tag must match the versions in HardcoreBuddy.toc and Core.lua.')
-    suffix = '-Beta' if match[1] == '0' else ''
-    return f'HardcoreBuddy-{ref_name}{suffix}'
+    return f'HardcoreBuddy-{ref_name}'
 
 
 def main():

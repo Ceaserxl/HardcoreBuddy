@@ -84,7 +84,7 @@ local function modelSupply(id,stock)
         end end
     end
 end
-MOCK.Click(f.filters[4]); assert(A.state.filter=="Potions")
+MOCK.Click(f.filters[5]); assert(A.state.filter=="Potions")
 local healing=findRow(healId); assert(healing and healing.block.count==3 and healing.block.status=="low")
 assert(healing.count:GetText()=="3" and healing.quantity:GetText()=="5")
 healing.quantity:SetFocus(); healing.quantity:SetText("9"); healing.quantity.scripts.OnEnterPressed(healing.quantity)
@@ -132,7 +132,7 @@ A.characterDB.targets[tostring(healId)]=11
 A:SetCarryTarget(healId,""); A:Refresh()
 assert(A.characterDB.targets[tostring(healId)]==nil and findRow(healId).block.target==5)
 -- Automatic anti-venom counts and filters use the exact learned item.
-MOCK.Click(f.filters[5]); assert(A.state.filter=="Emergency")
+MOCK.Click(f.filters[6]); assert(A.state.filter=="Emergency")
 local savedProfessions=A.professions
 local anti=A.Professions.recipes.antivenom[1]
 A.professions={available=true,skills={bandage=anti.craftSkill,dummy=0},known={[anti.spellId]=true}}
@@ -146,7 +146,7 @@ A:SetCarryTarget(6452,0); A:Refresh(); assert(not modelSupply(6452,"Missing"))
 assert(findRow(6452).block.status=="off")
 A:SetCarryTarget(6452,3); A:Refresh()
 A.professions=savedProfessions; A:Refresh()
-MOCK.Click(f.filters[4]); assert(A.state.filter=="Potions")
+MOCK.Click(f.filters[5]); assert(A.state.filter=="Potions")
 -- Bank contents are not counted, bags refresh in Preview, and unknown never becomes missing.
 MOCK.Click(f.mode); assert(A:GetContext().mode=="preview")
 A:SetProfile("characterClass","Hunter"); A:SetLevel(32)
@@ -270,7 +270,7 @@ for index,category in ipairs(expectedCategories) do
 end
 assert(total==A.document.total and total>12,"All supplies still truncates the list to one page")
 for index,category in ipairs(expectedCategories) do
-    MOCK.Click(f.filters[index+1])
+    MOCK.Click(f.filters[index+2])
     local actual={}
     for page=1,A.document.pages do
         for _,card in ipairs(A.document.cards) do for _,block in ipairs(card.blocks) do
@@ -320,7 +320,7 @@ for _,example in ipairs({{8951,195,29},{9030,215,32}}) do
     assert(byLabel["Profession rank"].value:find("Expert",1,true))
     assert(byLabel["Use level"].value=="Level "..example[3])
     assert(f.sidebar:IsShown(),"Item detail lost sidebar navigation")
-    MOCK.Click(f.filters[4]); assert(not A.document.isDetail and A.state.filter=="Potions" and #A.history==0)
+    MOCK.Click(f.filters[5]); assert(not A.document.isDetail and A.state.filter=="Potions" and #A.history==0)
 end
 A:Navigate("training")
 for _,index in ipairs({2,3,4}) do

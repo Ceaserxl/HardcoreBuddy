@@ -51,6 +51,7 @@ local function Edit(parent,width,x,y,numeric)
 end
 local function Drag(frame, key, height)
     local handle = CreateFrame("Frame", nil, frame)
+    frame.dragHandle=handle
     handle:SetPoint("TOPLEFT", 8, -8)
     handle:SetPoint("TOPRIGHT", -36, -8)
     handle:SetHeight(height)
@@ -188,11 +189,12 @@ function H:Refresh()
 end
 function H:ApplySettings()
     local s = self.db.settings
+    if self.ApplyAppearance then self:ApplyAppearance() end
     s.alertDuration=self.NormalizeAlertDuration(s.alertDuration)
     self.db.positions = self.db.positions or {}
     for key, f in pairs({ mini=self.mini, alert=self.alert }) do
         local scale=s.scale
-        if key=="alert" then scale=math.min(scale,math.max(0.1,(UIParent:GetWidth()-24)/896)) end
+        if key=="alert" then scale=math.min(scale,math.max(0.1,(UIParent:GetWidth()-24)/f:GetWidth())) end
         f:SetScale(scale)
         f:ClearAllPoints()
         local p = self.db.positions[key]
@@ -220,16 +222,18 @@ function H:ApplySettings()
     self.options.alertLevel:SetText(tostring(s.minAlertLevel))
     if not self.options.duration:HasFocus() then self.options.duration:SetText(tostring(s.alertDuration)) end
     self:UpdateAnnouncementReplacement()
-    if not s.alerts then
+    if not s.alerts and not self.alert.positioning then
         self.alert:Hide()
     end
     self:Refresh()
 end
 function H:ShowAlert(record, preview)
     local a = self.alert
+    if a.positioning and not preview then return end
+    if self.ApplyAppearance then self:ApplyAppearance() end
     a.name:SetText(record.name .. "  |  Level " .. (record.level or "?"))
     a.description:SetText(self:Cause(record).."  |  "..(record.zone or "Location not reported"))
-    for _,entry in ipairs({{a.name,28,22},{a.description,16,14}}) do
+    for _,entry in ipairs({{a.name,a.nameSize or 28,a.nameMinimum or 22},{a.description,a.detailSize or 16,12}}) do
         local label,size,minimum=unpack(entry)
         label:SetFont(STANDARD_TEXT_FONT,size,"")
         while size>minimum and label:GetStringWidth()>label:GetWidth() do
@@ -238,13 +242,13 @@ function H:ShowAlert(record, preview)
     end
     -- Keep the banner artwork undistorted. Long text uses the available
     -- center width without repeating the name and level from the line above.
-    a:SetHeight(80)
+    if not self.ApplyAppearance then a:SetHeight(80) end
     a.record = record
     a.elapsed = 0
     a.holdDuration=self.NormalizeAlertDuration(self.db.settings.alertDuration)
     a:SetAlpha(1)
     a:Show()
-    self:PlayAlertSound()
+    if not a.positioning then self:PlayAlertSound() end
 end
 function H:LayoutPage(parent,left,top,width,height,state)
     self.host:SetParent(parent)
@@ -254,8 +258,9 @@ function H:LayoutPage(parent,left,top,width,height,state)
     self.mode="all"
     if self.lastFilter~=state.filter then self.page=1; self.lastFilter=state.filter end
     self.rowsPerPage=math.max(1,math.min(13,math.floor((height-216)/32)))
-    self.window:SetShown(state.filter~="Options" and not state.deathRecord)
+    self.window:SetShown(state.filter~="Options" and state.filter~="Appearance" and not state.deathRecord)
     self.options:SetShown(state.filter=="Options" and not state.deathRecord)
+    if self.appearance then self.appearance:SetShown(state.filter=="Appearance" and not state.deathRecord) end
     self.details:SetShown(state.deathRecord~=nil)
     self.details.body:SetWidth(width-70)
     self.details.content:SetWidth(width-65)
@@ -358,6 +363,7 @@ function H:BuildUI()
     local alert=Panel("HardcoreBuddyDeathsAlert",896,80);self.alert=alert
     alert:SetFrameStrata("HIGH")
     alert:SetScript("OnUpdate",function(banner,elapsed)
+        if banner.positioning then return end
         banner.elapsed = (banner.elapsed or 0) + elapsed
         local duration=banner.holdDuration or 3
         if banner.elapsed >= duration+0.5 then
@@ -397,6 +403,7 @@ function H:BuildUI()
         label:SetShadowColor(0,0,0,1); label:SetShadowOffset(1,-1)
     end
     Drag(alert,"alert",64)
+    if self.BuildAppearance then self:BuildAppearance(host) end
 
     local options=Page(host); self.options=options
     Text(options,22,"TOPLEFT",20,-16,700):SetText("Death alerts & feed")

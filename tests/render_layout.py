@@ -26,7 +26,11 @@ def font(size, path=None):
     filename = 'georgiab.ttf' if 'morpheus' in source else 'segoeui.ttf'
     local = ROOT / str(path or '').replace('\\', '/')
     filename = str(local) if local.suffix.lower() in ('.ttf', '.otf') and local.is_file() else str(Path('C:/Windows/Fonts') / filename)
-    return ImageFont.truetype(filename, max(1, int(size)))
+    try:
+        return ImageFont.truetype(filename, max(1, int(size)))
+    except OSError:
+        # CI has no Windows fonts; these remain approximate layout checks.
+        return ImageFont.load_default(size=max(1, int(size)))
 
 
 def plain(text):

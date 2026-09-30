@@ -146,6 +146,11 @@ function H:Scan()
         if self.soundHandle and StopSound then StopSound(self.soundHandle); self.soundHandle=nil end
         return
     end
+    local _,instanceType=IsInInstance()
+    if (instanceType=="party" or instanceType=="raid") and self.warning.category=="elites" then
+        self.warning:Hide(); self.screenFlash:Hide()
+        if self.soundHandle and StopSound then StopSound(self.soundHandle); self.soundHandle=nil end
+    end
     self.collecting=true
     self:Inspect("target"); self:Inspect("mouseover")
     for unit in pairs(self.plates) do self:Inspect(unit) end
@@ -233,7 +238,7 @@ function H:LayoutSettings(parent,x,y,width,height,section,visible)
             t:SetJustifyH("LEFT"); t:SetText(value); return t
         end
         p.title=text("",22,-16); p.title:SetTextColor(unpack(addon.Skin.colors.gold))
-        text("Warns when a creature appears on a nameplate, your target, or mouseover.",13,-52)
+        text("Warns on nameplates, target or mouseover. Elites are muted in dungeons/raids; rares stay active.",12,-52)
         for i,entry in ipairs({{"enabled","Enable warnings"},{"sound","Play alert sound"},{"nonHostile","Include attackable neutral elites"}}) do
             local key=entry[1]
             local b=CreateFrame("CheckButton",nil,p,"BackdropTemplate"); p.checks[key]=b
@@ -304,8 +309,9 @@ events:SetScript("OnEvent",function(_,event,unit)
     if event=="ADDON_LOADED" then
         if unit~=addonName then return end
         H:Initialize(); events:UnregisterEvent("ADDON_LOADED")
-        for _,name in ipairs({"PLAYER_REGEN_ENABLED","PLAYER_ENTERING_WORLD","PLAYER_TARGET_CHANGED","UPDATE_MOUSEOVER_UNIT","NAME_PLATE_UNIT_ADDED","NAME_PLATE_UNIT_REMOVED","UNIT_FACTION","UNIT_CLASSIFICATION_CHANGED"}) do events:RegisterEvent(name) end
+        for _,name in ipairs({"PLAYER_REGEN_ENABLED","PLAYER_ENTERING_WORLD","ZONE_CHANGED_NEW_AREA","PLAYER_TARGET_CHANGED","UPDATE_MOUSEOVER_UNIT","NAME_PLATE_UNIT_ADDED","NAME_PLATE_UNIT_REMOVED","UNIT_FACTION","UNIT_CLASSIFICATION_CHANGED"}) do events:RegisterEvent(name) end
     elseif event=="PLAYER_REGEN_ENABLED" then H:SyncTargetButton()
+    elseif event=="ZONE_CHANGED_NEW_AREA" then H:Scan()
     elseif event=="NAME_PLATE_UNIT_REMOVED" then H.plates[unit]=nil
     elseif event=="NAME_PLATE_UNIT_ADDED" then H.plates[unit]=true; H:Inspect(unit)
     elseif event=="PLAYER_TARGET_CHANGED" then H:Inspect("target",true)

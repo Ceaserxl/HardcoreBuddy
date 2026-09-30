@@ -3,7 +3,7 @@
 ## IconTexture: Interface\AddOns\HardcoreBuddy\Media\SurvivorShield.tga
 ## Notes: Hardcore Field Kit: carry recommendations, common pet training, demons and quivers for Classic Era levels 1-60, with death journal, live feed and alerts.
 ## Author: CeaserXL
-## Version: 0.2.5
+## Version: 0.3.0
 ## SavedVariables: HardcoreBuddyDB
 ## SavedVariablesPerCharacter: HardcoreBuddyCharacterDB
 
@@ -23,6 +23,7 @@ Planner.lua
 Inventory.lua
 Professions.lua
 Crafting.lua
+Ammunition.lua
 Supplies.lua
 Guide.lua
 Instances.lua
@@ -31,6 +32,7 @@ Companion.lua
 Skin.lua
 Core.lua
 UI.lua
+Readiness.lua
 Minimap.lua
 LowHealth.lua
 Data\CreatureAlertExclusions.lua
@@ -40,4 +42,5 @@ HunterTooltips.lua
 Deaths\Model.lua
 Deaths\Core.lua
 Deaths\UI.lua
+Deaths\Appearance.lua
 Deaths\Events.lua

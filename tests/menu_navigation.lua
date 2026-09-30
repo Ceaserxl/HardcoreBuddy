@@ -207,7 +207,7 @@ A:SetProfile("mode","preview")
 -- Exact reported failure: the first pooled supply Button becomes the inert
 -- stock row inside Elixir of Agility, then regains its highlight after Back.
 A:SetProfile("characterClass","Hunter"); A:SetLevel(32)
-MOCK.Click(f.tabs[1]); MOCK.Click(f.filters[3])
+MOCK.Click(f.tabs[1]); MOCK.Click(f.filters[4])
 local function agilityRow()
     for _,card in ipairs(f.cards) do if card:IsShown() then
         for _,row in ipairs(card.content.blocks) do if row:IsShown() and row.block.itemId==8949 then return row end end
@@ -242,8 +242,8 @@ for _,class in ipairs(A.Planner.classes) do
     for _,level in ipairs({1,9,10,32,60}) do
         A:SetLevel(level)
         MOCK.Click(f.tabs[1]); assert(A.state.view=="supplies")
-        for filterIndex=1,#A.Supplies.categories do
-            MOCK.Click(f.filters[filterIndex]); assert(A.state.filter==A.Supplies.categories[filterIndex])
+        for filterIndex=1,#A.Supplies.filters do
+            MOCK.Click(f.filters[filterIndex]); assert(A.state.filter==A.Supplies.filters[filterIndex])
             walkPages(0)
             assert((A.state.query or "")=="" and (A.state.stock or "All")=="All","Supplies retains a filter with no visible control")
         end

@@ -11,7 +11,7 @@ C_Item.GetItemInfo=function(id)
  if id==12345 and loaded then return "Test Item",nil,nil,nil,12 end
 end
 assert(A.Supplies.categories[8]=="Optional" and A.Supplies.categories[9]=="User")
-A:Navigate("supplies"); MOCK.Click(A.window.filters[9])
+A:Navigate("supplies"); MOCK.Click(A.window.filters[10])
 local entry=A.window.userEntry
 assert(entry:IsVisible())
 local hint=entry.hint:GetText()
@@ -39,10 +39,10 @@ MOCK.Click(A.window.userRemove)
 assert(#A.characterDB.userItems==1 and A.state.filter=="User" and not A.window.userRemove:IsShown())
 assert(A.characterDB.targets[6948]==3)
 assert(not A:EditUserItem("999",true))
-assert(A.window.filters[5].navIcon.texture~=A.window.filters[4].navIcon.texture)
+assert(A.window.filters[6].navIcon.texture~=A.window.filters[5].navIcon.texture)
 local saved=A.characterDB
 A:Initialize(); assert(A.characterDB==saved and #A.characterDB.userItems==1)
-A:Navigate("supplies"); MOCK.Click(A.window.filters[9])
+A:Navigate("supplies"); MOCK.Click(A.window.filters[10])
 print("PASS: User add/link parsing, invalid input, duplicates, uncached resolution, bag counts, carry targets, remove, persistence, details/back and distinct Emergency icon.")
 ''')
 composite(lua.globals().MOCK['frames'],a['window']).convert('RGB').save(ROOT/'docs/layout-previews/hardcorebuddy-user-items.png')

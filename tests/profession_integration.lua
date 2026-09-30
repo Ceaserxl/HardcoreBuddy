@@ -67,7 +67,7 @@ local function expect(family,itemId)
     return row
 end
 local function supplies()
-    MOCK.Click(f.tabs[1]); MOCK.Click(f.filters[5])
+    MOCK.Click(f.tabs[1]); MOCK.Click(f.filters[6])
     check(A.state.filter=="Emergency")
 end
 local function modelBlock(stock,predicate)

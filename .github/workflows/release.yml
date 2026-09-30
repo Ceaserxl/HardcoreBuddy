@@ -28,6 +28,8 @@ jobs:
         run: python tests/release_workflow.py
       - name: Test death module and Lua syntax
         run: python tests/run_deaths.py
+      - name: Test preparation and alert controls
+        run: python tests/run_preparation.py
       - name: Stage shipping manifest
         id: release
         run: python scripts/prepare_ci_release.py

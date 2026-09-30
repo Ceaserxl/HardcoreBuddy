@@ -137,7 +137,7 @@ assert(H.window:IsVisible(), "details opened from options return to reports")
 print("PASS: Journal search, level filtering, empty state, pagination, row details/back and class-change continuity.")
 
 assert(A.window.filters[2].label:GetText()=="Options")
-assert(not A.window.filters[3] or not A.window.filters[3]:IsShown(),"no Watchlist sidebar entry")
+assert(A.window.filters[3].label:GetText()=="Appearance","no Watchlist sidebar entry")
 local count=#H.db.records
 MOCK.Click(A.window.filters[2])
 assert(H.options:IsVisible())
@@ -159,7 +159,7 @@ H:Refresh()
 print("PASS: Watching removed; real-record preview prefers current realm, falls back across realms, preserves history and uses samples only for empty history.")
 
 assert(A.window.filters[1].label:GetText()=="Reports" and A.window.filters[2].label:GetText()=="Options")
-assert(not A.window.filters[3] or not A.window.filters[3]:IsShown(),"Verified tab is removed")
+assert(A.window.filters[3].label:GetText()=="Appearance","Verified tab is removed")
 assert(H.db.settings.alertDuration==3,"existing installs keep three-second hold")
 for _,pair in ipairs({{-1,1},{0,1},{1,1},{30,30},{90,30},{7.8,7},{"bad",3},{math.huge,3},{0/0,3}}) do
     assert(H.NormalizeAlertDuration(pair[1])==pair[2])
@@ -216,6 +216,7 @@ for _,row in ipairs(H.window.rows) do if row:IsVisible() then
 end end
 local raw={name="Bellef",level=17,realm="Realm",date=4000,source="Blizzard",cause="a Defias Knuckleduster",
     zone="Sentinel Hill",message="[Bellef] has been slain by a Defias Knuckleduster in Sentinel Hill! They were level 17"}
+H.db.settings.alertStyle="Banner"
 H:ShowAlert(raw,true)
 assert(H.alert.description:GetText()=="Defias Knuckleduster  |  Sentinel Hill")
 assert(raw.cause=="a Defias Knuckleduster" and raw.message:find("%[Bellef%]"),"original report remains intact")
@@ -229,7 +230,7 @@ assert(H.alert.name.justifyH=="CENTER" and H.alert.description.justifyH=="CENTER
 assert(H.alert.name.fontSize==28 and H.alert.description.fontSize==16,"short alerts use the enlarged typography")
 H:ShowAlert({name=string.rep("W",35),level=60,cause=string.rep("D",40),zone=string.rep("Z",40)},true)
 assert(H.alert.name.fontSize<=28 and H.alert.name.fontSize>=22)
-assert(H.alert.description.fontSize<=16 and H.alert.description.fontSize>=14)
+assert(H.alert.description.fontSize<=16 and H.alert.description.fontSize>=12)
 assert(H.alert.name:GetStringWidth()<=H.alert.name:GetWidth())
 assert(H.alert.description:GetStringWidth()<=H.alert.description:GetWidth())
 H:ShowAlert(raw,true)

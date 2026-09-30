@@ -4,7 +4,8 @@ H.MEDIA = "Interface\\AddOns\\HardcoreBuddy\\Media\\Deaths\\"
 H.channel = "hcdeathalertschannel"
 H.channelPassword = "hcdeathalertschannelpw"
 H.defaults = {
-    scale = 1, mini = true, alerts = true, sound = true, locked = false,
+    scale = 1, mini = true, alerts = true, sound = true, locked = true,
+    alertStyle = "Compact", backgroundOpacity = 65,
     community = false, minAlertLevel = 1, alertDuration = 3, volume = 70, alertSound = "RaidWarning",
 }
 H.soundChoices={

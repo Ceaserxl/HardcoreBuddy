@@ -1,7 +1,7 @@
 local addonName, addon = ...
 
 addon.name = addonName
-addon.version = "0.2.5"
+addon.version = "0.3.0"
 local P = addon.Planner
 local classNames = {}
 for _, name in ipairs(P.classes) do classNames[name:upper()] = name end
@@ -17,22 +17,22 @@ function addon:ShowKitUpdate(level, changes)
     local summary=table.concat(changes, ", ")
     self:Print("Field Kit updated for level "..level..": "..summary..". Open /hcb to review.")
     if not self.kitAlert then
-        local frame=CreateFrame("Button",nil,UIParent,"BackdropTemplate")
-        frame:SetSize(480,100)
-        frame:SetPoint("TOP",UIParent,"TOP",0,-180)
-        frame:SetFrameStrata("DIALOG")
-        self.Skin.Paint(frame,"menu")
+        local frame=CreateFrame("Button",nil,UIParent)
+        frame:SetSize(350,48)
+        frame:SetPoint("TOPRIGHT",UIParent,"TOPRIGHT",-48,-260)
+        frame:SetFrameStrata("HIGH")
+        frame:SetClampedToScreen(true)
         local function label(size,y,height)
             local text=frame:CreateFontString(nil,"OVERLAY","GameFontHighlight")
             text:SetFont(STANDARD_TEXT_FONT,size,"")
-            text:SetPoint("TOPLEFT",18,y); text:SetSize(444,height)
-            text:SetJustifyH("CENTER")
+            text:SetPoint("TOPLEFT",0,y); text:SetSize(350,height)
+            text:SetJustifyH("LEFT")
+            text:SetShadowColor(0,0,0,1); text:SetShadowOffset(1,-1)
             return text
         end
-        frame.title=label(18,-12,22)
+        frame.title=label(13,-4,19)
         frame.title:SetTextColor(unpack(self.Skin.colors.gold))
-        frame.summary=label(13,-38,32)
-        frame.hint=label(11,-77,14); frame.hint:SetText("Click to open your field kit")
+        frame.summary=label(11,-25,18)
         frame:SetScript("OnClick",function()
             self.db.profile.mode="live"
             self.state={view="supplies",filter="All",page=1}; self.history={}
@@ -41,16 +41,14 @@ function addon:ShowKitUpdate(level, changes)
         end)
         frame:SetScript("OnUpdate",function(_,elapsed)
             frame.elapsed=frame.elapsed+elapsed
-            if frame.elapsed>=8.5 then frame:Hide()
-            elseif frame.elapsed>8 then frame:SetAlpha(1-(frame.elapsed-8)/0.5) end
+            if frame.elapsed>=4.5 then frame:Hide()
+            elseif frame.elapsed>4 then frame:SetAlpha(1-(frame.elapsed-4)/0.5) end
         end)
         self.kitAlert=frame
     end
     local frame=self.kitAlert
-    frame.title:SetText("Field Kit Updated  |  Level "..level)
-    local names={}
-    for i=1,math.min(3,#changes) do names[i]=changes[i] end
-    frame.summary:SetText(table.concat(names,", ")..(#changes>3 and (" +"..(#changes-3).." more") or ""))
+    frame.title:SetText("HardcoreBuddy: supply upgrades available")
+    frame.summary:SetText("Level "..level.."  |  Click to review your field kit")
     frame.elapsed=0; frame:SetAlpha(1); frame:Show()
 end
 
@@ -158,6 +156,8 @@ function addon:GetContext()
     context.targets = self.characterDB and self.characterDB.targets or {}
     context.ranks = self.characterDB and self.characterDB.ranks or {}
     context.userItems = self.characterDB and self.characterDB.userItems or {}
+    context.priorities = self.characterDB and self.characterDB.priorities or {}
+    context.previewAmmo = self.characterDB and self.characterDB.previewAmmo or "arrows"
     return context
 end
 
@@ -180,7 +180,8 @@ function addon:SetCarryTarget(itemId,value)
     else
         local n=tonumber(value)
         if not n or n~=n or math.abs(n)==math.huge then return end
-        self.characterDB.targets[itemId]=math.max(0,math.min(200,math.floor(n)))
+        local limit=self.Ammunition and self.Ammunition.items[itemId] and 10000 or 200
+        self.characterDB.targets[itemId]=self.Supplies.NormalizeTarget(n,limit)
     end
     self.characterDB.targets[tostring(itemId)]=nil
     for _,item in ipairs(self.Data.Items.items) do
@@ -189,6 +190,18 @@ function addon:SetCarryTarget(itemId,value)
         end
     end
     self.needsRefresh=true
+end
+
+function addon:CyclePriority(item)
+    if not item then return end
+    local values=self.Supplies.priorities
+    local current=self.Supplies.Priority(self:GetContext(),item)
+    -- Tier upgrades retain the family's preference; custom items have unique families.
+    local key=item.family or item.itemId
+    for i,value in ipairs(values) do
+        if current==value then self.characterDB.priorities[key]=values[i%#values+1]; break end
+    end
+    self:Refresh()
 end
 
 function addon:SelectSupplyRank(family,itemId)
@@ -219,6 +232,7 @@ function addon:Initialize()
     if type(self.characterDB.targets)~="table" then self.characterDB.targets={} end
     if type(self.characterDB.ranks)~="table" then self.characterDB.ranks={} end
     if type(self.characterDB.userItems)~="table" then self.characterDB.userItems={} end
+    if type(self.characterDB.priorities)~="table" then self.characterDB.priorities={} end
     for _,item in ipairs(self.characterDB.userItems) do self:UpdateUserItem(item) end
     self.db.profile = P.NormalizeProfile(self.db.profile)
     -- Preserve saved preview choices before the first click or schema migration.
@@ -245,7 +259,7 @@ function addon:Initialize()
         self:HandleSlashCommand(message)
     end
     for _, event in ipairs({"PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA", "PLAYER_LEVEL_UP", "PLAYER_XP_UPDATE", "UNIT_PET", "UNIT_LEVEL", "UNIT_FACTION", "BAG_UPDATE_DELAYED", "DISPLAY_SIZE_CHANGED", "UI_SCALE_CHANGED",
-        "PET_BAR_UPDATE", "SKILL_LINES_CHANGED", "SPELLS_CHANGED", "TRADE_SKILL_UPDATE", "TRADE_SKILL_SHOW", "GET_ITEM_INFO_RECEIVED"}) do
+        "PLAYER_EQUIPMENT_CHANGED", "UNIT_INVENTORY_CHANGED", "PET_BAR_UPDATE", "SKILL_LINES_CHANGED", "SPELLS_CHANGED", "TRADE_SKILL_UPDATE", "TRADE_SKILL_SHOW", "GET_ITEM_INFO_RECEIVED"}) do
         self.events:RegisterEvent(event)
     end
     if self.db.window.visible then self:CreateWindow(); self.window:Show(); self:Refresh() end
@@ -260,6 +274,7 @@ events:SetScript("OnEvent", function(self, event, arg, success)
         addon:Initialize()
     elseif addon.db then
         if event=="GET_ITEM_INFO_RECEIVED" then
+            addon.needsRefresh=true
             for _,item in ipairs(addon.characterDB.userItems) do
                 if item.itemId==arg then
                     if success==false then item.short="Item information unavailable. Check the item ID."

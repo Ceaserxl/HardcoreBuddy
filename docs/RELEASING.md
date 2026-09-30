@@ -6,8 +6,7 @@ do not publish to addon services.
 
 Pushing a numeric version tag publishes to GitHub Releases and CurseForge,
 after the build and tests pass. Both services receive a normal Release.
-Versions below 1.0 use a display name such as `HardcoreBuddy-v0.2.0-Beta`;
-1.0 and later use `HardcoreBuddy-v1.0.0`. Beta is a display label only.
+All versions use a numeric display name such as `HardcoreBuddy-v0.2.5`.
 
 ## Repository settings
 
@@ -28,9 +27,8 @@ Versions below 1.0 use a display name such as `HardcoreBuddy-v0.2.0-Beta`;
    git push origin v0.2.0
    ```
 
-Use numeric tags without `-beta` or `-alpha`; the workflow adds the Beta label
-automatically. Invalid tags or mismatched versions fail before publishing.
-The current source version is `0.2.0`, matching the `v0.2.0` release tag.
+Use numeric tags without suffixes. Invalid tags or mismatched versions fail
+before publishing. Read the current version from `HardcoreBuddy.toc`.
 Manual workflow runs only build; publishing requires a tag push.
 
 ## Packaging

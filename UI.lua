@@ -111,6 +111,7 @@ local function newBlock(parent)
     frame.fields = {}
     frame.count=font(frame,14,WHITE); frame.count:SetJustifyH("CENTER")
     frame.stock=font(frame,12,MUTED)
+    frame.priority=font(frame,10,MUTED)
     frame.stockTrack=frame:CreateTexture(nil,"ARTWORK",nil,-1); frame.stockTrack:SetTexture("Interface\\Buttons\\WHITE8x8")
     frame.stockTrack:SetVertexColor(0.06,0.07,0.055,1); frame.stockTrack:SetSize(60,3)
     frame.stockFill=frame:CreateTexture(nil,"ARTWORK"); frame.stockFill:SetTexture("Interface\\Buttons\\WHITE8x8"); frame.stockFill:SetHeight(3)
@@ -120,7 +121,7 @@ local function newBlock(parent)
     frame.quantity=CreateFrame("EditBox",nil,frame,"BackdropTemplate")
     local edit=frame.quantity
     Skin.Paint(edit,"edit"); edit:SetFont(STANDARD_TEXT_FONT,14,""); edit:SetTextColor(unpack(WHITE))
-    edit:SetAutoFocus(false); edit:SetNumeric(true); edit:SetMaxLetters(3); edit:SetJustifyH("CENTER")
+    edit:SetAutoFocus(false); edit:SetNumeric(true); edit:SetMaxLetters(5); edit:SetJustifyH("CENTER")
     edit:SetScript("OnEditFocusLost",function(self)
         if not self.cancelCommit then addon:SetCarryTarget(self.targetKey,self:GetText()) end
     end)
@@ -138,6 +139,7 @@ end
 local renderBlocks
 local function renderBlock(frame, block, width)
     frame.block = block; frame:SetWidth(width); frame:Show()
+    frame.priority:SetShown(block.supply and block.priority~=nil)
     frame.body:SetFont(STANDARD_TEXT_FONT,block.guideTone and 12 or 11,"")
     frame.body:SetTextColor(unpack(block.guideTone and WHITE or MUTED))
     if frame.quantity:HasFocus() and (frame.quantity.targetKey~=block.targetKey
@@ -190,8 +192,8 @@ local function renderBlock(frame, block, width)
     local icon = block.itemId ~= nil or block.icon ~= nil
     frame.icon:SetShown(icon); frame.iconHit:SetShown(icon); frame.iconBorder:SetShown(icon)
     if icon then
-        local texture = block.icon and block.icon:match("([^/]+)%.%w+$")
-        local native
+        local texture = type(block.icon)=="string" and block.icon:match("([^/]+)%.%w+$")
+        local native=type(block.icon)=="number" and block.icon or nil
         local getIcon=C_Item and C_Item.GetItemIconByID or GetItemIcon
         if getIcon and block.itemId then local ok,value=pcall(getIcon,block.itemId); if ok then native=value end end
         native=native or (texture and ("Interface\\Icons\\" .. texture)) or "Interface\\Icons\\INV_Misc_QuestionMark"
@@ -269,7 +271,12 @@ local function renderBlock(frame, block, width)
         local function center(element,left,offset)
             element:ClearAllPoints(); element:SetPoint("LEFT",frame,"LEFT",left,offset or 0)
         end
-        center(frame.title,x)
+        center(frame.title,x,block.priority and 7 or 0)
+        if block.priority then
+            frame.title:SetHeight(20)
+            frame.priority:SetSize(math.floor(available*0.42),14)
+            center(frame.priority,x,-11); frame.priority:SetText(block.priority)
+        end
         center(frame.body,x+math.floor(available*0.42)+16)
         center(frame.count,width-204)
         center(frame.quantity,width-142)
@@ -496,6 +503,14 @@ function addon:CreateWindow()
             self.state={view="supplies",filter="User",page=1}; self.history={}; self:Refresh(true)
         end
     end)
+    f.priorityChoice=button(f,"",190,function() self:CyclePriority(f.priorityChoice.item) end)
+    f.ammoChoice=button(f,"",200,function()
+        local values={"arrows","bullets","thrown","none"}
+        for i,value in ipairs(values) do if (self.characterDB.previewAmmo or "arrows")==value then
+            self.characterDB.previewAmmo=values[i%#values+1]; break
+        end end
+        self:Refresh(true)
+    end)
     entry.input:SetScript("OnEnterPressed",function() editUser(false) end)
     entry.input:SetScript("OnEscapePressed",function(box) box:ClearFocus() end)
     entry:SetScript("OnHide",function() entry.input:ClearFocus() end)
@@ -535,7 +550,7 @@ end
 function addon:OpenDeaths(section, record)
     self:CreateWindow()
     self:CommitInputs()
-    self.state={view="deaths",filter=section=="Options" and "Options" or "Reports",deathRecord=record,page=1}
+    self.state={view="deaths",filter=(section=="Options" or section=="Appearance") and section or "Reports",deathRecord=record,page=1}
     self.history={}
     self.window.classMenu:Hide()
     self.window:Show()
@@ -590,6 +605,7 @@ function addon:Refresh(resetScroll)
     if resetScroll then self.window.scroll:SetVerticalScroll(0) end
 end
 local FILTER_ICONS={
+    Essentials="INV_Misc_Bag_08",Preparation="INV_Misc_Note_01",Appearance="INV_Misc_Book_09",
     ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
     ["Reports"]="INV_Misc_Book_09",Options="Trade_Engineering",["All"]="INV_Misc_Bag_08",["Food & drink"]="INV_Misc_Food_11",Buffs="INV_Potion_27",
     Emergency="INV_Misc_Bandage_12",Potions="INV_Potion_54",Class="INV_Misc_Rune_01",Optional="INV_Misc_PocketWatch_01",User="INV_Misc_Note_01",Scrolls="INV_Scroll_03",Families="Ability_Hunter_BeastTaming",
@@ -696,10 +712,10 @@ function addon:Layout()
     end
     local instancePage=doc.view=="dungeons" or doc.view=="raids"
     local navigation=instancePage and self.Instances.Navigation(self.state)
-        or doc.view=="alerts" and {"Low Health","Rares","Elites"} or doc.view=="deaths" and {"Reports","Options"}
+        or doc.view=="alerts" and {"Low Health","Rares","Elites","Preparation"} or doc.view=="deaths" and {"Reports","Options","Appearance"}
         or doc.view=="training" and {"Overview","First Aid","Engineering","Cooking"}
         or doc.view=="petguide" and {"Families","Abilities","Pets","Looks","Care"}
-        or addon.Supplies.categories
+        or addon.Supplies.filters
     local sidebar=true
     local left=sidebar and 184 or 22
     local bodyWidth=width-left-40
@@ -768,6 +784,17 @@ function addon:Layout()
         f.back:ClearAllPoints(); f.back:SetPoint("TOPLEFT",left,-y); y=y+34
     end
     local customDetail=doc.isDetail and self.state.detail and self.state.detail.item and self.state.detail.item.userItem
+    local priorityItem=doc.isDetail and self.state.detail and self.state.detail.item
+    if doc.isDetail and self.state.detail and self.state.detail.kind=="supplyFamily" then
+        local id=self.Supplies.Selection(context,self.state.detail.family)
+        for _,item in ipairs(self.Data.Items.items) do if item.itemId==id then priorityItem=item; break end end
+    end
+    f.priorityChoice:SetShown(priorityItem and true or false)
+    if priorityItem then
+        f.priorityChoice.item=priorityItem
+        f.priorityChoice.label:SetText("Priority: "..self.Supplies.Priority(context,priorityItem))
+        f.priorityChoice:ClearAllPoints(); f.priorityChoice:SetPoint("TOPRIGHT",-40,-(y-34))
+    end
     f.userRemove:SetShown(customDetail and true or false)
     if customDetail then
         f.userRemove:ClearAllPoints(); f.userRemove:SetPoint("TOPLEFT",f.back,"TOPRIGHT",8,0)
@@ -780,6 +807,13 @@ function addon:Layout()
         y=y+30
     else
         f.userDrop:Hide()
+    end
+    local ammoPreview=doc.view=="supplies" and self.state.filter=="Class" and not doc.isDetail and context.mode=="preview"
+        and (context.characterClass=="Hunter" or context.characterClass=="Warrior" or context.characterClass=="Rogue")
+    f.ammoChoice:SetShown(ammoPreview and true or false)
+    if ammoPreview then
+        f.ammoChoice.label:SetText("Plan ammo: "..(context.previewAmmo or "arrows"))
+        f.ammoChoice:ClearAllPoints(); f.ammoChoice:SetPoint("TOPLEFT",left,-y); y=y+34
     end
     local searchable=(doc.view=="petguide" or instancePage) and doc.searchable
     f.search:SetShown(searchable); f.searchLabel:SetShown(searchable); f.clear:SetShown(searchable)
@@ -812,6 +846,7 @@ function addon:Layout()
     if self.LowHealth then self.LowHealth:LayoutSettings(f,left,y,bodyWidth,height-y-46,doc.view=="alerts" and alertSection=="Low Health") end
     local creaturePage=doc.view=="alerts" and (alertSection=="Rares" or alertSection=="Elites")
     if self.CreatureAlerts then self.CreatureAlerts:LayoutSettings(f,left,y,bodyWidth,height-y-46,alertSection,creaturePage) end
+    if self.Readiness then self.Readiness:LayoutSettings(f,left,y,bodyWidth,height-y-46,doc.view=="alerts" and alertSection=="Preparation") end
     if self.Deaths and self.Deaths.host then
         self.Deaths.host:SetShown(deathPage)
         if deathPage then self.Deaths:LayoutPage(f,left,y,bodyWidth,height-y-46,self.state) end

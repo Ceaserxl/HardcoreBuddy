@@ -34,7 +34,7 @@ for class,count in pairs(expected) do
     end
 end
 A:Navigate("supplies")
-MOCK.Click(A.window.filters[7])
+MOCK.Click(A.window.filters[8])
 assert(A.state.filter=="Scrolls" and A.document.total==5)
 local block=A.document.cards[1].blocks[1]
 A:Activate(block.action)

@@ -42,6 +42,7 @@ local function supplyRow(record)
     b.body=record.quantityNote or record.item.short
     b.supply=true
     b.category=record.category
+    b.priority=record.priority
     b.count,b.target,b.targetKey=record.count,record.target,record.targetKey
     b.status,b.missing=record.tracking and record.status or "off",record.missing
     return b
@@ -245,7 +246,7 @@ function C.Build(context,state)
     local view=result.view
     if state.detail then result.cards[1]=C.Detail(context,state.detail); result.isDetail=true
     elseif view=="supplies" then
-        result.filters=S.categories
+        result.filters=S.filters
         local rows,summary=supplyRows(context,state)
         result.summary=summary
         if not state.filter or state.filter=="All" then
@@ -264,7 +265,8 @@ function C.Build(context,state)
             end
             if #rows==0 then result.cards={card("Your supplies",nil,{})} end
         else
-            result.cards[1]=card("Your supplies",nil,rows)
+            result.cards[1]=card(state.filter=="Essentials" and "Essentials" or "Your supplies",
+                state.filter=="Essentials" and "Your core supplies. Open an item to change its priority; set Carry to 0 to skip restocking." or nil,rows)
             result.cards[1].supplyTable=true
             if state.filter=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
                 result.cards[#rows==0 and 1 or #result.cards+1]=A.HunterTraining.Card(context)

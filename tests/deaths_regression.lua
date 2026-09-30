@@ -177,7 +177,7 @@ H:Slash("settings");eq(H.options:IsShown(),true)
 H:ShowDetails(H.db.records[1]);eq(H.details:IsShown(),true)
 eq(H.details.watch,nil,"player watching removed")
 H:Slash("mini");eq(H.mini:IsShown(),false)
-H:Slash("lock");eq(H.db.settings.locked,true)
+H:Slash("lock");eq(H.db.settings.locked,false)
 H:Slash("resetposition");eq(next(H.db.positions),nil)
 H.db.settings.community=true
 H:JoinCommunity();eq(joins,2)

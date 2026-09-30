@@ -125,6 +125,19 @@ H:Inspect("target"); assert(shown==before+5 and H.warning.category=="rares")
 u.guid="raidNeutralRare"; u.reaction=4
 H:Inspect("target"); assert(shown==before+6 and H.warning.category=="rares")
 print("PASS: dungeons and raids suppress elites while preserving hostile/neutral rares; outdoor elite alerts remain active.")
+-- A warning displayed outdoors also disappears as soon as the instance changes.
+H.Inspect=inspect
+instanceType="none"; H:Show("Outdoor elite",40,"elite","Hostile","elites",false)
+assert(H.warning:IsShown())
+instanceType="party"; u.classification="elite"; H:Scan()
+assert(not H.warning:IsShown() and not H.screenFlash:IsShown())
+H:Show("Dungeon rare",40,"rareelite","Hostile","rares",false); H:Scan()
+assert(H.warning:IsShown() and H.warning.category=="rares")
+instanceType="raid"; H:Scan(); assert(H.warning:IsShown())
+H:Show("Old elite",40,"elite","Hostile","elites",false)
+H.events.scripts.OnEvent(H.events,"ZONE_CHANGED_NEW_AREA")
+assert(not H.warning:IsShown())
+print("PASS: Instance transitions clear existing ordinary elite warnings and preserve rare warnings.")
 ''')
 
 import wave

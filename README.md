@@ -9,6 +9,26 @@ Use `/hcb` or `/hardcorebuddy`, or click the skull-and-shield minimap emblem.
 Drag the minimap button to reposition it. Escape closes the window. `/hcb reset`
 centers it; `/hcb help` lists commands.
 
+## Supply priorities and preparation
+
+**Supplies > Essentials** collects core food, drink, buff food, bandages, healing,
+movement potions and relevant ammunition. Items still live in their usual tabs.
+Each row shows Essentials, Advanced or Optional; open its details to cycle the
+priority. Priority choices follow the item family as ranks improve. Carry targets
+are per item and character; set 0 to skip restocking.
+
+**Supplies > Class** tracks arrows for bows/crossbows, bullets for guns, or your
+equipped thrown weapon stack. It uses selected ammunition when available and
+otherwise suggests a level-appropriate vendor tier. Planning mode has its own
+ammo selector. Wands do not produce ammo recommendations.
+
+**Alerts > Preparation** has two optional controls, both off by default: a compact
+missing-essentials panel while resting in a city/inn, and a silent reminder when
+leaving. Reminders use the real character, respect Carry 0, suppress unknown stock,
+stay out of combat, and have a five-minute cooldown. Dismiss the panel for the
+current visit with its close button. An unowned Light of Elune has no default
+restock requirement.
+
 ## Dungeons and raids
 
 The **Dungeons** and **Raids** tabs contain 28 dungeon routes/wings and all seven
@@ -40,7 +60,7 @@ window, right-click the shared minimap button, or use `/hcb deaths`. The `/hd` a
 `/hardcoredeaths` aliases also open this page.
 
 Reports, player details and death options appear in the right-hand content
-area. Use the left sidebar for Reports and Options.
+area. Use the left sidebar for Reports, Options and Appearance.
 The main window controls positioning and scale; compact feed and alert overlays
 keep their separate position/scale settings.
 
@@ -71,13 +91,17 @@ It works independently of death alerts, planning mode and menu visibility.
 Disable the old Low Health WeakAura to avoid duplicate warnings. WeakAuras is
 not required; distribute `Media/Health/` with its attribution and font license.
 
-Level-ups that change the field kit show an eight-second **Field Kit Updated**
-notification with changed supplies. Click it to open the live kit; the complete
+Level-ups that change the field kit show a small, silent, borderless
+**HardcoreBuddy: supply upgrades available** notice toward the right of the screen.
+It lasts four seconds, then fades. Click it to open the live kit; the complete
 list is also printed in chat. Unchanged levels stay quiet, and preview settings
 do not affect detection.
 
-Death alerts use a symmetrical iron-and-silver banner, with centered character and level
-above a concise cause/location line. The banner scales down on smaller screens.
+**Death Journal > Appearance** offers Compact (default), Banner, and Text-only
+death alerts. Background opacity is independent of text. **Unlock and move**
+keeps a silent preview visible while you drag; **Save position** locks it and
+restores click-through behavior. All styles share a saved position and scale
+down on smaller screens. Banner retains the symmetrical iron-and-silver artwork.
 
 The journal includes searchable history for your realm, level filters, player details, statistics, and Deathlog history import. The compact
 live feed uses a 360 x 218 panel with six compact, unframed reports, prominent levels,
@@ -197,8 +221,8 @@ This is an independent addon, not an official Blizzard product.
 ## Development and distribution
 
 GitHub Actions now builds each push and publishes numeric version tags to
-GitHub and CurseForge. Versions below 1.0 display **Beta** while retaining the
-normal **Release** type. See [release instructions](docs/RELEASING.md).
+GitHub and CurseForge as normal releases with numeric version names.
+See [release instructions](docs/RELEASING.md).
 
 The Death Journal also records the official Hardcore death-chat channel,
 independently of Blizzard's raid-warning selection. With chat set to everyone
@@ -218,7 +242,7 @@ full TOC loading and saved-data persistence with Lua 5.1.
 `python tests/render_layout.py` also uses Pillow and Windows fonts for labeled
 layout simulations, not game screenshots. None are runtime dependencies.
 
-Build the first beta with `python scripts/package_release.py`. The builder uses
+Build a release ZIP with `python scripts/package_release.py`. The builder uses
 an explicit runtime manifest, verifies TOC entries and version consistency, and
 includes required audio credits, licenses and source clips. It excludes tests,
 research, preview images, source artwork, caches and retired media. The ZIP has

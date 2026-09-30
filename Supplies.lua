@@ -4,6 +4,19 @@ local P = addon.Planner
 local S = {}
 addon.Supplies = S
 S.categories = {"All", "Food & drink", "Buffs", "Potions", "Emergency", "Class", "Scrolls", "Optional", "User"}
+S.filters={"All","Essentials"}
+for i=2,#S.categories do S.filters[#S.filters+1]=S.categories[i] end
+S.priorities={"Essentials","Advanced","Optional"}
+local essentials={recovery=true,drink=true,wellfed=true,manafood=true,bandage=true,healing=true,
+    ammunition=true,["Swiftness Potion"]=true,["Swim Speed Potion"]=true}
+local advanced={["Flask of Petrification"]=true,["Limited Invulnerability Potion"]=true,
+    ["Free Action Potion"]=true,["Restorative Potion"]=true,["Living Action Potion"]=true,["Light of Elune"]=true}
+function S.Priority(context,item)
+    local saved=context.priorities or {}
+    local choice=saved[item.family] or saved[item.itemId] or saved[tostring(item.itemId)]
+    for _,value in ipairs(S.priorities) do if choice==value then return value end end
+    return essentials[item.family] and "Essentials" or advanced[item.family] and "Advanced" or "Optional"
+end
 
 -- Automatic profession choices always come from the current character, even
 -- while previewing a different class/level. Old manual choices cannot pin them.
@@ -25,6 +38,7 @@ local function defaultCategory(item)
 end
 
 function S.Category(item)
+    if item.ammoKind then return "Class" end
     if item.userItem then return "User" end
     if item.family=="trollsblood" then return "Buffs" end
     if item.name and item.name:find("Potion",1,true) then return "Potions" end
@@ -33,13 +47,14 @@ function S.Category(item)
     return defaultCategory(item)
 end
 
-function S.NormalizeTarget(value)
+function S.NormalizeTarget(value,limit)
     value = tonumber(value)
     if not value or value ~= value or value == math.huge or value == -math.huge then return nil end
-    return math.min(200, math.max(0, math.floor(value)))
+    return math.min(limit or 200, math.max(0, math.floor(value)))
 end
 
 function S.DefaultTarget(item)
+    if item.ammoKind then return item.ammoKind=="thrown" and 100 or 1000 end
     if item.userItem then return 1 end
     local family = item.family
     if family == "recovery" or family == "drink" or family == "bandage" then return 20 end
@@ -58,9 +73,13 @@ function S.Record(context, item, groupFamily)
     local available = inventory.available == true and type(inventory.counts) == "table"
     local targets = type(context.targets) == "table" and context.targets or {}
     groupFamily = groupFamily or (P.grouped[item.family] and item.family or nil)
-    local target = S.NormalizeTarget(targets[id] ~= nil and targets[id] or targets[tostring(id)])
+    local target = S.NormalizeTarget(targets[id] ~= nil and targets[id] or targets[tostring(id)],item.ammoKind and 10000 or 200)
     if target == nil then target = S.DefaultTarget(item) end
     local count = available and (inventory.counts[id] or 0) or nil
+    if item.ammoKind and addon.Ammunition then count=addon.Ammunition.Count(context,item) end
+    if item.ammoKind and context.characterClass~="Hunter" and targets[id]==nil and targets[tostring(id)]==nil then target=100 end
+    -- A consumed, unique quest reward cannot be restocked by another purchase.
+    if item.family=="Light of Elune" and (count==nil or count==0) and targets[id]==nil and targets[tostring(id)]==nil then target=0 end
     if count ~= nil and (type(count) ~= "number" or count ~= count or count < 0
         or count == math.huge or count ~= math.floor(count)) then count = nil end
     local missing = count ~= nil and math.max(0, target - count) or nil
@@ -69,7 +88,7 @@ function S.Record(context, item, groupFamily)
         or groupFamily == "antivenom" and ("Poisons up to level "..item.power) or nil
     return {
         item=item, itemId=id, name=item.name, displayName=item.name, icon=item.icon,
-        family=item.family, groupFamily=groupFamily, category=S.Category(item),
+        family=item.family, groupFamily=groupFamily, category=S.Category(item),priority=S.Priority(context,item),
         count=count, target=target, targetKey=id, status=status, missing=missing,
         owned=count ~= nil and count > 0 or false, available=count ~= nil,
         quantityNote=note, defaultTarget=S.DefaultTarget(item),
@@ -78,7 +97,7 @@ function S.Record(context, item, groupFamily)
 end
 
 local function matches(item, category, query)
-    if category ~= "All" and S.Category(item) ~= category then return false end
+    if category ~= "All" and category~="Essentials" and S.Category(item) ~= category then return false end
     local text = table.concat({item.name or "", item.short or "", item.family or "",
         item.useSkill and item.useSkill.name or "", S.Category(item)}, " "):lower()
     for word in tostring(query or ""):lower():gmatch("%S+") do
@@ -100,6 +119,8 @@ function S.Build(context, state)
         if seen[id] or not matches(item, category, state.query) then return end
         seen[id] = true
         local record = S.Record(context, item, groupFamily)
+        if category=="Essentials" and (record.priority~="Essentials"
+            or groupFamily and S.Selection(context,groupFamily)~=id) then return end
         if stock == "Missing" and (record.missing == nil or record.missing == 0) then return end
         if stock == "Ready" and record.status ~= "ready" then return end
         rows[#rows + 1] = record
@@ -128,6 +149,7 @@ function S.Build(context, state)
         end
     end
     for _,family in ipairs(order) do add(best[family]) end
+    if addon.Ammunition then local ammo=addon.Ammunition.Recommend(context); if ammo then add(ammo) end end
     for _,item in ipairs(context.userItems or {}) do add(item) end
     return rows
 end

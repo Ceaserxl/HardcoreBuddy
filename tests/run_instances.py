@@ -157,7 +157,7 @@ check(A.state.instance=="sm-library","Zone change stole selected guide")
 ctx.mode="live"; ctx.level=60; ctx.inventory={available=true,counts={[19183]=7}}
 local pack=I.Build(ctx,{view="raids",instance="bwl",filter="Items"})
 check(allText(pack.cards):find("In bags: 7",1,true),"Real bag count missing")
-GetInventoryItemID=function(unit,slot) check(unit=="player" and slot==15,"Wrong cloak slot"); return 15138 end
+GetInventoryItemID=function(unit,slot) check(unit=="player","Wrong inventory unit"); return slot==15 and 15138 or nil end
 pack=I.Build(ctx,{view="raids",instance="bwl",filter="Items"})
 check(allText(pack.cards):find("Equipped",1,true),"Equipped cloak shown as missing")
 ctx.inventory.available=false

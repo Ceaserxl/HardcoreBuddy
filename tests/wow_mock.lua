@@ -66,6 +66,7 @@ function methods:SetPoint(point,a,b,c,d)
     self.points[#self.points+1]={point,relative,relativePoint,x,y}
 end
 function methods:ClearAllPoints() self.points={} end
+function methods:GetPoint(index) return unpack(self.points[index or 1] or {}) end
 function methods:SetAllPoints(other)
     other=other or self.parent
     self:ClearAllPoints(); self:SetPoint("TOPLEFT",other,"TOPLEFT",0,0); self:SetPoint("BOTTOMRIGHT",other,"BOTTOMRIGHT",0,0)

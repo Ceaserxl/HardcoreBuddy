@@ -30,8 +30,10 @@ for level=2,60 do
     if expected then
         changed=changed+1
         assert(A.kitAlert:IsShown())
-        assert(A.kitAlert.title:GetText():find(tostring(level),1,true))
-        A.kitAlert.scripts.OnUpdate(A.kitAlert,8.25)
+        assert(A.kitAlert.summary:GetText():find(tostring(level),1,true))
+        assert(A.kitAlert.title:GetText()=="HardcoreBuddy: supply upgrades available")
+        assert(not A.kitAlert.backdrop,"Routine updates have no banner")
+        A.kitAlert.scripts.OnUpdate(A.kitAlert,4.25)
         assert(A.kitAlert:GetAlpha()==0.5)
         A.kitAlert.scripts.OnUpdate(A.kitAlert,0.25)
         assert(not A.kitAlert:IsShown())

@@ -1,0 +1,146 @@
+{
+    "2512":  {
+                 "name":  "Rough Arrow",
+                 "quality":  1,
+                 "icon":  "inv_ammo_arrow_02",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eRough Arrow\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e5\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eAmmo\u003c/td\u003e\u003cth\u003e\u003c!--scstart6:2--\u003e\u003cspan class=\"q1\"\u003eArrow\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003cspan\u003eAdds 1.5 damage per second\u003c/span\u003e\n\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "2515":  {
+                 "name":  "Sharp Arrow",
+                 "quality":  1,
+                 "icon":  "inv_ammo_arrow_02",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eSharp Arrow\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e15\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eAmmo\u003c/td\u003e\u003cth\u003e\u003c!--scstart6:2--\u003e\u003cspan class=\"q1\"\u003eArrow\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003cspan\u003eAdds 3.5 damage per second\u003c/span\u003e\n\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e10\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "3030":  {
+                 "name":  "Razor Arrow",
+                 "quality":  1,
+                 "icon":  "inv_ammo_arrow_02",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eRazor Arrow\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e30\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eAmmo\u003c/td\u003e\u003cth\u003e\u003c!--scstart6:2--\u003e\u003cspan class=\"q1\"\u003eArrow\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003cspan\u003eAdds 7.5 damage per second\u003c/span\u003e\n\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e25\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "11285":  {
+                  "name":  "Jagged Arrow",
+                  "quality":  1,
+                  "icon":  "inv_weapon_shortblade_25",
+                  "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eJagged Arrow\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e45\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eAmmo\u003c/td\u003e\u003cth\u003e\u003c!--scstart6:2--\u003e\u003cspan class=\"q1\"\u003eArrow\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003cspan\u003eAdds 13 damage per second\u003c/span\u003e\n\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e40\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneycopper\"\u003e2\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                  "spells":  [
+
+                             ]
+              },
+    "2516":  {
+                 "name":  "Light Shot",
+                 "quality":  1,
+                 "icon":  "inv_ammo_bullet_02",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eLight Shot\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e5\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eAmmo\u003c/td\u003e\u003cth\u003e\u003c!--scstart6:3--\u003e\u003cspan class=\"q1\"\u003eBullet\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003cspan\u003eAdds 1.5 damage per second\u003c/span\u003e\n\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "2519":  {
+                 "name":  "Heavy Shot",
+                 "quality":  1,
+                 "icon":  "inv_ammo_bullet_02",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eHeavy Shot\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e15\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eAmmo\u003c/td\u003e\u003cth\u003e\u003c!--scstart6:3--\u003e\u003cspan class=\"q1\"\u003eBullet\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003cspan\u003eAdds 3.5 damage per second\u003c/span\u003e\n\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e10\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "3033":  {
+                 "name":  "Solid Shot",
+                 "quality":  1,
+                 "icon":  "inv_ammo_bullet_02",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eSolid Shot\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e30\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eAmmo\u003c/td\u003e\u003cth\u003e\u003c!--scstart6:3--\u003e\u003cspan class=\"q1\"\u003eBullet\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003cspan\u003eAdds 7.5 damage per second\u003c/span\u003e\n\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e25\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "11284":  {
+                  "name":  "Accurate Slugs",
+                  "quality":  1,
+                  "icon":  "inv_ammo_bullet_01",
+                  "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eAccurate Slugs\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e45\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eAmmo\u003c/td\u003e\u003cth\u003e\u003c!--scstart6:3--\u003e\u003cspan class=\"q1\"\u003eBullet\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003cspan\u003eAdds 13 damage per second\u003c/span\u003e\n\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e40\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneycopper\"\u003e1\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                  "spells":  [
+
+                             ]
+              },
+    "2947":  {
+                 "name":  "Small Throwing Knife",
+                 "quality":  1,
+                 "icon":  "inv_throwingknife_02",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eSmall Throwing Knife\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e3\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eThrown\u003c/td\u003e\u003cth\u003e\u003c!--scstart2:16--\u003e\u003cspan class=\"q1\"\u003eThrown\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\n    \u003ctd\u003e\u003cspan\u003e\u003c!--dmg--\u003e1 - 3 Damage\u003c/span\u003e\u003c/td\u003e\n    \u003cth\u003eSpeed \u003c!--spd--\u003e2.00\u003c/th\u003e\n\u003c/tr\u003e\u003c/table\u003e\u003c!--dps--\u003e(1.00 damage per second)\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "2946":  {
+                 "name":  "Balanced Throwing Dagger",
+                 "quality":  1,
+                 "icon":  "inv_weapon_shortblade_05",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eBalanced Throwing Dagger\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e8\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eThrown\u003c/td\u003e\u003cth\u003e\u003c!--scstart2:16--\u003e\u003cspan class=\"q1\"\u003eThrown\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\n    \u003ctd\u003e\u003cspan\u003e\u003c!--dmg--\u003e4 - 9 Damage\u003c/span\u003e\u003c/td\u003e\n    \u003cth\u003eSpeed \u003c!--spd--\u003e2.20\u003c/th\u003e\n\u003c/tr\u003e\u003c/table\u003e\u003c!--dps--\u003e(2.95 damage per second)\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e3\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "3107":  {
+                 "name":  "Keen Throwing Knife",
+                 "quality":  1,
+                 "icon":  "inv_throwingknife_01",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eKeen Throwing Knife\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e16\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eThrown\u003c/td\u003e\u003cth\u003e\u003c!--scstart2:16--\u003e\u003cspan class=\"q1\"\u003eThrown\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\n    \u003ctd\u003e\u003cspan\u003e\u003c!--dmg--\u003e8 - 16 Damage\u003c/span\u003e\u003c/td\u003e\n    \u003cth\u003eSpeed \u003c!--spd--\u003e1.90\u003c/th\u003e\n\u003c/tr\u003e\u003c/table\u003e\u003c!--dps--\u003e(6.32 damage per second)\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e11\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "3108":  {
+                 "name":  "Heavy Throwing Dagger",
+                 "quality":  1,
+                 "icon":  "inv_throwingknife_03",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eHeavy Throwing Dagger\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e27\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eThrown\u003c/td\u003e\u003cth\u003e\u003c!--scstart2:16--\u003e\u003cspan class=\"q1\"\u003eThrown\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\n    \u003ctd\u003e\u003cspan\u003e\u003c!--dmg--\u003e17 - 32 Damage\u003c/span\u003e\u003c/td\u003e\n    \u003cth\u003eSpeed \u003c!--spd--\u003e2.10\u003c/th\u003e\n\u003c/tr\u003e\u003c/table\u003e\u003c!--dps--\u003e(11.67 damage per second)\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e22\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "3135":  {
+                 "name":  "Sharp Throwing Axe",
+                 "quality":  1,
+                 "icon":  "inv_throwingaxe_01",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eSharp Throwing Axe\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e16\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eThrown\u003c/td\u003e\u003cth\u003e\u003c!--scstart2:16--\u003e\u003cspan class=\"q1\"\u003eThrown\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\n    \u003ctd\u003e\u003cspan\u003e\u003c!--dmg--\u003e8 - 16 Damage\u003c/span\u003e\u003c/td\u003e\n    \u003cth\u003eSpeed \u003c!--spd--\u003e1.90\u003c/th\u003e\n\u003c/tr\u003e\u003c/table\u003e\u003c!--dps--\u003e(6.32 damage per second)\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e11\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "3137":  {
+                 "name":  "Deadly Throwing Axe",
+                 "quality":  1,
+                 "icon":  "inv_throwingaxe_05",
+                 "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eDeadly Throwing Axe\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e27\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eThrown\u003c/td\u003e\u003cth\u003e\u003c!--scstart2:16--\u003e\u003cspan class=\"q1\"\u003eThrown\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\n    \u003ctd\u003e\u003cspan\u003e\u003c!--dmg--\u003e17 - 32 Damage\u003c/span\u003e\u003c/td\u003e\n    \u003cth\u003eSpeed \u003c!--spd--\u003e2.10\u003c/th\u003e\n\u003c/tr\u003e\u003c/table\u003e\u003c!--dps--\u003e(11.67 damage per second)\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e22\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                 "spells":  [
+
+                            ]
+             },
+    "15326":  {
+                  "name":  "Gleaming Throwing Axe",
+                  "quality":  1,
+                  "icon":  "inv_throwingaxe_06",
+                  "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003ctable style=\"display:inline-table; vertical-align:inherit\"\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eGleaming Throwing Axe\u003c/b\u003e\u003c!--nend--\u003e\u003c/td\u003e\u003cth\u003e\u003cb class=\"q0 whtt-extra\"\u003eSoD Phase 2\u003c/b\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e40\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eThrown\u003c/td\u003e\u003cth\u003e\u003c!--scstart2:16--\u003e\u003cspan class=\"q1\"\u003eThrown\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\n    \u003ctd\u003e\u003cspan\u003e\u003c!--dmg--\u003e23 - 43 Damage\u003c/span\u003e\u003c/td\u003e\n    \u003cth\u003eSpeed \u003c!--spd--\u003e1.80\u003c/th\u003e\n\u003c/tr\u003e\u003c/table\u003e\u003c!--dps--\u003e(18.33 damage per second)\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e35\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneycopper\"\u003e1\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                  "spells":  [
+
+                             ]
+              },
+    "15327":  {
+                  "name":  "Wicked Throwing Dagger",
+                  "quality":  1,
+                  "icon":  "inv_throwingknife_03",
+                  "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003ctable style=\"display:inline-table; vertical-align:inherit\"\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eWicked Throwing Dagger\u003c/b\u003e\u003c!--nend--\u003e\u003c/td\u003e\u003cth\u003e\u003cb class=\"q0 whtt-extra\"\u003eSoD Phase 2\u003c/b\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e40\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\u003ctd\u003eThrown\u003c/td\u003e\u003cth\u003e\u003c!--scstart2:16--\u003e\u003cspan class=\"q1\"\u003eThrown\u003c/span\u003e\u003c!--scend--\u003e\u003c/th\u003e\u003c/tr\u003e\u003c/table\u003e\u003c!--rf--\u003e\u003ctable width=\"100%\"\u003e\u003ctr\u003e\n    \u003ctd\u003e\u003cspan\u003e\u003c!--dmg--\u003e23 - 43 Damage\u003c/span\u003e\u003c/td\u003e\n    \u003cth\u003eSpeed \u003c!--spd--\u003e1.80\u003c/th\u003e\n\u003c/tr\u003e\u003c/table\u003e\u003c!--dps--\u003e(18.33 damage per second)\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c!--rs--\u003e\u003c!--e--\u003e\u003c!--ps--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e35\u003cbr\u003e\u003c!--rr--\u003e\u003c!--itemEffects:0--\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 200\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneycopper\"\u003e1\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                  "spells":  [
+
+                             ]
+              }
+}
