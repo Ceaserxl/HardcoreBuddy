@@ -17,6 +17,7 @@ Data\Beasts.lua
 Data\FactionRules.lua
 Data\ProfessionProgression.lua
 Data\Crafting.lua
+Data\ArmorKits.lua
 Data\Instances.lua
 Data\InstancesRaids.lua
 Planner.lua
@@ -24,6 +25,7 @@ Inventory.lua
 Professions.lua
 Crafting.lua
 Ammunition.lua
+ArmorKits.lua
 Supplies.lua
 Guide.lua
 Instances.lua

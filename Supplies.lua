@@ -38,6 +38,7 @@ local function defaultCategory(item)
 end
 
 function S.Category(item)
+    if item.armorKit then return "Buffs" end
     if item.ammoKind then return "Class" end
     if item.userItem then return "User" end
     if item.family=="trollsblood" then return "Buffs" end
@@ -54,6 +55,7 @@ function S.NormalizeTarget(value,limit)
 end
 
 function S.DefaultTarget(item)
+    if item.armorKit then return item.recommendedTarget or 1 end
     if item.ammoKind then return item.ammoKind=="thrown" and 100 or 1000 end
     if item.userItem then return 1 end
     local family = item.family
@@ -150,6 +152,7 @@ function S.Build(context, state)
     end
     for _,family in ipairs(order) do add(best[family]) end
     if addon.Ammunition then local ammo=addon.Ammunition.Recommend(context); if ammo then add(ammo) end end
+    if addon.ArmorKits then for _,item in ipairs(addon.ArmorKits.Recommendations(context)) do add(item) end end
     for _,item in ipairs(context.userItems or {}) do add(item) end
     return rows
 end

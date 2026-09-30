@@ -29,6 +29,14 @@ stay out of combat, and have a five-minute cooldown. Dismiss the panel for the
 current visit with its close button. An unowned Light of Elune has no default
 restock requirement.
 
+**Supplies > Buffs** checks your equipped chest armor, leggings, gloves and boots
+for armor-kit upgrades. It respects both your character level and each piece's
+item level, recommends kits for unenhanced pieces or older armor kits, and keeps
+other enchants and Core Armor Kits. Suggested Carry quantities cover the pieces
+that need each kit. Open a kit to see which pieces to enhance. Recommendations
+refresh when equipment or enhancements change; unavailable item data stays
+unknown. Planning mode shows a level-based reference without checking live gear.
+
 ## Dungeons and raids
 
 The **Dungeons** and **Raids** tabs contain 28 dungeon routes/wings and all seven

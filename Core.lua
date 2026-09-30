@@ -292,6 +292,7 @@ events:SetScript("OnEvent", function(self, event, arg, success)
         if event == "UNIT_PET" and arg ~= "player" then return end
         if event == "UNIT_LEVEL" and arg ~= "pet" and arg ~= "player" then return end
         if event == "UNIT_FACTION" and arg ~= "player" then return end
+        if event == "UNIT_INVENTORY_CHANGED" and arg ~= "player" then return end
         if event == "PLAYER_XP_UPDATE" and arg ~= "player" then return end
         if event == "PLAYER_LEVEL_UP" and validLevel(arg) then
             addon.levelOverride = arg

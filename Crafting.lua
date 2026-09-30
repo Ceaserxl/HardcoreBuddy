@@ -3,6 +3,7 @@ local C = {}
 addon.Crafting = C
 
 local ranks = {
+    Leatherworking={{"Apprentice",75,0,5},{"Journeyman",150,50,10},{"Expert",225,125,20},{"Artisan",300,200,35}},
     Alchemy={{"Apprentice",75,0,5},{"Journeyman",150,50,10},{"Expert",225,125,20},{"Artisan",300,200,35}},
     Engineering={{"Apprentice",75,0,5},{"Journeyman",150,50,10},{"Expert",225,125,20},{"Artisan",300,200,35}},
     Cooking={{"Apprentice",75,0,5},{"Journeyman",150,50,10},{"Expert",225,125,0},{"Artisan",300,225,35}},
@@ -46,7 +47,7 @@ end
 function C.GetInfo(item,context)
     item=item or {};context=context or {}
     local catalog=addon.Data.Crafting
-    local row=catalog and catalog.items and catalog.items[item.itemId]
+    local row=(catalog and catalog.items and catalog.items[item.itemId]) or item.crafting
     if not row then return {craftable=nil,craftingText="Crafting information unavailable."} end
     local result={}
     for key,value in pairs(row) do result[key]=value end

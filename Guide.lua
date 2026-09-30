@@ -27,6 +27,11 @@ function G.ItemFields(item,context)
         end
     end
     field("Effect",(item.detail or item.short or ""):gsub("^Use: ",""),nil,true)
+    if item.armorKit then
+        field("Armor to enhance",item.kitTargets,nil,true)
+        field("Gear requirement",item.gearLevel>1 and ("Target armor must be item level "..item.gearLevel.." or higher.")
+            or "No minimum armor item level.",nil,true)
+    end
     local crafting=info.craftingText
     if not crafting and item.craftSkill then crafting=item.craftSkill.name.." "..item.craftSkill.value end
     field("Crafting",crafting)

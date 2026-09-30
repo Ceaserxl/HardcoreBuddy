@@ -1,0 +1,156 @@
+{
+    "item:2304":  {
+                      "name":  "Light Armor Kit",
+                      "quality":  1,
+                      "icon":  "inv_misc_armorkit_17",
+                      "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eLight Armor Kit\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e5\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=2831/armor-8\" class=\"q2\"\u003ePermanently increase the armor value of an item worn on the chest, legs, hands or feet by 8.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneycopper\"\u003e15\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                      "spells":  [
+
+                                 ]
+                  },
+    "item:2313":  {
+                      "name":  "Medium Armor Kit",
+                      "quality":  1,
+                      "icon":  "inv_misc_armorkit_15",
+                      "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eMedium Armor Kit\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e15\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e5\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=2832/armor-16\" class=\"q2\"\u003ePermanently increase the armor value of an item worn on the chest, legs, hands or feet by 16.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e2\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                      "spells":  [
+
+                                 ]
+                  },
+    "item:4265":  {
+                      "name":  "Heavy Armor Kit",
+                      "quality":  1,
+                      "icon":  "inv_misc_armorkit_16",
+                      "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eHeavy Armor Kit\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e30\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e20\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=2833/armor-24\" class=\"q2\"\u003ePermanently increase the armor value of an item worn on the chest, legs, hands or feet by 24. \u0026nbsp;Only usable on items level 15 and above.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e6\u003c/span\u003e \u003cspan class=\"moneycopper\"\u003e50\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                      "spells":  [
+
+                                 ]
+                  },
+    "item:8173":  {
+                      "name":  "Thick Armor Kit",
+                      "quality":  1,
+                      "icon":  "inv_misc_armorkit_07",
+                      "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eThick Armor Kit\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e40\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e30\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=10344/armor-32\" class=\"q2\"\u003ePermanently increase the armor value of an item worn on the chest, legs, hands or feet by 32. \u0026nbsp;Only usable on items level 25 and above.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e10\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                      "spells":  [
+
+                                 ]
+                  },
+    "item:15564":  {
+                       "name":  "Rugged Armor Kit",
+                       "quality":  1,
+                       "icon":  "inv_misc_armorkit_09",
+                       "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q1\"\u003eRugged Armor Kit\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e50\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e40\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=19057/armor-40\" class=\"q2\"\u003ePermanently increase the armor value of an item worn on the chest, legs, hands or feet by 40. \u0026nbsp;Only usable on items level 35 and above.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e10\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                       "spells":  [
+
+                                  ]
+                   },
+    "item:18251":  {
+                       "name":  "Core Armor Kit",
+                       "quality":  3,
+                       "icon":  "inv_misc_armorkit_05",
+                       "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q3\"\u003eCore Armor Kit\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e60\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires Level \u003c!--rlvl--\u003e50\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=22725/defense-3\" class=\"q2\"\u003ePermanently increase the defense value of an item worn on the chest, legs, hands or feet by 3. \u0026nbsp;Only usable on items level 45 and above.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e50\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                       "spells":  [
+
+                                  ]
+                   },
+    "item:18252":  {
+                       "name":  "Pattern: Core Armor Kit",
+                       "quality":  3,
+                       "icon":  "inv_scroll_05",
+                       "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003c!--nstart--\u003e\u003cb class=\"q3\"\u003ePattern: Core Armor Kit\u003c/b\u003e\u003c!--nend--\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e60\u003c/span\u003e\u003c!--bo--\u003e\u003cbr\u003eBinds when picked up\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eRequires \u003ca href=\"/classic/skill=165/leatherworking\" class=\"q1\"\u003eLeatherworking\u003c/a\u003e (300)\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=22728/pattern-core-armor-kit\" class=\"q2\"\u003eTeaches you how to craft a Core Armor Kit.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneygold\"\u003e5\u003c/span\u003e\u003c/div\u003e\u003cbr /\u003e\u003cspan class=\"q3\"\u003e\u003ca href=\"/classic/item=18251/core-armor-kit\"\u003eCore Armor Kit\u003c/a\u003e\u003c/span\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e60\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003cbr\u003eRequires Level \u003c!--rlvl--\u003e50\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=22725/defense-3\" class=\"q2\"\u003ePermanently increase the defense value of an item worn on the chest, legs, hands or feet by 3. \u0026nbsp;Only usable on items level 45 and above.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e50\u003c/span\u003e\u003c/div\u003e\u003cdiv class=\"q1 whtt-extra whtt-reagents\"\u003e\u003cbr /\u003eRequires \u003ca href=\"/classic/item=17012/core-leather\"\u003eCore Leather\u003c/a\u003e\u0026nbsp;(3), \u003ca href=\"/classic/item=14341/rune-thread\"\u003eRune Thread\u003c/a\u003e\u0026nbsp;(2)\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                       "spells":  [
+
+                                  ],
+                       "completion_category":  "9"
+                   },
+    "spell:2152":  {
+                       "name":  "Light Armor Kit",
+                       "icon":  "inv_misc_armorkit_17",
+                       "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003ca class=\"whtt-name q1\" href=\"/classic/spell=2152/light-armor-kit\"\u003e\u003cb class=\"whtt-name q1\"\u003eLight Armor Kit\u003c/b\u003e\u003c/a\u003e\u003cbr /\u003e5.125 sec cast\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eReagents:\u003cbr /\u003e\u003cdiv class=\"indent q1\"\u003e\u003ca href=\"/classic/item=2318/light-leather\"\u003eLight Leather\u003c/a\u003e\u003c/div\u003e\u003cbr /\u003e\u003cspan class=\"q1\"\u003e\u003ca href=\"/classic/item=2304/light-armor-kit\"\u003eLight Armor Kit\u003c/a\u003e\u003c/span\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e5\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=2831/armor-8\" class=\"q2\"\u003ePermanently increase the armor value of an item worn on the chest, legs, hands or feet by 8.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneycopper\"\u003e15\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                       "tooltip2":  "",
+                       "buff":  "",
+                       "quality":  1,
+                       "spells":  {
+
+                                  },
+                       "buffspells":  {
+
+                                      },
+                       "completion_category":  11
+                   },
+    "spell:2165":  {
+                       "name":  "Medium Armor Kit",
+                       "icon":  "inv_misc_armorkit_15",
+                       "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003ca class=\"whtt-name q1\" href=\"/classic/spell=2165/medium-armor-kit\"\u003e\u003cb class=\"whtt-name q1\"\u003eMedium Armor Kit\u003c/b\u003e\u003c/a\u003e\u003cbr /\u003e5.125 sec cast\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eReagents:\u003cbr /\u003e\u003cdiv class=\"indent q1\"\u003e\u003ca href=\"/classic/item=2319/medium-leather\"\u003eMedium Leather\u003c/a\u003e\u0026nbsp;(4), \u003ca href=\"/classic/item=2320/coarse-thread\"\u003eCoarse Thread\u003c/a\u003e\u003c/div\u003e\u003cbr /\u003e\u003cspan class=\"q1\"\u003e\u003ca href=\"/classic/item=2313/medium-armor-kit\"\u003eMedium Armor Kit\u003c/a\u003e\u003c/span\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e15\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003cbr\u003eRequires Level \u003c!--rlvl--\u003e5\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=2832/armor-16\" class=\"q2\"\u003ePermanently increase the armor value of an item worn on the chest, legs, hands or feet by 16.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e2\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                       "tooltip2":  "",
+                       "buff":  "",
+                       "quality":  1,
+                       "spells":  {
+
+                                  },
+                       "buffspells":  {
+
+                                      },
+                       "completion_category":  11
+                   },
+    "spell:3780":  {
+                       "name":  "Heavy Armor Kit",
+                       "icon":  "inv_misc_armorkit_16",
+                       "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003ca class=\"whtt-name q1\" href=\"/classic/spell=3780/heavy-armor-kit\"\u003e\u003cb class=\"whtt-name q1\"\u003eHeavy Armor Kit\u003c/b\u003e\u003c/a\u003e\u003cbr /\u003e5.125 sec cast\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eReagents:\u003cbr /\u003e\u003cdiv class=\"indent q1\"\u003e\u003ca href=\"/classic/item=4234/heavy-leather\"\u003eHeavy Leather\u003c/a\u003e\u0026nbsp;(5), \u003ca href=\"/classic/item=2321/fine-thread\"\u003eFine Thread\u003c/a\u003e\u003c/div\u003e\u003cbr /\u003e\u003cspan class=\"q1\"\u003e\u003ca href=\"/classic/item=4265/heavy-armor-kit\"\u003eHeavy Armor Kit\u003c/a\u003e\u003c/span\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e30\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003cbr\u003eRequires Level \u003c!--rlvl--\u003e20\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=2833/armor-24\" class=\"q2\"\u003ePermanently increase the armor value of an item worn on the chest, legs, hands or feet by 24. \u0026nbsp;Only usable on items level 15 and above.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e6\u003c/span\u003e \u003cspan class=\"moneycopper\"\u003e50\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                       "tooltip2":  "",
+                       "buff":  "",
+                       "quality":  1,
+                       "spells":  {
+
+                                  },
+                       "buffspells":  {
+
+                                      },
+                       "completion_category":  11
+                   },
+    "spell:10487":  {
+                        "name":  "Thick Armor Kit",
+                        "icon":  "inv_misc_armorkit_07",
+                        "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003ca class=\"whtt-name q1\" href=\"/classic/spell=10487/thick-armor-kit\"\u003e\u003cb class=\"whtt-name q1\"\u003eThick Armor Kit\u003c/b\u003e\u003c/a\u003e\u003cbr /\u003e5.125 sec cast\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eReagents:\u003cbr /\u003e\u003cdiv class=\"indent q1\"\u003e\u003ca href=\"/classic/item=4304/thick-leather\"\u003eThick Leather\u003c/a\u003e\u0026nbsp;(5), \u003ca href=\"/classic/item=4291/silken-thread\"\u003eSilken Thread\u003c/a\u003e\u003c/div\u003e\u003cbr /\u003e\u003cspan class=\"q1\"\u003e\u003ca href=\"/classic/item=8173/thick-armor-kit\"\u003eThick Armor Kit\u003c/a\u003e\u003c/span\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e40\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003cbr\u003eRequires Level \u003c!--rlvl--\u003e30\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=10344/armor-32\" class=\"q2\"\u003ePermanently increase the armor value of an item worn on the chest, legs, hands or feet by 32. \u0026nbsp;Only usable on items level 25 and above.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e10\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                        "tooltip2":  "",
+                        "buff":  "",
+                        "quality":  1,
+                        "spells":  {
+
+                                   },
+                        "buffspells":  {
+
+                                       },
+                        "completion_category":  11
+                    },
+    "spell:19058":  {
+                        "name":  "Rugged Armor Kit",
+                        "icon":  "inv_misc_armorkit_09",
+                        "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003ca class=\"whtt-name q1\" href=\"/classic/spell=19058/rugged-armor-kit\"\u003e\u003cb class=\"whtt-name q1\"\u003eRugged Armor Kit\u003c/b\u003e\u003c/a\u003e\u003cbr /\u003e12.5 sec cast\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eReagents:\u003cbr /\u003e\u003cdiv class=\"indent q1\"\u003e\u003ca href=\"/classic/item=8170/rugged-leather\"\u003eRugged Leather\u003c/a\u003e\u0026nbsp;(5)\u003c/div\u003e\u003cbr /\u003e\u003cspan class=\"q1\"\u003e\u003ca href=\"/classic/item=15564/rugged-armor-kit\"\u003eRugged Armor Kit\u003c/a\u003e\u003c/span\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e50\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003cbr\u003eRequires Level \u003c!--rlvl--\u003e40\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=19057/armor-40\" class=\"q2\"\u003ePermanently increase the armor value of an item worn on the chest, legs, hands or feet by 40. \u0026nbsp;Only usable on items level 35 and above.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e10\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                        "tooltip2":  "",
+                        "buff":  "",
+                        "quality":  1,
+                        "spells":  {
+
+                                   },
+                        "buffspells":  {
+
+                                       },
+                        "completion_category":  11
+                    },
+    "spell:22727":  {
+                        "name":  "Core Armor Kit",
+                        "icon":  "inv_misc_armorkit_05",
+                        "tooltip":  "\u003ctable\u003e\u003ctr\u003e\u003ctd\u003e\u003ca class=\"whtt-name q3\" href=\"/classic/spell=22727/core-armor-kit\"\u003e\u003cb class=\"whtt-name q3\"\u003eCore Armor Kit\u003c/b\u003e\u003c/a\u003e\u003cbr /\u003e25 sec cast\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e\u003ctable\u003e\u003ctr\u003e\u003ctd\u003eReagents:\u003cbr /\u003e\u003cdiv class=\"indent q1\"\u003e\u003ca href=\"/classic/item=17012/core-leather\"\u003eCore Leather\u003c/a\u003e\u0026nbsp;(3), \u003ca href=\"/classic/item=14341/rune-thread\"\u003eRune Thread\u003c/a\u003e\u0026nbsp;(2)\u003c/div\u003e\u003cbr /\u003e\u003cspan class=\"q3\"\u003e\u003ca href=\"/classic/item=18251/core-armor-kit\"\u003eCore Armor Kit\u003c/a\u003e\u003c/span\u003e\u003c!--ndstart--\u003e\u003c!--ndend--\u003e\u003cspan class=\"q whtt-extra whtt-ilvl\"\u003e\u003cbr\u003eItem Level \u003c!--ilvl--\u003e60\u003c/span\u003e\u003c!--bo--\u003e\u003c!--ue--\u003e\u003c!--ue--\u003e\u003c!--ebstats--\u003e\u003c!--egstats--\u003e\u003c!--eistats--\u003e\u003c!--nameDescStats--\u003e\u003cbr\u003eRequires Level \u003c!--rlvl--\u003e50\u003cbr\u003e\u003cbr\u003e\u003c!--useText:0:1--\u003e\u003cspan id=\"useText1\" class=\"q2\"\u003eUse: \u003c!--useEffect:0:1--\u003e\u003ca href=\"/classic/spell=22725/defense-3\" class=\"q2\"\u003ePermanently increase the defense value of an item worn on the chest, legs, hands or feet by 3. \u0026nbsp;Only usable on items level 45 and above.\u003c/a\u003e\u003c!--useEffect:1--\u003e\u003c/span\u003e\u003c!--useText:1--\u003e\u003c!--itemEffects:1--\u003e\u003cbr\u003e\u003c!--pvpEquip--\u003e\u003c!--pvpEquip--\u003e\u003cdiv class=\"whtt-extra whtt-maxstack\"\u003eMax Stack: 10\u003c/div\u003e\u003cdiv class=\"whtt-sellprice\"\u003eSell Price: \u003cspan class=\"moneysilver\"\u003e50\u003c/span\u003e\u003c/div\u003e\u003c/td\u003e\u003c/tr\u003e\u003c/table\u003e",
+                        "tooltip2":  "",
+                        "buff":  "",
+                        "quality":  3,
+                        "spells":  {
+
+                                   },
+                        "buffspells":  {
+
+                                       },
+                        "completion_category":  11
+                    }
+}

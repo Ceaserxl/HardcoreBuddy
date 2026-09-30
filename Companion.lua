@@ -151,6 +151,7 @@ function C.Detail(context, action)
     if kind=="item" then
         local item=P.ItemForFaction(action.item,P.ContextFaction(context))
         if not item then return card("Unavailable route",nil,{row(nil,"This quest reward is not available for your faction.")}) end
+        if item.armorKit and A.ArmorKits then item=A.ArmorKits.DetailItem(context,item) end
         local family=P.grouped[item.family] and item.family or nil
         local blocks=G.ItemBlocks(item,context)
         if family then blocks[#blocks+1]=row("Profession training","Next recipes, skill books and training routes",{kind="profession",family=family}) end
@@ -257,6 +258,7 @@ function C.Build(context,state)
                 local group={}
                 for _,b in ipairs(rows) do if b.category==category then group[#group+1]=b end end
                 local section=card(category,#group==0 and "No matching items in this category." or nil,group)
+                if category=="Buffs" and A.ArmorKits then section.note=A.ArmorKits.Summary(context) end
                 section.supplyTable=true
                 result.cards[#result.cards+1]=section
                 if category=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
@@ -268,6 +270,7 @@ function C.Build(context,state)
             result.cards[1]=card(state.filter=="Essentials" and "Essentials" or "Your supplies",
                 state.filter=="Essentials" and "Your core supplies. Open an item to change its priority; set Carry to 0 to skip restocking." or nil,rows)
             result.cards[1].supplyTable=true
+            if state.filter=="Buffs" and A.ArmorKits then result.cards[1].note=A.ArmorKits.Summary(context) end
             if state.filter=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
                 result.cards[#rows==0 and 1 or #result.cards+1]=A.HunterTraining.Card(context)
             end

@@ -1,4 +1,11 @@
-# HardcoreBuddy v0.3.0
+# Unreleased
+
+- Supplies > Buffs now checks equipped chest armor, leggings, gloves and boots
+  for missing or outdated armor kits. Recommendations respect character and
+  armor item levels, preserve other enchants and Core Armor Kits, and update
+  when equipment or enhancements change.
+
+## HardcoreBuddy v0.3.0
 
 More flexible alerts and clearer supply planning for WoW Classic Era / Hardcore.
 
