@@ -1,5 +1,9 @@
 # Unreleased
 
+- Fixed weapon percentage mismatches by preserving each profile's DPS weight and
+  reading native displayed DPS precision. Two-handed tooltips show the reference
+  main-hand comparison plus a separate Both hands comparison when an off-hand
+  would be lost. Full auction setups continue to compare the complete equipment.
 - Added auction-house Weapon setups: compare two-handed weapons against complete
   main-hand/off-hand pairs using the same equipped baseline. Includes upgrades
   for either or both hands, equipped-item reuse, shields, caster off-hands,

@@ -246,8 +246,38 @@ equipment[16]=twohand; equipment[17]=nil
 local off=item("INVTYPE_WEAPONOFFHAND",{ITEM_MOD_DAMAGE_PER_SECOND_SHORT=10},2,7)
 check(row(off).status=="unknown","Cannot equip offhand beside two-hander")
 reset("DRUID",40,{0,31,0})
-local staff=item("INVTYPE_2HWEAPON",{ITEM_MOD_STRENGTH_SHORT=5},2,10)
-check(G.Score(G:Read(staff.link),G:CurrentProfile(),16)>0,"Feral stat sticks require no weapon DPS")
+local staff=item("INVTYPE_2HWEAPON",{ITEM_MOD_STRENGTH_SHORT=5},2,10,{{"(10.0 damage per second)"}})
+check(G:CurrentProfile().weights.meleeDPS>0 and G.Score(G:Read(staff.link),G:CurrentProfile(),16)>0,"Feral weapon scoring retains the selected profile DPS weight")
+
+-- Live screenshots: native displayed DPS (not the higher-precision item API)
+-- and the selected profile's DPS weight reproduce the item percentages.
+reset("HUNTER",41,{31,1,0})
+local rapier=item("INVTYPE_WEAPON",{ITEM_MOD_DAMAGE_PER_SECOND_SHORT=28.05555534362793},2,7,
+    {{"(28.1 damage per second)"},{"+8 Agility"},{"+3 Stamina"}})
+rapier.name="Speedsteel Rapier"
+equipment[16]=rapier; equipment[17]=rapier
+local zealot=item("INVTYPE_WEAPON",{ITEM_MOD_DAMAGE_PER_SECOND_SHORT=22.14285659790039},2,7,
+    {{"(22.1 damage per second)"},{"+5 Intellect"},{"+6 Spirit"}})
+zealot.name="Zealot Blade"
+local jordan=item("INVTYPE_2HWEAPON",{ITEM_MOD_DAMAGE_PER_SECOND_SHORT=40.4054069519043},2,10,
+    {{"(40.4 damage per second)"},{"+11 Intellect"},{"+11 Spirit"},
+     {"Equip: Increases damage and healing done by magical spells and effects by up to 26."}})
+jordan.name="Staff of Jordan"
+check(G:Read(rapier.link).dps==28.1 and close(G.Score(G:Read(rapier.link),G:CurrentProfile(),16),76.94),"Equipped weapon uses displayed DPS and reference profile weight")
+check(report(zealot).rows[1].percent==-18.07 and report(zealot).rows[2].percent==-18.07,"Zealot Blade screenshot matches both reference slot percentages")
+local jordanReport=report(jordan)
+check(jordanReport.rows[1].label=="Main hand" and jordanReport.rows[1].percent==51.75,"Staff of Jordan item percentage matches main-hand reference")
+check(jordanReport.rows[2].label=="Both hands" and jordanReport.rows[2].percent==-24.13,"Separate setup comparison still accounts for losing the off hand")
+local enchantedZealot=withEnchant(zealot,241,zealot.stats,{{"(22.8 damage per second)"},{"+5 Intellect"},{"+6 Spirit"},{"Weapon Damage +2"}})
+check(report(enchantedZealot).rows[1].percent==-18.07,"Weapon enchant remains excluded from displayed intrinsic DPS")
+for class,profiles in pairs(A.Data.AdvisorGear) do
+    for id,source in ipairs(profiles) do
+        local profile=G.Profile(class,40,nil,id)
+        check(profile.weights.meleeDPS==profile.weights.rangedDPS and profile.weights.meleeDPS==profile.weights.wandDPS,
+            "Selected weapon DPS weight is not overridden by class or slot")
+        if source.stats.DAMAGE_PER_SECOND then check(profile.weights.meleeDPS==source.stats.DAMAGE_PER_SECOND,"Explicit reference DPS weight preserved") end
+    end
+end
 
 reset("HUNTER",40,{31,0,0}); equipment[10]=kit; equipment[3]=shoulders
 GameTooltip:SetHyperlink(scorpid.link)

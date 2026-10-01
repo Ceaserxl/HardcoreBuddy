@@ -97,7 +97,7 @@ check(snapshot.character.name=="Tester" and snapshot.character.realm=="Realm" an
 check(snapshot.slots[10].link==enchanted.link and snapshot.slots[10].enchantID==1843,"Original enchanted item link preserved")
 check(snapshot.slots[10].apiStats.RESISTANCE0_NAME==211 and snapshot.slots[10].advisor.stats.RESISTANCE0_NAME==171,"Raw API and enchant-free advisor values kept separately")
 check(close(snapshot.slots[10].score,11.155) and close(snapshot.slots[3].score,16.12),"Offline item scores reproduce exact source fixtures")
-check(snapshot.slots[10].scoreModel=="classic-weighted-v2","Saved item scores identify the same stat model as the compact advisor")
+check(snapshot.slots[10].scoreModel=="classic-weighted-v3","Saved item scores identify the same stat model as the compact advisor")
 check(snapshot.slots[3].advisor.stats.ITEM_MOD_AGILITY_SHORT==8 and snapshot.slots[3].link:find(":-15:",1,true),"Random suffix identity and corrected native stats preserved")
 check(snapshot.slots[10].tooltipLines[2].right=="Mail" and snapshot.slots[10].tooltipLines[6].left=="Reinforced Armor +40","Both original tooltip columns and applied enchant text preserved")
 check(snapshot.slots[4].advisorReason=="unsupported" and snapshot.slots[4].score==nil,"Unscored cosmetic item saved without a fabricated score")

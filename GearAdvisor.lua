@@ -141,9 +141,10 @@ function G.Profile(class,level,tree,profileID)
     for key,name in pairs(weightNames) do p.weights[key]=source.stats[name] or 0 end
     p.weights.armor=source.stats.ARMOR or (lowest or 1)*0.1
     local dps=source.stats.DAMAGE_PER_SECOND or (lowest or 1)*0.1
-    local feral=class=="DRUID" and (id==2 or id==3)
-    p.weights.meleeDPS=(class=="HUNTER" and id~=4 or feral) and 0 or dps
-    p.weights.rangedDPS=class=="HUNTER" and id~=4 and dps or 0
+    -- Apply the selected profile's weapon-DPS weight consistently. Silently
+    -- zeroing it for a class or weapon slot changes the reference item score.
+    p.weights.meleeDPS=dps
+    p.weights.rangedDPS=dps
     p.weights.wandDPS=dps
     return p
 end
@@ -309,7 +310,7 @@ function G:Read(link,inventorySlot,allowUnscored)
         end
     end
     return {id=id,link=link,name=name,required=required or 0,equip=equip,classID=classID,subclassID=subclassID,
-        stats=merged,dps=stats.ITEM_MOD_DAMAGE_PER_SECOND_SHORT or scanned.dps,restricted=scanned.restricted,unique=scanned.unique,
+        stats=merged,dps=scanned.dps or stats.ITEM_MOD_DAMAGE_PER_SECOND_SHORT,restricted=scanned.restricted,unique=scanned.unique,
         spellEffectsComplete=scanned.spellEffectsComplete,useOrSetEffect=scanned.useOrSetEffect,
         blockValueComplete=blockComplete}
 end
@@ -427,7 +428,7 @@ function G.CanDualWield(p)
     return dual
 end
 
-function G:Comparisons(item,p)
+function G:Comparisons(item,p,slotOnly)
     local candidates={}
     -- Slot, not armor subclass, chooses the baseline. Robes and chest armor
     -- both replace slot 5; stats decide the result across cloth/leather/mail/plate.
@@ -454,7 +455,7 @@ function G:Comparisons(item,p)
             reason=reason or mainReason
             if main and main.equip=="INVTYPE_2HWEAPON" then reason="Needs a one-handed main hand" end
             if item.classID==2 and not dual then reason="Dual wield not available" end
-        elseif item.equip=="INVTYPE_2HWEAPON" then
+        elseif item.equip=="INVTYPE_2HWEAPON" and not slotOnly then
             row.label="Both hands"
             local off,offReason=self:Equipped(17)
             reason=reason or offReason
@@ -488,9 +489,13 @@ function G:Report(link)
     local rows
     if item then
         local allowed,why=self.Allowed(item,p)
-        rows=allowed and self:Comparisons(item,p) or {{label="Unavailable",text=why,status="unknown"}}
+        rows=allowed and self:Comparisons(item,p,true) or {{label="Unavailable",text=why,status="unknown"}}
+        if allowed and item.equip=="INVTYPE_2HWEAPON" then
+            local off,offReason=self:Equipped(17)
+            if off or offReason then rows[2]=self:Comparisons(item,p)[1] end
+        end
     else rows={{label="Comparison",text=reason,status="unknown"}} end
-    return {profile=p,rows=rows,scoreModel="classic-weighted-v2"}
+    return {profile=p,rows=rows,scoreModel="classic-weighted-v3"}
 end
 
 function G:Add(tip)

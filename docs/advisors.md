@@ -21,15 +21,22 @@ changes the live gear-scoring character.
 All usable armor materials compete by slot. There is no lighter-armor penalty
 and no requirement to match the equipped material. Class, level and native red
 equipment restrictions still apply. Rings and trinkets show both slots; a
-two-handed weapon replaces both hands. A replacement off-hand cannot be scored
+two-handed item's **Main hand** line uses the main-hand baseline, matching the
+reference item tooltip. When an off-hand is equipped, a separate **Both hands**
+line includes its lost score. Auction weapon setups always compare the complete
+configuration. A replacement off-hand cannot be scored
 as equippable while a two-handed main hand remains equipped.
 
 Permanent enchants and armor kits are cleared from both item links before
 scanning; random suffixes remain intact. Native primary-stat text takes priority
 over incomplete Classic item-stat API results. Static supported Equip stats are
 included; procs, use effects and set bonuses are excluded. Lost stats appear in
-red even when the total item score improves. Hunter melee stat sticks and feral
-weapons do not receive irrelevant weapon-DPS value.
+red even when the total item score improves. The selected profile's DPS weight
+applies to melee, ranged and wand weapons, without class-specific overrides.
+Weapon DPS uses the native tooltip's displayed precision, matching the reference
+scorer, ahead of the item API's higher-precision value. Enhancements are removed
+before reading that tooltip. New snapshots identify this as `classic-weighted-v3`;
+older saved snapshots retain their original scores and model identifier.
 
 ## Auction weapon setups
 
@@ -37,7 +44,7 @@ The auction house's **Upgrades > Weapon setups** compares complete configuration
 The baseline is the sum of the equipped main-hand and off-hand scores. A candidate
 two-hander supplies one score; a one-handed weapon and its off-hand supply two.
 Both percentages use the same formula and rounding as the gear advisor. Ordinary
-single-item tooltip percentages are unchanged and can differ from a setup's
+single-item tooltip percentages can differ from a setup's
 percentage because their replaced baseline is different.
 
 The scan retains usable weapon candidates even if they are not individual upgrades.
@@ -95,7 +102,9 @@ Deliberate differences from that reference:
 - No asymmetric candidate-only hit-cap discount: the same weight evaluates both
   sides, so comparing an identical item always returns zero.
 - No invented 100% score against an empty or zero-score slot.
-- Relevant weapon DPS only, as described above; enchants are consistently excluded.
+- Enchants are consistently excluded.
+- Two-handed tooltips also show the complete replacement under **Both hands**
+  when an off-hand would be removed, rather than presenting only the main-hand gain.
 - The Frost single-target path moves its third Frost Channeling point ahead of
   Ice Barrier, making Ice Barrier legal at level 40 instead of the source's 39.
 - No automatic equipping or multi-point talent spending.

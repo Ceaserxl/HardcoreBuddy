@@ -95,7 +95,7 @@ function S:ReadSlot(slot,profile)
     row.advisor=copy(item)
     row.advisorReason=reason
     row.score=item and profile and G.Score(item,profile,slot) or nil
-    row.scoreModel=row.score~=nil and "classic-weighted-v2" or nil
+    row.scoreModel=row.score~=nil and "classic-weighted-v3" or nil
     if item and profile and row.score==nil then
         reason="Item stats incomplete"; row.advisorReason=reason
     end
