@@ -245,8 +245,11 @@ G.ItemBlocks = function(item,context)
                     action={kind="item",item=other},child=true})
             end
         end
-        if item.next then add(out,{title="Next: "..item.next.name,body="Suggested from level "..P.AvailableAt(item.next),
-            itemId=item.next.itemId,icon=item.next.icon,action={kind="item",item=item.next},child=true}) end
+        if item.next then
+            text(out,"Next","Suggested from level "..P.AvailableAt(item.next))
+            add(out,{title=item.next.name,body=item.next.short,itemId=item.next.itemId,icon=item.next.icon,
+                action={kind="item",item=item.next},child=true})
+        end
     end
     return out.blocks
 end

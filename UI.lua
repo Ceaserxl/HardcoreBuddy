@@ -993,7 +993,8 @@ function addon:Layout()
     if priorityItem then
         f.priorityChoice.item=priorityItem
         f.priorityChoice.label:SetText("Priority: "..self.Supplies.Priority(context,priorityItem))
-        f.priorityChoice:ClearAllPoints(); f.priorityChoice:SetPoint("TOPRIGHT",-40,-y)
+        local inset=doc.cards[1] and doc.cards[1].itemLayout and 12 or 0
+        f.priorityChoice:ClearAllPoints(); f.priorityChoice:SetPoint("TOPRIGHT",-40-inset,-y)
     end
     f.userRemove:SetShown(customDetail and true or false)
     if customDetail then

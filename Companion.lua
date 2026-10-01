@@ -246,7 +246,7 @@ function C.Detail(context, action)
         end
         for _,block in ipairs(out.blocks) do
             if block.fields then block.title="Item details"; block.singleFieldColumn=true end
-            if block.title=="Alternatives" then block.plain=true; block.textInset=52 end
+            if block.title=="Alternatives" or block.title=="Next" then block.plain=true; block.textInset=52 end
             if block.child and block.itemId then block.child=nil end
         end
         return out
