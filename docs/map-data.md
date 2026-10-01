@@ -30,8 +30,20 @@ Markers use native Classic assets: `nameplates-icon-elite-silver`,
 `Interface/TargetingFrame/UI-TargetingFrame-Skull`. Atlas availability is checked
 before use; native texture fallbacks handle missing atlases. Classic atlas names
 are recorded in the [client atlas catalogue](https://github.com/Hoizame/WoW_ClassicUIResources/blob/master/RawData/UiTextureAtlasElement.lua).
-Icons remain 18 pixels at different map zoom levels. Clusters use a 16-pixel
+Icons keep their selected screen size at different map zoom levels. Clusters use a 16-pixel
 maximum distance between all members, preventing transitive chains.
+The default size is adjustable from 12–40 pixels, with 10–100% icon opacity.
+Each category can use the rare, elite, skull, warning, star, diamond or cross icon.
+Tint RGB and opacity are editable independently of Reveal all and Unchanged.
+Appearance resets preserve category filters and silent notice preferences.
+Silent zone notices default on for unset preferences; explicit opt-outs remain.
+
+Clicking a marker opens a native PlayerModel inside HardcoreBuddy's Advisors >
+Map page. A copied, deduplicated NPC list keeps paging stable across map refreshes.
+Previous/Next controls show each clustered NPC; Back restores the prior addon
+page. Loading failures clear the old model and offer Retry. Drag rotates and the
+mouse wheel zooms. Models are requested by NPC ID from the game client, with no
+external addon integration or bundled model files.
 
 Reveal uses independent textures behind native explored overlays. Discovering an
 area naturally removes its extra tint. It never changes exploration flags,

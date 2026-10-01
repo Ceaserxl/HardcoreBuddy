@@ -52,7 +52,8 @@ C_Map={GetBestMapForUnit=function() return current end,
     GetMapArtLayers=function() return {{tileWidth=256,tileHeight=256}} end,
     GetMapInfo=function(id) return id==999 and {parentMapID=1436} end}
 C_MapExplorationInfo={GetExploredMapTextures=function() return known end}
-local s=M:Settings(); assert(s.reveal=="tint" and not s.notify)
+local s=M:Settings(); assert(s.reveal=="tint" and s.notify)
+s.notify=false; assert(not M:Settings().notify,"Explicit opt-out survives default change")
 M:Attach(); M:RefreshPins()
 assert(#M.exploration[pin]>0 and #M.pins>0)
 local t=M.exploration[pin][1]
@@ -180,3 +181,48 @@ assert(M.pins[2].icon.testAtlas=="nameplates-icon-elite-gold")
 assert(M.pins[3].icon.testAtlas=="services-icon-warning")
 assert(M.pins[4].icon.texture=="Interface\\TargetingFrame\\UI-TargetingFrame-Skull")
 C_Texture=previousTexture; M.Records=records
+
+-- Appearance settings update the map, persist, and reset independently of filters.
+s.notify=false
+A:OpenSettings("Map")
+local controls=M.controls
+controls.sliders.tintR:SetValue(255); controls.sliders.tintG:SetValue(0)
+controls.sliders.tintB:SetValue(128); controls.sliders.tintAlpha:SetValue(25)
+controls.sliders.iconSize:SetValue(30); controls.sliders.iconAlpha:SetValue(40)
+now=now+1; M.events.scripts.OnUpdate(M.events)
+mapID=1436; art=1240; scale=1; s.reveal="tint"; known={}
+M:Attach(); M:RefreshPins()
+assert(t.vertexColor[1]==1 and t.vertexColor[2]==0 and t.vertexColor[3]==128/255 and t.vertexColor[4]==0.25)
+assert(M.pins[1]:GetWidth()==30 and M.pins[1].icon:GetAlpha()==0.4)
+local oldIcon=s.icons.rare; MOCK.Click(controls.icons.rare)
+assert(s.icons.rare~=oldIcon)
+A:OpenSettings("General"); A:OpenSettings("Map")
+assert(s.tintR==1 and s.iconSize==30 and not s.notify)
+MOCK.Click(controls.restore)
+assert(s.tintR==0.35 and s.iconSize==18 and s.iconAlpha==1 and s.icons.rare=="rare" and not s.notify)
+s.iconSize=999; s.iconAlpha=-10; s.icons.rare="bad"; M:Settings()
+assert(s.iconSize==40 and s.iconAlpha==0.1 and s.icons.rare=="rare")
+MOCK.Click(controls.restore)
+
+-- Marker click opens a paged native model inside HardcoreBuddy; Back restores context.
+A:Navigate("supplies"); local previousState=A.state
+M.pins[1].cluster={records={{id=589},{id=2529},{id=589}}}
+MOCK.Click(M.pins[1])
+assert(A.state.view=="advisors" and A.state.filter=="Map" and #A.state.mapNPCs==2)
+assert(not map:IsShown() and A:CanGoBack())
+local viewer=M.viewer
+assert(viewer:IsVisible() and viewer.model.creatureID==589 and not viewer.previous:IsEnabled() and viewer.next:IsEnabled())
+assert(viewer.title:GetText()==A.Data.MapNPCs[589].name)
+viewer.model.modelFileID=123; viewer.model.scripts.OnModelLoaded(viewer.model)
+assert(viewer.loading:GetText():find("Drag",1,true))
+viewer.model.scripts.OnMouseWheel(viewer.model,1); assert(viewer.model.zoom==0.1)
+MOCK.Click(viewer.next)
+assert(viewer.model.creatureID==2529 and viewer.previous:IsEnabled() and not viewer.next:IsEnabled())
+viewer.model.scripts.OnUpdate(viewer.model,6)
+assert(viewer.loading:GetText():find("unavailable",1,true) and viewer.model.modelFileID==nil,"No previous model on a failed next page")
+MOCK.Click(viewer.retry); assert(viewer.waiting==0)
+MOCK.Click(viewer.previous); assert(viewer.model.creatureID==589)
+A:Back(); assert(A.state==previousState and not viewer:IsShown())
+M:OpenNPCs({records={{id=589}}})
+assert(not viewer.next:IsEnabled() and not viewer.previous:IsEnabled())
+A:Navigate("supplies"); assert(not viewer:IsShown() and viewer.model.creatureID==nil)

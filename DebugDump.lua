@@ -172,7 +172,7 @@ function D:ShowPart(offset)
     while last<#text and text:byte(last+1)>=128 and text:byte(last+1)<192 do last=last-1 end
     local more=last<#text
     if more then p.partStarts[p.part+1]=last+1 end
-    p.partText=text:sub(first,last)
+    p.partText=p.editedParts and p.editedParts[p.part] or text:sub(first,last)
     p.edit:ClearFocus()
     local _,lines=p.partText:gsub("\n","\n")
     p.edit:SetHeight(math.max(250,(lines+1)*14))
@@ -195,7 +195,7 @@ function D:Refresh()
     p.sheen:SetShown(self.job~=nil)
     p.sheen:ClearAllPoints(); p.sheen:SetPoint("TOPLEFT",p.track,"TOPLEFT",((self.animationTime or 0)*220)%660,0)
     if saved and p.shownDump~=saved then
-        p.shownDump=saved; p.part=1; p.partStarts={1}
+        p.shownDump=saved; p.part=1; p.partStarts={1}; p.editedParts={}
         self:ShowPart(0)
     end
     p.previous:SetEnabled(not self.job and (p.part or 1)>1)
@@ -208,7 +208,8 @@ function D:Create(page)
     label(page,"Capture all HardcoreBuddy data and available character details for offline review.",20,56,700)
     page.dump=button(page,"Dump Data",20,90,function() self:Start() end)
     page.copy=button(page,"Copy",170,90,function() self:Copy() end)
-    page.cached=label(page,"",330,98,390)
+    page.copyHint=label(page,"Ctrl + C to copy",330,88,390)
+    page.cached=label(page,"",330,108,390)
     page.status=label(page,"",20,130,700); page.status:SetHeight(40)
     local track=CreateFrame("Frame",nil,page,"BackdropTemplate"); page.track=track
     track:SetPoint("TOPLEFT",20,-176); track:SetSize(700,18); Skin.Paint(track,"edit")
@@ -223,8 +224,8 @@ function D:Create(page)
     scroll:SetFrameLevel(border:GetFrameLevel()+1)
     scroll:SetPoint("TOPLEFT",20,-208); scroll:SetSize(680,250)
     local edit=CreateFrame("EditBox",nil,scroll); page.edit=edit
-    edit:SetMultiLine(true); edit:SetAutoFocus(false); edit:SetFontObject(ChatFontNormal); edit:SetWidth(670); edit:SetHeight(250); edit:SetMaxLetters(0)
-    if edit.SetMaxBytes then edit:SetMaxBytes(0) end
+    edit:SetMultiLine(true); edit:SetAutoFocus(false); edit:SetFontObject(ChatFontNormal); edit:SetWidth(670); edit:SetHeight(250); edit:SetMaxLetters(COPY_BYTES*2)
+    if edit.SetMaxBytes then edit:SetMaxBytes(COPY_BYTES*2) end
     if edit.SetCountInvisibleLetters then edit:SetCountInvisibleLetters(true) end
     scroll:SetScrollChild(edit)
     scroll:EnableMouseWheel(true)
@@ -232,7 +233,12 @@ function D:Create(page)
         scroll:SetVerticalScroll(math.max(0,math.min(edit:GetHeight()-250,scroll:GetVerticalScroll()-delta*42)))
     end)
     edit:SetScript("OnEscapePressed",function(e) e:ClearFocus() end)
-    edit:SetScript("OnTextChanged",function(e,user) if user then e:SetText(page.partText or "") end end)
+    edit:SetScript("OnTextChanged",function(e,user)
+        if not user or not page.shownDump then return end
+        page.editedParts=page.editedParts or {}; page.editedParts[page.part]=e:GetText()
+        local _,lines=e:GetText():gsub("\n","\n")
+        e:SetHeight(math.max(250,(lines+1)*14)); scroll:UpdateScrollChildRect()
+    end)
     edit:SetScript("OnCursorChanged",function(_,_,y,_,height)
         if not y or page.scrolling then return end
         page.scrolling=true
@@ -247,7 +253,7 @@ function D:Create(page)
     page.previous=button(page,"Previous part",20,472,function() self:ShowPart(-1) end)
     page.next=button(page,"Next part",170,472,function() self:ShowPart(1) end)
     page.partLabel=label(page,"",330,480,390)
-    label(page,"Small parts keep copying responsive. Paste each part in order, or /reload to save the full dump in SavedVariables.",20,516,700)
+    label(page,"Edit this text before copying. Edits last until a new dump or reload; the original full dump stays cached.",20,516,700)
     page:SetScript("OnHide",function() edit:ClearFocus() end)
     page.contentHeight=562; self:Refresh()
 end

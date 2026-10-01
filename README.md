@@ -97,6 +97,9 @@ press **Ctrl+C** (Cmd+C on Mac), paste, then use **Next part**. Paste parts in
 order to reconstruct the dump. `/reload` or log out to write the complete cache
 to disk in the character's `SavedVariables/HardcoreBuddy.lua` file. Opening
 Debug restores the last dump without recapturing.
+The textbox is editable before copying, with a persistent **Ctrl + C to copy**
+label. Copy selects all displayed text, including your edits. Edits are retained
+while browsing parts until a new dump or reload; the original cache is preserved.
 Unavailable APIs are labelled; bank information depends on the bank being open.
 The dump includes only HardcoreBuddy-owned data and player APIs, not other
 addons. UI objects and functions are represented by markers. Shared tables and
@@ -109,12 +112,19 @@ reveal unexplored outdoor terrain or tint unexplored areas translucent blue.
 Category filters show known dangerous NPCs, rares, elites and bosses.
 Map markers use Blizzard's silver rare and gold elite icons, a skull for world
 bosses and a warning icon for dangerous NPCs. Hover for NPC names and details.
+Map settings include RGB tint color and opacity, individual category icon choices,
+and marker size (12–40 pixels) and opacity (10–100%). Reset appearance restores
+the original visuals without changing category filters or notice preferences.
 Only nearly overlapping points (within 16 screen pixels of every other point
 in their group) combine. Nearby chains cannot collapse an entire camp. Zooming
 in separates locations that are far enough apart on screen.
 Browse any Classic zone or follow your current zone under **Advisors > Map**.
-An optional **Silent zone-entry notice** lists known dangers in chat without
-playing a sound. Pins mark recorded spawn areas, not live sightings; missing
+**Silent zone-entry notice** lists known dangers in chat without playing a sound
+and is enabled by default; existing opt-outs are preserved. Click a marker to
+open its NPC's 3D preview inside **Advisors > Map**. Clustered markers provide
+Previous/Next NPC controls. Drag to rotate, scroll to zoom, and use Back to return.
+Models depend on client availability; a failed load offers Retry.
+Pins mark recorded spawn areas, not live sightings; missing
 coordinates stay clearly labelled in the zone list. See [sources and coverage](docs/map-data.md).
 
 ## Auction house upgrades

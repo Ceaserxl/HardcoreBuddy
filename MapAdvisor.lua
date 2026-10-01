@@ -8,18 +8,28 @@ local icons={
     rare={atlas="nameplates-icon-elite-silver",fallback="Interface\\TargetingFrame\\UI-TargetingFrame-Skull"},
     elite={atlas="nameplates-icon-elite-gold",fallback="Interface\\TargetingFrame\\UI-TargetingFrame-Skull"},
     boss={fallback="Interface\\TargetingFrame\\UI-TargetingFrame-Skull"},
+    star={fallback="Interface\\TargetingFrame\\UI-RaidTargetingIcon_1"},
+    diamond={fallback="Interface\\TargetingFrame\\UI-RaidTargetingIcon_3"},
+    cross={fallback="Interface\\TargetingFrame\\UI-RaidTargetingIcon_7"},
 }
 local function atlasFor(kind)
     local atlas=icons[kind].atlas
     local lookup=C_Texture and C_Texture.GetAtlasInfo or GetAtlasInfo
     return atlas and lookup and lookup(atlas) and atlas
 end
-local function iconLabel(kind)
-    local atlas=atlasFor(kind)
-    return (atlas and ("|A:"..atlas..":18:18|a") or ("|T"..icons[kind].fallback..":18:18:0:0|t")).." "..names[kind]
+function M:IconLabel(kind,showChoice)
+    local s=self:Settings(); local key=s and s.icons[kind] or kind
+    local atlas=atlasFor(key)
+    local caption=showChoice and (names[key] or (key:sub(1,1):upper()..key:sub(2))) or names[kind]
+    return (atlas and ("|A:"..atlas..":18:18|a") or ("|T"..icons[key].fallback..":18:18:0:0|t")).." "..caption
+end
+M.iconChoices={"rare","elite","boss","danger","star","diamond","cross"}
+local function bounded(value,default,low,high)
+    value=tonumber(value); if not value or value~=value then value=default end
+    return math.max(low,math.min(high,value))
 end
 local priority={danger=2,rare=1,elite=3,boss=4}
-local PIN_SIZE,CLUSTER_RADIUS=18,16
+local CLUSTER_RADIUS=16
 local function action(command,id) return {kind="mapAdvisor",command=command,id=id} end
 local function row(title,body,command,id) return {title=title,body=body,action=command and action(command,id)} end
 
@@ -29,7 +39,12 @@ function M:Settings()
     local s=A.db.mapAdvisor
     if s.reveal~="off" and s.reveal~="full" and s.reveal~="tint" then s.reveal="tint" end
     for _,key in ipairs({"danger","rare","elite","boss"}) do if s[key]==nil then s[key]=true end end
-    if s.notify==nil then s.notify=false end
+    if s.notify==nil then s.notify=true end
+    s.tintR=bounded(s.tintR,0.35,0,1); s.tintG=bounded(s.tintG,0.65,0,1); s.tintB=bounded(s.tintB,1,0,1)
+    s.tintAlpha=bounded(s.tintAlpha,0.55,0,1)
+    s.iconSize=bounded(s.iconSize,18,12,40); s.iconAlpha=bounded(s.iconAlpha,1,0.1,1)
+    if type(s.icons)~="table" then s.icons={} end
+    for _,kind in ipairs({"danger","rare","elite","boss"}) do if not icons[s.icons[kind]] then s.icons[kind]=kind end end
     return s
 end
 
@@ -108,10 +123,11 @@ function M:Tooltip(pin)
     local count=#pin.cluster.records
     GameTooltip:SetText("HardcoreBuddy: known danger area"..(count>1 and (" ("..count.." NPCs)") or ""),1,0.8,0.4,1,true)
     for _,record in ipairs(pin.cluster.records) do
-        GameTooltip:AddLine(record.npc.name.." | "..level(record.npc).." | "..iconLabel(record.npc.kind),unpack(colors[record.npc.kind]))
+        GameTooltip:AddLine(record.npc.name.." | "..level(record.npc).." | "..self:IconLabel(record.npc.kind),unpack(colors[record.npc.kind]))
         if count==1 and record.npc.note then GameTooltip:AddLine(record.npc.note,0.85,0.85,0.75,true) end
     end
     GameTooltip:AddLine("Recorded spawn areas; creatures may roam or be absent.",0.7,0.7,0.7,true)
+    GameTooltip:AddLine("Click to view NPC appearances in HardcoreBuddy.",1,0.8,0.4,true)
     GameTooltip:Show()
 end
 
@@ -127,7 +143,9 @@ function M:PlacePins()
         if pin:IsShown() and pin.cluster then
             pin:SetFrameLevel(frameLevel)
             pin:ClearAllPoints(); pin:SetPoint("CENTER",canvas,"TOPLEFT",pin.cluster.x*canvas:GetWidth(),-pin.cluster.y*canvas:GetHeight())
-            pin:SetSize(PIN_SIZE/math.max(0.1,scale),PIN_SIZE/math.max(0.1,scale))
+            local s=self:Settings()
+            pin:SetSize(s.iconSize/math.max(0.1,scale),s.iconSize/math.max(0.1,scale))
+            pin.icon:SetAlpha(s.iconAlpha)
         end
     end
 end
@@ -140,17 +158,20 @@ function M:RefreshPins()
     for index,cluster in ipairs(self:Clusters(map:GetMapID())) do
         local pin=self.pins[index]
         if not pin then
-            pin=CreateFrame("Frame",nil,canvas); self.pins[index]=pin
+            pin=CreateFrame("Button",nil,canvas); self.pins[index]=pin
             pin:EnableMouse(true)
             pin.icon=pin:CreateTexture(nil,"ARTWORK"); pin.icon:SetAllPoints()
             pin:SetScript("OnEnter",function(p) M:Tooltip(p) end)
             pin:SetScript("OnLeave",function() GameTooltip:Hide() end)
+            pin:SetScript("OnClick",function(p) M:OpenNPCs(p.cluster) end)
             pin:SetScript("OnHide",function(p) if GameTooltip.IsOwned and GameTooltip:IsOwned(p) then GameTooltip:Hide() end end)
         end
         pin.cluster=cluster
-        local atlas=atlasFor(cluster.kind)
+        local key=self:Settings().icons[cluster.kind]
+        local atlas=atlasFor(key)
+        pin.icon:SetTexCoord(0,1,0,1)
         if atlas and pin.icon.SetAtlas then pin.icon:SetAtlas(atlas,false)
-        else pin.icon:SetTexture(icons[cluster.kind].fallback) end
+        else pin.icon:SetTexture(icons[key].fallback) end
         pin:Show()
     end
     self:PlacePins()
@@ -188,7 +209,7 @@ function M:Reveal(pin)
                 texture:ClearAllPoints(); texture:SetPoint("TOPLEFT",pin,"TOPLEFT",r[3]+col*256,-r[4]-rowIndex*256)
                 texture:SetSize(w,h); texture:SetTexCoord(0,w/padded(w),0,h/padded(h))
                 local loaded=texture:SetTexture(file)
-                if s.reveal=="tint" then texture:SetVertexColor(0.35,0.65,1,0.55)
+                if s.reveal=="tint" then texture:SetVertexColor(s.tintR,s.tintG,s.tintB,s.tintAlpha)
                 else texture:SetVertexColor(1,1,1,1) end
                 -- Failed client assets must never leave a green placeholder.
                 texture:SetShown(loaded~=false)
@@ -260,6 +281,7 @@ end
 
 function M:Document(context,state)
     local doc={view="advisors",context=context,cards={}}
+    if state.mapNPCs then return doc end
     if state.mapZonePicker then
         local zones={}; for id,z in pairs(A.Data.MapZones) do zones[#zones+1]={id=id,zone=z} end
         table.sort(zones,function(a,b) return a.zone.name<b.zone.name end)
@@ -285,44 +307,8 @@ function M:Document(context,state)
     return doc
 end
 
-function M:LayoutSettings(parent,left,top,width,visible)
-    if not self.controls and not visible then return 0 end
-    local s=self:Settings()
-    if not self.controls then
-        local f=CreateFrame("Frame",nil,parent,"BackdropTemplate"); self.controls=f; A.Skin.Paint(f,"card")
-        local function label(text,x,y,w)
-            local l=f:CreateFontString(nil,"OVERLAY","GameFontHighlight"); l:SetFont(STANDARD_TEXT_FONT,12,"")
-            l:SetPoint("TOPLEFT",x,-y); l:SetWidth(w); l:SetJustifyH("LEFT"); l:SetText(text); return l
-        end
-        label("Map",16,12,700):SetTextColor(unpack(A.Skin.colors.gold))
-        label("Reveal unexplored terrain, or tint it blue to keep track of where you have been.",16,37,700)
-        f.modes={}
-        for i,mode in ipairs({{"off","Unchanged"},{"full","Reveal all"},{"tint","Tint unexplored"}}) do
-            local key=mode[1]; local b=CreateFrame("Button",nil,f,"BackdropTemplate")
-            b:SetSize(220,28); b:SetPoint("TOPLEFT",16+(i-1)*232,-65); A.Skin.Button(b,"utility")
-            b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetFont(STANDARD_TEXT_FONT,12,""); b.label:SetAllPoints(); b.label:SetText(mode[2])
-            b:SetScript("OnClick",function() s.reveal=key; M:Changed() end); f.modes[key]=b
-        end
-        f.checks={}
-        local function check(key,caption,x,y,w)
-            local b=CreateFrame("CheckButton",nil,f,"BackdropTemplate"); b:SetSize(22,22); b:SetPoint("TOPLEFT",x,-y); A.Skin.Paint(b,"edit")
-            b.mark=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.mark:SetAllPoints(); b.mark:SetText("X")
-            label(caption,x+30,y+4,w)
-            b:SetScript("OnClick",function() s[key]=not not b:GetChecked(); M:Changed() end); f.checks[key]=b
-        end
-        for i,key in ipairs({"danger","rare","elite","boss"}) do check(key,iconLabel(key),16+(i-1)*177,108,135) end
-        check("notify","Silent zone-entry notice (chat only)",16,146,650)
-        label("Recorded spawn areas, not live sightings. Creatures may roam beyond these markers.",16,185,700)
-    end
-    local f=self.controls; f:SetShown(visible); if not visible then return 0 end
-    local scale=math.min(1,width/744); f:SetScale(scale); f:SetSize(width/scale,212)
-    f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
-    for key,b in pairs(f.modes) do A.Skin.ButtonState(b,s.reveal==key,false,false) end
-    for key,b in pairs(f.checks) do b:SetChecked(s[key]); b.mark:SetText(s[key] and "X" or "") end
-    return 220*scale
-end
-
 function M:LayoutControls(parent,left,top,width,visible)
+    visible=visible and not A.state.mapNPCs
     if not self.navigation and not visible then return 0 end
     if not self.navigation then
         local f=CreateFrame("Frame",nil,parent); self.navigation=f

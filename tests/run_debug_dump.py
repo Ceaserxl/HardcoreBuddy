@@ -51,6 +51,14 @@ assert(p.previous:IsEnabled() and not p.next:IsEnabled())
 MOCK.Click(p.previous); assert(p.next:IsEnabled())
 MOCK.Click(p.copy)
 assert(p.edit:HasFocus() and p.status:GetText():find("Ctrl+C",1,true),"Copy selects text and explains the required keypress")
+assert(p.copyHint:GetText()=="Ctrl + C to copy")
+local cached=saved.text
+p.edit:SetText("Editable diagnostic note")
+p.edit.scripts.OnTextChanged(p.edit,true)
+local editedPart=p.part
+D:ShowPart(-1); D:ShowPart(1)
+assert(p.part==editedPart and p.edit:GetText()=="Editable diagnostic note","User edits survive part navigation")
+assert(saved.text==cached,"Editing the copy draft preserves the original cache")
 local job=D.Collect
 D.Collect=function() error("capture failure fixture") end
 D:Start(); D:Step(.016)
@@ -80,7 +88,8 @@ D:Refresh()
 assert(#D.page.edit:GetText()==8191,"Do not split a UTF-8 codepoint")
 D:ShowPart(1); assert(D.page.edit:GetText():sub(1,3)==unicode)
 local full=TestAddon.characterDB.debugDump.text
+D.page.edit:SetText("Edited text")
 D.page.edit.scripts.OnTextChanged(D.page.edit,true)
-assert(#D.page.edit:GetText()<=8192 and TestAddon.characterDB.debugDump.text==full,"Editing cannot restore a full-sized report into the textbox")
+assert(D.page.edit:GetText()=="Edited text" and TestAddon.characterDB.debugDump.text==full,"Textbox is editable without changing the cached report")
 ''')
 print("PASS: dump parses offline and cached text restores in a fresh addon runtime.")

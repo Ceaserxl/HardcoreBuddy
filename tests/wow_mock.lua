@@ -32,6 +32,13 @@ local function new(kind,name,parent)
 end
 function CreateFrame(kind,name,parent,template)
     local f=new(kind,name,parent); f.template=template
+    if kind=="PlayerModel" then
+        function f:ClearModel() self.modelFileID=nil; self.creatureID=nil end
+        function f:SetCreature(id) self.creatureID=id end
+        function f:SetPortraitZoom(value) self.zoom=value end
+        function f:SetFacing(value) self.facing=value end
+        function f:GetModelFileID() return self.modelFileID or 0 end
+    end
     if template and template:find("BackdropTemplate",1,true) then
         f.scripts.OnSizeChanged=function(self) self.backdropResizeCalls=(self.backdropResizeCalls or 0)+1 end
     end

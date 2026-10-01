@@ -601,6 +601,8 @@ function addon:Back()
     self:CommitInputs(); self.window.classMenu:Hide()
     if self.state.view=="settings" and self.state.gearPage then self.Settings:OpenGearPage(nil)
     elseif self.state.view=="deaths" and self.state.deathRecord then self:OpenDeaths("Reports")
+    elseif self.state.view=="advisors" and self.state.filter=="Map" and self.state.mapNPCs then
+        self.state=table.remove(self.history or {}) or {view="advisors",filter="Map"}; self:Refresh(true)
     elseif self.state.view=="advisors" and self.state.filter=="Map" and self.state.mapZonePicker then
         self.state.mapZonePicker=nil; self:Refresh(true)
     elseif self.history and #self.history>0 then self.state=table.remove(self.history); self:Refresh(true)
@@ -611,7 +613,7 @@ function addon:CanGoBack()
     return (self.history and #self.history>0) or s.view=="petguide"
         or (s.view=="settings" and s.gearPage~=nil)
         or (s.view=="deaths" and s.deathRecord~=nil)
-        or (s.view=="advisors" and s.filter=="Map" and s.mapZonePicker) or false
+        or (s.view=="advisors" and s.filter=="Map" and (s.mapZonePicker or s.mapNPCs)) or false
 end
 function addon:Refresh(resetScroll)
     if not self.window then return end
@@ -870,7 +872,7 @@ function addon:Layout()
     self.Settings:Layout(f,left,y,bodyWidth,height-y-46,self.state.filter,doc.view=="settings")
     f.scroll:ClearAllPoints(); f.scroll:SetPoint("TOPLEFT",left,-y); f.scroll:SetPoint("BOTTOMRIGHT",-40,46)
     local contentWidth=math.max(250,bodyWidth); f.content:SetWidth(contentWidth)
-    local top=0
+    local top=self.MapAdvisor:LayoutViewer(f.content,contentWidth,doc.view=="advisors" and self.state.filter=="Map")
     for index,data in ipairs(doc.cards) do
         local c=f.cards[index]
         if not c then

@@ -49,6 +49,8 @@ GearAdvisor.lua
 TalentAdvisor.lua
 TalentRanks.lua
 MapAdvisor.lua
+MapSettings.lua
+MapNPCViewer.lua
 GearIndicators.lua
 GearBagAdvisor.lua
 GearSnapshot.lua
