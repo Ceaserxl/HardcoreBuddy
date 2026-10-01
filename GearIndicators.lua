@@ -31,9 +31,9 @@ function I:Paint(button,show)
         art={}; button.hardcoreBuddyUpgrade=art
         local name=button:GetName()
         local icon=button.icon or button.Icon or button.iconTexture or (name and _G[name.."IconTexture"]) or button
-        local function line(width,height,point,relative,x,y,rotation)
-            local t=button:CreateTexture(nil,"OVERLAY",nil,7)
-            t:SetTexture("Interface\\Buttons\\WHITE8x8"); t:SetVertexColor(0.25,1,0.4,1)
+        local function line(width,height,point,relative,x,y,rotation,color,layer)
+            local t=button:CreateTexture(nil,"OVERLAY",nil,layer or 7)
+            t:SetTexture("Interface\\Buttons\\WHITE8x8"); t:SetVertexColor(unpack(color or {0.25,1,0.4,1}))
             t:SetSize(width,height); t:SetPoint(point,icon,relative,x,y)
             if rotation then t:SetRotation(rotation) end
             art[#art+1]=t; return t
@@ -42,9 +42,17 @@ function I:Paint(button,show)
         local bottom=line(1,2,"BOTTOMLEFT","BOTTOMLEFT",0,0); bottom:SetPoint("BOTTOMRIGHT",icon,"BOTTOMRIGHT",0,0)
         local left=line(2,1,"TOPLEFT","TOPLEFT",0,0); left:SetPoint("BOTTOMLEFT",icon,"BOTTOMLEFT",0,0)
         local right=line(2,1,"TOPRIGHT","TOPRIGHT",0,0); right:SetPoint("BOTTOMRIGHT",icon,"BOTTOMRIGHT",0,0)
-        line(3,10,"TOPLEFT","TOPLEFT",8,-6)
-        line(8,3,"CENTER","TOPLEFT",7,-7,math.pi/4)
-        line(8,3,"CENTER","TOPLEFT",12,-7,-math.pi/4)
+        -- Draw the complete black silhouette beneath all three green pieces.
+        -- Keeping both passes inside the icon prevents clipping at bag edges.
+        for pass=1,2 do
+            local outline=pass==1
+            local color=outline and {0,0,0,1} or {0.12,0.72,0.24,1}
+            local pad=outline and 2 or 0
+            local layer=outline and 6 or 7
+            line(3+pad,9+pad,"CENTER","BOTTOMRIGHT",-9,7.5,nil,color,layer)
+            line(7+pad,3+pad,"CENTER","BOTTOMRIGHT",-11,11,math.pi/4,color,layer)
+            line(7+pad,3+pad,"CENTER","BOTTOMRIGHT",-7,11,-math.pi/4,color,layer)
+        end
     end
     for _,texture in ipairs(art) do texture:SetShown(show) end
 end

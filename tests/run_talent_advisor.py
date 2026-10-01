@@ -21,6 +21,6 @@ if '--render' in sys.argv:
     target.parent.mkdir(parents=True, exist_ok=True)
     composite(lua.globals().MOCK.frames, addon.window).save(target)
     print('PASS: Offline advisor layout preview:', target)
-    panel_target = ROOT / '.release/talent-panel-preview.png'
-    composite(lua.globals().MOCK.frames, addon.TalentPanel.frame).save(panel_target)
-    print('PASS: Offline attached talent panel preview:', panel_target)
+    rank_target = ROOT / '.release/talent-ranks-preview.png'
+    composite(lua.globals().MOCK.frames, lua.globals().PlayerTalentFrame).save(rank_target)
+    print('PASS: Offline native talent rank preview:', rank_target)

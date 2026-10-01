@@ -4,21 +4,22 @@ Open **Advisors** in the main window. The sidebar offers **Gear** and **Talents*
 Choose builds in **Settings > Talent Advisor**. `/hcb gear` and `/hcb talents`
 open the advice pages.
 
-Opening WoW's Talents window also shows a compact attached Talent Advisor. It
-displays the live character's selected build, spent/available points and next
-recommended talent with its icon and rank. **Learn one point** checks the current
-talents again before spending a single point. It is disabled without a free
-point or during combat. **View full path** opens the existing scrollable guide;
-**Settings** opens build selection. Pet and inspection views do not show player
-talent advice. The panel follows the native window's position and visibility.
+WoW's talent icons show **current rank / recommended rank** for the live
+character's selected build, such as **2/5**. The target is blue when more points
+are recommended, green when met, and red when the current rank exceeds the
+build's target. Targets describe the complete selected path. Unused talents
+without any points retain the normal display. These mouse-transparent labels
+do not change talent clicks or spend points. Pet and inspection views do not
+show player recommendations. There is no separate attached panel; the complete
+scrollable path remains in **Advisors > Talents**.
 
 Both Settings pages have independent enable/disable buttons. Disabling Gear
 Advisor removes tooltip advice and upgrade markers and stops auction upgrade
 scanning. Tooltip/marker preferences, weights and saved scans are retained.
-Disabling Talent Advisor hides its attached panel and recommendations and blocks
+Disabling Talent Advisor hides its rank labels and recommendations and blocks
 point spending through the advisor. Its chosen build remains available to gear
-scoring. The talent panel also has **Disable Talent Advisor**; reenable it from
-**Settings > Talent Advisor**. These switches persist across reloads.
+scoring. Reenable it from **Settings > Talent Advisor**. These switches persist
+across reloads.
 
 ## Gear scoring
 
@@ -69,8 +70,9 @@ does not open or modify the native Character window. Existing snapshots are reta
 
 ## Upgrade markers
 
-Bag items and quest reward choices show a small green up arrow and green
-icon border when they beat equipped gear for at least one eligible slot. These
+Bag items and quest reward choices show a dark green up arrow with a black outline
+in the icon's bottom-right corner and a green icon border when they beat equipped
+gear for at least one eligible slot. These
 use the same build, restrictions and intrinsic-stat calculations as tooltips.
 Two-handed markers compare both replaced hands. Zero-score baselines use the
 score difference without inventing a percentage. Missing item data stays unmarked

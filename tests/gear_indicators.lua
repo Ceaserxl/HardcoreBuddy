@@ -64,7 +64,13 @@ button:SetScript("OnClick",click)
 ContainerFrame_GenerateFrame(bag)
 check(native==1 and #I.queue==8,"Bag opening discovers buttons without replacing Blizzard behavior")
 I:Step(); check(#I.queue==4,"Large bags are processed in bounded batches")
-drain(); check(marked(button) and #button.hardcoreBuddyUpgrade==7,"Upgrade has border and a three-part arrow")
+drain(); check(marked(button) and #button.hardcoreBuddyUpgrade==10,"Upgrade has border and a three-part arrow")
+for i=5,10 do
+    local texture=button.hardcoreBuddyUpgrade[i]
+    local _,relative,corner=texture:GetPoint(1)
+    check(relative==button.icon and corner=="BOTTOMRIGHT","Arrow and its outline anchor inside the icon's bottom-right")
+    check(texture.drawSubLevel==(i<=7 and 6 or 7),"Black arrow outline is below the green fill")
+end
 check(button:GetScript("OnClick")==click,"Item drag/click handlers remain untouched")
 local read=G.Read; local reads=0
 G.Read=function(self,...) reads=reads+1; return read(self,...) end
@@ -106,7 +112,7 @@ ContainerFrameItemButton_SetForceExtended(custom,false)
 I.Watch=watched
 check(setups==1 and watches==1,"Late-loaded native setup hook runs once and preserves original function")
 drain()
-check(marked(custom) and #custom.hardcoreBuddyUpgrade==7,"Unnamed replacement bag buttons get arrow and all border edges")
+check(marked(custom) and #custom.hardcoreBuddyUpgrade==10,"Unnamed replacement bag buttons get arrow and all border edges")
 check(custom:GetScript("OnClick")==click,"Replacement bag clicks are preserved")
 links[1]=worse.link; ContainerFrameItemButton_SetForceExtended(custom,false)
 check(not marked(custom),"Sorting clears a previous item's marker before the queued pass")

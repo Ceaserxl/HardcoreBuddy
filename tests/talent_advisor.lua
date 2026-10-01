@@ -122,61 +122,95 @@ check(not A.GearAdvisor:CurrentProfile().manual,"Automatic path restored")
 A:HandleSlashCommand("gear off"); check(not A.db.gearAdvisorEnabled,"Gear can be disabled")
 A:HandleSlashCommand("gear on"); check(A.db.gearAdvisorEnabled,"Gear can be enabled")
 A:HandleSlashCommand("talents")
--- Blizzard loads the talent window on demand. Attach once, preserving its scripts.
-local P=A.TalentPanel
-check(not P.frame,"No talent panel is created before the native talent UI loads")
+-- Rank badges decorate native buttons, never a separate panel or click handler.
+local O=A.TalentOverlay
+check(not O.parent and not HardcoreBuddyTalentPanel,"No side panel exists")
 local nativeShows=0
 PlayerTalentFrame=CreateFrame("Frame","PlayerTalentFrame",UIParent)
 PlayerTalentFrame:SetSize(384,424); PlayerTalentFrame:SetPoint("TOPLEFT",UIParent,"TOPLEFT",30,-60)
 PlayerTalentFrame:SetScript("OnShow",function() nativeShows=nativeShows+1 end)
 PlayerTalentFrame:Hide()
-function PlayerTalentFrame_Refresh() end
+local selectedTree=1
+PanelTemplates_GetSelectedTab=function(frame) assert(frame==PlayerTalentFrame); return selectedTree end
+local nativeClicks=0
+local nativeClick=function() nativeClicks=nativeClicks+1 end
+for i=1,30 do
+    local b=CreateFrame("Button","PlayerTalentFrameTalent"..i,PlayerTalentFrame)
+    function b:GetName() return self.name end
+    b:SetSize(32,32); b:SetScript("OnClick",nativeClick)
+    b.rank=b:CreateFontString(b:GetName().."Rank","OVERLAY","GameFontNormalSmall")
+    b.rank:SetSize(12,16); b.rank:SetPoint("BOTTOMRIGHT",b,"BOTTOMRIGHT",5,-3)
+end
+function TalentFrame_Update()
+    for i=1,30 do
+        local b=_G["PlayerTalentFrameTalent"..i]
+        local row=treeRows[selectedTree] and treeRows[selectedTree][i]
+        b:SetShown(row~=nil)
+        if row then
+            b:SetPoint("TOPLEFT",PlayerTalentFrame,"TOPLEFT",45+(row.node.column-1)*70,-25-(row.node.tier-1)*50)
+            b.rank:SetText(tostring(ranks[row.key] or 0))
+        end
+    end
+end
+function PlayerTalentFrame_Refresh() TalentFrame_Update() end
 function hooksecurefunc(name,callback)
     local original=_G[name]; _G[name]=function(...) original(...); callback(...) end
 end
 MOCK.FireAll("ADDON_LOADED","Blizzard_TalentUI")
-local panel=P.frame
-check(panel and panel:GetParent()==PlayerTalentFrame and not panel:IsVisible(),"Panel is parented to the hidden native talent frame")
-P:Attach(); PlayerTalentFrame:Show()
-check(nativeShows==1 and panel:IsVisible(),"Native show script survives and attached panel appears")
-local point,parent,relative=panel:GetPoint(1)
-check(point=="TOPLEFT" and parent==PlayerTalentFrame and relative=="TOPRIGHT","Advisor is attached beside the native window")
-check(panel.next:GetText()=="Localized Bestial Wrath" and panel.learn:IsEnabled(),"Panel displays localized next talent and available point")
-check(calls==1,"Attaching and showing never spends points")
+O:Attach(); PlayerTalentFrame:Show(); PlayerTalentFrame_Refresh()
+local function badge(key)
+    local index=T:ReadCurrent("HUNTER",40).indices[key]
+    return O.badges[_G["PlayerTalentFrameTalent"..index]]
+end
+check(nativeShows==1 and O.parent==PlayerTalentFrame,"Native show script is preserved")
+check(badge("bestialWrath"):IsVisible() and badge("bestialWrath").label:GetText()=="0/|cff55bbff1|r",
+    "Unlearned recommended talent shows current/target rank in blue")
+local key=build.steps[1]
+local current=ranks[key]
+check(badge(key).label:GetText()==current.."/|cff66cc77"..current.."|r","Completed build ranks are green")
+check(calls==1 and not HardcoreBuddyTalentPanel,"Drawing ranks never spends points or creates a side panel")
+for _,b in pairs(O.badges) do
+    check(not b.mouse and b:GetParent():GetScript("OnClick")==nativeClick,"Badges pass mouse input through to unchanged talent buttons")
+    check(b:GetParent().rank:GetText():match("^%d+$"),"Native rank text stays untouched beneath decoration")
+end
 A.db.profile.mode="preview"; A.db.profile.characterClass="Mage"; A.db.profile.level=60
-P:Refresh()
-check(panel.next:GetText()=="Localized Bestial Wrath","Attached panel always uses the live character, not planner preview")
+O:Refresh()
+check(badge("bestialWrath"):IsVisible(),"Overlay uses live character even when planner previews another class")
 A.db.profile.mode="live"
-combat=true; MOCK.FireAll("PLAYER_REGEN_DISABLED")
-check(not panel.learn:IsEnabled(),"Combat disables the learn button")
-combat=false; MOCK.FireAll("PLAYER_REGEN_ENABLED")
-check(panel.learn:IsEnabled(),"Leaving combat restores deliberate learning")
-MOCK.Click(panel.learn)
-check(calls==2 and not panel.learn:IsEnabled() and panel.pointCount:GetText():find("0 available",1,true),"Click spends exactly one point and refreshes the recommendation")
+ranks.bestialWrath=1; available=0; MOCK.FireAll("PLAYER_TALENT_UPDATE")
+check(badge("bestialWrath").label:GetText()=="1/|cff66cc771|r","Spending a point updates the displayed rank")
+selectedTree=3; ranks.counterattack=1; PlayerTalentFrame_Refresh()
+check(badge("counterattack"):IsVisible() and badge("counterattack").label:GetText()=="1/|cffee66550|r",
+    "Tree switch reuses icons and shows off-build ranks in red")
+selectedTree=4; PlayerTalentFrame_Refresh()
+for _,b in pairs(O.badges) do check(not b:IsShown(),"Non-talent tabs clear all rank badges") end
+selectedTree=1; ranks.counterattack=nil; PlayerTalentFrame_Refresh()
 PlayerTalentFrame.pet=true; PlayerTalentFrame_Refresh()
-check(not panel:IsShown(),"Player advice is hidden for pet talents")
-PlayerTalentFrame.pet=false; PlayerTalentFrame_Refresh()
-check(panel:IsVisible(),"Player advice returns when leaving pet talents")
-PlayerTalentFrame:Hide(); check(not panel:IsVisible(),"Closing Talents hides its companion panel")
+check(not badge("bestialWrath"):IsShown(),"Player ranks are hidden for pet talents")
+PlayerTalentFrame.pet=false; PlayerTalentFrame.inspect=true; PlayerTalentFrame_Refresh()
+check(not badge("bestialWrath"):IsShown(),"Inspection does not show the player's build targets")
+PlayerTalentFrame.inspect=false; PlayerTalentFrame_Refresh()
+check(badge("bestialWrath"):IsVisible(),"Returning to player talents restores recommendations")
+PlayerTalentFrame:Hide(); check(not badge("bestialWrath"):IsShown(),"Closing Talents clears badges")
 PlayerTalentFrame:Show()
 local scoring=A.GearAdvisor:CurrentProfile().id
-MOCK.Click(panel.disable)
-check(not T:IsEnabled() and not panel:IsShown(),"Disable button immediately hides talent advice")
-check(not T:LearnNext(build.id,"bestialWrath",1) and calls==2,"Disabled talent advisor cannot spend points")
-check(A.GearAdvisor:CurrentProfile().id==scoring and A.GearAdvisor:IsEnabled(),"Disabling talent advice preserves independent gear scoring")
+T:SetEnabled(false)
+check(not badge("bestialWrath"):IsShown(),"Disable immediately removes rank overlays")
+check(not T:LearnNext(build.id,"bestialWrath",1) and calls==1,"Disabled talent advisor cannot spend points")
+check(A.GearAdvisor:CurrentProfile().id==scoring and A.GearAdvisor:IsEnabled(),"Disabling talent advice preserves gear scoring")
 A:HandleSlashCommand("talents")
 check(A.document.cards[1].note=="Disabled" and #A.document.cards==1,"Disabled advisor page does not present active recommendations")
 A:OpenSettings("Talent Advisor")
-check(A.Settings.pages["Talent Advisor"].toggle.label:GetText()=="Enable Talent Advisor","Settings offers reenable after panel is disabled")
+check(A.Settings.pages["Talent Advisor"].toggle.label:GetText()=="Enable Talent Advisor","Settings offers reenable")
 MOCK.Click(A.Settings.pages["Talent Advisor"].toggle)
-check(T:IsEnabled() and panel:IsVisible(),"Settings button reenables attached talent panel immediately")
-GetTalentInfo=function() return nil end; P:Refresh()
-check(not panel.learn:IsEnabled() and panel.recommendation==nil,"Unavailable talent data clears stale actionable advice")
-GetTalentInfo=saved; P:Refresh()
+check(T:IsEnabled() and badge("bestialWrath"):IsVisible(),"Settings reenables native talent labels immediately")
+GetTalentInfo=function() return nil end; O:Refresh()
+for _,b in pairs(O.badges) do check(not b:IsShown(),"Unavailable talent data clears stale ranks") end
+GetTalentInfo=saved; O:Refresh()
 A:OpenSettings("Gear Advisor"); MOCK.Click(A.Settings.pages["Gear Advisor"].toggle)
 check(not A.GearAdvisor:IsEnabled() and T:IsEnabled(),"Gear disable button leaves talent advice enabled")
-check(A.Settings.pages["Gear Advisor"].toggle.label:GetText()=="Enable Gear Advisor","Gear master control reflects disabled state")
+check(A.Settings.pages["Gear Advisor"].toggle.label:GetText()=="Enable Gear Advisor","Gear control reflects disabled state")
 MOCK.Click(A.Settings.pages["Gear Advisor"].toggle)
-check(A.GearAdvisor:IsEnabled(),"Gear master control reenables gear advice")
+check(A.GearAdvisor:IsEnabled(),"Gear control reenables gear advice")
 A:HandleSlashCommand("talents")
 print("PASS: "..count.." talent assertions; "..paths.." legal paths / "..points.." points; live spending, preview isolation and advisor navigation.")

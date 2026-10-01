@@ -45,7 +45,7 @@ CreatureAlerts.lua
 HunterTooltips.lua
 GearAdvisor.lua
 TalentAdvisor.lua
-TalentPanel.lua
+TalentOverlay.lua
 GearIndicators.lua
 GearSnapshot.lua
 WeaponSetAdvisor.lua
