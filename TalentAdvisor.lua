@@ -245,9 +245,11 @@ function T:Document(context,state)
         local canLearn=live and live.unspent>0 and plan.spent<level-9 and level>=build.minLevel
         local learn=canLearn and action("learn",build.id) or nil
         if learn then learn.key=nextPoint.key; learn.rank=nextPoint.rank end
-        top[#top+1]=row((canLearn and "Learn: " or "Next: ")..(live and live.names[nextPoint.key] or node.name),
-            node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank,learn,
-            canLearn and "Click to spend one talent point" or "",live and live.icons[nextPoint.key] or spellIcon(node.spellID))
+        local nextRow=top[1]
+        nextRow.body=nextRow.body.."\n"..(live and live.names[nextPoint.key] or node.name)..
+            "\n"..node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank
+        nextRow.icon=live and live.icons[nextPoint.key] or spellIcon(node.spellID)
+        if learn then nextRow.action=learn; nextRow.meta="Click to spend one talent point" end
     end
     top[#top+1]=row("Point-by-point path",build.name.." | View the complete talent path.",action("path"))
     top[#top+1]=row("Talent Advisor settings","Choose your talent build and manage talent recommendations.",action("talentSettings"))

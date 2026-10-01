@@ -98,8 +98,10 @@ check(A.window.content:GetHeight()>A.window.scroll:GetHeight() and A:CanGoBack()
 MOCK.Click(A.window.back)
 check(A.state==overview and not A.state.talentPath,"Back restores the talent overview")
 check(A.window.sidebarTitle:GetText()=="ADVISORS","Sidebar identity")
-local lesson=A.document.cards[1].blocks[2]
+local lesson=A.document.cards[1].blocks[1]
 check(lesson.action and lesson.action.command=="learn" and lesson.icon==132127,"Visible single-point button and native icon")
+check(#A.document.cards[1].blocks==3 and lesson.body:find("Localized Bestial Wrath",1,true)
+    and lesson.body:find("Rank 1 / 1",1,true),"Next recommendation is inside the status item")
 check(calls==1,"Opening advisor never spends a point")
 for _,block in ipairs(A.document.cards[1].blocks) do
     check(block.title~="Choose a talent path","Talent page no longer has an inline path selector")
