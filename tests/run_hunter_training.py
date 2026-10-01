@@ -71,30 +71,39 @@ assert(A.document.isDetail)
 A:Back(); assert(A.state.filter=="Class")
 A:Navigate("training")
 assert(A.document.cards[1].title=="Overview")
-assert(A.window.filters[1].active and A.window.filters[2].filter=="Pet Training")
+assert(A.window.filters[1].active and A.window.filters[2].filter=="Zones")
 local overview=A.document.cards[1]
 assert(overview.blocks[1].title=="Before you pull")
 assert(overview.blocks[2].title=="Shared cooldowns and Self Found")
-for _,b in ipairs(overview.blocks) do assert(b.title~="Pet Training" and b.title~="Pet Guide") end
-MOCK.Click(A.window.filters[2])
+local petTab
+for _,tab in ipairs(A.window.filters) do if tab.filter=="Pet Training" then petTab=tab end end
+assert(petTab)
+local function tab(name)
+    for _,button in ipairs(A.window.filters) do if button.filter==name and button:IsShown() then return button end end
+    error("Missing tab: "..name)
+end
+local linked=false
+for _,b in ipairs(overview.blocks) do if b.title=="Pet Training" then linked=b.action.filter=="Pet Training" end end
+assert(linked,"Overview links to the dedicated Pet Training page")
+MOCK.Click(petTab)
 assert(A.state.filter=="Pet Training" and A.document.cards[1].title=="Pet training")
-assert(A.window.filters[2].active and not A.window.filters[1].active)
+assert(petTab.active and not A.window.filters[1].active)
 assert(A.document.cards[1].blocks[1].title=="Train a new pet skill")
 for _,b in ipairs(A.document.cards[1].blocks) do
     assert(not b.action or b.action.kind~="profession")
 end
 A:Activate(A.document.cards[1].blocks[1].action)
-assert(A.document.isDetail and A.window.filters[2].active)
+assert(A.document.isDetail and petTab.active)
 A:Back(); assert(A.state.filter=="Pet Training")
 MOCK.Click(A.window.filters[1])
 assert(A.document.cards[1].title==overview.title and A.window.filters[1].active)
-MOCK.Click(A.window.filters[2])
-assert(A.state.filter=="Pet Training" and A.window.filters[2].active)
-MOCK.Click(A.window.filters[3]); assert(A.state.view=="petguide")
+MOCK.Click(tab("Pet Training"))
+assert(A.state.filter=="Pet Training" and petTab.active)
+MOCK.Click(tab("Pet Guide")); assert(A.state.view=="petguide")
 MOCK.Click(A.window.back); assert(A.state.view=="training" and A.document.cards[1].title=="Overview")
-MOCK.Click(A.window.filters[4]); assert(A.state.detail.family=="bandage" and A.window.filters[4].active)
+MOCK.Click(tab("First Aid")); assert(A.state.detail.family=="bandage" and tab("First Aid").active)
 MOCK.class="MAGE"; A.lastClass=nil; A:Navigate("training")
-assert(A.window.filters[2].filter=="First Aid" and A.document.cards[1].title=="Field advice")
+assert(tab("First Aid") and A.document.cards[1].title=="Overview")
 MOCK.class="HUNTER"; A.lastClass=nil; A:Navigate("supplies"); A.state.filter="Class"; A:Refresh()
 print("PASS: Separate Hunter Overview and Pet Training pages, navigation highlights, guide return and profession tabs.")
 print("PASS: Actual/localized pet ranks, upgrades, tame sources, trainer skills, separate level gates, unknown/max ranks, preview, Class/All and pet-event refresh.")

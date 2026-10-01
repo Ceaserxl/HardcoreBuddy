@@ -13,6 +13,7 @@ end
 local methods={}
 function methods:SetMinMaxValues(low,high) self.minimum,self.maximum=low,high end
 function methods:SetValueStep(step) self.step=step end
+function methods:GetValue() return self.value or 0 end
 function methods:SetObeyStepOnDrag(value) self.obeyStep=value end
 function methods:SetOrientation(value) self.orientation=value end
 function methods:SetThumbTexture(path) self.thumb=self:CreateTexture(); self.thumb:SetTexture(path) end

@@ -1,5 +1,9 @@
 # Unreleased
 
+- Applied the Map settings card layout throughout the main addon: grouped
+  settings, paired Companion and Advisor links, consistent guide headings and
+  spacing, and a matching journal table. Related controls sit side by side;
+  long lists remain scrollable and alert sliders display their value inside.
 - Death Alerts volume now applies to every sound, including the original Classic
   raid warning. The slider stays visible and 0% mutes the alert independently.
 - Map icon selection now uses a scrollable six-column grid with 48 choices,

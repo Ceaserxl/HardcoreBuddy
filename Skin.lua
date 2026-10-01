@@ -61,6 +61,43 @@ function S.Hover(button,enabled)
     highlight:SetVertexColor(unpack(S.colors.gold)); highlight:SetAlpha(0.24)
 end
 
+-- Shared page sections follow the Map settings spacing and restrained card style.
+function S.Section(parent,title,top,height,column)
+    local panel=CreateFrame("Frame",nil,parent,"BackdropTemplate")
+    S.Paint(panel,"card")
+    panel.sectionTop, panel.sectionColumn=top,column
+    panel:SetSize(column and 362 or 736,height)
+    panel.title=panel:CreateFontString(nil,"OVERLAY","GameFontHighlight")
+    panel.title:SetFont(STANDARD_TEXT_FONT,15,""); panel.title:SetTextColor(unpack(S.colors.gold))
+    panel.title:SetPoint("TOPLEFT",16,-16); panel.title:SetWidth(panel:GetWidth()-32)
+    panel.title:SetJustifyH("LEFT"); panel.title:SetText(title or "")
+    parent.sectionCards=parent.sectionCards or {}; parent.sectionCards[#parent.sectionCards+1]=panel
+    S.LayoutSections(parent,parent:GetWidth()>0 and parent:GetWidth() or 760)
+    return panel
+end
+function S.LayoutSections(parent,width)
+    local full=width-24; local half=(full-12)/2
+    for _,panel in ipairs(parent.sectionCards or {}) do
+        panel:ClearAllPoints(); panel:SetPoint("TOPLEFT",12+(panel.sectionColumn==2 and half+12 or 0),-panel.sectionTop)
+        panel:SetWidth(panel.sectionColumn and half or full); panel.title:SetWidth(panel:GetWidth()-32)
+    end
+end
+function S.SectionBackdrop(parent,top,height,column)
+    local panel=S.Section(parent,"",top,height,column)
+    panel:SetFrameLevel(math.max(0,parent:GetFrameLevel()-1))
+    return panel
+end
+function S.InlineSlider(slider,suffix,step)
+    slider:SetHeight(28)
+    local value=slider:CreateFontString(nil,"OVERLAY","GameFontHighlight")
+    value:SetFont(STANDARD_TEXT_FONT,12,""); value:SetAllPoints(slider)
+    value:SetJustifyH("CENTER"); value:SetJustifyV("MIDDLE")
+    value:SetShadowColor(0,0,0,1); value:SetShadowOffset(1,-1)
+    slider.valueText=value
+    local function update(_,number) value:SetText(math.floor(number/(step or 1)+0.5)*(step or 1)..(suffix or "%")) end
+    slider:HookScript("OnValueChanged",update); update(slider,slider:GetValue() or 0)
+end
+
 function S.Unsnap(region)
     if region.SetSnapToPixelGrid then region:SetSnapToPixelGrid(false) end
     if region.SetTexelSnappingBias then region:SetTexelSnappingBias(0) end

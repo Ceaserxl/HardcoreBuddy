@@ -119,7 +119,7 @@ function R:LayoutSettings(parent,left,top,width,height,visible)
     if not self.settings then return end
     if not self.options then
         local f=CreateFrame("Frame",nil,parent,"BackdropTemplate"); self.options=f; A.Skin.Paint(f,"card")
-        text(f,22,20,-18,700,"Preparation reminders"):SetTextColor(unpack(A.Skin.colors.gold))
+        text(f,15,16,-16,700,"Preparation reminders"):SetTextColor(unpack(A.Skin.colors.gold))
         text(f,12,20,-56,700,"Quiet, optional reminders based on your Essentials priorities and Carry quantities.")
         f.checks={}
         for i,entry in ipairs({{"panel","Show missing essentials while resting in a city or inn"},

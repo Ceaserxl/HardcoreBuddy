@@ -37,7 +37,7 @@ function H:ApplyAppearance()
     a.dragHandle:EnableMouse(not s.locked or a.positioning==true)
     if self.appearance then
         self.appearance.opacity:SetValue(s.backgroundOpacity)
-        self.appearance.opacityText:SetText("Background opacity: "..math.floor(s.backgroundOpacity).."%")
+        self.appearance.opacityText:SetText("Background opacity")
         for name,b in pairs(self.appearance.styles) do
             b.selected=name==s.alertStyle; A.Skin.ButtonState(b,b.selected,nil,false)
         end
@@ -72,8 +72,10 @@ function H:BuildAppearance(host)
     a.done=button(a,"Save position",132,0,0,function() self:FinishPositioning() end)
     a.done:ClearAllPoints(); a.done:SetPoint("TOPLEFT",a,"BOTTOMLEFT",0,-8); a.done:Hide()
     local f=CreateFrame("Frame",nil,host,"BackdropTemplate"); self.appearance=f
-    f:SetAllPoints(host); A.Skin.Paint(f,"card"); f:Hide()
-    label(f,22,20,-18,700,"Death alert appearance"):SetTextColor(unpack(A.Skin.colors.gold))
+    f:SetAllPoints(host); A.Skin.Paint(f,"note"); f:Hide()
+    A.Skin.SectionBackdrop(f,82,150)
+    A.Skin.SectionBackdrop(f,244,176)
+    label(f,22,12,-12,700,"Appearance"):SetTextColor(unpack(A.Skin.colors.gold))
     label(f,12,20,-56,700,"Choose how much space a death report takes. Background opacity leaves text readable.")
     f.styles={}
     for i,name in ipairs({"Compact","Banner","Text-only"}) do
@@ -89,10 +91,11 @@ function H:BuildAppearance(host)
     slider:GetThumbTexture():SetSize(12,22); slider:GetThumbTexture():SetVertexColor(unpack(A.Skin.colors.gold))
     slider:SetScript("OnValueChanged",function(_,value)
         self.db.settings.backgroundOpacity=math.max(0,math.min(100,value))
-        f.opacityText:SetText("Background opacity: "..math.floor(value).."%")
+        f.opacityText:SetText("Background opacity")
         for _,art in ipairs(a.artParts) do art:SetAlpha(value/100) end
         a.flat:SetAlpha(value/100); a.rule:SetAlpha(value/100)
     end)
+    A.Skin.InlineSlider(slider)
     f.move=button(f,"Unlock and move",180,20,-256,function() self:TogglePositioning() end)
     f.preview=button(f,"Preview alert",140,212,-256,function() self:Slash("test") end)
     button(f,"Reset position",140,364,-256,function() self:Slash("resetposition") end)

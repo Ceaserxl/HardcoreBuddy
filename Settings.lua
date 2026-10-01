@@ -23,7 +23,7 @@ local function check(parent,text,y,get,set)
     local f=CreateFrame("CheckButton",nil,parent,"BackdropTemplate")
     f:SetPoint("TOPLEFT",20,-y); f:SetSize(24,24); Skin.Paint(f,"edit")
     f.mark=label(f,"",13,0,0,24); f.mark:SetHeight(24); f.mark:SetJustifyH("CENTER"); f.mark:SetJustifyV("MIDDLE")
-    f.label=label(parent,text,14,54,y+3,670)
+    f.label=label(parent,text,12,54,y+3,math.max(240,parent:GetWidth()-74))
     function f:Sync() self:SetChecked(get()); self.mark:SetText(get() and "X" or "") end
     f:SetScript("OnClick",function(self) set(not not self:GetChecked()); self:Sync() end)
     return f
@@ -56,7 +56,7 @@ function S:Create(parent)
     local scroll=CreateFrame("ScrollFrame","HardcoreBuddySettingsScroll",parent,"UIPanelScrollFrameTemplate")
     self.scroll=scroll
     local content=CreateFrame("Frame",nil,scroll,"BackdropTemplate"); self.content=content
-    Skin.Paint(content,"card"); scroll:SetScrollChild(content)
+    Skin.Paint(content,"note"); scroll:SetScrollChild(content)
     scroll:EnableMouseWheel(true)
     scroll:SetScript("OnMouseWheel",function(_,delta)
         scroll:SetVerticalScroll(math.max(0,math.min(self.range or 0,scroll:GetVerticalScroll()-delta*36)))
@@ -65,49 +65,55 @@ function S:Create(parent)
     self.pages={}
     for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","NPC Alerts","Debug"}) do
         local page=CreateFrame("Frame",nil,content); page:SetAllPoints(content); page:Hide(); self.pages[name]=page
-        label(page,name,22,20,18,700):SetTextColor(unpack(Skin.colors.gold))
+        label(page,name,22,12,12,700):SetTextColor(unpack(Skin.colors.gold))
     end
     local general=self.pages.General
-    label(general,"Window, access and field kit notifications.",13,20,56,700)
-    general.minimap=check(general,"Show minimap button",102,function() return not A.db.minimapHidden end,function(value)
+    label(general,"Window, access and field kit notifications.",12,12,46,700)
+    local access=Skin.Section(general,"Access & window",82,220,1)
+    local kit=Skin.Section(general,"Field kit",82,220,2)
+    general.minimap=check(access,"Show minimap button",56,function() return not A.db.minimapHidden end,function(value)
         A.db.minimapHidden=not value; A:PositionMinimapButton()
     end)
-    general.kit=check(general,"Notify me when leveling unlocks field kit upgrades",150,function() return A.db.kitNotifications~=false end,function(value)
+    general.kit=check(kit,"Notify me when leveling unlocks field kit upgrades",56,function() return A.db.kitNotifications~=false end,function(value)
         A.db.kitNotifications=value; if not value and A.kitAlert then A.kitAlert:Hide() end
     end)
-    general.reset=button(general,"Recenter main window",218,function() A:HandleSlashCommand("reset") end)
-    label(general,"Open this tab anytime with /hcb settings.",12,20,276,700)
-    label(general,"Carry quantities and item priorities stay in Supplies. Point-by-point talent advice stays in Advisors.",12,20,318,700)
-    general.contentHeight=752
+    general.reset=button(access,"Recenter main window",112,function() A:HandleSlashCommand("reset") end)
+    label(access,"Open settings with /hcb settings.",12,20,166,300)
+    label(kit,"Manage Carry quantities and item priorities in Supplies. Find talent recommendations in Advisors.",12,20,118,300)
+    general.contentHeight=668
     local npc=self.pages["NPC Alerts"]
-    label(npc,"Configure rare and elite warnings independently below.",13,20,56,700)
-    npc.contentHeight=930
+    label(npc,"Configure rare and elite warnings independently.",12,12,46,700)
+    npc.contentHeight=646
 
     local gear=self.pages["Gear Advisor"]
     gear.toggle=button(gear,"",18,function() A.GearAdvisor:SetEnabled(not A.GearAdvisor:IsEnabled()) end,200)
     gear.toggle:ClearAllPoints(); gear.toggle:SetPoint("TOPLEFT",520,-18)
-    gear.profile=label(gear,"",14,20,52,700)
-    label(gear,"Choose how equipment upgrades are shown and scored. Scoring follows your live character's Talent Advisor build and compares all usable armor types by stats.",13,20,84,700)
-    gear.enabled=check(gear,"Show gear advisor in item tooltips",142,function() return A.db.gearAdvisorEnabled~=false end,function(value)
+    gear.profile=label(gear,"",12,12,46,700)
+    label(gear,"Choose how upgrades are shown and scored. Scoring follows your Talent Advisor build and compares all usable armor types by stats.",12,12,72,700)
+    local display=Skin.Section(gear,"Display & notifications",122,224,1)
+    local equip=Skin.Section(gear,"Automatic equipment",122,224,2)
+    local scoring=Skin.Section(gear,"Scoring weights",358,104)
+    gear.enabled=check(display,"Show gear advice in item tooltips",54,function() return A.db.gearAdvisorEnabled~=false end,function(value)
         A.db.gearAdvisorEnabled=value; A.GearAdvisor:RefreshTooltips()
     end)
-    gear.markers=check(gear,"Mark gear upgrades in bags and quest rewards",184,function() return A.db.gearUpgradeMarkers~=false end,function(value)
+    gear.markers=check(display,"Mark upgrades in bags and quest rewards",104,function() return A.db.gearUpgradeMarkers~=false end,function(value)
         A.db.gearUpgradeMarkers=value
         if A.GearIndicators then A.GearIndicators:Invalidate() end
     end)
-    gear.notify=check(gear,"Notify me of gear upgrades in my bags",226,function() return A.db.gearBagNotify==true end,function(value)
+    gear.notify=check(display,"Notify me of upgrades in my bags",162,function() return A.db.gearBagNotify==true end,function(value)
         A.db.gearBagNotify=value; A.GearBagAdvisor:Changed()
     end)
-    gear.autoEquip=check(gear,"Automatically equip gear upgrades",268,function() return A.db.gearAutoEquip==true end,function(value)
+    gear.autoEquip=check(equip,"Automatically equip gear upgrades",54,function() return A.db.gearAutoEquip==true end,function(value)
         A.db.gearAutoEquip=value; A.GearBagAdvisor:Changed()
     end)
-    label(gear,"Auto-equip waits until you are out of combat and preserves equipped quest items, including off-hand items. Quest gear stays under your control.",12,20,306,700)
-    gear.openWeights=button(gear,"Stat Weights",364,function() self:OpenGearPage("Stat Weights") end)
-    gear.contentHeight=412
+    label(equip,"Waits until you are out of combat. Equipped quest items, including off-hand items, stay under your control.",12,20,110,300)
+    gear.openWeights=button(scoring,"Stat Weights",52,function() self:OpenGearPage("Stat Weights") end)
+    label(scoring,"Adjust individual stats or restore your build's defaults.",12,320,58,370)
+    gear.contentHeight=474
     A.DebugDump:Create(self.pages.Debug)
     local weightsPage=self.pages["Stat Weights"]
-    weightsPage.profile=label(weightsPage,"",14,20,52,700)
-    label(weightsPage,"Saved for this character's scoring profile. Use 0 to ignore a stat. Enter to save; Escape to cancel.",12,20,84,700)
+    weightsPage.profile=label(weightsPage,"",12,12,46,700)
+    label(weightsPage,"Saved for this character's scoring profile. Use 0 to ignore a stat. Enter to save; Escape to cancel.",12,12,76,700)
     gear.weightMessage=label(weightsPage,"",12,20,144,700)
     gear.weights={}
     gear.restore=button(weightsPage,"Restore Defaults",112,function()
@@ -149,32 +155,37 @@ function S:Create(parent)
         end)
     end
     weightsPage.contentHeight=192+math.ceil(#gear.weights/2)*36
+    Skin.SectionBackdrop(weightsPage,164,weightsPage.contentHeight-176)
 
     local talent=self.pages["Talent Advisor"]
     talent.toggle=button(talent,"",18,function() A.TalentAdvisor:SetEnabled(not A.TalentAdvisor:IsEnabled()) end,200)
     talent.toggle:ClearAllPoints(); talent.toggle:SetPoint("TOPLEFT",520,-18)
-    talent.context=label(talent,"",14,20,56,700)
-    label(talent,"Choose your talent path here. Its scoring profile also controls gear advice, auction upgrades and item markers. Selecting a path does not spend talent points.",12,20,88,700)
+    talent.context=label(talent,"",12,12,46,700)
+    label(talent,"Choose your talent path here. Its scoring profile also controls gear advice, auction upgrades and item markers. Selecting a path does not spend talent points.",12,12,76,700)
     talent.builds={}
     local maxBuilds=0
     for _,builds in pairs(A.Data.AdvisorBuilds) do maxBuilds=math.max(maxBuilds,#builds) end
+    talent.paths=Skin.Section(talent,"Talent paths",140,60+(maxBuilds+1)*52)
     for i=1,maxBuilds+1 do
-        local b=button(talent,"",156+(i-1)*52,function(self)
+        local b=button(talent.paths,"",52+(i-1)*52,function(self)
             A.TalentAdvisor:Activate({command=self.buildID and "build" or "defaultBuild",id=self.buildID,class=self.class})
         end,700)
         b:SetHeight(46); b.label:SetHeight(46); b.label:SetFont(STANDARD_TEXT_FONT,12,"")
         talent.builds[i]=b
     end
-    talent.contentHeight=176+(maxBuilds+1)*52
+    talent.contentHeight=212+(maxBuilds+1)*52
 
     local auction=self.pages["Auction House"]
-    label(auction,"Filters for the Upgrades tab at the auction house. Saved per character.",13,20,56,700)
-    auction.armor=check(auction,"",102,function() return A.characterDB.auctionHighestArmorOnly==true end,function(value)
+    label(auction,"Filters and saved scans for the auction house Upgrades tab.",12,12,46,700)
+    local filters=Skin.Section(auction,"Armor filter",82,242,1)
+    local scans=Skin.Section(auction,"Saved scans",82,242,2)
+    auction.armor=check(filters,"",56,function() return A.characterDB.auctionHighestArmorOnly==true end,function(value)
         A.AuctionUpgrades:SetHighestArmorOnly(value)
     end)
-    label(auction,"When enabled, scan only your class's highest available armor type. Accessories and weapons are still included. Turn it off to compare all usable armor types.",12,20,150,700)
-    auction.cache=label(auction,"",12,20,224,700)
-    auction.diagnostics=button(auction,"View scan diagnostics",286,function() A.AuctionDiagnostics:Show() end)
+    label(filters,"Scan only your class's highest available armor type. Accessories and weapons are included. Turn this off to compare all usable armor types.",12,20,102,300)
+    auction.cache=label(scans,"",12,20,56,300)
+    auction.diagnostics=button(scans,"View scan diagnostics",174,function() A.AuctionDiagnostics:Show() end)
+    auction.contentHeight=336
 end
 
 function S:Layout(parent,left,top,width,height,section,visible)
@@ -195,13 +206,14 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local pageName=section
     if section=="Gear Advisor" and A.state.gearPage=="Stat Weights" then pageName=A.state.gearPage end
     local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 440
-    if section=="Death Alerts" then contentHeight=892 end
+    if section=="Death Alerts" then contentHeight=932 end
     if section=="Map" then contentHeight=A.state.mapIconKind and A.MapAdvisor:IconPickerHeight() or A.MapAdvisor:SettingsHeight() end
     if pageName=="Debug" then A.DebugDump:Refresh() end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.scroll:SetSize(width-22,height)
     self.content:SetScale(scale); self.content:SetSize(contentWidth,math.max(contentHeight,height/scale))
-    Skin.Paint(self.content,section=="Map" and "note" or "card")
+    Skin.Paint(self.content,"note")
+    for _,page in pairs(self.pages) do Skin.LayoutSections(page,contentWidth) end
     for name,page in pairs(self.pages) do page:SetShown(name==pageName) end
     local general=self.pages.General; general.minimap:Sync(); general.kit:Sync()
     local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync(); gear.notify:Sync(); gear.autoEquip:Sync()
@@ -235,6 +247,9 @@ function S:Layout(parent,left,top,width,height,section,visible)
         b.selected=i==1 and not manual or manual and build and selected.id==build.id or false
         Skin.ButtonState(b,b.selected,nil,false)
     end
+    talent.paths:SetHeight(60+(#builds+1)*52)
+    talent.contentHeight=212+(#builds+1)*52
+    if pageName=="Talent Advisor" then self.content:SetHeight(math.max(talent.contentHeight,height/scale)) end
     local auction=self.pages["Auction House"]; auction.armor:Sync()
     local armor=profile and ({"Cloth","Leather","Mail","Plate"})[A.GearAdvisor.HighestArmorSubclass(profile)] or "..."
     auction.armor.label:SetText("Best Armor: "..armor)
@@ -245,10 +260,11 @@ function S:Layout(parent,left,top,width,height,section,visible)
     if section=="Low Health" then A.LowHealth:LayoutSettings(content,0,0,contentWidth,contentHeight,true)
     elseif A.LowHealth.page then A.LowHealth.page:Hide() end
     if section=="NPC Alerts" then
-        A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],0,82,contentWidth,412,"Rares",true)
-        A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],0,510,contentWidth,412,"Elites",true)
+        local half=(contentWidth-36)/2
+        A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],12,82,half,552,"Rares",true)
+        A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],24+half,82,half,552,"Elites",true)
     else for _,page in pairs(A.CreatureAlerts.pages or {}) do page:Hide() end end
-    if section=="General" then A.Readiness:LayoutSettings(general,0,360,contentWidth,380,true)
+    if section=="General" then A.Readiness:LayoutSettings(general,12,314,contentWidth-24,342,true)
     elseif A.Readiness.options then A.Readiness.options:Hide() end
     A.MapAdvisor:LayoutSettings(content,0,0,contentWidth,section=="Map")
     if section=="Death Alerts" then

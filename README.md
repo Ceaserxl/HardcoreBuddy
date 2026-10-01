@@ -24,6 +24,10 @@ grimoires have separate sections, with the matching demon listed for each book.
 Open the **Settings** tab or use `/hcb settings`. The sidebar groups General,
 Gear Advisor, Talent Advisor, Auction House, Death Alerts, Low Health, NPC Alerts,
 Map and Debug. Long pages scroll. Existing saved preferences are kept.
+Pages use the Map settings layout: clear headings, bordered sections and paired
+cards for related controls. Companion and Advisor overviews use matching cards;
+supply tables, spell lists and death reports keep full-width rows. Alert sliders
+show their percentage inside the control.
 General includes the minimap button, field kit upgrade notices, recentering and
 Preparation reminders. Death Alerts includes banner appearance; NPC Alerts
 contains separate rare and elite controls on the same scrolling page.

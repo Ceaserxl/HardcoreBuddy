@@ -173,23 +173,25 @@ end
 function D:Create(page)
     if self.page then return end
     self.page=page
-    label(page,"Capture all HardcoreBuddy data and available character details for offline review.",20,56,700)
-    page.dump=button(page,"Dump Data",20,90,function() self:Start() end)
-    page.copyHint=label(page,"Ctrl + C to copy",180,88,540)
-    page.cached=label(page,"",180,108,540)
-    page.status=label(page,"",20,130,700); page.status:SetHeight(40)
+    Skin.SectionBackdrop(page,82,162).title:SetText("Capture data")
+    Skin.SectionBackdrop(page,256,316).title:SetText("Dump output")
+    label(page,"Capture all HardcoreBuddy data and available character details for offline review.",12,46,700)
+    page.dump=button(page,"Dump Data",28,130,function() self:Start() end)
+    page.copyHint=label(page,"Ctrl + C to copy",188,128,530)
+    page.cached=label(page,"",188,148,530)
+    page.status=label(page,"",28,170,700); page.status:SetHeight(40)
     local track=CreateFrame("Frame",nil,page,"BackdropTemplate"); page.track=track
-    track:SetPoint("TOPLEFT",20,-176); track:SetSize(700,18); Skin.Paint(track,"edit")
+    track:SetPoint("TOPLEFT",28,-218); track:SetSize(700,18); Skin.Paint(track,"edit")
     page.fill=track:CreateTexture(nil,"ARTWORK"); page.fill:SetTexture("Interface\\Buttons\\WHITE8x8"); page.fill:SetVertexColor(0.25,0.7,0.42,1)
     page.fill:SetPoint("TOPLEFT"); page.fill:SetHeight(18)
     page.sheen=track:CreateTexture(nil,"OVERLAY"); page.sheen:SetTexture("Interface\\Buttons\\WHITE8x8")
     page.sheen:SetSize(40,18); page.sheen:SetVertexColor(1,1,1,0.22)
     page.percent=label(track,"",0,0,700); page.percent:SetHeight(18); page.percent:SetJustifyH("CENTER")
     local border=CreateFrame("Frame",nil,page,"BackdropTemplate"); Skin.Paint(border,"edit")
-    border:SetPoint("TOPLEFT",18,-206); border:SetSize(704,254)
+    border:SetPoint("TOPLEFT",26,-306); border:SetSize(704,254)
     local scroll=CreateFrame("ScrollFrame","HardcoreBuddyDebugTextScroll",page,"UIPanelScrollFrameTemplate"); page.scroll=scroll
     scroll:SetFrameLevel(border:GetFrameLevel()+1)
-    scroll:SetPoint("TOPLEFT",20,-208); scroll:SetSize(680,250)
+    scroll:SetPoint("TOPLEFT",28,-308); scroll:SetSize(680,250)
     local edit=CreateFrame("EditBox",nil,scroll); page.edit=edit
     edit:SetMultiLine(true); edit:SetAutoFocus(false); edit:SetFontObject(ChatFontNormal); edit:SetWidth(670); edit:SetHeight(250); edit:SetMaxLetters(0)
     if edit.SetMaxBytes then edit:SetMaxBytes(0) end
@@ -221,7 +223,7 @@ function D:Create(page)
         if math.abs(wanted-current)>0.5 then scroll:SetVerticalScroll(wanted) end
         page.scrolling=nil
     end)
-    label(page,"Full editable dump. Select text manually (Ctrl + A for all), then Ctrl + C. The original dump stays cached.",20,476,700)
+    label(page,"Full editable dump. Select text manually (Ctrl + A for all), then Ctrl + C. The original dump stays cached.",12,592,700)
     page:SetScript("OnHide",function() edit:ClearFocus() end)
-    page.contentHeight=522; self:Refresh()
+    page.contentHeight=632; self:Refresh()
 end

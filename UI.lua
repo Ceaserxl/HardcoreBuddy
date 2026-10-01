@@ -145,14 +145,15 @@ local renderBlocks
 local function renderBlock(frame, block, width)
     frame.block = block; frame:SetWidth(width); frame:Show()
     frame.priority:SetShown(block.supply and block.priority~=nil)
-    frame.body:SetFont(STANDARD_TEXT_FONT,block.guideTone and 12 or 11,"")
+    frame.title:SetFont(STANDARD_TEXT_FONT,block.supply and 14 or 15,"")
+    frame.body:SetFont(STANDARD_TEXT_FONT,block.supply and 11 or 12,"")
     frame.body:SetTextColor(unpack(block.guideTone and WHITE or MUTED))
     if frame.quantity:HasFocus() and (frame.quantity.targetKey~=block.targetKey
         or block.readOnlyTarget or block.groupSupply or not block.supply) then frame.quantity:ClearFocus() end
     frame.count:SetShown(block.supply); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.supply and not block.groupSupply and not block.readOnlyTarget)
     frame.choose:SetShown(block.supply and block.pickRank)
     local paintedRow=block.supply or (block.action and not block.columns)
-    Skin.Paint(frame,paintedRow and "row" or "note")
+    Skin.Paint(frame,block.supply and "row" or not block.columns and "card" or "note")
     frame.rule:Hide()
     for _,edge in ipairs(frame.statusBorder) do edge:SetShown(block.supply) end
     frame.chevron:SetShown(block.action and not block.supply and not block.columns)
@@ -183,10 +184,10 @@ local function renderBlock(frame, block, width)
                     local entriesHere=block.columns[previous]
                     if #entriesHere==1 and entriesHere[1].guideTone=="link" then
                         columnFrame:SetHeight(rowHeight)
-                        columnFrame.blocks[1]:SetHeight(rowHeight-4)
+                        columnFrame.blocks[1]:SetHeight(rowHeight)
                     end
                 end
-                y=y+rowHeight+8; rowHeight=0
+                y=y+rowHeight; rowHeight=0
             end
         end
         frame:SetHeight(y); return y
@@ -203,8 +204,8 @@ local function renderBlock(frame, block, width)
         if not frame.icon:SetTexture(native) then frame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark") end
     end
     local x = (icon and 52 or 12) + (block.child and 8 or 0)
-    local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), 8
-    frame.title:SetTextColor(unpack(block.titleColor or (block.supply and WHITE or block.action and GOLD or WHITE)))
+    local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), block.supply and 8 or 12
+    frame.title:SetTextColor(unpack(block.titleColor or (block.supply and WHITE or GOLD)))
     local height
     if block.supply then
         local nameWidth=math.floor(available*0.42)
@@ -296,7 +297,7 @@ local function renderBlock(frame, block, width)
         local tone=block.guideTone
         local color=tone=="danger" and {0.96,0.55,0.40} or tone=="tool" and {0.48,0.78,0.73} or GOLD
         frame.title:SetTextColor(unpack(color))
-        if tone~="plain" then
+        if tone~="plain" and tone~="link" then
             frame:SetBackdropColor(tone=="danger" and 0.115 or 0.045,tone=="danger" and 0.055 or 0.075,tone=="danger" and 0.04 or 0.085,1)
             for i,edge in ipairs(frame.statusBorder) do
                 edge:Show(); edge:SetVertexColor(color[1],color[2],color[3],0.3)
@@ -308,24 +309,35 @@ end
 renderBlocks = function(parent, blocks, width, beforeSupply)
     local y=0
     local headingShown=false
+    local pending
     for index, block in ipairs(blocks) do
         if beforeSupply and block.supply and not headingShown then
             y=y+beforeSupply(y); headingShown=true
         end
         local frame=parent.blocks[index]
         if not frame then frame=newBlock(parent); parent.blocks[index]=frame end
-        frame:ClearAllPoints(); frame:SetPoint("TOPLEFT", 0, -y)
-        y=y+renderBlock(frame, block, width)+4
+        local paired=parent.gridStart and index>=parent.gridStart and not block.supply and not block.columns and not block.fields
+        if pending and not paired then y=y+pending:GetHeight()+12; pending=nil end
+        local cellWidth=paired and (width-12)/2 or width
+        frame:ClearAllPoints(); frame:SetPoint("TOPLEFT",pending and cellWidth+12 or 0,-y)
+        local height=renderBlock(frame,block,cellWidth)
+        if pending then
+            height=math.max(height,pending:GetHeight()); pending:SetHeight(height); frame:SetHeight(height)
+            y=y+height+12; pending=nil
+        elseif paired and index<#blocks then pending=frame
+        else y=y+height+(block.supply and 4 or 12) end
         if block.supply then
             local shade=index%2==0 and 0.075 or 0.045
             frame:SetBackdropColor(shade,shade+0.009,shade+0.014,1)
         end
     end
     for index=#blocks+1,#parent.blocks do parent.blocks[index]:Hide() end
-    return math.max(1, y)
+    return math.max(1,y-(blocks[#blocks] and (blocks[#blocks].supply and 4 or 12) or 0))
 end
 local function renderCard(frame, data, width, compactSupplies)
     frame:Show(); frame:SetWidth(width)
+    Skin.Paint(frame,data.supplyTable and "card" or "note")
+    frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and 22 or 15,"")
     local compactHeader=compactSupplies and data.supplyTable
     frame.title:SetShown(not compactHeader); frame.note:SetShown(not compactHeader)
     local y=compactHeader and 4 or 14
@@ -350,6 +362,7 @@ local function renderCard(frame, data, width, compactSupplies)
         end
     end
     frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT", 12, -y); frame.content:SetWidth(width-24)
+    frame.content.gridStart=frame.gridStart
     local height=renderBlocks(frame.content, data.blocks, width-24,beforeSupply)
     frame.content:SetHeight(height); y=y+height+8; frame:SetHeight(y)
     return y
@@ -894,6 +907,9 @@ function addon:Layout()
             c.content=CreateFrame("Frame",nil,c); c.content.blocks={}; f.cards[index]=c
         end
         c:ClearAllPoints(); c:SetPoint("TOPLEFT",0,-top)
+        c.firstCard=index==1
+        c.gridStart=not doc.isDetail and (doc.view=="training" and (not self.state.filter or self.state.filter=="Overview") and index==1 and 3
+            or doc.view=="advisors" and self.state.filter~="Map" and not self.state.talentPath and 1) or nil
         top=top+renderCard(c,data,contentWidth,short and doc.view=="supplies" and not doc.isDetail)+10
     end
     for i=#doc.cards+1,#f.cards do f.cards[i]:Hide() end

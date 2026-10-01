@@ -4,7 +4,11 @@ local function eq(actual,expected,label)
     assert(actual==expected,(label or "value")..": expected "..tostring(expected)..", got "..tostring(actual))
     passed=passed+1
 end
-local addon={db={},Skin={Paint=function() end,Button=function() end,ButtonState=function() end,Hover=function() end}}
+local addon={db={},Skin={colors={gold={0.94,0.76,0.43}},Paint=function() end,Button=function() end,ButtonState=function() end,Hover=function() end,LayoutSections=function() end,InlineSlider=function() end}}
+function addon.Skin.SectionBackdrop(parent)
+    local frame=CreateFrame("Frame",nil,parent); frame.title=frame:CreateFontString()
+    return frame
+end
 function addon:OpenDeaths(section,record)
     self.state={view="deaths",filter=section or "All reports",deathRecord=record}
     self.Deaths:LayoutPage(UIParent,184,146,816,468,self.state)
