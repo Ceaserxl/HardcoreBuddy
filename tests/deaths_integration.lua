@@ -350,9 +350,13 @@ PlaySound=function(kit,channel)
     nativeCount=nativeCount+1; return true,9000+nativeCount
 end
 H.db.settings.alertSound="RaidWarning"; H.db.settings.sound=true; H:ApplySettings()
-assert(not H.options.volume:IsShown())
-H:PlayAlertSound(); assert(nativeCount==1)
-H.db.settings.sound=false; H:PlayAlertSound(); assert(nativeCount==1)
+assert(H.options.volume:IsShown())
+local originalHeard={}
+PlaySoundFile=function(path,channel) assert(channel=="Master"); originalHeard[#originalHeard+1]=path; return true,1000+#originalHeard end
+H.options.volume:SetValue(30); H:PlayAlertSound()
+assert(#originalHeard==1 and originalHeard[1]:find("Original\\RaidWarning30.ogg",1,true) and nativeCount==0)
+H.options.volume:SetValue(0); H:PlayAlertSound(); assert(#originalHeard==1,"Zero mutes the original clip")
+H.options.volume:SetValue(70); H.db.settings.sound=false; H:PlayAlertSound(); assert(#originalHeard==1)
 H.db.settings.alertSound="DeathBell"; H:ApplySettings()
 assert(H.options.volume:IsShown())
 local heard={}
@@ -373,8 +377,8 @@ for _,choice in ipairs(H.soundChoices) do
         H.options.volume:SetValue(volume)
         H:ShowAlert({name="Sound test",level=60},true)
         local extension=choice.id=="DeathBell" and ".wav" or ".ogg"
-        if choice.id=="RaidWarning" then assert(nativeCount==1+volume/10)
-        else assert(heard[#heard]:find(choice.id..volume..extension,1,true)) end
+        assert(heard[#heard]:find(choice.id..volume..extension,1,true))
+        assert(nativeCount==0,"All death sounds use independent gain, not native sound-kit volume")
     end
 end
 H.db.settings.alertSound="DeathBell"; H:ApplySettings()

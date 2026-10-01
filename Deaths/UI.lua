@@ -236,9 +236,8 @@ function H:ApplySettings()
     local sound,index=self.NormalizeAlertSound(s.alertSound)
     s.alertSound=sound
     self.options.soundChoice.label:SetText(self.soundChoices[index].name)
-    self.options.volume:SetShown(sound~="RaidWarning")
-    if sound=="RaidWarning" then self.options.volumeLabel:SetText("Uses WoW Master volume") end
-    if (not s.sound or not s.alerts or (sound~="RaidWarning" and s.volume==0)) and self.soundHandle and StopSound then StopSound(self.soundHandle); self.soundHandle=nil end
+    self.options.volume:Show()
+    if (not s.sound or not s.alerts or s.volume==0) and self.soundHandle and StopSound then StopSound(self.soundHandle); self.soundHandle=nil end
     self.options.alertLevel:SetText(tostring(s.minAlertLevel))
     if not self.options.duration:HasFocus() then self.options.duration:SetText(tostring(s.alertDuration)) end
     self:UpdateAnnouncementReplacement()

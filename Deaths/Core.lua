@@ -24,18 +24,17 @@ end
 function H:PlayAlertSound()
     if self.soundHandle and StopSound then StopSound(self.soundHandle); self.soundHandle=nil end
     local s=self.db.settings
-    if not s.sound then return end
+    if not s.sound or s.volume<=0 then return end
     local sound=self.NormalizeAlertSound(s.alertSound)
     if sound=="RaidWarning" then
-        -- The original native sound is also Deathlog's default (kit 8959).
-        -- Native sound kits use WoW's channel volume, not our file gain slider.
-        if PlaySound then
-            local _,handle=PlaySound((SOUNDKIT and SOUNDKIT.RAID_WARNING) or 8959,"Master")
+        -- Same Classic clip as kit 8959, with independent per-alert gain.
+        if PlaySoundFile then
+            local _,handle=PlaySoundFile(self.MEDIA.."Original\\RaidWarning"..s.volume..".ogg","Master")
             self.soundHandle=handle
         end
         return
     end
-    if s.volume<=0 or not PlaySoundFile then return end
+    if not PlaySoundFile then return end
     local path=sound=="DeathBell" and (self.MEDIA.."DeathBell"..s.volume..".wav")
         or (self.MEDIA.."Deathlog\\"..sound..s.volume..".ogg")
     local _,handle=PlaySoundFile(path,"Master")

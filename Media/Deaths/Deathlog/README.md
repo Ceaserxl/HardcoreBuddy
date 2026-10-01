@@ -9,4 +9,6 @@ HardcoreBuddy's numbered copies change only the playback gain, to provide an
 independent 0-100% alert volume without changing the game's sound settings.
 Rebuild with `scripts/import_deathlog_sounds.py PATH_TO_FFMPEG`.
 All five are selectable in the Death Journal options alongside the custom bell and the default
-native WoW raid-warning sound (kit 8959, also Deathlog's default). Deathlog itself is not required.
+original WoW raid-warning sound (kit 8959, also Deathlog's default). Volume-adjusted
+copies of that Blizzard clip ship separately in ../Original with their source
+attribution. Deathlog itself is not required.

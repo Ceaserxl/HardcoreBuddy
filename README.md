@@ -219,10 +219,10 @@ each guide retains its complete packing list.
 ## Death journal and alerts
 
 **Settings > Death Alerts** defaults to **Original (Deathlog default)**, the
-native WoW raid-warning sound used before the custom bell. It uses WoW's Master
-volume; the Play alert sound checkbox mutes it. The custom bell and five Deathlog
-clips (Hero Fallen, Arugal, Dread Hunger, Hunger Games and Golf Clap) retain the
-independent alert volume slider. Use the arrows to choose; click the name to listen.
+original WoW raid-warning sound used before the custom bell. It now supports the
+same independent 0-100% volume slider as the custom bell and five Deathlog
+clips (Hero Fallen, Arugal, Dread Hunger, Hunger Games and Golf Clap). Set it to 0%
+to mute. Use the arrows to choose a sound; click the name to listen.
 Deathlog does not need to be installed. Credits and original sources are in
 `Media/Deaths/Deathlog/README.md`.
 

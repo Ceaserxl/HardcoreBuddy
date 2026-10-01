@@ -115,6 +115,8 @@ function M:LayoutSettings(parent,left,top,width,visible)
     return 634*scale
 end
 
+function M:IconPickerHeight() return 94+math.ceil(#self.iconChoices/6)*88 end
+
 function M:LayoutIconPicker(parent,left,top,width,visible)
     if not self.iconPicker and not visible then return end
     if not self.iconPicker then
@@ -126,9 +128,19 @@ function M:LayoutIconPicker(parent,left,top,width,visible)
         f.choices={}
         for i,choice in ipairs(self.iconChoices) do
             local key=choice
-            local b=CreateFrame("Button",nil,f,"BackdropTemplate"); b:SetPoint("TOPLEFT",16,-78-(i-1)*48); b:SetSize(700,40)
+            local b=CreateFrame("Button",nil,f,"BackdropTemplate")
+            b:SetPoint("TOPLEFT",16+((i-1)%6)*118,-78-math.floor((i-1)/6)*88); b:SetSize(110,80)
             Skin.Button(b,"category")
-            b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetPoint("LEFT",12,0)
+            b.icon=b:CreateTexture(nil,"ARTWORK"); b.icon:SetPoint("TOP",0,-8); b.icon:SetSize(32,32)
+            b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetPoint("TOP",0,-46)
+            b.label:SetSize(102,28); b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE")
+            b:SetScript("OnEnter",function(self)
+                Skin.ButtonState(self,self.selected,true,false)
+                GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetText(M:IconName(key))
+                GameTooltip:AddLine(self.selected and "Selected" or "Click to use this marker icon.",1,0.8,0.4); GameTooltip:Show()
+            end)
+            b:SetScript("OnLeave",function(self) Skin.ButtonState(self,self.selected,false,false); GameTooltip:Hide() end)
+            b:SetScript("OnHide",function(self) if GameTooltip.IsOwned and GameTooltip:IsOwned(self) then GameTooltip:Hide() end end)
             b:SetScript("OnClick",function()
                 M:Settings().icons[A.state.mapIconKind]=key; M:Changed()
             end)
@@ -136,13 +148,13 @@ function M:LayoutIconPicker(parent,left,top,width,visible)
         end
     end
     local f=self.iconPicker; f:SetShown(visible); if not visible then return end
-    local scale=math.min(1,width/744); f:SetScale(scale); f:SetSize(width/scale,430)
+    local scale=math.min(1,width/744); f:SetScale(scale); f:SetSize(width/scale,self:IconPickerHeight())
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
     local kind=A.state.mapIconKind
     f.title:SetText((({rare="Rare",elite="Elite",boss="World boss",danger="Dangerous"})[kind] or "NPC").." marker icon")
     for key,b in pairs(f.choices) do
         local selected=self:Settings().icons[kind]==key
-        b.label:SetText(self:IconChoiceLabel(key)..(selected and "  |  Selected" or ""))
+        b.selected=selected; b.label:SetText(self:IconName(key)); self:SetIconTexture(b.icon,key)
         Skin.ButtonState(b,selected,false,false)
     end
 end

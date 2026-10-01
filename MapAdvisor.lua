@@ -29,6 +29,41 @@ function M:IconChoiceLabel(key)
     return (atlas and ("|A:"..atlas..":18:18|a") or ("|T"..icons[key].fallback..":18:18:0:0|t")).." "..caption
 end
 M.iconChoices={"rare","elite","boss","danger","star","diamond","cross"}
+for _,entry in ipairs({{"circle",2},{"triangle",4},{"moon",5},{"square",6},{"skull",8}}) do
+    icons[entry[1]]={fallback="Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..entry[2]}
+    M.iconChoices[#M.iconChoices+1]=entry[1]
+end
+for _,entry in ipairs({
+    {"wolf","Wolf","Ability_Hunter_Pet_Wolf"},{"bear","Bear","Ability_Hunter_Pet_Bear"},
+    {"cat","Cat","Ability_Hunter_Pet_Cat"},{"boar","Boar","Ability_Hunter_Pet_Boar"},
+    {"raptor","Raptor","Ability_Hunter_Pet_Raptor"},{"spider","Spider","Ability_Hunter_Pet_Spider"},
+    {"bat","Bat","Ability_Hunter_Pet_Bat"},{"owl","Owl","Ability_Hunter_Pet_Owl"},
+    {"scorpid","Scorpid","Ability_Hunter_Pet_Scorpid"},{"turtle","Turtle","Ability_Hunter_Pet_Turtle"},
+    {"gorilla","Gorilla","Ability_Hunter_Pet_Gorilla"},{"hyena","Hyena","Ability_Hunter_Pet_Hyena"},
+    {"crocodile","Crocolisk","Ability_Hunter_Pet_Crocolisk"},{"serpent","Wind serpent","Ability_Hunter_Pet_WindSerpent"},
+    {"bird","Carrion bird","Ability_Hunter_Pet_Vulture"},{"tallstrider","Tallstrider","Ability_Hunter_Pet_TallStrider"},
+    {"dragon","Dragon","INV_Misc_Head_Dragon_01"},{"demon","Demon","Spell_Shadow_SummonFelHunter"},
+    {"fire","Fire","Spell_Fire_FlameBolt"},{"frost","Frost","Spell_Frost_FrostBolt02"},
+    {"lightning","Lightning","Spell_Nature_Lightning"},{"poison","Poison","Ability_Rogue_DualWeild"},
+    {"shadow","Shadow","Spell_Shadow_ShadowBolt"},{"arcane","Arcane","Spell_Nature_StarFall"},
+    {"holy","Holy","Spell_Holy_HolyBolt"},{"shield","Shield","Ability_Defend"},
+    {"sword","Sword","Ability_MeleeDamage"},{"bow","Bow","Ability_Marksmanship"},
+    {"stealth","Stealth","Ability_Stealth"},{"trap","Trap","Spell_Frost_ChainsOfIce"},
+    {"fear","Fear","Spell_Shadow_Possession"},{"bleed","Bleed","Ability_Gouge"},
+    {"heal","Healing","Spell_Holy_Heal"},{"stun","Stun","Ability_ThunderBolt"},
+    {"eye","Eye","Spell_Shadow_DetectInvisibility"},{"paw","Paw","Ability_Druid_Maul"},
+}) do
+    local key=entry[1]; names[key]=entry[2]
+    icons[key]={fallback="Interface\\Icons\\"..entry[3]}
+    M.iconChoices[#M.iconChoices+1]=key
+end
+function M:IconName(key) return names[key] or (key:sub(1,1):upper()..key:sub(2)) end
+function M:SetIconTexture(texture,key)
+    local atlas=atlasFor(key)
+    texture:SetTexCoord(0,1,0,1)
+    if atlas and texture.SetAtlas then texture:SetAtlas(atlas,false)
+    else texture:SetTexture(icons[key].fallback) end
+end
 local function bounded(value,default,low,high)
     value=tonumber(value); if not value or value~=value then value=default end
     return math.max(low,math.min(high,value))
@@ -174,10 +209,7 @@ function M:RefreshPins()
         end
         pin.cluster=cluster
         local key=self:Settings().icons[cluster.kind]
-        local atlas=atlasFor(key)
-        pin.icon:SetTexCoord(0,1,0,1)
-        if atlas and pin.icon.SetAtlas then pin.icon:SetAtlas(atlas,false)
-        else pin.icon:SetTexture(icons[key].fallback) end
+        self:SetIconTexture(pin.icon,key)
         pin:Show()
     end
     self:PlacePins()

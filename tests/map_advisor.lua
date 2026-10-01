@@ -217,13 +217,25 @@ assert(s.icons.rare==oldIcon and A.state.mapIconKind=="rare" and M.iconPicker:Is
 local choices=0
 for _,key in ipairs(M.iconChoices) do
     local b=M.iconPicker.choices[key]; assert(b and b:IsVisible()); choices=choices+1
-    MOCK.Click(b); assert(s.icons.rare==key and b.label:GetText():find("Selected",1,true))
+    MOCK.Click(b); assert(s.icons.rare==key and b.selected and b.icon)
 end
-assert(choices==7 and A:CanGoBack(),"All available icons are listed")
+assert(choices==48 and A:CanGoBack(),"All 48 icons are listed")
+for index,key in ipairs(M.iconChoices) do
+    local button=M.iconPicker.choices[key]
+    local x,y,w,h=button:GetRect()
+    if index%6~=1 then
+        local px,py,pw=M.iconPicker.choices[M.iconChoices[index-1]]:GetRect()
+        assert(x>=px+pw and y==py,"Six columns without overlap")
+    elseif index>1 then
+        local px,py=M.iconPicker.choices[M.iconChoices[index-6]]:GetRect()
+        assert(x==px and math.abs(y-py)>h,"Next row starts in the first column")
+    end
+end
+assert(A.Settings.range>0,"Expanded icon grid scrolls")
 MOCK.Click(A.window.back)
 assert(not A.state.mapIconKind and not M.iconPicker:IsShown() and controls:IsVisible())
 MOCK.Click(controls.icons.elite); MOCK.Click(M.iconPicker.choices.star)
-assert(s.icons.elite=="star" and not M.iconPicker.choices.rare.label:GetText():find("UI%-RaidTargetingIcon_7"),"Picker previews actual choices, not another category's saved icon")
+assert(s.icons.elite=="star" and M.iconPicker.choices.rare.label:GetText()=="Rare","Picker previews actual choices, not another category's saved icon")
 A:OpenSettings("General"); A:OpenSettings("Map")
 assert(not M.iconPicker:IsShown() and controls:IsVisible(),"Picker hides on section changes")
 assert(s.tintR==1 and s.iconSize==30 and not s.notify)

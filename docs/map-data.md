@@ -34,8 +34,9 @@ Icons keep their selected screen size at different map zoom levels. Clusters use
 a maximum distance of iconSize * 16 / 18 between all members, preventing transitive
 chains. Size changes rebuild the groups after the slider's brief update delay.
 The default size is adjustable from 12–40 pixels, with 10–100% icon opacity.
-Each category opens a picker listing the rare, elite, skull, warning, star, diamond
-and cross icons, with previews and a selected indicator. The shared Back button
+Each category opens a six-column grid of 48 native icons: the default markers,
+all eight raid targets, beasts and spell symbols. Choices have previews, names,
+hover tooltips and a selected indicator; the grid scrolls. The shared Back button
 returns to Map settings.
 Tint RGB uses Blizzard's native color picker, with live preview and Cancel
 restoring the original color. A separate opacity slider preserves the existing

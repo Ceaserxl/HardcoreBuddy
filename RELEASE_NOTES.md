@@ -1,5 +1,9 @@
 # Unreleased
 
+- Death Alerts volume now applies to every sound, including the original Classic
+  raid warning. The slider stays visible and 0% mutes the alert independently.
+- Map icon selection now uses a scrollable six-column grid with 48 choices,
+  including raid markers, beasts and spell symbols.
 - NPC previews now have details and controls on the left and a larger bordered
   model viewport on the right. Loading retries automatically up to three times;
   delayed camera refreshes, extended zoom and Reset view help with framing.

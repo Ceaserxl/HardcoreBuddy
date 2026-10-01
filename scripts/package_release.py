@@ -25,11 +25,14 @@ def manifest():
         'Media/Deaths/Deathlog/README.md', 'Media/Deaths/Deathlog/LICENSE.txt',
         'Media/Deaths/Deathlog/sources.json',
         'scripts/import_deathlog_sounds.py',
+        'Media/Deaths/Original/README.md', 'Media/Deaths/Original/RaidWarning.ogg',
+        'scripts/import_raid_warning_sound.py',
         'docs/PROVENANCE.md', 'docs/advisors.md', 'docs/ADVISOR_DATA_LICENSE.txt',
         'docs/map-data.md', 'docs/map-data-audit.json', 'docs/leveling-zones.md',
         'docs/class-spells.md', 'docs/WHATS_TRAINING_LICENSE.txt',
     })
     for volume in range(10, 101, 10):
+        files.add(f'Media/Deaths/Original/RaidWarning{volume}.ogg')
         files.add(f'Media/Deaths/DeathBell{volume}.wav')
         files.add(f'Media/Health/AirHorn{volume}.wav')
         for kind in ('NeutralRareVoiceV1', 'HostileRareVoiceV1', 'EliteSirenV2'):
