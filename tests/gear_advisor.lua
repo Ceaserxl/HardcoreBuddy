@@ -160,6 +160,34 @@ skeletal.name="Skeletal Shoulders"
 check(close(row(skeletal).percent,-45.45),"Reference shoulder downgrade floors negative percentages")
 check(G:Read(shoulders.link).stats.ITEM_MOD_AGILITY_SHORT==8,"Native suffix attributes override faulty API")
 
+-- Assault Band: the API reports 19 AP while the intrinsic tooltip displays 20.
+do
+    reset("HUNTER",41,{31,1,0})
+    local assault=item("INVTYPE_FINGER",{ITEM_MOD_ATTACK_POWER_SHORT=19},4,0,
+        {{"+7 Stamina"},{"+5 Spirit"},{"Equip: +20 Attack Power."}})
+    equipment[11]=item("INVTYPE_FINGER",{},4,0,{{"+4 Strength"},{"+5 Agility"},{"+8 Spirit"}})
+    equipment[12]=item("INVTYPE_FINGER",{},4,0,{{"+7 Agility"},{"+6 Spirit"}})
+    check(G:Read(assault.link).stats.ITEM_MOD_ATTACK_POWER_SHORT==20,"Displayed AP overrides the incorrect API value")
+    check(assault.stats.ITEM_MOD_ATTACK_POWER_SHORT==19,"Reading does not modify the API stat table")
+    check(close(G.Score(G:Read(assault.link),G:CurrentProfile(),11),17.1),"Assault Band includes exactly 20 AP")
+    local advice=report(assault)
+    check(advice.rows[1].percent==29.54 and advice.rows[2].percent==31.53,"Assault Band screenshot percentages use displayed AP")
+    equipment[11]=assault
+    check(report(assault).rows[1].percent==0,"Equipped and candidate AP use the same source")
+    for _,entry in ipairs({{"ITEM_MOD_ATTACK_POWER_SHORT","Attack Power"},{"ITEM_MOD_RANGED_ATTACK_POWER_SHORT","ranged Attack Power"}}) do
+        for _,apiAmount in ipairs({0,19,20,21}) do
+            local bonus=item("INVTYPE_FINGER",{[entry[1]]=apiAmount},4,0,{{"Equip: +20 "..entry[2].."."}})
+            check(G:Read(bonus.link).stats[entry[1]]==20,"Displayed AP/RAP replaces lower, equal or higher API values without double counting")
+        end
+        local fallback=item("INVTYPE_FINGER",{[entry[1]]=19},4,0,
+            {{"Use: +40 "..entry[2].."."},{"Chance on hit: +40 "..entry[2].."."},{"(2) Set: +40 "..entry[2].."."}})
+        check(G:Read(fallback.link).stats[entry[1]]==19,"API fallback survives; conditional bonuses are not included")
+    end
+    local enhanced=withEnchant(assault,9999,{ITEM_MOD_ATTACK_POWER_SHORT=50},
+        {{"+7 Stamina"},{"+5 Spirit"},{"Equip: +20 Attack Power."},{"+30 Attack Power"}})
+    check(G:Read(enhanced.link).stats.ITEM_MOD_ATTACK_POWER_SHORT==20,"AP correction still excludes applied enchants")
+end
+
 -- Live screenshot: the equipped Frozen Wrath hat's short bonus line was
 -- dropped, leaving only 0.225 armor score and a false +593.33% upgrade.
 do

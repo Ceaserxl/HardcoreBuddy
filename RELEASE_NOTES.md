@@ -1,5 +1,8 @@
 # Unreleased
 
+- Gear scoring now prefers displayed intrinsic attack-power and ranged
+  attack-power bonuses over conflicting API values, correcting Assault Band's
+  upgrade percentages while continuing to exclude applied enchants.
 - Fixed auction slot filters missing their parent item subclass, which could
   cause every slot to repeat a broad armor or weapon scan.
 - Auction upgrades now scan individual equipment slots in sequence. Added a

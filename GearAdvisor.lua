@@ -298,7 +298,12 @@ function G:Read(link,inventorySlot,allowUnscored)
         merged.ITEM_MOD_ARMOR_SHORT=nil
     end
     for key,value in pairs(scanned.stats or {}) do
-        if merged[key]==nil then merged[key]=value end
+        -- Classic can return a different AP total from the displayed intrinsic
+        -- Equip bonus (Assault Band: API 19, tooltip 20). Prefer that clean
+        -- tooltip value for AP/RAP on both candidates and equipped items.
+        if merged[key]==nil or key=="ITEM_MOD_ATTACK_POWER_SHORT" or key=="ITEM_MOD_RANGED_ATTACK_POWER_SHORT" then
+            merged[key]=value
+        end
     end
     local blockComplete
     if equip=="INVTYPE_SHIELD" then
