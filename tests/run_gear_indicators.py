@@ -1,4 +1,4 @@
-"""Upgrade decisions and native bag/quest button lifecycle with real scoring fixtures."""
+"""Upgrade decisions and native/replacement bag and quest button lifecycle."""
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))

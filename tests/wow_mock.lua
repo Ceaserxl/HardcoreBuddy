@@ -56,6 +56,7 @@ function methods:HookScript(event,fn)
     self.scripts[event]=function(...) if previous then previous(...) end; fn(...) end
 end
 function methods:GetScript(event) return self.scripts[event] end
+function methods:GetParent() return self.parent end
 function methods:RegisterEvent(event) self.events=self.events or {}; self.events[event]=true end
 function methods:UnregisterEvent(event) if self.events then self.events[event]=nil end end
 function methods:SetPoint(point,a,b,c,d)

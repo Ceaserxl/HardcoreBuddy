@@ -87,6 +87,56 @@ check(not marked(button),"Marker preference removes hints")
 A.db.gearUpgradeMarkers=true; I:Invalidate(); drain()
 check(marked(button),"Marker preference can be reenabled")
 
+-- Replacement bags use native container-button setup without native frame names.
+-- Discover the hook after load, then follow the live slot through pooled layouts.
+local setups=0
+function ContainerFrameItemButton_SetForceExtended() setups=setups+1 end
+MOCK.FireAll("ADDON_LOADED","ReplacementBags")
+MOCK.FireAll("ADDON_LOADED","UnrelatedAddon")
+local customBag=CreateFrame("Frame",nil,UIParent)
+customBag.id=0; function customBag:GetID() return self.id end
+local custom=CreateFrame("Button",nil,customBag)
+custom.id=1; function custom:GetID() return self.id end
+function custom:GetName() return self.name end
+custom.icon=custom:CreateTexture(nil,"ARTWORK"); custom.icon:SetAllPoints()
+custom:SetScript("OnClick",click)
+local watched=I.Watch; local watches=0
+I.Watch=function(self,...) watches=watches+1; return watched(self,...) end
+ContainerFrameItemButton_SetForceExtended(custom,false)
+I.Watch=watched
+check(setups==1 and watches==1,"Late-loaded native setup hook runs once and preserves original function")
+drain()
+check(marked(custom) and #custom.hardcoreBuddyUpgrade==7,"Unnamed replacement bag buttons get arrow and all border edges")
+check(custom:GetScript("OnClick")==click,"Replacement bag clicks are preserved")
+links[1]=worse.link; ContainerFrameItemButton_SetForceExtended(custom,false)
+check(not marked(custom),"Sorting clears a previous item's marker before the queued pass")
+drain(); check(not marked(custom),"Replacement bag downgrade stays unmarked")
+links[1]=better.link; ContainerFrameItemButton_SetForceExtended(custom,false)
+custom.id=2; links[2]=worse.link; drain()
+check(not marked(custom),"Queued replacement bag work follows the final slot after sorting")
+custom.id=1; ContainerFrameItemButton_SetForceExtended(custom,false); drain()
+check(marked(custom),"Moving an upgrade into the button restores its marker")
+local bank=CreateFrame("Frame",nil,UIParent)
+function bank:GetID() return -1 end
+custom:SetParent(bank); I:Invalidate(); drain()
+check(not marked(custom),"Reparented buttons cannot score stale backpack slots while in the bank")
+custom:SetParent(customBag); custom.id=0; ContainerFrameItemButton_SetForceExtended(custom,false); drain()
+check(not marked(custom),"Unassigned pooled slots are not scored")
+custom.id=1; ContainerFrameItemButton_SetForceExtended(custom,false); drain()
+custom:Hide(); check(not marked(custom),"Releasing replacement bag buttons hides their decorations")
+custom:Show(); drain(); check(marked(custom),"Reopening replacement bags restores markers")
+better.loading=true; MOCK.FireAll("GET_ITEM_INFO_RECEIVED",better.id,false); drain()
+check(not marked(custom),"Uncached replacement bag gear has no false marker")
+better.loading=false; MOCK.FireAll("GET_ITEM_INFO_RECEIVED",better.id,true); drain()
+check(marked(custom),"Late item data restores replacement bag markers")
+A.db.gearUpgradeMarkers=false; I:Invalidate(); drain()
+check(not marked(custom),"Marker toggle also applies to replacement bags")
+A.db.gearUpgradeMarkers=true
+F.equip(1,better); MOCK.FireAll("PLAYER_EQUIPMENT_CHANGED",1); drain()
+check(not marked(custom),"Equipping better gear refreshes replacement bag comparisons")
+F.equip(1,old); MOCK.FireAll("PLAYER_EQUIPMENT_CHANGED",1); drain()
+check(marked(custom),"Equipment changes restore eligible replacement bag upgrades")
+
 local rewards=CreateFrame("Frame","QuestInfoRewardsFrame",UIParent); rewards.RewardButtons={}
 QuestInfoFrame={rewardsFrame=rewards,questLog=false}
 local choices={better.link,worse.link}
@@ -135,4 +185,4 @@ check(A.state.filter=="Talent Advisor" and A.Settings.pages["Talent Advisor"].bu
     "Selected build remains highlighted in Talent Advisor settings")
 MOCK.Click(A.Settings.pages["Talent Advisor"].builds[1]); drain()
 check(G:CurrentProfile().name=="Demonology" and not marked(button),"Automatic build restores the original score and removes the marker")
-print("PASS: "..checks.." gear indicator checks; native hooks, queued rendering, pooled buttons, cache invalidation, equipment and quest choices.")
+print("PASS: "..checks.." gear indicator checks; native/replacement bags, queued rendering, pooled buttons, cache invalidation, equipment and quest choices.")

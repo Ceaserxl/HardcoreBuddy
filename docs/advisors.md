@@ -53,7 +53,7 @@ does not open or modify the native Character window. Existing snapshots are reta
 
 ## Upgrade markers
 
-Native bag items and quest reward choices show a small green up arrow and green
+Bag items and quest reward choices show a small green up arrow and green
 icon border when they beat equipped gear for at least one eligible slot. These
 use the same build, restrictions and intrinsic-stat calculations as tooltips.
 Two-handed markers compare both replaced hands. Zero-score baselines use the
@@ -62,9 +62,13 @@ until it loads. Markers refresh after gear, level, build or inventory changes;
 recycled buttons clear old hints. They do not pick or equip items automatically.
 
 Toggle these in **Settings > Gear Advisor** independently of tooltip advice.
-Markers support Blizzard's native bags and quest reward/quest-log choices;
-replacement bag interfaces need their own integration. Work runs in batches of
-at most four visible buttons per frame and caches repeated comparisons.
+Markers support Blizzard's native bags, replacement bags using Blizzard's live
+container-button setup (including Baganator), and quest reward/quest-log choices.
+Live bag buttons are discovered as they are populated, without relying on native
+frame names or changing bag-addon settings. Pooled buttons resolve their current
+bag and slot after sorting. Bank and cached/offline views are not marked.
+Work runs in batches of at most four visible buttons per frame and caches
+repeated comparisons.
 Native hooks were checked against Blizzard's Classic Era
 [container UI source](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_UIPanels_Game/Classic/ContainerFrame_Shared.lua)
 and [quest UI source](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_UIPanels_Game/Vanilla/QuestInfo.lua).

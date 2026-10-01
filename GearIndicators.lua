@@ -1,4 +1,4 @@
--- Decorative upgrade hints on native bag and quest reward item buttons.
+-- Decorative upgrade hints on container and quest reward item buttons.
 -- Work is queued in small batches; no item or quest click handlers are replaced.
 local _,A=...
 local I={buttons=setmetatable({},{__mode="k"}),pending={},queue={},cache={},hooks={}}
@@ -52,10 +52,14 @@ end
 function I:Link(button,record)
     if not button:IsVisible() then return end
     if record.kind=="bag" then
-        local bag=record.parent:GetID()
+        -- Replacement bag windows can reparent pooled buttons when sorting.
+        local parent=button:GetParent()
+        local bag=parent and parent:GetID()
         if type(bag)~="number" or bag<0 or bag>(NUM_BAG_SLOTS or 4) then return end
+        local slot=button:GetID()
+        if type(slot)~="number" or slot<1 then return end
         local get=C_Container and C_Container.GetContainerItemLink or GetContainerItemLink
-        return get and get(bag,button:GetID())
+        return get and get(bag,slot)
     elseif record.kind=="quest" and button.objectType=="item" and button.type=="choice" then
         local get=record.questLog and GetQuestLogItemLink or GetQuestItemLink
         return get and get("choice",button:GetID())
@@ -85,7 +89,7 @@ end
 function I:Bags(frame)
     if not frame or not frame:IsShown() or not frame:GetName() then return end
     for index=1,frame.size or 0 do
-        self:Watch(_G[frame:GetName().."Item"..index],{kind="bag",parent=frame})
+        self:Watch(_G[frame:GetName().."Item"..index],{kind="bag"})
     end
 end
 
@@ -122,6 +126,10 @@ function I:Attach()
     if not hooksecurefunc then return end
     for _,entry in ipairs({{"ContainerFrame_Update",function(frame) I:Bags(frame) end},
         {"ContainerFrame_GenerateFrame",function(frame) I:Bags(frame) end},
+        -- Live replacement bags use Blizzard's container-button setup without
+        -- the ContainerFrameNItemN names. Discover each button as it is filled;
+        -- the queued pass resolves its final live bag/slot after layout finishes.
+        {"ContainerFrameItemButton_SetForceExtended",function(button) I:Watch(button,{kind="bag"}) end},
         {"QuestInfo_Display",function() I:Quests() end},
         {"QuestInfo_ShowRewards",function() I:Quests() end}}) do
         if type(_G[entry[1]])=="function" and not self.hooks[entry[1]] then
