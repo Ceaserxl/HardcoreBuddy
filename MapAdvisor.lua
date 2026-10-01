@@ -4,12 +4,12 @@ local M={pins={},exploration={},hooks={},notified={}}; A.MapAdvisor=M
 local colors={danger={1,0.3,0.2},rare={0.75,0.85,1},elite={1,0.7,0.2},boss={0.9,0.3,1}}
 local names={danger="Dangerous",rare="Rare",elite="Elite",boss="World boss"}
 local icons={
-    danger="Interface\\TargetingFrame\\UI-RaidTargetingIcon_7",
-    rare="Interface\\TargetingFrame\\UI-RaidTargetingIcon_5",
-    elite="Interface\\TargetingFrame\\UI-RaidTargetingIcon_1",
-    boss="Interface\\TargetingFrame\\UI-RaidTargetingIcon_8",
+    danger="Interface\\AddOns\\HardcoreBuddy\\Media\\MapMarkers\\Danger.tga",
+    rare="Interface\\AddOns\\HardcoreBuddy\\Media\\MapMarkers\\Rare.tga",
+    elite="Interface\\AddOns\\HardcoreBuddy\\Media\\MapMarkers\\Elite.tga",
+    boss="Interface\\AddOns\\HardcoreBuddy\\Media\\MapMarkers\\Boss.tga",
 }
-local function iconLabel(kind) return "|T"..icons[kind]..":16:16:0:0|t "..names[kind] end
+local function iconLabel(kind) return "|T"..icons[kind]..":18:18:0:0|t "..names[kind] end
 local priority={danger=2,rare=1,elite=3,boss=4}
 local function action(command,id) return {kind="mapAdvisor",command=command,id=id} end
 local function row(title,body,command,id) return {title=title,body=body,action=command and action(command,id)} end
@@ -98,7 +98,7 @@ function M:PlacePins()
         if pin:IsShown() and pin.cluster then
             pin:SetFrameLevel(frameLevel)
             pin:ClearAllPoints(); pin:SetPoint("CENTER",canvas,"TOPLEFT",pin.cluster.x*canvas:GetWidth(),-pin.cluster.y*canvas:GetHeight())
-            pin:SetSize(17/math.max(0.1,scale),17/math.max(0.1,scale))
+            pin:SetSize(22/math.max(0.1,scale),22/math.max(0.1,scale))
         end
     end
 end

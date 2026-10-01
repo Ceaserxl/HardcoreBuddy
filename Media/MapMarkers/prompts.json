@@ -1,0 +1,21 @@
+{
+  "tool": "Built-in image_gen",
+  "assets": [
+    {
+      "name": "Danger",
+      "prompt": "Use case: stylized-concept. Asset type: one custom fantasy MMORPG world-map marker icon for HardcoreBuddy, not a mockup. A square image with genuinely transparent alpha background. One isolated centered emblem occupying 85% of the image; crisp compact silhouette, chunky simple forms that remain legible when reduced to 22 pixels. Hand-painted metal with minimal bevel highlights, dark charcoal edging for contrast over a parchment map. No square frame, no circular badge, no background panel, no text, no letters, no other icons, no cast shadow beyond the emblem. No fine filigree, no tiny details, no glow cloud. A dangerous enemy marker: three thick diagonal crimson claw slashes cut into a compact dark iron claw-shaped emblem, fiery red highlights, visually clear aggressive three-stroke silhouette."
+    },
+    {
+      "name": "Rare",
+      "prompt": "Use case: stylized-concept. Asset type: one custom fantasy MMORPG world-map marker icon for HardcoreBuddy, not a mockup. A square image with genuinely transparent alpha background. One isolated centered emblem occupying 85% of the image; crisp compact silhouette, chunky simple forms that remain legible when reduced to 22 pixels. Hand-painted metal with minimal bevel highlights, dark charcoal edging for contrast over a parchment map. No square frame, no circular badge, no background panel, no text, no letters, no other icons, no cast shadow beyond the emblem. No fine filigree, no tiny details, no glow cloud. A rare creature marker: compact silver dragon head in side profile facing left, one swept horn and a clear open jaw, icy silver metal and muted blue recesses, thick dark outline."
+    },
+    {
+      "name": "Elite",
+      "prompt": "Use case: stylized-concept. Asset type: one custom fantasy MMORPG world-map marker icon for HardcoreBuddy, not a mockup. A square image with genuinely transparent alpha background. One isolated centered emblem occupying 85% of the image; crisp compact silhouette, chunky simple forms that remain legible when reduced to 22 pixels. Hand-painted metal with minimal bevel highlights, dark charcoal edging for contrast over a parchment map. No square frame, no circular badge, no background panel, no text, no letters, no other icons, no cast shadow beyond the emblem. No fine filigree, no tiny details, no glow cloud. An elite creature marker: compact gold dragon head in side profile facing right, two swept horns and a clear open jaw, warm antique gold metal and deep bronze recesses, thick dark outline."
+    },
+    {
+      "name": "Boss",
+      "prompt": "Use case: stylized-concept. Asset type: one custom fantasy MMORPG world-map marker icon for HardcoreBuddy, not a mockup. A square image with genuinely transparent alpha background. One isolated centered emblem occupying 85% of the image; crisp compact silhouette, chunky simple forms that remain legible when reduced to 22 pixels. Hand-painted metal with minimal bevel highlights, dark charcoal edging for contrast over a parchment map. No square frame, no circular badge, no background panel, no text, no letters, no other icons, no cast shadow beyond the emblem. No fine filigree, no tiny details, no glow cloud. A world boss marker: broad ivory skull seen from the front with two short sweeping black horns and deep crimson eyes, menacing compact silhouette, thick dark outline. Large skull shape with minimal teeth detail."
+    }
+  ]
+}

@@ -9,14 +9,22 @@ live spawn detection and discovery credit are outside this feature.
 - **Unchanged** leaves unexplored terrain hidden; **Reveal all** draws the map
   terrain; **Tint unexplored** draws it with a translucent blue tint (default).
 - Separate Dangerous, Rare, Elite and World boss filters control pins and lists.
-  Their map icons are a red cross, silver moon, gold star and skull, respectively.
+  Their custom map icons are crimson claw marks, a silver dragon, a gold dragon
+  and a horned skull, respectively. The transparent artwork draws at 22 pixels
+  and keeps its apparent size as the map zooms.
   Matching icons appear beside each filter and in marker tooltips.
+
 - **Silent zone-entry notice** is off by default. When enabled it prints a short
   chat message, with no sound or banner, upon entering a catalogued zone.
   Notices defer during combat, suppress dungeon/raid zones and throttle repeat
   visits for five minutes. They describe known dangers, not detected creatures.
 - Browse zones uses one scrollable list; Follow current zone resumes tracking
   your location. Hover map pins for names, levels, classifications and notes.
+
+Custom artwork lives in `Media/MapMarkers` as 128 x 128 RGBA TGA textures.
+It was created with the built-in image generation tool; the exact prompts are
+saved in [prompts.json](../Media/MapMarkers/prompts.json). The original alpha is
+preserved during downsampling and conversion; there is no square background.
 
 Reveal uses independent textures behind native explored overlays. Discovering an
 area naturally removes its extra tint. It never changes exploration flags,
