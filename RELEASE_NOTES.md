@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fixed short spell-damage suffixes such as `+15 Frost Spell Damage` being
+  omitted from gear scores, causing false upgrades against Frozen Wrath items.
 - Added an Advisors page with gear and talent advice for all nine Classic classes.
 - Rebuilt gear percentages around Classic specialization stat weights; all usable
   armor materials compete without lighter-armor penalties. Enchants and armor

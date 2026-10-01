@@ -57,6 +57,14 @@ local function statPatterns()
     end
     local complete=#patterns==#primaryStats
     add("RESISTANCE0_NAME",ARMOR_TEMPLATE or (english and "%d Armor"))
+    -- Random suffixes can display a short intrinsic bonus instead of an Equip
+    -- sentence. GetItemStats may omit these or return the wrong suffix value.
+    for _,school in ipairs({"Holy","Fire","Nature","Frost","Shadow","Arcane"}) do
+        local key="ITEM_MOD_"..school:upper().."_DAMAGE_SHORT"
+        local label=_G[key]
+        if type(label)=="string" then add(key,"%c%d "..label) end
+        if english then add(key,"%c%d "..school.." Spell Damage") end
+    end
     return patterns,complete
 end
 
@@ -279,9 +287,11 @@ function G:Read(link,inventorySlot,allowUnscored)
     -- the API's primary values (including attributes absent from that block).
     if scanned.baseParsed then
         for _,entry in ipairs(primaryStats) do merged[entry[1]]=scanned.baseStats[entry[1]] or 0 end
-    else
-        for key,value in pairs(scanned.baseStats) do merged[key]=value end
     end
+    -- Include school-damage suffixes as well as primary attributes. These are
+    -- read from the enhancement-free item and replace, rather than add to, the
+    -- corresponding API value.
+    for key,value in pairs(scanned.baseStats) do merged[key]=value end
     if scanned.baseStats.RESISTANCE0_NAME~=nil then
         merged.RESISTANCE0_NAME=scanned.baseStats.RESISTANCE0_NAME
         merged.ITEM_MOD_ARMOR_SHORT=nil

@@ -160,6 +160,35 @@ skeletal.name="Skeletal Shoulders"
 check(close(row(skeletal).percent,(8.795/16.12-1)*100),"Reference shoulder downgrade")
 check(G:Read(shoulders.link).stats.ITEM_MOD_AGILITY_SHORT==8,"Native suffix attributes override faulty API")
 
+-- Live screenshot: the equipped Frozen Wrath hat's short bonus line was
+-- dropped, leaving only 0.225 armor score and a false +593.33% upgrade.
+do
+    reset("MAGE",40,{0,0,31})
+    local frozen=item("INVTYPE_HEAD",{RESISTANCE0_NAME=45},4,1,
+        {{"45 Armor"},{"+15 Frost Spell Damage"}})
+    frozen.name="Regal Wizard Hat of Frozen Wrath"
+    local wolf=item("INVTYPE_HEAD",{},4,1,{{"48 Armor"},{"+12 Agility"},{"+12 Spirit"}})
+    wolf.name="Royal Headband of the Wolf"
+    equipment[1]=frozen
+    check(close(G.Score(G:Read(frozen.link),G:CurrentProfile(),1),14.475),"Short Frost suffix contributes to equipped score")
+    check(close(row(wolf).percent,(1.56/14.475-1)*100) and row(wolf).status=="down","Screenshot comparison is a downgrade, not +593.33%")
+    check(row(wolf).losses=="-15 Frost","Lost school damage is shown")
+    equipment[1]=wolf
+    check(row(frozen).status=="up","Short school damage also works on the candidate")
+    for _,school in ipairs({"Frost","Fire","Shadow","Nature","Arcane","Holy"}) do
+        local key="ITEM_MOD_"..school:upper().."_DAMAGE_SHORT"
+        for _,apiAmount in ipairs({0,1,15}) do
+            local suffix=item("INVTYPE_HEAD",{[key]=apiAmount},4,1,{{"45 Armor"},{"+15 "..school.." Spell Damage"}})
+            check(G:Read(suffix.link).stats[key]==15,"Native school suffix replaces absent/incorrect API values without duplication")
+        end
+    end
+    local enhanced=withEnchant(frozen,9999,{},{{"45 Armor"},{"+15 Frost Spell Damage"},{"+20 Frost Spell Damage"}})
+    check(G:Read(enhanced.link).stats.ITEM_MOD_FROST_DAMAGE_SHORT==15,"Applied enchant excluded; intrinsic suffix retained")
+    local conditional=item("INVTYPE_HEAD",{},4,1,{{"45 Armor"},{"Use: +40 Frost Spell Damage"},
+        {"Chance on hit: +40 Frost Spell Damage"},{"(2) Set: +40 Frost Spell Damage"}})
+    check(G:Read(conditional.link).stats.ITEM_MOD_FROST_DAMAGE_SHORT==nil,"Conditional effects are not short intrinsic stats")
+end
+
 local materialChecks=0
 for class in pairs(A.Data.AdvisorGear) do
     for _,level in ipairs({1,39,40,50,60}) do
