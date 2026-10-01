@@ -1,0 +1,1215 @@
+{
+  "schema": 2,
+  "character": {
+    "class": "HUNTER",
+    "level": 40,
+    "race": "NightElf",
+    "raceID": 4
+  },
+  "client": {
+    "date": "Sep 23 2026",
+    "interface": 11509,
+    "version": "1.15.9",
+    "build": "70003"
+  },
+  "locale": "enUS",
+  "projectID": 2,
+  "slots": {
+    "1": {
+      "slot": 1,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 9902,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 0,
+          "RESISTANCE0_NAME": 190,
+          "ITEM_MOD_SPIRIT_SHORT": 10,
+          "ITEM_MOD_AGILITY_SHORT": 11
+        },
+        "id": 9902,
+        "required": 36,
+        "equip": "INVTYPE_HEAD",
+        "subclassID": 3,
+        "classID": 4
+      }
+    },
+    "2": {
+      "slot": 2,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 1714,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 7,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 8,
+          "ITEM_MOD_SPIRIT_SHORT": 7,
+          "ITEM_MOD_AGILITY_SHORT": 0
+        },
+        "id": 1714,
+        "required": 38,
+        "equip": "INVTYPE_NECK",
+        "subclassID": 0,
+        "classID": 4
+      }
+    },
+    "3": {
+      "slot": 3,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 9934,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 9,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 0,
+          "RESISTANCE0_NAME": 184,
+          "ITEM_MOD_SPIRIT_SHORT": 0,
+          "ITEM_MOD_AGILITY_SHORT": 8
+        },
+        "id": 9934,
+        "required": 39,
+        "equip": "INVTYPE_SHOULDER",
+        "subclassID": 3,
+        "classID": 4
+      }
+    },
+    "4": {
+      "slot": 4,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 2577
+    },
+    "5": {
+      "slot": 5,
+      "state": "saved",
+      "enchantID": 1843,
+      "itemID": 1981,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 15,
+          "ITEM_MOD_AGILITY_SHORT": 5,
+          "ITEM_MOD_SPIRIT_SHORT": 24,
+          "RESISTANCE0_NAME": 294
+        },
+        "id": 1981,
+        "required": 39,
+        "equip": "INVTYPE_CHEST",
+        "subclassID": 3,
+        "classID": 4
+      }
+    },
+    "6": {
+      "slot": 6,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 9931,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 8,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 0,
+          "RESISTANCE0_NAME": 136,
+          "ITEM_MOD_SPIRIT_SHORT": 9,
+          "ITEM_MOD_AGILITY_SHORT": 0
+        },
+        "id": 9931,
+        "required": 38,
+        "equip": "INVTYPE_WAIST",
+        "subclassID": 3,
+        "classID": 4
+      }
+    },
+    "7": {
+      "slot": 7,
+      "state": "saved",
+      "enchantID": 1843,
+      "itemID": 9933,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 12,
+          "RESISTANCE0_NAME": 217,
+          "ITEM_MOD_SPIRIT_SHORT": 0,
+          "ITEM_MOD_AGILITY_SHORT": 12
+        },
+        "id": 9933,
+        "required": 40,
+        "equip": "INVTYPE_LEGS",
+        "subclassID": 3,
+        "classID": 4
+      }
+    },
+    "8": {
+      "slot": 8,
+      "state": "saved",
+      "enchantID": 1843,
+      "itemID": 15614,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 0,
+          "RESISTANCE0_NAME": 171,
+          "ITEM_MOD_SPIRIT_SHORT": 9,
+          "ITEM_MOD_AGILITY_SHORT": 9
+        },
+        "id": 15614,
+        "required": 40,
+        "equip": "INVTYPE_FEET",
+        "subclassID": 3,
+        "classID": 4
+      }
+    },
+    "9": {
+      "slot": 9,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 13119,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 4,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_SPIRIT_SHORT": 10,
+          "RESISTANCE0_NAME": 52,
+          "ITEM_MOD_STAMINA_SHORT": 0,
+          "ITEM_MOD_AGILITY_SHORT": 0
+        },
+        "id": 13119,
+        "required": 34,
+        "equip": "INVTYPE_WRIST",
+        "subclassID": 2,
+        "classID": 4
+      }
+    },
+    "10": {
+      "slot": 10,
+      "state": "saved",
+      "enchantID": 1843,
+      "itemID": 8347,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_CRIT_RATING_SHORT": 1,
+          "ITEM_MOD_STAMINA_SHORT": 7,
+          "RESISTANCE0_NAME": 171,
+          "ITEM_MOD_SPIRIT_SHORT": 6,
+          "ITEM_MOD_AGILITY_SHORT": 0
+        },
+        "id": 8347,
+        "required": 40,
+        "equip": "INVTYPE_HAND",
+        "subclassID": 3,
+        "classID": 4
+      }
+    },
+    "11": {
+      "slot": 11,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 13093,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 4,
+          "ITEM_MOD_SPIRIT_SHORT": 8,
+          "ITEM_MOD_STAMINA_SHORT": 0,
+          "ITEM_MOD_AGILITY_SHORT": 5
+        },
+        "id": 13093,
+        "required": 32,
+        "equip": "INVTYPE_FINGER",
+        "subclassID": 0,
+        "classID": 4
+      }
+    },
+    "12": {
+      "slot": 12,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 12012,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 0,
+          "ITEM_MOD_SPIRIT_SHORT": 6,
+          "ITEM_MOD_AGILITY_SHORT": 7
+        },
+        "id": 12012,
+        "required": 40,
+        "equip": "INVTYPE_FINGER",
+        "subclassID": 0,
+        "classID": 4
+      }
+    },
+    "13": {
+      "slot": 13,
+      "state": "empty"
+    },
+    "14": {
+      "slot": 14,
+      "state": "empty"
+    },
+    "15": {
+      "slot": 15,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 13108,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 7,
+          "ITEM_MOD_AGILITY_SHORT": 8,
+          "ITEM_MOD_SPIRIT_SHORT": 0,
+          "RESISTANCE0_NAME": 25
+        },
+        "id": 13108,
+        "required": 29,
+        "equip": "INVTYPE_CLOAK",
+        "subclassID": 1,
+        "classID": 4
+      }
+    },
+    "16": {
+      "slot": 16,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 13034,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 3,
+          "ITEM_MOD_DAMAGE_PER_SECOND_SHORT": 28.05555534362793,
+          "ITEM_MOD_SPIRIT_SHORT": 0,
+          "ITEM_MOD_AGILITY_SHORT": 8
+        },
+        "id": 13034,
+        "required": 36,
+        "equip": "INVTYPE_WEAPON",
+        "subclassID": 7,
+        "classID": 2,
+        "dps": 28.05555534362793
+      },
+      "tooltipLines": [
+        {
+          "right": "Speed 1.80",
+          "left": "35 - 66 Damage"
+        }
+      ]
+    },
+    "17": {
+      "slot": 17,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 13034,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 3,
+          "ITEM_MOD_DAMAGE_PER_SECOND_SHORT": 28.05555534362793,
+          "ITEM_MOD_SPIRIT_SHORT": 0,
+          "ITEM_MOD_AGILITY_SHORT": 8
+        },
+        "id": 13034,
+        "required": 36,
+        "equip": "INVTYPE_WEAPON",
+        "subclassID": 7,
+        "classID": 2,
+        "dps": 28.05555534362793
+      },
+      "tooltipLines": [
+        {
+          "right": "Speed 1.80",
+          "left": "35 - 66 Damage"
+        }
+      ]
+    },
+    "18": {
+      "slot": 18,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 15287,
+      "advisor": {
+        "stats": {
+          "ITEM_MOD_INTELLECT_SHORT": 0,
+          "ITEM_MOD_STRENGTH_SHORT": 0,
+          "ITEM_MOD_STAMINA_SHORT": 0,
+          "ITEM_MOD_DAMAGE_PER_SECOND_SHORT": 20.90909004211426,
+          "ITEM_MOD_SPIRIT_SHORT": 4,
+          "ITEM_MOD_AGILITY_SHORT": 3
+        },
+        "id": 15287,
+        "required": 40,
+        "equip": "INVTYPE_RANGED",
+        "subclassID": 2,
+        "classID": 2,
+        "dps": 20.90909004211426
+      },
+      "tooltipLines": [
+        {
+          "right": "Speed 2.20",
+          "left": "32 - 60 Damage"
+        }
+      ]
+    },
+    "19": {
+      "slot": 19,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 5976
+    },
+    "0": {
+      "slot": 0,
+      "state": "saved",
+      "enchantID": 0,
+      "itemID": 11285,
+      "tooltipLines": [
+        {
+          "left": "Adds 13 damage per second"
+        }
+      ],
+      "classID": 6,
+      "subclassID": 2
+    }
+  },
+  "talents": {
+    "1": {
+      "index": 1,
+      "points": 31,
+      "talents": {
+        "1": {
+          "tier": 2,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "2": {
+          "tier": 1,
+          "column": 2,
+          "rank": 5,
+          "maxRank": 5
+        },
+        "3": {
+          "tier": 3,
+          "column": 1,
+          "rank": 2,
+          "maxRank": 2
+        },
+        "4": {
+          "tier": 4,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 2
+        },
+        "5": {
+          "tier": 7,
+          "column": 2,
+          "rank": 1,
+          "maxRank": 1
+        },
+        "6": {
+          "tier": 5,
+          "column": 2,
+          "rank": 1,
+          "maxRank": 1
+        },
+        "7": {
+          "tier": 5,
+          "column": 1,
+          "rank": 1,
+          "maxRank": 2
+        },
+        "8": {
+          "tier": 1,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "9": {
+          "tier": 5,
+          "column": 4,
+          "rank": 0,
+          "maxRank": 2
+        },
+        "10": {
+          "tier": 3,
+          "column": 2,
+          "rank": 1,
+          "maxRank": 1
+        },
+        "11": {
+          "tier": 4,
+          "column": 3,
+          "rank": 5,
+          "maxRank": 5
+        },
+        "12": {
+          "tier": 2,
+          "column": 3,
+          "rank": 3,
+          "maxRank": 3
+        },
+        "13": {
+          "tier": 3,
+          "column": 3,
+          "rank": 5,
+          "maxRank": 5
+        },
+        "14": {
+          "tier": 6,
+          "column": 3,
+          "rank": 5,
+          "maxRank": 5
+        },
+        "15": {
+          "tier": 2,
+          "column": 1,
+          "rank": 0,
+          "maxRank": 2
+        },
+        "16": {
+          "tier": 2,
+          "column": 4,
+          "rank": 2,
+          "maxRank": 2
+        }
+      }
+    },
+    "2": {
+      "index": 2,
+      "points": 0,
+      "talents": {
+        "1": {
+          "tier": 1,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "2": {
+          "tier": 1,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "3": {
+          "tier": 2,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "4": {
+          "tier": 2,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "5": {
+          "tier": 3,
+          "column": 1,
+          "rank": 0,
+          "maxRank": 1
+        },
+        "6": {
+          "tier": 3,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "7": {
+          "tier": 5,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 3
+        },
+        "8": {
+          "tier": 4,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "9": {
+          "tier": 4,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "10": {
+          "tier": 5,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 3
+        },
+        "11": {
+          "tier": 3,
+          "column": 4,
+          "rank": 0,
+          "maxRank": 3
+        },
+        "12": {
+          "tier": 5,
+          "column": 1,
+          "rank": 0,
+          "maxRank": 1
+        },
+        "13": {
+          "tier": 7,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 1
+        },
+        "14": {
+          "tier": 6,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 5
+        }
+      }
+    },
+    "3": {
+      "index": 3,
+      "points": 0,
+      "talents": {
+        "1": {
+          "tier": 1,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 3
+        },
+        "2": {
+          "tier": 6,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "3": {
+          "tier": 2,
+          "column": 1,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "4": {
+          "tier": 2,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "5": {
+          "tier": 3,
+          "column": 1,
+          "rank": 0,
+          "maxRank": 2
+        },
+        "6": {
+          "tier": 3,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 1
+        },
+        "7": {
+          "tier": 4,
+          "column": 4,
+          "rank": 0,
+          "maxRank": 2
+        },
+        "8": {
+          "tier": 4,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 3
+        },
+        "9": {
+          "tier": 1,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "10": {
+          "tier": 5,
+          "column": 3,
+          "rank": 0,
+          "maxRank": 1
+        },
+        "11": {
+          "tier": 5,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 3
+        },
+        "12": {
+          "tier": 4,
+          "column": 1,
+          "rank": 0,
+          "maxRank": 2
+        },
+        "13": {
+          "tier": 7,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 1
+        },
+        "14": {
+          "tier": 2,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 2
+        },
+        "15": {
+          "tier": 3,
+          "column": 2,
+          "rank": 0,
+          "maxRank": 5
+        },
+        "16": {
+          "tier": 1,
+          "column": 1,
+          "rank": 0,
+          "maxRank": 3
+        }
+      }
+    }
+  },
+  "combat": {
+    "player": {
+      "stats": {
+        "intellect": {
+          "positive": 28,
+          "effective": 74,
+          "base": 74,
+          "negative": 0
+        },
+        "agility": {
+          "positive": 84,
+          "effective": 170,
+          "base": 170,
+          "negative": 0
+        },
+        "stamina": {
+          "positive": 55,
+          "effective": 115,
+          "base": 115,
+          "negative": 0
+        },
+        "strength": {
+          "positive": 4,
+          "effective": 41,
+          "base": 41,
+          "negative": 0
+        },
+        "spirit": {
+          "positive": 93,
+          "effective": 142,
+          "base": 142,
+          "negative": 0
+        }
+      },
+      "attackSpeed": {
+        "main": 1.800000071525574,
+        "off": 1.800000071525574
+      },
+      "meleePower": {
+        "positive": 0,
+        "base": 271,
+        "negative": 0
+      },
+      "unavailable": {
+        "dodgeFromAgility": "API unavailable"
+      },
+      "unit": "player",
+      "manaRegen": {
+        "outsideRule": 21.70100021362305,
+        "whileCasting": 0.001000000047497451
+      },
+      "rangedDamage": {
+        "min": 123.457145690918,
+        "positive": 0,
+        "max": 151.4571533203125,
+        "speed": 1.94700014591217,
+        "multiplier": 1,
+        "negative": 0
+      },
+      "rangedPower": {
+        "positive": 0,
+        "base": 400,
+        "negative": 0
+      },
+      "armor": {
+        "positive": 160,
+        "armor": 1940,
+        "effective": 1940,
+        "base": 1780,
+        "negative": 0
+      },
+      "level": 40,
+      "blockValue": 1,
+      "maxMana": 1935,
+      "defense": {
+        "base": 179,
+        "bonus": 0
+      },
+      "crit": 5.151000499725342,
+      "critFromAgility": 0,
+      "power": {
+        "token": "MANA",
+        "type": 0
+      },
+      "healing": 0,
+      "schools": {
+        "1": {
+          "crit": 5.383399963378906,
+          "damage": 0
+        },
+        "2": {
+          "crit": 5.383399963378906,
+          "damage": 0
+        },
+        "3": {
+          "crit": 5.383399963378906,
+          "damage": 0
+        },
+        "4": {
+          "crit": 5.383399963378906,
+          "damage": 0
+        },
+        "5": {
+          "crit": 5.383399963378906,
+          "damage": 0
+        },
+        "6": {
+          "crit": 5.383399963378906,
+          "damage": 0
+        },
+        "7": {
+          "crit": 5.383399963378906,
+          "damage": 0
+        }
+      },
+      "parry": 4.159999847412109,
+      "rangedCrit": 6.111000537872315,
+      "block": 0,
+      "dodge": 10.46199989318848,
+      "resistances": {
+        "1": {
+          "positive": 0,
+          "effective": 0,
+          "base": 0,
+          "negative": 0
+        },
+        "2": {
+          "positive": 0,
+          "effective": 0,
+          "base": 0,
+          "negative": 0
+        },
+        "3": {
+          "positive": 0,
+          "effective": 10,
+          "base": 10,
+          "negative": 0
+        },
+        "4": {
+          "positive": 10,
+          "effective": 10,
+          "base": 0,
+          "negative": 0
+        },
+        "5": {
+          "positive": 0,
+          "effective": 0,
+          "base": 0,
+          "negative": 0
+        },
+        "6": {
+          "positive": 0,
+          "effective": 0,
+          "base": 0,
+          "negative": 0
+        },
+        "0": {
+          "positive": 160,
+          "effective": 1940,
+          "base": 1780,
+          "negative": 0
+        }
+      },
+      "meleeDamage": {
+        "min": 69.84286499023438,
+        "offMax": 50.4857177734375,
+        "positive": 0,
+        "max": 100.8428649902344,
+        "negative": 0,
+        "multiplier": 1,
+        "offMin": 34.9857177734375
+      },
+      "powerRegen": {
+        "inactive": 21.70100021362305,
+        "active": 0.001000000047497451
+      },
+      "maxHealth": 1637,
+      "critFromIntellect": 0
+    },
+    "skills": {
+      "entries": {
+        "1": {
+          "index": 1,
+          "info": {
+            "isHeader": 1,
+            "name": "Class Skills",
+            "maximum": 0,
+            "rank": 0,
+            "temporary": 0,
+            "expanded": 1,
+            "permanent": 0
+          }
+        },
+        "2": {
+          "index": 2,
+          "info": {
+            "temporary": 0,
+            "name": "Beast Mastery",
+            "maximum": 200,
+            "rank": 200,
+            "permanent": 0
+          }
+        },
+        "3": {
+          "index": 3,
+          "info": {
+            "temporary": 0,
+            "name": "Marksmanship",
+            "maximum": 200,
+            "rank": 200,
+            "permanent": 0
+          }
+        },
+        "4": {
+          "index": 4,
+          "info": {
+            "temporary": 0,
+            "name": "Survival",
+            "maximum": 200,
+            "rank": 200,
+            "permanent": 0
+          }
+        },
+        "5": {
+          "index": 5,
+          "info": {
+            "isHeader": 1,
+            "name": "Professions",
+            "maximum": 0,
+            "rank": 0,
+            "temporary": 0,
+            "expanded": 1,
+            "permanent": 0
+          }
+        },
+        "6": {
+          "index": 6,
+          "info": {
+            "temporary": 0,
+            "name": "Engineering",
+            "maximum": 75,
+            "rank": 1,
+            "permanent": 0
+          }
+        },
+        "7": {
+          "index": 7,
+          "info": {
+            "temporary": 0,
+            "name": "Skinning",
+            "maximum": 300,
+            "rank": 225,
+            "permanent": 0
+          }
+        },
+        "8": {
+          "index": 8,
+          "info": {
+            "isHeader": 1,
+            "name": "Secondary Skills",
+            "maximum": 0,
+            "rank": 0,
+            "temporary": 0,
+            "expanded": 1,
+            "permanent": 0
+          }
+        },
+        "9": {
+          "index": 9,
+          "info": {
+            "temporary": 0,
+            "name": "Cooking",
+            "maximum": 225,
+            "rank": 225,
+            "permanent": 0
+          }
+        },
+        "10": {
+          "index": 10,
+          "info": {
+            "temporary": 0,
+            "name": "First Aid",
+            "maximum": 300,
+            "rank": 267,
+            "permanent": 0
+          }
+        },
+        "11": {
+          "index": 11,
+          "info": {
+            "temporary": 0,
+            "name": "Tiger Riding",
+            "maximum": 300,
+            "rank": 300,
+            "permanent": 0
+          }
+        },
+        "12": {
+          "index": 12,
+          "info": {
+            "isHeader": 1,
+            "name": "Weapon Skills",
+            "maximum": 0,
+            "rank": 0,
+            "temporary": 0,
+            "expanded": 1,
+            "permanent": 0
+          }
+        },
+        "13": {
+          "index": 13,
+          "info": {
+            "temporary": 0,
+            "name": "Axes",
+            "maximum": 200,
+            "rank": 191,
+            "permanent": 0
+          }
+        },
+        "14": {
+          "index": 14,
+          "info": {
+            "temporary": 0,
+            "name": "Bows",
+            "maximum": 200,
+            "rank": 199,
+            "permanent": 0
+          }
+        },
+        "15": {
+          "index": 15,
+          "info": {
+            "temporary": 0,
+            "name": "Crossbows",
+            "maximum": 200,
+            "rank": 1,
+            "permanent": 0
+          }
+        },
+        "16": {
+          "index": 16,
+          "info": {
+            "temporary": 0,
+            "name": "Daggers",
+            "maximum": 200,
+            "rank": 45,
+            "permanent": 0
+          }
+        },
+        "17": {
+          "index": 17,
+          "info": {
+            "temporary": 0,
+            "name": "Defense",
+            "maximum": 200,
+            "rank": 179,
+            "permanent": 0
+          }
+        },
+        "18": {
+          "index": 18,
+          "info": {
+            "temporary": 0,
+            "name": "Guns",
+            "maximum": 200,
+            "rank": 170,
+            "permanent": 0
+          }
+        },
+        "19": {
+          "index": 19,
+          "info": {
+            "temporary": 0,
+            "name": "Staves",
+            "maximum": 200,
+            "rank": 160,
+            "permanent": 0
+          }
+        },
+        "20": {
+          "index": 20,
+          "info": {
+            "temporary": 0,
+            "name": "Swords",
+            "maximum": 200,
+            "rank": 175,
+            "permanent": 0
+          }
+        },
+        "21": {
+          "index": 21,
+          "info": {
+            "temporary": 0,
+            "name": "Thrown",
+            "maximum": 200,
+            "rank": 1,
+            "permanent": 0
+          }
+        },
+        "22": {
+          "index": 22,
+          "info": {
+            "temporary": 0,
+            "name": "Two-Handed Axes",
+            "maximum": 200,
+            "rank": 1,
+            "permanent": 0
+          }
+        },
+        "23": {
+          "index": 23,
+          "info": {
+            "temporary": 0,
+            "name": "Two-Handed Swords",
+            "maximum": 200,
+            "rank": 1,
+            "permanent": 0
+          }
+        },
+        "24": {
+          "index": 24,
+          "info": {
+            "temporary": 0,
+            "name": "Unarmed",
+            "maximum": 200,
+            "rank": 10,
+            "permanent": 0
+          }
+        },
+        "25": {
+          "index": 25,
+          "info": {
+            "isHeader": 1,
+            "name": "Armor Proficiencies",
+            "maximum": 0,
+            "rank": 0,
+            "temporary": 0,
+            "expanded": 1,
+            "permanent": 0
+          }
+        },
+        "26": {
+          "index": 26,
+          "info": {
+            "temporary": 0,
+            "name": "Cloth",
+            "maximum": 1,
+            "rank": 1,
+            "permanent": 0
+          }
+        },
+        "27": {
+          "index": 27,
+          "info": {
+            "temporary": 0,
+            "name": "Leather",
+            "maximum": 1,
+            "rank": 1,
+            "permanent": 0
+          }
+        },
+        "28": {
+          "index": 28,
+          "info": {
+            "temporary": 0,
+            "name": "Mail",
+            "maximum": 1,
+            "rank": 1,
+            "permanent": 0
+          }
+        },
+        "29": {
+          "index": 29,
+          "info": {
+            "isHeader": 1,
+            "name": "Languages",
+            "maximum": 0,
+            "rank": 0,
+            "temporary": 0,
+            "expanded": 1,
+            "permanent": 0
+          }
+        },
+        "30": {
+          "index": 30,
+          "info": {
+            "temporary": 0,
+            "name": "Language: Common",
+            "maximum": 300,
+            "rank": 300,
+            "permanent": 0
+          }
+        },
+        "31": {
+          "index": 31,
+          "info": {
+            "temporary": 0,
+            "name": "Language: Darnassian",
+            "maximum": 300,
+            "rank": 300,
+            "permanent": 0
+          }
+        }
+      },
+      "complete": true
+    },
+    "context": {
+      "speed": 0,
+      "unavailable": {
+        "form": "Data unavailable"
+      },
+      "instance": {
+        "inside": false,
+        "type": "none"
+      },
+      "inCombat": false
+    },
+    "auras": {
+      "complete": true,
+      "helpful": [
+        {
+          "spellId": 19579,
+          "name": "Spirit Bond"
+        },
+        {
+          "spellId": 349981,
+          "name": "Supercharged Chronoboon Displacer"
+        }
+      ],
+      "harmful": []
+    }
+  },
+  "observationNote": "Anonymous level-40 Night Elf Hunter, client 1.15.9 build 70003; captured 2026-09-30. One observation, not all-level validation."
+}

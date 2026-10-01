@@ -174,8 +174,8 @@ end
 -- Hidden dropdown is closed when navigating; pet guide still works in detail.
 MOCK.Click(f.class); assert(f.classMenu:IsShown())
 A:Navigate("petguide"); assert(not f.classMenu:IsShown() and A.document.total==17)
-MOCK.Click(f.nextPage); assert(A.document.page==2)
-MOCK.Click(f.previous); assert(A.document.page==1)
+assert(A.document.continuous and #A.document.cards[1].blocks==17 and A.document.pages==1)
+assert(f.previous==nil and f.nextPage==nil and f.pageText==nil)
 MOCK.Click(f.filters[3]); assert(A.state.filter=="Pets" and A.document.total==559)
 f.search:SetText("broken tooth"); f.search.scripts.OnTextChanged(f.search,true)
 assert(A.document.total==1 and A.document.cards[1].blocks[1].title=="Broken Tooth")
@@ -255,7 +255,7 @@ A:SetProfile("characterClass","Hunter"); A:SetLevel(60); A:Navigate("supplies")
 A.state.filter,A.state.query,A.state.stock,A.state.page="All","","All",5
 A:Refresh()
 assert(#A.document.cards==8 and A.document.continuous and A.document.page==1 and A.document.pages==1)
-assert(not f.previous:IsShown() and not f.nextPage:IsShown() and not f.pageText:IsShown())
+assert(f.previous==nil and f.nextPage==nil and f.pageText==nil)
 local expectedCategories={"Food & drink","Buffs","Potions","Emergency","Class","Scrolls","Optional","User"}
 local grouped,total={},0
 for index,category in ipairs(expectedCategories) do
@@ -293,7 +293,7 @@ assert(f.missing==nil and f.stockPanel==nil)
 local faction=A:GetContext().faction
 MOCK.Click(f.filters[3]); MOCK.Click(f.filters[1])
 assert((A.state.query or "")=="" and (A.state.stock or "All")=="All" and A:GetContext().faction==faction)
-assert(A.document.page==1 and A.document.pages==1 and not f.nextPage:IsShown())
+assert(A.document.page==1 and A.document.pages==1 and f.nextPage==nil)
 
 -- Craftable item details separate their effect, crafting skill, profession
 -- rank, recipe route, AH access, materials and use level into rendered fields.

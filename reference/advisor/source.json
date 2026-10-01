@@ -1,0 +1,18 @@
+{
+  "inputs": {
+    "Data-Classic/Item-Statweights.lua": "c3481b10a82f2b7142a81817b68b64d642d99e66a3327b22dcf25cabb6f4d9a9",
+    "Guides-Classic/TalentAdvisor-Builds.lua": "8420b53069cd833bb84ab078fd43b49a608727e27333aaebc32acfd669cf3326"
+  },
+  "classes": 9,
+  "profiles": 30,
+  "builds": 16,
+  "corrections": [
+    {
+      "className": "MAGE",
+      "build": "Frost [Leveling] [Single Target] (DPS)",
+      "point": 30,
+      "delayed": "iceBarrier",
+      "selected": "frostChanneling"
+    }
+  ]
+}

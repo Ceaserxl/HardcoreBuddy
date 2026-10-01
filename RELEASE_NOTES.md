@@ -1,5 +1,17 @@
 # Unreleased
 
+- Added an Advisors page with gear and talent advice for all nine Classic classes.
+- Rebuilt gear percentages around Classic specialization stat weights; all usable
+  armor materials compete without lighter-armor penalties. Enchants and armor
+  kits are excluded, and lost stats are shown in red.
+- Added automatic talent-based scoring and selectable role profiles.
+- Added 16 Hardcore talent paths, next-point advice, explicit respec guidance,
+  one-click single-point learning and complete scrollable build lists.
+- Preserved manual Character-window gear snapshots for offline review.
+- Removed the combat simulator, recovery sampling and unused research data.
+- Replaced paging throughout HardcoreBuddy with continuous scrolling,
+  including the complete Pet Guide, supply and training lists, and Death Journal.
+  The journal reuses visible rows to keep large histories responsive.
 - Supplies > Buffs now checks equipped chest armor, leggings, gloves and boots
   for missing or outdated armor kits. Recommendations respect character and
   armor item levels, preserve other enchants and Core Armor Kits, and update

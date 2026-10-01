@@ -406,7 +406,7 @@ function addon:CreateWindow()
         if self.db.profile.mode == "preview" and (key=="UP" or key=="DOWN") then commit(f.level); self:SetLevel(self.db.profile.level+(key=="UP" and 1 or -1)) end
     end)
     f.tabs={}
-    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"petguide","Pet Guide",100},{"deaths","Death Journal",122},{"alerts","Alerts",100},{"dungeons","Dungeons",100},{"raids","Raids",100}}) do
+    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"petguide","Pet Guide",100},{"advisors","Advisors",100},{"deaths","Death Journal",122},{"alerts","Alerts",100},{"dungeons","Dungeons",100},{"raids","Raids",100}}) do
         local id=tab[1]
         local b=button(f,tab[2],tab[3],function() self:Navigate(id) end); b.view=id; Skin.Button(b,"tab"); f.tabs[#f.tabs+1]=b
     end
@@ -435,9 +435,6 @@ function addon:CreateWindow()
     f.search:SetScript("OnEscapePressed",function(edit) edit:ClearFocus() end)
     f.clear=button(f,"Clear",54,function() self.state.query=""; f.search:SetText(""); self.state.page=1; self:Refresh(true) end)
     f.atLevel=button(f,"Any level",112,function() self.state.atLevel=not self.state.atLevel; self.state.page=1; self:Refresh(true) end)
-    f.previous=button(f,"<",28,function() self.state.page=math.max(1,(self.document.page or 1)-1); self:Refresh(true) end)
-    f.nextPage=button(f,">",28,function() self.state.page=math.min(self.document.pages or 1,(self.document.page or 1)+1); self:Refresh(true) end)
-    f.pageText=font(f,11,MUTED)
 
     f.classMenu=CreateFrame("Frame",nil,f,"BackdropTemplate"); f.classMenu:SetSize(132,9*30+12)
     f.classMenu:SetPoint("TOPLEFT",f.class,"BOTTOMLEFT",0,-2); f.classMenu:SetFrameStrata("FULLSCREEN_DIALOG"); Skin.Paint(f.classMenu,"menu"); f.classMenu:Hide()
@@ -452,7 +449,7 @@ function addon:CreateWindow()
         scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*65)))
     end)
     f.content=CreateFrame("Frame",nil,f.scroll); f.content:SetSize(1,1); f.scroll:SetScrollChild(f.content); f.cards={}
-    f.footer=font(f,10,MUTED); f.footer:SetPoint("BOTTOMLEFT",22,17); f.footer:SetPoint("BOTTOMRIGHT",-208,17)
+    f.footer=font(f,10,MUTED); f.footer:SetPoint("BOTTOMLEFT",22,17); f.footer:SetPoint("BOTTOMRIGHT",-22,17)
     f.footer:SetText("Author CeaserXL (CXL) | Version "..addon.version)
     f.userEntry=CreateFrame("Frame",nil,f); f.userEntry:SetHeight(30)
     local entry=f.userEntry
@@ -576,6 +573,7 @@ function addon:OpenCurrentInstance()
     self:Refresh(true)
 end
 function addon:Activate(action)
+    if action.kind=="advisor" and self.TalentAdvisor then self.TalentAdvisor:Activate(action); return end
     self:CommitInputs(); self.window.classMenu:Hide()
     self.history=self.history or {}; self.history[#self.history+1]=self.state
     if action.kind=="instance" then
@@ -594,17 +592,19 @@ function addon:Refresh(resetScroll)
     if not self.window then return end
     local context=self:GetContext()
     if self.lastClass and self.lastClass~=context.characterClass and not (self.state and
-        (self.state.view=="deaths" or self.state.view=="dungeons" or self.state.view=="raids")) then self.state=nil; self.history={} end
+        (self.state.view=="deaths" or self.state.view=="dungeons" or self.state.view=="raids" or self.state.view=="advisors")) then self.state=nil; self.history={} end
     self.lastClass=context.characterClass
     self.state=self.state or {view="supplies",filter="Food & drink",page=1}; self.history=self.history or {}
     -- Supplies has no hidden search or shortage filter after its controls were
     -- removed. Back navigation and old in-memory state must show the full kit.
     if self.state.view=="supplies" or self.state.view=="now" then self.state.query=nil; self.state.stock=nil end
-    self.document=(self.state.view=="deaths" or self.state.view=="alerts") and {context=context,view=self.state.view,cards={}} or C.Build(context,self.state)
+    self.document=self.state.view=="advisors" and self.TalentAdvisor:Document(context,self.state)
+        or (self.state.view=="deaths" or self.state.view=="alerts") and {context=context,view=self.state.view,cards={}} or C.Build(context,self.state)
     self:Layout()
     if resetScroll then self.window.scroll:SetVerticalScroll(0) end
 end
 local FILTER_ICONS={
+    Gear="INV_Chest_Chain",Talents="Ability_Marksmanship",Builds="INV_Misc_Book_11",
     Essentials="INV_Misc_Bag_08",Preparation="INV_Misc_Note_01",Appearance="INV_Misc_Book_09",
     ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
     ["Reports"]="INV_Misc_Book_09",Options="Trade_Engineering",["All"]="INV_Misc_Bag_08",["Food & drink"]="INV_Misc_Food_11",Buffs="INV_Potion_27",
@@ -711,7 +711,7 @@ function addon:Layout()
         y=y+56
     end
     local instancePage=doc.view=="dungeons" or doc.view=="raids"
-    local navigation=instancePage and self.Instances.Navigation(self.state)
+    local navigation=doc.view=="advisors" and {"Gear","Talents","Builds"} or instancePage and self.Instances.Navigation(self.state)
         or doc.view=="alerts" and {"Low Health","Rares","Elites","Preparation"} or doc.view=="deaths" and {"Reports","Options","Appearance"}
         or doc.view=="training" and {"Overview","First Aid","Engineering","Cooking"}
         or doc.view=="petguide" and {"Families","Abilities","Pets","Looks","Care"}
@@ -722,7 +722,7 @@ function addon:Layout()
     f.sidebar:SetShown(sidebar)
     if sidebar then
         f.sidebar:ClearAllPoints(); f.sidebar:SetPoint("TOPLEFT",20,-y); f.sidebar:SetPoint("BOTTOMLEFT",20,46); f.sidebar:SetWidth(148)
-        f.sidebarTitle:SetText(instancePage and (doc.view=="raids" and "RAIDS" or "DUNGEONS") or doc.view=="alerts" and "ALERTS" or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or "FIELD KIT")
+        f.sidebarTitle:SetText(doc.view=="advisors" and "ADVISORS" or instancePage and (doc.view=="raids" and "RAIDS" or "DUNGEONS") or doc.view=="alerts" and "ALERTS" or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or "FIELD KIT")
         f.sidebarNote:SetText(instancePage and "Levels and\nitems to bring." or doc.view=="alerts" and "Stay alert.\nStay alive." or doc.view=="deaths" and "Every journey\nleaves a story." or doc.view=="petguide" and "Find a companion.\nLearn its strengths." or "Pack with purpose.\nEvery slot matters.")
         f.sidebarNote:SetShown(height-y-46>35+#navigation*41+70)
     end
@@ -870,12 +870,5 @@ function addon:Layout()
     -- WoW resolves nested texture/frame anchors after this layout pass. Refresh
     -- the scroll child's cached geometry next frame, as scrolling would do.
     f.refreshScrollGeometry=true
-    local pages=doc.pages or 1
-    f.previous:SetShown(pages>1); f.nextPage:SetShown(pages>1); f.pageText:SetShown(pages>1)
-    f.previous:ClearAllPoints(); f.previous:SetPoint("BOTTOMRIGHT",-176,12)
-    f.pageText:ClearAllPoints(); f.pageText:SetPoint("BOTTOMRIGHT",-70,19); f.pageText:SetSize(100,16)
-    f.pageText:SetText((doc.page or 1).." / "..pages)
-    f.nextPage:ClearAllPoints(); f.nextPage:SetPoint("BOTTOMRIGHT",-40,12)
-    enabled(f.previous,(doc.page or 1)>1); enabled(f.nextPage,(doc.page or 1)<pages)
     f.footer:SetText("Author CeaserXL (CXL) | Version "..addon.version)
 end

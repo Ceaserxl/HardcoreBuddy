@@ -1,0 +1,237 @@
+-- Independent Classic talent recommendations. Spending a point always requires
+-- a deliberate click and a fresh read of the player's real talent tree.
+local _,A=...
+local T={}; A.TalentAdvisor=T
+local D=A.Data
+local tokens={Druid="DRUID",Hunter="HUNTER",Mage="MAGE",Paladin="PALADIN",Priest="PRIEST",Rogue="ROGUE",Shaman="SHAMAN",Warlock="WARLOCK",Warrior="WARRIOR"}
+local function settings()
+    if not A.characterDB then return end
+    A.characterDB.advisors=A.characterDB.advisors or {}
+    local s=A.characterDB.advisors; s.builds=s.builds or {}
+    return s
+end
+local function row(title,body,action,meta,icon)
+    return {title=title,body=body,action=action,meta=meta,icon=icon}
+end
+local function card(title,note,blocks) return {title=title,note=note,blocks=blocks} end
+local function action(command,id,class) return {kind="advisor",command=command,id=id,class=class} end
+local function spellIcon(id)
+    if C_Spell and C_Spell.GetSpellTexture then return C_Spell.GetSpellTexture(id) end
+    if GetSpellTexture then return GetSpellTexture(id) end
+    return 134400
+end
+
+function T:Build(class,level)
+    local builds=D.AdvisorBuilds[class]
+    if not builds then return end
+    local s=settings()
+    local chosen=s and s.builds[class]
+    if chosen and builds[chosen] then return builds[chosen],true end
+    -- The first path is the Hardcore default. Short early-level phases switch
+    -- to their next path when their stated range ends, with respec advice.
+    for _,build in ipairs(builds) do
+        if level<=build.maxLevel then return build,false end
+    end
+    return builds[#builds],false
+end
+
+function T:ReadCurrent(class,level)
+    local _,actual=UnitClass("player")
+    if class~=actual then return nil,"Preview: recommendations for another class" end
+    local result={ranks={},indices={},icons={},names={},points=0}
+    if level<10 then result.unspent=0; return result end
+    local getCount=GetNumTalents or (C_SpecializationInfo and C_SpecializationInfo.GetNumTalents)
+    local modern=C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo
+    if not getCount or not (modern or GetTalentInfo) then return nil,"Open your Talents window to load talent data." end
+    local coordinates={}
+    for key,t in pairs(D.AdvisorTalents[class] or {}) do coordinates[t.tree..":"..t.tier..":"..t.column]=key end
+    for tree=1,3 do
+        local count=getCount(tree,false,false)
+        if type(count)~="number" or count<1 or count>50 then return nil,"Talent data is loading. Open Talents and try again." end
+        for index=1,count do
+            local info
+            if modern then
+                info=modern({specializationIndex=tree,talentIndex=index,isInspect=false,isPet=false})
+            else
+                local name,icon,tier,column,rank,maxRank=GetTalentInfo(tree,index,false,false)
+                if name then info={name=name,icon=icon,tier=tier,column=column,rank=rank,maxRank=maxRank} end
+            end
+            if not info or type(info.rank)~="number" then return nil,"Talent data is loading. Open Talents and try again." end
+            local key=coordinates[tree..":"..tostring(info.tier)..":"..tostring(info.column)]
+            local node=key and D.AdvisorTalents[class][key]
+            if not node or node.maxRank~=info.maxRank or info.rank<0 or info.rank>info.maxRank then
+                return nil,"This talent tree does not match Classic Era. Recommendations are unavailable."
+            end
+            result.ranks[key]=info.rank; result.indices[key]=index
+            result.icons[key]=info.icon; result.names[key]=info.name
+            result.points=result.points+info.rank
+        end
+    end
+    for key in pairs(D.AdvisorTalents[class]) do
+        if result.ranks[key]==nil then return nil,"Talent data is incomplete. Open Talents and try again." end
+    end
+    local available=UnitCharacterPoints and UnitCharacterPoints("player")
+    result.unspent=type(available)=="number" and available or math.max(0,level-9-result.points)
+    return result
+end
+
+function T.Plan(class,level,build,ranks)
+    ranks=ranks or {}
+    local nodes=D.AdvisorTalents[class]
+    local target,spent,trees={},0,{0,0,0}
+    for _,key in ipairs(build.steps) do target[key]=(target[key] or 0)+1 end
+    local result={target=target,divergences={},build=build}
+    for key,rank in pairs(ranks or {}) do
+        local node=nodes[key]
+        if node then
+            spent=spent+rank; trees[node.tree]=trees[node.tree]+rank
+            if rank>(target[key] or 0) then result.divergences[#result.divergences+1]=node.name end
+        end
+    end
+    table.sort(result.divergences)
+    result.spent=spent
+    if level<10 then result.status="Talents unlock at level 10"; return result end
+    if level<build.minLevel then result.status="This path starts at level "..build.minLevel; return result end
+    if #result.divergences>0 then result.status="Respec needed to follow this path"; return result end
+    local seen={}
+    for position,key in ipairs(build.steps) do
+        seen[key]=(seen[key] or 0)+1
+        local node=nodes[key]
+        if (ranks[key] or 0)<seen[key] then
+            local prerequisite=node.prerequisite
+            local ready=trees[node.tree]>=(node.tier-1)*5 and
+                (not prerequisite or (ranks[prerequisite] or 0)==nodes[prerequisite].maxRank)
+            if ready then
+                result.next={key=key,rank=(ranks[key] or 0)+1,position=position,tree=node.tree}
+                result.status=spent<level-9 and "Next recommended point" or "Next level"
+                return result
+            end
+        end
+    end
+    result.status=spent>=#build.steps and "Path complete" or "No legal next point"
+    return result
+end
+
+function T:LearnNext(expectedBuild,expectedKey,expectedRank)
+    if InCombatLockdown and InCombatLockdown() then A:Print("Spend talent points after combat."); return false end
+    local _,class=UnitClass("player"); local level=UnitLevel("player")
+    local build=self:Build(class,level)
+    local live,reason=self:ReadCurrent(class,level)
+    if not build or not live then A:Print(reason or "Talent data unavailable."); return false end
+    local plan=self.Plan(class,level,build,live.ranks)
+    local nextPoint=plan.next
+    -- Do not spend a different point if a stale row is clicked after a respec,
+    -- class/build switch or another addon has spent the previous point.
+    if build.id~=expectedBuild or not nextPoint or nextPoint.key~=expectedKey or nextPoint.rank~=expectedRank then
+        A:Refresh(); return false
+    end
+    if live.unspent<1 or plan.spent>=level-9 or not LearnTalent then return false end
+    LearnTalent(nextPoint.tree,live.indices[nextPoint.key],false)
+    return true
+end
+
+function T:OpenTalents()
+    if InCombatLockdown and InCombatLockdown() then A:Print("Open Talents after combat."); return end
+    if not ToggleTalentFrame then
+        if C_AddOns and C_AddOns.LoadAddOn then C_AddOns.LoadAddOn("Blizzard_TalentUI")
+        elseif UIParentLoadAddOn then UIParentLoadAddOn("Blizzard_TalentUI") end
+    end
+    if ToggleTalentFrame then ToggleTalentFrame() end
+end
+
+function T:Activate(a)
+    local s=settings(); if not s then return end
+    if a.command=="build" then
+        if D.AdvisorBuilds[a.class] and D.AdvisorBuilds[a.class][a.id] then s.builds[a.class]=a.id end
+        A.state.filter="Talents"
+    elseif a.command=="defaultBuild" then s.builds[a.class]=nil; A.state.filter="Talents"
+    elseif a.command=="profile" then s.gearProfile=a.id
+    elseif a.command=="toggleGear" then A.db.gearAdvisorEnabled=A.db.gearAdvisorEnabled==false
+    elseif a.command=="learn" then self:LearnNext(a.id,a.key,a.rank)
+    elseif a.command=="open" then self:OpenTalents()
+    elseif a.command=="snapshot" then
+        if InCombatLockdown and InCombatLockdown() then A:Print("Open Gear Snapshot after combat."); return end
+        if ToggleCharacter and CharacterFrame and not CharacterFrame:IsShown() then ToggleCharacter("PaperDollFrame") end
+        if A.GearSnapshot then A.GearSnapshot:Show() end
+    end
+    A.GearAdvisor.revision=A.GearAdvisor.revision+1
+    A.GearAdvisor:RefreshTooltips(); A:Refresh(true)
+end
+
+function T:Document(context,state)
+    local class=tokens[context.characterClass]
+    local level=context.level
+    local doc={context=context,view="advisors",cards={}}
+    if not D.AdvisorBuilds[class] then return doc end
+    local filter=state.filter or "Gear"
+    local _,actual=UnitClass("player")
+    local preview=context.mode=="preview"
+    if filter=="Gear" then
+        local profile=A.GearAdvisor:CurrentProfile()
+        local description=profile and (profile.name..(profile.manual and " | Selected profile" or profile.fallback and " | Leveling default" or " | Your current talents")) or "Character data loading"
+        local blocks={row(A.db.gearAdvisorEnabled==false and "Enable gear tooltips" or "Gear tooltips enabled", "Click to toggle color-coded upgrade and downgrade percentages.",action("toggleGear")),
+            row("Snapshot current gear","Save your equipment in the Character window for offline review.",action("snapshot"))}
+        doc.cards[#doc.cards+1]=card("Gear Advisor",description,blocks)
+        local choices={row("Automatic from your talents","Uses the tree with the most spent points; ties use tree order.",action("profile"),not (settings() or {}).gearProfile and "Selected" or nil)}
+        for _,p in ipairs(D.AdvisorGear[actual] or {}) do
+            choices[#choices+1]=row(p.name,"Use this role for equipment comparisons.",action("profile",p.id),profile and profile.id==p.id and "Current weights" or nil)
+        end
+        doc.cards[#doc.cards+1]=card("Scoring profile","Gear always uses your live character. Usable armor types compete on stats, with no material penalty.",choices)
+        doc.cards[#doc.cards+1]=card("Reading the score","Percentage change in weighted item stats, not a damage or survival simulation.",{
+            row("|cff73d696Green: upgrade|r   |cfff56e61Red: downgrade|r","Enchants, armor kits, procs, use effects and set bonuses are excluded. Check the stat losses before replacing an item."),
+            row("Two slots and weapons","Each ring or trinket is compared separately. Two-handed weapons replace both hands; zero-score baselines are labeled without an invented percentage.")})
+        return doc
+    end
+    local build,manual=self:Build(class,level)
+    if filter=="Builds" then
+        local choices={row("Automatic Hardcore path","Select the default path for your level, including planned respec phases.",action("defaultBuild",nil,class),not manual and "Selected" or nil)}
+        for _,b in ipairs(D.AdvisorBuilds[class]) do
+            choices[#choices+1]=row(b.name,"Levels "..b.minLevel.."-"..b.maxLevel.." | "..#b.steps.." points",
+                action("build",b.id,class),build.id==b.id and "Selected" or nil)
+        end
+        doc.cards[1]=card(context.characterClass.." talent paths","Hardcore leveling paths. Use Edit Character to browse any class.",choices)
+        return doc
+    end
+    local live,reason
+    if not preview then live,reason=self:ReadCurrent(class,level) else reason="Preview: no talent points will be spent." end
+    local ranks=live and live.ranks or {}
+    local plan=self.Plan(class,level,build,ranks)
+    local top={row("Choose a talent path",build.name,{view="advisors",filter="Builds"})}
+    if live then
+        top[#top+1]=row(plan.status,live.points.." spent | "..live.unspent.." unspent",
+            action("open"),#plan.divergences>0 and table.concat(plan.divergences,", ") or nil)
+    else top[#top+1]=row(preview and "Planning another character" or "Load current talents",reason,not preview and action("open") or nil) end
+    local nextPoint=plan.next
+    if nextPoint then
+        local node=D.AdvisorTalents[class][nextPoint.key]
+        local canLearn=live and live.unspent>0 and plan.spent<level-9 and level>=build.minLevel
+        local learn=canLearn and action("learn",build.id) or nil
+        if learn then learn.key=nextPoint.key; learn.rank=nextPoint.rank end
+        top[#top+1]=row((canLearn and "Learn: " or "Next: ")..(live and live.names[nextPoint.key] or node.name),
+            node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank,learn,
+            canLearn and "Click to spend one talent point" or "",live and live.icons[nextPoint.key] or spellIcon(node.spellID))
+    end
+    doc.cards[1]=card("Talent Advisor",context.characterClass.." | Level "..level,top)
+    local steps,occurrences={},{}
+    for index,key in ipairs(build.steps) do
+        occurrences[key]=(occurrences[key] or 0)+1
+        local node=D.AdvisorTalents[class][key]
+        local rank=occurrences[key]
+        local learned=(ranks[key] or 0)>=rank
+        local nextStep=nextPoint and nextPoint.key==key and nextPoint.rank==rank
+        local color=learned and "73d696" or nextStep and "efc26e" or "abb0b8"
+        local atLevel=math.max(build.minLevel,index+9)
+        local title="|cff"..color..""..(live and live.names[key] or node.name).."  "..rank.."/"..node.maxRank.."|r"
+        steps[#steps+1]=row(title,"Level "..atLevel.."  |  "..node.treeName,nil,
+            learned and "Learned" or nextStep and "Next point" or nil,live and live.icons[key] or spellIcon(node.spellID))
+    end
+    doc.cards[2]=card("Your point-by-point path",build.name.." | Scroll to see the complete path.",steps)
+    return doc
+end
+
+local events=CreateFrame("Frame"); T.events=events
+for _,event in ipairs({"CHARACTER_POINTS_CHANGED","PLAYER_TALENT_UPDATE","PLAYER_LEVEL_UP","PLAYER_ENTERING_WORLD","ADDON_LOADED"}) do events:RegisterEvent(event) end
+events:SetScript("OnEvent",function(_,event,name)
+    if event=="ADDON_LOADED" and name~="Blizzard_TalentUI" then return end
+    if A.window and A.window:IsShown() and A.state and A.state.view=="advisors" then A:Refresh() end
+end)

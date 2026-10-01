@@ -181,25 +181,14 @@ local function visitBlock(frame,depth)
     end
 end
 walkPages=function(depth)
-    local initialPage=A.document.page
-    local pages=A.document.pages
-    assert(initialPage==1,"Newly opened view must start on page one")
-    for page=1,pages do
-        assert(A.document.page==page and A.document.pages==pages)
-        validate(); counts.pages=counts.pages+1
-        local cardCount=#A.document.cards
-        for cardIndex=1,cardCount do
-            local count=#A.document.cards[cardIndex].blocks
-            for index=1,count do visitBlock(f.cards[cardIndex].content.blocks[index],depth) end
-        end
-        if page<pages then assert(f.nextPage:IsShown() and f.nextPage:IsEnabled()); MOCK.Click(f.nextPage)
-        elseif pages>1 then assert(not f.nextPage:IsEnabled()) end
+    assert(A.document.continuous and A.document.page==1 and A.document.pages==1,"Every view must be a complete scrollable list")
+    assert(f.previous==nil and f.nextPage==nil and f.pageText==nil)
+    validate(); counts.pages=counts.pages+1
+    local cardCount=#A.document.cards
+    for cardIndex=1,cardCount do
+        local count=#A.document.cards[cardIndex].blocks
+        for index=1,count do visitBlock(f.cards[cardIndex].content.blocks[index],depth) end
     end
-    -- Restore the caller's page using the actual previous-page button.
-    while A.document.page>initialPage do
-        assert(f.previous:IsShown() and f.previous:IsEnabled()); MOCK.Click(f.previous)
-    end
-    if pages>1 then assert(not f.previous:IsEnabled()) end
 end
 
 f:Show(); A:RestoreWindow()

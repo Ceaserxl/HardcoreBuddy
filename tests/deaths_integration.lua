@@ -12,7 +12,8 @@ end
 assert(minimaps == 1 and listeners == 1, "one minimap button and one death receiver")
 MOCK.Click(A.minimap)
 assert(A.window:IsShown())
-local journalTab=A.window.tabs[4]
+local journalTab
+for _,tab in ipairs(A.window.tabs) do if tab.view=="deaths" then journalTab=tab end end
 MOCK.Click(journalTab)
 assert(A.state.view=="deaths" and H.host.parent==A.window and H.window:IsVisible())
 local x,y,w,h=journalTab:GetRect()
@@ -111,14 +112,31 @@ print("PASS: Embedded journal navigation, options/details/back, visibility, side
 for i=1,30 do
     H:Add({name="PagePlayer"..i,realm="Realm",date=2100+i,source="Blizzard",level=i},true)
 end
-assert(#H.filtered==32 and H.window.page:GetText()=="1 / "..math.ceil(32/H.rowsPerPage))
+assert(#H.filtered==32 and H.window.page==nil and H.window.previous==nil and H.window.next==nil)
+local journalScroll=H.window.listScroll
+assert(journalScroll:GetVerticalScrollRange()>0)
 local first=H.window.rows[1].record
-MOCK.Click(H.window.next)
-assert(H.page==2 and H.window.rows[1].record~=first)
-MOCK.Click(H.window.previous)
-assert(H.page==1 and H.window.rows[1].record==first)
+journalScroll.scripts.OnMouseWheel(journalScroll,-1)
+assert(journalScroll:GetVerticalScroll()==96 and H.window.rows[1].record~=first)
+journalScroll.scripts.OnMouseWheel(journalScroll,1)
+assert(journalScroll:GetVerticalScroll()==0 and H.window.rows[1].record==first)
+local seen={}
+for offset=0,journalScroll:GetVerticalScrollRange()+32,32 do
+    journalScroll:SetVerticalScroll(math.min(offset,journalScroll:GetVerticalScrollRange()))
+    for _,row in ipairs(H.window.rows) do if row.record then seen[row.record]=true end end
+end
+for _,record in ipairs(H.filtered) do assert(seen[record],"Scrolling lost a death report") end
+assert(#H.window.rows<=math.ceil(journalScroll:GetHeight()/32)+1,"Journal should only allocate visible rows")
+local last
+for _,row in ipairs(H.window.rows) do if row.record==H.filtered[#H.filtered] then last=row end end
+assert(last,"Oldest report is reachable by scrolling")
+local bottom=journalScroll:GetVerticalScroll()
+MOCK.Click(last)
+assert(H.details.record==H.filtered[#H.filtered])
+MOCK.Click(H.details.back)
+assert(journalScroll:GetVerticalScroll()==bottom,"Details/back preserve the journal scroll position")
 H.window.search:SetText("PagePlayer30")
-assert(#H.filtered==1 and H.window.rows[1].record.name=="PagePlayer30")
+assert(#H.filtered==1 and H.window.rows[1].record.name=="PagePlayer30" and journalScroll:GetVerticalScroll()==0)
 MOCK.Click(H.window.rows[1])
 assert(H.details:IsVisible() and H.details.record.name=="PagePlayer30")
 MOCK.Click(H.details.back)
@@ -134,7 +152,31 @@ MOCK.Click(A.window.filters[2])
 H:ShowDetails(H.db.records[1])
 MOCK.Click(H.details.back)
 assert(H.window:IsVisible(), "details opened from options return to reports")
-print("PASS: Journal search, level filtering, empty state, pagination, row details/back and class-change continuity.")
+print("PASS: Journal continuous scrolling, bounded row pool, search, level filtering, empty state, row details/back and class-change continuity.")
+
+-- Large imports must remain fully reachable without allocating one row per death.
+do
+    local saved=H.db.records
+    local records={}
+    for i=1,5000 do records[i]={name="ScrollReport"..i,realm=H.realm,date=3000+i,source="Imported",level=20} end
+    H.db.records=records; H:Refresh()
+    local scroll=H.window.listScroll
+    local frames=#MOCK.frames
+    local visited={}
+    for offset=0,scroll:GetVerticalScrollRange()+120,120 do
+        scroll:SetVerticalScroll(math.min(offset,scroll:GetVerticalScrollRange()))
+        for _,row in ipairs(H.window.rows) do if row.record then visited[row.record]=true end end
+    end
+    for _,record in ipairs(records) do assert(visited[record],"Imported report is unreachable") end
+    assert(#H.window.rows<=math.ceil(scroll:GetHeight()/32)+1 and #MOCK.frames-frames<20,"History size grows the row pool")
+    scroll:SetVerticalScroll(scroll:GetVerticalScroll()-7.5)
+    local offset=scroll:GetVerticalScroll()
+    H:Refresh(); assert(scroll:GetVerticalScroll()==offset,"Refresh moves a fractional scroll position")
+    H.db.records={records[5000]}; H:Refresh()
+    assert(scroll:GetVerticalScroll()==0 and H.window.rows[1].record==records[5000],"Shrinking history must clamp the scroll offset")
+    H.db.records=saved; H:Refresh()
+end
+print("PASS: All 5,000 imported reports are reachable with a bounded row pool; fractional offsets and shrinking histories are handled.")
 
 assert(A.window.filters[2].label:GetText()=="Options")
 assert(A.window.filters[3].label:GetText()=="Appearance","no Watchlist sidebar entry")
@@ -191,7 +233,7 @@ for _,mode in ipairs({"live","preview"}) do
     local x,y,w,h=H.host:GetRect()
     for _,row in ipairs(H.window.rows) do if row:IsVisible() then
         local rx,ry,rw,rh=row:GetRect()
-        assert(ry>=y+176 and ry+rh<=y+h-40,"redesigned rows stay clear of pagination")
+        assert(ry>=y+180-32 and ry+rh<=y+h-40+32,"pooled rows only extend by one clipped row at viewport edges")
         assert(row.zone:GetHeight()>=row.zone:GetStringHeight(),"location column text fits")
     end end
     A:OpenDeaths("Options")

@@ -1,0 +1,3972 @@
+{
+  "DRUID": {
+    "improvedWrath": {
+      "tier": 1,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16814,
+      "name": "Improved Wrath"
+    },
+    "naturesGrasp": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16689,
+      "name": "Nature's Grasp"
+    },
+    "improvedNaturesGrasp": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 4,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 17245,
+      "name": "Improved Nature's Grasp",
+      "prerequisite": "naturesGrasp"
+    },
+    "improvedEntanglingRoots": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16918,
+      "name": "Improved Entangling Roots"
+    },
+    "improvedMoonfire": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16821,
+      "name": "Improved Moonfire"
+    },
+    "naturalWeapons": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16902,
+      "name": "Natural Weapons"
+    },
+    "naturalShapeshifter": {
+      "tier": 2,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16833,
+      "name": "Natural Shapeshifter"
+    },
+    "improvedThorns": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16836,
+      "name": "Improved Thorns"
+    },
+    "omenOfClarity": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16864,
+      "name": "Omen of Clarity",
+      "prerequisite": "naturalWeapons"
+    },
+    "naturesReach": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16819,
+      "name": "Nature's Reach"
+    },
+    "vengeance": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16909,
+      "name": "Vengeance",
+      "prerequisite": "improvedMoonfire"
+    },
+    "improvedStarfire": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16850,
+      "name": "Improved Starfire"
+    },
+    "naturesGrace": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16880,
+      "name": "Nature's Grace"
+    },
+    "moonglow": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16845,
+      "name": "Moonglow"
+    },
+    "moonfury": {
+      "tier": 6,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 16896,
+      "name": "Moonfury",
+      "prerequisite": "naturesGrace"
+    },
+    "moonkinForm": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Balance",
+      "spellID": 24858,
+      "name": "Moonkin Form"
+    },
+    "ferocity": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16934,
+      "name": "Ferocity"
+    },
+    "feralAggression": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16858,
+      "name": "Feral Aggression"
+    },
+    "feralInstinct": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16947,
+      "name": "Feral Instinct"
+    },
+    "brutalImpact": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16940,
+      "name": "Brutal Impact"
+    },
+    "thickHide": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16929,
+      "name": "Thick Hide"
+    },
+    "felineSwiftness": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 17002,
+      "name": "Feline Swiftness"
+    },
+    "feralCharge": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16979,
+      "name": "Feral Charge"
+    },
+    "sharpenedClaws": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16942,
+      "name": "Sharpened Claws"
+    },
+    "improvedShred": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16966,
+      "name": "Improved Shred"
+    },
+    "predatoryStrikes": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16972,
+      "name": "Predatory Strikes"
+    },
+    "bloodFrenzy": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16952,
+      "name": "Blood Frenzy",
+      "prerequisite": "sharpenedClaws"
+    },
+    "primalFury": {
+      "tier": 4,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16958,
+      "name": "Primal Fury"
+    },
+    "savageFury": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16998,
+      "name": "Savage Fury"
+    },
+    "faerieFireFeral": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 16857,
+      "name": "Faerie Fire (Feral)"
+    },
+    "heartOfTheWild": {
+      "tier": 6,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 17003,
+      "name": "Heart of the Wild",
+      "prerequisite": "predatoryStrikes"
+    },
+    "leaderOfThePack": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Feral Combat",
+      "spellID": 17007,
+      "name": "Leader of the Pack"
+    },
+    "improvedMarkOfTheWild": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17050,
+      "name": "Improved Mark of the Wild"
+    },
+    "furor": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17056,
+      "name": "Furor"
+    },
+    "improvedHealingTouch": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17069,
+      "name": "Improved Healing Touch"
+    },
+    "naturesFocus": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17063,
+      "name": "Nature's Focus"
+    },
+    "improvedEnrage": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17079,
+      "name": "Improved Enrage"
+    },
+    "reflection": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17106,
+      "name": "Reflection"
+    },
+    "insectSwarm": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 5570,
+      "name": "Insect Swarm"
+    },
+    "subtlety": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17118,
+      "name": "Subtlety"
+    },
+    "tranquilSpirit": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 24968,
+      "name": "Tranquil Spirit"
+    },
+    "improvedRejuvenation": {
+      "tier": 4,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17111,
+      "name": "Improved Rejuvenation"
+    },
+    "naturesSwiftness": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17116,
+      "name": "Nature's Swiftness",
+      "prerequisite": "improvedHealingTouch"
+    },
+    "giftOfNature": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17104,
+      "name": "Gift of Nature",
+      "prerequisite": "insectSwarm"
+    },
+    "improvedTranquility": {
+      "tier": 5,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17123,
+      "name": "Improved Tranquility"
+    },
+    "improvedRegrowth": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 17074,
+      "name": "Improved Regrowth"
+    },
+    "swiftmend": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 18562,
+      "name": "Swiftmend",
+      "prerequisite": "tranquilSpirit"
+    }
+  },
+  "HUNTER": {
+    "improvedAspectOfTheHawk": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19552,
+      "name": "Improved Aspect of the Hawk"
+    },
+    "enduranceTraining": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19583,
+      "name": "Endurance Training"
+    },
+    "improvedEyesOfTheBeast": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19557,
+      "name": "Improved Eyes of the Beast"
+    },
+    "improvedAspectOfTheMonkey": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19549,
+      "name": "Improved Aspect of the Monkey"
+    },
+    "thickHide": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19609,
+      "name": "Thick Hide"
+    },
+    "improvedRevivePet": {
+      "tier": 2,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 24443,
+      "name": "Improved Revive Pet"
+    },
+    "pathfinding": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19559,
+      "name": "Pathfinding"
+    },
+    "bestialSwiftness": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19596,
+      "name": "Bestial Swiftness"
+    },
+    "unleashedFury": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19616,
+      "name": "Unleashed Fury"
+    },
+    "improvedMendPet": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19572,
+      "name": "Improved Mend Pet"
+    },
+    "ferocity": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19598,
+      "name": "Ferocity"
+    },
+    "spiritBond": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19578,
+      "name": "Spirit Bond"
+    },
+    "intimidation": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19577,
+      "name": "Intimidation"
+    },
+    "bestialDiscipline": {
+      "tier": 5,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19590,
+      "name": "Bestial Discipline"
+    },
+    "frenzy": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19621,
+      "name": "Frenzy",
+      "prerequisite": "ferocity"
+    },
+    "bestialWrath": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Beast Mastery",
+      "spellID": 19574,
+      "name": "Bestial Wrath",
+      "prerequisite": "intimidation"
+    },
+    "improvedConcussiveShot": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19407,
+      "name": "Improved Concussive Shot"
+    },
+    "efficiency": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19416,
+      "name": "Efficiency"
+    },
+    "improvedHuntersMark": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19421,
+      "name": "Improved Hunter's Mark"
+    },
+    "lethalShots": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19426,
+      "name": "Lethal Shots"
+    },
+    "aimedShot": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19434,
+      "name": "Aimed Shot"
+    },
+    "improvedArcaneShot": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19454,
+      "name": "Improved Arcane Shot"
+    },
+    "hawkEye": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19498,
+      "name": "Hawk Eye"
+    },
+    "improvedSerpentSting": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19464,
+      "name": "Improved Serpent Sting"
+    },
+    "mortalShots": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19485,
+      "name": "Mortal Shots",
+      "prerequisite": "lethalShots"
+    },
+    "scatterShot": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19503,
+      "name": "Scatter Shot"
+    },
+    "barrage": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19461,
+      "name": "Barrage"
+    },
+    "improvedScorpidSting": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19491,
+      "name": "Improved Scorpid Sting"
+    },
+    "rangedWeaponSpecialization": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19507,
+      "name": "Ranged Weapon Specialization"
+    },
+    "trueshotAura": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Marksmanship",
+      "spellID": 19506,
+      "name": "Trueshot Aura",
+      "prerequisite": "barrage"
+    },
+    "monsterSlaying": {
+      "tier": 1,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 24293,
+      "name": "Monster Slaying"
+    },
+    "humanoidSlaying": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19151,
+      "name": "Humanoid Slaying"
+    },
+    "deflection": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19295,
+      "name": "Deflection"
+    },
+    "entrapment": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19184,
+      "name": "Entrapment"
+    },
+    "savageStrikes": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19159,
+      "name": "Savage Strikes"
+    },
+    "improvedWingClip": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19228,
+      "name": "Improved Wing Clip"
+    },
+    "cleverTraps": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19239,
+      "name": "Clever Traps"
+    },
+    "survivalist": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19255,
+      "name": "Survivalist"
+    },
+    "deterrence": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19263,
+      "name": "Deterrence"
+    },
+    "trapMastery": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19376,
+      "name": "Trap Mastery"
+    },
+    "surefooted": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19290,
+      "name": "Surefooted"
+    },
+    "improvedFeignDeath": {
+      "tier": 4,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19286,
+      "name": "Improved Feign Death"
+    },
+    "killerInstinct": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19370,
+      "name": "Killer Instinct"
+    },
+    "counterattack": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19306,
+      "name": "Counterattack",
+      "prerequisite": "deterrence"
+    },
+    "lightningReflexes": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19168,
+      "name": "Lightning Reflexes"
+    },
+    "wyvernSting": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Survival",
+      "spellID": 19386,
+      "name": "Wyvern Sting",
+      "prerequisite": "killerInstinct"
+    }
+  },
+  "MAGE": {
+    "arcaneSubtlety": {
+      "tier": 1,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 11210,
+      "name": "Arcane Subtlety"
+    },
+    "arcaneFocus": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 11222,
+      "name": "Arcane Focus"
+    },
+    "improvedArcaneMissiles": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 11237,
+      "name": "Improved Arcane Missiles"
+    },
+    "wandSpecialization": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 6057,
+      "name": "Wand Specialization"
+    },
+    "magicAbsorption": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 29441,
+      "name": "Magic Absorption"
+    },
+    "arcaneConcentration": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 11213,
+      "name": "Arcane Concentration"
+    },
+    "magicAttunement": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 11247,
+      "name": "Magic Attunement"
+    },
+    "improvedArcaneExplosion": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 11242,
+      "name": "Improved Arcane Explosion"
+    },
+    "arcaneResilience": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 28574,
+      "name": "Arcane Resilience"
+    },
+    "improvedManaShield": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 11252,
+      "name": "Improved Mana Shield"
+    },
+    "improvedCounterspell": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 11255,
+      "name": "Improved Counterspell"
+    },
+    "arcaneMeditation": {
+      "tier": 4,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 18462,
+      "name": "Arcane Meditation"
+    },
+    "presenceOfMind": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 12043,
+      "name": "Presence of Mind"
+    },
+    "arcaneMind": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 11232,
+      "name": "Arcane Mind",
+      "prerequisite": "arcaneResilience"
+    },
+    "arcaneInstability": {
+      "tier": 6,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 15058,
+      "name": "Arcane Instability",
+      "prerequisite": "presenceOfMind"
+    },
+    "arcanePower": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Arcane",
+      "spellID": 12042,
+      "name": "Arcane Power",
+      "prerequisite": "arcaneInstability"
+    },
+    "improvedFireball": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11069,
+      "name": "Improved Fireball"
+    },
+    "impact": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11103,
+      "name": "Impact"
+    },
+    "ignite": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11119,
+      "name": "Ignite"
+    },
+    "flameThrowing": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11100,
+      "name": "Flame Throwing"
+    },
+    "improvedFireBlast": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11078,
+      "name": "Improved Fire Blast"
+    },
+    "incinerate": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 18459,
+      "name": "Incinerate"
+    },
+    "improvedFlamestrike": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11108,
+      "name": "Improved Flamestrike"
+    },
+    "pyroblast": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11366,
+      "name": "Pyroblast"
+    },
+    "burningSoul": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11083,
+      "name": "Burning Soul"
+    },
+    "improvedScorch": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11095,
+      "name": "Improved Scorch"
+    },
+    "improvedFireWard": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11094,
+      "name": "Improved Fire Ward"
+    },
+    "masterOfElements": {
+      "tier": 4,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 29074,
+      "name": "Master of Elements"
+    },
+    "criticalMass": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11115,
+      "name": "Critical Mass"
+    },
+    "blastWave": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11113,
+      "name": "Blast Wave",
+      "prerequisite": "pyroblast"
+    },
+    "firePower": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11124,
+      "name": "Fire Power"
+    },
+    "combustion": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Fire",
+      "spellID": 11129,
+      "name": "Combustion",
+      "prerequisite": "criticalMass"
+    },
+    "frostWarding": {
+      "tier": 1,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11189,
+      "name": "Frost Warding"
+    },
+    "improvedFrostbolt": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11070,
+      "name": "Improved Frostbolt"
+    },
+    "elementalPrecision": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 29438,
+      "name": "Elemental Precision"
+    },
+    "iceShards": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11207,
+      "name": "Ice Shards"
+    },
+    "frostbite": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11071,
+      "name": "Frostbite"
+    },
+    "improvedFrostNova": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11165,
+      "name": "Improved Frost Nova"
+    },
+    "permafrost": {
+      "tier": 2,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11175,
+      "name": "Permafrost"
+    },
+    "piercingIce": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11151,
+      "name": "Piercing Ice"
+    },
+    "coldSnap": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 12472,
+      "name": "Cold Snap"
+    },
+    "improvedBlizzard": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11185,
+      "name": "Improved Blizzard"
+    },
+    "arcticReach": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 16757,
+      "name": "Arctic Reach"
+    },
+    "frostChanneling": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11160,
+      "name": "Frost Channeling"
+    },
+    "shatter": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11170,
+      "name": "Shatter",
+      "prerequisite": "improvedFrostNova"
+    },
+    "iceBlock": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11958,
+      "name": "Ice Block"
+    },
+    "improvedConeOfCold": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11190,
+      "name": "Improved Cone of Cold"
+    },
+    "wintersChill": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11180,
+      "name": "Winter's Chill"
+    },
+    "iceBarrier": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Frost",
+      "spellID": 11426,
+      "name": "Ice Barrier",
+      "prerequisite": "iceBlock"
+    }
+  },
+  "PALADIN": {
+    "divineStrength": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20262,
+      "name": "Divine Strength"
+    },
+    "divineIntellect": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20257,
+      "name": "Divine Intellect"
+    },
+    "spiritualFocus": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20205,
+      "name": "Spiritual Focus"
+    },
+    "improvedSealOfRighteousness": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20224,
+      "name": "Improved Seal of Righteousness"
+    },
+    "healingLight": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20237,
+      "name": "Healing Light"
+    },
+    "consecration": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 26573,
+      "name": "Consecration"
+    },
+    "improvedLayOnHands": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20234,
+      "name": "Improved Lay on Hands"
+    },
+    "unyieldingFaith": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 9453,
+      "name": "Unyielding Faith"
+    },
+    "illumination": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20210,
+      "name": "Illumination"
+    },
+    "improvedBlessingOfWisdom": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20244,
+      "name": "Improved Blessing of Wisdom"
+    },
+    "divineFavor": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20216,
+      "name": "Divine Favor",
+      "prerequisite": "illumination"
+    },
+    "lastingJudgement": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20359,
+      "name": "Lasting Judgement"
+    },
+    "holyPower": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 5923,
+      "name": "Holy Power"
+    },
+    "holyShock": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Holy",
+      "spellID": 20473,
+      "name": "Holy Shock",
+      "prerequisite": "divineFavor"
+    },
+    "improvedDevotionAura": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20138,
+      "name": "Improved Devotion Aura"
+    },
+    "redoubt": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20127,
+      "name": "Redoubt"
+    },
+    "precision": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20189,
+      "name": "Precision"
+    },
+    "guardiansFavor": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20174,
+      "name": "Guardian's Favor"
+    },
+    "toughness": {
+      "tier": 2,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20143,
+      "name": "Toughness"
+    },
+    "blessingOfKings": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20217,
+      "name": "Blessing of Kings"
+    },
+    "improvedRighteousFury": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20468,
+      "name": "Improved Righteous Fury"
+    },
+    "shieldSpecialization": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20148,
+      "name": "Shield Specialization",
+      "prerequisite": "redoubt"
+    },
+    "anticipation": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20096,
+      "name": "Anticipation"
+    },
+    "improvedHammerOfJustice": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20487,
+      "name": "Improved Hammer of Justice"
+    },
+    "improvedConcentrationAura": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20254,
+      "name": "Improved Concentration Aura"
+    },
+    "blessingOfSanctuary": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20911,
+      "name": "Blessing of Sanctuary"
+    },
+    "reckoning": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20177,
+      "name": "Reckoning"
+    },
+    "oneHandedWeaponSpecialization": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20196,
+      "name": "One-Handed Weapon Specialization"
+    },
+    "holyShield": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Protection",
+      "spellID": 20925,
+      "name": "Holy Shield",
+      "prerequisite": "blessingOfSanctuary"
+    },
+    "improvedBlessingOfMight": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20042,
+      "name": "Improved Blessing of Might"
+    },
+    "benediction": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20101,
+      "name": "Benediction"
+    },
+    "improvedJudgement": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 25956,
+      "name": "Improved Judgement"
+    },
+    "improvedSealOfTheCrusader": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20335,
+      "name": "Improved Seal of the Crusader"
+    },
+    "deflection": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20060,
+      "name": "Deflection"
+    },
+    "vindication": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 9452,
+      "name": "Vindication"
+    },
+    "conviction": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20117,
+      "name": "Conviction"
+    },
+    "sealOfCommand": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20375,
+      "name": "Seal of Command"
+    },
+    "pursuitOfJustice": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 26022,
+      "name": "Pursuit of Justice"
+    },
+    "eyeForAnEye": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 9799,
+      "name": "Eye for an Eye"
+    },
+    "improvedRetributionAura": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20091,
+      "name": "Improved Retribution Aura"
+    },
+    "twoHandedWeaponSpecialization": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20111,
+      "name": "Two-Handed Weapon Specialization"
+    },
+    "sanctityAura": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20218,
+      "name": "Sanctity Aura"
+    },
+    "vengeance": {
+      "tier": 6,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20049,
+      "name": "Vengeance",
+      "prerequisite": "conviction"
+    },
+    "repentance": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Retribution",
+      "spellID": 20066,
+      "name": "Repentance"
+    }
+  },
+  "PRIEST": {
+    "unbreakableWill": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14522,
+      "name": "Unbreakable Will"
+    },
+    "wandSpecialization": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14524,
+      "name": "Wand Specialization"
+    },
+    "silentResolve": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14523,
+      "name": "Silent Resolve"
+    },
+    "improvedPowerWordFortitude": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14749,
+      "name": "Improved Power Word: Fortitude"
+    },
+    "improvedPowerWordShield": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14748,
+      "name": "Improved Power Word: Shield"
+    },
+    "martyrdom": {
+      "tier": 2,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14531,
+      "name": "Martyrdom"
+    },
+    "innerFocus": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14751,
+      "name": "Inner Focus"
+    },
+    "meditation": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14521,
+      "name": "Meditation"
+    },
+    "improvedInnerFire": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14747,
+      "name": "Improved Inner Fire"
+    },
+    "mentalAgility": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14520,
+      "name": "Mental Agility"
+    },
+    "improvedManaBurn": {
+      "tier": 4,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14750,
+      "name": "Improved Mana Burn"
+    },
+    "mentalStrength": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 18551,
+      "name": "Mental Strength"
+    },
+    "divineSpirit": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 14752,
+      "name": "Divine Spirit",
+      "prerequisite": "meditation"
+    },
+    "forceOfWill": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 18544,
+      "name": "Force of Will"
+    },
+    "powerInfusion": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Discipline",
+      "spellID": 10060,
+      "name": "Power Infusion",
+      "prerequisite": "mentalStrength"
+    },
+    "healingFocus": {
+      "tier": 1,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 14913,
+      "name": "Healing Focus"
+    },
+    "improvedRenew": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 14908,
+      "name": "Improved Renew"
+    },
+    "holySpecialization": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 14889,
+      "name": "Holy Specialization"
+    },
+    "spellWarding": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 27900,
+      "name": "Spell Warding"
+    },
+    "divineFury": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 18530,
+      "name": "Divine Fury"
+    },
+    "holyNova": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 15237,
+      "name": "Holy Nova"
+    },
+    "blessedRecovery": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 27811,
+      "name": "Blessed Recovery"
+    },
+    "inspiration": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 14892,
+      "name": "Inspiration"
+    },
+    "holyReach": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 27789,
+      "name": "Holy Reach"
+    },
+    "improvedHealing": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 14912,
+      "name": "Improved Healing"
+    },
+    "searingLight": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 14909,
+      "name": "Searing Light",
+      "prerequisite": "divineFury"
+    },
+    "improvedPrayerOfHealing": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 14911,
+      "name": "Improved Prayer of Healing"
+    },
+    "spiritOfRedemption": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 20711,
+      "name": "Spirit of Redemption"
+    },
+    "spiritualGuidance": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 14901,
+      "name": "Spiritual Guidance"
+    },
+    "spiritualHealing": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 14898,
+      "name": "Spiritual Healing"
+    },
+    "lightwell": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Holy",
+      "spellID": 724,
+      "name": "Lightwell",
+      "prerequisite": "spiritOfRedemption"
+    },
+    "spiritTap": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15270,
+      "name": "Spirit Tap"
+    },
+    "blackout": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15268,
+      "name": "Blackout"
+    },
+    "shadowAffinity": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15318,
+      "name": "Shadow Affinity"
+    },
+    "improvedShadowWordPain": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15275,
+      "name": "Improved Shadow Word: Pain"
+    },
+    "shadowFocus": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15260,
+      "name": "Shadow Focus"
+    },
+    "improvedPsychicScream": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15392,
+      "name": "Improved Psychic Scream"
+    },
+    "improvedMindBlast": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15273,
+      "name": "Improved Mind Blast"
+    },
+    "mindFlay": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15407,
+      "name": "Mind Flay"
+    },
+    "improvedFade": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15274,
+      "name": "Improved Fade"
+    },
+    "shadowReach": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 17322,
+      "name": "Shadow Reach"
+    },
+    "shadowWeaving": {
+      "tier": 4,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15257,
+      "name": "Shadow Weaving"
+    },
+    "silence": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15487,
+      "name": "Silence",
+      "prerequisite": "improvedPsychicScream"
+    },
+    "vampiricEmbrace": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15286,
+      "name": "Vampiric Embrace"
+    },
+    "improvedVampiricEmbrace": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 27839,
+      "name": "Improved Vampiric Embrace",
+      "prerequisite": "vampiricEmbrace"
+    },
+    "darkness": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15259,
+      "name": "Darkness"
+    },
+    "shadowform": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Shadow",
+      "spellID": 15473,
+      "name": "Shadowform",
+      "prerequisite": "vampiricEmbrace"
+    }
+  },
+  "ROGUE": {
+    "improvedEviscerate": {
+      "tier": 1,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14162,
+      "name": "Improved Eviscerate"
+    },
+    "remorselessAttacks": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14144,
+      "name": "Remorseless Attacks"
+    },
+    "malice": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14138,
+      "name": "Malice"
+    },
+    "ruthlessness": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14156,
+      "name": "Ruthlessness"
+    },
+    "murder": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14158,
+      "name": "Murder"
+    },
+    "improvedSliceAndDice": {
+      "tier": 2,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14165,
+      "name": "Improved Slice and Dice"
+    },
+    "relentlessStrikes": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14179,
+      "name": "Relentless Strikes"
+    },
+    "improvedExposeArmor": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14168,
+      "name": "Improved Expose Armor"
+    },
+    "lethality": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14128,
+      "name": "Lethality",
+      "prerequisite": "malice"
+    },
+    "vilePoisons": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 16513,
+      "name": "Vile Poisons"
+    },
+    "improvedPoisons": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14113,
+      "name": "Improved Poisons"
+    },
+    "coldBlood": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14177,
+      "name": "Cold Blood"
+    },
+    "improvedKidneyShot": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14174,
+      "name": "Improved Kidney Shot"
+    },
+    "sealFate": {
+      "tier": 6,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14186,
+      "name": "Seal Fate",
+      "prerequisite": "coldBlood"
+    },
+    "vigor": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Assassination",
+      "spellID": 14983,
+      "name": "Vigor"
+    },
+    "improvedGouge": {
+      "tier": 1,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13741,
+      "name": "Improved Gouge"
+    },
+    "improvedSinisterStrike": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13732,
+      "name": "Improved Sinister Strike"
+    },
+    "lightningReflexes": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13712,
+      "name": "Lightning Reflexes"
+    },
+    "improvedBackstab": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13733,
+      "name": "Improved Backstab"
+    },
+    "deflection": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13713,
+      "name": "Deflection"
+    },
+    "precision": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13705,
+      "name": "Precision"
+    },
+    "endurance": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13742,
+      "name": "Endurance"
+    },
+    "riposte": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 14251,
+      "name": "Riposte",
+      "prerequisite": "deflection"
+    },
+    "improvedSprint": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13743,
+      "name": "Improved Sprint"
+    },
+    "improvedKick": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13754,
+      "name": "Improved Kick"
+    },
+    "daggerSpecialization": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13706,
+      "name": "Dagger Specialization"
+    },
+    "dualWieldSpecialization": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13715,
+      "name": "Dual Wield Specialization",
+      "prerequisite": "precision"
+    },
+    "maceSpecialization": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13709,
+      "name": "Mace Specialization"
+    },
+    "bladeFlurry": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13877,
+      "name": "Blade Flurry"
+    },
+    "swordSpecialization": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13960,
+      "name": "Sword Specialization"
+    },
+    "fistWeaponSpecialization": {
+      "tier": 5,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13707,
+      "name": "Fist Weapon Specialization"
+    },
+    "weaponExpertise": {
+      "tier": 6,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 30919,
+      "name": "Weapon Expertise",
+      "prerequisite": "bladeFlurry"
+    },
+    "aggression": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 18427,
+      "name": "Aggression"
+    },
+    "adrenalineRush": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Combat",
+      "spellID": 13750,
+      "name": "Adrenaline Rush"
+    },
+    "masterOfDeception": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 13958,
+      "name": "Master of Deception"
+    },
+    "opportunity": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 14057,
+      "name": "Opportunity"
+    },
+    "sleightOfHand": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 30892,
+      "name": "Sleight of Hand"
+    },
+    "elusiveness": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 13981,
+      "name": "Elusiveness"
+    },
+    "camouflage": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 13975,
+      "name": "Camouflage"
+    },
+    "initiative": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 13976,
+      "name": "Initiative"
+    },
+    "ghostlyStrike": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 14278,
+      "name": "Ghostly Strike"
+    },
+    "improvedAmbush": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 14079,
+      "name": "Improved Ambush"
+    },
+    "setup": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 13983,
+      "name": "Setup"
+    },
+    "improvedSap": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 14076,
+      "name": "Improved Sap"
+    },
+    "serratedBlades": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 14171,
+      "name": "Serrated Blades"
+    },
+    "heightenedSenses": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 30894,
+      "name": "Heightened Senses"
+    },
+    "preparation": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 14185,
+      "name": "Preparation"
+    },
+    "dirtyDeeds": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 14082,
+      "name": "Dirty Deeds"
+    },
+    "hemorrhage": {
+      "tier": 5,
+      "column": 4,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 16511,
+      "name": "Hemorrhage",
+      "prerequisite": "serratedBlades"
+    },
+    "deadliness": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 30902,
+      "name": "Deadliness"
+    },
+    "premeditation": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Subtlety",
+      "spellID": 14183,
+      "name": "Premeditation",
+      "prerequisite": "preparation"
+    }
+  },
+  "SHAMAN": {
+    "convection": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16039,
+      "name": "Convection"
+    },
+    "concussion": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16035,
+      "name": "Concussion"
+    },
+    "earthsGrasp": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16043,
+      "name": "Earth's Grasp"
+    },
+    "elementalWarding": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 28996,
+      "name": "Elemental Warding"
+    },
+    "callOfFlame": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16038,
+      "name": "Call of Flame"
+    },
+    "elementalFocus": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16164,
+      "name": "Elemental Focus"
+    },
+    "reverberation": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16040,
+      "name": "Reverberation"
+    },
+    "callOfThunder": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16041,
+      "name": "Call of Thunder"
+    },
+    "improvedFireTotems": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16086,
+      "name": "Improved Fire Totems"
+    },
+    "eyeOfTheStorm": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 29062,
+      "name": "Eye of the Storm"
+    },
+    "elementalDevastation": {
+      "tier": 4,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 30160,
+      "name": "Elemental Devastation"
+    },
+    "stormReach": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 28999,
+      "name": "Storm Reach"
+    },
+    "elementalFury": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16089,
+      "name": "Elemental Fury"
+    },
+    "lightningMastery": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16578,
+      "name": "Lightning Mastery",
+      "prerequisite": "callOfThunder"
+    },
+    "elementalMastery": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Elemental",
+      "spellID": 16166,
+      "name": "Elemental Mastery",
+      "prerequisite": "elementalFury"
+    },
+    "ancestralKnowledge": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 17485,
+      "name": "Ancestral Knowledge"
+    },
+    "shieldSpecialization": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16253,
+      "name": "Shield Specialization"
+    },
+    "guardianTotems": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16258,
+      "name": "Guardian Totems"
+    },
+    "thunderingStrikes": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16255,
+      "name": "Thundering Strikes"
+    },
+    "improvedGhostWolf": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16262,
+      "name": "Improved Ghost Wolf"
+    },
+    "improvedLightningShield": {
+      "tier": 2,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16261,
+      "name": "Improved Lightning Shield"
+    },
+    "enhancingTotems": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16259,
+      "name": "Enhancing Totems"
+    },
+    "twoHandedAxesAndMaces": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16269,
+      "name": "Two-Handed Axes and Maces"
+    },
+    "anticipation": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16254,
+      "name": "Anticipation"
+    },
+    "flurry": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16256,
+      "name": "Flurry",
+      "prerequisite": "thunderingStrikes"
+    },
+    "toughness": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16252,
+      "name": "Toughness"
+    },
+    "improvedWeaponTotems": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 29192,
+      "name": "Improved Weapon Totems"
+    },
+    "elementalWeapons": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16266,
+      "name": "Elemental Weapons"
+    },
+    "parry": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 16268,
+      "name": "Parry"
+    },
+    "weaponMastery": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 29082,
+      "name": "Weapon Mastery"
+    },
+    "stormstrike": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Enhancement",
+      "spellID": 17364,
+      "name": "Stormstrike",
+      "prerequisite": "elementalWeapons"
+    },
+    "improvedHealingWave": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16182,
+      "name": "Improved Healing Wave"
+    },
+    "tidalFocus": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16179,
+      "name": "Tidal Focus"
+    },
+    "improvedReincarnation": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16184,
+      "name": "Improved Reincarnation"
+    },
+    "ancestralHealing": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16176,
+      "name": "Ancestral Healing"
+    },
+    "totemicFocus": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16173,
+      "name": "Totemic Focus"
+    },
+    "naturesGuidance": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16180,
+      "name": "Nature's Guidance"
+    },
+    "healingFocus": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16181,
+      "name": "Healing Focus"
+    },
+    "totemicMastery": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16189,
+      "name": "Totemic Mastery"
+    },
+    "healingGrace": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 29187,
+      "name": "Healing Grace"
+    },
+    "restorativeTotems": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16187,
+      "name": "Restorative Totems"
+    },
+    "tidalMastery": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16194,
+      "name": "Tidal Mastery"
+    },
+    "healingWay": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 29206,
+      "name": "Healing Way"
+    },
+    "naturesSwiftness": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16188,
+      "name": "Nature's Swiftness"
+    },
+    "purification": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16178,
+      "name": "Purification"
+    },
+    "manaTideTotem": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Restoration",
+      "spellID": 16190,
+      "name": "Mana Tide Totem",
+      "prerequisite": "restorativeTotems"
+    }
+  },
+  "WARLOCK": {
+    "suppression": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18174,
+      "name": "Suppression"
+    },
+    "improvedCorruption": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 17810,
+      "name": "Improved Corruption"
+    },
+    "improvedCurseOfWeakness": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18179,
+      "name": "Improved Curse of Weakness"
+    },
+    "improvedDrainSoul": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18213,
+      "name": "Improved Drain Soul"
+    },
+    "improvedLifeTap": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18182,
+      "name": "Improved Life Tap"
+    },
+    "improvedDrainLife": {
+      "tier": 2,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 17804,
+      "name": "Improved Drain Life"
+    },
+    "improvedCurseOfAgony": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18827,
+      "name": "Improved Curse of Agony"
+    },
+    "felConcentration": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 17783,
+      "name": "Fel Concentration"
+    },
+    "amplifyCurse": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18288,
+      "name": "Amplify Curse"
+    },
+    "grimReach": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18218,
+      "name": "Grim Reach"
+    },
+    "nightfall": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18094,
+      "name": "Nightfall"
+    },
+    "improvedDrainMana": {
+      "tier": 4,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 17864,
+      "name": "Improved Drain Mana"
+    },
+    "siphonLife": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18265,
+      "name": "Siphon Life"
+    },
+    "curseOfExhaustion": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18223,
+      "name": "Curse of Exhaustion",
+      "prerequisite": "amplifyCurse"
+    },
+    "improvedCurseOfExhaustion": {
+      "tier": 5,
+      "column": 4,
+      "maxRank": 4,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18310,
+      "name": "Improved Curse of Exhaustion",
+      "prerequisite": "curseOfExhaustion"
+    },
+    "shadowMastery": {
+      "tier": 6,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18271,
+      "name": "Shadow Mastery",
+      "prerequisite": "siphonLife"
+    },
+    "darkPact": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Affliction",
+      "spellID": 18220,
+      "name": "Dark Pact"
+    },
+    "improvedHealthstone": {
+      "tier": 1,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18692,
+      "name": "Improved Healthstone"
+    },
+    "improvedImp": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18694,
+      "name": "Improved Imp"
+    },
+    "demonicEmbrace": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18697,
+      "name": "Demonic Embrace"
+    },
+    "improvedHealthFunnel": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18703,
+      "name": "Improved Health Funnel"
+    },
+    "improvedVoidwalker": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18705,
+      "name": "Improved Voidwalker"
+    },
+    "felIntellect": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18731,
+      "name": "Fel Intellect"
+    },
+    "improvedSayaad": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18754,
+      "name": "Improved Succubus"
+    },
+    "felDomination": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18708,
+      "name": "Fel Domination"
+    },
+    "felStamina": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18748,
+      "name": "Fel Stamina"
+    },
+    "masterSummoner": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18709,
+      "name": "Master Summoner",
+      "prerequisite": "felDomination"
+    },
+    "unholyPower": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18769,
+      "name": "Unholy Power"
+    },
+    "improvedSubjugateDemon": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18821,
+      "name": "Improved Enslave Demon"
+    },
+    "demonicSacrifice": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18788,
+      "name": "Demonic Sacrifice"
+    },
+    "improvedFirestone": {
+      "tier": 5,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18767,
+      "name": "Improved Firestone"
+    },
+    "masterDemonologist": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 23785,
+      "name": "Master Demonologist",
+      "prerequisite": "unholyPower"
+    },
+    "soulLink": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 19028,
+      "name": "Soul Link",
+      "prerequisite": "demonicSacrifice"
+    },
+    "improvedSpellstone": {
+      "tier": 7,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Demonology",
+      "spellID": 18774,
+      "name": "Improved Spellstone"
+    },
+    "improvedShadowBolt": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 17793,
+      "name": "Improved Shadow Bolt"
+    },
+    "cataclysm": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 17778,
+      "name": "Cataclysm"
+    },
+    "bane": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 17788,
+      "name": "Bane"
+    },
+    "aftermath": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 18119,
+      "name": "Aftermath"
+    },
+    "improvedFirebolt": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 18126,
+      "name": "Improved Firebolt"
+    },
+    "improvedLashOfPain": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 18128,
+      "name": "Improved Lash of Pain"
+    },
+    "devastation": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 18130,
+      "name": "Devastation"
+    },
+    "shadowburn": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 17877,
+      "name": "Shadowburn"
+    },
+    "intensity": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 18135,
+      "name": "Intensity"
+    },
+    "destructiveReach": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 17917,
+      "name": "Destructive Reach"
+    },
+    "improvedSearingPain": {
+      "tier": 4,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 17927,
+      "name": "Improved Searing Pain"
+    },
+    "pyroclasm": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 18096,
+      "name": "Pyroclasm",
+      "prerequisite": "intensity"
+    },
+    "improvedImmolate": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 17815,
+      "name": "Improved Immolate"
+    },
+    "ruin": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 17959,
+      "name": "Ruin",
+      "prerequisite": "devastation"
+    },
+    "emberstorm": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 17954,
+      "name": "Emberstorm"
+    },
+    "conflagrate": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Destruction",
+      "spellID": 17962,
+      "name": "Conflagrate",
+      "prerequisite": "improvedImmolate"
+    }
+  },
+  "WARRIOR": {
+    "improvedHeroicStrike": {
+      "tier": 1,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12282,
+      "name": "Improved Heroic Strike"
+    },
+    "deflection": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 16462,
+      "name": "Deflection"
+    },
+    "improvedRend": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12286,
+      "name": "Improved Rend"
+    },
+    "improvedCharge": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12285,
+      "name": "Improved Charge"
+    },
+    "tacticalMastery": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12295,
+      "name": "Tactical Mastery"
+    },
+    "improvedThunderClap": {
+      "tier": 2,
+      "column": 4,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12287,
+      "name": "Improved Thunder Clap"
+    },
+    "improvedOverpower": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12290,
+      "name": "Improved Overpower"
+    },
+    "angerManagement": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12296,
+      "name": "Anger Management",
+      "prerequisite": "tacticalMastery"
+    },
+    "deepWounds": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12834,
+      "name": "Deep Wounds",
+      "prerequisite": "improvedRend"
+    },
+    "twoHandedWeaponSpecialization": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12163,
+      "name": "Two-Handed Weapon Specialization"
+    },
+    "impale": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 16493,
+      "name": "Impale",
+      "prerequisite": "deepWounds"
+    },
+    "axeSpecialization": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12700,
+      "name": "Axe Specialization"
+    },
+    "sweepingStrikes": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12292,
+      "name": "Sweeping Strikes"
+    },
+    "maceSpecialization": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12284,
+      "name": "Mace Specialization"
+    },
+    "swordSpecialization": {
+      "tier": 5,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12281,
+      "name": "Sword Specialization"
+    },
+    "polearmSpecialization": {
+      "tier": 6,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12165,
+      "name": "Polearm Specialization"
+    },
+    "improvedHamstring": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12289,
+      "name": "Improved Hamstring"
+    },
+    "mortalStrike": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 1,
+      "treeName": "Arms",
+      "spellID": 12294,
+      "name": "Mortal Strike",
+      "prerequisite": "sweepingStrikes"
+    },
+    "boomingVoice": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12321,
+      "name": "Booming Voice"
+    },
+    "cruelty": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12320,
+      "name": "Cruelty"
+    },
+    "improvedDemoralizingShout": {
+      "tier": 2,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12324,
+      "name": "Improved Demoralizing Shout"
+    },
+    "unbridledWrath": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12322,
+      "name": "Unbridled Wrath"
+    },
+    "improvedCleave": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12329,
+      "name": "Improved Cleave"
+    },
+    "piercingHowl": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12323,
+      "name": "Piercing Howl"
+    },
+    "bloodCraze": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 16487,
+      "name": "Blood Craze"
+    },
+    "improvedBattleShout": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12318,
+      "name": "Improved Battle Shout"
+    },
+    "dualWieldSpecialization": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 23584,
+      "name": "Dual Wield Specialization"
+    },
+    "improvedExecute": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 20502,
+      "name": "Improved Execute"
+    },
+    "enrage": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12317,
+      "name": "Enrage"
+    },
+    "improvedSlam": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12862,
+      "name": "Improved Slam"
+    },
+    "deathWish": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12328,
+      "name": "Death Wish"
+    },
+    "improvedIntercept": {
+      "tier": 5,
+      "column": 4,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 20504,
+      "name": "Improved Intercept"
+    },
+    "improvedBerserkerRage": {
+      "tier": 6,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 20500,
+      "name": "Improved Berserker Rage"
+    },
+    "flurry": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 12319,
+      "name": "Flurry",
+      "prerequisite": "enrage"
+    },
+    "bloodthirst": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 2,
+      "treeName": "Fury",
+      "spellID": 23881,
+      "name": "Bloodthirst",
+      "prerequisite": "deathWish"
+    },
+    "shieldSpecialization": {
+      "tier": 1,
+      "column": 2,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12298,
+      "name": "Shield Specialization"
+    },
+    "anticipation": {
+      "tier": 1,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12297,
+      "name": "Anticipation"
+    },
+    "improvedBloodrage": {
+      "tier": 2,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12301,
+      "name": "Improved Bloodrage"
+    },
+    "toughness": {
+      "tier": 2,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12299,
+      "name": "Toughness"
+    },
+    "ironWill": {
+      "tier": 2,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12300,
+      "name": "Iron Will"
+    },
+    "lastStand": {
+      "tier": 3,
+      "column": 1,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12975,
+      "name": "Last Stand",
+      "prerequisite": "improvedBloodrage"
+    },
+    "improvedShieldBlock": {
+      "tier": 3,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12945,
+      "name": "Improved Shield Block",
+      "prerequisite": "shieldSpecialization"
+    },
+    "improvedRevenge": {
+      "tier": 3,
+      "column": 3,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12797,
+      "name": "Improved Revenge"
+    },
+    "defiance": {
+      "tier": 3,
+      "column": 4,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12303,
+      "name": "Defiance"
+    },
+    "improvedSunderArmor": {
+      "tier": 4,
+      "column": 1,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12308,
+      "name": "Improved Sunder Armor"
+    },
+    "improvedDisarm": {
+      "tier": 4,
+      "column": 2,
+      "maxRank": 3,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12313,
+      "name": "Improved Disarm"
+    },
+    "improvedTaunt": {
+      "tier": 4,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12302,
+      "name": "Improved Taunt"
+    },
+    "improvedShieldWall": {
+      "tier": 5,
+      "column": 1,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12312,
+      "name": "Improved Shield Wall"
+    },
+    "concussionBlow": {
+      "tier": 5,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12809,
+      "name": "Concussion Blow"
+    },
+    "improvedShieldBash": {
+      "tier": 5,
+      "column": 3,
+      "maxRank": 2,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 12311,
+      "name": "Improved Shield Bash"
+    },
+    "oneHandedWeaponSpecialization": {
+      "tier": 6,
+      "column": 3,
+      "maxRank": 5,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 16538,
+      "name": "One-Handed Weapon Specialization"
+    },
+    "shieldSlam": {
+      "tier": 7,
+      "column": 2,
+      "maxRank": 1,
+      "tree": 3,
+      "treeName": "Protection",
+      "spellID": 23922,
+      "name": "Shield Slam",
+      "prerequisite": "concussionBlow"
+    }
+  }
+}

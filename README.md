@@ -9,6 +9,9 @@ Use `/hcb` or `/hardcorebuddy`, or click the skull-and-shield minimap emblem.
 Drag the minimap button to reposition it. Escape closes the window. `/hcb reset`
 centers it; `/hcb help` lists commands.
 
+All lists use continuous scrolling, including the Pet Guide and Death Journal.
+Use the mouse wheel or scrollbar to browse the full list.
+
 ## Supply priorities and preparation
 
 **Supplies > Essentials** collects core food, drink, buff food, bandages, healing,
@@ -36,6 +39,25 @@ other enchants and Core Armor Kits. Suggested Carry quantities cover the pieces
 that need each kit. Open a kit to see which pieces to enhance. Recommendations
 refresh when equipment or enhancements change; unavailable item data stays
 unknown. Planning mode shows a level-based reference without checking live gear.
+
+## Gear and talent advisors
+
+Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
+
+- Color-coded gear upgrade/downgrade percentages using Classic specialization stat weights.
+- Automatically follows your current talent tree, with a selectable scoring profile.
+- Compares every usable armor material by slot, without penalizing lighter armor.
+- Shows both ring/trinket slots, handles two-handed replacements and lists stat losses.
+- Excludes applied enchants and armor kits from both scores.
+- Hardcore talent paths for all nine classes, with current ranks, next-point advice,
+  explicit respec guidance and one continuous point-by-point list.
+- Click **Learn** to spend a single recommended point, or browse other classes
+  using **Edit Character**. Points are never spent automatically.
+
+The gear percentage measures weighted item stats, not simulated damage or survival.
+Procs, active item effects and set bonuses are excluded. See [advisor details](docs/advisors.md).
+The Character window's **Gear Snapshot** tab saves gear and talent information for
+offline review; `/reload` or log out to write it to disk.
 
 ## Dungeons and raids
 

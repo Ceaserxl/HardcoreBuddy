@@ -242,7 +242,7 @@ function C.Build(context,state)
     if (state.view=="dungeons" or state.view=="raids") and not state.detail then
         return A.Instances.Build(context,state)
     end
-    local result={context=context,cards={},view=state.view or "supplies"}
+    local result={context=context,cards={},view=state.view or "supplies",continuous=true,page=1,pages=1}
     if result.view=="now" then result.view="supplies" end
     local view=result.view
     if state.detail then result.cards[1]=C.Detail(context,state.detail); result.isDetail=true
@@ -329,12 +329,6 @@ function C.Build(context,state)
     if #result.cards==1 then
         local out=result.cards[1]; local all=out.blocks
         result.total=#all
-        result.pages=result.continuous and 1 or math.max(1,math.ceil(#all/12))
-        result.page=result.continuous and 1 or math.max(1,math.min(state.page or 1,result.pages))
-        if not result.continuous then
-            out.blocks={}
-            for i=(result.page-1)*12+1,math.min(#all,result.page*12) do out.blocks[#out.blocks+1]=all[i] end
-        end
         if #all==0 then
             local unknown=context.inventory and not context.inventory.available and view=="supplies"
             out.blocks[1]=row(unknown and "Bag counts unavailable" or state.stock=="Missing" and "Nothing to restock here" or "No matches",

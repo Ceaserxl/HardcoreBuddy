@@ -66,12 +66,16 @@ for i,p in ipairs(D.pets) do
 end
 for i,l in ipairs(D.looks) do assert(C.Detail(ctx,{kind="look",index=i}).title==l.name) end
 for i=1,5 do assert(C.Detail(ctx,{kind="guide",index=i}).blocks[1].body~="") end
--- Every page contributes exactly its records, without repeats or gaps.
+-- Every catalog is complete in one scrollable list, without repeats or gaps.
 local total,seen=0,{}
 local first=C.Build(ctx,{view="petguide",filter="Pets"})
-for page=1,first.pages do
-    local doc=C.Build(ctx,{view="petguide",filter="Pets",page=page})
-    assert(#doc.cards[1].blocks<=12)
+for _,filter in ipairs({"Families","Abilities","Pets","Looks","Care"}) do
+    local doc=C.Build(ctx,{view="petguide",filter=filter,page=999})
+    assert(doc.continuous and doc.page==1 and doc.pages==1)
+    assert(#doc.cards[1].blocks==doc.total)
+end
+do
+    local doc=first
     for _,b in ipairs(doc.cards[1].blocks) do
         assert(not seen[b.action.index]); seen[b.action.index]=true; total=total+1
     end
@@ -83,7 +87,7 @@ assert(C.Build(ctx,{view="petguide",filter="Pets",query="broken tooth",atLevel=t
 assert(C.Build(context("Hunter",37),{view="petguide",filter="Pets",query="broken tooth",atLevel=true}).total==1)
 assert(C.Build(context("Hunter",9),{view="petguide",filter="Pets",atLevel=true}).total==0)
 assert(C.Build(ctx,{view="petguide",filter="Pets",query="A-Me 01",atLevel=true}).total==0)
-assert(C.Build(ctx,{view="petguide",filter="Pets",page=999}).page==first.pages)
+assert(C.Build(ctx,{view="petguide",filter="Pets",page=999}).total==559)
 -- Every item detail has an exact stock row and one labeled information panel;
 -- alternatives are separate links, not repeated walls of description text.
 for _,item in ipairs(A.Data.Items.items) do

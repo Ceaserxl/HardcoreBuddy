@@ -38,7 +38,7 @@ with zipfile.ZipFile(archive_path) as archive:
     lua.globals().PlaySoundFile = require_asset
     lua.execute('''
         local A=TestAddon; A:ToggleWindow()
-        for _,page in ipairs({"supplies","companion","deaths","alerts","dungeons","raids"}) do
+        for _,page in ipairs({"supplies","companion","advisors","deaths","alerts","dungeons","raids"}) do
             A:Navigate(page)
         end
         local H=A.Deaths

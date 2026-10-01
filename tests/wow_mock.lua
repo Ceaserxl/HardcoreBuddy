@@ -217,7 +217,12 @@ function methods:SetBackdropBorderColor(r,g,b,a) self.border={r,g,b,a or 1} end
 function methods:SetFrameStrata(value) self.strata=value end
 function methods:GetFrameStrata() return self.strata or (self.parent and self.parent:GetFrameStrata()) or "MEDIUM" end
 function methods:SetScrollChild(child) self.child=child; child:SetPoint("TOPLEFT",self,"TOPLEFT",0,0) end
-function methods:SetVerticalScroll(value) assert(value>=0); self.scroll=value end
+function methods:SetVerticalScroll(value)
+    assert(value>=0)
+    local previous=self.scroll or 0
+    self.scroll=value
+    if previous~=value and self.scripts.OnVerticalScroll then self.scripts.OnVerticalScroll(self,value) end
+end
 function methods:GetVerticalScroll() return self.scroll or 0 end
 function methods:GetVerticalScrollRange() return math.max(0,self.child:GetHeight()-self:GetHeight()) end
 function methods:HasFocus() return self.focus or false end

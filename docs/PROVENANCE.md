@@ -227,3 +227,9 @@ ability at character level 34. Its displayed skill-up difficulty of 170 is not
 presented as a verified crafting prerequisite. Class conjurations also display
 spell training levels instead of fictitious profession ranks. These metadata
 changes do not alter automatic bandage, anti-venom or target-dummy selection.
+
+## Gear and talent advisors
+
+See [advisor data and scoring](advisors.md). The addon includes compact Classic
+stat-weight tables and Hardcore talent paths, with an independent runtime.
+The previous combat simulation and recovery experiments have been removed.

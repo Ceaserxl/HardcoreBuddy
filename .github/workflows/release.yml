@@ -32,6 +32,12 @@ jobs:
         run: python tests/run_preparation.py
       - name: Test equipped armor-kit recommendations
         run: python tests/run_armor_kits.py
+      - name: Test talent-aware Hardcore gear advisor
+        run: python tests/run_gear_advisor.py
+      - name: Test Character window gear snapshots
+        run: python tests/run_gear_snapshot.py
+      - name: Test all Classic talent paths and advisor navigation
+        run: python tests/run_talent_advisor.py
       - name: Stage shipping manifest
         id: release
         run: python scripts/prepare_ci_release.py

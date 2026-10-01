@@ -81,8 +81,15 @@ function addon:HandleSlashCommand(message)
         self:CreateWindow(); self.window:Show(); self:Navigate("alerts")
     elseif command == "deaths" or command:match("^deaths%s") then
         if self.Deaths and self.Deaths.db then self.Deaths:Slash(text:match("^%S+%s*(.*)$")) end
+    elseif command == "talents" or command == "advisor" or command == "gear" then
+        self:CreateWindow(); self.window:Show(); self:Navigate("advisors")
+        self.state.filter=command=="talents" and "Talents" or "Gear"; self:Refresh(true)
+    elseif command == "gear on" or command == "gear off" then
+        if command~="gear" then self.db.gearAdvisorEnabled=command=="gear on" end
+        self:Print("Gear advisor: "..(self.db.gearAdvisorEnabled~=false and "on" or "off")..". /hcb gear on | /hcb gear off")
+        if self.GearAdvisor then self.GearAdvisor:RefreshTooltips() end
     elseif command == "help" then
-        self:Print("/hcb: open guide | /hcb reset: center window | /hcb health: health warning | /hcb deaths: death journal | /hcb deaths settings: death options")
+        self:Print("/hcb: open guide | /hcb reset: center window | /hcb health: health warning | /hcb deaths: death journal | /hcb deaths settings: death options | /hcb gear: gear advisor | /hcb talents: talent advisor")
     elseif command == "reset" then
         self.db.window = {visible=true}
         self:CreateWindow()
@@ -227,6 +234,7 @@ function addon:Initialize()
         HardcoreBuddyDB = {}
     end
     self.db = HardcoreBuddyDB
+    if self.db.gearAdvisorEnabled==nil then self.db.gearAdvisorEnabled=true end
     if type(HardcoreBuddyCharacterDB)~="table" then HardcoreBuddyCharacterDB={} end
     self.characterDB=HardcoreBuddyCharacterDB
     if type(self.characterDB.targets)~="table" then self.characterDB.targets={} end

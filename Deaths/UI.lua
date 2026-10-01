@@ -159,6 +159,26 @@ function H:PaintRow(row, record, mini)
         row.source:SetTextColor(record.source == "Community" and 0.9 or 0.60, 0.65, 0.50)
     end
 end
+-- Keep a small row pool while the scrollbar spans the entire filtered history.
+function H:RefreshJournalRows()
+    local f=self.window
+    if not f or not f.listScroll then return end
+    local records=self.filtered or {}
+    local offset=f.listScroll:GetVerticalScroll()
+    local first=math.floor(offset/32)+1
+    local count=math.max(0,math.min(#records-first+1,math.ceil((offset%32+f.listScroll:GetHeight())/32)))
+    for i=1,count do
+        local index=first+i-1
+        local row=f.rows[i]
+        if not row then row=self:MakeRow(f.listContent,i,0,false); f.rows[i]=row end
+        row:ClearAllPoints()
+        row:SetPoint("TOPLEFT",12,-(index-1)*32)
+        row:SetPoint("TOPRIGHT",-12,-(index-1)*32)
+        row.bg:SetColorTexture(1,1,1,index%2==0 and 0.04 or 0)
+        self:PaintRow(row,records[index],false)
+    end
+    for i=count+1,#f.rows do self:PaintRow(f.rows[i],nil,false) end
+end
 function H:Refresh()
     if not self.window then return end
     local all = self.Filter(self.db.records, "", "all", 0, self.realm)
@@ -170,12 +190,12 @@ function H:Refresh()
     self.window.highest:SetText(stats.highest>0 and tostring(stats.highest) or "--")
     self.window.hotspot:SetText("Most reported: "..stats.zone)
     self.window.realm:SetText(self.realm.."  |  Received death reports")
-    local pages = math.max(1, math.ceil(#filtered / (self.rowsPerPage or 8)))
-    self.page = math.max(1, math.min(self.page or 1, pages))
-    for i, row in ipairs(self.window.rows) do self:PaintRow(row, i <= (self.rowsPerPage or 8) and filtered[(self.page - 1) * (self.rowsPerPage or 8) + i] or nil, false) end
-    self.window.page:SetText(self.page .. " / " .. pages)
-    self.window.previous:SetEnabled(self.page>1); self.window.next:SetEnabled(self.page<pages)
-    addon.Skin.ButtonState(self.window.previous); addon.Skin.ButtonState(self.window.next)
+    local scroll=self.window.listScroll
+    self.window.listContent:SetWidth(scroll:GetWidth())
+    self.window.listContent:SetHeight(math.max(1,#filtered*32-2))
+    scroll:UpdateScrollChildRect()
+    scroll:SetVerticalScroll(math.min(scroll:GetVerticalScroll(),math.max(0,self.window.listContent:GetHeight()-scroll:GetHeight())))
+    self:RefreshJournalRows()
     self.window.empty:SetShown(#filtered == 0)
     self.window.empty:SetText(#self.db.records == 0 and "No reports yet.\nListening for Hardcore deaths while you play." or "No reports match these filters.")
     for i, row in ipairs(self.mini.rows) do self:PaintRow(row, all[i], true) end
@@ -256,8 +276,7 @@ function H:LayoutPage(parent,left,top,width,height,state)
     self.host:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.host:SetSize(width,height)
     self.mode="all"
-    if self.lastFilter~=state.filter then self.page=1; self.lastFilter=state.filter end
-    self.rowsPerPage=math.max(1,math.min(13,math.floor((height-216)/32)))
+    if self.lastFilter~=state.filter then self.window.listScroll:SetVerticalScroll(0); self.lastFilter=state.filter end
     self.window:SetShown(state.filter~="Options" and state.filter~="Appearance" and not state.deathRecord)
     self.options:SetShown(state.filter=="Options" and not state.deathRecord)
     if self.appearance then self.appearance:SetShown(state.filter=="Appearance" and not state.deathRecord) end
@@ -300,7 +319,7 @@ function H:BuildUI()
     search.placeholder:SetTextColor(unpack(MUTED))
     search:SetScript("OnEscapePressed", function(box) box:ClearFocus() end)
     search:SetScript("OnTextChanged", function(box)
-        self.query=box:GetText(); box.placeholder:SetShown(self.query==""); self.page=1; self:Refresh()
+        self.query=box:GetText(); box.placeholder:SetShown(self.query==""); self.window.listScroll:SetVerticalScroll(0); self:Refresh()
     end)
     search:SetScript("OnEnter", function()
         GameTooltip:SetOwner(search,"ANCHOR_RIGHT"); GameTooltip:SetText("Search name, location, cause, guild or message",1,1,1,1,true); GameTooltip:Show()
@@ -310,20 +329,23 @@ function H:BuildUI()
     local minimum=Edit(f,44,476,-122,true)
     f.minimum=minimum
     minimum:SetText("0")
-    minimum:SetScript("OnTextChanged", function(box) self.minLevel=math.max(0,math.min(60,tonumber(box:GetText()) or 0));self.page=1;self:Refresh() end)
+    minimum:SetScript("OnTextChanged", function(box) self.minLevel=math.max(0,math.min(60,tonumber(box:GetText()) or 0));self.window.listScroll:SetVerticalScroll(0);self:Refresh() end)
     minimum:SetScript("OnEscapePressed", function(box) box:ClearFocus() end)
     f.import=Button(f,"Import Deathlog",160,600,-122,function() self:ImportLegacy() end)
     local columns={{"LEVEL",18,40},{"ADVENTURER",64,140},{"LOCATION",214,170},{"CAUSE",394,208},{"SOURCE",612,96},{"WHEN",724,64}}
     for _,c in ipairs(columns) do local label=Text(f,10,"TOPLEFT",c[2],-163,c[3]); label:SetText(c[1]); label:SetTextColor(unpack(MUTED)) end
     f.rows = {}
-    for i=1,13 do f.rows[i]=self:MakeRow(f,i,-180-(i-1)*32,false) end
-    f.empty=Text(f,15,"CENTER",0,0,650);f.empty:SetJustifyH("CENTER");f.empty:SetWordWrap(true)
+    f.listScroll=CreateFrame("ScrollFrame","HardcoreBuddyDeathJournalScrollFrame",f,"UIPanelScrollFrameTemplate")
+    f.listScroll:SetPoint("TOPLEFT",0,-180); f.listScroll:SetPoint("BOTTOMRIGHT",0,40)
+    f.listScroll:EnableMouseWheel(true)
+    f.listScroll:SetScript("OnMouseWheel",function(scroll,delta)
+        scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*96)))
+    end)
+    f.listScroll:HookScript("OnVerticalScroll",function() self:RefreshJournalRows() end)
+    f.listContent=CreateFrame("Frame",nil,f.listScroll)
+    f.listContent:SetSize(816,1); f.listScroll:SetScrollChild(f.listContent)
+    f.empty=Text(f.listScroll,15,"CENTER",0,0,650);f.empty:SetJustifyH("CENTER");f.empty:SetWordWrap(true)
     f.hotspot=Text(f,11,"BOTTOMLEFT",16,20,560); f.hotspot:SetTextColor(unpack(MUTED))
-    f.previous=Button(f,"<",34,0,0,function() self.page=(self.page or 1)-1;self:Refresh() end)
-    f.previous:ClearAllPoints(); f.previous:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",-156,12)
-    f.next=Button(f,">",34,0,0,function() self.page=(self.page or 1)+1;self:Refresh() end)
-    f.next:ClearAllPoints(); f.next:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",-16,12)
-    f.page=Text(f,13,"BOTTOMRIGHT",-58,18,88); f.page:SetJustifyH("CENTER")
 
     local mini=Panel("HardcoreBuddyDeathsFeed",360,218);self.mini=mini
     addon.Skin.Paint(mini,"menu")

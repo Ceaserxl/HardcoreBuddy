@@ -24,7 +24,8 @@ local function hit(frame)
     check(MOCK.HitTest(x+w/2,y+h/2)==frame,"Skinned control is covered at its clickable center")
 end
 local function inspect()
-    local controls={f.mode,f.close,f.back,f.class,f.minus,f.plus,f.level,f.search,f.clear,f.atLevel,f.previous,f.nextPage}
+    local controls={f.mode,f.close,f.back,f.class,f.minus,f.plus,f.level,f.search,f.clear,f.atLevel}
+    check(f.previous==nil and f.nextPage==nil and f.pageText==nil,"Paging controls remain")
     for _,button in ipairs(f.tabs) do controls[#controls+1]=button end
     for _,button in ipairs(f.filters) do controls[#controls+1]=button end
     local visible={}

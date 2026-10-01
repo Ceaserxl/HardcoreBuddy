@@ -18,6 +18,8 @@ Data\FactionRules.lua
 Data\ProfessionProgression.lua
 Data\Crafting.lua
 Data\ArmorKits.lua
+Data\AdvisorGear.lua
+Data\AdvisorTalents.lua
 Data\Instances.lua
 Data\InstancesRaids.lua
 Planner.lua
@@ -40,6 +42,9 @@ LowHealth.lua
 Data\CreatureAlertExclusions.lua
 CreatureAlerts.lua
 HunterTooltips.lua
+GearAdvisor.lua
+TalentAdvisor.lua
+GearSnapshot.lua
 
 Deaths\Model.lua
 Deaths\Core.lua

@@ -117,6 +117,10 @@ function methods:GetEffectiveScale()return 1 end
 function methods:SetPoint(...)self.point={...}end
 function methods:GetPoint()return unpack(self.point)end
 function methods:SetScript(name,fn)self.scripts[name]=fn end
+function methods:HookScript(name,fn)
+    local old=self.scripts[name]
+    self.scripts[name]=function(...) if old then old(...) end; fn(...) end
+end
 function methods:RegisterEvent(event)self.events=self.events or {};self.events[event]=true end
 function methods:IsEventRegistered(event)return self.events and self.events[event] or false end
 function methods:UnregisterEvent(event)if self.events then self.events[event]=nil end end
@@ -133,6 +137,11 @@ for _,name in ipairs({"SetShadowColor","SetShadowOffset","SetEnabled","SetTextIn
     "SetNumeric","SetScale","ClearAllPoints","ClearFocus","StartMoving","StopMovingOrSizing","SetScrollChild","SetVerticalScroll","SetFrameLevel","SetTexCoord"})do
     methods[name]=function()end
 end
+function methods:GetVerticalScroll() return self.scroll or 0 end
+function methods:SetVerticalScroll(value) self.scroll=value; if self.scripts.OnVerticalScroll then self.scripts.OnVerticalScroll(self,value) end end
+function methods:GetVerticalScrollRange() return 0 end
+function methods:UpdateScrollChildRect() end
+function methods:EnableMouseWheel() end
 UIParent=CreateFrame();Minimap=CreateFrame()
 RaidWarningFrame=CreateFrame()
 RaidWarningFrame:RegisterEvent("HARDCORE_DEATHS")

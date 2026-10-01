@@ -1,0 +1,38 @@
+{
+  "talents_druid": {
+    "sha256": "6f363e41fec04acf0ecafcf64f40fcc6ee70186f663ecab9bd5f48a898d5c7c9",
+    "url": "https://raw.githubusercontent.com/wowsims/classic/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees/druid.json"
+  },
+  "talents_hunter": {
+    "sha256": "fce82f63439cf80cdb712338c7db0d6e5c660b10047ad8f60fd09f7f6faebe89",
+    "url": "https://raw.githubusercontent.com/wowsims/classic/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees/hunter.json"
+  },
+  "talents_mage": {
+    "sha256": "ad59497e6dbb2b3b9d9e97fa6758b00485c4e6c6c4beadc87ee260c2dd423334",
+    "url": "https://raw.githubusercontent.com/wowsims/classic/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees/mage.json"
+  },
+  "talents_paladin": {
+    "sha256": "6b22cb8f739481425b2010ae4c4af87bebc576913ebd3ad900233ca7cb2d7f2e",
+    "url": "https://raw.githubusercontent.com/wowsims/classic/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees/paladin.json"
+  },
+  "talents_priest": {
+    "sha256": "c8f441b5b3c797cbe691348aaf09bc1b891f1f9f286ae365a93984c4c4f1cd07",
+    "url": "https://raw.githubusercontent.com/wowsims/classic/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees/priest.json"
+  },
+  "talents_rogue": {
+    "sha256": "62b672c3a5406d7224183ea6034bc6f78e332bb8d7f6edfca4f0f0c2a9e40ce5",
+    "url": "https://raw.githubusercontent.com/wowsims/classic/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees/rogue.json"
+  },
+  "talents_shaman": {
+    "sha256": "83a2911ae0b70701fbcad3f6b746be8dff9df076667d361eddbfd8d30a3e2334",
+    "url": "https://raw.githubusercontent.com/wowsims/classic/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees/shaman.json"
+  },
+  "talents_warlock": {
+    "sha256": "45aa80026f0b18006c60879cab5113b675b42600729cb97f436d26ec94601c8b",
+    "url": "https://raw.githubusercontent.com/wowsims/classic/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees/warlock.json"
+  },
+  "talents_warrior": {
+    "sha256": "513a48e5ec29ac1797c59c5b3acae23053425f9baa1cc43ec0ae71ceace4b56c",
+    "url": "https://raw.githubusercontent.com/wowsims/classic/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees/warrior.json"
+  }
+}
