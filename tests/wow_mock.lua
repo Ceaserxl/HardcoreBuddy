@@ -185,6 +185,7 @@ function methods:IsEnabled() return self.enabled end
 function methods:EnableMouse(value) self.mouse=value end
 function methods:IsMouseEnabled() return self.mouse==true end
 function methods:EnableKeyboard(value) self.keyboard=value end
+function methods:GetObjectType() return self.kind end
 function methods:SetAlpha(value) self.alpha=value end
 function methods:SetTexture(value)
     assert(value==nil or type(value)=="string" or type(value)=="number","Texture asset must be a path, file ID or nil")

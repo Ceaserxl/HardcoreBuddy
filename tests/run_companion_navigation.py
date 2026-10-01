@@ -50,4 +50,11 @@ for _,b in ipairs(f.buttons) do
     b.scripts.OnMouseUp(b); b.scripts.OnLeave(b); assert(not b.skinButton.pressed and not b.skinButton.hovered)
 end
 print("PASS: Overview links for all 9 classes match sidebar order and return correctly; "..checked.." visible styled buttons have matching hover states.")
+A:Navigate("training")
+local row=A.window.cards[1].content.blocks[2]
+assert(row.block.action and row:GetHighlightTexture():GetAlpha()==0.24,"Clickable content rows use the tab gold wash")
+assert(row.iconHit:GetHighlightTexture():GetAlpha()==0.24,"Icon hit area shares the row hover")
+A:OpenSettings("Map")
+assert(A.MapAdvisor.controls.checks.notify:GetHighlightTexture():GetAlpha()==0.24,"Checkboxes share the tab hover")
+A.Skin.Hover(row,false); assert(not row.highlight,"Recycled passive rows lose the interactive highlight")
 ''')

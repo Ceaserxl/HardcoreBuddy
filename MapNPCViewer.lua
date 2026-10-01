@@ -23,8 +23,7 @@ local function createViewer(parent)
     local f=CreateFrame("Frame",nil,parent)
     f.info=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(f.info,"card")
     f.info:SetPoint("TOPLEFT"); f.info:SetSize(296,416)
-    f.modelBorder=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(f.modelBorder,"edit")
-    f.modelBorder:SetBackdropBorderColor(unpack(Skin.colors.bronze))
+    f.modelBorder=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(f.modelBorder,"card")
     f.modelBorder:SetPoint("TOPLEFT",312,0)
     local function label(y,size,height)
         local t=f.info:CreateFontString(nil,"OVERLAY","GameFontHighlight")
@@ -36,9 +35,28 @@ local function createViewer(parent)
     f.details=label(72,12,32)
     f.note=label(116,12,92)
     f.paging=label(222,12,20)
-    f.loading=label(342,12,58)
+    f.help=label(342,12,58)
+    f.help:SetText("Drag to rotate. Scroll to zoom.\nUse Reset view to re-center.")
     local model=CreateFrame("PlayerModel",nil,f.modelBorder); f.model=model
     model:SetPoint("CENTER"); model:SetSize(392,392)
+    f.status=CreateFrame("Frame",nil,f.modelBorder)
+    f.status:SetAllPoints(); f.status:SetFrameLevel(model:GetFrameLevel()+5)
+    f.loading=f.status:CreateFontString(nil,"OVERLAY","GameFontHighlight")
+    f.loading:SetFont(STANDARD_TEXT_FONT,16,""); f.loading:SetPoint("CENTER",0,12)
+    f.loading:SetSize(300,42); f.loading:SetJustifyH("CENTER")
+    f.dots={}
+    for i=1,3 do
+        local dot=f.status:CreateTexture(nil,"ARTWORK")
+        dot:SetTexture("Interface\\Buttons\\WHITE8x8"); dot:SetVertexColor(unpack(Skin.colors.gold))
+        dot:SetSize(8,8); dot:SetPoint("CENTER",(i-2)*20,-24); f.dots[i]=dot
+    end
+
+    function f:Status(state)
+        self.modelState=state; self.status:SetShown(state~="loaded")
+        self.retry:SetShown(state=="failed"); self.reset:SetShown(state=="loaded"); self.help:SetShown(state=="loaded")
+        self.loading:SetText(state=="failed" and "Model unavailable" or "Loading Model....")
+        for _,dot in ipairs(self.dots) do dot:SetShown(state=="loading") end
+    end
 
     function f:ApplyCamera()
         -- Rebuild the native full-body camera before applying user zoom. A second
@@ -56,15 +74,15 @@ local function createViewer(parent)
         if not id or id<=0 then return end
         self.waiting=nil; self.settle=0; self.settlePass=0
         self:ApplyCamera()
-        self.loading:SetText("Drag to rotate. Scroll to zoom.\nUse Reset view to re-center.")
+        self:Status("loaded")
     end
     function f:RequestModel(reset)
         if not self:IsVisible() or not self.npcID then return end
         if reset then self.attempts=0 end
         self.attempts=(self.attempts or 0)+1
-        self.waiting=0; self.settle=nil; self.dragging=nil
+        self.waiting=0; self.animationTime=0; self.settle=nil; self.dragging=nil
         model:ClearModel()
-        self.loading:SetText((self.attempts==1 and "Loading model" or "Retrying model").." ("..self.attempts.."/"..MAX_ATTEMPTS..")...")
+        self:Status("loading")
         -- Missing or uncached creature displays can throw or return no model.
         -- Both cases follow the same bounded retry schedule.
         pcall(model.SetCreature,model,self.npcID)
@@ -87,12 +105,14 @@ local function createViewer(parent)
         end
         if f.waiting then
             f.waiting=f.waiting+elapsed
+            f.animationTime=(f.animationTime or 0)+elapsed
+            for i,dot in ipairs(f.dots) do dot:SetAlpha(0.25+0.75*(0.5+0.5*math.sin(f.animationTime*5-(i-1)*1.2))) end
             f:Loaded()
             if f.waiting and f.waiting>=RETRY_SECONDS then
                 if f.attempts<MAX_ATTEMPTS then f:RequestModel()
                 else
                     f.waiting=nil; model:ClearModel()
-                    f.loading:SetText("Model unavailable after 3 attempts.\nUse Retry model to try again.")
+                    f:Status("failed")
                 end
             end
         elseif f.settle then
@@ -112,7 +132,8 @@ local function createViewer(parent)
     end
     f.previous=button("Previous NPC",16,252,function() A.state.mapNPCPage=A.state.mapNPCPage-1; A:Refresh(true) end)
     f.next=button("Next NPC",154,252,function() A.state.mapNPCPage=A.state.mapNPCPage+1; A:Refresh(true) end)
-    f.retry=button("Retry model",16,298,function() f:RequestModel(true) end)
+    f.retry=button("Retry Model",16,298,function() f:RequestModel(true) end)
+    f.retry:SetParent(f.status); f.retry:ClearAllPoints(); f.retry:SetPoint("CENTER",0,-36); f.retry:Hide()
     f.reset=button("Reset view",154,298,function()
         f.distance=DEFAULT_DISTANCE; f.facing=0.35; f.dragging=nil
         f:ApplyCamera(); f.settle=0; f.settlePass=0
@@ -123,13 +144,17 @@ local function createViewer(parent)
     return f
 end
 
-function M:LayoutViewer(parent,width,visible)
+function M:LayoutViewer(parent,width,visible,height)
     visible=visible and A.state.mapNPCs~=nil
     if not self.viewer and not visible then return 0 end
     if not self.viewer then self.viewer=createViewer(parent) end
     local f=self.viewer; f:SetShown(visible); if not visible then return 0 end
-    local scale=math.min(1,width/728); f:SetScale(scale); f:SetSize(width/scale,416)
-    f.modelBorder:SetSize(width/scale-312,416)
+    local scale=math.min(1,width/728,(height or 416)/416)
+    local frameHeight=(height or 416)/scale
+    f:SetScale(scale); f:SetSize(width/scale,frameHeight)
+    f.info:SetHeight(frameHeight); f.modelBorder:SetSize(width/scale-312,frameHeight)
+    local modelSize=math.min(f.modelBorder:GetWidth(),frameHeight)-24
+    f.model:SetSize(modelSize,modelSize)
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",0,0)
     local ids=A.state.mapNPCs
     local index=math.max(1,math.min(#ids,A.state.mapNPCPage or 1)); A.state.mapNPCPage=index
@@ -137,11 +162,11 @@ function M:LayoutViewer(parent,width,visible)
     f.title:SetText(npc.name)
     f.details:SetText("Level "..(npc.min or "?")..(npc.max and npc.max~=npc.min and ("-"..npc.max) or "").." | "..self:IconLabel(npc.kind))
     f.note:SetText(npc.note or "Recorded spawn area; this is a model preview, not a live sighting.")
-    f.paging:SetText("NPC "..index.." of "..#ids.." in this marker")
+    f.paging:SetText("NPC "..index.." of "..#ids)
     f.previous:SetEnabled(index>1); f.next:SetEnabled(index<#ids)
     if f.npcID~=id then
         f.npcID=id; f.distance=DEFAULT_DISTANCE; f.facing=0.35
         f:RequestModel(true)
     end
-    return 426*scale
+    return frameHeight*scale
 end

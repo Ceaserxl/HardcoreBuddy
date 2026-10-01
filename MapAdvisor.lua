@@ -302,6 +302,7 @@ end
 
 function M:Activate(a)
     if a.command=="settings" then A:OpenSettings("Map"); return
+    elseif a.command=="npc" then self:OpenNPCs({records={{id=a.id}}}); return
     elseif a.command=="zones" then A.state.mapZonePicker=true
     elseif a.command=="zone" then A.state.mapZone=a.id; A.state.mapZonePicker=nil
     elseif a.command=="current" then A.state.mapZone=nil; A.state.mapZonePicker=nil
@@ -330,17 +331,17 @@ function M:Document(context,state)
     local id=state.mapZone or self:CurrentMap(); local zone=A.Data.MapZones[id]
     local settingsRow=row("Map settings","Configure map reveal, marker categories and silent zone-entry notices.","settings")
     local blocks={settingsRow,row("Choose a zone","Browse the Classic outdoor zones and cities above.")}
-    doc.cards[1]={title=zone and zone.name or "Map Advisor",note="Filtered for your faction. Hover map icons for NPC details.",blocks=blocks}
+    doc.cards[1]={title=zone and zone.name or "Map Advisor",note="Known locations, filtered for your faction.",blocks=zone and {settingsRow} or blocks}
     if zone then
-        blocks={settingsRow}
+        blocks={}
         for _,r in ipairs(self:Records(id)) do
             local locations=r.npc.locations[id]
             local location=locations and #locations>0 and string.format("Known area: %.1f, %.1f",locations[1][1],locations[1][2]) or "Coordinates unavailable; no pin shown"
             blocks[#blocks+1]=row(r.npc.name,level(r.npc).." | "..names[r.npc.kind].." | "..location..
-                (r.npc.note and ("\n"..r.npc.note) or ""))
+                (r.npc.note and ("\n"..r.npc.note) or ""),"npc",r.id)
         end
-        if #blocks==1 then blocks[2]=row("No matching dangers in this catalogue","Adjust the filters in Map settings. An empty list does not guarantee a safe zone.") end
-        doc.cards[1].blocks=blocks
+        if #blocks==0 then blocks[1]=row("No matching dangers in this catalogue","Adjust the filters in Map settings. An empty list does not guarantee a safe zone.") end
+        doc.cards[2]={title="NPCs",note="Click a name to view its model and details.",blocks=blocks}
     end
     return doc
 end

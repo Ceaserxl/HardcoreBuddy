@@ -159,11 +159,9 @@ local function renderBlock(frame, block, width)
     frame.stockTrack:SetShown(block.supply and not block.groupSupply and not block.readOnlyTarget)
     frame.stockFill:Hide()
     frame.title:SetTextColor(unpack(block.action and GOLD or WHITE))
-    if block.action then
-        frame:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
-    else
-        frame:ClearHighlightTexture()
-    end
+    Skin.Hover(frame,block.action~=nil)
+    Skin.Hover(frame.iconHit,block.action~=nil)
+    if block.action then frame.iconHit:GetHighlightTexture():SetAllPoints(frame) end
     for _, col in ipairs(frame.columns) do col:Hide() end
     for _, field in ipairs(frame.fields) do field:Hide() end
     if block.columns then
@@ -887,7 +885,7 @@ function addon:Layout()
     self.Settings:Layout(f,left,y,bodyWidth,height-y-46,self.state.filter,doc.view=="settings")
     f.scroll:ClearAllPoints(); f.scroll:SetPoint("TOPLEFT",left,-y); f.scroll:SetPoint("BOTTOMRIGHT",-40,46)
     local contentWidth=math.max(250,bodyWidth); f.content:SetWidth(contentWidth)
-    local top=self.MapAdvisor:LayoutViewer(f.content,contentWidth,doc.view=="advisors" and self.state.filter=="Map")
+    local top=self.MapAdvisor:LayoutViewer(f.content,contentWidth,doc.view=="advisors" and self.state.filter=="Map",f.scroll:GetHeight())
     for index,data in ipairs(doc.cards) do
         local c=f.cards[index]
         if not c then

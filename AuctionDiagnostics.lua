@@ -127,11 +127,16 @@ function D:Show()
         edit:SetSize(610,325); edit:SetMaxLetters(0); scroll:SetScrollChild(edit)
         edit:SetScript("OnEscapePressed",function() f:Hide() end)
         f:SetScript("OnHide",function() edit:ClearFocus() end)
-        local selectAll=CreateFrame("Button",nil,f,"UIPanelButtonTemplate"); f.selectAll=selectAll
-        selectAll:SetPoint("BOTTOMLEFT",16,14); selectAll:SetSize(140,26); selectAll:SetText("Select report")
+        local function button(caption,width)
+            local b=CreateFrame("Button",nil,f,"BackdropTemplate"); b:SetSize(width,26)
+            b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetAllPoints(); b.label:SetText(caption)
+            A.Skin.Button(b,"utility"); return b
+        end
+        local selectAll=button("Select report",140); f.selectAll=selectAll
+        selectAll:SetPoint("BOTTOMLEFT",16,14)
         selectAll:SetScript("OnClick",function() edit:SetFocus(); edit:HighlightText() end)
-        local close=CreateFrame("Button",nil,f,"UIPanelButtonTemplate")
-        close:SetPoint("BOTTOMRIGHT",-16,14); close:SetSize(90,26); close:SetText("Close")
+        local close=button("Close",90)
+        close:SetPoint("BOTTOMRIGHT",-16,14)
         close:SetScript("OnClick",function() f:Hide() end)
         UISpecialFrames[#UISpecialFrames+1]="HardcoreBuddyAuctionDiagnostics"
     end

@@ -46,13 +46,18 @@ restores the silent notice default. Reset all restores all three Map sections
 without changing other addon settings.
 Silent zone notices default on for unset preferences; explicit opt-outs remain.
 
+The zone heading and Map settings link sit above a separate NPC list. Clicking
+an NPC name opens its model; Back returns to that zone list.
 Clicking a marker opens a native PlayerModel inside HardcoreBuddy's Advisors >
 Map page. A copied, deduplicated NPC list keeps paging stable across map refreshes.
 Previous/Next controls show each clustered NPC; Back restores the prior addon
 page. Details and controls occupy the left panel; a larger square viewport sits
-inside a bordered panel on the right. Missing models retry every three seconds,
-up to three attempts. Closing the page cancels pending work; Retry starts a new
-attempt sequence. The camera refreshes again after loaded data settles, and
+inside a bordered panel on the right. Both panels match the surrounding cards
+and fill the available section height. Loading Model.... and pulsing dots appear
+in the preview while missing models retry every three seconds, up to three
+attempts. A failed load replaces the animation with Retry Model. Closing the
+page cancels pending work; Retry starts a new attempt sequence. The camera
+refreshes again after loaded data settles, and
 Reset view restores its default framing. Drag rotates and the mouse wheel zooms,
 with extra zoom-out range. Models are requested by NPC ID from the game client, with no
 external addon integration or bundled model files.

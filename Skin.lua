@@ -36,6 +36,7 @@ function S.Paint(frame,kind)
     frame:SetBackdropColor(unpack(style.fill))
     frame:SetBackdropBorderColor(unpack(style.border))
     frame.skinKind=kind
+    if kind=="edit" and frame.GetObjectType and frame:GetObjectType()=="CheckButton" then S.Hover(frame) end
     if kind=="edit" and not frame.flatEditHooks then
         frame.flatEditHooks=true
         frame:HookScript("OnEnter",function(self) self:SetBackdropBorderColor(0.72,0.56,0.29,1) end)
@@ -49,6 +50,15 @@ local function texture(parent,layer,sublevel,path)
     local t=parent:CreateTexture(nil,layer,nil,sublevel)
     t:SetTexture(path or WHITE)
     return t
+end
+
+-- Native button highlights keep row colors and item borders intact while using
+-- the same flat gold wash as navigation tabs (including child icon hit areas).
+function S.Hover(button,enabled)
+    if enabled==false then button:ClearHighlightTexture(); return end
+    button:SetHighlightTexture(WHITE,"BLEND")
+    local highlight=button:GetHighlightTexture()
+    highlight:SetVertexColor(unpack(S.colors.gold)); highlight:SetAlpha(0.24)
 end
 
 function S.Unsnap(region)
