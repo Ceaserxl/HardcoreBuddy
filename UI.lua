@@ -981,9 +981,7 @@ function addon:Layout()
     local userPage=doc.view=="supplies" and self.state.filter=="User" and not doc.isDetail
     f.userEntry:SetShown(userPage)
     if userPage then
-        f.userEntry:ClearAllPoints(); f.userEntry:SetPoint("TOPLEFT",left,-y); f.userEntry:SetWidth(bodyWidth)
         f.userDrop:ClearAllPoints(); f.userDrop:SetPoint("TOPLEFT",left,-y); f.userDrop:SetPoint("BOTTOMRIGHT",-40,46)
-        y=y+30
     else
         f.userDrop:Hide()
     end
@@ -1049,6 +1047,12 @@ function addon:Layout()
             or doc.view=="training" and self.state.filter=="Zone Advisor" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)
             or doc.view=="advisors" and not self.state.talentPath and 1) or nil
         top=top+renderCard(c,data,contentWidth)+10
+        if userPage and index==1 then
+            -- Keep drag feedback in the subtitle, inside the scrolling page.
+            f.userEntry:SetParent(c); f.userEntry:ClearAllPoints(); f.userEntry:SetAllPoints(c.note)
+            f.userEntry.hint:ClearAllPoints(); f.userEntry.hint:SetAllPoints(f.userEntry)
+            c.note:Hide()
+        end
     end
     for i=#doc.cards+1,#f.cards do f.cards[i]:Hide() end
     f.content:SetHeight(math.max(1,top)); f.scroll:UpdateScrollChildRect()
