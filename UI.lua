@@ -912,7 +912,7 @@ function addon:Layout()
         c.firstCard=index==1
         c.gridStart=not doc.isDetail and (doc.view=="training" and (self.state.filter=="Spells" or self.state.filter=="Zones") and 1
             or doc.view=="training" and (not self.state.filter or self.state.filter=="Overview") and index==1 and 3
-            or doc.view=="advisors" and self.state.filter=="Map" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and 1
+            or doc.view=="advisors" and self.state.filter=="Map" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)
             or doc.view=="advisors" and self.state.filter~="Map" and not self.state.talentPath and 1) or nil
         top=top+renderCard(c,data,contentWidth)+10
     end
