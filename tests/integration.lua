@@ -191,7 +191,7 @@ A:Navigate("petguide"); A:Activate({kind="family",id="owl"}); A:Activate({kind="
 assert(A.document.total==4)
 MOCK.Click(f.cards[1].content.blocks[1]); assert(A.document.cards[1].title=="Screech - Rank 1")
 MOCK.Click(f.back); MOCK.Click(f.back); assert(A.document.cards[1].title=="Owls")
-A:SetProfile("characterClass","Warlock"); assert(not f.tabs[3]:IsShown() and A.state.view=="supplies")
+A:SetProfile("characterClass","Warlock"); assert(A.state.view=="supplies")
 A:Navigate("training"); assert(A.document.cards[1].title=="Demon companion")
 local function validateLayout()
     assert(f.scroll:GetHeight()>65)

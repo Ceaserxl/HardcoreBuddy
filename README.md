@@ -284,8 +284,10 @@ separate; training always uses the actual character, including while planning.
 ## Companion and Pet Guide
 
 Companion offers class advice, pet training, demon utility and professions.
-Hunter Pet Guide is an offline searchable index of **17 families, 21 abilities /
-111 ranks, 559 creatures and 145 appearances**, plus five care guides.
+Hunters open **Companion > Pet Guide** for an offline searchable index of
+**17 families, 21 abilities / 111 ranks, and 559 creatures**, plus five care guides.
+Its sections are Families, Abilities, Pets, and Care. Appearance descriptions
+remain on individual creature pages.
 Routine Hunter routes favor accessible early zones for the current faction.
 The complete wild-creature catalog stays available: beasts are not faction-locked
 by their home zone. Rare, elite, group and unavailable entries are labeled.

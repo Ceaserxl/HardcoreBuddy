@@ -64,12 +64,11 @@ for i,p in ipairs(D.pets) do
     assert(doc.title==p.name and doc.blocks[1].body==p.zone)
     assert(doc.blocks[2].meta==p.classification)
 end
-for i,l in ipairs(D.looks) do assert(C.Detail(ctx,{kind="look",index=i}).title==l.name) end
 for i=1,5 do assert(C.Detail(ctx,{kind="guide",index=i}).blocks[1].body~="") end
 -- Every catalog is complete in one scrollable list, without repeats or gaps.
 local total,seen=0,{}
 local first=C.Build(ctx,{view="petguide",filter="Pets"})
-for _,filter in ipairs({"Families","Abilities","Pets","Looks","Care"}) do
+for _,filter in ipairs({"Families","Abilities","Pets","Care"}) do
     local doc=C.Build(ctx,{view="petguide",filter=filter,page=999})
     assert(doc.continuous and doc.page==1 and doc.pages==1)
     assert(#doc.cards[1].blocks==doc.total)
@@ -116,4 +115,4 @@ for _,item in ipairs(A.Data.Items.items) do
             and fields["Profession rank"]:find("character level 20",1,true),"Alchemy profession rank must show its character-level gate")
     end
 end
-print('PASS: 540 categorized continuous supply dashboards with complete All/search/Missing rows; all item details have labeled fields; 17 families, 111 ranks, 559 creatures, 145 looks and 5 care guides render; pet search, level gates and catalog pagination verified.')
+print('PASS: 540 categorized continuous supply dashboards with complete All/search/Missing rows; all item details have labeled fields; 17 families, 111 ranks, 559 creatures and 5 care guides render; pet search, level gates and continuous catalogs verified.')

@@ -183,8 +183,7 @@ function C.Detail(context, action)
     if kind=="family" then
         local f=families[action.id]
         local blocks={row("Diet",f.diet),row("Family attributes",f.modifiers,nil,f.role.." role"),
-            row("Browse "..f.name,"Locations, levels, appearances and attack speeds",{view="petguide",filter="Pets",query=f.name}),
-            row("Family appearances","Available and unavailable looks",{view="petguide",filter="Looks",query=f.name})}
+            row("Browse "..f.name,"Locations, levels, appearances and attack speeds",{view="petguide",filter="Pets",query=f.name})}
         for _,id in ipairs(f.abilities) do
             blocks[#blocks+1]=row(abilities[id].name,"View ranks and training sources",{kind="ability",id=id})
         end
@@ -227,14 +226,6 @@ function C.Detail(context, action)
             row(families[p.family].name,"Diet, family modifiers and compatible abilities",{kind="family",id=p.family})}
         if p.historicalCaster then blocks[#blocks+1]=row("Historical caster entry","The Vanilla caster penalty is obsolete in Classic.",{kind="guide",index=5}) end
         return card(p.name,"Creature details",blocks)
-    end
-    if kind=="look" then
-        local look=D.PetGuide.looks[action.index]; local blocks={}
-        for _,name in ipairs(look.pets) do
-            for i,p in ipairs(D.PetGuide.pets) do if p.name==name and p.family==look.family then blocks[#blocks+1]=petRow(p,i) end end
-        end
-        if #blocks==0 then blocks[1]=row("No creature listed","This appearance has no creature listed in the catalog.") end
-        return card(look.name,families[look.family].name.." appearance",blocks)
     end
 end
 
@@ -307,7 +298,7 @@ function C.Build(context,state)
         result.cards[1]=card(context.characterClass=="Hunter" and "Pet training" or context.characterClass=="Warlock" and "Demon companion" or "Field advice",
             context.characterClass=="Hunter" and (context.petLevel and ((context.mode=="preview" and "Planned" or "Active").." pet level "..context.petLevel) or "No active pet level detected; no current rank assumed.") or nil,blocks)
     elseif view=="petguide" then
-        result.filters={"Families","Abilities","Pets","Looks","Care"}; result.searchable=true
+        result.filters={"Families","Abilities","Pets","Care"}; result.searchable=true
         local filter=state.filter or "Families"; local blocks={}
         if filter=="Families" then
             for _,f in ipairs(D.PetGuide.families) do if match(f.name.." "..f.id.." "..f.diet.." "..f.role,state.query) then blocks[#blocks+1]=row(f.name,f.role.."  |  Eats: "..f.diet,{kind="family",id=f.id}) end end
@@ -319,8 +310,6 @@ function C.Build(context,state)
                 local searchable=p.name.." "..p.family.." "..families[p.family].name.." "..p.zone.." "..table.concat(p.abilities," ").." "..table.concat(p.looks," ").." "..p.classification.." "..tostring(p.attackSpeed or "")
                 if match(searchable,state.query) and (not state.atLevel or (context.level>=10 and p.tameable and p.maxLevel<=context.level)) then blocks[#blocks+1]=petRow(p,i) end
             end
-        elseif filter=="Looks" then
-            for i,l in ipairs(D.PetGuide.looks) do if match(l.name.." "..l.family.." "..families[l.family].name,state.query) then blocks[#blocks+1]=row(l.name,families[l.family].name.."  |  "..#l.pets.." listed creatures",{kind="look",index=i},l.tameable and "Tameable appearance" or "Unavailable appearance") end end
         else
             for i,g in ipairs(guides) do if match(g.name.." "..g.body,state.query) then blocks[#blocks+1]=row(g.name,"Open quick guide",{kind="guide",index=i}) end end
         end

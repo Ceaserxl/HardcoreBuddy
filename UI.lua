@@ -406,7 +406,7 @@ function addon:CreateWindow()
         if self.db.profile.mode == "preview" and (key=="UP" or key=="DOWN") then commit(f.level); self:SetLevel(self.db.profile.level+(key=="UP" and 1 or -1)) end
     end)
     f.tabs={}
-    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"petguide","Pet Guide",100},{"advisors","Advisors",100},{"deaths","Death Journal",122},{"dungeons","Dungeons",100},{"raids","Raids",100},{"settings","Settings",100}}) do
+    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"advisors","Advisors",100},{"deaths","Death Journal",122},{"dungeons","Dungeons",100},{"raids","Raids",100},{"settings","Settings",100}}) do
         local id=tab[1]
         local b=button(f,tab[2],tab[3],function() self:Navigate(id) end); b.view=id; Skin.Button(b,"tab"); f.tabs[#f.tabs+1]=b
     end
@@ -616,7 +616,8 @@ local FILTER_ICONS={
     ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
     ["Reports"]="INV_Misc_Book_09",Options="Trade_Engineering",["All"]="INV_Misc_Bag_08",["Food & drink"]="INV_Misc_Food_11",Buffs="INV_Potion_27",
     Emergency="INV_Misc_Bandage_12",Potions="INV_Potion_54",Class="INV_Misc_Rune_01",Optional="INV_Misc_PocketWatch_01",User="INV_Misc_Note_01",Scrolls="INV_Scroll_03",Families="Ability_Hunter_BeastTaming",
-    Abilities="Ability_Hunter_BeastCall",Pets="Ability_Hunter_Pet_Bear",Looks="Ability_Hunter_EagleEye",Care="Ability_Hunter_MendPet",
+    Abilities="Ability_Hunter_BeastCall",Pets="Ability_Hunter_Pet_Bear",Care="Ability_Hunter_MendPet",
+    ["Pet Guide"]="Ability_Hunter_Pet_Bear",["< Companion"]="INV_Misc_Book_09",
     Overview="INV_Misc_Book_09",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",
 }
 function addon:Layout()
@@ -647,11 +648,11 @@ function addon:Layout()
     local x,y=22,f.headerHeight+4
     local right=width-22
     for _,b in ipairs(f.tabs) do
-        b:SetShown(b.view~="petguide" or context.characterClass=="Hunter")
+        b:Show()
         if b:IsShown() then
             if x+(compact and 94 or 114)>right then x=22; y=y+36 end
             b:SetSize(compact and 94 or 114,30); b:ClearAllPoints(); b:SetPoint("TOPLEFT",x,-y)
-            x=x+b:GetWidth()+6; active(b,doc.view==b.view)
+            x=x+b:GetWidth()+6; active(b,doc.view==b.view or (b.view=="training" and doc.view=="petguide"))
         end
     end
     local modeInTabs=x+modeWidth<=right
@@ -720,8 +721,8 @@ function addon:Layout()
     local instancePage=doc.view=="dungeons" or doc.view=="raids"
     local navigation=doc.view=="advisors" and {"Gear","Talents","Builds"} or instancePage and self.Instances.Navigation(self.state)
         or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {"Reports"}
-        or doc.view=="training" and {"Overview","First Aid","Engineering","Cooking"}
-        or doc.view=="petguide" and {"Families","Abilities","Pets","Looks","Care"}
+        or doc.view=="training" and (context.characterClass=="Hunter" and {"Overview","Pet Guide","First Aid","Engineering","Cooking"} or {"Overview","First Aid","Engineering","Cooking"})
+        or doc.view=="petguide" and {"< Companion","Families","Abilities","Pets","Care"}
         or addon.Supplies.filters
     local sidebar=true
     local left=sidebar and 184 or 22
@@ -741,6 +742,7 @@ function addon:Layout()
             b=button(f,label,78,function(self)
                 addon:CommitInputs(); addon.window.classMenu:Hide()
                 addon.state.detail=nil; addon.state.deathRecord=nil; addon.history={}; addon.state.page=1
+                if addon.state.view=="petguide" and self.filter=="< Companion" then addon:Navigate("training"); return end
                 if addon.state.view=="dungeons" or addon.state.view=="raids" then
                     addon.state.filter=self.filter
                     addon.state.currentMap=nil; addon.state.currentName=nil; addon.state.unknownInstance=nil
@@ -749,6 +751,7 @@ function addon:Layout()
                     addon:Refresh(true); return
                 end
                 if addon.state.view=="training" then
+                    if self.filter=="Pet Guide" then addon:Navigate("petguide"); return end
                     addon.state.filter=nil
                     local family=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[self.filter]
                     if family then addon:Activate({kind="profession",family=family}); return end
@@ -777,7 +780,7 @@ function addon:Layout()
             b:SetSize(tabWidth,27); b:SetPoint("TOPLEFT",x,-y); x=x+tabWidth+5
             b.label:SetAllPoints(); b.label:SetJustifyH("CENTER")
         end
-        local selected=self.state.filter or navigation[1]
+        local selected=self.state.filter or (doc.view=="petguide" and "Families" or navigation[1])
         if doc.view=="training" then
             local family=self.state.detail and self.state.detail.family
             selected=family=="bandage" and "First Aid" or family=="antivenom" and "First Aid"

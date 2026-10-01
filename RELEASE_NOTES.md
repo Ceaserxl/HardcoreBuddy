@@ -1,5 +1,6 @@
 # Unreleased
 
+- Moved Pet Guide into Companion's Hunter navigation and removed the Looks tab.
 - Added a central Settings tab for general preferences, gear scoring, auction
   filters, death alerts and appearance, low health, rares, elites, and preparation.
   Existing preferences and command shortcuts are preserved. Long settings pages

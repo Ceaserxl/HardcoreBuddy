@@ -263,13 +263,15 @@ end
 for id in pairs(expectedItems) do assert(visited[id],"A reachable supply item was never opened through its rendered row: "..id) end
 
 A:SetProfile("characterClass","Hunter"); A:SetLevel(60)
-MOCK.Click(f.tabs[3]); assert(A.state.view=="petguide")
-local expected={Families=17,Abilities=21,Pets=559,Looks=145,Care=5}
-for index,label in ipairs({"Families","Abilities","Pets","Looks","Care"}) do
-    MOCK.Click(f.filters[index]); assert(A.document.total==expected[label])
+for _,tab in ipairs(f.tabs) do assert(tab.view~="petguide","Pet Guide is not a top-level tab") end
+MOCK.Click(f.tabs[2]); assert(f.filters[2].filter=="Pet Guide")
+MOCK.Click(f.filters[2]); assert(A.state.view=="petguide")
+local expected={Families=17,Abilities=21,Pets=559,Care=5}
+for index,label in ipairs({"Families","Abilities","Pets","Care"}) do
+    MOCK.Click(f.filters[index+1]); assert(A.document.total==expected[label])
     walkPages(0)
 end
-for kind,total in pairs({family=17,ability=21,rank=111,pet=559,look=145,guide=5}) do
+for kind,total in pairs({family=17,ability=21,rank=111,pet=559,guide=5}) do
     assert(size(records[kind])==total,kind.." UI coverage incomplete: "..size(records[kind]).." / "..total)
 end
 assert(counts.icons>0 and size(records.item)>50)
@@ -278,7 +280,8 @@ for _,family in ipairs({"cooking","bandage","dummy","antivenom"}) do
 end
 
 -- Screen-coordinate dispatch catches overlays that handler-only tests cannot.
-MOCK.Click(f.tabs[3]); MOCK.Click(f.filters[3]); A:SetProfile("mode","live")
+MOCK.Click(f.filters[1]); assert(A.state.view=="training","Companion remains accessible from Pet Guide")
+MOCK.Click(f.filters[2]); MOCK.Click(f.filters[4]); A:SetProfile("mode","live")
 A:RestoreWindow(); A:Layout(); f.scroll:SetVerticalScroll(0)
 local function clickRow(frame)
     local x,y,w,h=frame:GetRect()
@@ -317,4 +320,4 @@ A.state,A.history,A.lastClass=copy(saved.state),copy(saved.history),saved.lastCl
 A:RestoreWindow(); A:Refresh(); f.scroll:SetVerticalScroll(saved.scroll)
 f:SetShown(saved.visible)
 A.needsRefresh,A.needsLayout,A.layoutElapsed=saved.needsRefresh,saved.needsLayout,saved.layoutElapsed
-print(string.format("PASS: Actual UI menu handlers: %d row/icon opens, %d passive-row clicks, %d pages, %d tooltip hovers, %d native item tooltip checks, and %d pooled-row checks and %d structured-field checks; removed Sources and manual Use controls remain absent. All 9 classes and %d reachable item recommendations; 17 families, 21 abilities, 111 ranks, 559 creatures, 145 looks, 5 care guides; coordinate row clicks and scroll clipping.",counts.actions,counts.passive,counts.pages,counts.hovers,counts.nativeTips,counts.pooled,counts.fields,size(expectedItems)))
+print(string.format("PASS: Actual UI menu handlers: %d row/icon opens, %d passive-row clicks, %d pages, %d tooltip hovers, %d native item tooltip checks, and %d pooled-row checks and %d structured-field checks; removed Sources and manual Use controls remain absent. All 9 classes and %d reachable item recommendations; 17 families, 21 abilities, 111 ranks, 559 creatures, 5 care guides; coordinate row clicks and scroll clipping.",counts.actions,counts.passive,counts.pages,counts.hovers,counts.nativeTips,counts.pooled,counts.fields,size(expectedItems)))
