@@ -52,6 +52,7 @@ MapAdvisor.lua
 GearIndicators.lua
 GearBagAdvisor.lua
 GearSnapshot.lua
+DebugDump.lua
 WeaponSetAdvisor.lua
 AuctionDiagnostics.lua
 AuctionCache.lua

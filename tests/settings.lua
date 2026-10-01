@@ -2,7 +2,7 @@ local A=TestAddon
 local S=A.Settings
 local count=0
 local function check(ok,why) count=count+1; assert(ok,why) end
-check(table.concat(S.sections,",")=="General,Gear Advisor,Talent Advisor,Auction House,Death Alerts,Low Health,NPC Alerts,Map","Consolidated sidebar order")
+check(table.concat(S.sections,",")=="General,Gear Advisor,Talent Advisor,Auction House,Death Alerts,Low Health,NPC Alerts,Map,Debug","Consolidated sidebar order")
 local settingsTab
 for _,tab in ipairs(A.window.tabs) do
     check(tab.view~="alerts","Old Alerts tab is replaced by Settings")
@@ -80,17 +80,17 @@ check(blocks[#blocks].action.command=="settings","Gear settings link is last aft
 for _,b in ipairs(blocks) do check(not b.action or b.action.command~="talentSettings","Talent settings link removed from Gear") end
 A:Activate(blocks[#blocks].action)
 check(A.state.view=="settings" and A.state.filter=="Gear Advisor","Advisor settings link works")
-check(gear.openWeights:IsVisible() and gear.openSnapshot:IsVisible() and not gear.weights[1]:IsVisible(),"Gear settings show navigation buttons instead of inline editors")
+check(gear.openWeights:IsVisible() and not gear.openSnapshot and not gear.weights[1]:IsVisible(),"Gear settings show navigation buttons instead of inline editors")
 MOCK.Click(gear.openWeights)
 check(A.state.gearPage=="Stat Weights" and A.state.filter=="Gear Advisor" and gear.weights[1]:IsVisible(),"Stat Weights opens within Gear Advisor")
 check(not gear:IsVisible() and A.window.back:IsVisible(),"Weights page uses the shared Back button")
 S.scroll:SetVerticalScroll(100)
 MOCK.Click(A.window.back)
 check(not A.state.gearPage and gear:IsVisible() and S.scroll:GetVerticalScroll()==0,"Weights Back returns to the compact Gear settings page")
-MOCK.Click(gear.openSnapshot)
-check(A.state.gearPage=="Gear Snapshot" and A.GearSnapshot.panel:IsVisible() and not gear.weights[1]:IsVisible(),"Snapshot button opens a separate page")
-MOCK.Click(A.window.back)
-check(gear:IsVisible() and not A.GearSnapshot.panel:IsVisible(),"Snapshot Back hides its contents and returns to Gear settings")
+A:OpenSettings("Debug")
+check(S.pages.Debug:IsVisible() and S.pages.Debug.dump.label:GetText()=="Dump Data","Debug replaces the Gear Snapshot page")
+check(not A.GearSnapshot.panel and not S.pages["Gear Snapshot"],"Old snapshot controls removed")
+A:OpenSettings("Gear Advisor")
 MOCK.Click(gear.openWeights)
 MOCK.Click(A.window.filters[1])
 MOCK.Click(A.window.filters[2])

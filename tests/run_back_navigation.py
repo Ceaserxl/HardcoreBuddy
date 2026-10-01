@@ -23,7 +23,7 @@ local function back()
     end
     MOCK.Click(f.back)
 end
-for _,page in ipairs({"Stat Weights","Gear Snapshot"}) do
+for _,page in ipairs({"Stat Weights"}) do
     A:OpenSettings("Gear Advisor"); A.Settings:OpenGearPage(page)
     A.Settings.scroll:SetVerticalScroll(100)
     back(); assert(not A.state.gearPage and A.state.filter=="Gear Advisor")

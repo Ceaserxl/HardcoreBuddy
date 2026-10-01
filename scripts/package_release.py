@@ -27,9 +27,6 @@ def manifest():
         'scripts/import_deathlog_sounds.py',
         'docs/PROVENANCE.md', 'docs/advisors.md', 'docs/ADVISOR_DATA_LICENSE.txt',
         'docs/map-data.md', 'docs/map-data-audit.json',
-        'Media/MapMarkers/Danger.tga', 'Media/MapMarkers/Rare.tga',
-        'Media/MapMarkers/Elite.tga', 'Media/MapMarkers/Boss.tga',
-        'Media/MapMarkers/prompts.json',
     })
     for volume in range(10, 101, 10):
         files.add(f'Media/Deaths/DeathBell{volume}.wav')

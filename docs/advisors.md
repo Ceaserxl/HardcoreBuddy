@@ -64,11 +64,12 @@ Weapon DPS uses the native tooltip's displayed precision, matching the reference
 scorer, ahead of the item API's higher-precision value. Enhancements are removed
 before reading that tooltip. New snapshots identify this as `classic-weighted-v3`;
 older saved snapshots retain their original scores and model identifier.
-The **Gear Snapshot** button in **Settings > Gear Advisor** opens a page that
-contains the capture button, saved character details, status and all 20 equipment
-slots. Hover a row to see its captured tooltip. Both gear subpages have a **Back**
-button that returns to Gear Advisor settings. Each uses the settings scroll and
-does not open or modify the native Character window. Existing snapshots are retained.
+**Settings > Debug > Dump Data** now captures gear alongside the rest of
+HardcoreBuddy's diagnostic data. It retains intrinsic item scores, raw item
+stats, native tooltip lines and talent information. The full dump is cached per
+character and shown in a text box. Copy selects the text for Ctrl+C. The former
+standalone Gear Snapshot page has been removed; saved gear snapshots remain
+available in diagnostic data. Stat Weights stays under Gear Advisor settings.
 
 ## Upgrade markers
 

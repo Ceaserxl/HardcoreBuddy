@@ -16,7 +16,7 @@ Use the mouse wheel or scrollbar to browse the full list.
 
 Open the **Settings** tab or use `/hcb settings`. The sidebar groups General,
 Gear Advisor, Talent Advisor, Auction House, Death Alerts, Low Health, NPC Alerts,
-and Map. Long pages scroll. Existing saved preferences are kept.
+Map and Debug. Long pages scroll. Existing saved preferences are kept.
 General includes the minimap button, field kit upgrade notices, recentering and
 Preparation reminders. Death Alerts includes banner appearance; NPC Alerts
 contains separate rare and elite controls on the same scrolling page.
@@ -85,20 +85,30 @@ Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
 
 The gear percentage measures weighted item stats, not simulated damage or survival.
 Procs, active item effects and set bonuses are excluded. See [advisor details](docs/advisors.md).
-Use **Settings → Gear Advisor → Gear Snapshot → Snapshot Current Gear** to save gear and talent
-information for offline review. The saved item list is on the snapshot page;
-`/reload` or log out to write it to disk.
+## Debug dump
+
+Use **Settings > Debug > Dump Data** to capture HardcoreBuddy settings, saved
+history, caches, runtime state and reference data, plus available character,
+equipment, talents, bags/bank, quests, spells, skills, pet and aura information.
+An animated progress bar tracks work spread across frames. The completed dump
+fills a scrollable text box and is cached per character. **Copy** selects all
+text; press **Ctrl+C** (Cmd+C on Mac) to copy it. `/reload` or log out to write
+the cache to disk. Opening Debug restores the last dump without recapturing.
+Unavailable APIs are labelled; bank information depends on the bank being open.
+The dump includes only HardcoreBuddy-owned data and player APIs, not other
+addons. UI objects and functions are represented by markers. Shared tables and
+cycles use `$ref` paths. Existing gear snapshots remain part of the dump.
 
 ## Map advisor
 
 Open **Settings > Map**, or the **Map settings** row in **Advisors > Map**, to
 reveal unexplored outdoor terrain or tint unexplored areas translucent blue.
 Category filters show known dangerous NPCs, rares, elites and bosses.
-Map symbols use black outlines and transparent backgrounds: a red warning
-triangle for dangers, a silver star for rares, a gold sword for elites and a
-white skull for world bosses. Hover a marker for NPC names and details.
-Nearby locations share one smaller marker and a combined tooltip. Zooming in
-separates locations that are far enough apart on screen.
+Map markers use Blizzard's silver rare and gold elite icons, a skull for world
+bosses and a warning icon for dangerous NPCs. Hover for NPC names and details.
+Only nearly overlapping points (within 12 screen pixels of every other point
+in their group) combine. Nearby chains cannot collapse an entire camp. Zooming
+in separates locations that are far enough apart on screen.
 Browse any Classic zone or follow your current zone under **Advisors > Map**.
 An optional **Silent zone-entry notice** lists known dangers in chat without
 playing a sound. Pins mark recorded spawn areas, not live sightings; missing

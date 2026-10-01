@@ -1,6 +1,6 @@
 local addonName,A=...
 local S={schema=2}; A.GearSnapshot=S
-local G,Skin=A.GearAdvisor,A.Skin
+local G=A.GearAdvisor
 local slotNames={[0]="Ammo","Head","Neck","Shoulders","Shirt","Chest","Waist","Legs","Feet",
     "Wrists","Hands","Ring 1","Ring 2","Trinket 1","Trinket 2","Back","Main hand","Off hand","Ranged","Tabard"}
 
@@ -109,7 +109,7 @@ end
 function S:Capture(quiet)
     if not A.characterDB or not GetInventoryItemID or not GetInventoryItemLink then
         self.message="Equipment data is not ready. Try again after loading."
-        self:Refresh(); return nil,self.message
+        return nil,self.message
     end
     local profile,profileReason=G:CurrentProfile()
     local _,class=UnitClass("player")
@@ -144,107 +144,8 @@ function S:Capture(quiet)
     -- Keep only the most recent manual snapshot for this character.
     A.characterDB.gearSnapshot=snapshot
     self.message=nil
-    self:Refresh()
     if not quiet then A:Print("Gear snapshot captured. Use /reload or log out to save it for offline review."
         ..(snapshot.complete and "" or " Some data is unavailable; wait for it to load and snapshot again."))
     end
     return snapshot
-end
-
-local function label(parent,size,color)
-    local text=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
-    text:SetFont(STANDARD_TEXT_FONT,size,""); text:SetTextColor(unpack(color or Skin.colors.white))
-    text:SetJustifyH("LEFT"); text:SetJustifyV("TOP"); text:SetWordWrap(true)
-    return text
-end
-local function button(parent,text,width,callback,name)
-    local b=CreateFrame("Button",name,parent,"BackdropTemplate"); b:SetSize(width,28)
-    b.label=label(b,12); b.label:SetAllPoints(); b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE"); b.label:SetText(text)
-    Skin.Button(b,"utility"); b:SetScript("OnClick",callback)
-    b:SetScript("OnEnter",function() Skin.ButtonState(b,b.active,true,false) end)
-    b:SetScript("OnLeave",function() Skin.ButtonState(b,b.active,false,false) end)
-    return b
-end
-
-function S:ShowSavedTooltip(button)
-    local row=button.snapshotRow
-    if not row then return end
-    GameTooltip:SetOwner(button,"ANCHOR_RIGHT"); GameTooltip:ClearLines()
-    for _,line in ipairs(row.tooltipLines or {}) do
-        local l,r=line.leftColor or {1,1,1},line.rightColor or {1,1,1}
-        GameTooltip:AddDoubleLine(line.left or "",line.right or "",l[1],l[2],l[3],r[1],r[2],r[3])
-    end
-    if not row.tooltipLines then GameTooltip:AddLine(row.name or row.slotName,1,0.8,0.4) end
-    GameTooltip:AddLine(" ")
-    GameTooltip:AddLine("Saved snapshot | "..(row.reason or (row.state=="empty" and "Empty slot" or "Captured item tooltip")),0.65,0.65,0.56,true)
-    GameTooltip:Show()
-end
-
-function S:Refresh()
-    if not self.panel then return end
-    local f=self.panel
-    local snapshot=A.characterDB and A.characterDB.gearSnapshot
-    f.capture:SetEnabled(A.characterDB~=nil)
-    Skin.ButtonState(f.capture,false,false,false)
-    if snapshot then
-        local who=snapshot.character or {}
-        f.summary:SetText((who.name or "Character").." | Level "..(who.level or "?").."\n"
-            ..(snapshot.profile and snapshot.profile.name or "Talent data unavailable"))
-        local stamp=date and date("%b %d, %H:%M",snapshot.capturedAt) or tostring(snapshot.capturedAt)
-        f.status:SetText(self.message or (stamp.." | "..snapshot.savedCount.." items saved"
-            ..(snapshot.complete and "" or "\nIncomplete data - snapshot again after loading.")))
-        f.status:SetTextColor(unpack(snapshot.complete and Skin.colors.green or Skin.colors.amber))
-    else
-        f.summary:SetText("Save your equipped gear for offline review.")
-        f.status:SetText(self.message or "No gear snapshot saved yet.")
-        f.status:SetTextColor(unpack(Skin.colors.muted))
-    end
-    for slot=0,19 do
-        local row=snapshot and snapshot.slots[slot]
-        local b=f.rows[slot]
-        b.snapshotRow=row; b:SetShown(row~=nil)
-        if row then
-            b.slot:SetText(row.slotName)
-            b.item:SetText(row.state=="empty" and "Empty" or row.name or (row.itemID and "Item "..row.itemID) or "Loading")
-            b.item:SetTextColor(unpack(row.state=="saved" and Skin.colors.white or row.state=="empty" and Skin.colors.muted or Skin.colors.amber))
-            b.icon:SetTexture(row.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
-            b.icon:SetShown(row.state~="empty")
-        end
-    end
-end
-
--- Snapshot controls and all saved slots share the Gear Advisor settings scroll.
-function S:Create(parent)
-    local f=CreateFrame("Frame","HardcoreBuddyGearSnapshotPanel",parent)
-    self.panel=f
-    f.title=label(f,18,Skin.colors.gold); f.title:SetPoint("TOPLEFT",0,0); f.title:SetText("Gear Snapshot")
-    f.summary=label(f,12,Skin.colors.muted); f.summary:SetPoint("TOPLEFT",0,-32); f.summary:SetSize(700,32)
-    f.capture=button(f,"Snapshot Current Gear",260,function()
-        A:CommitInputs(); self:Capture()
-        A:Refresh()
-    end)
-    f.capture:SetPoint("TOPLEFT",0,-76)
-    f.status=label(f,12); f.status:SetPoint("TOPLEFT",0,-116); f.status:SetSize(700,32)
-    f.hint=label(f,12,Skin.colors.gold); f.hint:SetPoint("TOPLEFT",0,-156); f.hint:SetSize(700,32)
-    f.hint:SetText("Use /reload or log out to write the snapshot to disk for offline review.")
-    f.rows={}
-    for slot=0,19 do
-        local row=CreateFrame("Button",nil,f,"BackdropTemplate"); f.rows[slot]=row
-        row:SetSize(700,28); row:SetPoint("TOPLEFT",0,-200-slot*30)
-        Skin.Paint(row,"row"); row:SetBackdropColor(slot%2==0 and 0.045 or 0.065,0.055,0.065,1)
-        row.slot=label(row,11,Skin.colors.muted); row.slot:SetPoint("LEFT",8,0); row.slot:SetSize(84,24); row.slot:SetJustifyV("MIDDLE")
-        row.icon=row:CreateTexture(nil,"ARTWORK"); row.icon:SetSize(24,24); row.icon:SetPoint("LEFT",100,0)
-        row.item=label(row,12); row.item:SetPoint("LEFT",136,0); row.item:SetSize(556,24); row.item:SetJustifyV("MIDDLE"); row.item:SetWordWrap(false)
-        row:SetScript("OnEnter",function() self:ShowSavedTooltip(row) end)
-        row:SetScript("OnLeave",function() GameTooltip:Hide() end)
-    end
-    f:SetScript("OnHide",function() GameTooltip:Hide() end)
-end
-
-function S:Layout(parent,top)
-    if not self.panel then self:Create(parent) end
-    self.panel:ClearAllPoints(); self.panel:SetPoint("TOPLEFT",parent,"TOPLEFT",20,-top)
-    self.panel:SetSize(700,A.characterDB and A.characterDB.gearSnapshot and 808 or 196)
-    self:Refresh()
-    return self.panel:GetHeight()
 end

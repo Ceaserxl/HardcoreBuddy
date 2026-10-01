@@ -4,33 +4,10 @@ local checks=0
 local function check(ok,why) checks=checks+1; assert(ok,why) end
 local function close(a,b) return a and math.abs(a-b)<0.00001 end
 
--- The snapshot subpage needs no Character window and opens from Gear settings.
-local function openSnapshot()
-    A:OpenSettings("Gear Advisor")
-    MOCK.Click(A.Settings.pages["Gear Advisor"].openSnapshot)
-end
-check(not S.panel,"Loading the addon does not require CharacterFrame")
-CharacterFrame=nil
-openSnapshot()
-local panel=S.panel
-check(panel and panel.parent==A.Settings.pages["Gear Snapshot"],"Snapshot panel belongs to Gear Advisor settings")
-check(A.state.view=="settings" and A.state.filter=="Gear Advisor" and panel:IsVisible(),"Gear settings display snapshot controls")
-check(not panel.scroll and not HardcoreBuddyCharacterTab,"No Character tab or nested snapshot scroll frame")
-check(not A.characterDB.gearSnapshot,"Opening settings never captures automatically")
-local emptyHeight=A.Settings.content:GetHeight()
-A:OpenSettings("General")
-check(not panel:IsVisible(),"Leaving Gear settings hides the snapshot section")
-openSnapshot()
-check(S.panel==panel,"Returning to settings reuses the snapshot controls")
-CharacterFrame=CreateFrame("Frame","CharacterFrame",UIParent)
-CharacterFrame:SetSize(384,512); CharacterFrame:SetPoint("TOPLEFT",50,-100)
-local nativeCalls=0
-CharacterFrame_ShowSubFrame=function() nativeCalls=nativeCalls+1 end
-CharacterFrameTab_OnClick=function() nativeCalls=nativeCalls+1 end
-ToggleCharacter=function() nativeCalls=nativeCalls+1 end
-openSnapshot()
-check(nativeCalls==0 and not S.tab and not S.chrome,"Settings never change native Character navigation or artwork")
-
+-- The gear collector is now an internal part of the full Debug dump.
+A:OpenSettings("Debug")
+check(A.Settings.pages.Debug:IsVisible() and not A.Settings.pages["Gear Advisor"].openSnapshot,"Snapshot moved to Debug")
+check(not S.panel and not HardcoreBuddyCharacterTab,"No old snapshot or Character window UI")
 F.reset("HUNTER",40,{31,0,0})
 A.db.gearAdvisorEnabled=false
 A.db.profile.mode="preview"; A.db.profile.characterClass="Mage"; A.db.profile.level=60
@@ -58,7 +35,7 @@ F.equip(10,enchanted); F.equip(3,suffix)
 F.equip(4,F.item("INVTYPE_BODY",{},4,0,{{"Shirt"}}))
 local ammo=F.item("INVTYPE_AMMO",{},6,2,{{"Ammo"}})
 F.equip(0,ammo)
-MOCK.Click(panel.capture)
+S:Capture(true)
 local snapshot=A.characterDB.gearSnapshot
 check(snapshot and snapshot.schema==2 and snapshot==HardcoreBuddyCharacterDB.gearSnapshot,"Button stores snapshot in per-character SavedVariables")
 check(snapshot.complete and snapshot.savedCount==4 and snapshot.emptyCount==16 and snapshot.unavailableCount==0,"All 20 slots represented, including ammo/shirt and empty slots")
@@ -72,9 +49,6 @@ check(snapshot.slots[3].advisor.stats.ITEM_MOD_AGILITY_SHORT==8 and snapshot.slo
 check(snapshot.slots[10].tooltipLines[2].right=="Mail" and snapshot.slots[10].tooltipLines[6].left=="Reinforced Armor +40","Both original tooltip columns and applied enchant text preserved")
 check(snapshot.slots[4].advisorReason=="unsupported" and snapshot.slots[4].score==nil,"Unscored cosmetic item saved without a fabricated score")
 check(snapshot.talents[1].points==31 and snapshot.talents[1].talents[1].rank==5,"Talent points and individual ranks preserved")
-check(panel.rows[10].snapshotRow==snapshot.slots[10],"Page shows saved data")
-panel.rows[10].scripts.OnEnter(panel.rows[10])
-check(GameTooltip.lines[6][1]=="Reinforced Armor +40","Hover uses captured tooltip instead of reading current gear")
 local before=snapshot.slots[10].advisor.stats.ITEM_MOD_STAMINA_SHORT
 enchanted.stats.RESISTANCE0_NAME=9999; originalTalents.rank=0; gloves.lines[3][1]="+99 Stamina"
 F.equip(10,nil); MOCK.FireAll("PLAYER_EQUIPMENT_CHANGED",10)
@@ -157,17 +131,4 @@ local changed=S:Capture()
 check(not changed.complete and changed.slots[3].reason:find("changed during capture",1,true),"Mid-capture gear changes produce a partial snapshot")
 C_Item.GetItemInfo=originalGetInfo
 
--- Profile or character changes must not leak another character's snapshot.
-local characterDB=A.characterDB
-A.characterDB={}; S:Refresh()
-check(panel.status:GetText()=="No gear snapshot saved yet." and not panel.rows[10]:IsShown(),"Characters without a snapshot do not see another character's gear")
-A.characterDB=characterDB; A.characterDB.gearSnapshot=snapshot; S.message=nil; S:Refresh()
-openSnapshot()
-local scroll=A.Settings.scroll
-check(A.Settings.range>0 and A.Settings.content:GetHeight()>emptyHeight,"Saved equipment extends the settings scroll instead of adding a separate menu")
-scroll:SetVerticalScroll(A.Settings.range)
-local _,lastY,_,lastH=panel.rows[19]:GetRect()
-local _,scrollY,_,scrollH=scroll:GetRect()
-check(lastY>=scrollY and lastY+lastH<=scrollY+scrollH,"Last equipment row reachable without paging")
-scroll:SetVerticalScroll(0)
-print("PASS: "..checks.." snapshot checks; manual capture, unenchanted scores, immutable raw data, Gear settings integration, partial data and continuous scrolling.")
+print("PASS: "..checks.." snapshot checks; gear collection, unenchanted scores, immutable data, partial data and offline persistence.")

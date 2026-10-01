@@ -131,7 +131,7 @@ local function record(id,name,kind,locations)
     return {id=id,npc={name=name,kind=kind,min=20,max=22,locations={[1436]=locations}}}
 end
 local fixture={record(1,"Rare neighbour","rare",{{2.9,10},{3,10}}),
-    record(2,"Elite neighbour","elite",{{5.1,10}}),record(3,"Far away","danger",{{70,70}})}
+    record(2,"Elite neighbour","elite",{{3.9,10}}),record(3,"Far away","danger",{{70,70}})}
 M.Records=function() return fixture end
 mapID=1436; scale=1; canvas:SetSize(1000,1000)
 map:OnCanvasSizeChanged()
@@ -152,3 +152,18 @@ for i=1,12 do fixture[i]=record(i,"Grouped NPC "..i,"rare",{{30+i/100,30}}) end
 M:RefreshPins(); M:Tooltip(M.pins[1])
 assert(GameTooltip.lines[13]:find("Grouped NPC 12",1,true),"Combined tooltip includes every NPC")
 M.Records=records
+
+-- Close chains cannot merge an entire camp; all members must fit the radius.
+M.Records=function() return {record(1,"A","rare",{{10,10}}),record(2,"B","rare",{{11,10}}),record(3,"C","rare",{{12,10}})} end
+scale=1
+assert(#M:Clusters(1436)==2,"No transitive chain clustering")
+local previousTexture=C_Texture
+C_Texture={GetAtlasInfo=function(name) return {width=32,height=32} end}
+for _,p in ipairs(M.pins) do p.icon.SetAtlas=function(self,name) self.testAtlas=name end end
+M.Records=function() return {record(1,"Rare","rare",{{10,10}}),record(2,"Elite","elite",{{40,40}}),record(3,"Danger","danger",{{70,70}}),record(4,"Boss","boss",{{90,90}})} end
+M:RefreshPins()
+assert(M.pins[1].icon.testAtlas=="nameplates-icon-elite-silver")
+assert(M.pins[2].icon.testAtlas=="nameplates-icon-elite-gold")
+assert(M.pins[3].icon.testAtlas=="services-icon-warning")
+assert(M.pins[4].icon.texture=="Interface\\TargetingFrame\\UI-TargetingFrame-Skull")
+C_Texture=previousTexture; M.Records=records

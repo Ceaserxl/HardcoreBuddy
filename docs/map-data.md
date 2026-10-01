@@ -25,10 +25,13 @@ the Open zone map / Follow current zone buttons remain in the advisor.
 - Browse zones uses one scrollable list; Follow current zone resumes tracking
   your location. Hover map pins for names, levels, classifications and notes.
 
-Custom artwork lives in `Media/MapMarkers` as 128 x 128 RGBA TGA textures.
-It was created with the built-in image generation tool; the exact prompts are
-saved in [prompts.json](../Media/MapMarkers/prompts.json). The original alpha is
-preserved during downsampling and conversion; there is no square background.
+Markers use native Classic assets: `nameplates-icon-elite-silver`,
+`nameplates-icon-elite-gold`, `services-icon-warning`, and
+`Interface/TargetingFrame/UI-TargetingFrame-Skull`. Atlas availability is checked
+before use; native texture fallbacks handle missing atlases. Classic atlas names
+are recorded in the [client atlas catalogue](https://github.com/Hoizame/WoW_ClassicUIResources/blob/master/RawData/UiTextureAtlasElement.lua).
+Icons remain 18 pixels at different map zoom levels. Clusters use a 12-pixel
+maximum distance between all members, preventing transitive chains.
 
 Reveal uses independent textures behind native explored overlays. Discovering an
 area naturally removes its extra tint. It never changes exploration flags,

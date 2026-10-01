@@ -4,14 +4,22 @@ local M={pins={},exploration={},hooks={},notified={}}; A.MapAdvisor=M
 local colors={danger={1,0.3,0.2},rare={0.75,0.85,1},elite={1,0.7,0.2},boss={0.9,0.3,1}}
 local names={danger="Dangerous",rare="Rare",elite="Elite",boss="World boss"}
 local icons={
-    danger="Interface\\AddOns\\HardcoreBuddy\\Media\\MapMarkers\\Danger.tga",
-    rare="Interface\\AddOns\\HardcoreBuddy\\Media\\MapMarkers\\Rare.tga",
-    elite="Interface\\AddOns\\HardcoreBuddy\\Media\\MapMarkers\\Elite.tga",
-    boss="Interface\\AddOns\\HardcoreBuddy\\Media\\MapMarkers\\Boss.tga",
+    danger={atlas="services-icon-warning",fallback="Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew"},
+    rare={atlas="nameplates-icon-elite-silver",fallback="Interface\\TargetingFrame\\UI-TargetingFrame-Skull"},
+    elite={atlas="nameplates-icon-elite-gold",fallback="Interface\\TargetingFrame\\UI-TargetingFrame-Skull"},
+    boss={fallback="Interface\\TargetingFrame\\UI-TargetingFrame-Skull"},
 }
-local function iconLabel(kind) return "|T"..icons[kind]..":18:18:0:0|t "..names[kind] end
+local function atlasFor(kind)
+    local atlas=icons[kind].atlas
+    local lookup=C_Texture and C_Texture.GetAtlasInfo or GetAtlasInfo
+    return atlas and lookup and lookup(atlas) and atlas
+end
+local function iconLabel(kind)
+    local atlas=atlasFor(kind)
+    return (atlas and ("|A:"..atlas..":18:18|a") or ("|T"..icons[kind].fallback..":18:18:0:0|t")).." "..names[kind]
+end
 local priority={danger=2,rare=1,elite=3,boss=4}
-local PIN_SIZE,CLUSTER_RADIUS=18,28
+local PIN_SIZE,CLUSTER_RADIUS=18,12
 local function action(command,id) return {kind="mapAdvisor",command=command,id=id} end
 local function row(title,body,command,id) return {title=title,body=body,action=command and action(command,id)} end
 
@@ -53,46 +61,35 @@ function M:Records(id)
 end
 
 function M:Clusters(id)
-    -- Screen-distance grouping joins neighbours across grid boundaries. The
-    -- grid only limits distance checks; connected points share one tooltip.
+    -- Every point must be close to every other point in its group. Nearby
+    -- chains cannot pull a whole camp into one marker.
     local map=WorldMapFrame
     local canvas=map and map.GetCanvas and map:GetCanvas()
     local scale=map and map.GetCanvasScale and map:GetCanvasScale() or 1
     local width=(canvas and canvas:GetWidth() or 1002)*scale
     local height=(canvas and canvas:GetHeight() or 668)*scale
-    local points,buckets={},{}
-    local function root(point)
-        while point.parent~=point do point.parent=point.parent.parent; point=point.parent end
-        return point
-    end
+    local clusters={}
     for _,record in ipairs(self:Records(id)) do
         for _,xy in ipairs(record.npc.locations[id] or {}) do
-            local p={x=xy[1]/100,y=xy[2]/100,record=record}
-            p.px=p.x*width; p.py=p.y*height; p.parent=p
-            local gx,gy=math.floor(p.px/CLUSTER_RADIUS),math.floor(p.py/CLUSTER_RADIUS)
-            for x=gx-1,gx+1 do for y=gy-1,gy+1 do
-                for _,near in ipairs(buckets[x..":"..y] or {}) do
-                    local dx,dy=p.px-near.px,p.py-near.py
-                    if dx*dx+dy*dy<=CLUSTER_RADIUS*CLUSTER_RADIUS then root(near).parent=root(p) end
+            local px,py=xy[1]/100*width,xy[2]/100*height
+            local cell
+            for _,candidate in ipairs(clusters) do
+                local fits=true
+                for _,point in ipairs(candidate.points) do
+                    local dx,dy=px-point[1],py-point[2]
+                    if dx*dx+dy*dy>CLUSTER_RADIUS*CLUSTER_RADIUS then fits=false; break end
                 end
-            end end
-            local key=gx..":"..gy
-            buckets[key]=buckets[key] or {}; buckets[key][#buckets[key]+1]=p
-            points[#points+1]=p
+                if fits then cell=candidate; break end
+            end
+            if not cell then
+                cell={x=0,y=0,count=0,records={},seen={},points={},kind=record.npc.kind}
+                clusters[#clusters+1]=cell
+            end
+            cell.points[#cell.points+1]={px,py}
+            cell.x=cell.x+xy[1]/100; cell.y=cell.y+xy[2]/100; cell.count=cell.count+1
+            if not cell.seen[record.id] then cell.records[#cell.records+1]=record; cell.seen[record.id]=true end
+            if priority[record.npc.kind]>priority[cell.kind] then cell.kind=record.npc.kind end
         end
-    end
-    local clusters,byRoot={},{}
-    for _,p in ipairs(points) do
-        local key=root(p); local cell=byRoot[key]; local record=p.record
-        if not cell then
-            cell={x=0,y=0,count=0,records={},seen={},kind=record.npc.kind}
-            byRoot[key]=cell; clusters[#clusters+1]=cell
-        end
-        cell.x=cell.x+p.x; cell.y=cell.y+p.y; cell.count=cell.count+1
-        if not cell.seen[record.id] then
-            cell.records[#cell.records+1]=record; cell.seen[record.id]=true
-        end
-        if priority[record.npc.kind]>priority[cell.kind] then cell.kind=record.npc.kind end
     end
     for _,cell in ipairs(clusters) do
         cell.x=cell.x/cell.count; cell.y=cell.y/cell.count
@@ -150,7 +147,11 @@ function M:RefreshPins()
             pin:SetScript("OnLeave",function() GameTooltip:Hide() end)
             pin:SetScript("OnHide",function(p) if GameTooltip.IsOwned and GameTooltip:IsOwned(p) then GameTooltip:Hide() end end)
         end
-        pin.cluster=cluster; pin.icon:SetTexture(icons[cluster.kind]); pin:Show()
+        pin.cluster=cluster
+        local atlas=atlasFor(cluster.kind)
+        if atlas and pin.icon.SetAtlas then pin.icon:SetAtlas(atlas,false)
+        else pin.icon:SetTexture(icons[cluster.kind].fallback) end
+        pin:Show()
     end
     self:PlacePins()
 end

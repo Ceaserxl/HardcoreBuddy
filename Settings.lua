@@ -1,5 +1,5 @@
 local _,A=...
-local S={sections={"General","Gear Advisor","Talent Advisor","Auction House","Death Alerts","Low Health","NPC Alerts","Map"}}
+local S={sections={"General","Gear Advisor","Talent Advisor","Auction House","Death Alerts","Low Health","NPC Alerts","Map","Debug"}}
 A.Settings=S
 local Skin=A.Skin
 local aliases={["Death Banner"]="Death Alerts",Rares="NPC Alerts",Elites="NPC Alerts",Preparation="General"}
@@ -37,6 +37,7 @@ end
 
 function S:OpenGearPage(page)
     A:CommitInputs()
+    if page=="Gear Snapshot" then A:OpenSettings("Debug"); return end
     A.state.gearPage=page
     A:Refresh(true)
 end
@@ -62,9 +63,9 @@ function S:Create(parent)
     end)
     scroll:SetScript("OnHide",function() self:CommitInputs() end)
     self.pages={}
-    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","Gear Snapshot","NPC Alerts"}) do
+    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","NPC Alerts","Debug"}) do
         local page=CreateFrame("Frame",nil,content); page:SetAllPoints(content); page:Hide(); self.pages[name]=page
-        if name~="Gear Snapshot" then label(page,name,22,20,18,700):SetTextColor(unpack(Skin.colors.gold)) end
+        label(page,name,22,20,18,700):SetTextColor(unpack(Skin.colors.gold))
     end
     local general=self.pages.General
     label(general,"Window, access and field kit notifications.",13,20,56,700)
@@ -102,8 +103,8 @@ function S:Create(parent)
     end)
     label(gear,"Auto-equip waits until you are out of combat and preserves equipped quest items, including off-hand items. Quest gear stays under your control.",12,20,306,700)
     gear.openWeights=button(gear,"Stat Weights",364,function() self:OpenGearPage("Stat Weights") end)
-    gear.openSnapshot=button(gear,"Gear Snapshot",412,function() self:OpenGearPage("Gear Snapshot") end)
-    gear.contentHeight=462
+    gear.contentHeight=412
+    A.DebugDump:Create(self.pages.Debug)
     local weightsPage=self.pages["Stat Weights"]
     weightsPage.profile=label(weightsPage,"",14,20,52,700)
     label(weightsPage,"Saved for this character's scoring profile. Use 0 to ignore a stat. Enter to save; Escape to cancel.",12,20,84,700)
@@ -191,12 +192,10 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local scale=math.min(1,(width-22)/760)
     local contentWidth=(width-22)/scale
     local pageName=section
-    if section=="Gear Advisor" and (A.state.gearPage=="Stat Weights" or A.state.gearPage=="Gear Snapshot") then pageName=A.state.gearPage end
+    if section=="Gear Advisor" and A.state.gearPage=="Stat Weights" then pageName=A.state.gearPage end
     local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 440
     if section=="Death Alerts" then contentHeight=892 end
-    if pageName=="Gear Snapshot" then
-        contentHeight=18+A.GearSnapshot:Layout(self.pages["Gear Snapshot"],18)+20
-    end
+    if pageName=="Debug" then A.DebugDump:Refresh() end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.scroll:SetSize(width-22,height)
     self.content:SetScale(scale); self.content:SetSize(contentWidth,math.max(contentHeight,height/scale))
