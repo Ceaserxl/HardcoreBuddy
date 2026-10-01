@@ -1,5 +1,7 @@
 # Unreleased
 
+- Auction upgrade hovers now show equipped-item comparisons automatically,
+  without requiring Shift.
 - Added saved diagnostics for skipped auction listings, including the precise
   failure stage, item and equipped comparison data, and retry timing. Open the
   copyable report with Scan details or `/hcb auction debug`.

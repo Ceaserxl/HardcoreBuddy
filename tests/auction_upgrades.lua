@@ -313,12 +313,12 @@ local function nativeTooltipTick()
 end
 local hovered=U.rows[1]
 hovered.scripts.OnEnter(hovered)
-check(not ShoppingTooltip1:IsShown(),"Unmodified hover leaves comparisons hidden")
+check(ShoppingTooltip1:IsShown() and ShoppingTooltip2:IsShown(),"Unmodified hover shows equipped comparisons even with always-compare disabled")
 shift=true; nativeTooltipTick()
 check(ShoppingTooltip1:IsShown() and ShoppingTooltip2:IsShown(),"Pressing Shift while hovered opens equipped comparisons")
 check(ShoppingTooltip1.comparedLink==GameTooltip.link,"Compares the hovered upgrade's exact item link")
 shift=false; nativeTooltipTick()
-check(not ShoppingTooltip1:IsShown() and GameTooltip:IsShown(),"Releasing Shift hides only comparisons")
+check(ShoppingTooltip1:IsShown() and GameTooltip:IsShown(),"Releasing Shift keeps automatic comparisons visible")
 shift=true; hovered.scripts.OnLeave(hovered); hovered.scripts.OnEnter(hovered)
 check(ShoppingTooltip1:IsShown(),"Holding Shift before hovering also works")
 hovered.scripts.OnLeave(hovered)
@@ -326,7 +326,7 @@ check(not GameTooltip:IsShown() and not ShoppingTooltip2:IsShown(),"Leaving a ro
 shift=false; always=true; hovered.scripts.OnEnter(hovered)
 check(ShoppingTooltip1:IsShown(),"Respects the native always-compare preference")
 equipped=true; nativeTooltipTick()
-check(not ShoppingTooltip1:IsShown(),"Always-compare skips already equipped items like the native tooltip")
+check(ShoppingTooltip1:IsShown(),"Equipped entries also request native comparisons without Shift")
 shift=true; nativeTooltipTick(); check(ShoppingTooltip1:IsShown(),"Explicit Shift still compares an equipped item")
 equipped=false; always=false
 local previousLink=GameTooltip.link

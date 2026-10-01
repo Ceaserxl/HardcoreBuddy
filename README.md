@@ -70,6 +70,8 @@ the native auction-tab style and works without any other auction addon.
   slots. Results scroll continuously, with no paging controls.
 - Clear item cards separate score changes, listing prices, buyouts and bids.
   **Find auctions** opens the normal Browse search; it does not buy the item.
+- Hover an upgrade to see currently equipped items automatically, without
+  holding Shift or changing your global tooltip settings.
 - **Compare weapons** compares both complete weapon setups, with their combined
   price and individual components available under **View items**.
 - Scan progress stays visible while browsing. Empty states distinguish slots

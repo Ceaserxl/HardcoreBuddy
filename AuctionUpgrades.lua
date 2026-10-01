@@ -95,12 +95,9 @@ end
 
 function U:UpdateTooltipComparison(row)
     if GameTooltip:GetOwner()~=row or not GameTooltip:IsShown() then return end
-    local compare=IsModifiedClick and IsModifiedClick("COMPAREITEMS")
-    local always=GetCVarBool and GetCVarBool("alwaysCompareItems")
-    local equipped=GameTooltip.IsEquippedItem and GameTooltip:IsEquippedItem()
-    if compare or (always and not equipped) then
-        if GameTooltip_ShowCompareItem then GameTooltip_ShowCompareItem(GameTooltip) end
-    else hideComparisons() end
+    -- These rows are explicitly for comparing upgrades. Show equipped items
+    -- automatically, without changing the player's global tooltip preference.
+    if GameTooltip_ShowCompareItem then GameTooltip_ShowCompareItem(GameTooltip) end
 end
 
 function U:Stop(message)
@@ -363,8 +360,8 @@ function U:Refresh()
         or "Higher score: "..(bestTwo.score>bestPair.score and "Two-handed" or "1H + off hand")) or "Both hands compared together"
     self.hint:SetText(self.setup and (change(self.setup).." for both hands"..(self.setup.emptyOff and " | Off hand stays empty" or ""))
         or weaponView and (#list.." setups | Score change includes both hands")
-        or self.slot and (#list.." upgrades | Best score first | Hold Shift to compare")
-        or self.weaponsOnly and advice or "Choose a slot to see all upgrades. Hold Shift to compare.")
+        or self.slot and (#list.." upgrades | Best score first | Hover to compare equipped gear")
+        or self.weaponsOnly and advice or "Choose a slot for all upgrades. Hover to compare equipped gear.")
     self.status:SetText(self.message or "Start a scan to find upgrades. You can browse results as they arrive.")
     local diagnostics=A.characterDB and A.characterDB.auctionDiagnostics
     self.diagnosticsButton:SetShown(diagnostics~=nil)
@@ -494,7 +491,7 @@ function U:Attach()
         local row=CreateFrame("Button",nil,panel,"BackdropTemplate"); self.rows[i]=row
         row.hardcoreBuddyAuctionRow=true
         -- The native GameTooltip OnUpdate calls its owner's UpdateTooltip.
-        -- This handles pressing/releasing Shift after the mouse has entered.
+        -- Keep equipped comparisons visible while the mouse remains here.
         row.UpdateTooltip=function(self) U:UpdateTooltipComparison(self) end
         row:SetPoint("TOPLEFT",204,-138-(i-1)*38); row:SetSize(558,36); Skin.Paint(row,"row")
         row:SetBackdropColor(i%2==0 and 0.055 or 0.04,i%2==0 and 0.075 or 0.055,i%2==0 and 0.09 or 0.07,1)
