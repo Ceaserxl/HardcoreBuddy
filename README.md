@@ -68,6 +68,11 @@ the native auction-tab style and works without any other auction addon.
 - Click a slot to browse all its upgrades in one continuously scrollable list.
 - Includes every usable armor material, jewelry and weapons, using the same
   scoring profile and percentages as HardcoreBuddy's gear tooltips.
+- Searches one equipment slot at a time, finishing its pages before moving on.
+- The checkbox under **Scan upgrades** restricts body armor to your class's
+  highest armor type for its level (for example, **Mail armor only** for hunters
+  at level 40+). Off by default and saved per character. Jewelry, cloaks, shields,
+  held off-hands and weapons remain eligible. Changing it requires a fresh scan.
 - Shows listing prices, merges duplicate item variants using their cheapest
   buyout (or next bid), and keeps different random suffixes separate.
 - Click an alternative to search for its auctions in the normal Browse tab.

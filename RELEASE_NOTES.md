@@ -1,5 +1,8 @@
 # Unreleased
 
+- Auction upgrades now scan individual equipment slots in sequence. Added a
+  saved per-character checkbox under Scan upgrades to restrict body armor to the
+  class-and-level armor type, while retaining jewelry, cloaks and weapon setups.
 - Fixed Shift-hover equipped-item comparisons on auction upgrades and weapon
   setup components, including modifier changes while already hovering.
 - Fixed weapon percentage mismatches by preserving each profile's DPS weight and

@@ -30,11 +30,25 @@ end
 local queries,ready,pending={},true,false
 local auctions,total={},0
 local pages={}
+local inventoryTypes={INVTYPE_HEAD=1,INVTYPE_NECK=2,INVTYPE_SHOULDER=3,INVTYPE_CHEST=5,INVTYPE_ROBE=20,
+    INVTYPE_WAIST=6,INVTYPE_LEGS=7,INVTYPE_FEET=8,INVTYPE_WRIST=9,INVTYPE_HAND=10,INVTYPE_FINGER=11,
+    INVTYPE_TRINKET=12,INVTYPE_CLOAK=16,INVTYPE_WEAPON=13,INVTYPE_WEAPONMAINHAND=21,INVTYPE_WEAPONOFFHAND=22,
+    INVTYPE_SHIELD=14,INVTYPE_HOLDABLE=23,INVTYPE_2HWEAPON=17,INVTYPE_RANGED=15,INVTYPE_THROWN=25,INVTYPE_RANGEDRIGHT=26}
 function CanSendAuctionQuery() return ready end
 function QueryAuctionItems(name,min,max,page,usable,quality,all,exact,filters)
     queries[#queries+1]={name=name,min=min,max=max,page=page,usable=usable,all=all,exact=exact,filters=filters}
     if filters then
-        local data=pages[filters[1].classID] or {}
+        local data={}
+        for _,class in ipairs({4,2}) do
+            for _,listing in ipairs(pages[class] or {}) do
+                for _,filter in ipairs(filters) do
+                    if class==filter.classID and inventoryTypes[listing.item.equip]==filter.inventoryType
+                        and (not filter.subClassID or listing.item.subclassID==filter.subClassID) then
+                        data[#data+1]=listing; break
+                    end
+                end
+            end
+        end
         auctions={}; total=#data
         for i=page*50+1,math.min(#data,(page+1)*50) do auctions[#auctions+1]=data[i] end
     end
@@ -86,8 +100,9 @@ pages[2]={{item=sword,buyout=12345}}
 ready=false; U:Start(); tick()
 check(#queries==0 and U.scan.phase=="query","Respects server query throttle")
 ready=true; finish()
-check(U.complete and #queries==3,"Scans both categories and every server page")
-check(queries[1].filters[1].classID==4 and queries[2].page==1 and queries[3].filters[1].classID==2,"Armor and weapon query filters correct")
+check(U.complete and #queries==17,"Scans sixteen slot groups and every server page")
+check(queries[1].filters[1].inventoryType==1 and queries[2].page==1 and queries[3].filters[1].inventoryType==2,
+    "Finishes every head page before starting neck, with no broad armor query")
 for _,q in ipairs(queries) do check(q.max==40 and q.usable and not q.all,"Only level-appropriate usable listings, no full-dump query") end
 check(#U.results[1]==3,"Only upgrades, with duplicates and unusable items removed")
 check(U.results[1][1].link==best.link and U.results[1][1].buyout==5000,"Best percentage first; duplicate keeps cheapest buyout")
@@ -97,6 +112,7 @@ check(U.results[1][3].link==good.link,"Cloth upgrade compared against equipped m
 check(U.results[1][2].link==suffix.link,"Different random suffixes of the same item remain separate")
 check(U.results[11][1].percent==nil and U.results[12][1].percent==nil,"Empty ring slots get no fabricated percentage")
 check(U.results[16] and U.results[17],"Dual-wield weapon compared in both hand slots")
+check(U.results.paired[1].emptyOff,"A shared one-handed listing is scanned only once, not counted as two purchasable copies")
 check(#U.rows==7 and #U.display==17,"Reuses seven rows for the continuous slot list")
 MOCK.Click(U.rows[1])
 check(U.slot==1 and #U.display==3 and U.display[1].link==best.link,"Slot opens every upgrade sorted descending")
@@ -251,4 +267,46 @@ local previous=compareCalls; part:UpdateTooltip(); part.scripts.OnLeave(part)
 check(GameTooltip:IsShown() and compareCalls==previous,"Does not update or hide another frame's tooltip")
 part.scripts.OnEnter(part); AuctionFrameTab_OnClick(AuctionFrameTab1)
 check(not GameTooltip:IsShown() and not ShoppingTooltip1:IsShown(),"Leaving the auction upgrades tab clears comparisons")
+
+shift=false; always=false
+AuctionFrameTab_OnClick(U.tab); F.reset("HUNTER",40,{31,0,0}); F.equip(1,old)
+check(not A.characterDB.auctionHighestArmorOnly,"Highest-only filter defaults off")
+local mail=F.item("INVTYPE_HEAD",{ITEM_MOD_AGILITY_SHORT=25},4,3)
+local robe=F.item("INVTYPE_ROBE",{ITEM_MOD_AGILITY_SHORT=5},4,1)
+local chest=F.item("INVTYPE_CHEST",{ITEM_MOD_AGILITY_SHORT=5},4,3)
+local cloak=F.item("INVTYPE_CLOAK",{ITEM_MOD_AGILITY_SHORT=5},4,1)
+local neck=F.item("INVTYPE_NECK",{ITEM_MOD_AGILITY_SHORT=5},4,0)
+local trinket=F.item("INVTYPE_TRINKET",{ITEM_MOD_AGILITY_SHORT=5},4,0)
+pages[4]={{item=good},{item=best},{item=mail},{item=robe},{item=chest},{item=cloak},{item=neck},{item=ring},{item=trinket},{item=held}}
+pages[2]={{item=sword,buyout=300}}
+U.armorOnly:SetChecked(true); MOCK.Click(U.armorOnly)
+check(A.characterDB.auctionHighestArmorOnly and U.armorOnly.label:GetText()=="Mail armor only","Checkbox saves per-character preference and labels hunter armor correctly")
+local queryStart=#queries
+U:Start(); finish()
+check(#queries-queryStart==16,"Each slot group scans separately, including shared rings/trinkets only once")
+check(#U.results[1]==1 and U.results[1][1].link==mail.link,"Highest-only hunter search excludes cloth and leather armor")
+check(#U.results[5]==1 and U.results[5][1].link==chest.link,"Highest-only chest search excludes cloth robes")
+check(U.results[15] and U.results[2] and U.results[11] and U.results[12] and U.results[13] and U.results[14],
+    "Cloth cloaks, necks, both rings and both trinkets remain available")
+check(#U.results.paired>0 and #U.results.paired[1].components==2,"Weapons and held off-hands survive the material filter")
+check(queries[queryStart+1].filters[1].subClassID==3 and queries[queryStart+2].filters[1].subClassID==nil,
+    "Armor subclass filtering happens server-side and never applies to jewelry")
+U.armorOnly:SetChecked(false); U:Refresh()
+check(U.armorOnly:GetChecked(),"Refreshing the UI restores the saved checkbox preference")
+U.armorOnly:SetChecked(false); MOCK.Click(U.armorOnly); U:Start(); finish()
+check(#U.results[1]==3 and #U.results[5]==2,"Unchecking restores cross-material armor and chest/robe variants")
+U:Start(); tick(); U.armorOnly:SetChecked(true); MOCK.Click(U.armorOnly)
+check(not U.scan and not next(U.results) and U.message:find("Armor filter changed"),"Changing filters mid-scan cancels and discards mixed results")
+for class,expected in pairs({HUNTER={2,3},SHAMAN={2,3},WARRIOR={3,4},PALADIN={3,4},
+    ROGUE={2,2},DRUID={2,2},MAGE={1,1},PRIEST={1,1},WARLOCK={1,1}}) do
+    check(G.HighestArmorSubclass({class=class,level=39})==expected[1]
+        and G.HighestArmorSubclass({class=class,level=40})==expected[2],"Highest armor follows Classic class and level: "..class)
+end
+F.reset("HUNTER",39,{30,0,0}); U:Refresh()
+check(U.armorOnly.label:GetText()=="Leather armor only","Hunter below 40 uses leather")
+MOCK.level=40; U:Refresh()
+check(U.armorOnly.label:GetText()=="Mail armor only","Armor label updates when mail unlocks")
+local _,sy,_,sh=U.start:GetRect(); local _,cy,_,ch=U.armorOnly:GetRect(); local _,wy=U.weaponButton:GetRect()
+check(cy>=sy+sh and cy+ch<wy,"Checkbox fits directly below Scan upgrades without overlapping Weapon setups")
+U.armorOnly:SetChecked(false); MOCK.Click(U.armorOnly)
 print("PASS: "..checks.." auction upgrade assertions")

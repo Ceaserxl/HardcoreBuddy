@@ -315,6 +315,12 @@ function G:Read(link,inventorySlot,allowUnscored)
         blockValueComplete=blockComplete}
 end
 
+function G.HighestArmorSubclass(p)
+    local max=armorMax[p.class] or 1
+    if p.level>=40 and (p.class=="WARRIOR" or p.class=="PALADIN" or p.class=="HUNTER" or p.class=="SHAMAN") then max=max+1 end
+    return max
+end
+
 function G.Allowed(item,p)
     if item.required>p.level then return false,"Requires level "..item.required end
     if item.classID==2 then
@@ -322,8 +328,7 @@ function G.Allowed(item,p)
         for _,id in ipairs(weaponTypes[p.class] or {}) do if id==item.subclassID then allowed=true end end
         if not allowed then return false,"Not usable by your class" end
     else
-        local max=armorMax[p.class] or 1
-        if p.level>=40 and (p.class=="WARRIOR" or p.class=="PALADIN" or p.class=="HUNTER" or p.class=="SHAMAN") then max=max+1 end
+        local max=G.HighestArmorSubclass(p)
         if item.subclassID==6 then
             if p.class~="WARRIOR" and p.class~="PALADIN" and p.class~="SHAMAN" then return false,"Cannot use shields" end
         elseif item.subclassID>max then return false,"Armor type not available" end

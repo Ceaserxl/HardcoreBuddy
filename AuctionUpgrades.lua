@@ -5,7 +5,33 @@ local slots={1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18}
 local names={[1]="Head",[2]="Neck",[3]="Shoulders",[5]="Chest",[6]="Waist",[7]="Legs",[8]="Feet",
     [9]="Wrists",[10]="Hands",[11]="Ring 1",[12]="Ring 2",[13]="Trinket 1",[14]="Trinket 2",
     [15]="Back",[16]="Main hand",[17]="Off hand",[18]="Ranged",twoHand="Two-handed",paired="1H + off hand"}
-local classes={4,2} -- Armor (including jewelry), then weapons; all usable materials.
+-- Auction inventory types differ from equipment-slot IDs. Shared ring/trinket
+-- slots and generic one-handed weapons are queried once, then compared in both
+-- eligible slots; duplicate queries would inflate available weapon copies.
+local searches={
+    {"Head",true,{4,1}}, {"Neck",false,{4,2}}, {"Shoulders",true,{4,3}},
+    {"Chest",true,{4,5},{4,20}}, {"Waist",true,{4,6}}, {"Legs",true,{4,7}},
+    {"Feet",true,{4,8}}, {"Wrists",true,{4,9}}, {"Hands",true,{4,10}},
+    {"Rings",false,{4,11}}, {"Trinkets",false,{4,12}}, {"Back",false,{4,16}},
+    {"Main hand",false,{2,13},{2,21}}, {"Off hand",false,{2,22},{4,14},{4,23}},
+    {"Two-handed",false,{2,17}}, {"Ranged",false,{2,15},{2,25},{2,26}},
+}
+local armorSlots={INVTYPE_HEAD=true,INVTYPE_SHOULDER=true,INVTYPE_CHEST=true,INVTYPE_ROBE=true,
+    INVTYPE_WAIST=true,INVTYPE_LEGS=true,INVTYPE_FEET=true,INVTYPE_WRIST=true,INVTYPE_HAND=true}
+local armorNames={"Cloth","Leather","Mail","Plate"}
+
+function U:SearchQueue(highestArmor)
+    local queue={}
+    for _,search in ipairs(searches) do
+        local entry={name=search[1],filters={}}
+        for i=3,#search do
+            entry.filters[#entry.filters+1]={classID=search[i][1],inventoryType=search[i][2],
+                subClassID=search[2] and highestArmor or nil}
+        end
+        queue[#queue+1]=entry
+    end
+    return queue
+end
 local function now() return GetTime() end
 local function profileKey(p)
     return p and table.concat({p.class,p.level,p.id or p.name,tostring(p.manual)},":")
@@ -82,7 +108,9 @@ function U:Start()
     self.results={}; self.slot=nil; self.setup=nil; self.offset=0; self.complete=false; self.stale=false
     self.weaponBaseline=weapons.baseline
     self.profile=p; self.profileKey=profileKey(p)
-    self.scan={class=1,page=0,phase="query",since=now(),seen=0,skipped=0,cache={},weapons=weapons}
+    local highest=A.characterDB and A.characterDB.auctionHighestArmorOnly and G.HighestArmorSubclass(p) or nil
+    self.scan={search=1,queue=self:SearchQueue(highest),highestArmor=highest,page=0,phase="query",since=now(),
+        seen=0,skipped=0,cache={},weapons=weapons}
     self.message="Waiting for the auction house..."; self:Refresh()
 end
 
@@ -124,6 +152,9 @@ function U:ReadAuction(index)
         if reason=="unsupported" then scan.cache[link]=false; return true end
         if not item then return false end
         if not G.Allowed(item,self.profile) then scan.cache[link]=false; return true end
+        if scan.highestArmor and armorSlots[item.equip] and item.subclassID~=scan.highestArmor then
+            scan.cache[link]=false; return true
+        end
         local rows=G:Comparisons(item,self.profile)
         for _,row in ipairs(rows) do
             -- Structural exclusions (unique items / two-handed constraints)
@@ -148,10 +179,11 @@ function U:Tick()
         if now()-scan.since>30 then self:Stop("Auction house busy. Results are partial; scan again."); return end
         if not CanSendAuctionQuery("list") then return end
         scan.phase="waiting"; scan.since=now()
-        self.message=string.format("Scanning %s | page %d | %d auctions checked",scan.class==1 and "armor" or "weapons",scan.page+1,scan.seen)
+        local search=scan.queue[scan.search]
+        self.message=string.format("Scanning %s (%d/%d) | page %d | %d auctions checked",search.name,scan.search,#scan.queue,scan.page+1,scan.seen)
         self:Refresh()
         self.sending=true
-        QueryAuctionItems("",nil,self.profile.level,scan.page,true,nil,false,false,{{classID=classes[scan.class]}})
+        QueryAuctionItems("",nil,self.profile.level,scan.page,true,nil,false,false,search.filters)
         self.sending=false
     elseif scan.phase=="waiting" then
         if now()-scan.since>20 then self:Stop("Auction response timed out. Results are partial; scan again.") end
@@ -162,8 +194,8 @@ function U:Tick()
             if scan.index>batch then
                 scan.seen=scan.seen+batch
                 if batch>0 and (scan.page+1)*50<total then scan.page=scan.page+1
-                else scan.class=scan.class+1; scan.page=0 end
-                if scan.class>#classes then
+                else scan.search=scan.search+1; scan.page=0 end
+                if scan.search>#scan.queue then
                     scan.phase="weapons"; scan.worker=coroutine.create(function() return scan.weapons:Build() end)
                     self.message="Comparing two-handed and main-hand/off-hand setups..."; self:Refresh()
                 else scan.phase="query"; scan.since=now(); self:Refresh() end
@@ -250,6 +282,9 @@ function U:Refresh()
     self.back:SetShown(self.slot~=nil or self.weaponsOnly)
     self.weaponButton:SetShown(not self.slot and not self.weaponsOnly)
     local p=self.profile or G:CurrentProfile()
+    local armorProfile=G:CurrentProfile()
+    self.armorOnly:SetChecked(A.characterDB and A.characterDB.auctionHighestArmorOnly==true)
+    self.armorOnly.label:SetText(armorProfile and (armorNames[G.HighestArmorSubclass(armorProfile)].." armor only") or "Highest armor only")
     self.subtitle:SetText((p and (p.name.." | Level "..p.level) or "Waiting for character data").." | Equipped gear comparisons")
     local weaponView=self.slot=="paired" or self.slot=="twoHand"
     self.heading:SetText(self.setup and ("Both hands vs equipped: "..change(self.setup).." | Score "..string.format("%.1f",self.setup.score))
@@ -307,6 +342,17 @@ function U:Attach()
     label(panel,"HardcoreBuddy Upgrades",14,-8,440,Skin.colors.gold,16)
     self.subtitle=label(panel,"",14,-31,610,Skin.colors.muted,11)
     self.start=button(panel,"Scan upgrades",130,function() U:Start() end); self.start:SetPoint("TOPRIGHT",-14,-12)
+    self.armorOnly=CreateFrame("CheckButton",nil,panel,"UICheckButtonTemplate")
+    self.armorOnly:SetSize(18,18); self.armorOnly:SetPoint("TOPLEFT",self.start,"BOTTOMLEFT",0,0)
+    self.armorOnly.label=label(self.armorOnly,"Highest armor only",20,0,112,Skin.colors.muted,10)
+    self.armorOnly.label:SetHeight(18)
+    self.armorOnly:SetScript("OnClick",function(self)
+        if not A.characterDB then return end
+        A.characterDB.auctionHighestArmorOnly=not not self:GetChecked()
+        U.results={}; U.slot=nil; U.setup=nil; U.offset=0; U.profile=nil; U.weaponBaseline=nil
+        U.complete=false; U.stale=false
+        U:Stop("Armor filter changed. Scan upgrades to refresh results.")
+    end)
     self.heading=label(panel,"",14,-59,620,Skin.colors.gold)
     self.weaponButton=button(panel,"Weapon setups",130,function()
         U.weaponsOnly=true; U.offset=0; U:Refresh()
