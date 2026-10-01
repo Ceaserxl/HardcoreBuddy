@@ -1,5 +1,8 @@
 # Unreleased
 
+- Redesigned auction upgrades with persistent slot navigation, a focused best
+  upgrades overview, modern item cards, explicit bid/buyout labels, a scan
+  progress bar and clearer weapon comparisons and empty states.
 - Hovered auction upgrade tooltips and Shift comparisons now stay visible during
   scan updates and refresh when the item under the pointer changes.
 - Gear scoring now prefers displayed intrinsic attack-power and ranged

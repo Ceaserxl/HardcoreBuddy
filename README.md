@@ -64,8 +64,16 @@ offline review; `/reload` or log out to write it to disk.
 Open **Upgrades** at the auction house and click **Scan upgrades**. The tab uses
 the native auction-tab style and works without any other auction addon.
 
-- Shows the highest percentage upgrade found for each equipped slot.
-- Click a slot to browse all its upgrades in one continuously scrollable list.
+- **Best by slot** shows the strongest available recommendation for each slot,
+  without filling the overview with slots that have no upgrades.
+- A persistent slot picker opens all alternatives directly, including empty
+  slots. Results scroll continuously, with no paging controls.
+- Clear item cards separate score changes, listing prices, buyouts and bids.
+  **Find auctions** opens the normal Browse search; it does not buy the item.
+- **Compare weapons** compares both complete weapon setups, with their combined
+  price and individual components available under **View items**.
+- Scan progress stays visible while browsing. Empty states distinguish slots
+  that have not been scanned from those with no upgrades found.
 - Includes every usable armor material, jewelry and weapons, using the same
   scoring profile and percentages as HardcoreBuddy's gear tooltips.
 - Searches one equipment slot at a time, finishing its pages before moving on.
@@ -78,7 +86,7 @@ the native auction-tab style and works without any other auction addon.
 - Click an alternative to search for its auctions in the normal Browse tab.
   Confirm the exact item variant and current price there before purchasing.
 
-Use **Weapon setups** to compare **Two-handed** against **1H + off hand**. Both
+Use **Compare weapons** to compare **Two-handed** against **1H + off hand**. Both
 percentages use the total score of your currently equipped hands. The paired
 view considers replacing either item, replacing both, or reusing equipped gear;
 it includes shields, caster off-hands and dual-wield weapons where usable.

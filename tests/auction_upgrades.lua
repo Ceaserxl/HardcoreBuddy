@@ -82,6 +82,15 @@ MOCK.FireAll("AUCTION_HOUSE_SHOW"); tick(); check(U.tab==first,"No duplicate tab
 AuctionFrameTab_OnClick(U.tab)
 check(U.panel:IsShown() and not AuctionFrameBrowse:IsShown(),"Native click handler selects upgrades")
 check(clicks==1,"Existing native click handler remains intact")
+check(U.empty:IsShown() and U.emptyTitle:GetText()=="Find your next upgrade" and #U.display==0,
+    "First visit explains the workflow instead of showing seventeen empty result rows")
+local navigationCount=0
+for slot,tab in pairs(U.slotButtons) do
+    navigationCount=navigationCount+1
+    local tx,ty,tw,th=tab:GetRect(); local px,py=U.panel:GetRect()
+    check(tx>=px+14 and tx+tw<=px+188 and ty+th<=py+326,"Slot navigation fits in its own column")
+end
+check(navigationCount==17 and U.weaponButton:IsShown(),"All slots and weapon navigation remain available")
 
 F.reset("HUNTER",40,{31,0,0})
 local old=F.item("INVTYPE_HEAD",{ITEM_MOD_AGILITY_SHORT=10},4,3)
@@ -117,17 +126,24 @@ check(#U.results[1]==3,"Only upgrades, with duplicates and unusable items remove
 check(U.results[1][1].link==best.link and U.results[1][1].buyout==5000,"Best percentage first; duplicate keeps cheapest buyout")
 check(U.results[1][1].auctions==2,"Duplicate listings counted once per item")
 check(U.results[1][1].percent==G:Comparisons(G:Read(best.link),G:CurrentProfile())[1].percent,"Exact advisor percentage reused")
+check(U.rows[1].priceKind:GetText()=="Buyout" and U.rows[1].action:GetText()=="See options >",
+    "Overview separates the price type from the navigation action")
 check(U.results[1][3].link==good.link,"Cloth upgrade compared against equipped mail")
 check(U.results[1][2].link==suffix.link,"Different random suffixes of the same item remain separate")
 check(U.results[11][1].percent==nil and U.results[12][1].percent==nil,"Empty ring slots get no fabricated percentage")
 check(U.results[16] and U.results[17],"Dual-wield weapon compared in both hand slots")
 check(U.results.paired[1].emptyOff,"A shared one-handed listing is scanned only once, not counted as two purchasable copies")
-check(#U.rows==7 and #U.display==17,"Reuses seven rows for the continuous slot list")
+check(#U.rows==5 and #U.display==4,"Overview shows only slots with recommendations, using five reusable cards")
 MOCK.Click(U.rows[1])
 check(U.slot==1 and #U.display==3 and U.display[1].link==best.link,"Slot opens every upgrade sorted descending")
-MOCK.Click(U.back); U.panel.scripts.OnMouseWheel(U.panel,-1)
-check(U.offset==3 and U.rows[1].entry.slot==5,"Mouse wheel browses continuous slot list")
-U.scroll:SetValue(10); check(U.rows[7].entry.slot==18,"Scroll bar reaches final slot")
+check(U.rows[1].action:GetText()=="Find auctions >","Candidate action describes opening a search rather than purchasing")
+MOCK.Click(U.back); MOCK.Click(U.slotButtons[12])
+check(U.slot==12 and U.slotButtons[12].active,"Persistent slot picker opens Ring 2 with a selected highlight")
+MOCK.Click(U.slotButtons[18])
+check(U.slot==18 and U.empty:IsShown(),"Every slot remains accessible even without an upgrade")
+check(U.emptyTitle:GetText()=="No upgrades found here","A searched empty slot is not labeled as unsearched")
+MOCK.Click(U.overview)
+check(not U.slot and U.overview.active,"Overview navigation resets selection directly")
 
 U:Start(); tick(); QueryAuctionItems("Other search")
 check(not U.scan and U.message:find("Another auction search"),"External queries cancel scanner without overwriting other results")
@@ -149,7 +165,7 @@ check(U.scan and U.scan.index==1,"Missing link is retried")
 pages[4][1].noLink=nil; finish()
 check(U.complete and U.results[1],"Delayed item data eventually included")
 pages[4]={{item=good,noLink=true}}; U:Start(); finish()
-check(not U.complete and U.message:find("1 unavailable"),"Unavailable data produces honest partial results")
+check(not U.complete and U.message:find("1 listing could not be read",1,true),"Unavailable data explains skipped listings")
 pages[4]={}; U:Start(); tick(); pending=false; tick(21)
 check(not U.scan and U.message:find("timed out"),"Missing server response times out safely")
 ready=false; U:Start(); tick(31)
@@ -169,8 +185,8 @@ check(U.results[16][1].buyout==0 and U.results[16][1].bid==810,"Bid-only upgrade
 -- More than one screen of upgrades, no paging buttons or growing frame pool.
 pages[4]={}; pages[2]={}
 for i=1,25 do pages[4][i]={item=F.item("INVTYPE_HEAD",{ITEM_MOD_AGILITY_SHORT=20+i},4,1),buyout=i*100} end
-U:Start(); finish(); MOCK.Click(U.rows[1]); U.scroll:SetValue(18)
-check(#U.display==25 and U.rows[7].entry==U.display[25] and #U.rows==7,"All slot alternatives are continuously scrollable")
+U:Start(); finish(); MOCK.Click(U.rows[1]); U.scroll:SetValue(20)
+check(#U.display==25 and U.rows[5].entry==U.display[25] and #U.rows==5,"All slot alternatives are continuously scrollable")
 
 BrowseName=CreateFrame("EditBox"); BrowseMinLevel=CreateFrame("EditBox"); BrowseMaxLevel=CreateFrame("EditBox")
 IsUsableCheckButton=CreateFrame("CheckButton")
@@ -218,7 +234,7 @@ check(ownedIndex and U.display[ownedIndex].percent==0,"Current staff stays visib
 MOCK.Click(U.rows[ownedIndex]); local oldSearches=searches; MOCK.Click(U.rows[1])
 check(searches==oldSearches,"Equipped components never trigger an auction purchase search")
 MOCK.Click(U.back); MOCK.Click(U.back); MOCK.Click(U.back)
-check(not U.weaponsOnly and #U.display==17,"Back returns to all gear slots")
+check(not U.weaponsOnly and #U.display==2,"Back returns to the overview's available recommendations")
 pages[4]={}; pages[2]={{item=staff,buyout=1}}
 U:Start(); finish()
 check(U.results.twoHand[1].owned,"An equal-scoring listing never outranks keeping the equipped weapon")
@@ -331,6 +347,12 @@ F.reset("HUNTER",40,{31,0,0}); F.equip(1,old)
 U.weaponsOnly=false; pages[4]={{item=best},{item=good}}; pages[2]={}
 U:Start(); tick(); pending=false; MOCK.FireAll("AUCTION_ITEM_LIST_UPDATE"); tick()
 check(U.scan and U.scan.search==2,"Head results arrive before later slot queries")
+local activeScan=U.scan
+MOCK.Click(U.slotButtons[18])
+check(U.scan==activeScan and U.emptyTitle:GetText()=="Waiting for this slot","Direct slot navigation preserves the active scan and explains pending results")
+MOCK.Click(U.slotButtons[1])
+check(U.rows[1].action:GetText()=="Stop scan to browse","Purchase search action explains why it is unavailable while scanning")
+MOCK.Click(U.overview)
 hovered=U.rows[1]; shift=true; hovered.scripts.OnEnter(hovered)
 local setsBefore=tooltipSets
 tick()
@@ -340,12 +362,22 @@ finish()
 check(GameTooltip:IsShown() and tooltipSets==setsBefore,"Tooltip stays open without rebuilding throughout the remaining scan and completion")
 local current=U.results[1][1]; current.auctions=current.auctions+1; U:Refresh()
 check(GameTooltip:IsShown() and tooltipSets==setsBefore+1
-    and GameTooltip.lines[#GameTooltip.lines][1]:find("2 listing(s)",1,true),
+    and GameTooltip.lines[#GameTooltip.lines-1][1]:find("2 listing(s)",1,true),
     "Updated listing count refreshes the visible tooltip")
 table.remove(U.results[1],1); U:Refresh()
 check(GameTooltip:IsShown() and GameTooltip.link==good.link and ShoppingTooltip1.comparedLink==good.link,
     "Reused hovered row updates both item and equipped comparisons")
 U.results[1]={}; U:Refresh()
 check(not GameTooltip:IsShown() and not ShoppingTooltip1:IsShown(),"Removing the hovered item clears its tooltips")
+local _,panelY=U.panel:GetRect()
+for _,card in ipairs(U.rows) do
+    local x,y,w,h=card:GetRect(); local sx=select(1,U.scroll:GetRect())
+    check(x+w<sx and y>=panelY+138 and y+h<=panelY+326,"Result cards do not overlap navigation, scrollbar or progress footer")
+    local fields={card.item,card.percent,card.cost}
+    for i=1,2 do
+        local left,_,width=fields[i]:GetRect(); local right=fields[i+1]:GetRect()
+        check(left+width<=right,"Item, score and price columns stay separate")
+    end
+end
 GameTooltip.SetHyperlink=setHyperlink
 print("PASS: "..checks.." auction upgrade assertions")
