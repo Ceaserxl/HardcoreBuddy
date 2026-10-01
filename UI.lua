@@ -147,6 +147,8 @@ local function renderBlock(frame, block, width)
     frame.priority:SetShown(block.supply and block.priority~=nil)
     frame.title:SetFont(STANDARD_TEXT_FONT,block.supply and 14 or 15,"")
     frame.body:SetFont(STANDARD_TEXT_FONT,block.supply and 11 or 12,"")
+    frame.title:SetWordWrap(true); frame.body:SetWordWrap(true)
+    frame.count:SetFont(STANDARD_TEXT_FONT,14,"")
     frame.body:SetTextColor(unpack(block.guideTone and WHITE or MUTED))
     if frame.quantity:HasFocus() and (frame.quantity.targetKey~=block.targetKey
         or block.readOnlyTarget or block.groupSupply or not block.supply) then frame.quantity:ClearFocus() end
@@ -295,20 +297,22 @@ local function renderBlock(frame, block, width)
     if paintedRow then Skin.RowArtwork(frame) end
     if block.supply and frame.supplyTile then
         -- Compact supply cards keep quantities together without a dense table.
-        frame:SetHeight(136); y=136
+        frame:SetHeight(76); y=76
         frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
-        measure(frame.title,block.title,width-68,52,10); frame.title:SetHeight(30)
-        measure(frame.body,block.body,width-68,52,42); frame.body:SetHeight(32)
-        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-10)
-        frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPLEFT",12,-80); frame.priority:SetSize(width-24,14)
-        frame.count:ClearAllPoints(); frame.count:SetPoint("TOPLEFT",12,-105); frame.count:SetSize(108,22)
+        frame.title:SetWordWrap(false); frame.body:SetWordWrap(false)
+        measure(frame.title,block.title,width-68,52,8); frame.title:SetHeight(18)
+        measure(frame.body,block.body,width-68,52,28); frame.body:SetHeight(14)
+        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-8)
+        frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPLEFT",8,-52); frame.priority:SetSize(68,14)
+        frame.count:SetFont(STANDARD_TEXT_FONT,11,"")
+        frame.count:ClearAllPoints(); frame.count:SetPoint("TOPLEFT",80,-51); frame.count:SetSize(94,16)
         frame.count:SetJustifyH("LEFT"); frame.count:SetText("In bags: "..(block.count~=nil and tostring(block.count) or "?"))
         if not frame.carryLabel then frame.carryLabel=font(frame,11,MUTED) end
-        frame.carryLabel:Show(); measure(frame.carryLabel,"Carry",40,126,107)
+        frame.carryLabel:Show(); measure(frame.carryLabel,"Carry",36,176,51)
         frame.carryLabel:SetShown(frame.quantity:IsShown())
-        frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",168,-98); frame.quantity:SetSize(40,28)
-        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPLEFT",width-92,-102); frame.stock:SetWidth(84)
-        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPLEFT",width-92,-98)
+        frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",214,-46); frame.quantity:SetSize(40,24)
+        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPLEFT",width-92,-48); frame.stock:SetWidth(84)
+        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPLEFT",width-92,-44)
         frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("TOPLEFT",frame.stock,"BOTTOMLEFT",0,-4)
         Skin.RowArtwork(frame)
     elseif frame.carryLabel then frame.carryLabel:Hide() end
@@ -353,7 +357,7 @@ end
 local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
     Skin.Paint(frame,"note")
-    frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and 22 or 15,"")
+    frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and not data.supplyTable and 22 or 15,"")
     frame.title:Show(); frame.note:Show()
     local y=14
     y=y+measure(frame.title, data.title, width-28, 14, y)+5
