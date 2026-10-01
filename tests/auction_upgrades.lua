@@ -42,8 +42,10 @@ function QueryAuctionItems(name,min,max,page,usable,quality,all,exact,filters)
         for _,class in ipairs({4,2}) do
             for _,listing in ipairs(pages[class] or {}) do
                 for _,filter in ipairs(filters) do
-                    if class==filter.classID and inventoryTypes[listing.item.equip]==filter.inventoryType
-                        and (not filter.subClassID or listing.item.subclassID==filter.subClassID) then
+                    -- A slot restriction without its parent subclass can become
+                    -- a class-wide query. Do not let the mock hide that failure.
+                    if class==filter.classID and (filter.subClassID==nil or
+                        (listing.item.subclassID==filter.subClassID and inventoryTypes[listing.item.equip]==filter.inventoryType)) then
                         data[#data+1]=listing; break
                     end
                 end
@@ -104,6 +106,13 @@ check(U.complete and #queries==17,"Scans sixteen slot groups and every server pa
 check(queries[1].filters[1].inventoryType==1 and queries[2].page==1 and queries[3].filters[1].inventoryType==2,
     "Finishes every head page before starting neck, with no broad armor query")
 for _,q in ipairs(queries) do check(q.max==40 and q.usable and not q.all,"Only level-appropriate usable listings, no full-dump query") end
+for _,q in ipairs(queries) do
+    for _,filter in ipairs(q.filters) do
+        check(type(filter.classID)=="number" and type(filter.subClassID)=="number" and type(filter.inventoryType)=="number",
+            "Every slot query includes the full native class/subclass/inventory hierarchy")
+    end
+end
+check(U.message:find("61 auctions checked",1,true),"Each auction is checked once across the complete scan")
 check(#U.results[1]==3,"Only upgrades, with duplicates and unusable items removed")
 check(U.results[1][1].link==best.link and U.results[1][1].buyout==5000,"Best percentage first; duplicate keeps cheapest buyout")
 check(U.results[1][1].auctions==2,"Duplicate listings counted once per item")
@@ -289,8 +298,8 @@ check(#U.results[5]==1 and U.results[5][1].link==chest.link,"Highest-only chest 
 check(U.results[15] and U.results[2] and U.results[11] and U.results[12] and U.results[13] and U.results[14],
     "Cloth cloaks, necks, both rings and both trinkets remain available")
 check(#U.results.paired>0 and #U.results.paired[1].components==2,"Weapons and held off-hands survive the material filter")
-check(queries[queryStart+1].filters[1].subClassID==3 and queries[queryStart+2].filters[1].subClassID==nil,
-    "Armor subclass filtering happens server-side and never applies to jewelry")
+check(queries[queryStart+1].filters[1].subClassID==3 and queries[queryStart+2].filters[1].subClassID==0,
+    "Body armor uses the selected material; jewelry uses the native miscellaneous subclass")
 U.armorOnly:SetChecked(false); U:Refresh()
 check(U.armorOnly:GetChecked(),"Refreshing the UI restores the saved checkbox preference")
 U.armorOnly:SetChecked(false); MOCK.Click(U.armorOnly); U:Start(); finish()

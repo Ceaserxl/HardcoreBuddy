@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fixed auction slot filters missing their parent item subclass, which could
+  cause every slot to repeat a broad armor or weapon scan.
 - Auction upgrades now scan individual equipment slots in sequence. Added a
   saved per-character checkbox under Scan upgrades to restrict body armor to the
   class-and-level armor type, while retaining jewelry, cloaks and weapon setups.

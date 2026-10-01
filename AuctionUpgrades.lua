@@ -19,14 +19,29 @@ local searches={
 local armorSlots={INVTYPE_HEAD=true,INVTYPE_SHOULDER=true,INVTYPE_CHEST=true,INVTYPE_ROBE=true,
     INVTYPE_WAIST=true,INVTYPE_LEGS=true,INVTYPE_FEET=true,INVTYPE_WRIST=true,INVTYPE_HAND=true}
 local armorNames={"Cloth","Leather","Mail","Plate"}
+-- Supply the full class/subclass/slot hierarchy, as Blizzard's auction
+-- categories do. Omitting subClassID can discard the inventory-type filter
+-- and repeatedly retrieve the entire armor/weapon category for each slot.
+local armorSubclasses={[2]={0},[11]={0},[12]={0},[16]={1},[14]={6},[23]={0}}
+local bodySubclasses={0,1,2,3,4}
+local oneHandSubclasses={0,4,7,13,15}
+local rangedSubclasses={2,3,18,19}
+local weaponSubclasses={
+    [13]=oneHandSubclasses,[21]=oneHandSubclasses,[22]=oneHandSubclasses,
+    [17]={1,5,6,8,10,20},[15]=rangedSubclasses,[25]={16},[26]=rangedSubclasses,
+}
 
 function U:SearchQueue(highestArmor)
     local queue={}
     for _,search in ipairs(searches) do
         local entry={name=search[1],filters={}}
         for i=3,#search do
-            entry.filters[#entry.filters+1]={classID=search[i][1],inventoryType=search[i][2],
-                subClassID=search[2] and highestArmor or nil}
+            local class,inventory=search[i][1],search[i][2]
+            local subclasses=class==2 and weaponSubclasses[inventory] or armorSubclasses[inventory] or bodySubclasses
+            if search[2] and highestArmor then subclasses={highestArmor} end
+            for _,subclass in ipairs(subclasses) do
+                entry.filters[#entry.filters+1]={classID=class,subClassID=subclass,inventoryType=inventory}
+            end
         end
         queue[#queue+1]=entry
     end
