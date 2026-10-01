@@ -1,5 +1,10 @@
 # Unreleased
 
+- Saved the last auction upgrade scan per character, including weapon setups
+  and partial scans across reloads. Cached results show their capture time and
+  require a rescan when gear, level, talent profile, weights, or armor filter changes.
+- Fixed legitimate negative item stats being rejected as unreadable auction
+  listings (including Cloak of Rot, Black Widow Band, and Ogremage Staff).
 - Simplified gear tooltips: green stat gains / red losses beneath the original
   slot and percentage row, without specialization, scoring explanations, or listing counts.
 - Fixed equipped comparison flicker during auction scans by reusing visible

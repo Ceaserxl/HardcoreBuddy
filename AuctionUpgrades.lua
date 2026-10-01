@@ -115,6 +115,7 @@ end
 
 function U:Stop(message)
     A.AuctionDiagnostics:Finish(self.scan,message)
+    A.AuctionCache:Save(self,message)
     self.scan=nil
     if message then self.message=message end
     self:Refresh()
@@ -134,6 +135,7 @@ function U:Start()
     local weapons,reason=A.WeaponSetAdvisor.New(p,equipped)
     if not weapons then self:Stop(reason); return end
     self.results={}; self.slot=nil; self.setup=nil; self.offset=0; self.complete=false; self.stale=false
+    self.cached=false; self.savedScanAt=nil; self.scanSignature=A.AuctionCache:Signature(p)
     self.checkedSlots={}; self.progress=0
     self.weaponBaseline=weapons.baseline
     self.profile=p; self.profileKey=profileKey(p)
@@ -365,7 +367,8 @@ function U:Refresh()
     local armorProfile=G:CurrentProfile()
     self.armorOnly:SetChecked(A.characterDB and A.characterDB.auctionHighestArmorOnly==true)
     self.armorOnly.label:SetText("Best Armor: "..(armorProfile and armorNames[G.HighestArmorSubclass(armorProfile)] or "..."))
-    self.subtitle:SetText(p and (p.name.."  |  Level "..p.level.."  |  Compared with equipped gear") or "Waiting for character data")
+    self.subtitle:SetText(p and (p.name.."  |  Level "..p.level.."  |  "..
+        (self.cached and ("Saved scan: "..(self.savedScanAt or "unknown time")) or "Compared with equipped gear")) or "Waiting for character data")
     local weaponView=self.slot=="paired" or self.slot=="twoHand"
     self.heading:SetText(self.setup and "Items in this setup" or self.slot and names[self.slot]
         or self.weaponsOnly and "Compare weapon setups" or "Best upgrades by slot")
@@ -470,6 +473,7 @@ function U:Attach()
     self.armorOnly:SetScript("OnClick",function(self)
         if not A.characterDB then return end
         A.characterDB.auctionHighestArmorOnly=not not self:GetChecked()
+        A.characterDB.auctionLastScan=nil; U.cached=false; U.savedScanAt=nil
         U.results={}; U.slot=nil; U.setup=nil; U.offset=0; U.profile=nil; U.weaponBaseline=nil
         U.complete=false; U.stale=false; U.progress=0; U.checkedSlots={}
         U:Stop("Armor filter changed. Scan upgrades to refresh results.")
@@ -586,6 +590,7 @@ function U:Attach()
     hooksecurefunc("AuctionFrameTab_OnClick",function(selected)
         panel:SetShown(selected==tab)
         if selected==tab then
+            if A.AuctionCache:Restore(self) then self.profileKey=profileKey(self.profile) end
             AuctionFrame.type="list"
             if SetAuctionsTabShowing then SetAuctionsTabShowing(false) end
             PanelTemplates_SetTab(AuctionFrame,index)
@@ -600,11 +605,14 @@ function U:Attach()
 end
 
 U.events=CreateFrame("Frame")
-for _,event in ipairs({"AUCTION_HOUSE_SHOW","AUCTION_HOUSE_CLOSED","AUCTION_ITEM_LIST_UPDATE","PLAYER_REGEN_ENABLED",
+for _,event in ipairs({"AUCTION_HOUSE_SHOW","AUCTION_HOUSE_CLOSED","AUCTION_ITEM_LIST_UPDATE","PLAYER_REGEN_ENABLED","PLAYER_LOGOUT",
     "PLAYER_EQUIPMENT_CHANGED","PLAYER_TALENT_UPDATE","CHARACTER_POINTS_CHANGED","PLAYER_LEVEL_UP"}) do U.events:RegisterEvent(event) end
 U.events:SetScript("OnEvent",function(_,event)
     if event=="AUCTION_HOUSE_SHOW" then U.open=true; U.attachPending=true
-    elseif event=="AUCTION_HOUSE_CLOSED" then U.open=false; U.complete=false; U:Stop("Auction house closed. Scan again for current listings.")
+    elseif event=="AUCTION_HOUSE_CLOSED" then
+        U.open=false; U:Stop("Auction house closed. Scan again for current listings.")
+        if U.profile then U.cached=true end
+    elseif event=="PLAYER_LOGOUT" then A.AuctionCache:Save(U)
     elseif event=="AUCTION_ITEM_LIST_UPDATE" then
         if U.scan and U.scan.phase=="waiting" then U.scan.phase="reading"; U.scan.index=1 end
     elseif event=="PLAYER_REGEN_ENABLED" then if U.open then U.attachPending=true end

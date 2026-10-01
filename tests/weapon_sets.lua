@@ -39,6 +39,12 @@ check(G:Comparisons(read(sword),profile)[1].percent<0,"Single sword is a downgra
 check(pair.buyout==200,"Pair price includes both purchases")
 check(#result.twoHand==2,"Current two-hander remains available beside upgrades")
 
+local penalized=gear("INVTYPE_2HWEAPON",-10000)
+local negative=W.New(profile,{[16]=read(penalized)})
+auction(negative,nextStaff)
+local recovered=top(build(negative).twoHand)
+check(negative.baseline<0 and recovered.percent>0,"Replacing a negative-score weapon setup remains an upgrade")
+
 local shield=gear("INVTYPE_SHIELD",500,4,6)
 local invalid=gear("INVTYPE_WEAPONOFFHAND",500,2,7)
 auction(w,shield); auction(w,invalid)

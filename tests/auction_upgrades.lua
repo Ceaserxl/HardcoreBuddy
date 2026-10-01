@@ -438,4 +438,51 @@ for _,card in ipairs(U.rows) do
     end
 end
 GameTooltip.SetHyperlink=setHyperlink
+
+-- Real Classic negative-stat items must finish scanning without timeouts.
+F.reset("HUNTER",41,{31,1,0}); F.equip(1,old)
+local rot=F.item("INVTYPE_CLOAK",{ITEM_MOD_STAMINA_SHORT=-5,ITEM_MOD_INTELLECT_SHORT=7,RESISTANCE0_NAME=22},4,1)
+local widow=F.item("INVTYPE_FINGER",{ITEM_MOD_STAMINA_SHORT=-5,ITEM_MOD_INTELLECT_SHORT=7},4,0)
+local ogremage=F.item("INVTYPE_2HWEAPON",{ITEM_MOD_INTELLECT_SHORT=-5,ITEM_MOD_STRENGTH_SHORT=11},2,10,
+    {{"(18.2 damage per second)"}})
+pages[4]={{item=rot},{item=widow},{item=best}}; pages[2]={{item=ogremage},{item=ogremage}}
+U:Start(); finish()
+check(U.complete and U.message:find("5 auctions checked",1,true),"All negative-stat auctions are scored without unavailable listings")
+
+local cache=A.characterDB.auctionLastScan
+check(cache and cache.complete and cache.results[1][1].link==best.link and cache.results.twoHand[1].components,
+    "Last scan saves armor and complete weapon setups")
+U.results[1][1].buyout=1234567
+check(cache.results[1][1].buyout~=1234567,"Saved scan does not share mutable result tables")
+local queryCount=#queries
+U.results={}; U.profile=nil; U.checkedSlots={}; U.scan=nil
+MOCK.Click(U.tab)
+check(U.cached and not U.stale and U.complete and U.results[1][1].link==best.link and #queries==queryCount,
+    "Reopening restores saved results without querying the auction house")
+check(U.subtitle:GetText():find("Saved scan:",1,true) and U.message:find("Prices may have changed",1,true),
+    "Cached scan is dated and does not claim current prices")
+MOCK.Click(U.slotButtons.twoHand); MOCK.Click(U.rows[1])
+check(U.setup and #U.display==1 and U.display[1].link==ogremage.link,"Restored weapon components remain browsable")
+U.setup=nil; U.slot=nil; U.profile=nil; F.equip(1,good)
+MOCK.Click(U.tab)
+check(U.stale and not U.complete,"Changed equipment invalidates cached percentages")
+local beforeFind=#queries; U:Find(U.results[1][1])
+check(#queries==beforeFind,"Stale cached comparisons cannot open a purchase search")
+F.equip(1,old); F.reset("HUNTER",42,{31,1,0}); F.equip(1,old); U.profile=nil
+MOCK.Click(U.tab); check(U.stale,"Changed level invalidates cached comparisons")
+F.reset("HUNTER",41,{31,1,0}); F.equip(1,old); U.profile=nil
+A.characterDB.auctionHighestArmorOnly=true
+MOCK.Click(U.tab); check(U.stale,"Changed armor filter invalidates cached comparisons")
+A.characterDB.auctionHighestArmorOnly=false
+U:Start(); tick(); pending=false; MOCK.FireAll("AUCTION_ITEM_LIST_UPDATE"); tick()
+MOCK.FireAll("PLAYER_LOGOUT")
+check(not A.characterDB.auctionLastScan.complete and A.characterDB.auctionLastScan.results[1],
+    "Reload during scanning saves partial results")
+finish()
+MOCK.FireAll("AUCTION_HOUSE_CLOSED")
+check(A.characterDB.auctionLastScan.complete,"Closing the auction house preserves the completed scan")
+U.profile=nil; U.results={}; local character=A.characterDB
+A.characterDB={}; check(not A.AuctionCache:Restore(U),"Another character does not inherit a saved scan")
+A.characterDB=character
+check(A.AuctionCache:Restore(U),"Character cache remains available after closing the auction house")
 print("PASS: "..checks.." auction upgrade assertions")

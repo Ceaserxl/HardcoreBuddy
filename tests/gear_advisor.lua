@@ -260,6 +260,24 @@ check(row(better).status=="unknown","Level restriction")
 better.required=1; better.lines={{"Requires Blacksmithing (300)",red=true}}
 check(row(better).status=="unknown","Native equipment restrictions")
 better.lines=nil
+-- Saved auction diagnostics: legitimate negative attributes were treated as
+-- incomplete data on Cloak of Rot, Black Widow Band and Ogremage Staff.
+reset("HUNTER",41,{31,1,0})
+local rot=item("INVTYPE_CLOAK",{ITEM_MOD_STAMINA_SHORT=-5,ITEM_MOD_INTELLECT_SHORT=7,RESISTANCE0_NAME=22},4,1,
+    {{"22 Armor"},{"-5 Stamina"},{"+7 Intellect"}})
+local widow=item("INVTYPE_FINGER",{ITEM_MOD_STAMINA_SHORT=-5,ITEM_MOD_INTELLECT_SHORT=7},4,0,
+    {{"-5 Stamina"},{"+7 Intellect"}})
+local ogremage=item("INVTYPE_2HWEAPON",{ITEM_MOD_INTELLECT_SHORT=-5,ITEM_MOD_STRENGTH_SHORT=11},2,10,
+    {{"(18.2 damage per second)"},{"+11 Strength"},{"-5 Intellect"}})
+local hunter=G:CurrentProfile()
+check(close(G.Score(G:Read(rot.link),hunter,15),3.21),"Cloak of Rot includes its negative stamina in the score")
+check(close(G.Score(G:Read(widow.link),hunter,11),3.1),"Black Widow Band includes its negative stamina in the score")
+check(close(G.Score(G:Read(ogremage.link),hunter,16),40.23),"Ogremage Staff includes negative intellect and displayed DPS")
+check(G.StatValue({stats={ITEM_MOD_ARMOR_SHORT=-10}},hunter,"armor")==-10,
+    "Missing stat aliases do not erase a negative attribute")
+equipment[11]=item("INVTYPE_FINGER",{ITEM_MOD_STAMINA_SHORT=-10},4,0)
+check(row(widow).percent>0 and row(widow).gains:find("+5 Sta",1,true),"Improvement over a negative baseline stays an upgrade")
+reset("WARRIOR",40)
 local ring=item("INVTYPE_FINGER",{ITEM_MOD_STRENGTH_SHORT=15})
 equipment[11]=item("INVTYPE_FINGER",{ITEM_MOD_STRENGTH_SHORT=10})
 equipment[12]=item("INVTYPE_FINGER",{ITEM_MOD_STRENGTH_SHORT=20})

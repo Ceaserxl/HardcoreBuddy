@@ -345,27 +345,31 @@ end
 -- Use the same normalized value for scoring and explaining stat tradeoffs.
 function G.StatValue(item,p,key)
     if not item then return 0 end
-    local value=0
+    local value
+    local function merge(amount)
+        if amount~=nil then
+            -- Some Classic items have real negative stats. Missing aliases
+            -- must not zero those penalties, but NaN/infinity remain invalid.
+            if type(amount)~="number" or amount~=amount or math.abs(amount)==math.huge then return false end
+            value=value and math.max(value,amount) or amount
+        end
+        return true
+    end
     for _,alias in ipairs(statKeys[key]) do
-        local amount=item.stats[alias]
-        if amount~=nil and not number(amount) then return nil end
-        value=math.max(value,amount or 0)
+        if not merge(item.stats[alias]) then return nil end
     end
     if p.class=="HUNTER" and (key=="hit" or key=="crit") then
         local amount=item.stats[key=="hit" and "ITEM_MOD_HIT_RANGED_RATING_SHORT" or "ITEM_MOD_CRIT_RANGED_RATING_SHORT"]
-        if amount~=nil and not number(amount) then return nil end
-        value=math.max(value,amount or 0)
+        if not merge(amount) then return nil end
     end
     if key=="healing" then
         -- Generic Classic spell power also heals. Some clients return both
         -- keys for the same effect, so take the larger total rather than sum.
         for _,alias in ipairs(statKeys.spellPower) do
-            local amount=item.stats[alias]
-            if amount~=nil and not number(amount) then return nil end
-            value=math.max(value,amount or 0)
+            if not merge(item.stats[alias]) then return nil end
         end
     end
-    return value
+    return value or 0
 end
 
 function G.Score(item,p,slot)
@@ -492,7 +496,8 @@ function G:Comparisons(item,p,slotOnly)
         else
             -- Floor to two decimals, including negative changes, to match the
             -- reference display. This calculation has no external dependency.
-            row.percent=math.floor(((candidateScore*100/oldScore)-100)*100)/100
+            local delta=oldScore>0 and (candidateScore*100/oldScore-100) or ((candidateScore-oldScore)*100/math.abs(oldScore))
+            row.percent=math.floor(delta*100)/100
             row.status=row.percent>0 and "up" or row.percent<0 and "down" or "equal"
             row.text=string.format(row.percent==0 and "%.2f%% Similar" or row.percent>0 and "+%.2f%% Upgrade" or "%.2f%% Downgrade",row.percent)
         end

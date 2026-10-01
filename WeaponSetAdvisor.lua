@@ -80,7 +80,9 @@ function W:Pair(main,off)
         end
     end
     local current=m.owned and (not o or o.owned)
-    local percent=self.baseline>0 and math.floor((score*100/self.baseline-100)*100)/100 or nil
+    local delta=self.baseline>0 and (score*100/self.baseline-100)
+        or self.baseline<0 and ((score-self.baseline)*100/math.abs(self.baseline))
+    local percent=delta and math.floor(delta*100)/100 or nil
     return {key=main.key.."/"..(off and off.key or "empty"),components=parts,weaponSet=true,owned=current,
         link=m.link,icon=m.icon,name=m.name..(o and (" + "..o.name) or first=="main" and " (empty off hand)" or ""),
         label="Both hands",score=score,percent=percent,
