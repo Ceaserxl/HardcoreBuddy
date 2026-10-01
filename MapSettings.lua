@@ -41,7 +41,7 @@ function M:ResetSettings(section)
     if section=="all" or section=="exploration" then self.tintRevision=(self.tintRevision or 0)+1 end
     self:Changed()
 end
-function M:SettingsHeight() return 628 end
+function M:SettingsHeight() return 572 end
 
 function M:LayoutSettings(parent,left,top,width,visible)
     local picking=visible and A.state.mapIconKind~=nil
@@ -77,9 +77,9 @@ function M:LayoutSettings(parent,left,top,width,visible)
             reset:ClearAllPoints(); reset:SetPoint("TOPRIGHT",-16,-12)
             return panel,reset
         end
-        f.exploration,f.resetExploration=section("exploration","Exploration","Choose how undiscovered areas look on the map.",82,238)
-        f.markers,f.resetMarkers=section("markers","NPC markers","Choose visible categories and click an icon to change it.",332,284)
-        f.notices,f.resetNotices=section("notices","Zone notices","Show known dangers in chat when you enter a zone.",82,238)
+        f.exploration,f.resetExploration=section("exploration","Exploration","Choose how undiscovered areas look on the map.",82,182)
+        f.markers,f.resetMarkers=section("markers","NPC markers","Choose visible categories and click an icon to change it.",276,284)
+        f.notices,f.resetNotices=section("notices","Zone notices","Show known dangers in chat when you enter a zone.",82,182)
         f.resetExploration:SetWidth(72); f.resetNotices:SetWidth(72)
         for i,mode in ipairs({{"off","Unchanged"},{"full","Reveal all"},{"tint","Tint unexplored"}}) do
             local key=mode[1]
@@ -92,21 +92,26 @@ function M:LayoutSettings(parent,left,top,width,visible)
             b:SetScript("OnClick",function() M:Settings()[key]=not not b:GetChecked(); M:Changed() end)
             f.checks[key]=b
         end
-        local function slider(parent,key,caption,x,y,w,low,high,default,multiplier,suffix)
-            local text=label(parent,"",x,y,w)
+        local function slider(parent,key,caption,x,y,w,low,high,default,multiplier,suffix,inline)
             local b=CreateFrame("Slider",nil,parent,"BackdropTemplate"); b:SetPoint("TOPLEFT",x,-y-23); b:SetSize(w,18)
+            local text=label(inline and b or parent,"",x,y,w)
+            if inline then
+                b:SetHeight(28); text:ClearAllPoints(); text:SetAllPoints(b)
+                text:SetJustifyH("CENTER"); text:SetJustifyV("MIDDLE")
+            end
+            local function valueText(value) return (inline and "" or caption..": ")..value..suffix end
             b.caption=text
             Skin.Paint(b,"edit"); b:SetOrientation("HORIZONTAL"); b:SetMinMaxValues(low,high); b:SetValueStep(1); b:SetObeyStepOnDrag(true)
             b:SetThumbTexture("Interface\\Buttons\\WHITE8x8"); b:GetThumbTexture():SetSize(10,22); b:GetThumbTexture():SetVertexColor(unpack(Skin.colors.gold))
             function b:Sync()
                 self.syncing=true
                 local value=math.floor((M:Settings()[key] or default)*multiplier+0.5)
-                self:SetValue(value); text:SetText(caption..": "..value..suffix); self.syncing=nil
+                self:SetValue(value); text:SetText(valueText(value)); self.syncing=nil
             end
             b:SetScript("OnValueChanged",function(self,value)
                 if self.syncing then return end
                 value=math.max(low,math.min(high,math.floor(value+0.5)))
-                M:Settings()[key]=value/multiplier; text:SetText(caption..": "..value..suffix)
+                M:Settings()[key]=value/multiplier; text:SetText(valueText(value))
                 M.appearanceAt=GetTime()+0.05
                 local settings=M:Settings(); f.swatch:SetVertexColor(settings.tintR,settings.tintG,settings.tintB,settings.tintAlpha)
             end)
@@ -115,8 +120,7 @@ function M:LayoutSettings(parent,left,top,width,visible)
         f.tintColor=button(f.exploration,"Choose tint color",16,126,216,function() M:OpenTintPicker() end)
         f.swatch=f.tintColor:CreateTexture(nil,"ARTWORK"); f.swatch:SetTexture("Interface\\Buttons\\WHITE8x8")
         f.swatch:SetPoint("RIGHT",-10,0); f.swatch:SetSize(18,18)
-        slider(f.exploration,"tintAlpha","Tint opacity",16,164,328,0,100,0.55,100,"%")
-        f.tintHint=label(f.exploration,"Color and opacity apply to Tint unexplored.",16,214,380)
+        slider(f.exploration,"tintAlpha","Tint opacity",244,103,184,0,100,0.55,100,"%",true)
         for i,kind in ipairs({"rare","elite","boss","danger"}) do
             local key=kind
             local caption=({rare="Rares",elite="Elites",boss="World bosses",danger="Dangerous NPCs"})[kind]
@@ -143,9 +147,11 @@ function M:LayoutSettings(parent,left,top,width,visible)
         panel.title:SetWidth(panel:GetWidth()-(panel==f.markers and 168 or 120))
         panel.description:SetWidth(panel:GetWidth()-32)
     end
-    f.tintHint:SetWidth(explorationWidth-32); f.noticeHint:SetWidth(noticeWidth-32)
-    f.sliders.tintAlpha:SetWidth(explorationWidth-32)
-    f.sliders.tintAlpha.caption:SetWidth(explorationWidth-32)
+    f.noticeHint:SetWidth(noticeWidth-32)
+    local tintWidth=(explorationWidth-44)/2
+    f.tintColor:SetWidth(tintWidth)
+    f.sliders.tintAlpha:SetWidth(tintWidth); f.sliders.tintAlpha:ClearAllPoints()
+    f.sliders.tintAlpha:SetPoint("TOPLEFT",28+tintWidth,-126)
     local modeWidth=(explorationWidth-48)/3
     for i,key in ipairs({"off","full","tint"}) do
         local b=f.modes[key]; b:SetWidth(modeWidth); b:ClearAllPoints(); b:SetPoint("TOPLEFT",16+(i-1)*(modeWidth+8),-82)
