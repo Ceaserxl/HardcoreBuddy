@@ -127,8 +127,9 @@ Map markers use Blizzard's silver rare and gold elite icons, a skull for world
 bosses and a warning icon for dangerous NPCs. Hover for NPC names and details.
 Map settings include Blizzard's tint color picker and a separate opacity slider,
 an icon picker for each category,
-and marker size (12–40 pixels) and opacity (10–100%). Reset appearance restores
-the original visuals without changing category filters or notice preferences.
+and marker size (12–40 pixels) and opacity (10–100%). Exploration, NPC markers
+and Zone notices each have a Reset button. Reset all restores defaults for all
+three Map sections without changing other addon settings.
 Only nearly overlapping points combine. The distance follows icon size (16 pixels
 at the default 18-pixel size), and changing size recalculates the groups. Every
 point must be close to every other point; nearby chains cannot collapse an entire camp. Zooming
@@ -364,6 +365,8 @@ separate; training always uses the actual character, including while planning.
 ## Companion and Pet Guide
 
 Companion offers class advice, pet training, demon utility and professions.
+Overview links to every available Companion tab in sidebar order, following
+Before you pull and Shared cooldowns and Self Found.
 Hunters open **Companion > Pet Guide** for an offline searchable index of
 **17 families, 21 abilities / 111 ranks, and 559 creatures**, plus five care guides.
 Its sections are Families, Abilities, Pets, and Care. Appearance descriptions

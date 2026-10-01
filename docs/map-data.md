@@ -13,12 +13,10 @@ the Open zone map / Follow current zone buttons remain in the advisor.
 - **Unchanged** leaves unexplored terrain hidden; **Reveal all** draws the map
   terrain; **Tint unexplored** draws it with a translucent blue tint (default).
 - Separate Dangerous, Rare, Elite and World boss filters control pins and lists.
-  Their custom map icons are crimson claw marks, a silver dragon, a gold dragon
-  and a horned skull, respectively. The transparent artwork draws at 22 pixels
-  and keeps its apparent size as the map zooms.
+  Native icons default to 18 pixels and keep their apparent size as the map zooms.
   Matching icons appear beside each filter and in marker tooltips.
 
-- **Silent zone-entry notice** is off by default. When enabled it prints a short
+- **Silent zone-entry notice** is on by default. When enabled it prints a short
   chat message, with no sound or banner, upon entering a catalogued zone.
   Notices defer during combat, suppress dungeon/raid zones and throttle repeat
   visits for five minutes. They describe known dangers, not detected creatures.
@@ -41,7 +39,11 @@ returns to Map settings.
 Tint RGB uses Blizzard's native color picker, with live preview and Cancel
 restoring the original color. A separate opacity slider preserves the existing
 transparency setting. Both are independent of Reveal all and Unchanged.
-Appearance resets preserve category filters and silent notice preferences.
+The page groups controls into Exploration, NPC markers and Zone notices cards.
+Each card has its own Reset button: exploration restores reveal mode and tint;
+markers restores category filters, chosen icons, size and opacity; notices
+restores the silent notice default. Reset all restores all three Map sections
+without changing other addon settings.
 Silent zone notices default on for unset preferences; explicit opt-outs remain.
 
 Clicking a marker opens a native PlayerModel inside HardcoreBuddy's Advisors >

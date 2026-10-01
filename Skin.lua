@@ -150,6 +150,13 @@ function S.Button(button,kind)
     local skin=button.skinButton
     if not skin then
         skin={}; button.skinButton=skin
+        -- Supply the same interaction states for every styled button, including
+        -- utility buttons whose callers only install a click handler.
+        button:HookScript("OnEnter",function(self) S.ButtonState(self,nil,true,false) end)
+        button:HookScript("OnLeave",function(self) S.ButtonState(self,nil,false,false) end)
+        button:HookScript("OnMouseDown",function(self) S.ButtonState(self,nil,nil,true) end)
+        button:HookScript("OnMouseUp",function(self) S.ButtonState(self,nil,nil,false) end)
+        button:HookScript("OnHide",function(self) S.ButtonState(self,nil,false,false) end)
         button:SetScript("OnSizeChanged",function(self) S.ButtonState(self) end)
         button:SetBackdrop(nil)
         skin.left=texture(button,"BACKGROUND",0)

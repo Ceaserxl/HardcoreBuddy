@@ -743,7 +743,7 @@ function addon:Layout()
     local instancePage=doc.view=="instances"
     local navigation=doc.view=="advisors" and {"Gear","Talents","Map"} or instancePage and self.Instances.Navigation(self.state)
         or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {"Reports"}
-        or doc.view=="training" and (context.characterClass=="Hunter" and {"Overview","Zones","Spells","Pet Training","Pet Guide","First Aid","Engineering","Cooking"} or {"Overview","Zones","Spells","First Aid","Engineering","Cooking"})
+        or doc.view=="training" and C.Tabs(context)
         or doc.view=="petguide" and {"Families","Abilities","Pets","Care"}
         or addon.Supplies.filters
     local sidebar=true

@@ -5,9 +5,12 @@ function M:OpenTintPicker()
     local picker=ColorPickerFrame
     if not picker then A:Print("Blizzard's color picker is unavailable."); return end
     picker:Hide()
+    self.tintRevision=(self.tintRevision or 0)+1
+    local revision=self.tintRevision
     local s=self:Settings()
     local r,g,b=s.tintR,s.tintG,s.tintB
     local function apply(red,green,blue)
+        if M.tintRevision~=revision then return end
         local settings=M:Settings()
         settings.tintR,settings.tintG,settings.tintB=red,green,blue
         M.appearanceAt=GetTime()+0.05
@@ -25,6 +28,21 @@ function M:OpenTintPicker()
     end
 end
 
+local resetKeys={
+    exploration={"reveal","tintR","tintG","tintB","tintAlpha"},
+    markers={"rare","elite","boss","danger","icons","iconSize","iconAlpha"},
+    notices={"notify"},
+}
+function M:ResetSettings(section)
+    local s=self:Settings()
+    if section=="all" then
+        for _,keys in pairs(resetKeys) do for _,key in ipairs(keys) do s[key]=nil end end
+    else for _,key in ipairs(resetKeys[section] or {}) do s[key]=nil end end
+    if section=="all" or section=="exploration" then self.tintRevision=(self.tintRevision or 0)+1 end
+    self:Changed()
+end
+function M:SettingsHeight() return 714 end
+
 function M:LayoutSettings(parent,left,top,width,visible)
     local picking=visible and A.state.mapIconKind~=nil
     self:LayoutIconPicker(parent,left,top,width,picking)
@@ -32,38 +50,51 @@ function M:LayoutSettings(parent,left,top,width,visible)
     if not self.controls and not visible then return 0 end
     local s=self:Settings()
     if not self.controls then
-        local f=CreateFrame("Frame",nil,parent,"BackdropTemplate"); self.controls=f; Skin.Paint(f,"card")
-        local function label(text,x,y,w)
-            local l=f:CreateFontString(nil,"OVERLAY","GameFontHighlight"); l:SetFont(STANDARD_TEXT_FONT,12,"")
-            l:SetPoint("TOPLEFT",x,-y); l:SetWidth(w); l:SetJustifyH("LEFT"); l:SetText(text); return l
+        local f=CreateFrame("Frame",nil,parent); self.controls=f
+        f.buttons={}; f.modes={}; f.checks={}; f.sliders={}; f.icons={}
+        local function label(parent,text,x,y,w,size)
+            local l=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
+            l:SetFont(STANDARD_TEXT_FONT,size or 12,""); l:SetPoint("TOPLEFT",x,-y)
+            l:SetWidth(w); l:SetJustifyH("LEFT"); l:SetText(text); return l
         end
-        local function button(text,x,y,w,click)
-            local b=CreateFrame("Button",nil,f,"BackdropTemplate"); b:SetSize(w,28); b:SetPoint("TOPLEFT",x,-y); Skin.Button(b,"utility")
-            b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetAllPoints(); b.label:SetText(text)
-            b:SetScript("OnClick",click); return b
+        local function button(parent,text,x,y,w,click)
+            local b=CreateFrame("Button",nil,parent,"BackdropTemplate")
+            b:SetSize(w,28); b:SetPoint("TOPLEFT",x,-y); Skin.Button(b,"utility")
+            b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetAllPoints()
+            b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE"); b.label:SetText(text)
+            b:SetScript("OnClick",click); f.buttons[#f.buttons+1]=b; return b
         end
-        label("Map",16,12,700):SetTextColor(unpack(Skin.colors.gold))
-        label("Choose how unexplored terrain and known NPCs appear on your map.",16,37,700)
-        f.modes={}
+        label(f,"Map",12,12,480,22):SetTextColor(unpack(Skin.colors.gold))
+        label(f,"Choose how terrain, NPC markers and zone notices appear.",12,46,700)
+        f.resetAll=button(f,"Reset all",0,12,120,function() M:ResetSettings("all") end)
+        f.resetAll:ClearAllPoints(); f.resetAll:SetPoint("TOPRIGHT",-12,-12)
+        local function section(name,title,description,y,height)
+            local panel=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(panel,"card")
+            panel:SetPoint("TOPLEFT",12,-y); panel:SetSize(720,height)
+            label(panel,title,16,16,460,15):SetTextColor(unpack(Skin.colors.gold))
+            label(panel,description,16,44,680)
+            local reset=button(panel,"Reset",0,12,120,function() M:ResetSettings(name) end)
+            reset:ClearAllPoints(); reset:SetPoint("TOPRIGHT",-16,-12)
+            return panel,reset
+        end
+        f.exploration,f.resetExploration=section("exploration","Exploration","Choose how undiscovered areas look on the map.",82,202)
+        f.markers,f.resetMarkers=section("markers","NPC markers","Choose visible categories and click an icon to change it.",296,284)
+        f.notices,f.resetNotices=section("notices","Zone notices","A quiet reminder of known dangers when you enter a zone.",592,110)
         for i,mode in ipairs({{"off","Unchanged"},{"full","Reveal all"},{"tint","Tint unexplored"}}) do
             local key=mode[1]
-            f.modes[key]=button(mode[2],16+(i-1)*232,65,220,function() M:Settings().reveal=key; M:Changed() end)
+            f.modes[key]=button(f.exploration,mode[2],16+(i-1)*232,70,216,function() M:Settings().reveal=key; M:Changed() end)
         end
-        f.checks={}
-        local function check(key,caption,x,y,w)
-            local b=CreateFrame("CheckButton",nil,f,"BackdropTemplate"); b:SetSize(22,22); b:SetPoint("TOPLEFT",x,-y); Skin.Paint(b,"edit")
+        local function check(parent,key,caption,x,y,w)
+            local b=CreateFrame("CheckButton",nil,parent,"BackdropTemplate"); b:SetSize(22,22); b:SetPoint("TOPLEFT",x,-y); Skin.Paint(b,"edit")
             b.mark=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.mark:SetAllPoints(); b.mark:SetText("X")
-            label(caption,x+30,y+4,w)
-            b:SetScript("OnClick",function() M:Settings()[key]=not not b:GetChecked(); M:Changed() end); f.checks[key]=b
+            label(parent,caption,x+30,y+4,w)
+            b:SetScript("OnClick",function() M:Settings()[key]=not not b:GetChecked(); M:Changed() end)
+            f.checks[key]=b
         end
-        for i,kind in ipairs({"danger","rare","elite","boss"}) do check(kind,({danger="Dangerous",rare="Rares",elite="Elites",boss="World bosses"})[kind],16+(i-1)*177,108,135) end
-        check("notify","Silent zone-entry notice (chat only)",16,146,650)
-        label("Unexplored tint color",16,190,700):SetTextColor(unpack(Skin.colors.gold))
-        f.swatch=f:CreateTexture(nil,"ARTWORK"); f.swatch:SetTexture("Interface\\Buttons\\WHITE8x8"); f.swatch:SetPoint("TOPLEFT",660,-189); f.swatch:SetSize(48,20)
-        f.sliders={}
-        local function slider(key,caption,x,y,w,low,high,default,multiplier,suffix)
-            local text=label("",x,y,w)
-            local b=CreateFrame("Slider",nil,f,"BackdropTemplate"); b:SetPoint("TOPLEFT",x,-y-23); b:SetSize(w,18)
+        local function slider(parent,key,caption,x,y,w,low,high,default,multiplier,suffix)
+            local text=label(parent,"",x,y,w)
+            local b=CreateFrame("Slider",nil,parent,"BackdropTemplate"); b:SetPoint("TOPLEFT",x,-y-23); b:SetSize(w,18)
+            b.caption=text
             Skin.Paint(b,"edit"); b:SetOrientation("HORIZONTAL"); b:SetMinMaxValues(low,high); b:SetValueStep(1); b:SetObeyStepOnDrag(true)
             b:SetThumbTexture("Interface\\Buttons\\WHITE8x8"); b:GetThumbTexture():SetSize(10,22); b:GetThumbTexture():SetVertexColor(unpack(Skin.colors.gold))
             function b:Sync()
@@ -75,44 +106,51 @@ function M:LayoutSettings(parent,left,top,width,visible)
                 if self.syncing then return end
                 value=math.max(low,math.min(high,math.floor(value+0.5)))
                 M:Settings()[key]=value/multiplier; text:SetText(caption..": "..value..suffix)
-                -- Coalesce dragging: don't rebuild every map pin on each mouse movement.
                 M.appearanceAt=GetTime()+0.05
                 local settings=M:Settings(); f.swatch:SetVertexColor(settings.tintR,settings.tintG,settings.tintB,settings.tintAlpha)
             end)
             f.sliders[key]=b
         end
-        f.tintColor=button("Choose tint color",16,220,210,function() M:OpenTintPicker() end)
-        label("Use Blizzard's color picker. Cancel restores the previous color.",253,228,450)
-        slider("tintAlpha","Tint opacity",16,280,328,0,100,0.55,100,"%")
-        label("0% is transparent; 100% is opaque. Applies to Tint unexplored.",372,289,328)
-        label("NPC marker appearance",16,346,700):SetTextColor(unpack(Skin.colors.gold))
-        f.icons={}
+        f.tintColor=button(f.exploration,"Choose tint color",16,126,216,function() M:OpenTintPicker() end)
+        f.swatch=f.tintColor:CreateTexture(nil,"ARTWORK"); f.swatch:SetTexture("Interface\\Buttons\\WHITE8x8")
+        f.swatch:SetPoint("RIGHT",-10,0); f.swatch:SetSize(18,18)
+        slider(f.exploration,"tintAlpha","Tint opacity",376,116,328,0,100,0.55,100,"%")
+        label(f.exploration,"Color and opacity apply to Tint unexplored.",16,174,680)
         for i,kind in ipairs({"rare","elite","boss","danger"}) do
             local key=kind
-            local b=button("",16+((i-1)%2)*352,372+math.floor((i-1)/2)*40,340,function()
+            local caption=({rare="Rares",elite="Elites",boss="World bosses",danger="Dangerous NPCs"})[kind]
+            check(f.markers,key,caption,16,78+(i-1)*36,175)
+            f.icons[key]=button(f.markers,"",240,74+(i-1)*36,464,function()
                 A.state.mapIconKind=key; A.Settings.scroll:SetVerticalScroll(0); A:Refresh(true)
             end)
-            b.caption=({rare="Rare",elite="Elite",boss="Boss",danger="Dangerous"})[key]; f.icons[key]=b
         end
-        label("Choose a category to browse all available icons.",16,450,700)
-        slider("iconSize","Icon size",16,480,328,12,40,18,1," px")
-        slider("iconAlpha","Icon opacity",372,480,328,10,100,1,100,"%")
-        f.restore=button("Reset appearance",16,544,210,function()
-            local settings=M:Settings()
-            for _,key in ipairs({"tintR","tintG","tintB","tintAlpha","iconSize","iconAlpha","icons"}) do settings[key]=nil end
-            M:Changed()
-        end)
-        label("Click map markers to view NPC models. Recorded spawn areas are not live sightings.",16,590,700)
+        slider(f.markers,"iconSize","Icon size",16,230,328,12,40,18,1," px")
+        slider(f.markers,"iconAlpha","Icon opacity",376,230,328,10,100,1,100,"%")
+        check(f.notices,"notify","Silent zone-entry notice (chat only)",16,72,650)
     end
     local f=self.controls; f:SetShown(visible); if not visible then return 0 end
-    local scale=math.min(1,width/744); f:SetScale(scale); f:SetSize(width/scale,626)
+    local scale=math.min(1,width/744); local baseWidth=width/scale
+    f:SetScale(scale); f:SetSize(baseWidth,self:SettingsHeight())
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
-    for key,b in pairs(f.modes) do Skin.ButtonState(b,s.reveal==key,false,false) end
+    local panelWidth=baseWidth-24
+    for _,panel in ipairs({f.exploration,f.markers,f.notices}) do panel:SetWidth(panelWidth) end
+    local modeWidth=(panelWidth-56)/3
+    for i,key in ipairs({"off","full","tint"}) do
+        local b=f.modes[key]; b:SetWidth(modeWidth); b:ClearAllPoints(); b:SetPoint("TOPLEFT",16+(i-1)*(modeWidth+12),-70)
+        Skin.ButtonState(b,s.reveal==key,nil,false)
+    end
     for key,b in pairs(f.checks) do b:SetChecked(s[key]); b.mark:SetText(s[key] and "X" or "") end
     for _,b in pairs(f.sliders) do b:Sync() end
-    for key,b in pairs(f.icons) do b.label:SetText(b.caption..": "..self:IconLabel(key,true)) end
+    local sliderWidth=(panelWidth-56)/2
+    f.sliders.iconSize:SetWidth(sliderWidth)
+    for _,key in ipairs({"iconAlpha","tintAlpha"}) do
+        local b=f.sliders[key]; b:SetWidth(sliderWidth); b:ClearAllPoints()
+        b:SetPoint("TOPLEFT",40+sliderWidth,-(key=="iconAlpha" and 253 or 139))
+        b.caption:ClearAllPoints(); b.caption:SetPoint("TOPLEFT",40+sliderWidth,-(key=="iconAlpha" and 230 or 116)); b.caption:SetWidth(sliderWidth)
+    end
+    for key,b in pairs(f.icons) do b:SetWidth(panelWidth-256); b.label:SetText(self:IconLabel(key,true)) end
     f.swatch:SetVertexColor(s.tintR,s.tintG,s.tintB,s.tintAlpha)
-    return 634*scale
+    return self:SettingsHeight()*scale
 end
 
 function M:IconPickerHeight() return 94+math.ceil(#self.iconChoices/6)*88 end

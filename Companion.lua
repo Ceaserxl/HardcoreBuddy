@@ -9,6 +9,20 @@ local function card(title,note,blocks) return {title=title,note=note,blocks=bloc
 local function row(title,body,action,meta)
     return {title=title,body=body,action=action,meta=meta}
 end
+function C.Tabs(context)
+    return context.characterClass=="Hunter" and {"Overview","Zones","Spells","Pet Training","Pet Guide","First Aid","Engineering","Cooking"}
+        or {"Overview","Zones","Spells","First Aid","Engineering","Cooking"}
+end
+local tabDescriptions={Zones="Recommended leveling zones for your level.",Spells="Your next training level and future class and pet spells.",
+    ["Pet Training"]="Learn and teach pet abilities.",["Pet Guide"]="Pet families, abilities, taming sources and care.",
+    ["First Aid"]="Your next bandage recipe and skill training.",Engineering="Target dummy recipes and profession training.",
+    Cooking="Recipes and training for your next skill tier."}
+function C.TabAction(tab)
+    local family=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[tab]
+    if family then return {kind="profession",family=family} end
+    if tab=="Pet Guide" then return {view="petguide",filter="Families"} end
+    return {view="training",filter=tab~="Overview" and tab or nil}
+end
 local function match(text,query)
     for word in (query or ""):lower():gmatch("%S+") do
         local haystack=(text or ""):lower()
@@ -295,14 +309,14 @@ function C.Build(context,state)
             blocks[#blocks+1]=row("Emergency supplies","Choose tools that fit your profession and escape plan.",{view="supplies",filter="Emergency"})
         end
         if not petTraining then
-            table.insert(blocks,2,row("Cooking","Recipes and training for your next skill tier",{kind="profession",family="cooking"}))
-            table.insert(blocks,3,row("First Aid","Your next bandage recipe and skill training",{kind="profession",family="bandage"}))
-            table.insert(blocks,4,row("Engineering","Target dummy recipes and profession training",{kind="profession",family="dummy"}))
             table.insert(blocks,2,row("Shared cooldowns and Self Found","Read before planning a sequence of emergency items.",{kind="card",card=card("Emergency planning",nil,{
                 row("Shared cooldowns","Healing, mana and escape potions compete for a cooldown. Healthstones, mana gems, target dummies and Felwood healing plants share another cooldown. Do not plan to chain those as independent saves."),
                 row("Self Found","Trading, auction house and mail are unavailable. Check recipe access and obtain materials yourself. Item recommendations do not imply ownership or a known recipe.")})}))
+            for index,tab in ipairs(C.Tabs(context)) do
+                if index>1 then table.insert(blocks,index+1,row(tab,tabDescriptions[tab],C.TabAction(tab))) end
+            end
         end
-        result.cards[1]=card(petTraining and "Pet training" or context.characterClass=="Hunter" and "Overview" or context.characterClass=="Warlock" and "Demon companion" or "Field advice",
+        result.cards[1]=card(petTraining and "Pet training" or "Overview",
             petTraining and (context.petLevel and ((context.mode=="preview" and "Planned" or "Active").." pet level "..context.petLevel) or "No active pet level detected; no current rank assumed.") or nil,blocks)
     elseif view=="petguide" then
         result.filters={"Families","Abilities","Pets","Care"}; result.searchable=true
