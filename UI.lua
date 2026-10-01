@@ -163,11 +163,11 @@ local function renderBlock(frame, block, width)
     if frame.carryLabel then frame.carryLabel:Hide() end
     for _,cell in ipairs(frame.npcCells or {}) do cell:Hide() end
     if frame.quantity:HasFocus() and (frame.quantity.targetKey~=block.targetKey
-        or block.readOnlyTarget or block.groupSupply or not block.editTarget or not block.supply) then frame.quantity:ClearFocus() end
-    frame.count:Hide(); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.supply and block.editTarget and not block.groupSupply and not block.readOnlyTarget)
+        or not block.quantityEditor) then frame.quantity:ClearFocus() end
+    frame.count:Hide(); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.quantityEditor==true)
     frame.choose:SetShown(block.supply and block.pickRank)
     local paintedRow=block.supply or (block.action and not block.columns)
-    Skin.Paint(frame,block.supply and "row" or not block.columns and "card" or "note")
+    Skin.Paint(frame,(block.plain or block.quantityEditor) and "note" or block.supply and "row" or not block.columns and "card" or "note")
     frame.rule:Hide()
     for _,edge in ipairs(frame.statusBorder) do edge:SetShown(block.supply) end
     frame.chevron:SetShown(block.action and not block.supply and not block.columns)
@@ -179,6 +179,16 @@ local function renderBlock(frame, block, width)
     if block.action then frame.iconHit:GetHighlightTexture():SetAllPoints(frame) end
     for _, col in ipairs(frame.columns) do col:Hide() end
     for _, field in ipairs(frame.fields) do field:Hide() end
+    if block.quantityEditor then
+        frame.title:Show(); frame.body:Hide(); frame.meta:Hide()
+        frame.icon:Hide(); frame.iconHit:Hide(); frame.iconBorder:Hide()
+        frame.title:SetFont(STANDARD_TEXT_FONT,12,"")
+        measure(frame.title,"Keep on hand",110,0,8)
+        frame.quantity.targetKey=block.targetKey
+        if not frame.quantity:HasFocus() then frame.quantity:SetText(tostring(block.target or "")) end
+        frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",120,-2); frame.quantity:SetSize(48,28)
+        frame:SetHeight(34); return 34
+    end
     if block.npcColumns then
         frame.title:Hide(); frame.body:Hide(); frame.meta:Hide()
         frame.icon:Hide(); frame.iconHit:Hide(); frame.iconBorder:Hide()
@@ -256,7 +266,7 @@ local function renderBlock(frame, block, width)
                 field:SetScript("OnLeave",function() GameTooltip:Hide() end)
                 frame.fields[index]=field
             end
-            local wide=data.wide or data.label=="Effect" or data.label=="Materials" or data.label=="Notes"
+            local wide=block.singleFieldColumn or data.wide or data.label=="Effect" or data.label=="Materials" or data.label=="Notes"
             if wide and column>0 then y=y+rowHeight+14; column=0; rowHeight=0 end
             local cellWidth=wide and width-24 or fieldWidth
             field:Show(); field:ClearAllPoints(); field:SetPoint("TOPLEFT",12+column*(fieldWidth+gap),-y)
@@ -322,7 +332,7 @@ local function renderBlock(frame, block, width)
     if block.supply then
         -- Classification and stock share a right-hand column. Quantity editing
         -- is available only after opening the item or its rank details.
-        frame:SetHeight(76); y=76
+        frame:SetHeight(56); y=56
         frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
         measure(frame.title,block.title,width-150,52,8); frame.title:SetHeight(18); frame.title:SetWordWrap(false)
         frame.body:SetFont(STANDARD_TEXT_FONT,12,"")
@@ -330,13 +340,8 @@ local function renderBlock(frame, block, width)
         frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-8)
         frame.priority:SetFont(STANDARD_TEXT_FONT,11,"")
         frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPRIGHT",-8,-10); frame.priority:SetSize(84,16); frame.priority:SetJustifyH("RIGHT")
-        if frame.quantity:IsShown() then
-            if not frame.carryLabel then frame.carryLabel=font(frame,11,MUTED) end
-            frame.carryLabel:Show(); measure(frame.carryLabel,"Keep on hand",100,8,52)
-            frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",112,-46); frame.quantity:SetSize(44,24)
-        end
-        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-47); frame.stock:SetSize(84,18); frame.stock:SetJustifyH("RIGHT")
-        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPRIGHT",-8,-40)
+        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-27); frame.stock:SetSize(84,18); frame.stock:SetJustifyH("RIGHT")
+        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPRIGHT",-8,-22)
         frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("BOTTOMRIGHT",-8,7)
         Skin.RowArtwork(frame)
     elseif frame.carryLabel then frame.carryLabel:Hide() end
@@ -403,6 +408,9 @@ renderBlocks = function(parent, blocks, width)
 end
 local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
+    if frame.detailQuantity and not data.quantityRecord then
+        frame.detailQuantity.quantity:ClearFocus(); frame.detailQuantity:Hide()
+    end
     Skin.Paint(frame,"note")
     frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and not data.supplyTable and 22 or 15,"")
     frame.title:Show(); frame.note:Show()
@@ -452,6 +460,33 @@ local function renderCard(frame, data, width)
     frame.content.supplyGrid=data.supplyTable
     frame.content.gridStart=data.supplyTable and 1 or frame.gridStart
     if data.fullWidth then frame.content.gridStart=nil end
+    if data.itemLayout then
+        -- Keep the item, its quantity and alternatives together on the left;
+        -- the labeled reference details get their own column on the right.
+        local contentWidth=width-24
+        local leftWidth=math.floor((contentWidth-16)/2)
+        local rightWidth=contentWidth-leftWidth-16
+        local leftHeight,rightHeight=0,0
+        for i,block in ipairs(data.blocks) do
+            local row=frame.content.blocks[i]
+            if not row then row=newBlock(frame.content); frame.content.blocks[i]=row end
+            local details=block.fields~=nil
+            row.supplyTile=false; row:ClearAllPoints()
+            row:SetPoint("TOPLEFT",details and leftWidth+16 or 0,-(details and rightHeight or leftHeight))
+            local height=renderBlock(row,block,details and rightWidth or leftWidth)
+            if details then rightHeight=rightHeight+height+12 else leftHeight=leftHeight+height+12 end
+            if i==1 and data.quantityRecord then
+                if not frame.detailQuantity then frame.detailQuantity=newBlock(frame.content) end
+                local editor=frame.detailQuantity
+                editor:ClearAllPoints(); editor:SetPoint("TOPLEFT",0,-leftHeight)
+                leftHeight=leftHeight+renderBlock(editor,data.quantityRecord,leftWidth)+12
+            end
+        end
+        for i=#data.blocks+1,#frame.content.blocks do frame.content.blocks[i]:Hide() end
+        local height=math.max(leftHeight,rightHeight)-12
+        frame.content:SetHeight(height); y=y+height+8; frame:SetHeight(y)
+        return y
+    end
     local height=renderBlocks(frame.content, data.blocks, width-24)
     frame.content:SetHeight(height); y=y+height+8; frame:SetHeight(y)
     return y
@@ -654,6 +689,7 @@ function addon:CommitInputs()
     f.level:ClearFocus()
     for _,c in ipairs(f.cards or {}) do
         for _,block in ipairs(c.content.blocks or {}) do if block.quantity then block.quantity:ClearFocus() end end
+        if c.detailQuantity then c.detailQuantity.quantity:ClearFocus() end
     end
 end
 function addon:OpenDeaths(section, record)

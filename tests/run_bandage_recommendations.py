@@ -54,11 +54,12 @@ A.state=state; A:Refresh(true)
 local original=A.state
 MOCK.Click(A.window.cards[1].headerButton)
 assert(state.showAllBandages and select(2,ids(A.document))==10)
+for _,c in ipairs(A.document.cards) do assert(c.title~="First Aid training","Completed First Aid has no empty training heading") end
 MOCK.Click(A.window.cards[1].headerButton)
 assert(not state.showAllBandages and select(2,ids(A.document))==2 and A.state==original)
 local header=A.window.cards[2].content.blocks[1]
 MOCK.Click(header)
-assert(A.document.isDetail and A.window.cards[1].content.blocks[1].quantity:IsShown(),"Recommended lower rank opens editable details")
+assert(A.document.isDetail and A.window.cards[1].detailQuantity.quantity:IsShown(),"Recommended lower rank opens editable details")
 A:Back(); assert(A.state==original)
 
 local saved=A.Data.ClassSpells.Mage

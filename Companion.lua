@@ -192,7 +192,8 @@ local function bandageCards(context,state)
             local section=card("Other ranks","Reference ranks; your learned recipes determine what you can make.",blocks)
             section.supplyTable=true; cards[#cards+1]=section
         end
-        cards[#cards+1]=card("First Aid training",nil,professionBlocks(context,"bandage"))
+        local training=professionBlocks(context,"bandage")
+        if #training>0 then cards[#cards+1]=card("First Aid training",nil,training) end
     end
     return cards
 end
@@ -228,6 +229,14 @@ function C.Detail(context, action)
         local r=S.Record(context,item,family)
         table.insert(out.blocks,1,supplyRow(r)); out.blocks[1].action=nil; out.blocks[1].editTarget=true
         if family then rankState(out.blocks[1],r,context) end
+        out.itemLayout=true
+        if not out.blocks[1].readOnlyTarget and not out.blocks[1].pickRank then
+            out.quantityRecord={title="Keep on hand",quantityEditor=true,targetKey=r.targetKey,target=r.target}
+        end
+        for _,block in ipairs(out.blocks) do
+            if block.fields then block.title="Item details"; block.singleFieldColumn=true end
+            if block.title=="Alternatives" then block.plain=true end
+        end
         return out
     end
     if kind=="supplyFamily" then
