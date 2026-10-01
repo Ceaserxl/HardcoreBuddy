@@ -4,19 +4,23 @@ local checks=0
 local function check(ok,why) checks=checks+1; assert(ok,why) end
 local function close(a,b) return a and math.abs(a-b)<0.00001 end
 
--- No Character window is needed. The controls live directly on Gear settings.
+-- The snapshot subpage needs no Character window and opens from Gear settings.
+local function openSnapshot()
+    A:OpenSettings("Gear Advisor")
+    MOCK.Click(A.Settings.pages["Gear Advisor"].openSnapshot)
+end
 check(not S.panel,"Loading the addon does not require CharacterFrame")
 CharacterFrame=nil
-A:OpenSettings("Gear Advisor")
+openSnapshot()
 local panel=S.panel
-check(panel and panel.parent==A.Settings.pages["Gear Advisor"],"Snapshot panel belongs to Gear Advisor settings")
+check(panel and panel.parent==A.Settings.pages["Gear Snapshot"],"Snapshot panel belongs to Gear Advisor settings")
 check(A.state.view=="settings" and A.state.filter=="Gear Advisor" and panel:IsVisible(),"Gear settings display snapshot controls")
 check(not panel.scroll and not HardcoreBuddyCharacterTab,"No Character tab or nested snapshot scroll frame")
 check(not A.characterDB.gearSnapshot,"Opening settings never captures automatically")
 local emptyHeight=A.Settings.content:GetHeight()
 A:OpenSettings("General")
 check(not panel:IsVisible(),"Leaving Gear settings hides the snapshot section")
-A:OpenSettings("Gear Advisor")
+openSnapshot()
 check(S.panel==panel,"Returning to settings reuses the snapshot controls")
 CharacterFrame=CreateFrame("Frame","CharacterFrame",UIParent)
 CharacterFrame:SetSize(384,512); CharacterFrame:SetPoint("TOPLEFT",50,-100)
@@ -24,7 +28,7 @@ local nativeCalls=0
 CharacterFrame_ShowSubFrame=function() nativeCalls=nativeCalls+1 end
 CharacterFrameTab_OnClick=function() nativeCalls=nativeCalls+1 end
 ToggleCharacter=function() nativeCalls=nativeCalls+1 end
-A:OpenSettings("Gear Advisor")
+openSnapshot()
 check(nativeCalls==0 and not S.tab and not S.chrome,"Settings never change native Character navigation or artwork")
 
 F.reset("HUNTER",40,{31,0,0})
@@ -158,12 +162,12 @@ local characterDB=A.characterDB
 A.characterDB={}; S:Refresh()
 check(panel.status:GetText()=="No gear snapshot saved yet." and not panel.rows[10]:IsShown(),"Characters without a snapshot do not see another character's gear")
 A.characterDB=characterDB; A.characterDB.gearSnapshot=snapshot; S.message=nil; S:Refresh()
-A:OpenSettings("Gear Advisor")
+openSnapshot()
 local scroll=A.Settings.scroll
 check(A.Settings.range>0 and A.Settings.content:GetHeight()>emptyHeight,"Saved equipment extends the settings scroll instead of adding a separate menu")
 scroll:SetVerticalScroll(A.Settings.range)
 local _,lastY,_,lastH=panel.rows[19]:GetRect()
 local _,scrollY,_,scrollH=scroll:GetRect()
 check(lastY>=scrollY and lastY+lastH<=scrollY+scrollH,"Last equipment row reachable without paging")
-scroll:SetVerticalScroll(math.min(A.Settings.range,A.Settings.pages["Gear Advisor"].snapshotTop*A.Settings.content:GetScale()))
+scroll:SetVerticalScroll(0)
 print("PASS: "..checks.." snapshot checks; manual capture, unenchanted scores, immutable raw data, Gear settings integration, partial data and continuous scrolling.")

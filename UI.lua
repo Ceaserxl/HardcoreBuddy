@@ -730,7 +730,7 @@ function addon:Layout()
         if not b then
             b=button(f,label,78,function(self)
                 addon:CommitInputs(); addon.window.classMenu:Hide()
-                addon.state.detail=nil; addon.state.deathRecord=nil; addon.history={}; addon.state.page=1
+                addon.state.detail=nil; addon.state.deathRecord=nil; addon.state.gearPage=nil; addon.history={}; addon.state.page=1
                 if addon.state.view=="petguide" and self.filter=="< Companion" then addon:Navigate("training"); return end
                 if addon.state.view=="dungeons" or addon.state.view=="raids" then
                     addon.state.filter=self.filter

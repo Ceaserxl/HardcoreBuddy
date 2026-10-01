@@ -19,6 +19,7 @@ function GameTooltip:GetOwner() return self.owner end
 A.AuctionUpgrades.profile=original
 A:OpenSettings("Gear Advisor")
 local gear=A.Settings.pages["Gear Advisor"]
+MOCK.Click(gear.openWeights)
 local fields={}; for _,edit in ipairs(gear.weights) do fields[edit.weightKey]=edit end
 check(gear.profile:GetText()=="Scoring: Beast Mastery","Scoring line has no build label")
 local _,scoringY=gear.profile:GetRect()
@@ -42,8 +43,8 @@ check(not G:SetWeight(original,"notAStat",2),"Unknown weight keys are rejected")
 edit:SetFocus(); edit:SetText("20"); edit.scripts.OnEscapePressed(edit)
 check(G:CurrentProfile().weights.agility==1.375,"Escape cancels a pending edit")
 fields.stamina:SetFocus(); fields.stamina:SetText("0.75")
-A:OpenSettings("General")
-check(G:CurrentProfile().weights.stamina==0.75,"Navigating away commits pending edits")
+MOCK.Click(A.Settings.pages["Stat Weights"].back)
+check(G:CurrentProfile().weights.stamina==0.75 and not A.state.gearPage,"Back commits pending edits and returns to Gear Advisor")
 
 local other=G.Profile("WARLOCK",40,nil,1)
 G:SetWeight(other,"shadow",0.123)
@@ -55,6 +56,7 @@ A.characterDB={}
 check(G:CurrentProfile().weights.agility==original.weights.agility,"Overrides do not leak into another character")
 A.characterDB=saved
 A:OpenSettings("Gear Advisor")
+MOCK.Click(gear.openWeights)
 edit:SetFocus(); edit:SetText("99"); MOCK.Click(gear.restore)
 check(G:CurrentProfile().weights.agility==original.weights.agility and G:CurrentProfile().weights.stamina==original.weights.stamina,
     "Restore Defaults clears all active-profile edits, including a pending edit")

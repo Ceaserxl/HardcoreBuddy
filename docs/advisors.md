@@ -19,7 +19,7 @@ Automatic Hardcore paths change phases with level. A manually selected path
 persists per character and class. Existing standalone gear-profile overrides are
 ignored. Edit Character never changes the live gear-scoring character.
 
-**Settings > Gear Advisor** lists all scoring weights. Edit a nonnegative decimal
+Open **Stat Weights** in **Settings > Gear Advisor** to edit all scoring weights. Edit a nonnegative decimal
 and press Enter or leave the field to save; Escape cancels the pending edit.
 Zero ignores that stat. Overrides are saved per character and scoring profile;
 builds using the same profile share its edits. **Restore Defaults** resets only
@@ -45,9 +45,10 @@ Weapon DPS uses the native tooltip's displayed precision, matching the reference
 scorer, ahead of the item API's higher-precision value. Enhancements are removed
 before reading that tooltip. New snapshots identify this as `classic-weighted-v3`;
 older saved snapshots retain their original scores and model identifier.
-The **Gear Snapshot** section below the stat weights in **Settings > Gear Advisor**
+The **Gear Snapshot** button in **Settings > Gear Advisor** opens a page that
 contains the capture button, saved character details, status and all 20 equipment
-slots. Hover a row to see its captured tooltip. It shares the settings scroll and
+slots. Hover a row to see its captured tooltip. Both gear subpages have a **Back**
+button that returns to Gear Advisor settings. Each uses the settings scroll and
 does not open or modify the native Character window. Existing snapshots are retained.
 
 ## Upgrade markers

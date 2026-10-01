@@ -1,5 +1,7 @@
 # Unreleased
 
+- Gear Advisor settings now open Stat Weights and Gear Snapshot on separate
+  pages, each with a Back button to return to the main gear settings.
 - Moved gear snapshot capture, details and the saved item list into Settings >
   Gear Advisor. Removed the snapshot entry from Advisors > Gear and the path
   selection link from Advisors > Talents. Native Character UI is no longer used.

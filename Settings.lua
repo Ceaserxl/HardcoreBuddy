@@ -33,6 +33,12 @@ function A:OpenSettings(section)
     self.window.classMenu:Hide(); self.window:Show(); self:Refresh(true)
 end
 
+function S:OpenGearPage(page)
+    A:CommitInputs()
+    A.state.gearPage=page
+    A:Refresh(true)
+end
+
 function S:CommitInputs()
     local gear=self.pages and self.pages["Gear Advisor"]
     if gear then for _,edit in ipairs(gear.weights) do edit:ClearFocus() end end
@@ -54,9 +60,13 @@ function S:Create(parent)
     end)
     scroll:SetScript("OnHide",function() self:CommitInputs() end)
     self.pages={}
-    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House"}) do
+    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","Gear Snapshot"}) do
         local page=CreateFrame("Frame",nil,content); page:SetAllPoints(content); page:Hide(); self.pages[name]=page
-        label(page,name,22,20,18,700):SetTextColor(unpack(Skin.colors.gold))
+        if name~="Gear Snapshot" then label(page,name,22,20,18,700):SetTextColor(unpack(Skin.colors.gold)) end
+        if name=="Stat Weights" or name=="Gear Snapshot" then
+            page.back=button(page,"< Back",18,function() self:OpenGearPage(nil) end,100)
+            page.back:ClearAllPoints(); page.back:SetPoint("TOPLEFT",620,-18)
+        end
     end
     local general=self.pages.General
     label(general,"Window, access and field kit notifications.",13,20,56,700)
@@ -80,21 +90,24 @@ function S:Create(parent)
         A.db.gearUpgradeMarkers=value
         if A.GearIndicators then A.GearIndicators:Invalidate() end
     end)
-    label(gear,"Stat weights",18,20,240,360):SetTextColor(unpack(Skin.colors.gold))
-    label(gear,"Saved for this character's scoring profile. Use 0 to ignore a stat. Enter to save; Escape to cancel.",12,20,280,700)
-    gear.weightMessage=label(gear,"",12,20,302,700)
+    gear.openWeights=button(gear,"Stat Weights",242,function() self:OpenGearPage("Stat Weights") end)
+    gear.openSnapshot=button(gear,"Gear Snapshot",290,function() self:OpenGearPage("Gear Snapshot") end)
+    local weightsPage=self.pages["Stat Weights"]
+    weightsPage.profile=label(weightsPage,"",14,20,52,700)
+    label(weightsPage,"Saved for this character's scoring profile. Use 0 to ignore a stat. Enter to save; Escape to cancel.",12,20,84,700)
+    gear.weightMessage=label(weightsPage,"",12,20,144,700)
     gear.weights={}
-    gear.restore=button(gear,"Restore Defaults",232,function()
+    gear.restore=button(weightsPage,"Restore Defaults",112,function()
         self:CommitInputs()
         A.GearAdvisor:ResetWeights(A.GearAdvisor:CurrentProfile())
         gear.weightMessage:SetText(""); A:Refresh()
     end,180)
-    gear.restore:ClearAllPoints(); gear.restore:SetPoint("TOPLEFT",540,-232)
+    gear.restore:ClearAllPoints(); gear.restore:SetPoint("TOPLEFT",540,-112)
     for index,entry in ipairs(A.GearAdvisor.WeightFields) do
         local x=20+((index-1)%2)*360
-        local y=332+math.floor((index-1)/2)*36
-        label(gear,entry[2],12,x,y+7,238)
-        local edit=CreateFrame("EditBox",nil,gear,"BackdropTemplate")
+        local y=176+math.floor((index-1)/2)*36
+        label(weightsPage,entry[2],12,x,y+7,238)
+        local edit=CreateFrame("EditBox",nil,weightsPage,"BackdropTemplate")
         gear.weights[index]=edit; edit.weightKey=entry[1]
         edit:SetSize(90,28); edit:SetPoint("TOPLEFT",x+246,-y)
         edit:SetFont(STANDARD_TEXT_FONT,13,""); edit:SetAutoFocus(false); edit:SetMaxLetters(16)
@@ -122,7 +135,7 @@ function S:Create(parent)
             nextEdit:SetFocus(); nextEdit:HighlightText()
         end)
     end
-    gear.contentHeight=348+math.ceil(#gear.weights/2)*36
+    weightsPage.contentHeight=192+math.ceil(#gear.weights/2)*36
 
     local talent=self.pages["Talent Advisor"]
     talent.context=label(talent,"",14,20,56,700)
@@ -162,20 +175,21 @@ function S:Layout(parent,left,top,width,height,section,visible)
     section=section or "General"
     local scale=math.min(1,(width-22)/760)
     local contentWidth=(width-22)/scale
-    local contentHeight=section=="Talent Advisor" and self.pages["Talent Advisor"].contentHeight or section=="Gear Advisor" and self.pages["Gear Advisor"].contentHeight or 440
-    if section=="Gear Advisor" then
-        local gear=self.pages["Gear Advisor"]
-        gear.snapshotTop=gear.contentHeight+12
-        contentHeight=gear.snapshotTop+A.GearSnapshot:Layout(gear,gear.snapshotTop)+20
+    local pageName=section
+    if section=="Gear Advisor" and (A.state.gearPage=="Stat Weights" or A.state.gearPage=="Gear Snapshot") then pageName=A.state.gearPage end
+    local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 440
+    if pageName=="Gear Snapshot" then
+        contentHeight=18+A.GearSnapshot:Layout(self.pages["Gear Snapshot"],18)+20
     end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.scroll:SetSize(width-22,height)
     self.content:SetScale(scale); self.content:SetSize(contentWidth,math.max(contentHeight,height/scale))
-    for name,page in pairs(self.pages) do page:SetShown(name==section) end
+    for name,page in pairs(self.pages) do page:SetShown(name==pageName) end
     local general=self.pages.General; general.minimap:Sync(); general.kit:Sync()
     local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync()
     local profile=A.GearAdvisor:CurrentProfile()
     gear.profile:SetText(profile and ("Scoring: "..profile.name) or "Character data loading")
+    self.pages["Stat Weights"].profile:SetText(gear.profile:GetText())
     for _,edit in ipairs(gear.weights) do
         if edit.profile and profile and (edit.profile.class~=profile.class or edit.profile.id~=profile.id) then edit:ClearFocus() end
         if not edit:HasFocus() then
@@ -220,6 +234,6 @@ function S:Layout(parent,left,top,width,height,section,visible)
     end
     self.range=math.max(0,self.content:GetHeight()*scale-height)
     self.scroll:UpdateScrollChildRect()
-    self.scroll:SetVerticalScroll(self.section~=section and 0 or math.min(self.scroll:GetVerticalScroll(),self.range))
-    self.section=section
+    self.scroll:SetVerticalScroll(self.section~=pageName and 0 or math.min(self.scroll:GetVerticalScroll(),self.range))
+    self.section=pageName
 end
