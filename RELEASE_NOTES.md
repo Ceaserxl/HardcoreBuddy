@@ -1,5 +1,8 @@
 # Unreleased
 
+- NPC previews now have details and controls on the left and a larger bordered
+  model viewport on the right. Loading retries automatically up to three times;
+  delayed camera refreshes, extended zoom and Reset view help with framing.
 - Companion > Spells now separates Hunter pet trainer/taming abilities and
   Warlock demon grimoires into pet sections in next-level and all-future views.
 - Tint color now uses Blizzard's color picker with live preview and Cancel;

@@ -46,8 +46,12 @@ Silent zone notices default on for unset preferences; explicit opt-outs remain.
 Clicking a marker opens a native PlayerModel inside HardcoreBuddy's Advisors >
 Map page. A copied, deduplicated NPC list keeps paging stable across map refreshes.
 Previous/Next controls show each clustered NPC; Back restores the prior addon
-page. Loading failures clear the old model and offer Retry. Drag rotates and the
-mouse wheel zooms. Models are requested by NPC ID from the game client, with no
+page. Details and controls occupy the left panel; a larger square viewport sits
+inside a bordered panel on the right. Missing models retry every three seconds,
+up to three attempts. Closing the page cancels pending work; Retry starts a new
+attempt sequence. The camera refreshes again after loaded data settles, and
+Reset view restores its default framing. Drag rotates and the mouse wheel zooms,
+with extra zoom-out range. Models are requested by NPC ID from the game client, with no
 external addon integration or bundled model files.
 
 Reveal uses independent textures behind native explored overlays. Discovering an

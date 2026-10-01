@@ -37,6 +37,7 @@ function CreateFrame(kind,name,parent,template)
         function f:SetCreature(id) self.creatureID=id end
         function f:SetPortraitZoom(value) self.zoom=value end
         function f:SetCamDistanceScale(value) self.cameraDistance=value end
+        function f:SetModelScale(value) self.modelScale=value end
         function f:SetPosition(x,y,z) self.modelPosition={x,y,z} end
         function f:RefreshCamera() self.cameraRefreshes=(self.cameraRefreshes or 0)+1 end
         function f:SetFacing(value) self.facing=value end
