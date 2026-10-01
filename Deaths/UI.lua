@@ -197,7 +197,7 @@ function H:Refresh()
     self.window.count:SetText(tostring(stats.count))
     self.window.average:SetText(stats.average and string.format("%.1f",stats.average) or "--")
     self.window.highest:SetText(stats.highest>0 and tostring(stats.highest) or "--")
-    self.window.hotspot:SetText("Most reported: "..stats.zone)
+    self.window.hotspot:SetText(stats.zone)
     self.window.realm:SetText(self.realm.."  |  Received death reports")
     local scroll=self.window.listScroll
     self.window.listContent:SetWidth(scroll:GetWidth())
@@ -286,15 +286,16 @@ function H:LayoutPage(parent,left,top,width,height,state)
     self.host:SetSize(width,height)
     addon.Skin.LayoutSections(self.window,width)
     for i,stat in ipairs(self.window.stats) do
-        local cell=(width-56)/3
+        local cell=(width-68)/4
         stat:ClearAllPoints(); stat:SetPoint("TOPLEFT",16+(i-1)*(cell+12),-64); stat:SetWidth(cell)
+        stat.label:SetWidth(cell-24); stat.value:SetWidth(cell-24)
     end
     self.window.clear:ClearAllPoints(); self.window.clear:SetPoint("TOPRIGHT",-16,-122)
     local columns=self:JournalColumns(width)
     for i,label in ipairs(self.window.columnLabels) do
         label:ClearAllPoints(); label:SetPoint("TOPLEFT",columns[i][2]+12,-163); label:SetWidth(columns[i][3])
     end
-    self.window.tableCard:SetHeight(math.max(40,height-242))
+    self.window.tableCard:SetHeight(math.max(40,height-162))
     addon.Skin.LayoutSections(self.details,width)
     self.details.bodyCard:SetHeight(math.max(40,height-114))
     addon.Skin.LayoutSections(self.options,width)
@@ -339,13 +340,15 @@ function H:BuildUI()
     f.realm=Text(f,12,"TOPLEFT",12,-42,650); f.realm:SetTextColor(unpack(MUTED))
     f.tableCard=addon.Skin.SectionBackdrop(f,154,274)
     f.stats={}
-    for i,entry in ipairs({{"count","REPORTS"},{"average","AVERAGE LEVEL"},{"highest","HIGHEST LEVEL"}}) do
+    for i,entry in ipairs({{"count","REPORTS"},{"average","AVERAGE LEVEL"},{"highest","HIGHEST LEVEL"},{"hotspot","MOST REPORTED"}}) do
         local stat=CreateFrame("Frame",nil,f,"BackdropTemplate")
         f.stats[i]=stat
         stat:SetSize(246,48); stat:SetPoint("TOPLEFT",16+(i-1)*258,-64)
         addon.Skin.Paint(stat,"card")
         local label=Text(stat,10,"TOPLEFT",12,-7,210); label:SetText(entry[2]); label:SetTextColor(unpack(MUTED))
-        f[entry[1]]=Text(stat,18,"TOPLEFT",12,-23,210); f[entry[1]]:SetTextColor(unpack(GOLD))
+        local value=Text(stat,entry[1]=="hotspot" and 12 or 18,"TOPLEFT",12,-23,210)
+        f[entry[1]]=value; value:SetTextColor(unpack(GOLD)); stat.label=label; stat.value=value
+        if entry[1]=="hotspot" then value:SetWordWrap(true); value:SetHeight(24) end
     end
     local search=Edit(f,340,16,-122)
     f.search=search
@@ -375,13 +378,13 @@ function H:BuildUI()
     f.clear:SetScript("OnUpdate",function(button)
         if button.confirmUntil and GetTime()>=button.confirmUntil then button.confirmUntil=nil; button.label:SetText("Clear reports") end
     end)
-    f.settings=Button(f,"Death Journal settings  >",720,0,0,function() addon:OpenSettings("Death Journal") end)
-    f.settings:ClearAllPoints(); f.settings:SetPoint("BOTTOMLEFT",12,8); f.settings:SetPoint("BOTTOMRIGHT",-12,8); f.settings:SetHeight(34)
+    f.settings=Button(f,"Settings",110,0,0,function() addon:OpenSettings("Death Journal") end)
+    f.settings:ClearAllPoints(); f.settings:SetPoint("TOPRIGHT",-16,-12)
     f.columnLabels={}
     for _,c in ipairs(self:JournalColumns(816)) do local label=Text(f,10,"TOPLEFT",c[2]+12,-163,c[3]); label:SetText(c[1]); label:SetTextColor(unpack(MUTED)); f.columnLabels[#f.columnLabels+1]=label end
     f.rows = {}
     f.listScroll=CreateFrame("ScrollFrame","HardcoreBuddyDeathJournalScrollFrame",f,"UIPanelScrollFrameTemplate")
-    f.listScroll:SetPoint("TOPLEFT",0,-180); f.listScroll:SetPoint("BOTTOMRIGHT",0,88)
+    f.listScroll:SetPoint("TOPLEFT",0,-180); f.listScroll:SetPoint("BOTTOMRIGHT",0,10)
     f.listScroll:EnableMouseWheel(true)
     f.listScroll:SetScript("OnMouseWheel",function(scroll,delta)
         scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*96)))
@@ -390,7 +393,6 @@ function H:BuildUI()
     f.listContent=CreateFrame("Frame",nil,f.listScroll)
     f.listContent:SetSize(816,1); f.listScroll:SetScrollChild(f.listContent)
     f.empty=Text(f.listScroll,15,"CENTER",0,0,650);f.empty:SetJustifyH("CENTER");f.empty:SetWordWrap(true)
-    f.hotspot=Text(f,11,"BOTTOMLEFT",16,64,560); f.hotspot:SetTextColor(unpack(MUTED))
 
     local mini=Panel("HardcoreBuddyDeathsFeed",360,218);self.mini=mini
     addon.Skin.Paint(mini,"menu")

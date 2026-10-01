@@ -238,7 +238,7 @@ Deathlog does not need to be installed. Credits and original sources are in
 HardcoreDeaths is built into HardcoreBuddy. Select the **Death Journal** tab in the main
 window, right-click the shared minimap button, or use `/hcb deaths`.
 Reports use the full content width with no sidebar. **Clear reports** asks for a
-second click within five seconds. The **Death Journal settings** row opens the
+second click within five seconds. **Settings** beside the journal title opens the
 combined settings page. **Import Deathlog** is there, along with **Keep reports
 for** (1–3650 days; default 30). Expired reports are removed automatically. The `/hd` and
 `/hardcoredeaths` aliases also open this page.

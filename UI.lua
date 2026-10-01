@@ -197,6 +197,7 @@ local function renderBlock(frame, block, width)
     frame.title:Show(); frame.body:Show(); frame.meta:Show()
     local icon = block.itemId ~= nil or block.icon ~= nil
     frame.icon:SetShown(icon); frame.iconHit:SetShown(icon); frame.iconBorder:SetShown(icon)
+    frame.chevron:SetShown(block.action and not block.supply and not icon)
     if icon then
         local texture = type(block.icon)=="string" and block.icon:match("([^/]+)%.%w+$")
         local native=type(block.icon)=="number" and block.icon or nil
@@ -205,8 +206,8 @@ local function renderBlock(frame, block, width)
         native=native or (texture and ("Interface\\Icons\\" .. texture)) or "Interface\\Icons\\INV_Misc_QuestionMark"
         if not frame.icon:SetTexture(native) then frame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark") end
     end
-    local x = (icon and 52 or 12) + (block.child and 8 or 0)
-    local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), block.supply and 8 or 12
+    local x = (icon and block.supply and 52 or 12) + (block.child and 8 or 0)
+    local available, y = width-x-(block.supply and 210 or icon and 54 or block.action and 32 or 14), block.supply and 8 or 12
     frame.title:SetTextColor(unpack(block.titleColor or (block.supply and WHITE or GOLD)))
     local height
     if block.supply then
@@ -290,7 +291,7 @@ local function renderBlock(frame, block, width)
         center(frame.stock,width-88,frame.stockTrack:IsShown() and 3.5 or 0)
         frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("TOPLEFT",frame.stock,"BOTTOMLEFT",0,-4)
     else
-        frame.icon:SetPoint("TOPLEFT",8,-8)
+        frame.icon:SetPoint("TOPRIGHT",-10,-10)
     end
     -- Pooled rows may retain the same size, so OnSizeChanged is not guaranteed.
     -- Lay out the artwork only after the row's final height and anchors settle.
@@ -300,9 +301,9 @@ local function renderBlock(frame, block, width)
         frame:SetHeight(76); y=76
         frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
         frame.title:SetWordWrap(false); frame.body:SetWordWrap(false)
-        measure(frame.title,block.title,width-68,52,8); frame.title:SetHeight(18)
-        measure(frame.body,block.body,width-68,52,28); frame.body:SetHeight(14)
-        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-8)
+        measure(frame.title,block.title,width-68,12,8); frame.title:SetHeight(18)
+        measure(frame.body,block.body,width-68,12,28); frame.body:SetHeight(14)
+        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPRIGHT",-8,-8)
         frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPLEFT",8,-52); frame.priority:SetSize(68,14)
         frame.count:SetFont(STANDARD_TEXT_FONT,11,"")
         frame.count:ClearAllPoints(); frame.count:SetPoint("TOPLEFT",80,-51); frame.count:SetSize(94,16)

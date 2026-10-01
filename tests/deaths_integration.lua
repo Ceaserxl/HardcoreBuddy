@@ -231,7 +231,8 @@ for _,mode in ipairs({"live","preview"}) do
     local x,y,w,h=H.host:GetRect()
     for _,row in ipairs(H.window.rows) do if row:IsVisible() then
         local rx,ry,rw,rh=row:GetRect()
-        assert(ry>=y+180-32 and ry+rh<=y+h-40+32,"pooled rows only extend by one clipped row at viewport edges")
+        local _,scrollY,_,scrollHeight=H.window.listScroll:GetRect()
+        assert(ry>=scrollY-32 and ry+rh<=scrollY+scrollHeight+32,"pooled rows only extend by one clipped row at viewport edges")
         assert(row.zone:GetHeight()>=row.zone:GetStringHeight(),"location column text fits")
     end end
     A:OpenDeaths("Options")
