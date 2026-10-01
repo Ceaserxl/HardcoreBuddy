@@ -29,6 +29,10 @@ for _,page in ipairs({"Stat Weights"}) do
     back(); assert(not A.state.gearPage and A.state.filter=="Gear Advisor")
 end
 A:Navigate("petguide"); back(); assert(A.state.view=="training")
+A:HandleSlashCommand("talents"); A:Activate({kind="advisor",command="path"})
+back(); assert(A.state.filter=="Talents" and not A.state.talentPath)
+A:OpenSettings("Map"); MOCK.Click(A.MapAdvisor.controls.icons.rare)
+back(); assert(A.state.filter=="Map" and not A.state.mapIconKind)
 A:Navigate("advisors"); A.state.filter="Map"; A:Refresh(true)
 A.MapAdvisor:Activate({command="zones"})
 back(); assert(not A.state.mapZonePicker and A.state.filter=="Map")

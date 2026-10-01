@@ -88,8 +88,15 @@ GetTalentInfo=saved
 
 A.db.profile.mode="live"; A:HandleSlashCommand("talents")
 check(A.state.view=="advisors" and A.state.filter=="Talents","Slash entry point")
-check(A.document.cards[1].title=="Talent Advisor" and #A.document.cards[2].blocks==51,"All 51 steps in one list")
-check(A.window.content:GetHeight()>A.window.scroll:GetHeight(),"Continuous scrolling, no paging")
+check(A.document.cards[1].title=="Talent Advisor" and #A.document.cards==1,"Path is collapsed into a button")
+local pathLink=A.document.cards[1].blocks[#A.document.cards[1].blocks-1]
+check(pathLink.action.command=="path","Dedicated path button")
+local overview=A.state
+A:Activate(pathLink.action)
+check(A.state.talentPath and #A.document.cards==1 and #A.document.cards[1].blocks==51,"All 51 steps in the separate path page")
+check(A.window.content:GetHeight()>A.window.scroll:GetHeight() and A:CanGoBack(),"Scrollable path with shared Back")
+MOCK.Click(A.window.back)
+check(A.state==overview and not A.state.talentPath,"Back restores the talent overview")
 check(A.window.sidebarTitle:GetText()=="ADVISORS","Sidebar identity")
 local lesson=A.document.cards[1].blocks[2]
 check(lesson.action and lesson.action.command=="learn" and lesson.icon==132127,"Visible single-point button and native icon")
@@ -111,7 +118,9 @@ for class,name in pairs(names) do
     A.state={view="advisors",filter="Talents"}; A:Refresh(true)
     check(A.document.view=="advisors" and A.document.cards[1].note:find(name,1,true),"Preview class stays on advisor page")
     for _,b in ipairs(A.document.cards[1].blocks) do check(not b.action or b.action.command~="learn","Preview cannot spend points") end
-    check(#A.document.cards[2].blocks>0,"Every preview class has a path")
+    A:Activate({kind="advisor",command="path"})
+    check(#A.document.cards[1].blocks>0 and A.state.talentPath,"Every preview class has a separate path")
+    A:Back()
 end
 check(calls==1,"Previewing all classes never spends")
 A.db.profile.mode="live"; A:HandleSlashCommand("gear")

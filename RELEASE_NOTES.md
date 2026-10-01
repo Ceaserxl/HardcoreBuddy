@@ -1,5 +1,8 @@
 # Unreleased
 
+- Talent Advisor's Point-by-point path now opens a separate scrolling page.
+- Map marker categories now open an icon picker with previews of every available
+  choice. Icon size also adjusts clustering distance and rebuilds nearby groups.
 - Added Companion > Spells with the next training level, all-future toggle,
   search, spell tooltips and bundled Classic Era trainer data for all nine classes.
 - Reframed map NPC previews with a square full-body viewport and additional

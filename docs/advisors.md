@@ -129,7 +129,8 @@ items before changing weapon styles.
 ## Talent advice
 
 Sixteen Hardcore paths cover levels 10-60 across all nine Classic classes.
-Levels 1-9 show that talents are locked. The list has continuous scrolling,
+Levels 1-9 show that talents are locked. The Point-by-point path button opens a
+separate page with the shared upper-left Back button. The list has continuous scrolling,
 current ranks and a next-point highlight. Edit Character can preview any class.
 Default paths change phases for Druid, Rogue, Shaman and Warrior; incompatible
 existing points produce explicit respec guidance. Selecting another path never

@@ -195,10 +195,32 @@ M:Attach(); M:RefreshPins()
 assert(t.vertexColor[1]==1 and t.vertexColor[2]==0 and t.vertexColor[3]==128/255 and t.vertexColor[4]==0.25)
 assert(M.pins[1]:GetWidth()==30 and M.pins[1].icon:GetAlpha()==0.4)
 local oldIcon=s.icons.rare; MOCK.Click(controls.icons.rare)
-assert(s.icons.rare~=oldIcon)
+assert(s.icons.rare==oldIcon and A.state.mapIconKind=="rare" and M.iconPicker:IsVisible() and not controls:IsShown(),"Category opens picker without changing its icon")
+local choices=0
+for _,key in ipairs(M.iconChoices) do
+    local b=M.iconPicker.choices[key]; assert(b and b:IsVisible()); choices=choices+1
+    MOCK.Click(b); assert(s.icons.rare==key and b.label:GetText():find("Selected",1,true))
+end
+assert(choices==7 and A:CanGoBack(),"All available icons are listed")
+MOCK.Click(A.window.back)
+assert(not A.state.mapIconKind and not M.iconPicker:IsShown() and controls:IsVisible())
+MOCK.Click(controls.icons.elite); MOCK.Click(M.iconPicker.choices.star)
+assert(s.icons.elite=="star" and not M.iconPicker.choices.rare.label:GetText():find("UI%-RaidTargetingIcon_7"),"Picker previews actual choices, not another category's saved icon")
 A:OpenSettings("General"); A:OpenSettings("Map")
+assert(not M.iconPicker:IsShown() and controls:IsVisible(),"Picker hides on section changes")
 assert(s.tintR==1 and s.iconSize==30 and not s.notify)
 MOCK.Click(controls.restore)
+
+-- Changing icon size rebuilds cluster membership, not just pin dimensions.
+M.Records=function() return {record(1,"A","rare",{{10,10}}),record(2,"B","elite",{{12,10}})} end
+scale=1; canvas:SetSize(1000,1000); mapID=1436
+controls.sliders.iconSize:SetValue(12); now=now+1; M.events.scripts.OnUpdate(M.events)
+assert(M.pins[1]:IsShown() and M.pins[2]:IsShown(),"Small icons stay separate")
+controls.sliders.iconSize:SetValue(30); now=now+1; M.events.scripts.OnUpdate(M.events)
+assert(#M.pins[1].cluster.records==2 and not M.pins[2]:IsShown(),"Larger icons recluster and hide the old pin")
+controls.sliders.iconSize:SetValue(12); now=now+1; M.events.scripts.OnUpdate(M.events)
+assert(M.pins[2]:IsShown(),"Reducing icon size splits the cluster again")
+M.Records=records; MOCK.Click(controls.restore)
 assert(s.tintR==0.35 and s.iconSize==18 and s.iconAlpha==1 and s.icons.rare=="rare" and not s.notify)
 s.iconSize=999; s.iconAlpha=-10; s.icons.rare="bad"; M:Settings()
 assert(s.iconSize==40 and s.iconAlpha==0.1 and s.icons.rare=="rare")

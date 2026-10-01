@@ -2,6 +2,9 @@ local _,A=...
 local M,Skin=A.MapAdvisor,A.Skin
 
 function M:LayoutSettings(parent,left,top,width,visible)
+    local picking=visible and A.state.mapIconKind~=nil
+    self:LayoutIconPicker(parent,left,top,width,picking)
+    visible=visible and not picking
     if not self.controls and not visible then return 0 end
     local s=self:Settings()
     if not self.controls then
@@ -64,15 +67,11 @@ function M:LayoutSettings(parent,left,top,width,visible)
         for i,kind in ipairs({"rare","elite","boss","danger"}) do
             local key=kind
             local b=button("",16+((i-1)%2)*352,372+math.floor((i-1)/2)*40,340,function()
-                local settings=M:Settings()
-                for n,choice in ipairs(M.iconChoices) do if settings.icons[key]==choice then
-                    settings.icons[key]=M.iconChoices[n%#M.iconChoices+1]; break
-                end end
-                M:Changed()
+                A.state.mapIconKind=key; A.Settings.scroll:SetVerticalScroll(0); A:Refresh(true)
             end)
             b.caption=({rare="Rare",elite="Elite",boss="Boss",danger="Dangerous"})[key]; f.icons[key]=b
         end
-        label("Click a category button to cycle its icon.",16,450,700)
+        label("Choose a category to browse all available icons.",16,450,700)
         slider("iconSize","Icon size",16,480,328,12,40,18,1," px")
         slider("iconAlpha","Icon opacity",372,480,328,10,100,1,100,"%")
         f.restore=button("Reset appearance",16,544,210,function()
@@ -91,6 +90,38 @@ function M:LayoutSettings(parent,left,top,width,visible)
     for key,b in pairs(f.icons) do b.label:SetText(b.caption..": "..self:IconLabel(key,true)) end
     f.swatch:SetVertexColor(s.tintR,s.tintG,s.tintB,s.tintAlpha)
     return 634*scale
+end
+
+function M:LayoutIconPicker(parent,left,top,width,visible)
+    if not self.iconPicker and not visible then return end
+    if not self.iconPicker then
+        local f=CreateFrame("Frame",nil,parent,"BackdropTemplate"); self.iconPicker=f; Skin.Paint(f,"card")
+        f.title=f:CreateFontString(nil,"OVERLAY","GameFontHighlight"); f.title:SetPoint("TOPLEFT",16,-16)
+        f.title:SetTextColor(unpack(Skin.colors.gold))
+        local note=f:CreateFontString(nil,"OVERLAY","GameFontHighlight"); note:SetPoint("TOPLEFT",16,-44)
+        note:SetText("Choose an icon. Use Back to return to Map settings.")
+        f.choices={}
+        for i,choice in ipairs(self.iconChoices) do
+            local key=choice
+            local b=CreateFrame("Button",nil,f,"BackdropTemplate"); b:SetPoint("TOPLEFT",16,-78-(i-1)*48); b:SetSize(700,40)
+            Skin.Button(b,"category")
+            b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetPoint("LEFT",12,0)
+            b:SetScript("OnClick",function()
+                M:Settings().icons[A.state.mapIconKind]=key; M:Changed()
+            end)
+            f.choices[key]=b
+        end
+    end
+    local f=self.iconPicker; f:SetShown(visible); if not visible then return end
+    local scale=math.min(1,width/744); f:SetScale(scale); f:SetSize(width/scale,430)
+    f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
+    local kind=A.state.mapIconKind
+    f.title:SetText((({rare="Rare",elite="Elite",boss="World boss",danger="Dangerous"})[kind] or "NPC").." marker icon")
+    for key,b in pairs(f.choices) do
+        local selected=self:Settings().icons[kind]==key
+        b.label:SetText(self:IconChoiceLabel(key)..(selected and "  |  Selected" or ""))
+        Skin.ButtonState(b,selected,false,false)
+    end
 end
 
 M.events:HookScript("OnUpdate",function()

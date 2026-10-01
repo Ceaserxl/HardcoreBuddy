@@ -30,10 +30,13 @@ Markers use native Classic assets: `nameplates-icon-elite-silver`,
 `Interface/TargetingFrame/UI-TargetingFrame-Skull`. Atlas availability is checked
 before use; native texture fallbacks handle missing atlases. Classic atlas names
 are recorded in the [client atlas catalogue](https://github.com/Hoizame/WoW_ClassicUIResources/blob/master/RawData/UiTextureAtlasElement.lua).
-Icons keep their selected screen size at different map zoom levels. Clusters use a 16-pixel
-maximum distance between all members, preventing transitive chains.
+Icons keep their selected screen size at different map zoom levels. Clusters use
+a maximum distance of iconSize * 16 / 18 between all members, preventing transitive
+chains. Size changes rebuild the groups after the slider's brief update delay.
 The default size is adjustable from 12–40 pixels, with 10–100% icon opacity.
-Each category can use the rare, elite, skull, warning, star, diamond or cross icon.
+Each category opens a picker listing the rare, elite, skull, warning, star, diamond
+and cross icons, with previews and a selected indicator. The shared Back button
+returns to Map settings.
 Tint RGB and opacity are editable independently of Reveal all and Unchanged.
 Appearance resets preserve category filters and silent notice preferences.
 Silent zone notices default on for unset preferences; explicit opt-outs remain.

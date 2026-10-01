@@ -186,6 +186,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
         for _,page in pairs(A.CreatureAlerts.pages or {}) do page:Hide() end
         if A.Readiness.options then A.Readiness.options:Hide() end
         if A.MapAdvisor.controls then A.MapAdvisor.controls:Hide() end
+        if A.MapAdvisor.iconPicker then A.MapAdvisor.iconPicker:Hide() end
         return
     end
     section=self:Section(section)
@@ -195,7 +196,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     if section=="Gear Advisor" and A.state.gearPage=="Stat Weights" then pageName=A.state.gearPage end
     local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 440
     if section=="Death Alerts" then contentHeight=892 end
-    if section=="Map" then contentHeight=650 end
+    if section=="Map" then contentHeight=A.state.mapIconKind and 446 or 650 end
     if pageName=="Debug" then A.DebugDump:Refresh() end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.scroll:SetSize(width-22,height)

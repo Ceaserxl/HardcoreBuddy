@@ -74,7 +74,7 @@ Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
 - Shows both ring/trinket slots, handles two-handed replacements and lists stat losses.
 - Excludes applied enchants and armor kits from both scores.
 - Hardcore talent paths for all nine classes, with current ranks, next-point advice,
-  explicit respec guidance and one continuous point-by-point list.
+  explicit respec guidance and a Point-by-point path button opening a continuous list.
 - WoW's existing talent rank numbers show current/recommended ranks for your
   selected build, such as **2/5**.
 - Separate **Disable Gear Advisor** and **Disable Talent Advisor** buttons in their
@@ -123,11 +123,12 @@ reveal unexplored outdoor terrain or tint unexplored areas translucent blue.
 Category filters show known dangerous NPCs, rares, elites and bosses.
 Map markers use Blizzard's silver rare and gold elite icons, a skull for world
 bosses and a warning icon for dangerous NPCs. Hover for NPC names and details.
-Map settings include RGB tint color and opacity, individual category icon choices,
+Map settings include RGB tint color and opacity, an icon picker for each category,
 and marker size (12–40 pixels) and opacity (10–100%). Reset appearance restores
 the original visuals without changing category filters or notice preferences.
-Only nearly overlapping points (within 16 screen pixels of every other point
-in their group) combine. Nearby chains cannot collapse an entire camp. Zooming
+Only nearly overlapping points combine. The distance follows icon size (16 pixels
+at the default 18-pixel size), and changing size recalculates the groups. Every
+point must be close to every other point; nearby chains cannot collapse an entire camp. Zooming
 in separates locations that are far enough apart on screen.
 Browse any Classic zone or follow your current zone under **Advisors > Map**.
 **Silent zone-entry notice** lists known dangers in chat without playing a sound

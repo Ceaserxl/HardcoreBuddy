@@ -607,6 +607,8 @@ end
 function addon:Back()
     self:CommitInputs(); self.window.classMenu:Hide()
     if self.state.view=="settings" and self.state.gearPage then self.Settings:OpenGearPage(nil)
+    elseif self.state.view=="settings" and self.state.mapIconKind then
+        self.state.mapIconKind=nil; self.Settings.scroll:SetVerticalScroll(0); self:Refresh(true)
     elseif self.state.view=="deaths" and self.state.deathRecord then self:OpenDeaths("Reports")
     elseif self.state.view=="advisors" and self.state.filter=="Map" and self.state.mapNPCs then
         self.state=table.remove(self.history or {}) or {view="advisors",filter="Map"}; self:Refresh(true)
@@ -619,6 +621,7 @@ function addon:CanGoBack()
     local s=self.state or {}
     return (self.history and #self.history>0) or s.view=="petguide"
         or (s.view=="settings" and s.gearPage~=nil)
+        or (s.view=="settings" and s.mapIconKind~=nil)
         or (s.view=="deaths" and s.deathRecord~=nil)
         or (s.view=="advisors" and s.filter=="Map" and (s.mapZonePicker or s.mapNPCs)) or false
 end
@@ -760,7 +763,7 @@ function addon:Layout()
         if not b then
             b=button(f,label,78,function(self)
                 addon:CommitInputs(); addon.window.classMenu:Hide()
-                addon.state.detail=nil; addon.state.deathRecord=nil; addon.state.gearPage=nil; addon.history={}; addon.state.page=1
+                addon.state.detail=nil; addon.state.deathRecord=nil; addon.state.gearPage=nil; addon.state.mapIconKind=nil; addon.state.talentPath=nil; addon.history={}; addon.state.page=1
                 if addon.state.view=="instances" then
                     addon.state.filter=self.filter
                     addon.state.currentMap=nil; addon.state.currentName=nil; addon.state.unknownInstance=nil

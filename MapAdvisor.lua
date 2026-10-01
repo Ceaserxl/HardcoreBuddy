@@ -23,13 +23,17 @@ function M:IconLabel(kind,showChoice)
     local caption=showChoice and (names[key] or (key:sub(1,1):upper()..key:sub(2))) or names[kind]
     return (atlas and ("|A:"..atlas..":18:18|a") or ("|T"..icons[key].fallback..":18:18:0:0|t")).." "..caption
 end
+function M:IconChoiceLabel(key)
+    local atlas=atlasFor(key)
+    local caption=names[key] or (key:sub(1,1):upper()..key:sub(2))
+    return (atlas and ("|A:"..atlas..":18:18|a") or ("|T"..icons[key].fallback..":18:18:0:0|t")).." "..caption
+end
 M.iconChoices={"rare","elite","boss","danger","star","diamond","cross"}
 local function bounded(value,default,low,high)
     value=tonumber(value); if not value or value~=value then value=default end
     return math.max(low,math.min(high,value))
 end
 local priority={danger=2,rare=1,elite=3,boss=4}
-local CLUSTER_RADIUS=16
 local function action(command,id) return {kind="mapAdvisor",command=command,id=id} end
 local function row(title,body,command,id) return {title=title,body=body,action=command and action(command,id)} end
 
@@ -83,6 +87,8 @@ function M:Clusters(id)
     local scale=map and map.GetCanvasScale and map:GetCanvasScale() or 1
     local width=(canvas and canvas:GetWidth() or 1002)*scale
     local height=(canvas and canvas:GetHeight() or 668)*scale
+    -- Preserve the default 16px radius at 18px, and follow the marker footprint.
+    local radius=self:Settings().iconSize*16/18
     local clusters={}
     for _,record in ipairs(self:Records(id)) do
         for _,xy in ipairs(record.npc.locations[id] or {}) do
@@ -92,7 +98,7 @@ function M:Clusters(id)
                 local fits=true
                 for _,point in ipairs(candidate.points) do
                     local dx,dy=px-point[1],py-point[2]
-                    if dx*dx+dy*dy>CLUSTER_RADIUS*CLUSTER_RADIUS then fits=false; break end
+                    if dx*dx+dy*dy>radius*radius then fits=false; break end
                 end
                 if fits then cell=candidate; break end
             end

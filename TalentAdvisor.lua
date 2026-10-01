@@ -147,6 +147,12 @@ function T:OpenTalents()
 end
 
 function T:Activate(a)
+    if a.command=="path" then
+        A:CommitInputs()
+        A.history=A.history or {}; A.history[#A.history+1]=A.state
+        A.state={view="advisors",filter="Talents",talentPath=true}
+        A:Refresh(true); return
+    end
     if a.command=="settings" then A:OpenSettings("Gear Advisor"); return end
     if a.command=="talentSettings" then A:OpenSettings("Talent Advisor"); return end
     local s=settings(); if not s then return end
@@ -211,8 +217,10 @@ function T:Document(context,state)
             node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank,learn,
             canLearn and "Click to spend one talent point" or "",live and live.icons[nextPoint.key] or spellIcon(node.spellID))
     end
+    top[#top+1]=row("Point-by-point path",build.name.." | View the complete talent path.",action("path"))
     top[#top+1]=row("Talent Advisor settings","Choose your talent build and manage talent recommendations.",action("talentSettings"))
     doc.cards[1]=card("Talent Advisor",context.characterClass.." | Level "..level,top)
+    if not state.talentPath then return doc end
     local steps,occurrences={},{}
     for index,key in ipairs(build.steps) do
         occurrences[key]=(occurrences[key] or 0)+1
@@ -226,7 +234,7 @@ function T:Document(context,state)
         steps[#steps+1]=row(title,"Level "..atLevel.."  |  "..node.treeName,nil,
             learned and "Learned" or nextStep and "Next point" or nil,live and live.icons[key] or spellIcon(node.spellID))
     end
-    doc.cards[2]=card("Your point-by-point path",build.name.." | Scroll to see the complete path.",steps)
+    doc.cards={card("Your point-by-point path",context.characterClass.." | "..build.name.." | Scroll to see the complete path.",steps)}
     return doc
 end
 
