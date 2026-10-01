@@ -1,7 +1,7 @@
 # Unreleased
 
-- Simplified gear tooltips: left-aligned slot percentages and green stat gains /
-  red losses, without specialization, scoring explanations, or listing counts.
+- Simplified gear tooltips: green stat gains / red losses beneath the original
+  slot and percentage row, without specialization, scoring explanations, or listing counts.
 - Fixed equipped comparison flicker during auction scans by reusing visible
   tooltips and updating listing counts without rebuilding item comparisons.
 - Auction upgrade hovers now show equipped-item comparisons automatically,

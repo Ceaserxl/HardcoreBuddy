@@ -313,8 +313,9 @@ local lineCount=GameTooltip:NumLines()
 local state=GameTooltip.hardcoreBuddyGear
 check(state and _G[GameTooltip.name.."TextLeft"..state.start]:GetText()==" ","Spacer before advisor")
 local function adviceLine(offset) return _G[GameTooltip.name.."TextLeft"..(state.start+offset)] end
-check(adviceLine(2):GetText()=="Hands: "..state.report.rows[1].text
-    and _G[GameTooltip.name.."TextRight"..(state.start+2)]:GetText()=="","Slot and percentage are together on the left")
+check(adviceLine(2):GetText()=="Hands"
+    and _G[GameTooltip.name.."TextRight"..(state.start+2)]:GetText()==state.report.rows[1].text,
+    "Slot remains on the left and percentage on the right")
 check(adviceLine(3):GetText()==state.report.rows[1].gains and adviceLine(3):GetText():find("+",1,true)
     and adviceLine(4):GetText()==state.report.rows[1].losses,"Unlabelled gains and losses appear beneath the comparison")
 local gr,gg=adviceLine(3):GetTextColor(); local lr,lg=adviceLine(4):GetTextColor()

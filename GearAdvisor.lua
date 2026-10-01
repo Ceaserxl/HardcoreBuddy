@@ -543,7 +543,7 @@ function G:Add(tip)
             local row=report.rows[i]
             -- Reserve the same fields on refresh; empty text collapses in the
             -- native tooltip and avoids moving other addons' appended lines.
-            lines[#lines+1]={row and (row.label..": "..row.text) or "","",colors[row and row.status or "equal"]}
+            lines[#lines+1]={row and row.label or "",row and row.text or "",colors[row and row.status or "equal"]}
             lines[#lines+1]={row and row.gains or "","",colors.up}
             lines[#lines+1]={row and row.losses or "","",colors.down}
         end
@@ -556,7 +556,7 @@ function G:Add(tip)
             local left=name and _G[name.."TextLeft"..(start+i-1)]
             local right=name and _G[name.."TextRight"..(start+i-1)]
             local color=line[3]
-            local leftColor=color
+            local leftColor=line[2]~="" and colors.equal or color
             if reuse and left and right then
                 left:SetText(line[1]); left:SetTextColor(unpack(leftColor)); left:Show()
                 right:SetText(line[2]); right:SetTextColor(unpack(color)); right:SetShown(line[2]~="")
