@@ -316,9 +316,12 @@ local function adviceLine(offset) return _G[GameTooltip.name.."TextLeft"..(state
 check(adviceLine(2):GetText()=="Hands"
     and _G[GameTooltip.name.."TextRight"..(state.start+2)]:GetText()==state.report.rows[1].text,
     "Slot remains on the left and percentage on the right")
-check(adviceLine(3):GetText()==state.report.rows[1].gains and adviceLine(3):GetText():find("+",1,true)
-    and adviceLine(4):GetText()==state.report.rows[1].losses,"Unlabelled gains and losses appear beneath the comparison")
-local gr,gg=adviceLine(3):GetTextColor(); local lr,lg=adviceLine(4):GetTextColor()
+local gainsLine=_G[GameTooltip.name.."TextRight"..(state.start+3)]
+local lossesLine=_G[GameTooltip.name.."TextRight"..(state.start+4)]
+check(adviceLine(3):GetText()=="Stats gained" and gainsLine:GetText()==state.report.rows[1].gains
+    and adviceLine(4):GetText()=="Stats lost" and lossesLine:GetText()==state.report.rows[1].losses,
+    "Gains and losses have labels beside their values")
+local gr,gg=gainsLine:GetTextColor(); local lr,lg=lossesLine:GetTextColor()
 check(gg>gr and lr>lg,"Gains are green and losses are red")
 local reads=#readLinks
 G:Add(GameTooltip)
