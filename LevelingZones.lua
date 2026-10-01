@@ -15,7 +15,7 @@ function Z.Build(context,state)
                 and name:lower():find((state.query or ""):lower(),1,true) then
                 local status=level<band[1] and "Upcoming" or level>band[2] and "Finishing up" or "In range"
                 blocks[#blocks+1]={title=name,body="Recommended levels "..band[1].."-"..band[2].." | "..status,
-                    action={kind="mapAdvisor",command="open",id=entry.map},low=band[1],high=band[2],map=entry.map}
+                    action={kind="mapAdvisor",command="zone",id=entry.map},low=band[1],high=band[2],map=entry.map}
             end
         end
     end
@@ -25,7 +25,7 @@ function Z.Build(context,state)
         body=faction and "Try Show all or clear your search." or "Zone recommendations will appear when your character's faction is available."} end
     local note=(context.mode=="preview" and "Planned level " or "Your level ")..level.." | "..(faction or "Unknown faction")
         ..(state.showAllZones and " | All levels" or " | Ranges within 3 levels")
-        .."\nClick a zone to open its map. For Hardcore, favor green quests and check individual enemy levels."
+        .."\nClick a zone to review its dangers and NPCs in Zone Advisor. For Hardcore, favor green quests and check individual enemy levels."
     return {view="training",context=context,cards={{title="Recommended leveling zones",note=note,blocks=blocks}},
         continuous=true,page=1,pages=1,total=total,searchable=true,levelFilter=true}
 end

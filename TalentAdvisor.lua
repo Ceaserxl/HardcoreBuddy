@@ -207,7 +207,6 @@ function T:Activate(a)
 end
 
 function T:Document(context,state)
-    if state.filter=="Map" then return A.MapAdvisor:Document(context,state) end
     local class=tokens[context.characterClass]
     local level=context.level
     local doc={context=context,view="advisors",cards={}}

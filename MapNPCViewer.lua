@@ -31,7 +31,7 @@ function M:OpenNPCs(cluster)
     if #ids==0 then return end
     A:CreateWindow(); A:CommitInputs()
     A.history=A.history or {}; A.history[#A.history+1]=A.state
-    A.state={view="advisors",filter="Map",mapNPCs=ids,mapNPCPage=1}
+    A.state={view="training",filter="Zone Advisor",mapNPCs=ids,mapNPCPage=1}
     GameTooltip:Hide()
     if WorldMapFrame and WorldMapFrame:IsShown() then
         if HideUIPanel then HideUIPanel(WorldMapFrame) else WorldMapFrame:Hide() end

@@ -125,8 +125,8 @@ instance="none"; M:NotifyZone(); assert(#messages==3 and soundCalls==0)
 assert(messages[1]:find("recorded areas",1,true))
 A.Print=printOriginal
 
-A:Navigate("advisors"); A.state.filter="Map"; A:Refresh(true)
-assert((not M.navigation or not M.navigation:IsShown()) and (not M.controls or not M.controls:IsVisible()) and A.document.cards[1].title=="Map Advisor")
+A:Navigate("training"); A.state.filter="Zone Advisor"; A:Refresh(true)
+assert((not M.navigation or not M.navigation:IsShown()) and (not M.controls or not M.controls:IsVisible()) and A.document.cards[1].title=="Zone Advisor")
 A:Activate({kind="mapAdvisor",command="zones"})
 assert(#A.document.cards[1].blocks==47,"All zones in a single scrollable list")
 A:Activate({kind="mapAdvisor",command="zone",id=1421})
@@ -276,7 +276,7 @@ ColorPickerFrame:Hide()
 A:Navigate("supplies"); local previousState=A.state
 M.pins[1].cluster={records={{id=589},{id=2529},{id=589}}}
 MOCK.Click(M.pins[1])
-assert(A.state.view=="advisors" and A.state.filter=="Map" and #A.state.mapNPCs==2)
+assert(A.state.view=="training" and A.state.filter=="Zone Advisor" and #A.state.mapNPCs==2)
 assert(not map:IsShown() and A:CanGoBack())
 local viewer=M.viewer
 assert(viewer:IsVisible() and viewer.model.creatureID==589 and not viewer.previous:IsEnabled() and viewer.next:IsEnabled())
@@ -337,7 +337,7 @@ assert(viewer.attempts==3 and not viewer.waiting,"Native request errors also ret
 viewer.model.SetCreature=setCreature; A:Navigate("supplies")
 
 -- Zone controls and NPC rows have distinct cards; row navigation preserves Back.
-A:Navigate("advisors"); A.state.filter="Map"; A.state.mapZone=1436; A:Refresh(true)
+A:Navigate("training"); A.state.filter="Zone Advisor"; A.state.mapZone=1436; A:Refresh(true)
 local overview=A.state
 local doc=A.document
 assert(#doc.cards==2 and #doc.cards[1].blocks==2 and doc.cards[1].blocks[1].action.command=="zones" and doc.cards[1].blocks[2].action.command=="settings")

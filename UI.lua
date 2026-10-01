@@ -384,7 +384,18 @@ local function renderCard(frame, data, width)
     frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and not data.supplyTable and 22 or 15,"")
     frame.title:Show(); frame.note:Show()
     local y=14
-    y=y+measure(frame.title, data.title, width-28, 14, y)+5
+    if data.headerAction and not frame.headerButton then
+        frame.headerButton=button(frame,"",112,function(self) addon:Activate(self.action) end)
+    end
+    if frame.headerButton then
+        frame.headerButton:SetShown(data.headerAction~=nil)
+        if data.headerAction then
+            frame.headerButton.action=data.headerAction.action
+            frame.headerButton.label:SetText(data.headerAction.label)
+            frame.headerButton:ClearAllPoints(); frame.headerButton:SetPoint("TOPRIGHT",-14,-10)
+        end
+    end
+    y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 154 or 28), 14, y))+5
     y=y+measure(frame.note, data.note, width-28, 14, y)+12
     frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT", 12, -y); frame.content:SetWidth(width-24)
     frame.content.supplyGrid=data.supplyTable
@@ -647,9 +658,9 @@ function addon:Back()
     elseif self.state.view=="settings" and self.state.mapIconKind then
         self.state.mapIconKind=nil; self.Settings.scroll:SetVerticalScroll(0); self:Refresh(true)
     elseif self.state.view=="deaths" and self.state.deathRecord then self:OpenDeaths("Reports")
-    elseif self.state.view=="advisors" and self.state.filter=="Map" and self.state.mapNPCs then
-        self.state=table.remove(self.history or {}) or {view="advisors",filter="Map"}; self:Refresh(true)
-    elseif self.state.view=="advisors" and self.state.filter=="Map" and self.state.mapZonePicker then
+    elseif self.state.view=="training" and self.state.filter=="Zone Advisor" and self.state.mapNPCs then
+        self.state=table.remove(self.history or {}) or {view="training",filter="Zone Advisor"}; self:Refresh(true)
+    elseif self.state.view=="training" and self.state.filter=="Zone Advisor" and self.state.mapZonePicker then
         self.state.mapZonePicker=nil; self:Refresh(true)
     elseif self.history and #self.history>0 then self.state=table.remove(self.history); self:Refresh(true)
     elseif self.state.view=="petguide" then self:Navigate("training") end
@@ -660,7 +671,7 @@ function addon:CanGoBack()
         or (s.view=="settings" and s.gearPage~=nil)
         or (s.view=="settings" and s.mapIconKind~=nil)
         or (s.view=="deaths" and s.deathRecord~=nil)
-        or (s.view=="advisors" and s.filter=="Map" and (s.mapZonePicker or s.mapNPCs)) or false
+        or (s.view=="training" and s.filter=="Zone Advisor" and (s.mapZonePicker or s.mapNPCs)) or false
 end
 function addon:Refresh(resetScroll)
     if not self.window then return end
@@ -688,7 +699,7 @@ local FILTER_ICONS={
     Emergency="INV_Misc_Bandage_12",Potions="INV_Potion_54",Class="INV_Misc_Rune_01",Optional="INV_Misc_PocketWatch_01",User="INV_Misc_Note_01",Scrolls="INV_Scroll_03",Families="Ability_Hunter_BeastTaming",
     Abilities="Ability_Hunter_BeastCall",Pets="Ability_Hunter_Pet_Bear",Care="Ability_Hunter_MendPet",
     ["Pet Guide"]="Ability_Hunter_Pet_Bear",
-    Overview="INV_Misc_Book_09",Zones="INV_Misc_Map_01",Spells="INV_Misc_Book_07",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",
+    Overview="INV_Misc_Book_09",["Zone Advisor"]="INV_Misc_Map_01",Zones="INV_Misc_Map_01",Spells="INV_Misc_Book_07",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",
 }
 function addon:Layout()
     local f,doc=self.window,self.document
@@ -778,7 +789,7 @@ function addon:Layout()
         y=y+56
     end
     local instancePage=doc.view=="instances"
-    local navigation=doc.view=="advisors" and {"Gear","Talents","Map"} or instancePage and self.Instances.Navigation(self.state)
+    local navigation=doc.view=="advisors" and {"Gear","Talents"} or instancePage and self.Instances.Navigation(self.state)
         or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {}
         or doc.view=="training" and C.Tabs(context)
         or doc.view=="petguide" and {"Families","Abilities","Pets","Care"}
@@ -789,7 +800,7 @@ function addon:Layout()
     f.sidebar:SetShown(sidebar)
     if sidebar then
         f.sidebar:ClearAllPoints(); f.sidebar:SetPoint("TOPLEFT",20,-y); f.sidebar:SetPoint("BOTTOMLEFT",20,46); f.sidebar:SetWidth(148)
-        f.sidebarTitle:SetText(doc.view=="settings" and "SETTINGS" or doc.view=="advisors" and "ADVISORS" or instancePage and "INSTANCES" or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or "FIELD KIT")
+        f.sidebarTitle:SetText(doc.view=="settings" and "SETTINGS" or doc.view=="advisors" and "ADVISORS" or instancePage and "INSTANCES" or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or doc.view=="training" and "COMPANION" or "FIELD KIT")
         f.sidebarNote:SetText(doc.view=="settings" and "Your preferences.\nOne place." or instancePage and "Levels and\nitems to bring." or doc.view=="deaths" and "Every journey\nleaves a story." or doc.view=="petguide" and "Find a companion.\nLearn its strengths." or "Pack with purpose.\nEvery slot matters.")
         f.sidebarNote:SetShown(height-y-46>35+#navigation*41+70)
     end
@@ -810,8 +821,8 @@ function addon:Layout()
                 end
                 if addon.state.view=="training" then
                     if self.filter=="Pet Guide" then addon:Navigate("petguide"); return end
-                    addon.state.filter=(self.filter=="Pet Training" or self.filter=="Zones" or self.filter=="Spells") and self.filter or nil
-                    addon.state.query=nil
+                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Pet Training" or self.filter=="Zones" or self.filter=="Spells") and self.filter or nil
+                    addon.state.query=nil; addon.state.mapNPCs=nil; addon.state.mapZonePicker=nil; addon.state.mapZone=nil
                     local family=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[self.filter]
                     if family then addon:Activate({kind="profession",family=family}); return end
                 else
@@ -843,7 +854,7 @@ function addon:Layout()
         if doc.view=="training" then
             local family=self.state.detail and self.state.detail.family
             selected=family=="bandage" and "First Aid" or family=="antivenom" and "First Aid"
-                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or self.state.filter=="Pet Training" and "Pet Training" or self.state.filter=="Zones" and "Zones" or self.state.filter=="Spells" and "Spells" or "Overview"
+                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or self.state.filter=="Pet Training" and "Pet Training" or self.state.filter=="Zone Advisor" and "Zone Advisor" or self.state.filter=="Zones" and "Zones" or self.state.filter=="Spells" and "Spells" or "Overview"
         end
         active(b,selected==label)
     end
@@ -913,7 +924,7 @@ function addon:Layout()
         active(f.atLevel,(rangePage or spellPage) and showAll or self.state.atLevel)
         y=y+rowHeight+8+(wrapExtra and 34 or 0)
     end
-    y=y+self.MapAdvisor:LayoutControls(f,left,y,bodyWidth,doc.view=="advisors" and self.state.filter=="Map")
+    y=y+self.MapAdvisor:LayoutControls(f,left,y,bodyWidth,doc.view=="training" and self.state.filter=="Zone Advisor")
     local deathPage=doc.view=="deaths"
     f.scroll:SetShown(not deathPage and doc.view~="settings")
     if self.Deaths and self.Deaths.host then
@@ -924,7 +935,7 @@ function addon:Layout()
     self.Settings:Layout(f,left,y,bodyWidth,height-y-46,self.state.filter,doc.view=="settings")
     f.scroll:ClearAllPoints(); f.scroll:SetPoint("TOPLEFT",left,-y); f.scroll:SetPoint("BOTTOMRIGHT",-40,46)
     local contentWidth=math.max(250,bodyWidth); f.content:SetWidth(contentWidth)
-    local top=self.MapAdvisor:LayoutViewer(f.content,contentWidth,doc.view=="advisors" and self.state.filter=="Map",f.scroll:GetHeight())
+    local top=self.MapAdvisor:LayoutViewer(f.content,contentWidth,doc.view=="training" and self.state.filter=="Zone Advisor",f.scroll:GetHeight())
     for index,data in ipairs(doc.cards) do
         local c=f.cards[index]
         if not c then
@@ -936,8 +947,8 @@ function addon:Layout()
         c.firstCard=index==1
         c.gridStart=not doc.isDetail and (doc.view=="training" and (self.state.filter=="Spells" or self.state.filter=="Zones") and 1
             or doc.view=="training" and (not self.state.filter or self.state.filter=="Overview") and index==1 and 3
-            or doc.view=="advisors" and self.state.filter=="Map" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)
-            or doc.view=="advisors" and self.state.filter~="Map" and not self.state.talentPath and 1) or nil
+            or doc.view=="training" and self.state.filter=="Zone Advisor" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)
+            or doc.view=="advisors" and not self.state.talentPath and 1) or nil
         top=top+renderCard(c,data,contentWidth)+10
     end
     for i=#doc.cards+1,#f.cards do f.cards[i]:Hide() end

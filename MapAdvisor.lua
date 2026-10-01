@@ -287,14 +287,18 @@ function M:NotifyZone()
     if #labels==0 then return end
     self.notified[id]=GetTime()
     A:Print(A.Data.MapZones[id].name..": known dangers include "..table.concat(labels,", ")..
-        (#list>#labels and (" (+"..(#list-#labels).." more)") or "")..". See Advisors > Map. These are recorded areas, not live sightings.")
+        (#list>#labels and (" (+"..(#list-#labels).." more)") or "")..". See Companion > Zone Advisor. These are recorded areas, not live sightings.")
 end
 
 function M:Activate(a)
     if a.command=="settings" then A:OpenSettings("Map"); return
     elseif a.command=="npc" then self:OpenNPCs({records={{id=a.id}}}); return
     elseif a.command=="zones" then A.state.mapZonePicker=true
-    elseif a.command=="zone" then A.state.mapZone=a.id; A.state.mapZonePicker=nil
+    elseif a.command=="zone" then
+        if not A.Data.MapZones[a.id] then return end
+        A:CommitInputs(); A.history=A.history or {}; A.history[#A.history+1]=A.state
+        if A.window then A.window.search:ClearFocus(); A.window.classMenu:Hide() end
+        A.state={view="training",filter="Zone Advisor",mapZone=a.id}
     elseif a.command=="current" then A.state.mapZone=nil; A.state.mapZonePicker=nil
     elseif a.command=="open" then
         if InCombatLockdown and InCombatLockdown() then A:Print("Open the map after combat."); return end
@@ -309,7 +313,7 @@ function M:Activate(a)
 end
 
 function M:Document(context,state)
-    local doc={view="advisors",context=context,cards={}}
+    local doc={view="training",context=context,cards={}}
     if state.mapNPCs then return doc end
     if state.mapZonePicker then
         local zones={}; for id,z in pairs(A.Data.MapZones) do zones[#zones+1]={id=id,zone=z} end
@@ -321,7 +325,7 @@ function M:Document(context,state)
     local id=state.mapZone or self:CurrentMap(); local zone=A.Data.MapZones[id]
     local settingsRow=row("Map settings","Configure map reveal, marker categories and silent zone-entry notices.","settings")
     local blocks={row("Browse zones","Choose a zone to explore its recorded NPCs.","zones"),settingsRow}
-    doc.cards[1]={title="Map Advisor",note="Explore known locations and prepare for dangerous encounters.",blocks=blocks}
+    doc.cards[1]={title="Zone Advisor",note="Explore known locations and prepare for dangerous encounters.",blocks=blocks}
     if zone then
         blocks={}
         for _,r in ipairs(self:Records(id)) do
@@ -331,7 +335,9 @@ function M:Document(context,state)
                 (r.npc.note and ("\n"..r.npc.note) or ""),"npc",r.id)
         end
         if #blocks==0 then blocks[1]=row("No matching dangers in this catalogue","Adjust the filters in Map settings. An empty list does not guarantee a safe zone.") end
-        doc.cards[2]={title=zone.name,note="NPCs | Click a name to view its model and details.",blocks=blocks}
+        doc.cards[2]={title=zone.name,headerAction={label="Open Map",action={kind="mapAdvisor",command="open",id=id}},note="NPCs | Click a name to view its model and details.",blocks=blocks}
+    else
+        doc.cards[2]={title="Choose a zone",note="Your current area is not in the outdoor zone catalogue. Use Browse zones to select one.",blocks={}}
     end
     return doc
 end
@@ -351,6 +357,6 @@ end)
 events:SetScript("OnUpdate",function()
     if M.refreshAt and GetTime()>=M.refreshAt then
         M.refreshAt=nil; M:NotifyZone(); M:RefreshPins()
-        if A.window and A.window:IsShown() and A.state.view=="advisors" and A.state.filter=="Map" then A:Refresh() end
+        if A.window and A.window:IsShown() and A.state.view=="training" and A.state.filter=="Zone Advisor" then A:Refresh() end
     end
 end)

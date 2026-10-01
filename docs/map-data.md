@@ -1,14 +1,15 @@
-# Map Advisor data and behavior
+# Zone Advisor data and behavior
 
-Advisors > Map covers 46 Classic Era outdoor zones and cities. It ships its data
+Companion > Zone Advisor covers 46 Classic Era outdoor zones and cities. It ships its data
 locally and does not load or communicate with another addon. Indoor instances,
 live spawn detection and discovery credit are outside this feature.
 
 ## Controls
 
 Reveal, marker filters and zone-entry notices are in **Settings > Map**. The
-**Map settings** row in **Advisors > Map** opens that page. Zone browsing and
-the Open zone map / Follow current zone buttons remain in the advisor.
+**Map settings** row in **Companion > Zone Advisor** opens that page. **Browse zones**
+offers a full-width **Use my current zone** row. Leveling recommendations open
+the selected zone's advisor, with **Open Map** beside the zone name.
 
 - **Unchanged** leaves unexplored terrain hidden; **Reveal all** draws the map
   terrain; **Tint unexplored** draws it with a translucent blue tint (default).

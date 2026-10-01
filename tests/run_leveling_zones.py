@@ -7,6 +7,10 @@ from render_layout import boot
 lua, addon = boot()
 lua.execute('''
 local A=TestAddon
+A:Navigate("advisors")
+for _,b in ipairs(A.window.filters) do
+    assert(not b:IsShown() or (b.filter~="Map" and b.filter~="Zone Advisor"),"Zone Advisor removed from Advisors")
+end
 local function build(faction,level,all,query)
     return A.LevelingZones.Build({faction=faction,level=level,mode="live"},
         {view="training",filter="Zones",showAllZones=all,query=query})
@@ -45,15 +49,33 @@ for _,class in ipairs({"HUNTER","WARRIOR"}) do
     MOCK.Click(A.window.atLevel)
     assert(A.state.showAllZones and A.document.total>filtered and A.window.atLevel.label:GetText()=="Near my level")
     MOCK.Click(A.window.atLevel); assert(not A.state.showAllZones and A.document.total==filtered)
+    local source=A.state
+    local destination=A.document.cards[1].blocks[1].map
     local opened
-    local activate=A.MapAdvisor.Activate
-    A.MapAdvisor.Activate=function(_,action) opened=action.id end
+    WorldMapFrame=WorldMapFrame or CreateFrame("Frame")
+    WorldMapFrame.SetMapID=function(_,id) opened=id end
     A:Activate(A.document.cards[1].blocks[1].action)
-    assert(opened==A.document.cards[1].blocks[1].map)
-    A.MapAdvisor.Activate=activate
+    assert(A.state.view=="training" and A.state.filter=="Zone Advisor" and A.state.mapZone==destination)
+    assert(not opened,"Zone row must not open the world map")
+    assert(A.document.cards[1].title=="Zone Advisor")
+    local zoneState=A.state
+    A.MapAdvisor:Activate({command="zones"})
+    local choice=A.document.cards[1].blocks[2].action
+    A:Activate(choice)
+    assert(A.state.mapZone==choice.id and not A.state.mapZonePicker)
+    A:Back(); assert(A.state==zoneState and A.state.mapZonePicker,"Back restores zone browser")
+    A:Back(); assert(A.state==zoneState and not A.state.mapZonePicker,"Back restores selected zone")
+    local zoneCard=A.window.cards[2]
+    assert(zoneCard.headerButton:IsShown() and zoneCard.headerButton.label:GetText()=="Open Map")
+    MOCK.Click(zoneCard.headerButton)
+    assert(opened==destination,"Header button opens the selected zone map")
+    WorldMapFrame:Hide()
+    A:Back(); assert(A.state==source and A.state.filter=="Zones","Back restores recommendations")
+    assert(not A.window.cards[1].headerButton or not A.window.cards[1].headerButton:IsShown(),"Pooled header control hidden")
+
 end
 A.db.profile.mode="preview"; A.db.profile.level=58; A.db.profile.characterClass="Warrior"; A:Refresh()
 assert(A.document.cards[1].note:find("Planned level 58",1,true))
 for _,row in ipairs(A.document.cards[1].blocks) do assert(row.high>=55) end
-print("PASS: Zones navigation, all levels 1-60 for both factions, exact filter edges, search, Show all, map links and planned levels.")
+print("PASS: Zones navigation, all levels 1-60 for both factions, exact filter edges, search, Show all, zone detail links, map button, Back and planned levels.")
 ''')

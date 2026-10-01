@@ -126,9 +126,9 @@ The dump includes only HardcoreBuddy-owned data and player APIs, not other
 addons. UI objects and functions are represented by markers. Shared tables and
 cycles use `$ref` paths. Existing gear snapshots remain part of the dump.
 
-## Map advisor
+## Zone Advisor
 
-Open **Settings > Map**, or the **Map settings** row in **Advisors > Map**, to
+Open **Settings > Map**, or the **Map settings** row in **Companion > Zone Advisor**, to
 reveal unexplored outdoor terrain or tint unexplored areas translucent blue.
 Category filters show known dangerous NPCs, rares, elites and bosses.
 Map markers use Blizzard's silver rare and gold elite icons, a skull for world
@@ -142,10 +142,10 @@ Only nearly overlapping points combine. The distance follows icon size (16 pixel
 at the default 18-pixel size), and changing size recalculates the groups. Every
 point must be close to every other point; nearby chains cannot collapse an entire camp. Zooming
 in separates locations that are far enough apart on screen.
-Use the **Browse zones** row under **Advisors > Map** to choose a zone or return to your current zone. The zone name appears above its NPC list.
+Use the **Browse zones** row under **Companion > Zone Advisor** to choose a zone or return to your current zone. Zone recommendations open Zone Advisor. The zone name appears above its NPC list, with an **Open Map** button beside it.
 **Silent zone-entry notice** lists known dangers in chat without playing a sound
 and is enabled by default; existing opt-outs are preserved. Click a marker to
-open its NPC's 3D preview inside **Advisors > Map**. Clustered markers provide
+open its NPC's 3D preview inside **Companion > Zone Advisor**. Clustered markers provide
 Previous/Next NPC controls. Drag to rotate, scroll to zoom, and use Back to return.
 The bordered viewer uses a native ModelScene, fits the full creature bounds and centers the model while rotating. Models depend on client availability; loading is animated, retries are automatic, and a failed load offers Retry.
 Pins mark recorded spawn areas, not live sightings; missing
