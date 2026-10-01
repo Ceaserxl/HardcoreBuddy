@@ -34,7 +34,7 @@ equipped thrown weapon stack. It uses selected ammunition when available and
 otherwise suggests a level-appropriate vendor tier. Planning mode has its own
 ammo selector. Wands do not produce ammo recommendations.
 
-**Settings > Preparation** has two optional controls, both off by default: a compact
+**Settings > Preparation** has two controls, both on by default: a compact
 missing-essentials panel while resting in a city/inn, and a silent reminder when
 leaving. Reminders use the real character, respect Carry 0, suppress unknown stock,
 stay out of combat, and have a five-minute cooldown. Dismiss the panel for the
@@ -92,6 +92,7 @@ the native auction-tab style and works without any other auction addon.
   highest armor type for its level (for example, **Best Armor: Mail** for hunters
   at level 40+). Off by default and saved per character. Jewelry, cloaks, shields,
   held off-hands and weapons remain eligible. Changing it requires a fresh scan.
+  The same checkbox is also available beneath **Scan upgrades** in the AH window.
 - Shows listing prices, merges duplicate item variants using their cheapest
   buyout (or next bid), and keeps different random suffixes separate.
 - Click an alternative to search for its auctions in the normal Browse tab.

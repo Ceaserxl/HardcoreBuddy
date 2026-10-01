@@ -365,10 +365,10 @@ local neck=F.item("INVTYPE_NECK",{ITEM_MOD_AGILITY_SHORT=5},4,0)
 local trinket=F.item("INVTYPE_TRINKET",{ITEM_MOD_AGILITY_SHORT=5},4,0)
 pages[4]={{item=good},{item=best},{item=mail},{item=robe},{item=chest},{item=cloak},{item=neck},{item=ring},{item=trinket},{item=held}}
 pages[2]={{item=sword,buyout=300}}
-MOCK.Click(U.settingsButton)
-check(A.state.view=="settings" and A.state.filter=="Auction House","Auction shortcut opens centralized settings")
+A:OpenSettings("Auction House")
 local armorToggle=A.Settings.pages["Auction House"].armor
-armorToggle:SetChecked(true); MOCK.Click(armorToggle)
+U.armorOnly:SetChecked(true); MOCK.Click(U.armorOnly)
+check(armorToggle:GetChecked() and U.armorOnly.mark:GetText()=="X","AH checkbox updates centralized settings")
 check(A.characterDB.auctionHighestArmorOnly and armorToggle.label:GetText()=="Best Armor: Mail","Checkbox saves per-character preference and labels hunter armor correctly")
 local queryStart=#queries
 U:Start(); finish()
@@ -383,6 +383,7 @@ check(queries[queryStart+1].filters[1].subClassID==3 and queries[queryStart+2].f
 armorToggle:SetChecked(false); A:Refresh()
 check(armorToggle:GetChecked(),"Refreshing settings restores the saved checkbox preference")
 armorToggle:SetChecked(false); MOCK.Click(armorToggle); U:Start(); finish()
+check(not U.armorOnly:GetChecked(),"Centralized checkbox updates AH filter")
 check(#U.results[1]==3 and #U.results[5]==2,"Unchecking restores cross-material armor and chest/robe variants")
 U:Start(); tick(); armorToggle:SetChecked(true); MOCK.Click(armorToggle)
 check(not U.scan and U.stale,"Changing filters mid-scan cancels and marks old results stale")
@@ -395,8 +396,8 @@ F.reset("HUNTER",39,{30,0,0}); A:Refresh()
 check(armorToggle.label:GetText()=="Best Armor: Leather","Hunter below 40 uses leather")
 MOCK.level=40; A:Refresh()
 check(armorToggle.label:GetText()=="Best Armor: Mail","Armor label updates when mail unlocks")
-local _,sy,_,sh=U.start:GetRect(); local _,cy,_,ch=U.settingsButton:GetRect(); local _,wy=U.weaponButton:GetRect()
-check(cy>=sy+sh and cy+ch<wy,"Settings shortcut fits below Scan upgrades without overlapping navigation")
+local _,sy,_,sh=U.start:GetRect(); local _,cy,_,ch=U.armorOnly:GetRect(); local _,wy=U.weaponButton:GetRect()
+check(cy>=sy+sh and cy+ch<wy,"Best Armor fits below Scan upgrades without overlapping navigation")
 armorToggle:SetChecked(false); MOCK.Click(armorToggle)
 
 -- Hover after head results arrive, then continue querying the remaining slots.

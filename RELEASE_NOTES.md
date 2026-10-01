@@ -1,5 +1,8 @@
 # Unreleased
 
+- Restored Best Armor beneath Scan upgrades in the auction window, synchronized
+  with Settings. Missing-essentials and departure reminders now default on;
+  existing saved choices are preserved.
 - Moved Pet Guide into Companion's Hunter navigation and removed the Looks tab.
 - Added a central Settings tab for general preferences, gear scoring, auction
   filters, death alerts and appearance, low health, rares, elites, and preparation.

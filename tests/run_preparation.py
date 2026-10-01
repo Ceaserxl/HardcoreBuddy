@@ -8,7 +8,7 @@ lua, addon = boot()
 lua.execute('''
 local A=TestAddon
 local R,S,M,H=A.Readiness,A.Supplies,A.Ammunition,A.Deaths
-assert(not R.settings.panel and not R.settings.departure)
+assert(R.settings.panel and R.settings.departure)
 assert(A.LowHealth.settings.enabled,"Low health stays enabled by default")
 A:Navigate("supplies"); A.state.filter="Essentials"; A:Refresh()
 assert(A.document.cards[1].title=="Essentials")

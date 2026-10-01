@@ -88,9 +88,7 @@ function S:Create(parent)
     local auction=self.pages["Auction House"]
     label(auction,"Filters for the Upgrades tab at the auction house. Saved per character.",13,20,56,700)
     auction.armor=check(auction,"",102,function() return A.characterDB.auctionHighestArmorOnly==true end,function(value)
-        A.characterDB.auctionHighestArmorOnly=value
-        A.AuctionUpgrades:Invalidate()
-        A.AuctionUpgrades:Refresh()
+        A.AuctionUpgrades:SetHighestArmorOnly(value)
     end)
     label(auction,"When enabled, scan only your class's highest available armor type. Accessories and weapons are still included. Turn it off to compare all usable armor types.",12,20,150,700)
     auction.cache=label(auction,"",12,20,224,700)

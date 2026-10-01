@@ -128,8 +128,8 @@ events:SetScript("OnEvent",function(_,event,name)
         if name~=addonName then return end
         A.db.preparation=type(A.db.preparation)=="table" and A.db.preparation or {}
         R.settings=A.db.preparation
-        if R.settings.panel==nil then R.settings.panel=false end
-        if R.settings.departure==nil then R.settings.departure=false end
+        if R.settings.panel==nil then R.settings.panel=true end
+        if R.settings.departure==nil then R.settings.departure=true end
         R:BuildFrames()
         for _,e in ipairs({"PLAYER_ENTERING_WORLD","PLAYER_UPDATE_RESTING","ZONE_CHANGED","ZONE_CHANGED_NEW_AREA",
             "BAG_UPDATE_DELAYED","PLAYER_EQUIPMENT_CHANGED","UNIT_INVENTORY_CHANGED","GET_ITEM_INFO_RECEIVED",
