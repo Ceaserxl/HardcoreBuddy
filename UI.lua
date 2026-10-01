@@ -155,15 +155,15 @@ local function renderBlock(frame, block, width)
     if frame.recommendationName then frame.recommendationName:Hide(); frame.recommendationDetail:Hide() end
     if frame.carryLabel then frame.carryLabel:Hide() end
     if frame.quantity:HasFocus() and (frame.quantity.targetKey~=block.targetKey
-        or block.readOnlyTarget or block.groupSupply or not block.supply) then frame.quantity:ClearFocus() end
-    frame.count:SetShown(block.supply); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.supply and not block.groupSupply and not block.readOnlyTarget)
+        or block.readOnlyTarget or block.groupSupply or not block.editTarget or not block.supply) then frame.quantity:ClearFocus() end
+    frame.count:Hide(); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.supply and block.editTarget and not block.groupSupply and not block.readOnlyTarget)
     frame.choose:SetShown(block.supply and block.pickRank)
     local paintedRow=block.supply or (block.action and not block.columns)
     Skin.Paint(frame,block.supply and "row" or not block.columns and "card" or "note")
     frame.rule:Hide()
     for _,edge in ipairs(frame.statusBorder) do edge:SetShown(block.supply) end
     frame.chevron:SetShown(block.action and not block.supply and not block.columns)
-    frame.stockTrack:SetShown(block.supply and not block.groupSupply and not block.readOnlyTarget)
+    frame.stockTrack:SetShown(block.supply and not block.pickRank)
     frame.stockFill:Hide()
     frame.title:SetTextColor(unpack(block.action and GOLD or WHITE))
     Skin.Hover(frame,block.action~=nil)
@@ -251,16 +251,15 @@ local function renderBlock(frame, block, width)
         if column>0 then y=y+rowHeight+14 end
     end
     if block.supply then
-        local color=STOCK_COLORS[block.status] or MUTED
+        local color=STOCK_COLORS[block.count==0 and "missing" or block.status] or MUTED
         frame.count:ClearAllPoints(); frame.count:SetPoint("TOPLEFT",width-204,-12); frame.count:SetSize(52,22)
         frame.count:SetTextColor(unpack(block.count and block.count>0 and WHITE or MUTED))
         frame.count:SetText(block.count~=nil and tostring(block.count) or "?")
         frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",width-142,-8); frame.quantity:SetSize(42,28)
         frame.quantity.targetKey=block.targetKey
         if not frame.quantity:HasFocus() then frame.quantity:SetText(tostring(block.target or "")) end
-        local label=block.status=="ready" and "Ready" or block.status=="missing" and "Missing"
-            or block.status=="low" and ("Need "..block.missing) or block.status=="off" and "Not tracked"
-            or block.status=="choose" and "Choose rank >" or "Unknown"
+        local label=block.count==nil and "Unknown" or block.count==0 and "Missing"
+            or ("("..block.count.."/"..(block.target or "?")..")")
         frame.stock:SetTextColor(unpack(color)); measure(frame.stock,label,84,width-88,9)
         for _,edge in ipairs(frame.statusBorder) do edge:SetVertexColor(color[1],color[2],color[3],0.7) end
         frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("TOPLEFT",width-88,-29)
@@ -299,25 +298,25 @@ local function renderBlock(frame, block, width)
     -- Pooled rows may retain the same size, so OnSizeChanged is not guaranteed.
     -- Lay out the artwork only after the row's final height and anchors settle.
     if paintedRow then Skin.RowArtwork(frame) end
-    if block.supply and frame.supplyTile then
-        -- Keep status apart from the editable controls in compact supply cards.
+    if block.supply then
+        -- Classification and stock share a right-hand column. Quantity editing
+        -- is available only after opening the item or its rank details.
         frame:SetHeight(76); y=76
         frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
         measure(frame.title,block.title,width-150,52,8); frame.title:SetHeight(18); frame.title:SetWordWrap(false)
         frame.body:SetFont(STANDARD_TEXT_FONT,12,"")
         measure(frame.body,block.body,width-150,52,28); frame.body:SetHeight(16); frame.body:SetWordWrap(false)
         frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-8)
-        frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPLEFT",8,-52); frame.priority:SetSize(68,14)
-        frame.count:SetFont(STANDARD_TEXT_FONT,12,"")
-        frame.count:ClearAllPoints(); frame.count:SetPoint("TOPLEFT",86,-51); frame.count:SetSize(width-210,16)
-        frame.count:SetJustifyH("LEFT"); frame.count:SetText("In bags: "..(block.count~=nil and tostring(block.count) or "?"))
-        if not frame.carryLabel then frame.carryLabel=font(frame,11,MUTED) end
-        frame.carryLabel:Show(); measure(frame.carryLabel,"Carry",36,width-96,51)
-        frame.carryLabel:SetShown(frame.quantity:IsShown())
-        frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",width-52,-46); frame.quantity:SetSize(44,24)
-        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPLEFT",width-88,-11); frame.stock:SetSize(80,18); frame.stock:SetJustifyH("RIGHT")
-        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPLEFT",width-82,-8)
-        frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("TOPRIGHT",frame,"TOPRIGHT",-8,-32)
+        frame.priority:SetFont(STANDARD_TEXT_FONT,11,"")
+        frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPRIGHT",-8,-10); frame.priority:SetSize(84,16); frame.priority:SetJustifyH("RIGHT")
+        if frame.quantity:IsShown() then
+            if not frame.carryLabel then frame.carryLabel=font(frame,11,MUTED) end
+            frame.carryLabel:Show(); measure(frame.carryLabel,"Keep on hand",100,8,52)
+            frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",112,-46); frame.quantity:SetSize(44,24)
+        end
+        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-47); frame.stock:SetSize(84,18); frame.stock:SetJustifyH("RIGHT")
+        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPRIGHT",-8,-40)
+        frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("BOTTOMRIGHT",-8,7)
         Skin.RowArtwork(frame)
     elseif frame.carryLabel then frame.carryLabel:Hide() end
     if block.recommendation then

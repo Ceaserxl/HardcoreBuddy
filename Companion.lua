@@ -104,6 +104,8 @@ local function supplyRows(context,state,onlyFamily)
                     local selected,automatic=S.Selection(context,r.groupFamily)
                     local b=row(groupNames[r.groupFamily],automatic and automatic.note or "Select one rank to track",{kind="supplyFamily",family=r.groupFamily})
                     b.supply,b.groupSupply,b.status=true,true,"choose"
+                    b.priority=S.Priority(context,r.item)
+                    b.target=r.target
                     if r.groupFamily=="dummy" then b.itemId,b.icon=r.itemId,r.item.icon end
                     b.category="Emergency"
                     if automatic then
@@ -172,13 +174,13 @@ function C.Detail(context, action)
         local out=card(item.displayName or item.name,nil,blocks)
         out.supplyTable=true
         local r=S.Record(context,item,family)
-        table.insert(out.blocks,1,supplyRow(r)); out.blocks[1].action=nil
+        table.insert(out.blocks,1,supplyRow(r)); out.blocks[1].action=nil; out.blocks[1].editTarget=true
         if family then rankState(out.blocks[1],r,context) end
         return out
     end
     if kind=="supplyFamily" then
         local blocks=professionBlocks(context,action.family)
-        for _,b in ipairs(supplyRows(context,{},action.family)) do blocks[#blocks+1]=b end
+        for _,b in ipairs(supplyRows(context,{},action.family)) do b.editTarget=true; blocks[#blocks+1]=b end
         local _,automatic=S.Selection(context,action.family)
         local note=automatic and (automatic.note..". Your character's learned recipes determine the rank; materials are not checked.")
             or "Select one rank for your list. Check its skill requirement; other ranks stay optional."

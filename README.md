@@ -319,8 +319,8 @@ Use the mouse wheel or scrollbar for longer lists. There is no resize grip.
 
 ## Supplies and item details
 
-Supplies opens to Food & drink. Recommendations show exact **In bags** quantities,
-editable **Carry** targets and per-item stock status.
+Supplies opens to All. Each card shows its classification at the upper right and
+**(owned/target)** with a stock bar at the lower right. Zero owned shows **Missing**.
 Healing/mana potions are under Emergency; elixirs are under Buffs.
 All combines Food & drink, Buffs, Emergency and Optional into one scrolling list
 with category headings and no pages. Supplies has no search, Missing-only button
@@ -328,14 +328,14 @@ or stock-summary strip, so the item list starts directly below navigation.
 The category sidebar stays visible on item, profession and pet detail pages;
 choose a category there to return directly to its list.
 
-Click a Carry number, type an amount and press Enter. Zero disables that target;
+Click an item, edit **Keep on hand** in its details, and press Enter. Zero disables that target;
 clearing it restores the suggestion. Bag counts exclude bank stock and update
 when items are looted, bought, used or moved. Unavailable counts stay Unknown.
 
 Hover an item row or icon for its native tooltip, with an embedded-description
 fallback for uncached items. Click for acquisition, requirements and alternatives;
 Back sits above the right content area and restores the previous category.
-The Carry field has its own editing
+The quantity field has its own editing
 help. Sources buttons, URL export and runtime research metadata are removed.
 Item details use labeled fields for effects, crafting profession and skill,
 profession rank and its character-level gate, recipe acquisition, Auction House

@@ -149,7 +149,11 @@ A:Navigate("supplies")
 local blocks=A.window.cards[1].content.blocks
 local a,b=blocks[1],blocks[2]; local x,y,w=a:GetRect(); local xx,yy=b:GetRect()
 assert(a.supplyTile and b.supplyTile and xx>=x+w and y==yy)
-local q=a.quantity; local qx,qy,qw,qh=q:GetRect(); assert(MOCK.HitTest(qx+qw/2,qy+qh/2)==q,"Carry editor is above the card")
+assert(not a.quantity:IsShown() and not a.count:IsShown(),"List hides bag and quantity controls")
+MOCK.Click(a)
+a=A.window.cards[1].content.blocks[1]
+local q=a.quantity; assert(q:IsShown(),"Opening item exposes quantity editor")
+local qx,qy,qw,qh=q:GetRect(); assert(MOCK.HitTest(qx+qw/2,qy+qh/2)==q,"Carry editor is above the card")
 q:SetFocus(); q:SetText("17"); q:ClearFocus(); A:Refresh()
 assert(a.quantity:GetText()=="17","Carry edits survive card refresh")
 for _,section in ipairs(A.Settings.sections) do
