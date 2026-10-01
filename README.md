@@ -15,9 +15,11 @@ Use the mouse wheel or scrollbar to browse the full list.
 ## Settings
 
 Open the **Settings** tab or use `/hcb settings`. The sidebar groups General,
-Gear Advisor, Auction House, Death Alerts, Death Banner, Low Health, Rares,
-Elites, and Preparation. Long pages scroll. Existing saved preferences are kept.
-General includes the minimap button, field kit upgrade notices, and recentering.
+Gear Advisor, Talent Advisor, Auction House, Death Alerts, Low Health, NPC Alerts,
+and Map. Long pages scroll. Existing saved preferences are kept.
+General includes the minimap button, field kit upgrade notices, recentering and
+Preparation reminders. Death Alerts includes banner appearance; NPC Alerts
+contains separate rare and elite controls on the same scrolling page.
 Carry quantities and item priorities remain in Supplies; talent paths remain in
 Advisors. `/hcb health` and `/hcb deaths settings` open their Settings sections.
 
@@ -34,7 +36,7 @@ equipped thrown weapon stack. It uses selected ammunition when available and
 otherwise suggests a level-appropriate vendor tier. Planning mode has its own
 ammo selector. Wands do not produce ammo recommendations.
 
-**Settings > Preparation** has two controls, both on by default: a compact
+**Settings > General > Preparation reminders** has two controls, both on by default: a compact
 missing-essentials panel while resting in a city/inn, and a silent reminder when
 leaving. Reminders use the real character, respect Carry 0, suppress unknown stock,
 stay out of combat, and have a five-minute cooldown. Dismiss the panel for the
@@ -86,9 +88,10 @@ information for offline review. The saved item list is on the snapshot page;
 
 ## Map advisor
 
-Open **Advisors > Map** to reveal unexplored outdoor terrain or tint unexplored
-areas translucent blue. Category filters show known dangerous NPCs, rares,
-elites and bosses. Browse any Classic zone, or follow your current zone.
+Open **Settings > Map**, or the **Map settings** row in **Advisors > Map**, to
+reveal unexplored outdoor terrain or tint unexplored areas translucent blue.
+Category filters show known dangerous NPCs, rares, elites and bosses.
+Browse any Classic zone or follow your current zone under **Advisors > Map**.
 An optional **Silent zone-entry notice** lists known dangers in chat without
 playing a sound. Pins mark recorded spawn areas, not live sightings; missing
 coordinates stay clearly labelled in the zone list. See [sources and coverage](docs/map-data.md).
@@ -177,7 +180,7 @@ window, right-click the shared minimap button, or use `/hcb deaths`. The `/hd` a
 `/hardcoredeaths` aliases also open this page.
 
 Reports and player details appear in the right-hand content area. Death options
-and appearance are in **Settings > Death Alerts** and **Settings > Death Banner**.
+and banner appearance are together in **Settings > Death Alerts**.
 The main window controls positioning and scale; compact feed and alert overlays
 keep their separate position/scale settings.
 
@@ -214,7 +217,7 @@ It lasts four seconds, then fades. Click it to open the live kit; the complete
 list is also printed in chat. Unchanged levels stay quiet, and preview settings
 do not affect detection.
 
-**Settings > Death Banner** offers Compact (default), Banner, and Text-only
+The appearance section of **Settings > Death Alerts** offers Compact (default), Banner, and Text-only
 death alerts. Background opacity is independent of text. **Unlock and move**
 keeps a silent preview visible while you drag; **Save position** locks it and
 restores click-through behavior. All styles share a saved position and scale

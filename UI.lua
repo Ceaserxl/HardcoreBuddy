@@ -601,6 +601,7 @@ function addon:Refresh(resetScroll)
         (self.state.view=="deaths" or self.state.view=="settings" or self.state.view=="dungeons" or self.state.view=="raids" or self.state.view=="advisors")) then self.state=nil; self.history={} end
     self.lastClass=context.characterClass
     self.state=self.state or {view="supplies",filter="Food & drink",page=1}; self.history=self.history or {}
+    if self.state.view=="settings" then self.state.filter=self.Settings:Section(self.state.filter) end
     -- Supplies has no hidden search or shortage filter after its controls were
     -- removed. Back navigation and old in-memory state must show the full kit.
     if self.state.view=="supplies" or self.state.view=="now" then self.state.query=nil; self.state.stock=nil end
@@ -611,7 +612,7 @@ function addon:Refresh(resetScroll)
 end
 local FILTER_ICONS={
     General="Trade_Engineering",["Gear Advisor"]="INV_Chest_Chain",["Auction House"]="INV_Misc_Coin_01",
-    ["Death Alerts"]="INV_Misc_Book_09",["Death Banner"]="INV_Misc_Book_09",
+    ["Death Alerts"]="INV_Misc_Book_09",["NPC Alerts"]="Ability_Warrior_BattleShout",
     Gear="INV_Chest_Chain",Talents="Ability_Marksmanship",Map="INV_Misc_Map_01",["Talent Advisor"]="INV_Misc_Book_11",
     Essentials="INV_Misc_Bag_08",Preparation="INV_Misc_Note_01",Appearance="INV_Misc_Book_09",
     ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
@@ -844,7 +845,7 @@ function addon:Layout()
     local deathPage=doc.view=="deaths"
     f.scroll:SetShown(not deathPage and doc.view~="settings")
     if self.Deaths and self.Deaths.host then
-        local deathSettings=doc.view=="settings" and (self.state.filter=="Death Alerts" or self.state.filter=="Death Banner")
+        local deathSettings=doc.view=="settings" and self.state.filter=="Death Alerts"
         self.Deaths.host:SetShown(deathPage or deathSettings)
         if deathPage then self.Deaths:LayoutPage(f,left,y,bodyWidth,height-y-46,self.state) end
     end

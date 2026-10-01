@@ -97,5 +97,5 @@ function H:BuildAppearance(host)
     f.preview=button(f,"Preview alert",140,212,-256,function() self:Slash("test") end)
     button(f,"Reset position",140,364,-256,function() self:Slash("resetposition") end)
     label(f,12,20,-310,690,"Unlock and move keeps a silent preview on screen. Drag the alert, then click Save position. Locked alerts let clicks pass through to the game.")
-    label(f,12,20,-372,690,"Duration, sound, volume and the live feed are in Settings > Death Alerts. Your saved position is shared by all three styles.")
+    label(f,12,20,-372,690,"Duration, sound, volume and live feed controls are above. Your saved position is shared by all three styles.")
 end

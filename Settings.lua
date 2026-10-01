@@ -1,7 +1,9 @@
 local _,A=...
-local S={sections={"General","Gear Advisor","Talent Advisor","Auction House","Death Alerts","Death Banner","Low Health","Rares","Elites","Preparation"}}
+local S={sections={"General","Gear Advisor","Talent Advisor","Auction House","Death Alerts","Low Health","NPC Alerts","Map"}}
 A.Settings=S
 local Skin=A.Skin
+local aliases={["Death Banner"]="Death Alerts",Rares="NPC Alerts",Elites="NPC Alerts",Preparation="General"}
+function S:Section(section) return aliases[section] or section or "General" end
 
 local function label(parent,text,size,x,y,width)
     local f=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
@@ -29,7 +31,7 @@ end
 
 function A:OpenSettings(section)
     self:CreateWindow(); self:CommitInputs()
-    self.state={view="settings",filter=section or "General",page=1}; self.history={}
+    self.state={view="settings",filter=self.Settings:Section(section),page=1}; self.history={}
     self.window.classMenu:Hide(); self.window:Show(); self:Refresh(true)
 end
 
@@ -43,7 +45,7 @@ function S:CommitInputs()
     local gear=self.pages and self.pages["Gear Advisor"]
     if gear then for _,edit in ipairs(gear.weights) do edit:ClearFocus() end end
     if A.LowHealth.page then A.LowHealth.page.threshold:ClearFocus() end
-    if A.CreatureAlerts.page then A.CreatureAlerts.page.duration:ClearFocus() end
+    for _,page in pairs(A.CreatureAlerts.pages or {}) do page.duration:ClearFocus() end
     if A.Deaths.options then
         A.Deaths.options.duration:ClearFocus(); A.Deaths.options.alertLevel:ClearFocus()
     end
@@ -60,7 +62,7 @@ function S:Create(parent)
     end)
     scroll:SetScript("OnHide",function() self:CommitInputs() end)
     self.pages={}
-    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","Gear Snapshot"}) do
+    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","Gear Snapshot","NPC Alerts"}) do
         local page=CreateFrame("Frame",nil,content); page:SetAllPoints(content); page:Hide(); self.pages[name]=page
         if name~="Gear Snapshot" then label(page,name,22,20,18,700):SetTextColor(unpack(Skin.colors.gold)) end
         if name=="Stat Weights" or name=="Gear Snapshot" then
@@ -79,6 +81,10 @@ function S:Create(parent)
     general.reset=button(general,"Recenter main window",218,function() A:HandleSlashCommand("reset") end)
     label(general,"Open this tab anytime with /hcb settings.",12,20,276,700)
     label(general,"Carry quantities and item priorities stay in Supplies. Point-by-point talent advice stays in Advisors.",12,20,318,700)
+    general.contentHeight=752
+    local npc=self.pages["NPC Alerts"]
+    label(npc,"Configure rare and elite warnings independently below.",13,20,56,700)
+    npc.contentHeight=930
 
     local gear=self.pages["Gear Advisor"]
     gear.toggle=button(gear,"",18,function() A.GearAdvisor:SetEnabled(not A.GearAdvisor:IsEnabled()) end,200)
@@ -180,16 +186,18 @@ function S:Layout(parent,left,top,width,height,section,visible)
     self.scroll:SetShown(visible)
     if not visible then
         if A.LowHealth.page then A.LowHealth.page:Hide() end
-        if A.CreatureAlerts.page then A.CreatureAlerts.page:Hide() end
+        for _,page in pairs(A.CreatureAlerts.pages or {}) do page:Hide() end
         if A.Readiness.options then A.Readiness.options:Hide() end
+        if A.MapAdvisor.controls then A.MapAdvisor.controls:Hide() end
         return
     end
-    section=section or "General"
+    section=self:Section(section)
     local scale=math.min(1,(width-22)/760)
     local contentWidth=(width-22)/scale
     local pageName=section
     if section=="Gear Advisor" and (A.state.gearPage=="Stat Weights" or A.state.gearPage=="Gear Snapshot") then pageName=A.state.gearPage end
     local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 440
+    if section=="Death Alerts" then contentHeight=892 end
     if pageName=="Gear Snapshot" then
         contentHeight=18+A.GearSnapshot:Layout(self.pages["Gear Snapshot"],18)+20
     end
@@ -238,12 +246,15 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local content=self.content
     if section=="Low Health" then A.LowHealth:LayoutSettings(content,0,0,contentWidth,contentHeight,true)
     elseif A.LowHealth.page then A.LowHealth.page:Hide() end
-    if section=="Rares" or section=="Elites" then A.CreatureAlerts:LayoutSettings(content,0,0,contentWidth,contentHeight,section,true)
-    elseif A.CreatureAlerts.page then A.CreatureAlerts.page:Hide() end
-    if section=="Preparation" then A.Readiness:LayoutSettings(content,0,0,contentWidth,contentHeight,true)
+    if section=="NPC Alerts" then
+        A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],0,82,contentWidth,412,"Rares",true)
+        A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],0,510,contentWidth,412,"Elites",true)
+    else for _,page in pairs(A.CreatureAlerts.pages or {}) do page:Hide() end end
+    if section=="General" then A.Readiness:LayoutSettings(general,0,360,contentWidth,380,true)
     elseif A.Readiness.options then A.Readiness.options:Hide() end
-    if section=="Death Alerts" or section=="Death Banner" then
-        A.Deaths:LayoutPage(content,0,0,contentWidth,contentHeight,{filter=section=="Death Banner" and "Appearance" or "Options"})
+    A.MapAdvisor:LayoutSettings(content,0,0,contentWidth,section=="Map")
+    if section=="Death Alerts" then
+        A.Deaths:LayoutPage(content,0,0,contentWidth,contentHeight,{filter="Settings"})
         A.Deaths.host:Show()
     end
     self.range=math.max(0,self.content:GetHeight()*scale-height)

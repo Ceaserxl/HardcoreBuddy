@@ -277,9 +277,18 @@ function H:LayoutPage(parent,left,top,width,height,state)
     self.host:SetSize(width,height)
     self.mode="all"
     if self.lastFilter~=state.filter then self.window.listScroll:SetVerticalScroll(0); self.lastFilter=state.filter end
-    self.window:SetShown(state.filter~="Options" and state.filter~="Appearance" and not state.deathRecord)
-    self.options:SetShown(state.filter=="Options" and not state.deathRecord)
-    if self.appearance then self.appearance:SetShown(state.filter=="Appearance" and not state.deathRecord) end
+    local combined=state.filter=="Settings"
+    self.window:SetShown(not combined and state.filter~="Options" and state.filter~="Appearance" and not state.deathRecord)
+    self.options:ClearAllPoints()
+    if combined then self.options:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,0); self.options:SetSize(width,440)
+    else self.options:SetAllPoints(self.host) end
+    self.options:SetShown((combined or state.filter=="Options") and not state.deathRecord)
+    if self.appearance then
+        self.appearance:ClearAllPoints()
+        if combined then self.appearance:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,-452); self.appearance:SetSize(width,440)
+        else self.appearance:SetAllPoints(self.host) end
+        self.appearance:SetShown((combined or state.filter=="Appearance") and not state.deathRecord)
+    end
     self.details:SetShown(state.deathRecord~=nil)
     self.details.body:SetWidth(width-70)
     self.details.content:SetWidth(width-65)

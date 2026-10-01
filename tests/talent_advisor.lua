@@ -95,8 +95,12 @@ local lesson=A.document.cards[1].blocks[2]
 check(lesson.action and lesson.action.command=="learn" and lesson.icon==132127,"Visible single-point button and native icon")
 check(calls==1,"Opening advisor never spends a point")
 for _,block in ipairs(A.document.cards[1].blocks) do
-    check(block.title~="Choose a talent path" and (not block.action or block.action.command~="talentSettings"),"Talent page no longer has a path selector")
+    check(block.title~="Choose a talent path","Talent page no longer has an inline path selector")
 end
+local settingsLink=A.document.cards[1].blocks[#A.document.cards[1].blocks]
+check(settingsLink.action.command=="talentSettings","Talent settings link belongs to Talents")
+A:Activate(settingsLink.action)
+check(A.state.view=="settings" and A.state.filter=="Talent Advisor","Talent settings row opens the correct section")
 A:OpenSettings("Talent Advisor")
 check(A.state.view=="settings" and A.state.filter=="Talent Advisor","Build selection moved to Talent Advisor settings")
 T:Activate({kind="advisor",command="build",class="HUNTER",id=1})

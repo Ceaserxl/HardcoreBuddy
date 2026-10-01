@@ -230,8 +230,10 @@ end
 
 function H:LayoutSettings(parent,x,y,width,height,section,visible)
     if not self.settings then return end
-    if not self.page and visible then
-        local p=CreateFrame("Frame",nil,parent); self.page=p; p.checks={}
+    self.pages=self.pages or {}
+    local category=section=="Rares" and "rares" or "elites"
+    if not self.pages[category] and visible then
+        local p=CreateFrame("Frame",nil,parent); self.pages[category]=p; p.checks={}
         local function text(value,size,top)
             local t=p:CreateFontString(nil,"OVERLAY","GameFontHighlight")
             t:SetFont(STANDARD_TEXT_FONT,size,""); t:SetPoint("TOPLEFT",20,top); t:SetWidth(650)
@@ -290,9 +292,9 @@ function H:LayoutSettings(parent,x,y,width,height,section,visible)
         text("Rares: spoken warning. Elites: siren. Green triangle marks detected creatures.\nAlerts re-arm after 30 seconds out of sight; paused during flights and while dead.",12,-352)
         p:SetScript("OnHide",function() edit:ClearFocus() end)
     end
-    local p=self.page; if not p then return end
-    if p.category and p.category~=(section=="Rares" and "rares" or "elites") then p.duration:ClearFocus() end
-    p.category=section=="Rares" and "rares" or "elites"
+    local p=self.pages[category]; if not p then return end
+    self.page=p -- Legacy callers may still inspect the most recently laid-out category.
+    p.category=category
     p:ClearAllPoints(); p:SetPoint("TOPLEFT",parent,"TOPLEFT",x,-y); p:SetSize(width,height); p:SetShown(visible)
     p.title:SetText(section=="Rares" and "Rare warnings" or "Elite warnings")
     for key,b in pairs(p.checks) do b:SetChecked(self.settings[p.category][key]); b.mark:SetText(b:GetChecked() and "X" or ""); b:Show() end

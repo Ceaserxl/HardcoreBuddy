@@ -2,6 +2,7 @@ local A=TestAddon
 local S=A.Settings
 local count=0
 local function check(ok,why) count=count+1; assert(ok,why) end
+check(table.concat(S.sections,",")=="General,Gear Advisor,Talent Advisor,Auction House,Death Alerts,Low Health,NPC Alerts,Map","Consolidated sidebar order")
 local settingsTab
 for _,tab in ipairs(A.window.tabs) do
     check(tab.view~="alerts","Old Alerts tab is replaced by Settings")
@@ -14,13 +15,12 @@ check(A.state.view=="settings" and S.pages.General:IsVisible(),"Settings default
 for i,name in ipairs(S.sections) do
     MOCK.Click(A.window.filters[i])
     check(A.state.filter==name and S.scroll:IsVisible() and not A.window.scroll:IsShown(),"Section opens: "..name)
-    local visible=0
-    for _,page in pairs(S.pages) do if page:IsVisible() then visible=visible+1 end end
-    for _,page in ipairs({A.Deaths.options,A.Deaths.appearance,A.LowHealth.page or UIParent,
-        A.CreatureAlerts.page or UIParent,A.Readiness.options or UIParent}) do
-        if page~=UIParent and page:IsVisible() then visible=visible+1 end
-    end
-    check(visible==1,"Exactly one settings page is visible: "..name)
+    for pageName,page in pairs(S.pages) do check(page:IsVisible()==(pageName==name),"Correct settings parent: "..pageName) end
+    check(A.Deaths.options:IsVisible()==(name=="Death Alerts") and A.Deaths.appearance:IsVisible()==(name=="Death Alerts"),"Death controls share one tab")
+    if A.LowHealth.page then check(A.LowHealth.page:IsVisible()==(name=="Low Health"),"Health page visibility") end
+    for _,page in pairs(A.CreatureAlerts.pages or {}) do check(page:IsVisible()==(name=="NPC Alerts"),"Both NPC categories share one tab") end
+    check(A.Readiness.options:IsVisible()==(name=="General"),"Preparation is nested in General")
+    if A.MapAdvisor.controls then check(A.MapAdvisor.controls:IsVisible()==(name=="Map"),"Map controls live in Settings") end
 end
 check(A.LowHealth.settings.volume==30 and A.Deaths.db.settings.alertDuration==8,"Moving controls preserves saved preferences")
 A:HandleSlashCommand("health")
@@ -28,7 +28,10 @@ check(A.state.view=="settings" and A.state.filter=="Low Health","Health command 
 A.LowHealth.page.threshold:SetFocus(); A.LowHealth.page.threshold:SetText("27")
 A:OpenSettings("Rares")
 check(A.LowHealth.settings.threshold==27,"Leaving a page commits its pending edit")
-A.CreatureAlerts.page.duration:SetFocus(); A.CreatureAlerts.page.duration:SetText("17")
+check(A.state.filter=="NPC Alerts","Old rare route resolves to NPC Alerts")
+A.CreatureAlerts.pages.rares.duration:SetFocus(); A.CreatureAlerts.pages.rares.duration:SetText("17")
+A:Refresh()
+check(A.CreatureAlerts.pages.rares.duration:HasFocus() and A.CreatureAlerts.pages.rares.duration:GetText()=="17","Combined NPC page preserves pending edits on refresh")
 A:OpenSettings("Elites")
 check(A.CreatureAlerts.settings.rares.duration==17 and A.CreatureAlerts.settings.elites.duration==10,
     "Switching creature sections commits the old category before changing it")
@@ -39,7 +42,14 @@ check(A.Deaths.options.duration:HasFocus() and A.Deaths.options.duration:GetText
     "Ordinary refresh does not hide the active settings page or interrupt edits")
 A:OpenDeaths("Appearance")
 check(A.Deaths.db.settings.alertDuration==12,"Leaving death settings commits its pending duration")
-check(A.state.filter=="Death Banner" and A.Deaths.appearance:IsVisible(),"Appearance shortcut redirects")
+check(A.state.filter=="Death Alerts" and A.Deaths.appearance:IsVisible() and A.Deaths.options:IsVisible(),"Appearance shortcut opens combined death settings")
+local _,optionY,_,optionH=A.Deaths.options:GetRect()
+local _,appearanceY,_,appearanceH=A.Deaths.appearance:GetRect()
+check(appearanceY>optionY+optionH,"Combined death sections do not overlap")
+S.scroll:SetVerticalScroll(S.range)
+local _,scrollY,_,scrollH=S.scroll:GetRect()
+local _,buttonY,_,buttonH=A.Deaths.appearance.move:GetRect()
+check(buttonY>=scrollY and buttonY+buttonH<=scrollY+scrollH,"Banner controls remain reachable by scrolling")
 A:OpenDeaths()
 check(A.state.view=="deaths" and A.Deaths.window:IsVisible() and not S.scroll:IsShown(),"Journal remains a separate reports page")
 check(A.window.filters[1].label:GetText()=="Reports" and not A.window.filters[2]:IsShown(),"Journal no longer has scattered settings sections")
@@ -64,8 +74,11 @@ check(A.state.filter=="Talent Advisor" and A.GearAdvisor:CurrentProfile().fromBu
 MOCK.Click(talent.builds[1]); check(not A.GearAdvisor:CurrentProfile().manual,"Automatic Hardcore path remains available")
 gear.enabled:SetChecked(true); MOCK.Click(gear.enabled)
 A:Navigate("advisors")
-check(A.document.cards[1].blocks[1].action.command=="settings","Advisor page links to centralized configuration")
-A:Activate(A.document.cards[1].blocks[1].action)
+local blocks=A.document.cards[1].blocks
+check(#A.document.cards==1 and A.document.cards[1].note:find("\nPercentage change",1,true),"Score explanation follows profile subtext")
+check(blocks[#blocks].action.command=="settings","Gear settings link is last after supporting text")
+for _,b in ipairs(blocks) do check(not b.action or b.action.command~="talentSettings","Talent settings link removed from Gear") end
+A:Activate(blocks[#blocks].action)
 check(A.state.view=="settings" and A.state.filter=="Gear Advisor","Advisor settings link works")
 check(gear.openWeights:IsVisible() and gear.openSnapshot:IsVisible() and not gear.weights[1]:IsVisible(),"Gear settings show navigation buttons instead of inline editors")
 MOCK.Click(gear.openWeights)

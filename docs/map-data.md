@@ -6,6 +6,10 @@ live spawn detection and discovery credit are outside this feature.
 
 ## Controls
 
+Reveal, marker filters and zone-entry notices are in **Settings > Map**. The
+**Map settings** row in **Advisors > Map** opens that page. Zone browsing and
+the Open zone map / Follow current zone buttons remain in the advisor.
+
 - **Unchanged** leaves unexplored terrain hidden; **Reveal all** draws the map
   terrain; **Tint unexplored** draws it with a translucent blue tint (default).
 - Separate Dangerous, Rare, Elite and World boss filters control pins and lists.

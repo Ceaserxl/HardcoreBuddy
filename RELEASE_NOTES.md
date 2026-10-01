@@ -1,5 +1,10 @@
 # Unreleased
 
+- Consolidated death alerts and banner appearance in Death Alerts, rares and
+  elites in NPC Alerts, and preparation reminders in General. Map controls now
+  live in Settings > Map, linked from the Map advisor. Existing preferences stay.
+- Moved the Talent Advisor settings link onto Talents. Gear now presents its
+  score explanation beneath the profile, supporting notes next, and settings last.
 - Added opt-in bag upgrade notices and automatic equipping to Gear Advisor
   settings. Auto-equip preserves worn quest gear, checks both hands, and waits
   during combat, cursor use or item locks. Both options default off.

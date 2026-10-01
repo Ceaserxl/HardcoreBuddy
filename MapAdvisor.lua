@@ -207,7 +207,8 @@ function M:NotifyZone()
 end
 
 function M:Activate(a)
-    if a.command=="zones" then A.state.mapZonePicker=true
+    if a.command=="settings" then A:OpenSettings("Map"); return
+    elseif a.command=="zones" then A.state.mapZonePicker=true
     elseif a.command=="zone" then A.state.mapZone=a.id; A.state.mapZonePicker=nil
     elseif a.command=="current" then A.state.mapZone=nil; A.state.mapZonePicker=nil
     elseif a.command=="open" then
@@ -232,23 +233,24 @@ function M:Document(context,state)
         doc.cards[1]={title="Choose a zone",note="Classic Era outdoor zones and cities",blocks=blocks}; return doc
     end
     local id=state.mapZone or self:CurrentMap(); local zone=A.Data.MapZones[id]
-    local blocks={row("Choose a zone","Browse the Classic outdoor zones and cities above.")}
+    local settingsRow=row("Map settings","Configure map reveal, marker categories and silent zone-entry notices.","settings")
+    local blocks={settingsRow,row("Choose a zone","Browse the Classic outdoor zones and cities above.")}
     doc.cards[1]={title=zone and zone.name or "Map Advisor",note="Filtered for your faction. Hover map icons for NPC details.",blocks=blocks}
     if zone then
-        blocks={}
+        blocks={settingsRow}
         for _,r in ipairs(self:Records(id)) do
             local locations=r.npc.locations[id]
             local location=locations and #locations>0 and string.format("Known area: %.1f, %.1f",locations[1][1],locations[1][2]) or "Coordinates unavailable; no pin shown"
             blocks[#blocks+1]=row(r.npc.name,level(r.npc).." | "..names[r.npc.kind].." | "..location..
                 (r.npc.note and ("\n"..r.npc.note) or ""))
         end
-        if #blocks==0 then blocks[1]=row("No matching dangers in this catalogue","Adjust the filters above. An empty list does not guarantee a safe zone.") end
+        if #blocks==1 then blocks[2]=row("No matching dangers in this catalogue","Adjust the filters in Map settings. An empty list does not guarantee a safe zone.") end
         doc.cards[1].blocks=blocks
     end
     return doc
 end
 
-function M:LayoutControls(parent,left,top,width,visible)
+function M:LayoutSettings(parent,left,top,width,visible)
     if not self.controls and not visible then return 0 end
     local s=self:Settings()
     if not self.controls then
@@ -275,23 +277,34 @@ function M:LayoutControls(parent,left,top,width,visible)
         end
         for i,key in ipairs({"danger","rare","elite","boss"}) do check(key,iconLabel(key),16+(i-1)*177,108,135) end
         check("notify","Silent zone-entry notice (chat only)",16,146,650)
+        label("Recorded spawn areas, not live sightings. Creatures may roam beyond these markers.",16,185,700)
+    end
+    local f=self.controls; f:SetShown(visible); if not visible then return 0 end
+    local scale=math.min(1,width/744); f:SetScale(scale); f:SetSize(width/scale,212)
+    f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
+    for key,b in pairs(f.modes) do A.Skin.ButtonState(b,s.reveal==key,false,false) end
+    for key,b in pairs(f.checks) do b:SetChecked(s[key]); b.mark:SetText(s[key] and "X" or "") end
+    return 220*scale
+end
+
+function M:LayoutControls(parent,left,top,width,visible)
+    if not self.navigation and not visible then return 0 end
+    if not self.navigation then
+        local f=CreateFrame("Frame",nil,parent); self.navigation=f
         for i,entry in ipairs({{"zones","Browse zones"},{"open","Open zone map"},{"current","Follow current zone"}}) do
             local command=entry[1]; local b=CreateFrame("Button",nil,f,"BackdropTemplate")
-            b:SetSize(220,28); b:SetPoint("TOPLEFT",16+(i-1)*232,-179); A.Skin.Button(b,"utility")
+            b:SetSize(220,28); b:SetPoint("TOPLEFT",16+(i-1)*232,-8); A.Skin.Button(b,"utility")
             b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetAllPoints(); b.label:SetText(entry[2])
             b:SetScript("OnClick",function()
                 local id=A.state.mapZone or M:CurrentMap()
                 if command~="open" or id then M:Activate(action(command,id)) end
             end)
         end
-        label("Recorded spawn areas, not live sightings. Creatures may roam beyond these markers.",16,217,700)
     end
-    local f=self.controls; f:SetShown(visible); if not visible then return 0 end
-    local scale=math.min(1,width/744); f:SetScale(scale); f:SetSize(width/scale,244)
+    local f=self.navigation; f:SetShown(visible); if not visible then return 0 end
+    local scale=math.min(1,width/744); f:SetScale(scale); f:SetSize(width/scale,44)
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
-    for key,b in pairs(f.modes) do A.Skin.ButtonState(b,s.reveal==key,false,false) end
-    for key,b in pairs(f.checks) do b:SetChecked(s[key]); b.mark:SetText(s[key] and "X" or "") end
-    return 252*scale
+    return 52*scale
 end
 
 local events=CreateFrame("Frame"); M.events=events

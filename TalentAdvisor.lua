@@ -180,12 +180,11 @@ function T:Document(context,state)
     if filter=="Gear" then
         local profile=A.GearAdvisor:CurrentProfile()
         local description=profile and (profile.name.." | "..(profile.buildName or "Leveling default")) or "Character data loading"
-        local blocks={row("Gear advisor settings", "Configure tooltips and upgrade markers in Settings.",action("settings")),
-            row("Talent Advisor settings","Your selected talent build determines gear scoring.",action("talentSettings"))}
-        doc.cards[#doc.cards+1]=card("Gear Advisor",description,blocks)
-        doc.cards[#doc.cards+1]=card("Reading the score","Percentage change in weighted item stats, not a damage or survival simulation.",{
+        local blocks={
             row("|cff73d696Green: upgrade|r   |cfff56e61Red: downgrade|r","Enchants, armor kits, procs, use effects and set bonuses are excluded. Check the stat losses before replacing an item."),
-            row("Two slots and weapons","Each ring or trinket is compared separately. Two-handed weapons replace both hands; zero-score baselines are labeled without an invented percentage.")})
+            row("Two slots and weapons","Each ring or trinket is compared separately. Two-handed weapons replace both hands; zero-score baselines are labeled without an invented percentage."),
+            row("Gear advisor settings", "Configure scoring, tooltips, upgrade markers and automatic equipping in Settings.",action("settings"))}
+        doc.cards[1]=card("Gear Advisor",description.."\nPercentage change in weighted item stats, not a damage or survival simulation.",blocks)
         return doc
     end
     if not self:IsEnabled() then
@@ -212,6 +211,7 @@ function T:Document(context,state)
             node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank,learn,
             canLearn and "Click to spend one talent point" or "",live and live.icons[nextPoint.key] or spellIcon(node.spellID))
     end
+    top[#top+1]=row("Talent Advisor settings","Choose your talent build and manage talent recommendations.",action("talentSettings"))
     doc.cards[1]=card("Talent Advisor",context.characterClass.." | Level "..level,top)
     local steps,occurrences={},{}
     for index,key in ipairs(build.steps) do
