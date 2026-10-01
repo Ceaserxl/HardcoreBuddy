@@ -45,6 +45,10 @@ Weapon DPS uses the native tooltip's displayed precision, matching the reference
 scorer, ahead of the item API's higher-precision value. Enhancements are removed
 before reading that tooltip. New snapshots identify this as `classic-weighted-v3`;
 older saved snapshots retain their original scores and model identifier.
+The **Gear Snapshot** section below the stat weights in **Settings > Gear Advisor**
+contains the capture button, saved character details, status and all 20 equipment
+slots. Hover a row to see its captured tooltip. It shares the settings scroll and
+does not open or modify the native Character window. Existing snapshots are retained.
 
 ## Upgrade markers
 
@@ -147,7 +151,7 @@ slot handling, item-loading failures, enhancement stripping and tooltip reuse.
 `tests/run_talent_advisor.py` validates every path point against Classic tier,
 rank and prerequisite rules and tests live allocation safeguards and navigation.
 `tests/run_gear_snapshot.py` verifies manual capture, saved-data independence,
-native Character-window integration and offline reload of the saved fixture.
+Gear Advisor settings integration and offline reload of the saved fixture.
 `tests/run_auction_upgrades.py` verifies auction scanning, complete weapon setups,
 both purchase links, legal pairings, duplicate availability/prices, equipped-item
 reuse, score baselines, yielding and continuous result navigation.

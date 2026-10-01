@@ -91,10 +91,13 @@ check(A.state.view=="advisors" and A.state.filter=="Talents","Slash entry point"
 check(A.document.cards[1].title=="Talent Advisor" and #A.document.cards[2].blocks==51,"All 51 steps in one list")
 check(A.window.content:GetHeight()>A.window.scroll:GetHeight(),"Continuous scrolling, no paging")
 check(A.window.sidebarTitle:GetText()=="ADVISORS","Sidebar identity")
-local lesson=A.document.cards[1].blocks[3]
+local lesson=A.document.cards[1].blocks[2]
 check(lesson.action and lesson.action.command=="learn" and lesson.icon==132127,"Visible single-point button and native icon")
 check(calls==1,"Opening advisor never spends a point")
-A:Activate(A.document.cards[1].blocks[1].action)
+for _,block in ipairs(A.document.cards[1].blocks) do
+    check(block.title~="Choose a talent path" and (not block.action or block.action.command~="talentSettings"),"Talent page no longer has a path selector")
+end
+A:OpenSettings("Talent Advisor")
 check(A.state.view=="settings" and A.state.filter=="Talent Advisor","Build selection moved to Talent Advisor settings")
 T:Activate({kind="advisor",command="build",class="HUNTER",id=1})
 check(A.state.filter=="Talent Advisor" and T:Build("HUNTER",40).id==1,"Persistent selected path")
@@ -109,6 +112,9 @@ end
 check(calls==1,"Previewing all classes never spends")
 A.db.profile.mode="live"; A:HandleSlashCommand("gear")
 check(A.state.filter=="Gear","Gear slash opens settings")
+for _,block in ipairs(A.document.cards[1].blocks) do
+    check(not block.action or block.action.command~="snapshot","Snapshots are not listed in Advisors Gear")
+end
 T:Activate({kind="advisor",command="build",class="HUNTER",id=1})
 check(A.GearAdvisor:CurrentProfile().id==T:Build("HUNTER",40).profile,"Talent path sets the gear role")
 T:Activate({kind="advisor",command="defaultBuild",class="HUNTER"})

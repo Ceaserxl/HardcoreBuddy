@@ -1,4 +1,4 @@
-"""Verify manual gear capture, native Character navigation and offline persistence."""
+"""Verify manual gear capture in Gear settings and offline persistence."""
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -30,8 +30,7 @@ offline.execute('''
 print('PASS: SavedVariables fixture reloaded and inspected offline with no WoW APIs.')
 
 if '--render' in sys.argv:
-    addon.window.Hide(addon.window)
     target = ROOT / '.release/gear-snapshot-preview.png'
     target.parent.mkdir(parents=True, exist_ok=True)
-    composite(lua.globals().MOCK.frames, lua.globals().CharacterFrame).save(target)
-    print(f'PASS: Character snapshot layout simulation: {target}')
+    composite(lua.globals().MOCK.frames, addon.window).save(target)
+    print(f'PASS: Gear settings snapshot layout simulation: {target}')

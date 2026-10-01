@@ -163,6 +163,11 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local scale=math.min(1,(width-22)/760)
     local contentWidth=(width-22)/scale
     local contentHeight=section=="Talent Advisor" and self.pages["Talent Advisor"].contentHeight or section=="Gear Advisor" and self.pages["Gear Advisor"].contentHeight or 440
+    if section=="Gear Advisor" then
+        local gear=self.pages["Gear Advisor"]
+        gear.snapshotTop=gear.contentHeight+12
+        contentHeight=gear.snapshotTop+A.GearSnapshot:Layout(gear,gear.snapshotTop)+20
+    end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.scroll:SetSize(width-22,height)
     self.content:SetScale(scale); self.content:SetSize(contentWidth,math.max(contentHeight,height/scale))

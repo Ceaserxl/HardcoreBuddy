@@ -149,10 +149,6 @@ function T:Activate(a)
     elseif a.command=="toggleGear" then A.db.gearAdvisorEnabled=A.db.gearAdvisorEnabled==false
     elseif a.command=="learn" then self:LearnNext(a.id,a.key,a.rank)
     elseif a.command=="open" then self:OpenTalents()
-    elseif a.command=="snapshot" then
-        if InCombatLockdown and InCombatLockdown() then A:Print("Open Gear Snapshot after combat."); return end
-        if ToggleCharacter and CharacterFrame and not CharacterFrame:IsShown() then ToggleCharacter("PaperDollFrame") end
-        if A.GearSnapshot then A.GearSnapshot:Show() end
     end
     if a.command=="build" or a.command=="defaultBuild" then
         s.gearProfile=nil
@@ -175,8 +171,7 @@ function T:Document(context,state)
         local profile=A.GearAdvisor:CurrentProfile()
         local description=profile and (profile.name.." | "..(profile.buildName or "Leveling default")) or "Character data loading"
         local blocks={row("Gear advisor settings", "Configure tooltips and upgrade markers in Settings.",action("settings")),
-            row("Talent Advisor settings","Your selected talent build determines gear scoring.",action("talentSettings")),
-            row("Snapshot current gear","Save your equipment in the Character window for offline review.",action("snapshot"))}
+            row("Talent Advisor settings","Your selected talent build determines gear scoring.",action("talentSettings"))}
         doc.cards[#doc.cards+1]=card("Gear Advisor",description,blocks)
         doc.cards[#doc.cards+1]=card("Reading the score","Percentage change in weighted item stats, not a damage or survival simulation.",{
             row("|cff73d696Green: upgrade|r   |cfff56e61Red: downgrade|r","Enchants, armor kits, procs, use effects and set bonuses are excluded. Check the stat losses before replacing an item."),
@@ -188,7 +183,7 @@ function T:Document(context,state)
     if not preview then live,reason=self:ReadCurrent(class,level) else reason="Preview: no talent points will be spent." end
     local ranks=live and live.ranks or {}
     local plan=self.Plan(class,level,build,ranks)
-    local top={row("Choose a talent path",build.name,action("talentSettings"))}
+    local top={}
     if live then
         top[#top+1]=row(plan.status,live.points.." spent | "..live.unspent.." unspent",
             action("open"),#plan.divergences>0 and table.concat(plan.divergences,", ") or nil)

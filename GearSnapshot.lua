@@ -17,7 +17,6 @@ local function copy(value)
     elseif type(value)=="number" and value==value and math.abs(value)<math.huge then return value end
 end
 local function api(name) return C_Item and C_Item[name] or _G[name] end
-local function inCombat() return InCombatLockdown and InCombatLockdown() end
 
 function S:ReadTalents()
     local trees={}
@@ -161,7 +160,7 @@ end
 local function button(parent,text,width,callback,name)
     local b=CreateFrame("Button",name,parent,"BackdropTemplate"); b:SetSize(width,28)
     b.label=label(b,12); b.label:SetAllPoints(); b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE"); b.label:SetText(text)
-    Skin.Button(b,"tab"); b:SetScript("OnClick",callback)
+    Skin.Button(b,"utility"); b:SetScript("OnClick",callback)
     b:SetScript("OnEnter",function() Skin.ButtonState(b,b.active,true,false) end)
     b:SetScript("OnLeave",function() Skin.ButtonState(b,b.active,false,false) end)
     return b
@@ -214,78 +213,38 @@ function S:Refresh()
     end
 end
 
-function S:Show()
-    if inCombat() then A:Print("Open Gear Snapshot after combat."); return end
-    if not self:Attach() then return end
-    -- Opened from Advisors; keep the Character window's native tabs unchanged.
-    CharacterFrame_ShowSubFrame("HardcoreBuddyGearSnapshotPanel")
-    for i=1,CharacterFrame.numTabs or 0 do
-        local tab=_G["CharacterFrameTab"..i]
-        if tab and PanelTemplates_DeselectTab then PanelTemplates_DeselectTab(tab) end
-    end
-    self.panel:Show()
-    self:Refresh()
-end
-
-function S:Attach()
-    if self.panel then return true end
-    if not CharacterFrame or not CharacterFrame_ShowSubFrame or not hooksecurefunc or inCombat() then return false end
-    local f=CreateFrame("Frame","HardcoreBuddyGearSnapshotPanel",CharacterFrame,"BackdropTemplate")
-    self.panel=f; f:Hide(); f:EnableMouse(true)
-    f:SetPoint("TOPLEFT",CharacterFrame,"TOPLEFT",14,-64)
-    f:SetPoint("BOTTOMRIGHT",CharacterFrame,"BOTTOMRIGHT",-34,86)
-    Skin.Paint(f,"card")
-    -- Classic keeps most window artwork on PaperDollFrame, which is hidden
-    -- on this page. Draw a plain backing on the Character frame itself, below
-    -- its existing portrait, name and close button.
-    self.chrome={}
-    local function chrome(width,height,point,relativePoint,x,y,color)
-        local t=CharacterFrame:CreateTexture(nil,"BACKGROUND",nil,-1)
-        t:SetTexture("Interface\\Buttons\\WHITE8x8"); t:SetVertexColor(unpack(color))
-        t:SetSize(width,height); t:SetPoint(point,CharacterFrame,relativePoint,x,y)
-        t:Hide(); self.chrome[#self.chrome+1]=t
-        return t
-    end
-    chrome(350,438,"TOPLEFT","TOPLEFT",3,-3,{0.025,0.030,0.035,1})
-    chrome(350,1,"TOPLEFT","TOPLEFT",3,-3,{0.48,0.37,0.19,1})
-    chrome(350,1,"TOPLEFT","TOPLEFT",3,-440,{0.48,0.37,0.19,1})
-    chrome(1,438,"TOPLEFT","TOPLEFT",3,-3,{0.48,0.37,0.19,1})
-    chrome(1,438,"TOPLEFT","TOPLEFT",352,-3,{0.48,0.37,0.19,1})
-    f.title=label(f,16,Skin.colors.gold); f.title:SetPoint("TOPLEFT",12,-12); f.title:SetText("Gear Snapshot")
-    f.summary=label(f,11,Skin.colors.muted); f.summary:SetPoint("TOPLEFT",12,-37); f.summary:SetSize(304,32)
-    f.capture=button(f,"Snapshot Current Gear",300,function() self:Capture() end)
-    f.capture:SetPoint("TOPLEFT",12,-76)
-    f.status=label(f,11); f.status:SetPoint("TOPLEFT",12,-111); f.status:SetSize(304,32)
-    f.scroll=CreateFrame("ScrollFrame","HardcoreBuddySnapshotScroll",f,"UIPanelScrollFrameTemplate")
-    f.scroll:SetPoint("TOPLEFT",12,-148); f.scroll:SetPoint("BOTTOMRIGHT",-30,54)
-    f.content=CreateFrame("Frame",nil,f.scroll); f.content:SetSize(286,20*30)
-    f.scroll:SetScrollChild(f.content); f.scroll:EnableMouseWheel(true)
-    f.scroll:SetScript("OnMouseWheel",function(scroll,delta)
-        scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*60)))
+-- Snapshot controls and all saved slots share the Gear Advisor settings scroll.
+function S:Create(parent)
+    local f=CreateFrame("Frame","HardcoreBuddyGearSnapshotPanel",parent)
+    self.panel=f
+    f.title=label(f,18,Skin.colors.gold); f.title:SetPoint("TOPLEFT",0,0); f.title:SetText("Gear Snapshot")
+    f.summary=label(f,12,Skin.colors.muted); f.summary:SetPoint("TOPLEFT",0,-32); f.summary:SetSize(700,32)
+    f.capture=button(f,"Snapshot Current Gear",260,function()
+        A:CommitInputs(); self:Capture()
+        A:Refresh()
     end)
+    f.capture:SetPoint("TOPLEFT",0,-76)
+    f.status=label(f,12); f.status:SetPoint("TOPLEFT",0,-116); f.status:SetSize(700,32)
+    f.hint=label(f,12,Skin.colors.gold); f.hint:SetPoint("TOPLEFT",0,-156); f.hint:SetSize(700,32)
+    f.hint:SetText("Use /reload or log out to write the snapshot to disk for offline review.")
     f.rows={}
     for slot=0,19 do
-        local row=CreateFrame("Button",nil,f.content,"BackdropTemplate"); f.rows[slot]=row
-        row:SetSize(286,28); row:SetPoint("TOPLEFT",0,-slot*30)
+        local row=CreateFrame("Button",nil,f,"BackdropTemplate"); f.rows[slot]=row
+        row:SetSize(700,28); row:SetPoint("TOPLEFT",0,-200-slot*30)
         Skin.Paint(row,"row"); row:SetBackdropColor(slot%2==0 and 0.045 or 0.065,0.055,0.065,1)
-        row.slot=label(row,10,Skin.colors.muted); row.slot:SetPoint("LEFT",4,0); row.slot:SetSize(67,24); row.slot:SetJustifyV("MIDDLE")
-        row.icon=row:CreateTexture(nil,"ARTWORK"); row.icon:SetSize(24,24); row.icon:SetPoint("LEFT",74,0)
-        row.item=label(row,11); row.item:SetPoint("LEFT",104,0); row.item:SetSize(178,24); row.item:SetJustifyV("MIDDLE"); row.item:SetWordWrap(false)
+        row.slot=label(row,11,Skin.colors.muted); row.slot:SetPoint("LEFT",8,0); row.slot:SetSize(84,24); row.slot:SetJustifyV("MIDDLE")
+        row.icon=row:CreateTexture(nil,"ARTWORK"); row.icon:SetSize(24,24); row.icon:SetPoint("LEFT",100,0)
+        row.item=label(row,12); row.item:SetPoint("LEFT",136,0); row.item:SetSize(556,24); row.item:SetJustifyV("MIDDLE"); row.item:SetWordWrap(false)
         row:SetScript("OnEnter",function() self:ShowSavedTooltip(row) end)
         row:SetScript("OnLeave",function() GameTooltip:Hide() end)
     end
-    f.hint=label(f,11,Skin.colors.gold); f.hint:SetPoint("BOTTOMLEFT",12,12); f.hint:SetSize(300,32)
-    f.hint:SetText("Use /reload or log out to write the snapshot to disk for offline review.")
-    f:SetScript("OnShow",function()
-        for _,part in ipairs(self.chrome) do part:Show() end
-    end)
-    f:SetScript("OnHide",function()
-        for _,part in ipairs(self.chrome) do part:Hide() end
-        GameTooltip:Hide()
-    end)
-    hooksecurefunc("CharacterFrame_ShowSubFrame",function(name)
-        if name~="HardcoreBuddyGearSnapshotPanel" then f:Hide() end
-    end)
+    f:SetScript("OnHide",function() GameTooltip:Hide() end)
+end
+
+function S:Layout(parent,top)
+    if not self.panel then self:Create(parent) end
+    self.panel:ClearAllPoints(); self.panel:SetPoint("TOPLEFT",parent,"TOPLEFT",20,-top)
+    self.panel:SetSize(700,A.characterDB and A.characterDB.gearSnapshot and 808 or 196)
     self:Refresh()
-    return true
+    return self.panel:GetHeight()
 end

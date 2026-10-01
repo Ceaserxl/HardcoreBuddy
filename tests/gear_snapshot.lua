@@ -4,63 +4,28 @@ local checks=0
 local function check(ok,why) checks=checks+1; assert(ok,why) end
 local function close(a,b) return a and math.abs(a-b)<0.00001 end
 
--- Character UI can load after the addon. The mock models the native switcher
--- and tab hooks, while preserving an unrelated addon's sixth tab.
+-- No Character window is needed. The controls live directly on Gear settings.
 check(not S.panel,"Loading the addon does not require CharacterFrame")
-CharacterFrame=CreateFrame("Frame","CharacterFrame",UIParent,"BackdropTemplate")
-CharacterFrame:SetSize(384,512); CharacterFrame:SetPoint("TOPLEFT",50,-100)
-CharacterFrame.numTabs=6
-CHARACTERFRAME_SUBFRAMES={"PaperDollFrame","PetPaperDollFrame","ReputationFrame","SkillFrame","HonorFrame","OtherAddonCharacterPanel"}
-for i,name in ipairs(CHARACTERFRAME_SUBFRAMES) do
-    local f=CreateFrame("Frame",name,CharacterFrame); f:Hide()
-    local b=CreateFrame("Button","CharacterFrameTab"..i,CharacterFrame)
-    b:SetSize(51,30); b:SetPoint("BOTTOMLEFT",20+(i-1)*51,48)
-end
-local nativeClicks=0
-function CharacterFrame_ShowSubFrame(name)
-    for i,frame in ipairs(CHARACTERFRAME_SUBFRAMES) do
-        _G[frame]:SetShown(name==frame)
-        _G["CharacterFrameTab"..i].selected=name==frame
-    end
-end
-function CharacterFrameTab_OnClick(button)
-    nativeClicks=nativeClicks+1
-    for i=1,6 do if button==_G["CharacterFrameTab"..i] then CharacterFrame_ShowSubFrame(CHARACTERFRAME_SUBFRAMES[i]) end end
-end
-function PanelTemplates_DeselectTab(tab) tab.selected=false end
-function hooksecurefunc(name,callback)
-    local previous=_G[name]
-    _G[name]=function(...) previous(...); callback(...) end
-end
-local combat=true
-InCombatLockdown=function() return combat end
-MOCK.FireAll("ADDON_LOADED","Blizzard_CharacterFrame")
-S:Show()
-check(not S.panel,"Character UI attachment deferred during combat")
-combat=false; MOCK.FireAll("PLAYER_REGEN_ENABLED")
-check(not S.panel and not HardcoreBuddyCharacterTab,"Login and combat events do not add a Character window button or page")
-S:Show()
+CharacterFrame=nil
+A:OpenSettings("Gear Advisor")
 local panel=S.panel
-check(panel and not S.tab and not HardcoreBuddyCharacterTab,"Explicit snapshot navigation creates only the page")
-MOCK.FireAll("ADDON_LOADED","AnotherAddon")
-S:Show()
-check(S.panel==panel,"Repeated navigation reuses the snapshot page")
-check(CharacterFrame.numTabs==6 and #CHARACTERFRAME_SUBFRAMES==6,"Native/other-addon tab counts and subframes unchanged")
-CharacterFrame_ShowSubFrame("PaperDollFrame")
-S:Show()
-check(panel:IsShown() and not PaperDollFrame:IsShown(),"Snapshot navigation selects its page and hides paper doll")
-check(nativeClicks==0,"Snapshot navigation does not manufacture Character tab clicks")
-for i=1,6 do check(not _G["CharacterFrameTab"..i].selected,"Native tabs deselected on snapshot page") end
-CharacterFrameTab_OnClick(CharacterFrameTab3)
-check(ReputationFrame:IsShown() and not panel:IsShown(),"Native tab returns to its own page")
-check(not S.chrome[1]:IsShown(),"Snapshot backing never covers native Character pages")
-S:Show(); CharacterFrame_ShowSubFrame("OtherAddonCharacterPanel")
-check(not panel:IsShown() and OtherAddonCharacterPanel:IsShown(),"Other addon subframe switches hide snapshot page")
-combat=true; S:Show()
-check(not panel:IsShown(),"Snapshot navigation does not mutate Character UI during combat")
-combat=false; S:Show()
-check(S.chrome[1]:IsShown(),"Snapshot page supplies its own backing when paper doll artwork hides")
-check(not A.characterDB.gearSnapshot,"Opening the page never captures automatically")
+check(panel and panel.parent==A.Settings.pages["Gear Advisor"],"Snapshot panel belongs to Gear Advisor settings")
+check(A.state.view=="settings" and A.state.filter=="Gear Advisor" and panel:IsVisible(),"Gear settings display snapshot controls")
+check(not panel.scroll and not HardcoreBuddyCharacterTab,"No Character tab or nested snapshot scroll frame")
+check(not A.characterDB.gearSnapshot,"Opening settings never captures automatically")
+local emptyHeight=A.Settings.content:GetHeight()
+A:OpenSettings("General")
+check(not panel:IsVisible(),"Leaving Gear settings hides the snapshot section")
+A:OpenSettings("Gear Advisor")
+check(S.panel==panel,"Returning to settings reuses the snapshot controls")
+CharacterFrame=CreateFrame("Frame","CharacterFrame",UIParent)
+CharacterFrame:SetSize(384,512); CharacterFrame:SetPoint("TOPLEFT",50,-100)
+local nativeCalls=0
+CharacterFrame_ShowSubFrame=function() nativeCalls=nativeCalls+1 end
+CharacterFrameTab_OnClick=function() nativeCalls=nativeCalls+1 end
+ToggleCharacter=function() nativeCalls=nativeCalls+1 end
+A:OpenSettings("Gear Advisor")
+check(nativeCalls==0 and not S.tab and not S.chrome,"Settings never change native Character navigation or artwork")
 
 F.reset("HUNTER",40,{31,0,0})
 A.db.gearAdvisorEnabled=false
@@ -193,11 +158,12 @@ local characterDB=A.characterDB
 A.characterDB={}; S:Refresh()
 check(panel.status:GetText()=="No gear snapshot saved yet." and not panel.rows[10]:IsShown(),"Characters without a snapshot do not see another character's gear")
 A.characterDB=characterDB; A.characterDB.gearSnapshot=snapshot; S.message=nil; S:Refresh()
-S:Show()
-check(panel.scroll:GetVerticalScrollRange()>0,"Saved equipment is one scrollable list")
-panel.scroll:SetVerticalScroll(panel.scroll:GetVerticalScrollRange())
+A:OpenSettings("Gear Advisor")
+local scroll=A.Settings.scroll
+check(A.Settings.range>0 and A.Settings.content:GetHeight()>emptyHeight,"Saved equipment extends the settings scroll instead of adding a separate menu")
+scroll:SetVerticalScroll(A.Settings.range)
 local _,lastY,_,lastH=panel.rows[19]:GetRect()
-local _,scrollY,_,scrollH=panel.scroll:GetRect()
+local _,scrollY,_,scrollH=scroll:GetRect()
 check(lastY>=scrollY and lastY+lastH<=scrollY+scrollH,"Last equipment row reachable without paging")
-panel.scroll:SetVerticalScroll(0)
-print("PASS: "..checks.." snapshot checks; manual capture, unenchanted scores, immutable raw data, native Character tabs, partial data and continuous scrolling.")
+scroll:SetVerticalScroll(math.min(A.Settings.range,A.Settings.pages["Gear Advisor"].snapshotTop*A.Settings.content:GetScale()))
+print("PASS: "..checks.." snapshot checks; manual capture, unenchanted scores, immutable raw data, Gear settings integration, partial data and continuous scrolling.")
