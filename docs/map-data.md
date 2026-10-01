@@ -30,7 +30,7 @@ Markers use native Classic assets: `nameplates-icon-elite-silver`,
 `Interface/TargetingFrame/UI-TargetingFrame-Skull`. Atlas availability is checked
 before use; native texture fallbacks handle missing atlases. Classic atlas names
 are recorded in the [client atlas catalogue](https://github.com/Hoizame/WoW_ClassicUIResources/blob/master/RawData/UiTextureAtlasElement.lua).
-Icons remain 18 pixels at different map zoom levels. Clusters use a 12-pixel
+Icons remain 18 pixels at different map zoom levels. Clusters use a 16-pixel
 maximum distance between all members, preventing transitive chains.
 
 Reveal uses independent textures behind native explored overlays. Discovering an
@@ -73,7 +73,10 @@ sources. A reference URL alone does not mean the individual NPC page was read.
 
 The 40 outdoor map tile manifests contain factual client map-art IDs, rectangle
 geometry and texture file IDs, normalized from
-[Leatrix Maps' archived reveal data](https://github.com/WowInterfaces/leatrix-maps-wrath/blob/1c8a143e2fbc29afbcee39e607d0376ab53ba4c1/Leatrix_Maps_Reveal.lua).
+[Leatrix Maps 1.15.157 Classic Era reveal data](https://www.curseforge.com/wow/addons/leatrix-maps/files/9020349).
+This replaces the Wrath manifest, which had incompatible Eastern Plaguelands
+texture IDs and different geometry in Eastern Plaguelands, Badlands and Tirisfal.
+The builder pins the Classic archive; failed texture loads stay hidden.
 No Leatrix functions or runtime dependency are included. Capital maps need no
 fog overlay. Drawing follows the native Classic map API contract documented by
 [Blizzard's exploration provider](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_SharedMapDataProviders/MapExplorationDataProvider.lua).

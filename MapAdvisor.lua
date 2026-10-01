@@ -19,7 +19,7 @@ local function iconLabel(kind)
     return (atlas and ("|A:"..atlas..":18:18|a") or ("|T"..icons[kind].fallback..":18:18:0:0|t")).." "..names[kind]
 end
 local priority={danger=2,rare=1,elite=3,boss=4}
-local PIN_SIZE,CLUSTER_RADIUS=18,12
+local PIN_SIZE,CLUSTER_RADIUS=18,16
 local function action(command,id) return {kind="mapAdvisor",command=command,id=id} end
 local function row(title,body,command,id) return {title=title,body=body,action=command and action(command,id)} end
 
@@ -186,10 +186,12 @@ function M:Reveal(pin)
                 count=count+1; local texture=textures[count]
                 if not texture then texture=pin:CreateTexture(nil,"ARTWORK",nil,-1); textures[count]=texture end
                 texture:ClearAllPoints(); texture:SetPoint("TOPLEFT",pin,"TOPLEFT",r[3]+col*256,-r[4]-rowIndex*256)
-                texture:SetSize(w,h); texture:SetTexCoord(0,w/padded(w),0,h/padded(h)); texture:SetTexture(file)
+                texture:SetSize(w,h); texture:SetTexCoord(0,w/padded(w),0,h/padded(h))
+                local loaded=texture:SetTexture(file)
                 if s.reveal=="tint" then texture:SetVertexColor(0.35,0.65,1,0.55)
                 else texture:SetVertexColor(1,1,1,1) end
-                texture:Show()
+                -- Failed client assets must never leave a green placeholder.
+                texture:SetShown(loaded~=false)
             end
         end
     end

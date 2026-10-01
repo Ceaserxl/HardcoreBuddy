@@ -91,9 +91,12 @@ Use **Settings > Debug > Dump Data** to capture HardcoreBuddy settings, saved
 history, caches, runtime state and reference data, plus available character,
 equipment, talents, bags/bank, quests, spells, skills, pet and aura information.
 An animated progress bar tracks work spread across frames. The completed dump
-fills a scrollable text box and is cached per character. **Copy** selects all
-text; press **Ctrl+C** (Cmd+C on Mac) to copy it. `/reload` or log out to write
-the cache to disk. Opening Debug restores the last dump without recapturing.
+is cached in full per character. The text box displays parts of at most 8 KB
+to keep native text selection responsive. **Copy** selects the current part;
+press **Ctrl+C** (Cmd+C on Mac), paste, then use **Next part**. Paste parts in
+order to reconstruct the dump. `/reload` or log out to write the complete cache
+to disk in the character's `SavedVariables/HardcoreBuddy.lua` file. Opening
+Debug restores the last dump without recapturing.
 Unavailable APIs are labelled; bank information depends on the bank being open.
 The dump includes only HardcoreBuddy-owned data and player APIs, not other
 addons. UI objects and functions are represented by markers. Shared tables and
@@ -106,7 +109,7 @@ reveal unexplored outdoor terrain or tint unexplored areas translucent blue.
 Category filters show known dangerous NPCs, rares, elites and bosses.
 Map markers use Blizzard's silver rare and gold elite icons, a skull for world
 bosses and a warning icon for dangerous NPCs. Hover for NPC names and details.
-Only nearly overlapping points (within 12 screen pixels of every other point
+Only nearly overlapping points (within 16 screen pixels of every other point
 in their group) combine. Nearby chains cannot collapse an entire camp. Zooming
 in separates locations that are far enough apart on screen.
 Browse any Classic zone or follow your current zone under **Advisors > Map**.

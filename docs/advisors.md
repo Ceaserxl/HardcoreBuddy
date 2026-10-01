@@ -67,7 +67,8 @@ older saved snapshots retain their original scores and model identifier.
 **Settings > Debug > Dump Data** now captures gear alongside the rest of
 HardcoreBuddy's diagnostic data. It retains intrinsic item scores, raw item
 stats, native tooltip lines and talent information. The full dump is cached per
-character and shown in a text box. Copy selects the text for Ctrl+C. The former
+character and shown in a text box in parts of at most 8 KB. Copy selects the
+current part for Ctrl+C; Previous/Next part browse the complete report. The former
 standalone Gear Snapshot page has been removed; saved gear snapshots remain
 available in diagnostic data. Stat Weights stays under Gear Advisor settings.
 

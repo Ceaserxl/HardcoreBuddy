@@ -38,7 +38,17 @@ assert(data.capture.equipment and data.capture.bags and data.capture.quests and 
 assert(data.referenceData.MapZones and data.referenceData.PetGuide and data.runtime)
 assert(not data.character.debugDump,"Previous dump is excluded")
 A:OpenSettings("Debug")
-assert(p.edit:GetText()==saved.text and not p.sheen:IsShown())
+assert(p.edit:GetText()==saved.text:sub(1,#p.partText) and #p.partText<=8192 and not p.sheen:IsShown())
+local parts={}
+repeat
+    local part=p.edit:GetText(); assert(#part<=8192,"Native text selection is bounded")
+    parts[#parts+1]=part
+    if not p.next:IsEnabled() then break end
+    MOCK.Click(p.next)
+until false
+assert(table.concat(parts)==saved.text,"All parts reconstruct the complete dump without loss")
+assert(p.previous:IsEnabled() and not p.next:IsEnabled())
+MOCK.Click(p.previous); assert(p.next:IsEnabled())
 MOCK.Click(p.copy)
 assert(p.edit:HasFocus() and p.status:GetText():find("Ctrl+C",1,true),"Copy selects text and explains the required keypress")
 local job=D.Collect
@@ -59,7 +69,18 @@ fresh.globals().RESTORED_TEXT = lua.globals().DEBUG_SAVED_TEXT
 fresh.execute('''
 TestAddon.characterDB.debugDump={schema=1,text=RESTORED_TEXT,capturedAt=123}
 TestAddon:OpenSettings("Debug")
-assert(TestAddon.DebugDump.page.edit:GetText()==RESTORED_TEXT)
+assert(TestAddon.DebugDump.page.edit:GetText()==RESTORED_TEXT:sub(1,#TestAddon.DebugDump.page.partText))
+assert(#TestAddon.DebugDump.page.edit:GetText()<=8192)
 assert(not TestAddon.DebugDump.job,"Opening Debug must not recapture")
+local D=TestAddon.DebugDump
+local unicode=string.char(226,152,131)
+local fixture=string.rep("x",8191)..unicode..string.rep("y",9000)
+TestAddon.characterDB.debugDump={schema=1,text=fixture,capturedAt=123}
+D:Refresh()
+assert(#D.page.edit:GetText()==8191,"Do not split a UTF-8 codepoint")
+D:ShowPart(1); assert(D.page.edit:GetText():sub(1,3)==unicode)
+local full=TestAddon.characterDB.debugDump.text
+D.page.edit.scripts.OnTextChanged(D.page.edit,true)
+assert(#D.page.edit:GetText()<=8192 and TestAddon.characterDB.debugDump.text==full,"Editing cannot restore a full-sized report into the textbox")
 ''')
 print("PASS: dump parses offline and cached text restores in a fresh addon runtime.")

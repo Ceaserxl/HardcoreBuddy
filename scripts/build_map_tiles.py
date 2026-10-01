@@ -2,16 +2,19 @@
 import re
 from pathlib import Path
 import urllib.request
+import io
+import zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
-SOURCE='https://raw.githubusercontent.com/WowInterfaces/leatrix-maps-wrath/1c8a143e2fbc29afbcee39e607d0376ab53ba4c1/Leatrix_Maps_Reveal.lua'
-cache=ROOT/'.release/map-research/reveal-source.lua'
+SOURCE='https://edge.forgecdn.net/files/9020/349/Leatrix_Maps-1.15.157-classic.zip'
+cache=ROOT/'.release/map-research/era-reveal-1.15.157.lua'
 if not cache.exists():
     cache.parent.mkdir(parents=True,exist_ok=True)
-    cache.write_bytes(urllib.request.urlopen(SOURCE).read())
+    archive=zipfile.ZipFile(io.BytesIO(urllib.request.urlopen(SOURCE).read()))
+    cache.write_bytes(archive.read('Leatrix_Maps/Leatrix_Maps_Reveal.lua'))
 out=['-- Classic client map-art geometry and file IDs. See docs/map-data.md.','local _,A=...','A.Data.MapTiles={']
 count=0
-for line in cache.read_text(encoding='utf-8').splitlines():
+for line in cache.read_text(encoding='utf-8-sig').splitlines():
     match=re.search(r'--\[\[(\d+):.*?\]\]\s*\[(\d+)\]\s*=\s*\{(.*)\}',line)
     if not match or not 1411<=int(match[1])<=1458: continue
     tiles=[]

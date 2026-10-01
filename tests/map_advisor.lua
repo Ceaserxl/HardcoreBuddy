@@ -77,6 +77,17 @@ pin:RefreshOverlays()
 for _,texture in ipairs(M.exploration[pin]) do assert(not texture:IsShown()) end
 assert(native:IsShown(),"Discovering the zone leaves native textures intact")
 known={}; pin:RefreshOverlays(); assert(t:IsShown())
+-- Classic Era EPL uses different geometry from Wrath's expanded map.
+mapID=1423; art=1213
+pin:RefreshOverlays()
+local files={}
+for _,texture in ipairs(M.exploration[pin]) do if texture:IsShown() then files[texture.texture]=true end end
+assert(files[271530] and not files[4357862] and not files[4357864],"Era overlays, not Wrath's green missing assets")
+local setTexture=t.SetTexture
+t.SetTexture=function() return false end
+pin:RefreshOverlays(); assert(not t:IsShown(),"Failed texture stays hidden")
+t.SetTexture=setTexture
+mapID=1436; art=1240; pin:RefreshOverlays()
 art=1; pin:RefreshOverlays(); assert(not t:IsShown(),"Mismatched art is never drawn")
 art=1240; pin:RefreshOverlays(); assert(t:IsShown())
 pin:RemoveAllData(); assert(not t:IsShown())
@@ -157,6 +168,8 @@ M.Records=records
 M.Records=function() return {record(1,"A","rare",{{10,10}}),record(2,"B","rare",{{11,10}}),record(3,"C","rare",{{12,10}})} end
 scale=1
 assert(#M:Clusters(1436)==2,"No transitive chain clustering")
+M.Records=function() return {record(1,"A","rare",{{10,10}}),record(2,"B","rare",{{11.5,10}})} end
+assert(#M:Clusters(1436)==1,"Slightly wider 16px cluster distance includes a 15px neighbour")
 local previousTexture=C_Texture
 C_Texture={GetAtlasInfo=function(name) return {width=32,height=32} end}
 for _,p in ipairs(M.pins) do p.icon.SetAtlas=function(self,name) self.testAtlas=name end end

@@ -2,6 +2,9 @@
 local _,A=...
 local D={schema=1}; A.DebugDump=D
 local Skin=A.Skin
+-- Never give the native EditBox an entire multi-megabyte report. Selection,
+-- wrapping and cursor layout happen synchronously in the client.
+local COPY_BYTES=8192
 local function call(fn,...)
     if type(fn)~="function" then return {unavailable="API unavailable"} end
     local function pack(...) return {n=select("#",...),...} end
@@ -151,9 +154,33 @@ function D:Step(elapsed)
 end
 
 function D:Copy()
-    if not self.page or not A.characterDB.debugDump then return end
+    if self.job or not self.page or not self.page.shownDump then return end
     self.page.edit:SetFocus(); self.page.edit:HighlightText()
-    self.page.status:SetText("Dump selected. Press Ctrl+C to copy (Cmd+C on Mac).")
+    self.page.status:SetText("Part "..self.page.part.." selected. Press Ctrl+C (Cmd+C on Mac), then Next part. The complete dump stays cached.")
+end
+
+function D:ShowPart(offset)
+    local p=self.page
+    if not p or not p.shownDump or self.job then return end
+    local text=p.shownDump.text
+    p.partStarts=p.partStarts or {1}
+    p.part=math.max(1,(p.part or 1)+(offset or 0))
+    local first=p.partStarts[p.part]
+    if not first then p.part=p.part-1; return end
+    local last=math.min(#text,first+COPY_BYTES-1)
+    -- Keep UTF-8 characters intact at part boundaries.
+    while last<#text and text:byte(last+1)>=128 and text:byte(last+1)<192 do last=last-1 end
+    local more=last<#text
+    if more then p.partStarts[p.part+1]=last+1 end
+    p.partText=text:sub(first,last)
+    p.edit:ClearFocus()
+    local _,lines=p.partText:gsub("\n","\n")
+    p.edit:SetHeight(math.max(250,(lines+1)*14))
+    p.edit:SetText(p.partText); p.edit:SetCursorPosition(0); p.scroll:SetVerticalScroll(0)
+    p.scroll:UpdateScrollChildRect()
+    p.previous:SetEnabled(p.part>1); p.next:SetEnabled(more)
+    p.partLabel:SetText("Part "..p.part.." | bytes "..first.."-"..last.." / "..#text)
+    p.status:SetText("Copy selects this part for Ctrl+C. Paste parts in order; the full dump remains cached.")
 end
 
 function D:Refresh()
@@ -162,18 +189,17 @@ function D:Refresh()
     p.dump:SetEnabled(not self.job); p.copy:SetEnabled(saved~=nil and not self.job)
     p.dump.label:SetText(self.job and "Dumping..." or "Dump Data")
     p.cached:SetText(saved and ((date and date("%b %d %H:%M",saved.capturedAt) or tostring(saved.capturedAt)).." | "..math.ceil(#saved.text/1024).." KB cached") or "")
-    p.status:SetText(self.error and (self.phase.." "..self.error) or self.phase or (saved and "Cached dump restored. Copy selects all text." or "No dump cached yet."))
+    p.status:SetText(self.error and (self.phase.." "..self.error) or self.phase or (saved and "Cached dump restored. Copy selects the current part." or "No dump cached yet."))
     p.fill:SetWidth(math.max(1,700*(self.displayProgress or (saved and 1 or 0))))
     p.percent:SetText(math.floor((self.displayProgress or (saved and 1 or 0))*100).."%")
     p.sheen:SetShown(self.job~=nil)
     p.sheen:ClearAllPoints(); p.sheen:SetPoint("TOPLEFT",p.track,"TOPLEFT",((self.animationTime or 0)*220)%660,0)
     if saved and p.shownDump~=saved then
-        p.shownDump=saved
-        local _,lines=saved.text:gsub("\n","\n")
-        p.edit:SetHeight(math.max(250,(lines+1)*14))
-        p.edit:SetText(saved.text); p.edit:SetCursorPosition(0); p.scroll:SetVerticalScroll(0)
-        p.scroll:UpdateScrollChildRect()
+        p.shownDump=saved; p.part=1; p.partStarts={1}
+        self:ShowPart(0)
     end
+    p.previous:SetEnabled(not self.job and (p.part or 1)>1)
+    p.next:SetEnabled(not self.job and p.shownDump~=nil and p.partStarts and p.partStarts[(p.part or 1)+1]~=nil)
 end
 
 function D:Create(page)
@@ -206,13 +232,22 @@ function D:Create(page)
         scroll:SetVerticalScroll(math.max(0,math.min(edit:GetHeight()-250,scroll:GetVerticalScroll()-delta*42)))
     end)
     edit:SetScript("OnEscapePressed",function(e) e:ClearFocus() end)
-    edit:SetScript("OnTextChanged",function(e,user) if user and page.shownDump then e:SetText(page.shownDump.text) end end)
+    edit:SetScript("OnTextChanged",function(e,user) if user then e:SetText(page.partText or "") end end)
     edit:SetScript("OnCursorChanged",function(_,_,y,_,height)
-        if not y then return end
+        if not y or page.scrolling then return end
+        page.scrolling=true
         local top=-y; local current=scroll:GetVerticalScroll()
-        if top<current then scroll:SetVerticalScroll(top)
-        elseif top+height>current+scroll:GetHeight() then scroll:SetVerticalScroll(top+height-scroll:GetHeight()) end
+        local wanted=current
+        if top<current then wanted=top
+        elseif top+height>current+scroll:GetHeight() then wanted=top+height-scroll:GetHeight() end
+        wanted=math.max(0,math.min(math.max(0,edit:GetHeight()-scroll:GetHeight()),wanted))
+        if math.abs(wanted-current)>0.5 then scroll:SetVerticalScroll(wanted) end
+        page.scrolling=nil
     end)
+    page.previous=button(page,"Previous part",20,472,function() self:ShowPart(-1) end)
+    page.next=button(page,"Next part",170,472,function() self:ShowPart(1) end)
+    page.partLabel=label(page,"",330,480,390)
+    label(page,"Small parts keep copying responsive. Paste each part in order, or /reload to save the full dump in SavedVariables.",20,516,700)
     page:SetScript("OnHide",function() edit:ClearFocus() end)
-    page.contentHeight=490; self:Refresh()
+    page.contentHeight=562; self:Refresh()
 end
