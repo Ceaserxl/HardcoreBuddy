@@ -41,6 +41,9 @@ stay out of combat, and have a five-minute cooldown. Dismiss the panel for the
 current visit with its close button. An unowned Light of Elune has no default
 restock requirement.
 
+Drag the **Missing essentials** panel to move it. Its position is saved between
+sessions; clicking it still opens your Essentials supplies.
+
 **Supplies > Buffs** checks your equipped chest armor, leggings, gloves and boots
 for armor-kit upgrades. It respects both your character level and each piece's
 item level, recommends kits for unenhanced pieces or older armor kits, and keeps
@@ -74,6 +77,15 @@ Procs, active item effects and set bonuses are excluded. See [advisor details](d
 Use **Settings → Gear Advisor → Gear Snapshot → Snapshot Current Gear** to save gear and talent
 information for offline review. The saved item list is on the snapshot page;
 `/reload` or log out to write it to disk.
+
+## Map advisor
+
+Open **Advisors > Map** to reveal unexplored outdoor terrain or tint unexplored
+areas translucent blue. Category filters show known dangerous NPCs, rares,
+elites and bosses. Browse any Classic zone, or follow your current zone.
+An optional **Silent zone-entry notice** lists known dangers in chat without
+playing a sound. Pins mark recorded spawn areas, not live sightings; missing
+coordinates stay clearly labelled in the zone list. See [sources and coverage](docs/map-data.md).
 
 ## Auction house upgrades
 

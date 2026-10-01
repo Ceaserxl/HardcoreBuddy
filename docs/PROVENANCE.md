@@ -233,3 +233,9 @@ changes do not alter automatic bandage, anti-venom or target-dummy selection.
 See [advisor data and scoring](advisors.md). The addon includes compact Classic
 stat-weight tables and Hardcore talent paths, with an independent runtime.
 The previous combat simulation and recovery experiments have been removed.
+
+## Map advisor
+
+See [map sources and coverage](map-data.md) and the per-zone/per-NPC audit for
+Wowhead research, Classic factual coordinate supplementation, client map-art
+geometry, exclusions and known coverage gaps. All runtime data ships locally.

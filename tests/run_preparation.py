@@ -96,6 +96,19 @@ assert(#R:Missing(live)==0,"Carry 0 skips restocking")
 R.settings.panel=true; R.settings.departure=true
 R:Refresh(); assert(not R.toast:IsShown(),"No login departure")
 resting=true; R:Refresh(); assert(R.panel:IsShown())
+local opens=0; local originalOpen=R.Open
+R.Open=function() opens=opens+1 end
+R.panel.scripts.OnDragStart(R.panel)
+assert(R.dragging)
+R:Refresh(); assert(R.dragging and R.panel:IsShown(),"Bag refresh must not interrupt a drag")
+R.panel:ClearAllPoints(); R.panel:SetPoint("CENTER",UIParent,"CENTER",123,45)
+R.panel.scripts.OnDragStop(R.panel)
+assert(not R.dragging and R.settings.position.x==123 and R.settings.position.y==45)
+MOCK.Click(R.panel); assert(opens==0,"Releasing a drag must not open Supplies")
+now=now+1; MOCK.Click(R.panel); assert(opens==1)
+R.panel.scripts.OnDragStart(R.panel); combat=true; R:Refresh()
+assert(not R.dragging and not R.panel:IsShown(),"Unsafe hide stops and saves movement")
+combat=false; R:Refresh(); R.Open=originalOpen
 MOCK.Click(R.panel.close); R:Refresh(); assert(not R.panel:IsShown(),"Dismiss for this visit")
 resting=false; R:Refresh(); assert(R.toast:IsShown() and R.lastReminder==now)
 R.toast:Hide(); resting=true; R:Refresh(); assert(R.panel:IsShown())
@@ -163,6 +176,8 @@ local A=TestAddon
 assert(A.characterDB.targets[3033]==2200)
 assert(A.characterDB.priorities.recovery=="Essentials")
 assert(A.Readiness.settings.panel and A.Readiness.settings.departure)
+local _,_,_,rx,ry=A.Readiness.panel:GetPoint()
+assert(rx==123 and ry==45,"Missing essentials position survives a fresh login")
 assert(A.Deaths.db.settings.alertStyle=="Compact" and A.Deaths.db.settings.backgroundOpacity==65)
 assert(A.Deaths.db.positions.alert[3]==123 and A.Deaths.db.positions.alert[4]==47)
 assert(not A.Readiness.toast:IsShown() and not A.Deaths.alert.positioning)

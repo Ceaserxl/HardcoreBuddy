@@ -20,6 +20,8 @@ Data\Crafting.lua
 Data\ArmorKits.lua
 Data\AdvisorGear.lua
 Data\AdvisorTalents.lua
+Data\MapNPCs.lua
+Data\MapTiles.lua
 Data\Instances.lua
 Data\InstancesRaids.lua
 Planner.lua
@@ -46,6 +48,7 @@ HunterTooltips.lua
 GearAdvisor.lua
 TalentAdvisor.lua
 TalentRanks.lua
+MapAdvisor.lua
 GearIndicators.lua
 GearSnapshot.lua
 WeaponSetAdvisor.lua

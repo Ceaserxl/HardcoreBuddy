@@ -37,10 +37,28 @@ function R:BuildFrames()
     local f=CreateFrame("Button",nil,UIParent,"BackdropTemplate"); self.panel=f
     f:SetSize(290,180); f:SetPoint("RIGHT",UIParent,"RIGHT",-36,35)
     f:SetFrameStrata("MEDIUM"); f:SetClampedToScreen(true); A.Skin.Paint(f,"card")
+    f:SetMovable(true); f:RegisterForDrag("LeftButton")
+    local anchors={TOPLEFT=true,TOP=true,TOPRIGHT=true,LEFT=true,CENTER=true,RIGHT=true,BOTTOMLEFT=true,BOTTOM=true,BOTTOMRIGHT=true}
+    local position=self.settings and self.settings.position
+    if type(position)=="table" and anchors[position.point] and anchors[position.relative]
+        and type(position.x)=="number" and type(position.y)=="number"
+        and math.abs(position.x)<100000 and math.abs(position.y)<100000 then
+        f:ClearAllPoints(); f:SetPoint(position.point,UIParent,position.relative,position.x,position.y)
+    end
+    local function stopDrag()
+        if not self.dragging then return end
+        f:StopMovingOrSizing(); self.dragging=nil; self.ignoreClickUntil=GetTime()+0.2
+        local point,_,relative,x,y=f:GetPoint()
+        self.settings.position={point=point,relative=relative,x=x,y=y}
+    end
+    f:SetScript("OnDragStart",function() self.dragging=true; f:StartMoving() end)
+    f:SetScript("OnDragStop",stopDrag); f:SetScript("OnHide",stopDrag)
     f.title=text(f,14,12,-12,244,"Missing essentials"); f.title:SetTextColor(unpack(A.Skin.colors.gold))
     f.body=text(f,12,12,-38,264)
-    f.hint=text(f,10,12,-151,264,"Click to review carry quantities")
-    f:SetScript("OnClick",function() self:Open() end)
+    f.hint=text(f,10,12,-151,264,"Drag to move | Click to review supplies")
+    f:SetScript("OnClick",function()
+        if not self.dragging and (not self.ignoreClickUntil or GetTime()>self.ignoreClickUntil) then self:Open() end
+    end)
     local close=CreateFrame("Button",nil,f,"BackdropTemplate"); f.close=close
     close:SetSize(22,22); close:SetPoint("TOPRIGHT",-6,-6); A.Skin.Button(close,"utility")
     close.label=text(close,12,5,-3,16,"x")
@@ -71,6 +89,7 @@ function R:Refresh()
     local unsafe=InCombatLockdown() or (UnitIsDeadOrGhost and UnitIsDeadOrGhost("player"))
         or (UnitOnTaxi and UnitOnTaxi("player")) or instance=="party" or instance=="raid"
     if resting or not self.settings.departure or (self.departure and now-self.departure>20) then self.departure=nil end
+    if self.dragging and not unsafe then return end
     self.panel:Hide()
     if unsafe then self.toast:Hide(); return end
     if not self.settings.panel and not self.departure then return end

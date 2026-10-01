@@ -1,5 +1,10 @@
 # Unreleased
 
+- Added Advisors > Map with full reveal or translucent unexplored-area tint,
+  category filters, known NPC locations across 46 Classic zones and cities,
+  zone browsing and optional silent zone-entry notices. Pins show recorded
+  areas, not live sightings; unavailable coordinates are labelled in the list.
+- Missing essentials can now be dragged; its position persists across reloads.
 - Gear Advisor settings now open Stat Weights and Gear Snapshot on separate
   pages, each with a Back button to return to the main gear settings.
 - Moved gear snapshot capture, details and the saved item list into Settings >
