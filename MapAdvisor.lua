@@ -333,7 +333,16 @@ function M:Document(context,state)
     local id=state.mapZone or self:CurrentMap(); local zone=A.Data.MapZones[id]
     if zone then
         local blocks={}
-        for _,r in ipairs(self:Records(id,true)) do
+        local records=self:Records(id,true)
+        table.sort(records,function(a,b)
+            local amin,bmin=a.npc.min or math.huge,b.npc.min or math.huge
+            if amin~=bmin then return amin<bmin end
+            local amax,bmax=a.npc.max or amin,b.npc.max or bmin
+            if amax~=bmax then return amax<bmax end
+            if a.npc.name~=b.npc.name then return a.npc.name<b.npc.name end
+            return a.id<b.id
+        end)
+        for _,r in ipairs(records) do
             if not state.zoneNPCFilter or state.zoneNPCFilter=="all" or r.npc.kind==state.zoneNPCFilter then
                 local locations=r.npc.locations[id]
                 local location=locations and #locations>0 and string.format("%.1f, %.1f",locations[1][1],locations[1][2]) or "Unknown"

@@ -294,7 +294,10 @@ local function renderBlock(frame, block, width)
         frame.stock:SetTextColor(unpack(color)); measure(frame.stock,label,84,width-88,9)
         for _,edge in ipairs(frame.statusBorder) do edge:SetVertexColor(color[1],color[2],color[3],0.7) end
         frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("TOPLEFT",width-88,-29)
-        if block.target and block.target>0 and block.count and block.count>0 and not block.readOnlyTarget then
+        if block.count==0 and not block.pickRank then
+            frame.stockFill:Show(); frame.stockFill:ClearAllPoints(); frame.stockFill:SetPoint("TOPLEFT",frame.stockTrack,"TOPLEFT",0,0)
+            frame.stockFill:SetWidth(60); frame.stockFill:SetVertexColor(0.9,0.12,0.12,1)
+        elseif block.target and block.target>0 and block.count and block.count>0 and not block.readOnlyTarget then
             frame.stockFill:Show(); frame.stockFill:ClearAllPoints(); frame.stockFill:SetPoint("TOPLEFT",frame.stockTrack,"TOPLEFT",0,0)
             frame.stockFill:SetWidth(60*math.min(1,block.count/block.target)); frame.stockFill:SetVertexColor(color[1],color[2],color[3],0.9)
         end
@@ -426,8 +429,12 @@ local function renderCard(frame, data, width)
             frame.headerButton:ClearAllPoints(); frame.headerButton:SetPoint("TOPRIGHT",-14,-10)
         end
     end
-    y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 154 or 28), 14, y))+5
-    y=y+measure(frame.note, data.note, width-28, 14, y)+12
+    if data.itemLayout then
+        frame.title:Hide(); frame.note:Hide()
+    else
+        y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 154 or 28), 14, y))+5
+        y=y+measure(frame.note, data.note, width-28, 14, y)+12
+    end
     for _,control in ipairs(frame.npcFilters or {}) do control:Hide() end
     for _,label in ipairs(frame.npcHeaders or {}) do label:Hide() end
     if data.npcTable then

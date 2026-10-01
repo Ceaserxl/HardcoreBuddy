@@ -331,7 +331,6 @@ function C.Build(context,state)
                 local group={}
                 for _,b in ipairs(rows) do if b.category==category then group[#group+1]=b end end
                 local section=card(category,#group==0 and "No matching items in this category." or nil,group)
-                if category=="Buffs" and A.ArmorKits then section.note=A.ArmorKits.Summary(context) end
                 section.supplyTable=true
                 result.cards[#result.cards+1]=section
                 if category=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
@@ -343,7 +342,6 @@ function C.Build(context,state)
             result.cards[1]=card(state.filter=="Essentials" and "Essentials" or "Your supplies",
                 state.filter=="Essentials" and "Your core supplies. Open an item to change its priority; set Carry to 0 to skip restocking." or nil,rows)
             result.cards[1].supplyTable=true
-            if state.filter=="Buffs" and A.ArmorKits then result.cards[1].note=A.ArmorKits.Summary(context) end
             if state.filter=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
                 result.cards[#rows==0 and 1 or #result.cards+1]=A.HunterTraining.Card(context)
             end
