@@ -640,11 +640,15 @@ function addon:Layout()
         ..(context.mode=="preview" and "  |  Planning" or "")
         ..(context.characterClass=="Hunter" and (context.petLevel and ((context.mode=="preview" and "  |  Planned pet " or "  |  Pet ")..context.petLevel) or "  |  No pet") or ""))
     f.motto:SetShown(not compact); f.motto:ClearAllPoints(); f.motto:SetPoint("TOPLEFT",titleX+2,-82); f.motto:SetSize(240,14)
-    f.drag:SetWidth(math.max(1,width-58)); f.drag:SetHeight(f.headerHeight-6)
+    f.drag:SetHeight(f.headerHeight-6)
     local preview=context.mode=="preview"
     f.mode.label:SetText(preview and "Return" or "Edit Character")
     local modeWidth=math.max(154,math.ceil(f.mode.label:GetStringWidth())+22)
     f.mode:SetSize(modeWidth,28)
+    f.mode:ClearAllPoints(); f.mode:SetPoint("RIGHT",f.close,"LEFT",-8,0)
+    f.mode:SetFrameLevel(f.drag:GetFrameLevel()+2)
+    f.drag:SetWidth(math.max(1,width-modeWidth-59))
+    f.title:SetWidth(math.max(140,width-titleX-modeWidth-67))
     local x,y=22,f.headerHeight+4
     local right=width-22
     for _,b in ipairs(f.tabs) do
@@ -655,20 +659,7 @@ function addon:Layout()
             x=x+b:GetWidth()+6; active(b,doc.view==b.view or (b.view=="training" and doc.view=="petguide"))
         end
     end
-    local modeInTabs=x+modeWidth<=right
-    if modeInTabs then
-        f.mode:ClearAllPoints(); f.mode:SetPoint("TOPRIGHT",-22,-y)
-    end
     y=y+36
-
-    -- Only overflow navigation uses the utility row below the tabs.
-    local utilityUsed=false
-    x=22
-    local function utility(control,controlWidth)
-        if x+controlWidth>right then x=22; y=y+34 end
-        control:ClearAllPoints(); control:SetPoint("TOPLEFT",x,-y)
-        x=x+controlWidth+8; utilityUsed=true
-    end
     f.class:SetShown(preview); f.levelGroup:SetShown(preview)
     f.class.label:SetText(context.characterClass)
     f.class:SetWidth(math.max(compact and 88 or 104,math.ceil(f.class.label:GetStringWidth())+22))
@@ -693,9 +684,7 @@ function addon:Layout()
         local textWidth=width-titleX-22-f.class:GetWidth()-8-f.levelGroup:GetWidth()-12
         f.subtitle:SetWidth(math.max(1,textWidth))
     end
-    if not modeInTabs then utility(f.mode,modeWidth) end
     f.back:SetShown(#self.history>0)
-    if utilityUsed then y=y+34 end
     if not f.level:HasFocus() then f.level:SetText(tostring(context.level)) end
     enabled(f.class,preview); enabled(f.minus,preview and context.level>1); enabled(f.plus,preview and context.level<60)
     f.level:EnableMouse(preview); f.level:EnableKeyboard(preview)
