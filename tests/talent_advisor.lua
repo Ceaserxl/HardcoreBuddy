@@ -122,8 +122,8 @@ check(not A.GearAdvisor:CurrentProfile().manual,"Automatic path restored")
 A:HandleSlashCommand("gear off"); check(not A.db.gearAdvisorEnabled,"Gear can be disabled")
 A:HandleSlashCommand("gear on"); check(A.db.gearAdvisorEnabled,"Gear can be enabled")
 A:HandleSlashCommand("talents")
--- Rank badges decorate native buttons, never a separate panel or click handler.
-local O=A.TalentOverlay
+-- Update native rank labels and widen their original borders in place.
+local O=A.TalentRanks
 check(not O.parent and not HardcoreBuddyTalentPanel,"No side panel exists")
 local nativeShows=0
 PlayerTalentFrame=CreateFrame("Frame","PlayerTalentFrame",UIParent)
@@ -139,7 +139,9 @@ for i=1,30 do
     function b:GetName() return self.name end
     b:SetSize(32,32); b:SetScript("OnClick",nativeClick)
     b.rank=b:CreateFontString(b:GetName().."Rank","OVERLAY","GameFontNormalSmall")
-    b.rank:SetSize(12,16); b.rank:SetPoint("BOTTOMRIGHT",b,"BOTTOMRIGHT",5,-3)
+    b.rank:SetSize(34,16); b.rank:SetPoint("BOTTOMRIGHT",b,"BOTTOMRIGHT",5,-3)
+    b.border=b:CreateTexture(b:GetName().."RankBorder","ARTWORK")
+    b.border:SetSize(32,32); b.border:SetPoint("CENTER",b.rank,"CENTER",0,0)
 end
 function TalentFrame_Update()
     for i=1,30 do
@@ -148,7 +150,9 @@ function TalentFrame_Update()
         b:SetShown(row~=nil)
         if row then
             b:SetPoint("TOPLEFT",PlayerTalentFrame,"TOPLEFT",45+(row.node.column-1)*70,-25-(row.node.tier-1)*50)
-            b.rank:SetText(tostring(ranks[row.key] or 0))
+            local rank=ranks[row.key] or 0
+            b.rank:SetText(tostring(rank)); b.rank:SetShown(rank>0 or available>0)
+            b.border:SetShown(b.rank:IsShown())
         end
     end
 end
@@ -156,46 +160,54 @@ function PlayerTalentFrame_Refresh() TalentFrame_Update() end
 function hooksecurefunc(name,callback)
     local original=_G[name]; _G[name]=function(...) original(...); callback(...) end
 end
+local frameCount=#MOCK.frames
 MOCK.FireAll("ADDON_LOADED","Blizzard_TalentUI")
 O:Attach(); PlayerTalentFrame:Show(); PlayerTalentFrame_Refresh()
-local function badge(key)
+local function rankLabel(key)
     local index=T:ReadCurrent("HUNTER",40).indices[key]
-    return O.badges[_G["PlayerTalentFrameTalent"..index]]
+    return _G["PlayerTalentFrameTalent"..index.."Rank"]
 end
 check(nativeShows==1 and O.parent==PlayerTalentFrame,"Native show script is preserved")
-check(badge("bestialWrath"):IsVisible() and badge("bestialWrath").label:GetText()=="0/|cff55bbff1|r",
+check(rankLabel("bestialWrath"):IsVisible() and rankLabel("bestialWrath"):GetText()=="0/|cff55bbff1|r",
     "Unlearned recommended talent shows current/target rank in blue")
 local key=build.steps[1]
 local current=ranks[key]
-check(badge(key).label:GetText()==current.."/|cff66cc77"..current.."|r","Completed build ranks are green")
+check(rankLabel(key):GetText()==current.."/|cff66cc77"..current.."|r","Completed build ranks are green")
 check(calls==1 and not HardcoreBuddyTalentPanel,"Drawing ranks never spends points or creates a side panel")
-for _,b in pairs(O.badges) do
-    check(not b.mouse and b:GetParent():GetScript("OnClick")==nativeClick,"Badges pass mouse input through to unchanged talent buttons")
-    check(b:GetParent().rank:GetText():match("^%d+$"),"Native rank text stays untouched beneath decoration")
+check(#MOCK.frames==frameCount,"Drawing talent targets creates no frames, textures or font strings")
+for label,state in pairs(O.ranks) do
+    check(label:GetParent():GetScript("OnClick")==nativeClick,"Native talent clicks remain unchanged")
+    check(state.border==_G[label:GetParent():GetName().."RankBorder"] and state.border:GetWidth()==54,
+        "Only the existing native rank border widens to fit current/target text")
 end
 A.db.profile.mode="preview"; A.db.profile.characterClass="Mage"; A.db.profile.level=60
 O:Refresh()
-check(badge("bestialWrath"):IsVisible(),"Overlay uses live character even when planner previews another class")
+check(rankLabel("bestialWrath"):IsVisible(),"Rank text uses live character even when planner previews another class")
 A.db.profile.mode="live"
 ranks.bestialWrath=1; available=0; MOCK.FireAll("PLAYER_TALENT_UPDATE")
-check(badge("bestialWrath").label:GetText()=="1/|cff66cc771|r","Spending a point updates the displayed rank")
+check(rankLabel("bestialWrath"):GetText()=="1/|cff66cc771|r","Spending a point updates the displayed rank")
 selectedTree=3; ranks.counterattack=1; PlayerTalentFrame_Refresh()
-check(badge("counterattack"):IsVisible() and badge("counterattack").label:GetText()=="1/|cffee66550|r",
+check(rankLabel("counterattack"):IsVisible() and rankLabel("counterattack"):GetText()=="1/|cffee66550|r",
     "Tree switch reuses icons and shows off-build ranks in red")
 selectedTree=4; PlayerTalentFrame_Refresh()
-for _,b in pairs(O.badges) do check(not b:IsShown(),"Non-talent tabs clear all rank badges") end
+check(next(O.ranks)==nil,"Non-talent tabs clear modified ranks")
+for i=1,30 do
+    local b=_G["PlayerTalentFrameTalent"..i]
+    check(not b.rank:GetText():find("/",1,true) and b.border:GetWidth()==32,"Leaving talents restores native text and border width")
+end
 selectedTree=1; ranks.counterattack=nil; PlayerTalentFrame_Refresh()
 PlayerTalentFrame.pet=true; PlayerTalentFrame_Refresh()
-check(not badge("bestialWrath"):IsShown(),"Player ranks are hidden for pet talents")
+check(rankLabel("bestialWrath"):GetText()=="1","Pet view retains native numbers without build targets")
 PlayerTalentFrame.pet=false; PlayerTalentFrame.inspect=true; PlayerTalentFrame_Refresh()
-check(not badge("bestialWrath"):IsShown(),"Inspection does not show the player's build targets")
+check(rankLabel("bestialWrath"):GetText()=="1","Inspection retains native numbers without player build targets")
 PlayerTalentFrame.inspect=false; PlayerTalentFrame_Refresh()
-check(badge("bestialWrath"):IsVisible(),"Returning to player talents restores recommendations")
-PlayerTalentFrame:Hide(); check(not badge("bestialWrath"):IsShown(),"Closing Talents clears badges")
+check(rankLabel("bestialWrath"):IsVisible(),"Returning to player talents restores recommendations")
+PlayerTalentFrame:Hide(); check(rankLabel("bestialWrath"):GetText()=="1","Closing Talents restores native text")
 PlayerTalentFrame:Show()
 local scoring=A.GearAdvisor:CurrentProfile().id
 T:SetEnabled(false)
-check(not badge("bestialWrath"):IsShown(),"Disable immediately removes rank overlays")
+check(rankLabel("bestialWrath"):GetText()=="1" and next(O.ranks)==nil,"Disable immediately restores native ranks")
+check(rankLabel("bestialWrath"):GetParent().border:GetWidth()==32,"Disable restores the original border size")
 check(not T:LearnNext(build.id,"bestialWrath",1) and calls==1,"Disabled talent advisor cannot spend points")
 check(A.GearAdvisor:CurrentProfile().id==scoring and A.GearAdvisor:IsEnabled(),"Disabling talent advice preserves gear scoring")
 A:HandleSlashCommand("talents")
@@ -203,9 +215,16 @@ check(A.document.cards[1].note=="Disabled" and #A.document.cards==1,"Disabled ad
 A:OpenSettings("Talent Advisor")
 check(A.Settings.pages["Talent Advisor"].toggle.label:GetText()=="Enable Talent Advisor","Settings offers reenable")
 MOCK.Click(A.Settings.pages["Talent Advisor"].toggle)
-check(T:IsEnabled() and badge("bestialWrath"):IsVisible(),"Settings reenables native talent labels immediately")
+check(T:IsEnabled() and rankLabel("bestialWrath"):IsVisible(),"Settings reenables native talent labels immediately")
+selectedTree=2; PlayerTalentFrame_Refresh()
+local future=rankLabel("efficiency")
+check(future:IsShown() and future:GetText():find("0/",1,true),"Recommended future talents show their target in the native hidden rank field")
+T:SetEnabled(false)
+check(future:GetText()=="0" and not future:IsShown() and not future:GetParent().border:IsShown(),
+    "Disable restores native hidden zero-rank text and border with no free points")
+T:SetEnabled(true); selectedTree=1; PlayerTalentFrame_Refresh()
 GetTalentInfo=function() return nil end; O:Refresh()
-for _,b in pairs(O.badges) do check(not b:IsShown(),"Unavailable talent data clears stale ranks") end
+check(next(O.ranks)==nil,"Unavailable talent data clears modified ranks")
 GetTalentInfo=saved; O:Refresh()
 A:OpenSettings("Gear Advisor"); MOCK.Click(A.Settings.pages["Gear Advisor"].toggle)
 check(not A.GearAdvisor:IsEnabled() and T:IsEnabled(),"Gear disable button leaves talent advice enabled")

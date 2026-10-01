@@ -4,19 +4,21 @@ Open **Advisors** in the main window. The sidebar offers **Gear** and **Talents*
 Choose builds in **Settings > Talent Advisor**. `/hcb gear` and `/hcb talents`
 open the advice pages.
 
-WoW's talent icons show **current rank / recommended rank** for the live
+WoW's existing talent rank text shows **current rank / recommended rank** for the live
 character's selected build, such as **2/5**. The target is blue when more points
 are recommended, green when met, and red when the current rank exceeds the
 build's target. Targets describe the complete selected path. Unused talents
-without any points retain the normal display. These mouse-transparent labels
-do not change talent clicks or spend points. Pet and inspection views do not
+without any points retain the normal display. The original rank border widens
+to fit the numbers; no overlay badges, textures or additional labels are created.
+Talent clicks are unchanged. Pet and inspection views do not
 show player recommendations. There is no separate attached panel; the complete
 scrollable path remains in **Advisors > Talents**.
 
 Both Settings pages have independent enable/disable buttons. Disabling Gear
 Advisor removes tooltip advice and upgrade markers and stops auction upgrade
 scanning. Tooltip/marker preferences, weights and saved scans are retained.
-Disabling Talent Advisor hides its rank labels and recommendations and blocks
+Disabling Talent Advisor restores native rank numbers, visibility and border
+sizes, hides recommendations and blocks
 point spending through the advisor. Its chosen build remains available to gear
 scoring. Reenable it from **Settings > Talent Advisor**. These switches persist
 across reloads.

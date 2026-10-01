@@ -5,7 +5,7 @@ local T={}; A.TalentAdvisor=T
 function T:IsEnabled() return A.db and A.db.talentAdvisorEnabled~=false end
 function T:SetEnabled(enabled)
     A.db.talentAdvisorEnabled=not not enabled
-    if A.TalentOverlay then A.TalentOverlay:Refresh() end
+    if A.TalentRanks then A.TalentRanks:Refresh() end
     if A.window and A.window:IsShown() then A:Refresh() end
 end
 local D=A.Data
@@ -163,7 +163,7 @@ function T:Activate(a)
         if A.GearIndicators then A.GearIndicators:Invalidate() end
     end
     A.GearAdvisor.revision=A.GearAdvisor.revision+1
-    if A.TalentOverlay then A.TalentOverlay:Refresh() end
+    if A.TalentRanks then A.TalentRanks:Refresh() end
     A.GearAdvisor:RefreshTooltips(); A:Refresh(true)
 end
 

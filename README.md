@@ -62,7 +62,7 @@ Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
 - Excludes applied enchants and armor kits from both scores.
 - Hardcore talent paths for all nine classes, with current ranks, next-point advice,
   explicit respec guidance and one continuous point-by-point list.
-- Current/recommended rank labels appear directly on WoW's talent icons for your
+- WoW's existing talent rank numbers show current/recommended ranks for your
   selected build, such as **2/5**.
 - Separate **Disable Gear Advisor** and **Disable Talent Advisor** buttons in their
   Settings pages.
