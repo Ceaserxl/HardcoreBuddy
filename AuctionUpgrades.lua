@@ -283,7 +283,7 @@ function U:Invalidate()
     self.stale=true; self.complete=false
     local owner=GameTooltip:GetOwner()
     if owner and owner.hardcoreBuddyAuctionRow then owner.tooltipItem=nil end
-    self:Stop("Gear or talents changed. Scan again to refresh upgrades.")
+    self:Stop("Gear, talents or scan settings changed. Scan again to refresh upgrades.")
 end
 
 function U:Find(row)
@@ -365,8 +365,8 @@ function U:Refresh()
     for slot,tab in pairs(self.slotButtons) do tab:PaintState(self.slot==slot) end
     local p=self.profile or G:CurrentProfile()
     local armorProfile=G:CurrentProfile()
-    self.armorOnly:SetChecked(A.characterDB and A.characterDB.auctionHighestArmorOnly==true)
-    self.armorOnly.label:SetText("Best Armor: "..(armorProfile and armorNames[G.HighestArmorSubclass(armorProfile)] or "..."))
+    self.armorSummary:SetText(A.characterDB and A.characterDB.auctionHighestArmorOnly and
+        ("Best Armor: "..(armorProfile and armorNames[G.HighestArmorSubclass(armorProfile)] or "...")) or "All usable armor")
     self.subtitle:SetText(p and (p.name.."  |  Level "..p.level.."  |  "..
         (self.cached and ("Saved scan: "..(self.savedScanAt or "unknown time")) or "Compared with equipped gear")) or "Waiting for character data")
     local weaponView=self.slot=="paired" or self.slot=="twoHand"
@@ -466,18 +466,10 @@ function U:Attach()
     label(panel,"HardcoreBuddy  /  Gear upgrades",16,-12,560,Skin.colors.white,18)
     self.subtitle=label(panel,"",16,-38,580,Skin.colors.muted,11)
     self.start=button(panel,"Scan upgrades",156,function() U:Start() end); self.start:SetPoint("TOPRIGHT",-14,-12)
-    self.armorOnly=CreateFrame("CheckButton",nil,panel,"UICheckButtonTemplate")
-    self.armorOnly:SetSize(18,18); self.armorOnly:SetPoint("TOPLEFT",self.start,"BOTTOMLEFT",0,0)
-    self.armorOnly.label=label(self.armorOnly,"Best Armor: ...",20,0,136,Skin.colors.muted,11)
-    self.armorOnly.label:SetHeight(18)
-    self.armorOnly:SetScript("OnClick",function(self)
-        if not A.characterDB then return end
-        A.characterDB.auctionHighestArmorOnly=not not self:GetChecked()
-        A.characterDB.auctionLastScan=nil; U.cached=false; U.savedScanAt=nil
-        U.results={}; U.slot=nil; U.setup=nil; U.offset=0; U.profile=nil; U.weaponBaseline=nil
-        U.complete=false; U.stale=false; U.progress=0; U.checkedSlots={}
-        U:Stop("Armor filter changed. Scan upgrades to refresh results.")
-    end)
+    self.settingsButton=button(panel,"Auction settings",156,function() A:OpenSettings("Auction House") end)
+    self.settingsButton:SetPoint("TOPLEFT",self.start,"BOTTOMLEFT",0,-4); self.settingsButton:SetHeight(22)
+    self.armorSummary=label(panel,"",452,-12,150,Skin.colors.muted,10)
+    self.armorSummary:SetJustifyH("RIGHT")
     local divider=Skin.Divider(panel); divider:SetPoint("TOPLEFT",14,-68); divider:SetWidth(762)
     divider:SetVertexColor(0.20,0.25,0.29,1)
     self.overview=button(panel,"Best by slot",174,function() U:SelectSlot(nil) end)

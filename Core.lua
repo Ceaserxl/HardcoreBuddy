@@ -14,6 +14,7 @@ function addon:Print(message)
 end
 
 function addon:ShowKitUpdate(level, changes)
+    if self.db.kitNotifications==false then return end
     local summary=table.concat(changes, ", ")
     self:Print("Field Kit updated for level "..level..": "..summary..". Open /hcb to review.")
     if not self.kitAlert then
@@ -79,8 +80,10 @@ function addon:HandleSlashCommand(message)
         self:ToggleWindow()
     elseif command == "auction debug" then
         self.AuctionDiagnostics:Show()
+    elseif command == "settings" then
+        self:OpenSettings()
     elseif command == "health" then
-        self:CreateWindow(); self.window:Show(); self:Navigate("alerts")
+        self:OpenSettings("Low Health")
     elseif command == "deaths" or command:match("^deaths%s") then
         if self.Deaths and self.Deaths.db then self.Deaths:Slash(text:match("^%S+%s*(.*)$")) end
     elseif command == "talents" or command == "advisor" or command == "gear" then
@@ -91,7 +94,7 @@ function addon:HandleSlashCommand(message)
         self:Print("Gear advisor: "..(self.db.gearAdvisorEnabled~=false and "on" or "off")..". /hcb gear on | /hcb gear off")
         if self.GearAdvisor then self.GearAdvisor:RefreshTooltips() end
     elseif command == "help" then
-        self:Print("/hcb: open guide | /hcb reset: center window | /hcb health: health warning | /hcb deaths: death journal | /hcb deaths settings: death options | /hcb gear: gear advisor | /hcb talents: talent advisor")
+        self:Print("/hcb: open guide | /hcb settings: all settings | /hcb reset: center window | /hcb health: low health settings | /hcb deaths: death journal | /hcb deaths settings: death settings | /hcb gear: gear advisor | /hcb talents: talent advisor")
         self:Print("/hcb auction debug: view and copy the latest skipped-listing report")
     elseif command == "reset" then
         self.db.window = {visible=true}

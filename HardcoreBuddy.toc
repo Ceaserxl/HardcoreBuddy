@@ -36,6 +36,7 @@ Companion.lua
 Skin.lua
 Core.lua
 UI.lua
+Settings.lua
 Readiness.lua
 Minimap.lua
 LowHealth.lua

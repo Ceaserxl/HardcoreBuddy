@@ -29,7 +29,7 @@ dead=false; health=0; fire("PLAYER_ALIVE"); assert(not H.active)
 health=10; maximum=0; fire("UNIT_MAXHEALTH","player"); assert(not H.active)
 health=100; maximum=100; fire("PLAYER_ALIVE")
 A:HandleSlashCommand("health")
-assert(A.state.view=="alerts" and H.page:IsVisible() and not A.window.scroll:IsShown())
+assert(A.state.view=="settings" and A.state.filter=="Low Health" and H.page:IsVisible() and not A.window.scroll:IsShown())
 local p=H.page
 p.threshold:SetText("25"); p.threshold.scripts.OnEnterPressed(p.threshold)
 assert(H.settings.threshold==25)

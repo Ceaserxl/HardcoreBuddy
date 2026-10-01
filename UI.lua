@@ -406,7 +406,7 @@ function addon:CreateWindow()
         if self.db.profile.mode == "preview" and (key=="UP" or key=="DOWN") then commit(f.level); self:SetLevel(self.db.profile.level+(key=="UP" and 1 or -1)) end
     end)
     f.tabs={}
-    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"petguide","Pet Guide",100},{"advisors","Advisors",100},{"deaths","Death Journal",122},{"alerts","Alerts",100},{"dungeons","Dungeons",100},{"raids","Raids",100}}) do
+    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"petguide","Pet Guide",100},{"advisors","Advisors",100},{"deaths","Death Journal",122},{"dungeons","Dungeons",100},{"raids","Raids",100},{"settings","Settings",100}}) do
         local id=tab[1]
         local b=button(f,tab[2],tab[3],function() self:Navigate(id) end); b.view=id; Skin.Button(b,"tab"); f.tabs[#f.tabs+1]=b
     end
@@ -539,12 +539,16 @@ end
 function addon:CommitInputs()
     local f=self.window
     if not f then return end
+    if self.Settings then self.Settings:CommitInputs() end
     f.level:ClearFocus()
     for _,c in ipairs(f.cards or {}) do
         for _,block in ipairs(c.content.blocks or {}) do if block.quantity then block.quantity:ClearFocus() end end
     end
 end
 function addon:OpenDeaths(section, record)
+    if section=="Options" or section=="Appearance" then
+        self:OpenSettings(section=="Appearance" and "Death Banner" or "Death Alerts"); return
+    end
     self:CreateWindow()
     self:CommitInputs()
     self.state={view="deaths",filter=(section=="Options" or section=="Appearance") and section or "Reports",deathRecord=record,page=1}
@@ -554,6 +558,7 @@ function addon:OpenDeaths(section, record)
     self:Refresh(true)
 end
 function addon:Navigate(view)
+    if view=="alerts" then self:OpenSettings("Low Health"); return end
     self:CommitInputs()
     self.state={view=view=="now" and "supplies" or view,filter=(view=="supplies" or view=="now") and "Food & drink" or nil,page=1}; self.history={}
     self.window.classMenu:Hide()
@@ -592,18 +597,20 @@ function addon:Refresh(resetScroll)
     if not self.window then return end
     local context=self:GetContext()
     if self.lastClass and self.lastClass~=context.characterClass and not (self.state and
-        (self.state.view=="deaths" or self.state.view=="dungeons" or self.state.view=="raids" or self.state.view=="advisors")) then self.state=nil; self.history={} end
+        (self.state.view=="deaths" or self.state.view=="settings" or self.state.view=="dungeons" or self.state.view=="raids" or self.state.view=="advisors")) then self.state=nil; self.history={} end
     self.lastClass=context.characterClass
     self.state=self.state or {view="supplies",filter="Food & drink",page=1}; self.history=self.history or {}
     -- Supplies has no hidden search or shortage filter after its controls were
     -- removed. Back navigation and old in-memory state must show the full kit.
     if self.state.view=="supplies" or self.state.view=="now" then self.state.query=nil; self.state.stock=nil end
     self.document=self.state.view=="advisors" and self.TalentAdvisor:Document(context,self.state)
-        or (self.state.view=="deaths" or self.state.view=="alerts") and {context=context,view=self.state.view,cards={}} or C.Build(context,self.state)
+        or (self.state.view=="deaths" or self.state.view=="settings") and {context=context,view=self.state.view,cards={}} or C.Build(context,self.state)
     self:Layout()
     if resetScroll then self.window.scroll:SetVerticalScroll(0) end
 end
 local FILTER_ICONS={
+    General="Trade_Engineering",["Gear Advisor"]="INV_Chest_Chain",["Auction House"]="INV_Misc_Coin_01",
+    ["Death Alerts"]="INV_Misc_Book_09",["Death Banner"]="INV_Misc_Book_09",
     Gear="INV_Chest_Chain",Talents="Ability_Marksmanship",Builds="INV_Misc_Book_11",
     Essentials="INV_Misc_Bag_08",Preparation="INV_Misc_Note_01",Appearance="INV_Misc_Book_09",
     ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
@@ -712,7 +719,7 @@ function addon:Layout()
     end
     local instancePage=doc.view=="dungeons" or doc.view=="raids"
     local navigation=doc.view=="advisors" and {"Gear","Talents","Builds"} or instancePage and self.Instances.Navigation(self.state)
-        or doc.view=="alerts" and {"Low Health","Rares","Elites","Preparation"} or doc.view=="deaths" and {"Reports","Options","Appearance"}
+        or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {"Reports"}
         or doc.view=="training" and {"Overview","First Aid","Engineering","Cooking"}
         or doc.view=="petguide" and {"Families","Abilities","Pets","Looks","Care"}
         or addon.Supplies.filters
@@ -722,8 +729,8 @@ function addon:Layout()
     f.sidebar:SetShown(sidebar)
     if sidebar then
         f.sidebar:ClearAllPoints(); f.sidebar:SetPoint("TOPLEFT",20,-y); f.sidebar:SetPoint("BOTTOMLEFT",20,46); f.sidebar:SetWidth(148)
-        f.sidebarTitle:SetText(doc.view=="advisors" and "ADVISORS" or instancePage and (doc.view=="raids" and "RAIDS" or "DUNGEONS") or doc.view=="alerts" and "ALERTS" or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or "FIELD KIT")
-        f.sidebarNote:SetText(instancePage and "Levels and\nitems to bring." or doc.view=="alerts" and "Stay alert.\nStay alive." or doc.view=="deaths" and "Every journey\nleaves a story." or doc.view=="petguide" and "Find a companion.\nLearn its strengths." or "Pack with purpose.\nEvery slot matters.")
+        f.sidebarTitle:SetText(doc.view=="settings" and "SETTINGS" or doc.view=="advisors" and "ADVISORS" or instancePage and (doc.view=="raids" and "RAIDS" or "DUNGEONS") or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or "FIELD KIT")
+        f.sidebarNote:SetText(doc.view=="settings" and "Your preferences.\nOne place." or instancePage and "Levels and\nitems to bring." or doc.view=="deaths" and "Every journey\nleaves a story." or doc.view=="petguide" and "Find a companion.\nLearn its strengths." or "Pack with purpose.\nEvery slot matters.")
         f.sidebarNote:SetShown(height-y-46>35+#navigation*41+70)
     end
     x=22
@@ -841,16 +848,13 @@ function addon:Layout()
         y=y+rowHeight+8+(wrapExtra and 34 or 0)
     end
     local deathPage=doc.view=="deaths"
-    f.scroll:SetShown(not deathPage and doc.view~="alerts")
-    local alertSection=self.state.filter or "Low Health"
-    if self.LowHealth then self.LowHealth:LayoutSettings(f,left,y,bodyWidth,height-y-46,doc.view=="alerts" and alertSection=="Low Health") end
-    local creaturePage=doc.view=="alerts" and (alertSection=="Rares" or alertSection=="Elites")
-    if self.CreatureAlerts then self.CreatureAlerts:LayoutSettings(f,left,y,bodyWidth,height-y-46,alertSection,creaturePage) end
-    if self.Readiness then self.Readiness:LayoutSettings(f,left,y,bodyWidth,height-y-46,doc.view=="alerts" and alertSection=="Preparation") end
+    f.scroll:SetShown(not deathPage and doc.view~="settings")
     if self.Deaths and self.Deaths.host then
-        self.Deaths.host:SetShown(deathPage)
+        local deathSettings=doc.view=="settings" and (self.state.filter=="Death Alerts" or self.state.filter=="Death Banner")
+        self.Deaths.host:SetShown(deathPage or deathSettings)
         if deathPage then self.Deaths:LayoutPage(f,left,y,bodyWidth,height-y-46,self.state) end
     end
+    self.Settings:Layout(f,left,y,bodyWidth,height-y-46,self.state.filter,doc.view=="settings")
     f.scroll:ClearAllPoints(); f.scroll:SetPoint("TOPLEFT",left,-y); f.scroll:SetPoint("BOTTOMRIGHT",-40,46)
     local contentWidth=math.max(250,bodyWidth); f.content:SetWidth(contentWidth)
     local top=0

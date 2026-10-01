@@ -1,6 +1,7 @@
 local _, addon = ...
 
 function addon:PositionMinimapButton()
+    self.minimap:SetShown(not self.db.minimapHidden)
     local angle = math.rad(self.db.minimapAngle)
     local x, y = math.cos(angle), math.sin(angle)
     if GetMinimapShape and GetMinimapShape() == "SQUARE" then

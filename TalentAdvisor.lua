@@ -140,6 +140,7 @@ function T:OpenTalents()
 end
 
 function T:Activate(a)
+    if a.command=="settings" then A:OpenSettings("Gear Advisor"); return end
     local s=settings(); if not s then return end
     if a.command=="build" then
         if D.AdvisorBuilds[a.class] and D.AdvisorBuilds[a.class][a.id] then s.builds[a.class]=a.id end
@@ -169,14 +170,9 @@ function T:Document(context,state)
     if filter=="Gear" then
         local profile=A.GearAdvisor:CurrentProfile()
         local description=profile and (profile.name..(profile.manual and " | Selected profile" or profile.fallback and " | Leveling default" or " | Your current talents")) or "Character data loading"
-        local blocks={row(A.db.gearAdvisorEnabled==false and "Enable gear tooltips" or "Gear tooltips enabled", "Click to toggle color-coded upgrade and downgrade percentages.",action("toggleGear")),
+        local blocks={row("Gear advisor settings", "Configure tooltips and your scoring profile in Settings.",action("settings")),
             row("Snapshot current gear","Save your equipment in the Character window for offline review.",action("snapshot"))}
         doc.cards[#doc.cards+1]=card("Gear Advisor",description,blocks)
-        local choices={row("Automatic from your talents","Uses the tree with the most spent points; ties use tree order.",action("profile"),not (settings() or {}).gearProfile and "Selected" or nil)}
-        for _,p in ipairs(D.AdvisorGear[actual] or {}) do
-            choices[#choices+1]=row(p.name,"Use this role for equipment comparisons.",action("profile",p.id),profile and profile.id==p.id and "Current weights" or nil)
-        end
-        doc.cards[#doc.cards+1]=card("Scoring profile","Gear always uses your live character. Usable armor types compete on stats, with no material penalty.",choices)
         doc.cards[#doc.cards+1]=card("Reading the score","Percentage change in weighted item stats, not a damage or survival simulation.",{
             row("|cff73d696Green: upgrade|r   |cfff56e61Red: downgrade|r","Enchants, armor kits, procs, use effects and set bonuses are excluded. Check the stat losses before replacing an item."),
             row("Two slots and weapons","Each ring or trinket is compared separately. Two-handed weapons replace both hands; zero-score baselines are labeled without an invented percentage.")})

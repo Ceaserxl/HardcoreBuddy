@@ -1,5 +1,9 @@
 # Unreleased
 
+- Added a central Settings tab for general preferences, gear scoring, auction
+  filters, death alerts and appearance, low health, rares, elites, and preparation.
+  Existing preferences and command shortcuts are preserved. Long settings pages
+  scroll, and General includes minimap and field kit notification toggles.
 - Saved the last auction upgrade scan per character, including weapon setups
   and partial scans across reloads. Cached results show their capture time and
   require a rescan when gear, level, talent profile, weights, or armor filter changes.

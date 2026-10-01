@@ -82,7 +82,7 @@ for _,entry in ipairs({{1,"all"}}) do
     MOCK.Click(A.window.filters[entry[1]])
     assert(H.mode==entry[2] and H.window:IsVisible())
 end
-MOCK.Click(A.window.filters[2])
+A:OpenDeaths("Options")
 assert(H.options:IsVisible())
 MOCK.Click(A.window.tabs[1])
 assert(A.state.view=="supplies" and not H.host:IsShown() and A.window.scroll:IsVisible())
@@ -178,10 +178,9 @@ do
 end
 print("PASS: All 5,000 imported reports are reachable with a bounded row pool; fractional offsets and shrinking histories are handled.")
 
-assert(A.window.filters[2].label:GetText()=="Options")
-assert(A.window.filters[3].label:GetText()=="Appearance","no Watchlist sidebar entry")
+assert(A.window.filters[1].label:GetText()=="Reports" and not A.window.filters[2]:IsShown(),"Journal only contains reports")
 local count=#H.db.records
-MOCK.Click(A.window.filters[2])
+A:OpenDeaths("Options")
 assert(H.options:IsVisible())
 MOCK.Click(H.options.preview)
 assert(H.alert.record==H.db.records[count] and H.alert.title==nil)
@@ -200,8 +199,7 @@ H.db.records=savedRecords
 H:Refresh()
 print("PASS: Watching removed; real-record preview prefers current realm, falls back across realms, preserves history and uses samples only for empty history.")
 
-assert(A.window.filters[1].label:GetText()=="Reports" and A.window.filters[2].label:GetText()=="Options")
-assert(A.window.filters[3].label:GetText()=="Appearance","Verified tab is removed")
+assert(A.state.view=="settings" and A.state.filter=="Death Alerts","Death preferences live in Settings")
 assert(H.db.settings.alertDuration==3,"existing installs keep three-second hold")
 for _,pair in ipairs({{-1,1},{0,1},{1,1},{30,30},{90,30},{7.8,7},{"bad",3},{math.huge,3},{0/0,3}}) do
     assert(H.NormalizeAlertDuration(pair[1])==pair[2])

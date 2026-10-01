@@ -12,6 +12,15 @@ centers it; `/hcb help` lists commands.
 All lists use continuous scrolling, including the Pet Guide and Death Journal.
 Use the mouse wheel or scrollbar to browse the full list.
 
+## Settings
+
+Open the **Settings** tab or use `/hcb settings`. The sidebar groups General,
+Gear Advisor, Auction House, Death Alerts, Death Banner, Low Health, Rares,
+Elites, and Preparation. Long pages scroll. Existing saved preferences are kept.
+General includes the minimap button, field kit upgrade notices, and recentering.
+Carry quantities and item priorities remain in Supplies; talent paths remain in
+Advisors. `/hcb health` and `/hcb deaths settings` open their Settings sections.
+
 ## Supply priorities and preparation
 
 **Supplies > Essentials** collects core food, drink, buff food, bandages, healing,
@@ -25,7 +34,7 @@ equipped thrown weapon stack. It uses selected ammunition when available and
 otherwise suggests a level-appropriate vendor tier. Planning mode has its own
 ammo selector. Wands do not produce ammo recommendations.
 
-**Alerts > Preparation** has two optional controls, both off by default: a compact
+**Settings > Preparation** has two optional controls, both off by default: a compact
 missing-essentials panel while resting in a city/inn, and a silent reminder when
 leaving. Reminders use the real character, respect Carry 0, suppress unknown stock,
 stay out of combat, and have a five-minute cooldown. Dismiss the panel for the
@@ -79,7 +88,7 @@ the native auction-tab style and works without any other auction addon.
 - Includes every usable armor material, jewelry and weapons, using the same
   scoring profile and percentages as HardcoreBuddy's gear tooltips.
 - Searches one equipment slot at a time, finishing its pages before moving on.
-- The checkbox under **Scan upgrades** restricts body armor to your class's
+- **Settings > Auction House > Best Armor** restricts body armor to your class's
   highest armor type for its level (for example, **Best Armor: Mail** for hunters
   at level 40+). Off by default and saved per character. Jewelry, cloaks, shields,
   held off-hands and weapons remain eligible. Changing it requires a fresh scan.
@@ -129,7 +138,7 @@ even while editing a planned character. Zygor and DBM are not required.
 
 ## Death journal and alerts
 
-**Death Journal > Options** defaults to **Original (Deathlog default)**, the
+**Settings > Death Alerts** defaults to **Original (Deathlog default)**, the
 native WoW raid-warning sound used before the custom bell. It uses WoW's Master
 volume; the Play alert sound checkbox mutes it. The custom bell and five Deathlog
 clips (Hero Fallen, Arugal, Dread Hunger, Hunger Games and Golf Clap) retain the
@@ -141,15 +150,15 @@ HardcoreDeaths is built into HardcoreBuddy. Select the **Death Journal** tab in 
 window, right-click the shared minimap button, or use `/hcb deaths`. The `/hd` and
 `/hardcoredeaths` aliases also open this page.
 
-Reports, player details and death options appear in the right-hand content
-area. Use the left sidebar for Reports, Options and Appearance.
+Reports and player details appear in the right-hand content area. Death options
+and appearance are in **Settings > Death Alerts** and **Settings > Death Banner**.
 The main window controls positioning and scale; compact feed and alert overlays
 keep their separate position/scale settings.
 
 The journal uses separate Level, Adventurer, Location, Cause, Source and When
 columns, plus summary statistics and search/minimum-level controls. Leading
 "a"/"an" is omitted from displayed causes; original reports remain in details.
-Under **Death Journal > Options**, set **Alert display duration** from 1 to 30
+Under **Settings > Death Alerts**, set **Alert display duration** from 1 to 30
 seconds (default 3). Press Enter or leave the field to save; Escape cancels an
 edit. The alert remains visible for that duration, then fades for half a second.
 The setting applies to new alerts and previews and survives login.
@@ -165,7 +174,7 @@ Stamina, Intellect, Spirit and Protection scrolls. Recommendations follow your c
 live or planned level, with exact-item bag counts, editable carry quantities
 and item details. The catalog covers all 24 Classic Era ranks.
 
-The **Alerts** tab (`/hcb health`) controls a flashing red **LOW HEALTH!** warning
+**Settings > Low Health** (`/hcb health`) controls a flashing red **LOW HEALTH!** warning
 with an air horn. It defaults to below 40% health, matching the existing aura;
 the threshold, warning and sound are configurable. The alarm plays once on entry
 and the warning clears on recovery or death. Preview runs for three seconds.
@@ -179,7 +188,7 @@ It lasts four seconds, then fades. Click it to open the live kit; the complete
 list is also printed in chat. Unchanged levels stay quiet, and preview settings
 do not affect detection.
 
-**Death Journal > Appearance** offers Compact (default), Banner, and Text-only
+**Settings > Death Banner** offers Compact (default), Banner, and Text-only
 death alerts. Background opacity is independent of text. **Unlock and move**
 keeps a silent preview visible while you drag; **Save position** locks it and
 restores click-through behavior. All styles share a saved position and scale

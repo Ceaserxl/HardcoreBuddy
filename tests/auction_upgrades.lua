@@ -365,8 +365,11 @@ local neck=F.item("INVTYPE_NECK",{ITEM_MOD_AGILITY_SHORT=5},4,0)
 local trinket=F.item("INVTYPE_TRINKET",{ITEM_MOD_AGILITY_SHORT=5},4,0)
 pages[4]={{item=good},{item=best},{item=mail},{item=robe},{item=chest},{item=cloak},{item=neck},{item=ring},{item=trinket},{item=held}}
 pages[2]={{item=sword,buyout=300}}
-U.armorOnly:SetChecked(true); MOCK.Click(U.armorOnly)
-check(A.characterDB.auctionHighestArmorOnly and U.armorOnly.label:GetText()=="Best Armor: Mail","Checkbox saves per-character preference and labels hunter armor correctly")
+MOCK.Click(U.settingsButton)
+check(A.state.view=="settings" and A.state.filter=="Auction House","Auction shortcut opens centralized settings")
+local armorToggle=A.Settings.pages["Auction House"].armor
+armorToggle:SetChecked(true); MOCK.Click(armorToggle)
+check(A.characterDB.auctionHighestArmorOnly and armorToggle.label:GetText()=="Best Armor: Mail","Checkbox saves per-character preference and labels hunter armor correctly")
 local queryStart=#queries
 U:Start(); finish()
 check(#queries-queryStart==16,"Each slot group scans separately, including shared rings/trinkets only once")
@@ -377,24 +380,24 @@ check(U.results[15] and U.results[2] and U.results[11] and U.results[12] and U.r
 check(#U.results.paired>0 and #U.results.paired[1].components==2,"Weapons and held off-hands survive the material filter")
 check(queries[queryStart+1].filters[1].subClassID==3 and queries[queryStart+2].filters[1].subClassID==0,
     "Body armor uses the selected material; jewelry uses the native miscellaneous subclass")
-U.armorOnly:SetChecked(false); U:Refresh()
-check(U.armorOnly:GetChecked(),"Refreshing the UI restores the saved checkbox preference")
-U.armorOnly:SetChecked(false); MOCK.Click(U.armorOnly); U:Start(); finish()
+armorToggle:SetChecked(false); A:Refresh()
+check(armorToggle:GetChecked(),"Refreshing settings restores the saved checkbox preference")
+armorToggle:SetChecked(false); MOCK.Click(armorToggle); U:Start(); finish()
 check(#U.results[1]==3 and #U.results[5]==2,"Unchecking restores cross-material armor and chest/robe variants")
-U:Start(); tick(); U.armorOnly:SetChecked(true); MOCK.Click(U.armorOnly)
-check(not U.scan and not next(U.results) and U.message:find("Armor filter changed"),"Changing filters mid-scan cancels and discards mixed results")
+U:Start(); tick(); armorToggle:SetChecked(true); MOCK.Click(armorToggle)
+check(not U.scan and U.stale,"Changing filters mid-scan cancels and marks old results stale")
 for class,expected in pairs({HUNTER={2,3},SHAMAN={2,3},WARRIOR={3,4},PALADIN={3,4},
     ROGUE={2,2},DRUID={2,2},MAGE={1,1},PRIEST={1,1},WARLOCK={1,1}}) do
     check(G.HighestArmorSubclass({class=class,level=39})==expected[1]
         and G.HighestArmorSubclass({class=class,level=40})==expected[2],"Highest armor follows Classic class and level: "..class)
 end
-F.reset("HUNTER",39,{30,0,0}); U:Refresh()
-check(U.armorOnly.label:GetText()=="Best Armor: Leather","Hunter below 40 uses leather")
-MOCK.level=40; U:Refresh()
-check(U.armorOnly.label:GetText()=="Best Armor: Mail","Armor label updates when mail unlocks")
-local _,sy,_,sh=U.start:GetRect(); local _,cy,_,ch=U.armorOnly:GetRect(); local _,wy=U.weaponButton:GetRect()
-check(cy>=sy+sh and cy+ch<wy,"Checkbox fits directly below Scan upgrades without overlapping Weapon setups")
-U.armorOnly:SetChecked(false); MOCK.Click(U.armorOnly)
+F.reset("HUNTER",39,{30,0,0}); A:Refresh()
+check(armorToggle.label:GetText()=="Best Armor: Leather","Hunter below 40 uses leather")
+MOCK.level=40; A:Refresh()
+check(armorToggle.label:GetText()=="Best Armor: Mail","Armor label updates when mail unlocks")
+local _,sy,_,sh=U.start:GetRect(); local _,cy,_,ch=U.settingsButton:GetRect(); local _,wy=U.weaponButton:GetRect()
+check(cy>=sy+sh and cy+ch<wy,"Settings shortcut fits below Scan upgrades without overlapping navigation")
+armorToggle:SetChecked(false); MOCK.Click(armorToggle)
 
 -- Hover after head results arrive, then continue querying the remaining slots.
 F.reset("HUNTER",40,{31,0,0}); F.equip(1,old)
