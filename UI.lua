@@ -150,6 +150,10 @@ local function renderBlock(frame, block, width)
     frame.title:SetWordWrap(true); frame.body:SetWordWrap(true)
     frame.count:SetFont(STANDARD_TEXT_FONT,14,"")
     frame.body:SetTextColor(unpack(block.guideTone and WHITE or MUTED))
+    frame.body:SetJustifyH("LEFT")
+    frame.stock:SetJustifyH("LEFT")
+    if frame.recommendationName then frame.recommendationName:Hide(); frame.recommendationDetail:Hide() end
+    if frame.carryLabel then frame.carryLabel:Hide() end
     if frame.quantity:HasFocus() and (frame.quantity.targetKey~=block.targetKey
         or block.readOnlyTarget or block.groupSupply or not block.supply) then frame.quantity:ClearFocus() end
     frame.count:SetShown(block.supply); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.supply and not block.groupSupply and not block.readOnlyTarget)
@@ -296,26 +300,46 @@ local function renderBlock(frame, block, width)
     -- Lay out the artwork only after the row's final height and anchors settle.
     if paintedRow then Skin.RowArtwork(frame) end
     if block.supply and frame.supplyTile then
-        -- Compact supply cards keep quantities together without a dense table.
+        -- Keep status apart from the editable controls in compact supply cards.
         frame:SetHeight(76); y=76
         frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
-        frame.title:SetWordWrap(false); frame.body:SetWordWrap(false)
-        measure(frame.title,block.title,width-68,52,8); frame.title:SetHeight(18)
-        measure(frame.body,block.body,width-68,52,28); frame.body:SetHeight(14)
+        measure(frame.title,block.title,width-150,52,8); frame.title:SetHeight(18); frame.title:SetWordWrap(false)
+        frame.body:SetFont(STANDARD_TEXT_FONT,12,"")
+        measure(frame.body,block.body,width-150,52,28); frame.body:SetHeight(16); frame.body:SetWordWrap(false)
         frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-8)
         frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPLEFT",8,-52); frame.priority:SetSize(68,14)
-        frame.count:SetFont(STANDARD_TEXT_FONT,11,"")
-        frame.count:ClearAllPoints(); frame.count:SetPoint("TOPLEFT",80,-51); frame.count:SetSize(94,16)
+        frame.count:SetFont(STANDARD_TEXT_FONT,12,"")
+        frame.count:ClearAllPoints(); frame.count:SetPoint("TOPLEFT",86,-51); frame.count:SetSize(width-210,16)
         frame.count:SetJustifyH("LEFT"); frame.count:SetText("In bags: "..(block.count~=nil and tostring(block.count) or "?"))
         if not frame.carryLabel then frame.carryLabel=font(frame,11,MUTED) end
-        frame.carryLabel:Show(); measure(frame.carryLabel,"Carry",36,176,51)
+        frame.carryLabel:Show(); measure(frame.carryLabel,"Carry",36,width-96,51)
         frame.carryLabel:SetShown(frame.quantity:IsShown())
-        frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",214,-46); frame.quantity:SetSize(40,24)
-        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPLEFT",width-92,-48); frame.stock:SetWidth(84)
-        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPLEFT",width-92,-44)
-        frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("TOPLEFT",frame.stock,"BOTTOMLEFT",0,-4)
+        frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",width-52,-46); frame.quantity:SetSize(44,24)
+        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPLEFT",width-88,-11); frame.stock:SetSize(80,18); frame.stock:SetJustifyH("RIGHT")
+        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPLEFT",width-82,-8)
+        frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("TOPRIGHT",frame,"TOPRIGHT",-8,-32)
         Skin.RowArtwork(frame)
     elseif frame.carryLabel then frame.carryLabel:Hide() end
+    if block.recommendation then
+        local rec=block.recommendation
+        if not frame.recommendationName then
+            frame.recommendationName=font(frame,14,WHITE)
+            frame.recommendationDetail=font(frame,12,MUTED)
+        end
+        measure(frame.title,block.title,width-36,12,10)
+        frame.body:SetFont(STANDARD_TEXT_FONT,11,"")
+        -- The point summary follows the heading; the actual talent has its own row.
+        local headerBottom=10+frame.title:GetHeight()+3
+        local summaryHeight=measure(frame.body,rec.summary,width-36,12,headerBottom)
+        local talentY=headerBottom+summaryHeight+9
+        frame.recommendationName:Show(); frame.recommendationDetail:Show()
+        local nameHeight=measure(frame.recommendationName,rec.name,width-84,52,talentY)
+        local detailHeight=measure(frame.recommendationDetail,rec.detail,width-84,52,talentY+nameHeight+4)
+        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-talentY)
+        frame.meta:Hide()
+        y=talentY+math.max(34,nameHeight+4+detailHeight)+10
+        frame:SetHeight(y)
+    end
     if block.guideTone then
         local tone=block.guideTone
         local color=tone=="danger" and {0.96,0.55,0.40} or tone=="tool" and {0.48,0.78,0.73} or GOLD

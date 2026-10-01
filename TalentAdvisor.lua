@@ -246,6 +246,9 @@ function T:Document(context,state)
         local learn=canLearn and action("learn",build.id) or nil
         if learn then learn.key=nextPoint.key; learn.rank=nextPoint.rank end
         local nextRow=top[1]
+        nextRow.recommendation={summary=nextRow.body,
+            name=live and live.names[nextPoint.key] or node.name,
+            detail=node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank}
         nextRow.body=nextRow.body.."\n"..(live and live.names[nextPoint.key] or node.name)..
             "\n"..node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank
         nextRow.icon=live and live.icons[nextPoint.key] or spellIcon(node.spellID)
