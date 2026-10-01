@@ -435,12 +435,10 @@ function U:Refresh()
         if not self.panel:IsShown() or not owner:IsShown() or not item then self:HideTooltip(owner)
         elseif item~=owner.tooltipItem or item.auctions~=owner.tooltipAuctions then
             local old=owner.tooltipItem
-            local details=owner.tooltipDetailsLine and _G[GameTooltip:GetName().."TextLeft"..owner.tooltipDetailsLine]
             if old and not item.weaponSet and old.link==item.link and old.owned==item.owned
-                and old.label==item.label and old.count==item.count and details then
+                and old.label==item.label and old.count==item.count then
                 -- A new price/listing record for the same item does not change
-                -- its equipped comparison. Update our footer in place.
-                details:SetText(item.label..(item.owned and " | Equipped" or " | "..item.auctions.." listing(s)"))
+                -- its equipped comparison. Keep the tooltip in place.
                 owner.tooltipItem=item; owner.tooltipAuctions=item.auctions
             else owner:GetScript("OnEnter")(owner) end
         end
@@ -536,7 +534,6 @@ function U:Attach()
             U:HideTooltip()
             local entry=self.entry; local item=entry and (U.slot and entry or entry.best)
             if item then GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink(item.link)
-                self.tooltipDetailsLine=nil
                 if item.weaponSet then
                     GameTooltip:AddLine(" ")
                     GameTooltip:AddLine("Complete setup vs equipped: "..change(item),unpack(changeColor(item)))
@@ -545,13 +542,9 @@ function U:Attach()
                     end
                     if item.emptyOff then GameTooltip:AddLine("Off hand: empty",0.9,0.75,0.45) end
                     GameTooltip:AddLine("Total: "..(item.owned and "No purchase" or money(price(item)).." ("..item.priceLabel..")"),0.9,0.75,0.45)
-                    GameTooltip:AddLine("Weighted stats; not a damage or survival simulation.",0.65,0.65,0.56,true)
                 else
-                    self.tooltipDetailsLine=GameTooltip:NumLines()+1
-                    GameTooltip:AddLine(item.label..(item.owned and " | Equipped" or " | "..item.auctions.." listing(s)"),0.9,0.75,0.45)
                     if item.count>1 then GameTooltip:AddLine("Listed stack: "..item.count,1,0.8,0.4) end
                 end
-                GameTooltip:AddLine("Score change compares items, not total damage.",0.65,0.65,0.56,true)
                 self.tooltipItem=item; self.tooltipAuctions=item.auctions
                 GameTooltip:Show()
                 self:UpdateTooltip()

@@ -393,7 +393,7 @@ local lossStats={
     {"frost","Frost"},{"fire","Fire"},{"shadow","Shadow"},{"nature","Nature"},{"arcane","Arcane"},{"holy","Holy"},
     {"armor","Armor"},
 }
-function G.LossSummary(item,p,replacedItems,allStats,compact)
+local function statChangeSummary(item,p,replacedItems,allStats,compact,gains)
     local losses={}
     for i,entry in ipairs(lossStats) do
         local key=entry[1]
@@ -407,7 +407,9 @@ function G.LossSummary(item,p,replacedItems,allStats,compact)
                 previous=previous+amount
             end
             local delta=candidate-previous
-            if delta<0 then losses[#losses+1]=string.format("%g%s %s",delta,entry[3] or "",entry[2]) end
+            if (gains and delta>0) or (not gains and delta<0) then
+                losses[#losses+1]=string.format(gains and "+%g%s %s" or "%g%s %s",delta,entry[3] or "",entry[2])
+            end
         end
     end
     if #losses>0 then
@@ -436,6 +438,14 @@ function G.CanDualWield(p)
     local dual=(p.class=="ROGUE" and p.level>=10) or ((p.class=="WARRIOR" or p.class=="HUNTER") and p.level>=20)
     if dual and IsSpellKnown then dual=IsSpellKnown(674) end
     return dual
+end
+
+function G.LossSummary(item,p,replacedItems,allStats,compact)
+    return statChangeSummary(item,p,replacedItems,allStats,compact,false)
+end
+
+function G.GainSummary(item,p,replacedItems,allStats,compact)
+    return statChangeSummary(item,p,replacedItems,allStats,compact,true)
 end
 
 function G:Comparisons(item,p,slotOnly)
@@ -485,7 +495,10 @@ function G:Comparisons(item,p,slotOnly)
             row.percent=math.floor(((candidateScore*100/oldScore)-100)*100)/100
             row.status=row.percent>0 and "up" or row.percent<0 and "down" or "equal"
             row.text=string.format(row.percent==0 and "%.2f%% Similar" or row.percent>0 and "+%.2f%% Upgrade" or "%.2f%% Downgrade",row.percent)
+        end
+        if row.status~="unknown" then
             row.losses=self.LossSummary(item,p,replacedItems,false,true)
+            row.gains=self.GainSummary(item,p,replacedItems,false,true)
         end
     end
     return rows
@@ -525,19 +538,15 @@ function G:Add(tip)
     if report then
         local title="|TInterface\\AddOns\\HardcoreBuddy\\Media\\SurvivorShield.tga:16:16:0:0|t HardcoreBuddy  |  Gear Advisor"
         -- WoW collapses empty text; a space preserves the native blank line.
-        local lines={{" ","",colors.equal},{title,"",colors.gold},
-            {report.profile.name..(report.profile.manual and "  |  Selected" or report.profile.fallback and "  |  Leveling default" or "  |  Talents"),"",colors.equal}}
+        local lines={{" ","",colors.equal},{title,"",colors.gold}}
         for i=1,2 do
             local row=report.rows[i]
-            if i==2 and not row and report.rows[1] then
-                local firstRow=report.rows[1]
-                if firstRow.losses then
-                    row={label="Stats lost",text=firstRow.losses,status="down"}
-                end
-            end
-            lines[#lines+1]={row and row.label or "",row and row.text or "",colors[row and row.status or "equal"]}
+            -- Reserve the same fields on refresh; empty text collapses in the
+            -- native tooltip and avoids moving other addons' appended lines.
+            lines[#lines+1]={row and (row.label..": "..row.text) or "","",colors[row and row.status or "equal"]}
+            lines[#lines+1]={row and row.gains or "","",colors.up}
+            lines[#lines+1]={row and row.losses or "","",colors.down}
         end
-        lines[#lines+1]={"Stat score; enchants / procs / sets excluded","",colors.equal}
         local state=tip.hardcoreBuddyGear
         local name=tip.GetName and tip:GetName()
         local header=state and name and _G[name.."TextLeft"..(state.start+1)]
@@ -547,7 +556,7 @@ function G:Add(tip)
             local left=name and _G[name.."TextLeft"..(start+i-1)]
             local right=name and _G[name.."TextRight"..(start+i-1)]
             local color=line[3]
-            local leftColor=(i>=4 and line[2]~="") and colors.equal or color
+            local leftColor=color
             if reuse and left and right then
                 left:SetText(line[1]); left:SetTextColor(unpack(leftColor)); left:Show()
                 right:SetText(line[2]); right:SetTextColor(unpack(color)); right:SetShown(line[2]~="")

@@ -312,11 +312,19 @@ GameTooltip:SetHyperlink(scorpid.link)
 local lineCount=GameTooltip:NumLines()
 local state=GameTooltip.hardcoreBuddyGear
 check(state and _G[GameTooltip.name.."TextLeft"..state.start]:GetText()==" ","Spacer before advisor")
+local function adviceLine(offset) return _G[GameTooltip.name.."TextLeft"..(state.start+offset)] end
+check(adviceLine(2):GetText()=="Hands: "..state.report.rows[1].text
+    and _G[GameTooltip.name.."TextRight"..(state.start+2)]:GetText()=="","Slot and percentage are together on the left")
+check(adviceLine(3):GetText()==state.report.rows[1].gains and adviceLine(3):GetText():find("+",1,true)
+    and adviceLine(4):GetText()==state.report.rows[1].losses,"Unlabelled gains and losses appear beneath the comparison")
+local gr,gg=adviceLine(3):GetTextColor(); local lr,lg=adviceLine(4):GetTextColor()
+check(gg>gr and lr>lg,"Gains are green and losses are red")
 local reads=#readLinks
 G:Add(GameTooltip)
 check(GameTooltip:NumLines()==lineCount and #readLinks==reads,"No duplicate rows or repeated scans")
 equipment[10]=scorpid; MOCK.FireAll("PLAYER_EQUIPMENT_CHANGED",10)
 check(GameTooltip:NumLines()==lineCount and GameTooltip.hardcoreBuddyGear.report.rows[1].percent==0,"Visible advice refreshes without new rows")
+check(adviceLine(3):GetText()=="" and adviceLine(4):GetText()=="","Refresh clears obsolete gains and losses")
 A.db.gearAdvisorEnabled=false; G:RefreshTooltips(); check(not GameTooltip:IsShown(),"Disable hides stale visible advice")
 A.db.gearAdvisorEnabled=true
 print("PASS: "..checks.." gear assertions; "..materialChecks.." cross-material comparisons; reference scores and native tooltip lifecycle.")

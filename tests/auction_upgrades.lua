@@ -415,9 +415,8 @@ check(GameTooltip:IsShown() and GameTooltip.link==best.link and ShoppingTooltip1
 finish()
 check(GameTooltip:IsShown() and tooltipSets==setsBefore,"Tooltip stays open without rebuilding throughout the remaining scan and completion")
 local current=U.results[1][1]; current.auctions=current.auctions+1; U:Refresh()
-check(GameTooltip:IsShown() and tooltipSets==setsBefore
-    and _G[GameTooltip:GetName().."TextLeft"..hovered.tooltipDetailsLine]:GetText():find("2 listing(s)",1,true),
-    "Updated listing count changes the footer without rebuilding either tooltip")
+check(GameTooltip:IsShown() and tooltipSets==setsBefore and hovered.tooltipAuctions==current.auctions,
+    "Updated listing count preserves both tooltips without a listing footer")
 local comparisonBefore=compareCalls
 local replacement={}; for key,value in pairs(current) do replacement[key]=value end
 replacement.buyout=1; U.results[1][1]=replacement; U:Refresh(); nativeTooltipTick()
