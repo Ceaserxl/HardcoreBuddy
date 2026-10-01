@@ -320,19 +320,15 @@ local function label(parent,text,x,y,width,color,size)
 end
 local function button(parent,text,width,callback)
     local b=CreateFrame("Button",nil,parent,"BackdropTemplate"); b:SetSize(width,24)
-    Skin.Paint(b,"card")
     b.caption=label(b,"",6,-2,width-12,Skin.colors.white,11)
     b.caption:SetJustifyH("CENTER")
+    b.label=b.caption; Skin.Button(b,"utility")
     function b:SetText(value) self.caption:SetText(value) end
     function b:GetText() return self.caption:GetText() end
     function b:PaintState(active)
         self.active=active
-        self:SetBackdropColor(active and 0.20 or 0.065,active and 0.16 or 0.08,active and 0.09 or 0.095,1)
-        self:SetBackdropBorderColor(active and 0.75 or 0.20,active and 0.57 or 0.25,active and 0.28 or 0.29,1)
-        self.caption:SetTextColor(unpack(active and Skin.colors.gold or Skin.colors.white))
+        Skin.ButtonState(self,active,nil,false)
     end
-    b:SetScript("OnEnter",function(self) self:SetBackdropBorderColor(0.8,0.65,0.37,1) end)
-    b:SetScript("OnLeave",function(self) self:PaintState(self.active) end)
     b:PaintState(false)
     b:SetText(text); b:SetScript("OnClick",callback); return b
 end
@@ -477,6 +473,7 @@ function U:Attach()
     while _G["AuctionFrameTab"..index] do index=index+1 end
     local tab=CreateFrame("Button","AuctionFrameTab"..index,AuctionFrame,"AuctionTabTemplate")
     self.tab=tab; tab:SetID(index); tab:SetText("Upgrades")
+    Skin.Hover(tab)
     tab:SetPoint("LEFT",_G["AuctionFrameTab"..(index-1)],"RIGHT",-15,0)
     PanelTemplates_SetNumTabs(AuctionFrame,index); PanelTemplates_EnableTab(AuctionFrame,index)
     PanelTemplates_TabResize(tab,0,nil,36)

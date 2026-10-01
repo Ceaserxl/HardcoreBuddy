@@ -56,7 +56,7 @@ end
 -- the same flat gold wash as navigation tabs (including child icon hit areas).
 function S.Hover(button,enabled)
     if enabled==false then button:ClearHighlightTexture(); return end
-    button:SetHighlightTexture(WHITE,"BLEND")
+    button:SetHighlightTexture(type(enabled)=="string" and enabled or WHITE,"BLEND")
     local highlight=button:GetHighlightTexture()
     highlight:SetVertexColor(unpack(S.colors.gold)); highlight:SetAlpha(0.24)
 end
@@ -183,7 +183,7 @@ function S.Button(button,kind)
         end
     end
     skin.kind=kind or skin.kind or "normal"
-    S.ButtonState(button,false,false,false)
+    S.ButtonState(button)
     return skin
 end
 

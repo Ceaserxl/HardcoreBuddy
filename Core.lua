@@ -19,6 +19,7 @@ function addon:ShowKitUpdate(level, changes)
     self:Print("Field Kit updated for level "..level..": "..summary..". Open /hcb to review.")
     if not self.kitAlert then
         local frame=CreateFrame("Button",nil,UIParent)
+        self.Skin.Hover(frame)
         frame:SetSize(350,48)
         frame:SetPoint("TOPRIGHT",UIParent,"TOPRIGHT",-48,-260)
         frame:SetFrameStrata("HIGH")

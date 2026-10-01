@@ -221,6 +221,7 @@ function H:Initialize()
     if RegisterStateDriver and UnregisterStateDriver then
         local b=CreateFrame("Button","HardcoreBuddyCreatureTarget",UIParent,"SecureActionButtonTemplate")
         self.targetButton=b
+        addon.Skin.Hover(b)
         b:SetSize(560,76); b:SetPoint("TOP",UIParent,"TOP",0,-110)
         b:SetFrameStrata("HIGH"); b:SetFrameLevel(f:GetFrameLevel()+5)
         b:RegisterForClicks("AnyUp","AnyDown"); b:Hide()

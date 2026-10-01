@@ -200,6 +200,7 @@ function M:RefreshPins()
         local pin=self.pins[index]
         if not pin then
             pin=CreateFrame("Button",nil,canvas); self.pins[index]=pin
+            A.Skin.Hover(pin)
             pin:EnableMouse(true)
             pin.icon=pin:CreateTexture(nil,"ARTWORK"); pin.icon:SetAllPoints()
             pin:SetScript("OnEnter",function(p) M:Tooltip(p) end)

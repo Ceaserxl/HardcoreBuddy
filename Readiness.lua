@@ -35,6 +35,7 @@ function R:Open()
 end
 function R:BuildFrames()
     local f=CreateFrame("Button",nil,UIParent,"BackdropTemplate"); self.panel=f
+    A.Skin.Hover(f)
     f:SetSize(290,180); f:SetPoint("RIGHT",UIParent,"RIGHT",-36,35)
     f:SetFrameStrata("MEDIUM"); f:SetClampedToScreen(true); A.Skin.Paint(f,"card")
     f:SetMovable(true); f:RegisterForDrag("LeftButton")
@@ -65,6 +66,7 @@ function R:BuildFrames()
     close:SetScript("OnClick",function() self.dismissed=true; f:Hide() end)
     f:Hide()
     local toast=CreateFrame("Button",nil,UIParent); self.toast=toast
+    A.Skin.Hover(toast)
     toast:SetSize(350,52); toast:SetPoint("TOPRIGHT",UIParent,"TOPRIGHT",-48,-318)
     toast:SetFrameStrata("HIGH"); toast:SetClampedToScreen(true)
     toast.title=text(toast,13,0,-3,350); toast.title:SetTextColor(unpack(A.Skin.colors.gold))

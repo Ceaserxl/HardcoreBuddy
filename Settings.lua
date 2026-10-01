@@ -233,7 +233,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
         local score=build and A.GearAdvisor.Profile(class,context.level,nil,build.profile)
         b.label:SetText(i==1 and ("Automatic Hardcore path\n"..(selected and selected.name or "")) or build and (build.name.."\nLevels "..build.minLevel.."-"..build.maxLevel.." | Scoring: "..(score and score.name or "Unavailable")) or "")
         b.selected=i==1 and not manual or manual and build and selected.id==build.id or false
-        Skin.ButtonState(b,b.selected,false,false)
+        Skin.ButtonState(b,b.selected,nil,false)
     end
     local auction=self.pages["Auction House"]; auction.armor:Sync()
     local armor=profile and ({"Cloth","Leather","Mail","Plate"})[A.GearAdvisor.HighestArmorSubclass(profile)] or "..."

@@ -174,7 +174,7 @@ function M:LayoutIconPicker(parent,left,top,width,visible)
             b.label:SetSize(102,28); b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE")
             b:SetScript("OnEnter",function(self)
                 Skin.ButtonState(self,self.selected,true,false)
-                GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetText(M:IconName(key))
+                GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetText(M:IconName(key),1,0.8,0.4,1,true)
                 GameTooltip:AddLine(self.selected and "Selected" or "Click to use this marker icon.",1,0.8,0.4); GameTooltip:Show()
             end)
             b:SetScript("OnLeave",function(self) Skin.ButtonState(self,self.selected,false,false); GameTooltip:Hide() end)
@@ -193,7 +193,7 @@ function M:LayoutIconPicker(parent,left,top,width,visible)
     for key,b in pairs(f.choices) do
         local selected=self:Settings().icons[kind]==key
         b.selected=selected; b.label:SetText(self:IconName(key)); self:SetIconTexture(b.icon,key)
-        Skin.ButtonState(b,selected,false,false)
+        Skin.ButtonState(b,selected,nil,false)
     end
 end
 

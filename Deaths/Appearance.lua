@@ -39,7 +39,7 @@ function H:ApplyAppearance()
         self.appearance.opacity:SetValue(s.backgroundOpacity)
         self.appearance.opacityText:SetText("Background opacity: "..math.floor(s.backgroundOpacity).."%")
         for name,b in pairs(self.appearance.styles) do
-            b.selected=name==s.alertStyle; A.Skin.ButtonState(b,b.selected,false,false)
+            b.selected=name==s.alertStyle; A.Skin.ButtonState(b,b.selected,nil,false)
         end
         self.appearance.move.label:SetText(a.positioning and "Save position" or "Unlock and move")
         a.done:SetShown(a.positioning==true)
