@@ -30,7 +30,17 @@ end end
 assert(header and option)
 local hx=header.title:GetRect(); local ox=option.title:GetRect()
 local ix=card.content.blocks[1].title:GetRect()
-assert(hx==ox and ox==ix,"Alternatives heading aligns with item titles")
+local backX=A.window.back:GetRect()
+assert(hx==backX and ox==ix,"Heading aligns with Back; item text retains consistent padding")
+assert(card.content.blocks[1]:GetRect()==backX and option:GetRect()==backX)
+assert(card.detailQuantity.title:GetRect()==backX and card.defaultChoice:GetRect()==backX)
+for _,r in ipairs(card.content.blocks) do if r:IsShown() then
+    if r.block.title=="Next" then assert(r.title:GetRect()==backX) end
+    if r.block.fields then
+        local dx,dy,dw=r:GetRect(); local px,py,pw=A.window.priorityChoice:GetRect()
+        assert(dx+dw==px+pw,"Priority remains aligned with details right edge")
+    end
+end end
 MOCK.Click(option)
 card=A.window.cards[1]
 assert(card.defaultChoice:IsEnabled() and card.defaultChoice.label:GetText()=="Set as default")

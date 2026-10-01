@@ -464,14 +464,15 @@ local function renderCard(frame, data, width)
         end
         y=y+24
     end
-    frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT", 12, -y); frame.content:SetWidth(width-24)
+    local contentInset=data.itemLayout and 0 or 12
+    frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT",contentInset,-y); frame.content:SetWidth(width-contentInset-12)
     frame.content.supplyGrid=data.supplyTable
     frame.content.gridStart=data.supplyTable and 1 or frame.gridStart
     if data.fullWidth then frame.content.gridStart=nil end
     if data.itemLayout then
         -- Keep the item, its quantity and alternatives together on the left;
         -- the labeled reference details get their own column on the right.
-        local contentWidth=width-24
+        local contentWidth=width-12
         local leftWidth=math.floor((contentWidth-16)/2)
         local rightWidth=contentWidth-leftWidth-16
         local leftHeight,rightHeight=0,0
