@@ -3,6 +3,7 @@ local G={tooltips=setmetatable({},{__mode="k"}),revision=0}; A.GearAdvisor=G
 function G:IsEnabled() return A.db and A.db.gearAdvisorActive~=false end
 function G:SetEnabled(enabled)
     A.db.gearAdvisorActive=not not enabled
+    if A.GearBagAdvisor then A.GearBagAdvisor:Changed() end
     self:RefreshTooltips()
     if A.GearIndicators then A.GearIndicators:Invalidate() end
     if A.AuctionUpgrades then
@@ -209,6 +210,7 @@ end
 
 function G:WeightsChanged()
     self.revision=self.revision+1
+    if A.GearBagAdvisor then A.GearBagAdvisor:Changed() end
     self:RefreshTooltips()
     if A.AuctionUpgrades then A.AuctionUpgrades:Invalidate() end
     if A.GearIndicators then A.GearIndicators:Invalidate() end

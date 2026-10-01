@@ -242,6 +242,8 @@ function addon:Initialize()
     self.db = HardcoreBuddyDB
     if self.db.gearAdvisorEnabled==nil then self.db.gearAdvisorEnabled=true end
     if self.db.gearAdvisorActive==nil then self.db.gearAdvisorActive=true end
+    if self.db.gearBagNotify==nil then self.db.gearBagNotify=false end
+    if self.db.gearAutoEquip==nil then self.db.gearAutoEquip=false end
     if self.db.talentAdvisorEnabled==nil then self.db.talentAdvisorEnabled=true end
     if type(HardcoreBuddyCharacterDB)~="table" then HardcoreBuddyCharacterDB={} end
     self.characterDB=HardcoreBuddyCharacterDB

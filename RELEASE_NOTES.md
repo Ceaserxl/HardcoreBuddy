@@ -1,5 +1,8 @@
 # Unreleased
 
+- Added opt-in bag upgrade notices and automatic equipping to Gear Advisor
+  settings. Auto-equip preserves worn quest gear, checks both hands, and waits
+  during combat, cursor use or item locks. Both options default off.
 - Added Advisors > Map with full reveal or translucent unexplored-area tint,
   category filters, known NPC locations across 46 Classic zones and cities,
   zone browsing and optional silent zone-entry notices. Pins show recorded

@@ -36,6 +36,8 @@ jobs:
         run: python tests/run_armor_kits.py
       - name: Test talent-aware Hardcore gear advisor
         run: python tests/run_gear_advisor.py
+      - name: Test bag upgrade notices and quest-safe auto-equip
+        run: python tests/run_gear_bags.py
       - name: Test auction upgrade scanning and native tabs
         run: python tests/run_auction_upgrades.py
       - name: Test Character window gear snapshots

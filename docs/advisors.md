@@ -162,7 +162,8 @@ Deliberate differences from that reference:
   when an off-hand would be removed, rather than presenting only the main-hand gain.
 - The Frost single-target path moves its third Frost Channeling point ahead of
   Ice Barrier, making Ice Barrier legal at level 40 instead of the source's 39.
-- No automatic equipping or multi-point talent spending.
+- Automatic equipping is opt-in under Gear Advisor settings; talent points are
+  still spent one at a time only when requested.
 
 Classic talent coordinates, rank limits, spell IDs and prerequisites come from
 the pinned [WoWSims Classic talent trees](https://github.com/wowsims/classic/tree/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees).
@@ -170,6 +171,29 @@ The compact factual reference, individual source URLs/hashes and MIT license
 are retained in `reference/advisor`. No simulation code is loaded or shipped.
 
 ## Validation
+
+`tests/run_gear_bags.py` covers optional chat notices and automatic bag upgrades.
+The bag advisor uses the same live scoring profile and comparisons as tooltips,
+including usable lighter armor and complete two-handed replacements. It checks
+four bag entries per update, chooses the strongest eligible improvement, equips
+one item, then waits for an equipment update before scoring again.
+
+Both bag options default off and respect the Gear Advisor master switch.
+Notifications are deduplicated for the session, resetting when the options or
+scoring settings change. Auto-equip preserves worn items identified by the
+client as Quest class or Quest binding, and skips equipment whose quest status
+has not loaded. A two-hander also checks the off-hand it would remove. Bag quest
+flags and quest-starter IDs prevent equipping those candidates. Ordinary earned
+quest rewards are eligible. Items with no quest designation cannot be inferred
+to be needed for a quest simply from their stats.
+
+Equipment changes wait for combat, death, taxi travel, cursor use and item locks
+to clear. Failed attempts are not repeatedly issued against unchanged gear;
+native binding confirmations are never accepted automatically. The module uses
+the client [item API](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_APIDocumentationGenerated/ItemDocumentation.lua)
+and [container API](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_APIDocumentationGenerated/ContainerDocumentation.lua),
+without other addon dependencies. Live equip/confirmation behavior still needs
+verification in the game client.
 
 `tests/run_gear_advisor.py` covers reference scores, all-class armor eligibility,
 slot handling, item-loading failures, enhancement stripping and tooltip reuse.

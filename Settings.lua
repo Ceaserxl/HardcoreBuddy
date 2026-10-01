@@ -92,8 +92,16 @@ function S:Create(parent)
         A.db.gearUpgradeMarkers=value
         if A.GearIndicators then A.GearIndicators:Invalidate() end
     end)
-    gear.openWeights=button(gear,"Stat Weights",242,function() self:OpenGearPage("Stat Weights") end)
-    gear.openSnapshot=button(gear,"Gear Snapshot",290,function() self:OpenGearPage("Gear Snapshot") end)
+    gear.notify=check(gear,"Notify me of gear upgrades in my bags",226,function() return A.db.gearBagNotify==true end,function(value)
+        A.db.gearBagNotify=value; A.GearBagAdvisor:Changed()
+    end)
+    gear.autoEquip=check(gear,"Automatically equip gear upgrades",268,function() return A.db.gearAutoEquip==true end,function(value)
+        A.db.gearAutoEquip=value; A.GearBagAdvisor:Changed()
+    end)
+    label(gear,"Auto-equip waits until you are out of combat and preserves equipped quest items, including off-hand items. Quest gear stays under your control.",12,20,306,700)
+    gear.openWeights=button(gear,"Stat Weights",364,function() self:OpenGearPage("Stat Weights") end)
+    gear.openSnapshot=button(gear,"Gear Snapshot",412,function() self:OpenGearPage("Gear Snapshot") end)
+    gear.contentHeight=462
     local weightsPage=self.pages["Stat Weights"]
     weightsPage.profile=label(weightsPage,"",14,20,52,700)
     label(weightsPage,"Saved for this character's scoring profile. Use 0 to ignore a stat. Enter to save; Escape to cancel.",12,20,84,700)
@@ -190,7 +198,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     self.content:SetScale(scale); self.content:SetSize(contentWidth,math.max(contentHeight,height/scale))
     for name,page in pairs(self.pages) do page:SetShown(name==pageName) end
     local general=self.pages.General; general.minimap:Sync(); general.kit:Sync()
-    local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync()
+    local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync(); gear.notify:Sync(); gear.autoEquip:Sync()
     gear.toggle.label:SetText(A.GearAdvisor:IsEnabled() and "Disable Gear Advisor" or "Enable Gear Advisor")
     local profile=A.GearAdvisor:CurrentProfile()
     gear.profile:SetText(profile and ("Scoring: "..profile.name) or "Character data loading")

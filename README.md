@@ -69,6 +69,12 @@ Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
   selected build, such as **2/5**.
 - Separate **Disable Gear Advisor** and **Disable Talent Advisor** buttons in their
   Settings pages.
+- Optional **Notify me of gear upgrades in my bags** and **Automatically equip
+  gear upgrades** checkboxes in Gear Advisor settings, both off by default.
+  Notices appear in chat without repeating on each bag update. Auto-equip uses your live
+  scoring profile, waits out combat and preserves equipped quest gear, including
+  an off-hand that a two-handed weapon would remove. Quest items are never
+  automatically equipped. Normal earned quest rewards remain eligible.
 - Click **Learn** to spend a single recommended point, or browse other classes
   using **Edit Character**. Points are never spent automatically.
 

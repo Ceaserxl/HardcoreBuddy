@@ -163,6 +163,7 @@ function T:Activate(a)
         if A.GearIndicators then A.GearIndicators:Invalidate() end
     end
     A.GearAdvisor.revision=A.GearAdvisor.revision+1
+    if A.GearBagAdvisor then A.GearBagAdvisor:Changed() end
     if A.TalentRanks then A.TalentRanks:Refresh() end
     A.GearAdvisor:RefreshTooltips(); A:Refresh(true)
 end

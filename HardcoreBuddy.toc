@@ -50,6 +50,7 @@ TalentAdvisor.lua
 TalentRanks.lua
 MapAdvisor.lua
 GearIndicators.lua
+GearBagAdvisor.lua
 GearSnapshot.lua
 WeaponSetAdvisor.lua
 AuctionDiagnostics.lua
