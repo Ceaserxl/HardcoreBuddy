@@ -2,6 +2,12 @@
 -- a deliberate click and a fresh read of the player's real talent tree.
 local _,A=...
 local T={}; A.TalentAdvisor=T
+function T:IsEnabled() return A.db and A.db.talentAdvisorEnabled~=false end
+function T:SetEnabled(enabled)
+    A.db.talentAdvisorEnabled=not not enabled
+    if A.TalentPanel then A.TalentPanel:Refresh() end
+    if A.window and A.window:IsShown() then A:Refresh() end
+end
 local D=A.Data
 local tokens={Druid="DRUID",Hunter="HUNTER",Mage="MAGE",Paladin="PALADIN",Priest="PRIEST",Rogue="ROGUE",Shaman="SHAMAN",Warlock="WARLOCK",Warrior="WARRIOR"}
 local function settings()
@@ -113,6 +119,7 @@ function T.Plan(class,level,build,ranks)
 end
 
 function T:LearnNext(expectedBuild,expectedKey,expectedRank)
+    if not self:IsEnabled() then return false end
     if InCombatLockdown and InCombatLockdown() then A:Print("Spend talent points after combat."); return false end
     local _,class=UnitClass("player"); local level=UnitLevel("player")
     local build=self:Build(class,level)
@@ -146,7 +153,7 @@ function T:Activate(a)
     if a.command=="build" then
         if D.AdvisorBuilds[a.class] and D.AdvisorBuilds[a.class][a.id] then s.builds[a.class]=a.id end
     elseif a.command=="defaultBuild" then s.builds[a.class]=nil
-    elseif a.command=="toggleGear" then A.db.gearAdvisorEnabled=A.db.gearAdvisorEnabled==false
+    elseif a.command=="toggleGear" then A.GearAdvisor:SetEnabled(not A.GearAdvisor:IsEnabled())
     elseif a.command=="learn" then self:LearnNext(a.id,a.key,a.rank)
     elseif a.command=="open" then self:OpenTalents()
     end
@@ -156,6 +163,7 @@ function T:Activate(a)
         if A.GearIndicators then A.GearIndicators:Invalidate() end
     end
     A.GearAdvisor.revision=A.GearAdvisor.revision+1
+    if A.TalentPanel then A.TalentPanel:Refresh() end
     A.GearAdvisor:RefreshTooltips(); A:Refresh(true)
 end
 
@@ -176,6 +184,10 @@ function T:Document(context,state)
         doc.cards[#doc.cards+1]=card("Reading the score","Percentage change in weighted item stats, not a damage or survival simulation.",{
             row("|cff73d696Green: upgrade|r   |cfff56e61Red: downgrade|r","Enchants, armor kits, procs, use effects and set bonuses are excluded. Check the stat losses before replacing an item."),
             row("Two slots and weapons","Each ring or trinket is compared separately. Two-handed weapons replace both hands; zero-score baselines are labeled without an invented percentage.")})
+        return doc
+    end
+    if not self:IsEnabled() then
+        doc.cards[1]=card("Talent Advisor","Disabled",{row("Talent Advisor settings","Enable talent recommendations in Settings.",action("talentSettings"))})
         return doc
     end
     local build,manual=self:Build(class,level)

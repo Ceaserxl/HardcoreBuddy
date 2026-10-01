@@ -110,7 +110,7 @@ function I:Step()
         local record=self.buttons[button]
         local link=record and self:Link(button,record)
         if record then record.link=link end
-        self:Paint(button,A.db and A.db.gearUpgradeMarkers~=false and link and self:IsUpgrade(link) or false)
+        self:Paint(button,A.GearAdvisor:IsEnabled() and A.db.gearUpgradeMarkers~=false and link and self:IsUpgrade(link) or false)
     end
 end
 

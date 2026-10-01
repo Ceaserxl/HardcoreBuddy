@@ -81,6 +81,8 @@ function S:Create(parent)
     label(general,"Carry quantities and item priorities stay in Supplies. Point-by-point talent advice stays in Advisors.",12,20,318,700)
 
     local gear=self.pages["Gear Advisor"]
+    gear.toggle=button(gear,"",18,function() A.GearAdvisor:SetEnabled(not A.GearAdvisor:IsEnabled()) end,200)
+    gear.toggle:ClearAllPoints(); gear.toggle:SetPoint("TOPLEFT",520,-18)
     gear.profile=label(gear,"",14,20,52,700)
     label(gear,"Choose how equipment upgrades are shown and scored. Scoring follows your live character's Talent Advisor build and compares all usable armor types by stats.",13,20,84,700)
     gear.enabled=check(gear,"Show gear advisor in item tooltips",142,function() return A.db.gearAdvisorEnabled~=false end,function(value)
@@ -138,6 +140,8 @@ function S:Create(parent)
     weightsPage.contentHeight=192+math.ceil(#gear.weights/2)*36
 
     local talent=self.pages["Talent Advisor"]
+    talent.toggle=button(talent,"",18,function() A.TalentAdvisor:SetEnabled(not A.TalentAdvisor:IsEnabled()) end,200)
+    talent.toggle:ClearAllPoints(); talent.toggle:SetPoint("TOPLEFT",520,-18)
     talent.context=label(talent,"",14,20,56,700)
     label(talent,"Choose your talent path here. Its scoring profile also controls gear advice, auction upgrades and item markers. Selecting a path does not spend talent points.",12,20,88,700)
     talent.builds={}
@@ -187,6 +191,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     for name,page in pairs(self.pages) do page:SetShown(name==pageName) end
     local general=self.pages.General; general.minimap:Sync(); general.kit:Sync()
     local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync()
+    gear.toggle.label:SetText(A.GearAdvisor:IsEnabled() and "Disable Gear Advisor" or "Enable Gear Advisor")
     local profile=A.GearAdvisor:CurrentProfile()
     gear.profile:SetText(profile and ("Scoring: "..profile.name) or "Character data loading")
     self.pages["Stat Weights"].profile:SetText(gear.profile:GetText())
@@ -204,6 +209,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local tokens={Druid="DRUID",Hunter="HUNTER",Mage="MAGE",Paladin="PALADIN",Priest="PRIEST",Rogue="ROGUE",Shaman="SHAMAN",Warlock="WARLOCK",Warrior="WARRIOR"}
     local class=tokens[context.characterClass]
     local talent=self.pages["Talent Advisor"]
+    talent.toggle.label:SetText(A.TalentAdvisor:IsEnabled() and "Disable Talent Advisor" or "Enable Talent Advisor")
     local builds=A.Data.AdvisorBuilds[class] or {}
     local selected,manual=A.TalentAdvisor:Build(class,context.level)
     talent.context:SetText(context.characterClass.." | Level "..context.level..(context.mode=="preview" and " | Planning another character" or " | Your character"))

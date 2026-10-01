@@ -136,6 +136,11 @@ F.equip(1,better); MOCK.FireAll("PLAYER_EQUIPMENT_CHANGED",1); drain()
 check(not marked(custom),"Equipping better gear refreshes replacement bag comparisons")
 F.equip(1,old); MOCK.FireAll("PLAYER_EQUIPMENT_CHANGED",1); drain()
 check(marked(custom),"Equipment changes restore eligible replacement bag upgrades")
+G:SetEnabled(false); drain()
+check(not marked(custom) and not marked(button),"Gear master switch clears native and replacement bag markers")
+check(A.db.gearUpgradeMarkers==true,"Master disable preserves marker preference")
+G:SetEnabled(true); drain()
+check(marked(custom) and marked(button),"Reenabling gear advice restores eligible bag markers")
 
 local rewards=CreateFrame("Frame","QuestInfoRewardsFrame",UIParent); rewards.RewardButtons={}
 QuestInfoFrame={rewardsFrame=rewards,questLog=false}

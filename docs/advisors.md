@@ -4,6 +4,22 @@ Open **Advisors** in the main window. The sidebar offers **Gear** and **Talents*
 Choose builds in **Settings > Talent Advisor**. `/hcb gear` and `/hcb talents`
 open the advice pages.
 
+Opening WoW's Talents window also shows a compact attached Talent Advisor. It
+displays the live character's selected build, spent/available points and next
+recommended talent with its icon and rank. **Learn one point** checks the current
+talents again before spending a single point. It is disabled without a free
+point or during combat. **View full path** opens the existing scrollable guide;
+**Settings** opens build selection. Pet and inspection views do not show player
+talent advice. The panel follows the native window's position and visibility.
+
+Both Settings pages have independent enable/disable buttons. Disabling Gear
+Advisor removes tooltip advice and upgrade markers and stops auction upgrade
+scanning. Tooltip/marker preferences, weights and saved scans are retained.
+Disabling Talent Advisor hides its attached panel and recommendations and blocks
+point spending through the advisor. Its chosen build remains available to gear
+scoring. The talent panel also has **Disable Talent Advisor**; reenable it from
+**Settings > Talent Advisor**. These switches persist across reloads.
+
 ## Gear scoring
 
 The score is the sum of each intrinsic stat multiplied by the chosen profile's

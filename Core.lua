@@ -90,9 +90,9 @@ function addon:HandleSlashCommand(message)
         self:CreateWindow(); self.window:Show(); self:Navigate("advisors")
         self.state.filter=command=="talents" and "Talents" or "Gear"; self:Refresh(true)
     elseif command == "gear on" or command == "gear off" then
-        if command~="gear" then self.db.gearAdvisorEnabled=command=="gear on" end
-        self:Print("Gear advisor: "..(self.db.gearAdvisorEnabled~=false and "on" or "off")..". /hcb gear on | /hcb gear off")
-        if self.GearAdvisor then self.GearAdvisor:RefreshTooltips() end
+        self.db.gearAdvisorEnabled=command=="gear on"
+        self.GearAdvisor:SetEnabled(command=="gear on")
+        self:Print("Gear advisor: "..(self.GearAdvisor:IsEnabled() and "on" or "off")..". /hcb gear on | /hcb gear off")
     elseif command == "help" then
         self:Print("/hcb: open guide | /hcb settings: all settings | /hcb reset: center window | /hcb health: low health settings | /hcb deaths: death journal | /hcb deaths settings: death settings | /hcb gear: gear advisor | /hcb talents: talent advisor")
         self:Print("/hcb auction debug: view and copy the latest skipped-listing report")
@@ -241,6 +241,8 @@ function addon:Initialize()
     end
     self.db = HardcoreBuddyDB
     if self.db.gearAdvisorEnabled==nil then self.db.gearAdvisorEnabled=true end
+    if self.db.gearAdvisorActive==nil then self.db.gearAdvisorActive=true end
+    if self.db.talentAdvisorEnabled==nil then self.db.talentAdvisorEnabled=true end
     if type(HardcoreBuddyCharacterDB)~="table" then HardcoreBuddyCharacterDB={} end
     self.characterDB=HardcoreBuddyCharacterDB
     if type(self.characterDB.targets)~="table" then self.characterDB.targets={} end

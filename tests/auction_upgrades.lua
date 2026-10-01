@@ -489,4 +489,17 @@ U.profile=nil; U.results={}; local character=A.characterDB
 A.characterDB={}; check(not A.AuctionCache:Restore(U),"Another character does not inherit a saved scan")
 A.characterDB=character
 check(A.AuctionCache:Restore(U),"Character cache remains available after closing the auction house")
+local completedScan=A.characterDB.auctionLastScan
+U.open=true; U.panel:Show(); U:Start()
+check(U.scan~=nil,"Master toggle fixture starts an active scan")
+G:SetEnabled(false)
+check(U.scan==nil and not U.start:IsEnabled() and #U.display==0,"Gear master switch stops scanning and hides upgrade results")
+check(U.emptyTitle:GetText()=="Gear Advisor disabled","Auction tab explains the disabled advisor")
+local disabledQueries=#queries; U:Start(); tick()
+check(U.scan==nil and #queries==disabledQueries,"Disabled advisor cannot start auction queries")
+G:SetEnabled(true)
+check(U.start:IsEnabled(),"Reenabling restores auction scan control")
+U.open=false
+-- Keep the completed item/weapon fixture for the fresh-runtime persistence test.
+A.characterDB.auctionLastScan=completedScan
 print("PASS: "..checks.." auction upgrade assertions")

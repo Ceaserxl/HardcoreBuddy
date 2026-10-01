@@ -363,6 +363,12 @@ check(GameTooltip:NumLines()==lineCount and GameTooltip.hardcoreBuddyGear.report
 check(adviceLine(3):GetText()=="" and adviceLine(4):GetText()=="","Refresh clears obsolete gains and losses")
 A.db.gearAdvisorEnabled=false; G:RefreshTooltips(); check(not GameTooltip:IsShown(),"Disable hides stale visible advice")
 A.db.gearAdvisorEnabled=true
+GameTooltip:SetHyperlink(scorpid.link); G:SetEnabled(false)
+check(not GameTooltip:IsShown() and A.db.gearAdvisorEnabled,"Master disable closes visible gear advice and preserves tooltip preference")
+GameTooltip:SetHyperlink(scorpid.link)
+check(not GameTooltip.hardcoreBuddyGear,"Master disable prevents new tooltip advice")
+G:SetEnabled(true); GameTooltip:SetHyperlink(scorpid.link)
+check(GameTooltip.hardcoreBuddyGear~=nil,"Master enable restores tooltip advice")
 print("PASS: "..checks.." gear assertions; "..materialChecks.." cross-material comparisons; reference scores and native tooltip lifecycle.")
 GEAR_FIXTURES={item=item,withEnchant=withEnchant,reset=reset,
     equip=function(slot,v) equipment[slot]=v end,alias=function(link,v) items[link]=v end}

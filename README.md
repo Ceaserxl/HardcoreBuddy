@@ -62,6 +62,10 @@ Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
 - Excludes applied enchants and armor kits from both scores.
 - Hardcore talent paths for all nine classes, with current ranks, next-point advice,
   explicit respec guidance and one continuous point-by-point list.
+- A compact Talent Advisor attaches beside WoW's Talents window with your build,
+  available points and next recommended talent.
+- Separate **Disable Gear Advisor** and **Disable Talent Advisor** buttons in their
+  Settings pages. The talent panel also has a disable button.
 - Click **Learn** to spend a single recommended point, or browse other classes
   using **Edit Character**. Points are never spent automatically.
 

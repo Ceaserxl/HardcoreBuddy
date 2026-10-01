@@ -1,5 +1,16 @@
 local _, A = ...
 local G={tooltips=setmetatable({},{__mode="k"}),revision=0}; A.GearAdvisor=G
+function G:IsEnabled() return A.db and A.db.gearAdvisorActive~=false end
+function G:SetEnabled(enabled)
+    A.db.gearAdvisorActive=not not enabled
+    self:RefreshTooltips()
+    if A.GearIndicators then A.GearIndicators:Invalidate() end
+    if A.AuctionUpgrades then
+        if not enabled and A.AuctionUpgrades.scan then A.AuctionUpgrades:Stop("Gear Advisor disabled.")
+        else A.AuctionUpgrades:Refresh() end
+    end
+    if A.window and A.window:IsShown() then A:Refresh() end
+end
 local slots={INVTYPE_HEAD={1},INVTYPE_NECK={2},INVTYPE_SHOULDER={3},INVTYPE_CHEST={5},INVTYPE_ROBE={5},
     INVTYPE_WAIST={6},INVTYPE_LEGS={7},INVTYPE_FEET={8},INVTYPE_WRIST={9},INVTYPE_HAND={10},
     INVTYPE_FINGER={11,12},INVTYPE_TRINKET={13,14},INVTYPE_CLOAK={15},INVTYPE_WEAPON={16},
@@ -570,7 +581,7 @@ function G:Report(link)
 end
 
 function G:Add(tip)
-    if self.busy or not A.db or A.db.gearAdvisorEnabled==false or not tip.GetItem then return end
+    if self.busy or not self:IsEnabled() or A.db.gearAdvisorEnabled==false or not tip.GetItem then return end
     local _,link=tip:GetItem()
     if not itemID(link) then return end
     self.busy=true
@@ -624,7 +635,7 @@ end
 function G:RefreshTooltips()
     for tip in pairs(self.tooltips) do
         if tip:IsShown() then
-            if A.db and A.db.gearAdvisorEnabled==false then
+            if not self:IsEnabled() or A.db.gearAdvisorEnabled==false then
                 -- Close the visible tooltip so disabled advice is not left on screen.
                 if tip.hardcoreBuddyGear then tip:Hide() end
             elseif tip.hardcoreBuddyGear then self:Add(tip) end

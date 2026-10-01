@@ -123,6 +123,7 @@ function U:Stop(message)
 end
 
 function U:Start()
+    if not G:IsEnabled() then self:Refresh(); return end
     if self.scan then self:Stop("Scan stopped. Results are partial."); return end
     if not self.open or not self.panel or not self.panel:IsShown() then return end
     local p=G:CurrentProfile()
@@ -344,6 +345,7 @@ end
 
 function U:Refresh()
     if not self.panel then return end
+    local enabled=G:IsEnabled()
     local list={}
     if self.setup then
         list=self.setup.components
@@ -360,12 +362,14 @@ function U:Refresh()
             end
         end
     end
+    if not enabled then list={} end
     self.display=list
     self.offset=math.max(0,math.min(self.offset,#list-visibleRows))
     self.scroll:SetMinMaxValues(0,math.max(0,#list-visibleRows)); self.scroll:SetValue(self.offset)
     self.scroll:SetShown(#list>visibleRows)
     self.start:SetText(self.scan and "Stop scan" or self.profile and "Rescan upgrades" or "Scan upgrades")
     self.start:PaintState(true)
+    self.start:SetEnabled(enabled)
     self.back:SetShown(self.slot~=nil or self.weaponsOnly)
     self.back:SetText(self.setup and "< Setups" or self.slot and self.weaponsOnly and "< Weapons" or "< Overview")
     self.overview:PaintState(not self.slot and not self.weaponsOnly)
@@ -409,6 +413,12 @@ function U:Refresh()
         or self.stale and "Your equipment changed. Rescan to update comparisons."
         or waiting and "Start a new scan to check this slot."
         or "Try another slot or rescan for new listings.")
+    if not enabled then
+        self.emptyTitle:SetText("Gear Advisor disabled")
+        self.emptyText:SetText("Enable it in HardcoreBuddy Settings > Gear Advisor.")
+        self.status:SetText("Gear Advisor disabled. Your scan and preferences are saved.")
+        self.hint:SetText(""); self.progressFill:Hide()
+    end
     for index,frame in ipairs(self.rows) do
         local entry=list[self.offset+index]; frame.entry=entry; frame:SetShown(entry~=nil)
         if entry then
