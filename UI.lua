@@ -710,7 +710,7 @@ function addon:Layout()
     local instancePage=doc.view=="dungeons" or doc.view=="raids"
     local navigation=doc.view=="advisors" and {"Gear","Talents","Builds"} or instancePage and self.Instances.Navigation(self.state)
         or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {"Reports"}
-        or doc.view=="training" and (context.characterClass=="Hunter" and {"Overview","Pet Guide","First Aid","Engineering","Cooking"} or {"Overview","First Aid","Engineering","Cooking"})
+        or doc.view=="training" and (context.characterClass=="Hunter" and {"Overview","Pet Training","Pet Guide","First Aid","Engineering","Cooking"} or {"Overview","First Aid","Engineering","Cooking"})
         or doc.view=="petguide" and {"< Companion","Families","Abilities","Pets","Care"}
         or addon.Supplies.filters
     local sidebar=true
@@ -741,7 +741,7 @@ function addon:Layout()
                 end
                 if addon.state.view=="training" then
                     if self.filter=="Pet Guide" then addon:Navigate("petguide"); return end
-                    addon.state.filter=nil
+                    addon.state.filter=self.filter=="Pet Training" and "Pet Training" or nil
                     local family=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[self.filter]
                     if family then addon:Activate({kind="profession",family=family}); return end
                 else
@@ -773,7 +773,7 @@ function addon:Layout()
         if doc.view=="training" then
             local family=self.state.detail and self.state.detail.family
             selected=family=="bandage" and "First Aid" or family=="antivenom" and "First Aid"
-                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or "Overview"
+                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or self.state.filter=="Pet Training" and "Pet Training" or "Overview"
         end
         active(b,selected==label)
     end

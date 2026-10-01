@@ -268,18 +268,23 @@ function C.Build(context,state)
         end
         result.searchable,result.stockFilter=false,false
     elseif view=="training" then
+        local petTraining=context.characterClass=="Hunter" and state.filter=="Pet Training"
         local blocks={row("Before you pull",P.classNotes[context.characterClass])}
-        if context.characterClass=="Hunter" then
+        if petTraining then
             local ctx={characterClass="Hunter",level=context.level,petLevel=context.petLevel,mode=context.mode,detailed=false,
                 faction=context.faction,factionUnknown=context.factionUnknown}
             local h=G.Hunter(ctx)
             blocks={row("Train a new pet skill","A short guide to learning and teaching abilities",{kind="guide",index=1}),
-                row("Common pet choices","Leveling companions and common tames",{kind="hunterChoices"}),
-                row("Quivers and ammo pouches","Your current tier and next upgrade",{kind="quivers"})}
+                row("Training points and ability limits","Plan your pet's active abilities and passive skills",{kind="guide",index=2})}
             for _,b in ipairs(h.blocks) do if b.abilityId then
                 blocks[#blocks+1]=row(b.title,b.body,{kind="ability",id=b.abilityId},"Training opportunity; learned ranks are not checked")
             end end
             if context.level<10 then blocks[#blocks+1]=row("First pet quest","Taming, feeding and training unlock through the level-10 quest chain.") end
+        elseif context.characterClass=="Hunter" then
+            blocks[#blocks+1]=row("Pet Training","Learn and teach abilities; review training opportunities.",{view="training",filter="Pet Training"})
+            blocks[#blocks+1]=row("Pet Guide","Browse families, abilities, tame sources and pet care.",{view="petguide",filter="Families"})
+            blocks[#blocks+1]=row("Common pet choices","Leveling companions and common tames",{kind="hunterChoices"})
+            blocks[#blocks+1]=row("Quivers and ammo pouches","Your current tier and next upgrade",{kind="quivers"})
         elseif context.characterClass=="Warlock" then
             local ctx={level=context.level,detailed=true}
             local w=G.Warlock(ctx)
@@ -289,14 +294,16 @@ function C.Build(context,state)
         else
             blocks[#blocks+1]=row("Emergency supplies","Choose tools that fit your profession and escape plan.",{view="supplies",filter="Emergency"})
         end
-        table.insert(blocks,1,row("Cooking","Recipes and training for your next skill tier",{kind="profession",family="cooking"}))
-        table.insert(blocks,2,row("First Aid","Your next bandage recipe and skill training",{kind="profession",family="bandage"}))
-        table.insert(blocks,3,row("Engineering","Target dummy recipes and profession training",{kind="profession",family="dummy"}))
-        blocks[#blocks+1]=row("Shared cooldowns and Self Found","Read before planning a sequence of emergency items.",{kind="card",card=card("Emergency planning",nil,{
-            row("Shared cooldowns","Healing, mana and escape potions compete for a cooldown. Healthstones, mana gems, target dummies and Felwood healing plants share another cooldown. Do not plan to chain those as independent saves."),
-            row("Self Found","Trading, auction house and mail are unavailable. Check recipe access and obtain materials yourself. Item recommendations do not imply ownership or a known recipe.")})})
-        result.cards[1]=card(context.characterClass=="Hunter" and "Pet training" or context.characterClass=="Warlock" and "Demon companion" or "Field advice",
-            context.characterClass=="Hunter" and (context.petLevel and ((context.mode=="preview" and "Planned" or "Active").." pet level "..context.petLevel) or "No active pet level detected; no current rank assumed.") or nil,blocks)
+        if not petTraining then
+            table.insert(blocks,1,row("Cooking","Recipes and training for your next skill tier",{kind="profession",family="cooking"}))
+            table.insert(blocks,2,row("First Aid","Your next bandage recipe and skill training",{kind="profession",family="bandage"}))
+            table.insert(blocks,3,row("Engineering","Target dummy recipes and profession training",{kind="profession",family="dummy"}))
+            blocks[#blocks+1]=row("Shared cooldowns and Self Found","Read before planning a sequence of emergency items.",{kind="card",card=card("Emergency planning",nil,{
+                row("Shared cooldowns","Healing, mana and escape potions compete for a cooldown. Healthstones, mana gems, target dummies and Felwood healing plants share another cooldown. Do not plan to chain those as independent saves."),
+                row("Self Found","Trading, auction house and mail are unavailable. Check recipe access and obtain materials yourself. Item recommendations do not imply ownership or a known recipe.")})})
+        end
+        result.cards[1]=card(petTraining and "Pet training" or context.characterClass=="Hunter" and "Overview" or context.characterClass=="Warlock" and "Demon companion" or "Field advice",
+            petTraining and (context.petLevel and ((context.mode=="preview" and "Planned" or "Active").." pet level "..context.petLevel) or "No active pet level detected; no current rank assumed.") or nil,blocks)
     elseif view=="petguide" then
         result.filters={"Families","Abilities","Pets","Care"}; result.searchable=true
         local filter=state.filter or "Families"; local blocks={}
