@@ -151,13 +151,13 @@ equipment[10]=kit
 local scorpid=item("INVTYPE_HAND",{},4,3,{{"155 Armor"},{"+10 Agility"},{"+9 Spirit"}})
 scorpid.name="Tough Scorpid Gloves"
 check(close(G.Score(G:Read(kit.link),G:CurrentProfile(),10),11.155),"Reference glove score; armor kit excluded")
-check(close(row(scorpid).percent,(19.775/11.155-1)*100),"Reference +77.27 percent comparison")
+check(close(row(scorpid).percent,77.27),"Reference +77.27 percent comparison")
 check(row(scorpid).losses:find("-7 Sta",1,true) and row(scorpid).losses:find("-1% Crit",1,true),"Lost survival and secondary stats remain visible")
 local shoulders=item("INVTYPE_SHOULDER",{ITEM_MOD_AGILITY_SHORT=1},4,3,{{"184 Armor"},{"+8 Agility"},{"+9 Intellect"}})
 equipment[3]=shoulders
 local skeletal=item("INVTYPE_SHOULDER",{},4,3,{{"199 Armor"},{"+6 Strength"},{"+15 Stamina"}})
 skeletal.name="Skeletal Shoulders"
-check(close(row(skeletal).percent,(8.795/16.12-1)*100),"Reference shoulder downgrade")
+check(close(row(skeletal).percent,-45.45),"Reference shoulder downgrade floors negative percentages")
 check(G:Read(shoulders.link).stats.ITEM_MOD_AGILITY_SHORT==8,"Native suffix attributes override faulty API")
 
 -- Live screenshot: the equipped Frozen Wrath hat's short bonus line was
@@ -171,7 +171,7 @@ do
     wolf.name="Royal Headband of the Wolf"
     equipment[1]=frozen
     check(close(G.Score(G:Read(frozen.link),G:CurrentProfile(),1),14.475),"Short Frost suffix contributes to equipped score")
-    check(close(row(wolf).percent,(1.56/14.475-1)*100) and row(wolf).status=="down","Screenshot comparison is a downgrade, not +593.33%")
+    check(close(row(wolf).percent,-89.23) and row(wolf).status=="down","Screenshot comparison matches reference Frost build and flooring")
     check(row(wolf).losses=="-15 Frost","Lost school damage is shown")
     equipment[1]=wolf
     check(row(frozen).status=="up","Short school damage also works on the candidate")

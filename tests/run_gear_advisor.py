@@ -4,7 +4,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from render_layout import boot, ROOT
 
+# The runtime must never depend on or inspect the other addon. Offline import
+# tooling is deliberately excluded: it is not loaded by the shipping TOC.
+for entry in (ROOT / 'HardcoreBuddy.toc').read_text().splitlines():
+    if entry.strip() and not entry.startswith('#'):
+        source = (ROOT / entry.strip().replace('\\', '/')).read_text(encoding='utf-8')
+        assert 'zygor' not in source.lower() and 'ZGV' not in source, entry
+
 lua, addon = boot()
+lua.execute('''
+    local denied={__index=function() error("Runtime access to Zygor is forbidden") end,
+                  __newindex=function() error("Runtime modification of Zygor is forbidden") end}
+    ZGV=setmetatable({},denied)
+    ZygorGuidesViewer=setmetatable({},denied)
+    ZygorGuidesViewerClassicSettings=setmetatable({},denied)
+''')
 lua.globals().GEAR_RENDER = '--render' in sys.argv
 lua.execute((ROOT / 'tests/gear_advisor.lua').read_text(encoding='utf-8'))
 

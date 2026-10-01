@@ -1,5 +1,7 @@
 # Unreleased
 
+- Matched the reference percentage display's downward rounding to two decimals.
+  Gear scoring remains standalone, with no in-game interaction with Zygor.
 - Fixed short spell-damage suffixes such as `+15 Frost Spell Damage` being
   omitted from gear scores, causing false upgrades against Frozen Wrath items.
 - Added an Advisors page with gear and talent advice for all nine Classic classes.

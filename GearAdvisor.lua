@@ -464,8 +464,9 @@ function G:Comparisons(item,p)
         elseif oldScore==0 then
             row.text=not equipped and "Upgrade: empty slot" or "No scored baseline"; row.status=not equipped and "up" or "equal"
         else
-            row.percent=(candidateScore/oldScore-1)*100
-            if math.abs(row.percent)<0.005 then row.percent=0 end
+            -- Floor to two decimals, including negative changes, to match the
+            -- reference display. This calculation has no external dependency.
+            row.percent=math.floor(((candidateScore*100/oldScore)-100)*100)/100
             row.status=row.percent>0 and "up" or row.percent<0 and "down" or "equal"
             row.text=string.format(row.percent==0 and "%.2f%% Similar" or row.percent>0 and "+%.2f%% Upgrade" or "%.2f%% Downgrade",row.percent)
             row.losses=self.LossSummary(item,p,replacedItems,false,true)

@@ -6,8 +6,9 @@ and **Builds**. `/hcb gear` and `/hcb talents` open the relevant page.
 ## Gear scoring
 
 The score is the sum of each intrinsic stat multiplied by the chosen profile's
-weight. The displayed change is `(new score / replaced score - 1) * 100`, rounded
-to two decimals. This measures the relative item score, not simulated DPS or
+weight. The displayed change is `(new score * 100 / replaced score) - 100`, rounded
+down to two decimals, matching the reference display, including negative changes.
+This measures the relative item score, not simulated DPS or
 survival. Zero-score and empty baselines have descriptive labels.
 
 Thirty Classic profiles cover every talent tree in all nine classes, plus Feral
@@ -52,7 +53,9 @@ Reference inspected: the installed Zygor Classic `Item-ItemScore.lua`,
 `Code-Classic/TalentAdvisor*.lua` and the Hardcore branch of
 `Guides-Classic/TalentAdvisor-Builds.lua`. Numerical stat tables and ordered
 talent selections were imported into compact data files. The advisor runtime
-and UI are independent; Zygor is not required or loaded by HardcoreBuddy.
+and UI are independent. HardcoreBuddy must not access Zygor globals, APIs,
+settings or saved data, hook its functions, or load it in-game. Source inspection
+and reference comparisons are performed only in offline developer tooling.
 Input hashes and the import correction are in `reference/advisor/source.json`.
 
 Deliberate differences from that reference:
