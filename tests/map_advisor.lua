@@ -126,12 +126,12 @@ assert(messages[1]:find("recorded areas",1,true))
 A.Print=printOriginal
 
 A:Navigate("training"); A.state.filter="Zone Advisor"; A.state.mapCurrent=true; A:Refresh(true)
-assert((not M.navigation or not M.navigation:IsShown()) and (not M.controls or not M.controls:IsVisible()) and A.document.cards[1].title=="Zone Advisor")
+assert((not M.navigation or not M.navigation:IsShown()) and (not M.controls or not M.controls:IsVisible()) and A.document.cards[1].title==A.Data.MapZones[current].name)
 A:Activate({kind="mapAdvisor",command="zones"})
 assert(#A.document.cards[1].blocks==47,"All zones in a single scrollable list")
 A:Activate({kind="mapAdvisor",command="zone",id=1421})
-assert(A.document.cards[2].title=="Silverpine Forest")
-A:Activate(A.document.cards[1].blocks[2].action)
+assert(A.document.cards[1].title=="Silverpine Forest")
+A:Activate({kind="mapAdvisor",command="settings"})
 assert(A.state.view=="settings" and A.state.filter=="Zone Advisor" and M.controls:IsVisible() and (not M.navigation or not M.navigation:IsShown()))
 local before=s.rare; M.controls.checks.rare:SetChecked(not before)
 MOCK.Click(M.controls.checks.rare); assert(s.rare~=before)
@@ -340,9 +340,9 @@ viewer.model.SetCreature=setCreature; A:Navigate("supplies")
 A:Navigate("training"); A.state.filter="Zone Advisor"; A.state.mapZone=1436; A:Refresh(true)
 local overview=A.state
 local doc=A.document
-assert(#doc.cards==2 and #doc.cards[1].blocks==2 and doc.cards[1].blocks[1].action.command=="zones" and doc.cards[1].blocks[2].action.command=="settings")
-assert(doc.cards[2].title=="Westfall" and #doc.cards[2].blocks>0)
-local npcRow=doc.cards[2].blocks[1]
+assert(#doc.cards==1 and doc.cards[1].npcTable)
+assert(doc.cards[1].title=="Westfall" and #doc.cards[1].blocks>0)
+local npcRow=doc.cards[1].blocks[1]
 assert(npcRow.action.command=="npc" and A.Data.MapNPCs[npcRow.action.id].name==npcRow.title)
 A:Activate(npcRow.action)
 assert(viewer.npcID==npcRow.action.id and #A.state.mapNPCs==1 and viewer.modelState=="loading")

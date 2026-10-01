@@ -86,13 +86,13 @@ function M:CurrentMap()
     end
 end
 
-function M:Records(id)
+function M:Records(id,allCategories)
     local zone=A.Data.MapZones[id]; local list={}; local settings=self:Settings()
     if not zone or not settings then return list end
     local faction=UnitFactionGroup("player"); local side=faction=="Alliance" and 1 or faction=="Horde" and 2
     for _,npcID in ipairs(zone.npcs) do
         local npc=A.Data.MapNPCs[npcID]
-        if npc and settings[npc.kind] and (not side or npc.react[side]~=1) then
+        if npc and (allCategories or settings[npc.kind]) and (not side or npc.react[side]~=1) then
             list[#list+1]={id=npcID,npc=npc}
         end
     end
@@ -293,6 +293,9 @@ end
 function M:Activate(a)
     if a.command=="settings" then A:OpenSettings("Zone Advisor"); return
     elseif a.command=="npc" then self:OpenNPCs({records={{id=a.id}}}); return
+    elseif a.command=="filter" then
+        if a.id~="all" and not names[a.id] then return end
+        A.state.zoneNPCFilter=a.id
     elseif a.command=="zones" then A.state.mapZonePicker=true
     elseif a.command=="zone" then
         if not A.Data.MapZones[a.id] then return end
@@ -328,21 +331,25 @@ function M:Document(context,state)
         doc.cards[1]={title="Choose a zone",note="Classic Era outdoor zones and cities",blocks=blocks}; return doc
     end
     local id=state.mapZone or self:CurrentMap(); local zone=A.Data.MapZones[id]
-    local settingsRow=row("Zone Advisor settings","Configure map reveal, marker categories and silent zone-entry notices.","settings")
-    local blocks={row("Browse zones","Choose a zone to explore its recorded NPCs.","zones"),settingsRow}
-    doc.cards[1]={title="Zone Advisor",note="Explore known locations and prepare for dangerous encounters.",blocks=blocks}
     if zone then
-        blocks={}
-        for _,r in ipairs(self:Records(id)) do
-            local locations=r.npc.locations[id]
-            local location=locations and #locations>0 and string.format("Known area: %.1f, %.1f",locations[1][1],locations[1][2]) or "Coordinates unavailable; no pin shown"
-            blocks[#blocks+1]=row(r.npc.name,level(r.npc).." | "..names[r.npc.kind].." | "..location..
-                (r.npc.note and ("\n"..r.npc.note) or ""),"npc",r.id)
+        local blocks={}
+        for _,r in ipairs(self:Records(id,true)) do
+            if not state.zoneNPCFilter or state.zoneNPCFilter=="all" or r.npc.kind==state.zoneNPCFilter then
+                local locations=r.npc.locations[id]
+                local location=locations and #locations>0 and string.format("%.1f, %.1f",locations[1][1],locations[1][2]) or "Unknown"
+                local block=row(r.npc.name,level(r.npc).." | "..names[r.npc.kind].." | Known area: "..location..
+                    (r.npc.note and ("\n"..r.npc.note) or ""),"npc",r.id)
+                block.npcColumns={level(r.npc):gsub("^Level ",""),r.npc.name,names[r.npc.kind],location}
+                block.npcKind=r.npc.kind
+                blocks[#blocks+1]=block
+            end
         end
-        if #blocks==0 then blocks[1]=row("No matching dangers in this catalogue","Adjust the filters in Zone Advisor settings. An empty list does not guarantee a safe zone.") end
-        doc.cards[2]={title=zone.name,headerAction={label="Open Map",action={kind="mapAdvisor",command="open",id=id}},note="NPCs | Click a name to view its model and details.",blocks=blocks}
+        local count=#blocks
+        if count==0 then blocks[1]=row("No matching NPCs","Try another category. An empty list does not guarantee a safe zone.") end
+        doc.cards[1]={title=zone.name,headerAction={label="Open Map",action={kind="mapAdvisor",command="open",id=id}},
+            note=count.." NPCs | Recorded spawn areas. Click a row for its model and details.",blocks=blocks,npcTable=true,fullWidth=true}
     else
-        doc.cards[2]={title="Choose a zone",note="Your current area is not in the outdoor zone catalogue. Use Browse zones to select one.",blocks={}}
+        doc.cards[1]={title="Zone unavailable",note="Your current area is not in the outdoor zone catalogue. Use Back to choose a zone.",blocks={}}
     end
     return doc
 end

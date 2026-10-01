@@ -142,7 +142,7 @@ Only nearly overlapping points combine. The distance follows icon size (16 pixel
 at the default 18-pixel size), and changing size recalculates the groups. Every
 point must be close to every other point; nearby chains cannot collapse an entire camp. Zooming
 in separates locations that are far enough apart on screen.
-Use the **Browse zones** row under **Companion > Zone Advisor** to choose a zone or return to your current zone. Zone recommendations open Zone Advisor. The zone name appears above its NPC list, with an **Open Map** button beside it.
+Use **Browse all zones** under **Companion > Zone Advisor** to choose a zone, or **Use my current zone** to follow your location. Zone recommendations open a detail page titled with the zone name, with **Open Map** beside it. Its clickable NPC table shows level, name, type and location. Filter by All, Rares, Elites, World bosses or Dangerous without changing map-marker preferences. Settings and zone browsing stay on the overview.
 **Silent zone-entry notice** lists known dangers in chat without playing a sound
 and is enabled by default; existing opt-outs are preserved. Click a marker to
 open its NPC's 3D preview inside **Companion > Zone Advisor**. Clustered markers provide

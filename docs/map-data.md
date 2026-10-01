@@ -47,8 +47,11 @@ restores the silent notice default. Reset all restores all three Map sections
 without changing other addon settings.
 Silent zone notices default on for unset preferences; explicit opt-outs remain.
 
-The zone heading and Zone Advisor settings link sit above a separate NPC list. Clicking
-an NPC name opens its model; Back returns to that zone list.
+Zone details use the zone name as their heading, with Open Map beside it.
+The NPC table shows level, name, type and location; clicking a row opens its model.
+All, Rares, Elites, World bosses and Dangerous filters affect only the table,
+independently of map-marker categories. Back from a model preserves the selected
+filter. Settings and browsing links stay on the overview.
 Clicking a marker opens a native PlayerModel inside HardcoreBuddy's Companion >
 Zone Advisor page. A copied, deduplicated NPC list keeps paging stable across map refreshes.
 Previous/Next controls show each clustered NPC; Back restores the prior addon

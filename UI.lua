@@ -142,6 +142,13 @@ local function newBlock(parent)
     return frame
 end
 local renderBlocks
+local npcColumnStarts={0,0.10,0.55,0.80}
+local npcColumnEnds={0.09,0.54,0.79,1}
+local function placeNPCCell(label,text,index,width,y)
+    local usable=width-40
+    measure(label,text,usable*(npcColumnEnds[index]-npcColumnStarts[index]),12+usable*npcColumnStarts[index],y)
+    label:SetWordWrap(false); label:SetHeight(18)
+end
 local function renderBlock(frame, block, width)
     frame.block = block; frame:SetWidth(width); frame:Show()
     frame.priority:SetShown(block.supply and block.priority~=nil)
@@ -154,6 +161,7 @@ local function renderBlock(frame, block, width)
     frame.stock:SetJustifyH("LEFT")
     if frame.recommendationName then frame.recommendationName:Hide(); frame.recommendationDetail:Hide() end
     if frame.carryLabel then frame.carryLabel:Hide() end
+    for _,cell in ipairs(frame.npcCells or {}) do cell:Hide() end
     if frame.quantity:HasFocus() and (frame.quantity.targetKey~=block.targetKey
         or block.readOnlyTarget or block.groupSupply or not block.editTarget or not block.supply) then frame.quantity:ClearFocus() end
     frame.count:Hide(); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.supply and block.editTarget and not block.groupSupply and not block.readOnlyTarget)
@@ -171,6 +179,19 @@ local function renderBlock(frame, block, width)
     if block.action then frame.iconHit:GetHighlightTexture():SetAllPoints(frame) end
     for _, col in ipairs(frame.columns) do col:Hide() end
     for _, field in ipairs(frame.fields) do field:Hide() end
+    if block.npcColumns then
+        frame.title:Hide(); frame.body:Hide(); frame.meta:Hide()
+        frame.icon:Hide(); frame.iconHit:Hide(); frame.iconBorder:Hide()
+        frame.npcCells=frame.npcCells or {}
+        Skin.Paint(frame,"note")
+        for i,value in ipairs(block.npcColumns) do
+            local cell=frame.npcCells[i]
+            if not cell then cell=font(frame,i==2 and 13 or 12,i==2 and WHITE or MUTED); frame.npcCells[i]=cell end
+            cell:Show(); placeNPCCell(cell,value,i,width,9)
+        end
+        frame:SetHeight(36)
+        return 36
+    end
     if block.columns then
         frame.title:Hide(); frame.body:Hide(); frame.meta:Hide(); frame.icon:Hide(); frame.iconHit:Hide(); frame.iconBorder:Hide()
         local count = width >= 570 and #block.columns or 1
@@ -368,14 +389,17 @@ renderBlocks = function(parent, blocks, width)
             height=math.max(height,pending:GetHeight()); pending:SetHeight(height); frame:SetHeight(height)
             y=y+height+12; pending=nil
         elseif paired and index<#blocks then pending=frame
-        else y=y+height+(block.supply and not paired and 4 or 12) end
+        else y=y+height+((block.supply and not paired or block.npcColumns) and 4 or 12) end
         if block.supply then
             local shade=index%2==0 and 0.075 or 0.045
             frame:SetBackdropColor(shade,shade+0.009,shade+0.014,1)
+        elseif block.npcColumns then
+            local shade=index%2==0 and 0.06 or 0.035
+            frame:SetBackdropColor(shade,shade+0.008,shade+0.012,1)
         end
     end
     for index=#blocks+1,#parent.blocks do parent.blocks[index]:Hide() end
-    return math.max(1,y-(blocks[#blocks] and (blocks[#blocks].supply and not parent.supplyGrid and 4 or 12) or 0))
+    return math.max(1,y-(blocks[#blocks] and ((blocks[#blocks].supply and not parent.supplyGrid or blocks[#blocks].npcColumns) and 4 or 12) or 0))
 end
 local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
@@ -396,6 +420,34 @@ local function renderCard(frame, data, width)
     end
     y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 154 or 28), 14, y))+5
     y=y+measure(frame.note, data.note, width-28, 14, y)+12
+    for _,control in ipairs(frame.npcFilters or {}) do control:Hide() end
+    for _,label in ipairs(frame.npcHeaders or {}) do label:Hide() end
+    if data.npcTable then
+        frame.npcFilters=frame.npcFilters or {}; frame.npcHeaders=frame.npcHeaders or {}
+        local filters={{"All","all"},{"Rares","rare"},{"Elites","elite"},{"World bosses","boss"},{"Dangerous","danger"}}
+        local buttonWidth=(width-24-24)/5
+        for i,filter in ipairs(filters) do
+            local control=frame.npcFilters[i]
+            if not control then
+                control=button(frame,filter[1],buttonWidth,function(self)
+                    addon:Activate({kind="mapAdvisor",command="filter",id=self.category})
+                end)
+                Skin.Button(control,"category"); frame.npcFilters[i]=control
+            end
+            control.category=filter[2]; control:Show(); control:SetWidth(buttonWidth)
+            control:ClearAllPoints(); control:SetPoint("TOPLEFT",12+(i-1)*(buttonWidth+6),-y)
+            active(control,(addon.state.zoneNPCFilter or "all")==filter[2])
+        end
+        y=y+42
+        for i,text in ipairs({"LEVEL","NPC","TYPE","LOCATION"}) do
+            local label=frame.npcHeaders[i]
+            if not label then label=font(frame,10,MUTED); frame.npcHeaders[i]=label end
+            label:Show(); placeNPCCell(label,text,i,width-24,y)
+            -- Rows live inside the card's 12px content inset.
+            label:ClearAllPoints(); label:SetPoint("TOPLEFT",24+(width-64)*npcColumnStarts[i],-y)
+        end
+        y=y+24
+    end
     frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT", 12, -y); frame.content:SetWidth(width-24)
     frame.content.supplyGrid=data.supplyTable
     frame.content.gridStart=data.supplyTable and 1 or frame.gridStart

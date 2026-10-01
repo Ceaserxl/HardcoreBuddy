@@ -58,7 +58,7 @@ for _,class in ipairs({"HUNTER","WARRIOR"}) do
     A:Activate(A.document.cards[2].blocks[1].action)
     assert(A.state.view=="training" and A.state.filter=="Zone Advisor" and A.state.mapZone==destination)
     assert(not opened,"Zone row must not open the world map")
-    assert(A.document.cards[1].title=="Zone Advisor")
+    assert(A.document.cards[1].title==A.Data.MapZones[destination].name)
     local zoneState=A.state
     A.MapAdvisor:Activate({command="zones"})
     local choice=A.document.cards[1].blocks[2].action
@@ -66,7 +66,7 @@ for _,class in ipairs({"HUNTER","WARRIOR"}) do
     assert(A.state.mapZone==choice.id and not A.state.mapZonePicker)
     A:Back(); assert(A.state==zoneState and A.state.mapZonePicker,"Back restores zone browser")
     A:Back(); assert(A.state==zoneState and not A.state.mapZonePicker,"Back restores selected zone")
-    local zoneCard=A.window.cards[2]
+    local zoneCard=A.window.cards[1]
     assert(zoneCard.headerButton:IsShown() and zoneCard.headerButton.label:GetText()=="Open Map")
     MOCK.Click(zoneCard.headerButton)
     assert(opened==destination,"Header button opens the selected zone map")
