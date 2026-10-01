@@ -38,6 +38,7 @@ local function defaultCategory(item)
 end
 
 function S.Category(item)
+    if item.supplyCategory then return item.supplyCategory end
     if item.armorKit then return "Buffs" end
     if item.ammoKind then return "Class" end
     if item.userItem then return "User" end
@@ -108,6 +109,33 @@ local function matches(item, category, query)
     return true
 end
 
+-- Preferences only apply to currently eligible alternatives, so old food and
+-- potion choices cannot suppress a stronger tier when the character levels.
+function S.PreferredItem(context, row)
+    local selected=row
+    local wanted=(context.supplyDefaults or {})[row.family]
+    for _,item in ipairs(row.options or {}) do if item.itemId==wanted then selected=item; break end end
+    local out={}; for k,v in pairs(selected) do out[k]=v end
+    out.options={}
+    if selected~=row then out.options[1]=row end
+    for _,item in ipairs(row.options or {}) do
+        if item.itemId~=selected.itemId then out.options[#out.options+1]=item end
+    end
+    out.next=row.next; out.progression=row.progression
+    out.supplyCategory=S.Category(row)
+    return out
+end
+
+function S.DefaultGroup(context, item)
+    if not item or item.userItem or P.grouped[item.family] then return end
+    for _,row in ipairs(P.BuildList(context.characterClass,context.level,P.ContextFaction(context)).rows) do
+        if row.family==item.family and #(row.options or {})>0 then
+            if row.itemId==item.itemId then return row end
+            for _,other in ipairs(row.options) do if other.itemId==item.itemId then return row end end
+        end
+    end
+end
+
 function S.Build(context, state)
     state = state or {}
     local category = state.category or state.filter or "All"
@@ -137,7 +165,7 @@ function S.Build(context, state)
                     add(rank, item.family)
                 end
             end
-        else add(item) end
+        else add(S.PreferredItem(context,item)) end
     end
     for _, section in ipairs({plan.specialist, plan.backups, plan.advanced}) do
         for _, item in ipairs(section) do add(item) end

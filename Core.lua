@@ -173,6 +173,7 @@ function addon:GetContext()
     context.ranks = self.characterDB and self.characterDB.ranks or {}
     context.userItems = self.characterDB and self.characterDB.userItems or {}
     context.priorities = self.characterDB and self.characterDB.priorities or {}
+    context.supplyDefaults = self.characterDB and self.characterDB.supplyDefaults or {}
     context.previewAmmo = self.characterDB and self.characterDB.previewAmmo or "arrows"
     return context
 end
@@ -254,6 +255,7 @@ function addon:Initialize()
     if type(self.characterDB.ranks)~="table" then self.characterDB.ranks={} end
     if type(self.characterDB.userItems)~="table" then self.characterDB.userItems={} end
     if type(self.characterDB.priorities)~="table" then self.characterDB.priorities={} end
+    if type(self.characterDB.supplyDefaults)~="table" then self.characterDB.supplyDefaults={} end
     for _,item in ipairs(self.characterDB.userItems) do self:UpdateUserItem(item) end
     self.db.profile = P.NormalizeProfile(self.db.profile)
     -- Preserve saved preview choices before the first click or schema migration.

@@ -222,6 +222,13 @@ function C.Detail(context, action)
         if not item then return card("Unavailable route",nil,{row(nil,"This quest reward is not available for your faction.")}) end
         if item.armorKit and A.ArmorKits then item=A.ArmorKits.DetailItem(context,item) end
         local family=P.grouped[item.family] and item.family or nil
+        local defaults=S.DefaultGroup(context,item)
+        if defaults then
+            local copy={}; for k,v in pairs(item) do copy[k]=v end; item=copy
+            item.options={defaults}
+            for _,other in ipairs(defaults.options) do item.options[#item.options+1]=other end
+            item.supplyCategory=S.Category(defaults)
+        end
         local blocks=G.ItemBlocks(item,context)
         if family then blocks[#blocks+1]=row("Profession training","Next recipes, skill books and training routes",{kind="profession",family=family}) end
         local out=card(item.displayName or item.name,nil,blocks)
@@ -230,12 +237,17 @@ function C.Detail(context, action)
         table.insert(out.blocks,1,supplyRow(r)); out.blocks[1].action=nil; out.blocks[1].editTarget=true
         if family then rankState(out.blocks[1],r,context) end
         out.itemLayout=true
+        if defaults then
+            out.defaultItem=item
+            out.isDefault=S.PreferredItem(context,defaults).itemId==item.itemId
+        end
         if not out.blocks[1].readOnlyTarget and not out.blocks[1].pickRank then
             out.quantityRecord={title="Keep on hand",quantityEditor=true,targetKey=r.targetKey,target=r.target}
         end
         for _,block in ipairs(out.blocks) do
             if block.fields then block.title="Item details"; block.singleFieldColumn=true end
-            if block.title=="Alternatives" then block.plain=true end
+            if block.title=="Alternatives" then block.plain=true; block.textInset=52 end
+            if block.child and block.itemId then block.child=nil end
         end
         return out
     end

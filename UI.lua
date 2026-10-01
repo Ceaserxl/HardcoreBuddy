@@ -240,7 +240,7 @@ local function renderBlock(frame, block, width)
         native=native or (texture and ("Interface\\Icons\\" .. texture)) or "Interface\\Icons\\INV_Misc_QuestionMark"
         if not frame.icon:SetTexture(native) then frame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark") end
     end
-    local x = (icon and 52 or 12) + (block.child and 8 or 0)
+    local x = block.textInset or (icon and 52 or 12) + (block.child and 8 or 0)
     local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), block.supply and 8 or 12
     frame.title:SetTextColor(unpack(block.titleColor or (block.supply and WHITE or GOLD)))
     local height
@@ -414,6 +414,7 @@ local function renderCard(frame, data, width)
     if frame.detailQuantity and not data.quantityRecord then
         frame.detailQuantity.quantity:ClearFocus(); frame.detailQuantity:Hide()
     end
+    if frame.defaultChoice then frame.defaultChoice:Hide() end
     Skin.Paint(frame,"note")
     frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and not data.supplyTable and 22 or 15,"")
     frame.title:Show(); frame.note:Show()
@@ -487,6 +488,18 @@ local function renderCard(frame, data, width)
                 local editor=frame.detailQuantity
                 editor:ClearAllPoints(); editor:SetPoint("TOPLEFT",0,-leftHeight)
                 leftHeight=leftHeight+renderBlock(editor,data.quantityRecord,leftWidth)+12
+            end
+            if i==1 and data.defaultItem then
+                if not frame.defaultChoice then
+                    frame.defaultChoice=button(frame.content,"",150,function(self)
+                        addon:Activate({kind="supplyDefault",item=self.item})
+                    end)
+                end
+                local choice=frame.defaultChoice
+                choice.item=data.defaultItem; choice.label:SetText(data.isDefault and "Default item" or "Set as default")
+                choice:SetEnabled(not data.isDefault); choice:Show(); choice:ClearAllPoints()
+                choice:SetPoint("TOPLEFT",0,-leftHeight)
+                leftHeight=leftHeight+choice:GetHeight()+12
             end
         end
         for i=#data.blocks+1,#frame.content.blocks do frame.content.blocks[i]:Hide() end
@@ -735,6 +748,15 @@ function addon:OpenCurrentInstance()
     self:Refresh(true)
 end
 function addon:Activate(action)
+    if action.kind=="supplyDefault" then
+        self:CommitInputs()
+        if self.Supplies.DefaultGroup(self:GetContext(),action.item) then
+            self.characterDB.supplyDefaults=self.characterDB.supplyDefaults or {}
+            self.characterDB.supplyDefaults[action.item.family]=action.item.itemId
+            self:Refresh()
+        end
+        return
+    end
     if action.kind=="bandageRanks" then
         self:CommitInputs(); self.state.showAllBandages=not self.state.showAllBandages; self:Refresh(true); return
     end
