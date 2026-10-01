@@ -20,6 +20,13 @@ The requested changes are implemented without runtime interaction with Zygor.
 
 Classic Era API signatures checked against Blizzard's generated interface source:
 
+Runtime correction: Classic Era's `GetMaxBoundingBox()` returns six numeric
+coordinates, despite generated documentation describing two vectors. The viewer
+accepts both shapes. `tests/run_model_bounds.py` reproduces the reported
+Verdantine Boughguard coordinates, checks 730 subsequent frames, and exercises
+invalid bounds, thrown API errors, retry limits and recovery. The default model
+mock now returns the six-number Classic shape.
+
 - [Character model display resolution](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_APIDocumentationGenerated/FrameAPICharacterModelBaseDocumentation.lua)
 - [Actor bounding boxes and transforms](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_APIDocumentationGenerated/FrameAPIModelSceneFrameActorBaseDocumentation.lua)
 - [Scene camera and lighting](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_APIDocumentationGenerated/FrameAPIModelSceneFrameDocumentation.lua)

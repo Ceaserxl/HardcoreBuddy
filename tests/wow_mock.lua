@@ -51,7 +51,10 @@ function CreateFrame(kind,name,parent,template)
             function a:ClearModel() self.file=nil; self.display=nil end
             function a:SetModelByCreatureDisplayID(id) self.display=id; self.file=id; return true end
             function a:GetModelFileID() return self.file end
-            function a:GetMaxBoundingBox() return self.bottom or {x=-1,y=-1,z=0}, self.top or {x=1,y=1,z=4} end
+            function a:GetMaxBoundingBox()
+                local bottom,top=self.bottom or {x=-1,y=-1,z=0},self.top or {x=1,y=1,z=4}
+                return bottom.x,bottom.y,bottom.z,top.x,top.y,top.z
+            end
             function a:SetShown(value) self.shown=value end
             function a:SetScale(value) self.scale=value end
             function a:SetYaw(value) self.yaw=value end

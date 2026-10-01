@@ -2,6 +2,26 @@ local _,A=...
 local M,Skin=A.MapAdvisor,A.Skin
 local DEFAULT_DISTANCE,MAX_ATTEMPTS,RETRY_SECONDS=1.8,3,3
 
+local function finite(value)
+    return type(value)=="number" and value==value and math.abs(value)<math.huge
+end
+local function readBounds(actor)
+    -- Classic Era returns six scalars; newer API documentation describes two
+    -- vectors. Normalize both shapes before using any coordinates.
+    local minX,minY,minZ,maxX,maxY,maxZ=actor:GetMaxBoundingBox()
+    if type(minX)=="table" or type(minX)=="userdata" then
+        local bottom,top=minX,minY
+        if type(top)~="table" and type(top)~="userdata" then return end
+        minX,minY,minZ,maxX,maxY,maxZ=bottom.x,bottom.y,bottom.z,top.x,top.y,top.z
+    end
+    if not (finite(minX) and finite(minY) and finite(minZ) and finite(maxX) and finite(maxY) and finite(maxZ)) then return end
+    local dx,dy,dz=maxX-minX,maxY-minY,maxZ-minZ
+    if dx<0 or dy<0 or dz<0 then return end
+    local radius=math.sqrt(dx*dx+dy*dy+dz*dz)/2
+    if not finite(radius) or radius<=0 then return end
+    return {x=(minX+maxX)/2,y=(minY+maxY)/2,z=(minZ+maxZ)/2,radius=radius}
+end
+
 function M:OpenNPCs(cluster)
     if not cluster then return end
     local ids,seen={},{}
@@ -79,6 +99,17 @@ local function createViewer(parent)
         scene:SetCameraPosition(distance,0,0)
         self.cameraDistance=distance
     end
+    function f:FailModel(reason)
+        self.modelError=tostring(reason or "Model unavailable")
+        self.waiting=nil; self.settle=nil; self.dragging=nil; self.bounds=nil
+        actor:SetShown(false)
+        self:Status("failed")
+    end
+    function f:UpdateCamera()
+        local ok,reason=pcall(self.ApplyCamera,self)
+        if not ok then self:FailModel(reason) end
+        return ok
+    end
     function f:Loaded()
         if not self:IsVisible() or not self.npcID or not self.waiting then return end
         local id=model:GetModelFileID()
@@ -94,14 +125,13 @@ local function createViewer(parent)
         end
         local actorFile=actor:GetModelFileID()
         if not actorFile or actorFile<=0 then return end
-        local bottom,top=actor:GetMaxBoundingBox()
-        if not bottom or not top then return end
-        local dx,dy,dz=top.x-bottom.x,top.y-bottom.y,top.z-bottom.z
-        local radius=math.sqrt(dx*dx+dy*dy+dz*dz)/2
-        if radius~=radius or radius<=0 or radius==math.huge then return end
-        self.bounds={x=(bottom.x+top.x)/2,y=(bottom.y+top.y)/2,z=(bottom.z+top.z)/2,radius=radius}
+        if self.boundsReadFailed then return end
+        local ok,bounds=pcall(readBounds,actor)
+        if not ok then self.boundsReadFailed=true; self.modelError=tostring(bounds); return end
+        if not bounds then return end
+        self.bounds=bounds
         self.waiting=nil; self.settle=0; self.settlePass=0
-        self:ApplyCamera()
+        if not self:UpdateCamera() then return end
         actor:SetShown(true)
         self:Status("loaded")
     end
@@ -109,7 +139,8 @@ local function createViewer(parent)
         if not self:IsVisible() or not self.npcID then return end
         if reset then self.attempts=0 end
         self.attempts=(self.attempts or 0)+1
-        self.waiting=0; self.animationTime=0; self.settle=nil; self.dragging=nil
+        self.waiting=0; self.animationTime=0; self.settle=nil; self.dragging=nil; self.boundsPoll=0
+        self.boundsReadFailed=nil; self.modelError=nil
         self.requestedDisplay=nil; self.bounds=nil; actor:SetShown(false); actor:ClearModel()
         actor:SetScale(1); actor:SetPosition(0,0,0); actor:SetYaw(0)
         model:ClearModel()
@@ -127,29 +158,30 @@ local function createViewer(parent)
     scene:SetScript("OnMouseWheel",function(_,delta)
         f.settle=nil
         f.distance=math.max(0.5,math.min(8,(f.distance or DEFAULT_DISTANCE)-delta*0.15))
-        f:ApplyCamera()
+        f:UpdateCamera()
     end)
     model:SetScript("OnUpdate",function(_,elapsed)
         if not f:IsVisible() or not f.npcID then return end
         if f.dragging then
-            local x=GetCursorPosition(); f.facing=(f.facing or 0.35)+(x-f.dragging)*0.015; f.dragging=x; f:ApplyCamera()
+            local x=GetCursorPosition(); f.facing=(f.facing or 0.35)+(x-f.dragging)*0.015; f.dragging=x; f:UpdateCamera()
         end
         if f.waiting then
             f.waiting=f.waiting+elapsed
             f.animationTime=(f.animationTime or 0)+elapsed
             for i,dot in ipairs(f.dots) do dot:SetAlpha(0.25+0.75*(0.5+0.5*math.sin(f.animationTime*5-(i-1)*1.2))) end
-            f:Loaded()
+            f.boundsPoll=(f.boundsPoll or 0)+elapsed
+            if f.boundsPoll>=0.1 then f.boundsPoll=0; f:Loaded() end
             if f.waiting and f.waiting>=RETRY_SECONDS then
                 if f.attempts<MAX_ATTEMPTS then f:RequestModel()
                 else
-                    f.waiting=nil; model:ClearModel()
-                    f:Status("failed")
+                    model:ClearModel(); f:FailModel(f.modelError)
                 end
             end
         elseif f.settle then
             f.settle=f.settle+elapsed
             if f.settle>=0.5 or f.settle>=0.15 and f.settlePass==0 then
-                f:ApplyCamera(); f.settlePass=1
+                if not f:UpdateCamera() then return end
+                f.settlePass=1
                 if f.settle>=0.5 then f.settle=nil end
             end
         end
@@ -167,7 +199,7 @@ local function createViewer(parent)
     f.retry:SetParent(f.status); f.retry:ClearAllPoints(); f.retry:SetPoint("CENTER",0,-36); f.retry:Hide()
     f.reset=button("Reset view",154,298,function()
         f.distance=DEFAULT_DISTANCE; f.facing=0.35; f.dragging=nil
-        f:ApplyCamera(); f.settle=0; f.settlePass=0
+        if f:UpdateCamera() then f.settle=0; f.settlePass=0 end
     end)
     f:SetScript("OnHide",function()
         f.dragging=nil; f.waiting=nil; f.settle=nil; f.npcID=nil; model:ClearModel(); actor:SetShown(false); actor:ClearModel()
@@ -185,7 +217,7 @@ function M:LayoutViewer(parent,width,visible,height)
     f:SetScale(scale); f:SetSize(width/scale,frameHeight)
     f.info:SetHeight(frameHeight); f.modelBorder:SetSize(width/scale-312,frameHeight)
     f.scene:SetSize(f.modelBorder:GetWidth()-2,frameHeight-2)
-    if f.bounds then f:ApplyCamera() end
+    if f.bounds then f:UpdateCamera() end
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",0,0)
     local ids=A.state.mapNPCs
     local index=math.max(1,math.min(#ids,A.state.mapNPCPage or 1)); A.state.mapNPCPage=index
