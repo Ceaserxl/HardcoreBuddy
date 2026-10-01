@@ -38,6 +38,28 @@ local function changeColor(row)
         or row.percent==0 and Skin.colors.muted or Skin.colors.green
 end
 
+local function hideComparisons()
+    if GameTooltip_HideShoppingTooltips then GameTooltip_HideShoppingTooltips(GameTooltip)
+    else for _,tip in ipairs(GameTooltip.shoppingTooltips or {}) do tip:Hide() end end
+end
+
+function U:HideTooltip(row)
+    local owner=GameTooltip:GetOwner()
+    if owner and owner.hardcoreBuddyAuctionRow and (not row or owner==row) then
+        hideComparisons(); GameTooltip:Hide()
+    end
+end
+
+function U:UpdateTooltipComparison(row)
+    if GameTooltip:GetOwner()~=row or not GameTooltip:IsShown() then return end
+    local compare=IsModifiedClick and IsModifiedClick("COMPAREITEMS")
+    local always=GetCVarBool and GetCVarBool("alwaysCompareItems")
+    local equipped=GameTooltip.IsEquippedItem and GameTooltip:IsEquippedItem()
+    if compare or (always and not equipped) then
+        if GameTooltip_ShowCompareItem then GameTooltip_ShowCompareItem(GameTooltip) end
+    else hideComparisons() end
+end
+
 function U:Stop(message)
     self.scan=nil
     if message then self.message=message end
@@ -204,6 +226,9 @@ end
 
 function U:Refresh()
     if not self.panel then return end
+    -- Visible rows are reused as results change; never leave the old item's
+    -- equipped comparisons attached to a row now displaying another item.
+    self:HideTooltip()
     local list={}
     if self.setup then
         list=self.setup.components
@@ -299,6 +324,10 @@ function U:Attach()
     self.rows={}
     for i=1,7 do
         local row=CreateFrame("Button",nil,panel,"BackdropTemplate"); self.rows[i]=row
+        row.hardcoreBuddyAuctionRow=true
+        -- The native GameTooltip OnUpdate calls its owner's UpdateTooltip.
+        -- This handles pressing/releasing Shift after the mouse has entered.
+        row.UpdateTooltip=function(self) U:UpdateTooltipComparison(self) end
         row:SetPoint("TOPLEFT",12,-105-(i-1)*32); row:SetSize(744,30); Skin.Paint(row,"row")
         row:SetBackdropColor(i%2==0 and 0.065 or 0.04,0.06,0.07,1)
         row.slot=label(row,"",5,-5,95,Skin.colors.muted,11)
@@ -310,6 +339,7 @@ function U:Attach()
         row.action=label(row,"",646,-5,96,Skin.colors.muted,11)
         row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight","ADD")
         row:SetScript("OnEnter",function(self)
+            U:HideTooltip()
             local entry=self.entry; local item=entry and (U.slot and entry or entry.best)
             if item then GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink(item.link)
                 if item.weaponSet then
@@ -326,12 +356,14 @@ function U:Attach()
                     if item.count>1 then GameTooltip:AddLine("Listed stack: "..item.count,1,0.8,0.4) end
                 end
                 GameTooltip:Show()
+                self:UpdateTooltip()
             end
         end)
-        row:SetScript("OnLeave",function() GameTooltip:Hide() end)
+        row:SetScript("OnLeave",function(self) U:HideTooltip(self) end)
+        row:SetScript("OnHide",function(self) U:HideTooltip(self) end)
         row:SetScript("OnClick",function(self)
             if not self.entry then return end
-            GameTooltip:Hide()
+            U:HideTooltip(self)
             if self.entry.weaponSet then U.setup=self.entry; U.offset=0; U:Refresh()
             elseif U.slot then U:Find(self.entry)
             elseif self.entry.total>0 then U.slot=self.entry.slot; U.offset=0; U:Refresh() end
@@ -342,7 +374,7 @@ function U:Attach()
     self.scroll:SetThumbTexture("Interface\\Buttons\\UI-ScrollBar-Knob"); self.scroll:GetThumbTexture():SetSize(16,32)
     self.scroll:SetValueStep(1); self.scroll:SetObeyStepOnDrag(true)
     self.scroll:SetScript("OnValueChanged",function(_,value)
-        value=math.floor(value+0.5); if U.offset~=value then U.offset=value; GameTooltip:Hide(); U:Refresh() end
+        value=math.floor(value+0.5); if U.offset~=value then U.offset=value; U:Refresh() end
     end)
     panel:EnableMouseWheel(true); panel:SetScript("OnMouseWheel",function(_,delta)
         self.scroll:SetValue(math.max(0,math.min(self.offset-delta*3,#(self.display or {})-7)))
@@ -350,7 +382,10 @@ function U:Attach()
     self.status=label(panel,"",14,-330,760,Skin.colors.gold,11)
     self.hint=label(panel,"",14,-352,760,Skin.colors.muted,10)
     panel:Hide()
-    panel:SetScript("OnHide",function() if self.scan then self:Stop("Scan stopped. Results are partial.") end end)
+    panel:SetScript("OnHide",function()
+        self:HideTooltip()
+        if self.scan then self:Stop("Scan stopped. Results are partial.") end
+    end)
     hooksecurefunc("AuctionFrameTab_OnClick",function(selected)
         panel:SetShown(selected==tab)
         if selected==tab then

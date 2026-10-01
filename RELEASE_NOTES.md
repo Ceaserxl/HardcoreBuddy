@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fixed Shift-hover equipped-item comparisons on auction upgrades and weapon
+  setup components, including modifier changes while already hovering.
 - Fixed weapon percentage mismatches by preserving each profile's DPS weight and
   reading native displayed DPS precision. Two-handed tooltips show the reference
   main-hand comparison plus a separate Both hands comparison when an off-hand

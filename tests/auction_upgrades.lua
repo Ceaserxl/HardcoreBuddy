@@ -2,6 +2,7 @@ local A,F=TestAddon,GEAR_FIXTURES
 local U,G=A.AuctionUpgrades,A.GearAdvisor
 local checks=0
 local function check(ok,why) checks=checks+1; assert(ok,why) end
+function GameTooltip:GetOwner() return self.owner end
 check(not U.panel,"Native Auction UI is optional at addon load")
 local create=CreateFrame
 CreateFrame=function(...)
@@ -198,4 +199,56 @@ U:Start(); finish()
 check(U.results.twoHand[1].owned,"An equal-scoring listing never outranks keeping the equipped weapon")
 MOCK.Click(U.weaponButton); U.rows[1].scripts.OnEnter(U.rows[1]); U.rows[1].scripts.OnLeave(U.rows[1])
 check(U.results.paired==nil or #U.results.paired==0,"No one-handed setup fabricated from a staff alone")
+
+-- Classic's GameTooltip_OnUpdate delegates to owner:UpdateTooltip(). Model
+-- that native boundary, including modifier changes without moving the mouse.
+local shift,always,equipped=false,false,false
+local compareCalls=0
+function IsModifiedClick(kind) check(kind=="COMPAREITEMS","Respects native comparison binding"); return shift end
+local oldCVar=GetCVarBool
+function GetCVarBool(name) if name=="alwaysCompareItems" then return always end; return oldCVar and oldCVar(name) end
+function GameTooltip:IsEquippedItem() return equipped end
+ShoppingTooltip1=CreateFrame("GameTooltip"); ShoppingTooltip2=CreateFrame("GameTooltip")
+GameTooltip.shoppingTooltips={ShoppingTooltip1,ShoppingTooltip2}
+function GameTooltip_HideShoppingTooltips(tip)
+    check(tip==GameTooltip,"Hides comparisons belonging to the item tooltip")
+    for _,shopping in ipairs(tip.shoppingTooltips) do shopping:Hide() end
+end
+function GameTooltip_ShowCompareItem(tip)
+    check(tip==GameTooltip and tip:IsShown(),"Uses the native comparison API after showing the item")
+    compareCalls=compareCalls+1
+    for _,shopping in ipairs(tip.shoppingTooltips) do shopping.comparedLink=tip.link; shopping:Show() end
+end
+local function nativeTooltipTick()
+    local owner=GameTooltip:GetOwner()
+    if owner and owner.UpdateTooltip then owner:UpdateTooltip() end
+end
+local hovered=U.rows[1]
+hovered.scripts.OnEnter(hovered)
+check(not ShoppingTooltip1:IsShown(),"Unmodified hover leaves comparisons hidden")
+shift=true; nativeTooltipTick()
+check(ShoppingTooltip1:IsShown() and ShoppingTooltip2:IsShown(),"Pressing Shift while hovered opens equipped comparisons")
+check(ShoppingTooltip1.comparedLink==GameTooltip.link,"Compares the hovered upgrade's exact item link")
+shift=false; nativeTooltipTick()
+check(not ShoppingTooltip1:IsShown() and GameTooltip:IsShown(),"Releasing Shift hides only comparisons")
+shift=true; hovered.scripts.OnLeave(hovered); hovered.scripts.OnEnter(hovered)
+check(ShoppingTooltip1:IsShown(),"Holding Shift before hovering also works")
+hovered.scripts.OnLeave(hovered)
+check(not GameTooltip:IsShown() and not ShoppingTooltip2:IsShown(),"Leaving a row clears all owned tooltips")
+shift=false; always=true; hovered.scripts.OnEnter(hovered)
+check(ShoppingTooltip1:IsShown(),"Respects the native always-compare preference")
+equipped=true; nativeTooltipTick()
+check(not ShoppingTooltip1:IsShown(),"Always-compare skips already equipped items like the native tooltip")
+shift=true; nativeTooltipTick(); check(ShoppingTooltip1:IsShown(),"Explicit Shift still compares an equipped item")
+equipped=false; always=false
+U:Refresh()
+check(not GameTooltip:IsShown() and not ShoppingTooltip1:IsShown(),"Refreshing pooled rows cannot leave stale comparisons")
+hovered.scripts.OnEnter(hovered); MOCK.Click(hovered); MOCK.Click(U.rows[1])
+local part=U.rows[1]; part.scripts.OnEnter(part)
+check(ShoppingTooltip1:IsShown() and ShoppingTooltip1.comparedLink==part.entry.link,"Weapon setup components support comparison too")
+local other=CreateFrame("Frame"); GameTooltip:SetOwner(other,"ANCHOR_RIGHT"); GameTooltip:Show()
+local previous=compareCalls; part:UpdateTooltip(); part.scripts.OnLeave(part)
+check(GameTooltip:IsShown() and compareCalls==previous,"Does not update or hide another frame's tooltip")
+part.scripts.OnEnter(part); AuctionFrameTab_OnClick(AuctionFrameTab1)
+check(not GameTooltip:IsShown() and not ShoppingTooltip1:IsShown(),"Leaving the auction upgrades tab clears comparisons")
 print("PASS: "..checks.." auction upgrade assertions")
