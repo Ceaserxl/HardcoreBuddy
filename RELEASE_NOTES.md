@@ -1,5 +1,9 @@
 # Unreleased
 
+- Added a native-style Upgrades tab at the auction house: scan for the best
+  percentage upgrade per slot, browse all alternatives with continuous scrolling,
+  and open matching auctions in Browse. Uses the standalone gear advisor and
+  respects auction throttling, other searches, and equipment/talent changes.
 - Matched the reference percentage display's downward rounding to two decimals.
   Gear scoring remains standalone, with no in-game interaction with Zygor.
 - Fixed short spell-damage suffixes such as `+15 Frost Spell Damage` being

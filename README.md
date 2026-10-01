@@ -59,6 +59,27 @@ Procs, active item effects and set bonuses are excluded. See [advisor details](d
 The Character window's **Gear Snapshot** tab saves gear and talent information for
 offline review; `/reload` or log out to write it to disk.
 
+## Auction house upgrades
+
+Open **Upgrades** at the auction house and click **Scan upgrades**. The tab uses
+the native auction-tab style and works without any other auction addon.
+
+- Shows the highest percentage upgrade found for each equipped slot.
+- Click a slot to browse all its upgrades in one continuously scrollable list.
+- Includes every usable armor material, jewelry and weapons, using the same
+  scoring profile and percentages as HardcoreBuddy's gear tooltips.
+- Shows listing prices, merges duplicate item variants using their cheapest
+  buyout (or next bid), and keeps different random suffixes separate.
+- Click an alternative to search for its auctions in the normal Browse tab.
+  Confirm the exact item variant and current price there before purchasing.
+
+Scanning takes time because the auction house returns one page at a time. Keep
+the Upgrades tab open; another auction search or changing tabs stops the scan.
+Stopped scans and missing data are labeled as partial results. Gear or talent
+changes require a new scan. Prices are for the full listing, not per item.
+Empty slots show **Empty slot** instead of an invented percentage. Each slot's
+recommendation is independent; this is not a combined shopping-list optimizer.
+
 ## Dungeons and raids
 
 The **Dungeons** and **Raids** tabs contain 28 dungeon routes/wings and all seven
