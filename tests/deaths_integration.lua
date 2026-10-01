@@ -76,7 +76,7 @@ print("PASS: Shared entry points, single receiver, duplicate suppression, origin
 
 H:ShowDetails(H.db.records[1])
 assert(H.details:IsVisible() and not H.window:IsShown())
-MOCK.Click(H.details.back)
+MOCK.Click(A.window.back)
 assert(H.window:IsVisible() and not H.details:IsShown())
 for _,entry in ipairs({{1,"all"}}) do
     MOCK.Click(A.window.filters[entry[1]])
@@ -133,13 +133,13 @@ assert(last,"Oldest report is reachable by scrolling")
 local bottom=journalScroll:GetVerticalScroll()
 MOCK.Click(last)
 assert(H.details.record==H.filtered[#H.filtered])
-MOCK.Click(H.details.back)
+MOCK.Click(A.window.back)
 assert(journalScroll:GetVerticalScroll()==bottom,"Details/back preserve the journal scroll position")
 H.window.search:SetText("PagePlayer30")
 assert(#H.filtered==1 and H.window.rows[1].record.name=="PagePlayer30" and journalScroll:GetVerticalScroll()==0)
 MOCK.Click(H.window.rows[1])
 assert(H.details:IsVisible() and H.details.record.name=="PagePlayer30")
-MOCK.Click(H.details.back)
+MOCK.Click(A.window.back)
 assert(H.window:IsVisible() and H.query=="PagePlayer30" and #H.filtered==1)
 H.window.minimum:SetText("40")
 assert(#H.filtered==0 and H.window.empty:IsShown())
@@ -150,7 +150,7 @@ assert(A.state.view=="deaths", "class change does not eject the character-indepe
 MOCK.class=class
 MOCK.Click(A.window.filters[2])
 H:ShowDetails(H.db.records[1])
-MOCK.Click(H.details.back)
+MOCK.Click(A.window.back)
 assert(H.window:IsVisible(), "details opened from options return to reports")
 print("PASS: Journal continuous scrolling, bounded row pool, search, level filtering, empty state, row details/back and class-change continuity.")
 

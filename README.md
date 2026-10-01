@@ -22,6 +22,8 @@ Preparation reminders. Death Alerts includes banner appearance; NPC Alerts
 contains separate rare and elite controls on the same scrolling page.
 Carry quantities and item priorities remain in Supplies; talent paths remain in
 Advisors. `/hcb health` and `/hcb deaths settings` open their Settings sections.
+Nested pages share **< Back** at the upper-right of the navigation area. It stays
+in place while scrolling; the auction upgrades window uses the same position.
 
 ## Supply priorities and preparation
 
@@ -91,6 +93,9 @@ information for offline review. The saved item list is on the snapshot page;
 Open **Settings > Map**, or the **Map settings** row in **Advisors > Map**, to
 reveal unexplored outdoor terrain or tint unexplored areas translucent blue.
 Category filters show known dangerous NPCs, rares, elites and bosses.
+Map symbols use black outlines and transparent backgrounds: a red warning
+triangle for dangers, a silver star for rares, a gold sword for elites and a
+white skull for world bosses. Hover a marker for NPC names and details.
 Browse any Classic zone or follow your current zone under **Advisors > Map**.
 An optional **Silent zone-entry notice** lists known dangers in chat without
 playing a sound. Pins mark recorded spawn areas, not live sightings; missing

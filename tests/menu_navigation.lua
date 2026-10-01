@@ -123,7 +123,7 @@ local function validate()
     end
     for index=#A.document.cards+1,#f.cards do assert(not f.cards[index]:IsShown(),"Stale grouped supply card remains visible") end
     assert(f.sidebar:IsShown(),"Navigation sidebar disappeared in a detail or companion view")
-    assert(visible(f.back:IsShown())==(#A.history>0))
+    assert(visible(f.back:IsShown())==A:CanGoBack())
     assert(visible(f.search:IsShown())==visible(A.document.view=="petguide" and A.document.searchable))
     assert(visible(f.atLevel:IsShown())==visible(A.document.levelFilter))
     assert(not f.missing or not f.missing:IsShown(),"Removed Missing-only control is visible")
@@ -264,11 +264,11 @@ for id in pairs(expectedItems) do assert(visited[id],"A reachable supply item wa
 
 A:SetProfile("characterClass","Hunter"); A:SetLevel(60)
 for _,tab in ipairs(f.tabs) do assert(tab.view~="petguide","Pet Guide is not a top-level tab") end
-MOCK.Click(f.tabs[2]); assert(f.filters[2].filter=="Pet Guide")
-MOCK.Click(f.filters[2]); assert(A.state.view=="petguide")
+MOCK.Click(f.tabs[2]); assert(f.filters[3].filter=="Pet Guide")
+MOCK.Click(f.filters[3]); assert(A.state.view=="petguide")
 local expected={Families=17,Abilities=21,Pets=559,Care=5}
 for index,label in ipairs({"Families","Abilities","Pets","Care"}) do
-    MOCK.Click(f.filters[index+1]); assert(A.document.total==expected[label])
+    MOCK.Click(f.filters[index]); assert(A.document.total==expected[label])
     walkPages(0)
 end
 for kind,total in pairs({family=17,ability=21,rank=111,pet=559,guide=5}) do
@@ -280,8 +280,8 @@ for _,family in ipairs({"cooking","bandage","dummy","antivenom"}) do
 end
 
 -- Screen-coordinate dispatch catches overlays that handler-only tests cannot.
-MOCK.Click(f.filters[1]); assert(A.state.view=="training","Companion remains accessible from Pet Guide")
-MOCK.Click(f.filters[2]); MOCK.Click(f.filters[4]); A:SetProfile("mode","live")
+MOCK.Click(f.back); assert(A.state.view=="training","Companion remains accessible from Pet Guide")
+MOCK.Click(f.filters[3]); MOCK.Click(f.filters[3]); A:SetProfile("mode","live")
 A:RestoreWindow(); A:Layout(); f.scroll:SetVerticalScroll(0)
 local function clickRow(frame)
     local x,y,w,h=frame:GetRect()

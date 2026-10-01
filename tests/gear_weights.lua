@@ -43,7 +43,7 @@ check(not G:SetWeight(original,"notAStat",2),"Unknown weight keys are rejected")
 edit:SetFocus(); edit:SetText("20"); edit.scripts.OnEscapePressed(edit)
 check(G:CurrentProfile().weights.agility==1.375,"Escape cancels a pending edit")
 fields.stamina:SetFocus(); fields.stamina:SetText("0.75")
-MOCK.Click(A.Settings.pages["Stat Weights"].back)
+MOCK.Click(A.window.back)
 check(G:CurrentProfile().weights.stamina==0.75 and not A.state.gearPage,"Back commits pending edits and returns to Gear Advisor")
 
 local other=G.Profile("WARLOCK",40,nil,1)

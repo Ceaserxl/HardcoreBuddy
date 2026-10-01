@@ -212,6 +212,13 @@ function S.ButtonState(button,active,hovered,pressed)
 
 end
 
+-- Keep return navigation at the upper-right of each window's navigation area.
+function S.PlaceBackButton(button,parent,top,right,height)
+    button:ClearAllPoints()
+    button:SetSize(100,height or 28)
+    button:SetPoint("TOPRIGHT",parent,"TOPRIGHT",-(right or 22),-top)
+end
+
 function S.IconBorder(parent,icon)
     local frame=CreateFrame("Frame",nil,parent,"BackdropTemplate")
     frame:EnableMouse(false)

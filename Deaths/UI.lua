@@ -388,8 +388,6 @@ function H:BuildUI()
     detail.scroll:SetScrollChild(detail.content)
     detail.body=Text(detail.content,13,"TOPLEFT",0,0,370);detail.body:SetWordWrap(true)
     detail.body:SetJustifyV("TOP")
-    detail.back=Button(detail,"< Back to reports",150,0,0,function() addon:OpenDeaths(addon.state.filter) end)
-    detail.back:ClearAllPoints(); detail.back:SetPoint("TOPRIGHT",detail,"TOPRIGHT",-20,-16)
 
     local alert=Panel("HardcoreBuddyDeathsAlert",896,80);self.alert=alert
     alert:SetFrameStrata("HIGH")

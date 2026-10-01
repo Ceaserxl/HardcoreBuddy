@@ -65,10 +65,6 @@ function S:Create(parent)
     for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","Gear Snapshot","NPC Alerts"}) do
         local page=CreateFrame("Frame",nil,content); page:SetAllPoints(content); page:Hide(); self.pages[name]=page
         if name~="Gear Snapshot" then label(page,name,22,20,18,700):SetTextColor(unpack(Skin.colors.gold)) end
-        if name=="Stat Weights" or name=="Gear Snapshot" then
-            page.back=button(page,"< Back",18,function() self:OpenGearPage(nil) end,100)
-            page.back:ClearAllPoints(); page.back:SetPoint("TOPLEFT",620,-18)
-        end
     end
     local general=self.pages.General
     label(general,"Window, access and field kit notifications.",13,20,56,700)

@@ -77,8 +77,8 @@ local function inspect()
     for _,color in ipairs({gradient.first,gradient.last}) do for i=1,4 do
         check(color[i]>=0 and color[i]<=1,"Header edge blend has an invalid color channel")
     end end
-    check(not overlap(f.mode,chrome.headerBase),"Planning button intrudes into the header")
-    check(not overlap(f.mode,chrome.banner) and not overlap(f.mode,chrome.crest),"Planning button covers header artwork")
+    check(inside(f.mode,chrome.headerBase),"Planning button left its header location")
+    check(not overlap(f.mode,f.close) and not overlap(f.mode,chrome.crest),"Planning button covers Close or the crest")
     check(not overlap(f.mode,f.title) and not overlap(f.mode,f.subtitle),"Planning button covers character/title text")
     check(f.mode.label:GetStringWidth()<=f.mode.label:GetWidth()+.01,"Planning button text is clipped")
     check(f.mode.label:GetStringHeight()<=f.mode.label:GetHeight()+.01,"Planning button text exceeds button height")

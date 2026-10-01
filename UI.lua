@@ -599,7 +599,19 @@ function addon:Activate(action)
 end
 function addon:Back()
     self:CommitInputs(); self.window.classMenu:Hide()
-    if self.history and #self.history>0 then self.state=table.remove(self.history); self:Refresh(true) end
+    if self.state.view=="settings" and self.state.gearPage then self.Settings:OpenGearPage(nil)
+    elseif self.state.view=="deaths" and self.state.deathRecord then self:OpenDeaths("Reports")
+    elseif self.state.view=="advisors" and self.state.filter=="Map" and self.state.mapZonePicker then
+        self.state.mapZonePicker=nil; self:Refresh(true)
+    elseif self.history and #self.history>0 then self.state=table.remove(self.history); self:Refresh(true)
+    elseif self.state.view=="petguide" then self:Navigate("training") end
+end
+function addon:CanGoBack()
+    local s=self.state or {}
+    return (self.history and #self.history>0) or s.view=="petguide"
+        or (s.view=="settings" and s.gearPage~=nil)
+        or (s.view=="deaths" and s.deathRecord~=nil)
+        or (s.view=="advisors" and s.filter=="Map" and s.mapZonePicker) or false
 end
 function addon:Refresh(resetScroll)
     if not self.window then return end
@@ -626,7 +638,7 @@ local FILTER_ICONS={
     ["Reports"]="INV_Misc_Book_09",Options="Trade_Engineering",["All"]="INV_Misc_Bag_08",["Food & drink"]="INV_Misc_Food_11",Buffs="INV_Potion_27",
     Emergency="INV_Misc_Bandage_12",Potions="INV_Potion_54",Class="INV_Misc_Rune_01",Optional="INV_Misc_PocketWatch_01",User="INV_Misc_Note_01",Scrolls="INV_Scroll_03",Families="Ability_Hunter_BeastTaming",
     Abilities="Ability_Hunter_BeastCall",Pets="Ability_Hunter_Pet_Bear",Care="Ability_Hunter_MendPet",
-    ["Pet Guide"]="Ability_Hunter_Pet_Bear",["< Companion"]="INV_Misc_Book_09",
+    ["Pet Guide"]="Ability_Hunter_Pet_Bear",
     Overview="INV_Misc_Book_09",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",
 }
 function addon:Layout()
@@ -659,7 +671,7 @@ function addon:Layout()
     f.drag:SetWidth(math.max(1,width-modeWidth-59))
     f.title:SetWidth(math.max(140,width-titleX-modeWidth-67))
     local x,y=22,f.headerHeight+4
-    local right=width-22
+    local right=width-134 -- Reserve the same Back location even on root pages.
     for _,b in ipairs(f.tabs) do
         b:Show()
         if b:IsShown() then
@@ -669,6 +681,7 @@ function addon:Layout()
         end
     end
     y=y+36
+    Skin.PlaceBackButton(f.back,f,f.headerHeight+5)
     f.class:SetShown(preview); f.levelGroup:SetShown(preview)
     f.class.label:SetText(context.characterClass)
     f.class:SetWidth(math.max(compact and 88 or 104,math.ceil(f.class.label:GetStringWidth())+22))
@@ -693,7 +706,7 @@ function addon:Layout()
         local textWidth=width-titleX-22-f.class:GetWidth()-8-f.levelGroup:GetWidth()-12
         f.subtitle:SetWidth(math.max(1,textWidth))
     end
-    f.back:SetShown(#self.history>0)
+    f.back:SetShown(self:CanGoBack())
     if not f.level:HasFocus() then f.level:SetText(tostring(context.level)) end
     enabled(f.class,preview); enabled(f.minus,preview and context.level>1); enabled(f.plus,preview and context.level<60)
     f.level:EnableMouse(preview); f.level:EnableKeyboard(preview)
@@ -720,7 +733,7 @@ function addon:Layout()
     local navigation=doc.view=="advisors" and {"Gear","Talents","Map"} or instancePage and self.Instances.Navigation(self.state)
         or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {"Reports"}
         or doc.view=="training" and (context.characterClass=="Hunter" and {"Overview","Pet Training","Pet Guide","First Aid","Engineering","Cooking"} or {"Overview","First Aid","Engineering","Cooking"})
-        or doc.view=="petguide" and {"< Companion","Families","Abilities","Pets","Care"}
+        or doc.view=="petguide" and {"Families","Abilities","Pets","Care"}
         or addon.Supplies.filters
     local sidebar=true
     local left=sidebar and 184 or 22
@@ -740,7 +753,6 @@ function addon:Layout()
             b=button(f,label,78,function(self)
                 addon:CommitInputs(); addon.window.classMenu:Hide()
                 addon.state.detail=nil; addon.state.deathRecord=nil; addon.state.gearPage=nil; addon.history={}; addon.state.page=1
-                if addon.state.view=="petguide" and self.filter=="< Companion" then addon:Navigate("training"); return end
                 if addon.state.view=="instances" then
                     addon.state.filter=self.filter
                     addon.state.currentMap=nil; addon.state.currentName=nil; addon.state.unknownInstance=nil
@@ -788,9 +800,6 @@ function addon:Layout()
     end
     for i=#navigation+1,#f.filters do f.filters[i]:Hide() end
     if doc.filters and not sidebar then y=y+34 end
-    if #self.history>0 then
-        f.back:ClearAllPoints(); f.back:SetPoint("TOPLEFT",left,-y); y=y+34
-    end
     local customDetail=doc.isDetail and self.state.detail and self.state.detail.item and self.state.detail.item.userItem
     local priorityItem=doc.isDetail and self.state.detail and self.state.detail.item
     if doc.isDetail and self.state.detail and self.state.detail.kind=="supplyFamily" then
@@ -801,12 +810,13 @@ function addon:Layout()
     if priorityItem then
         f.priorityChoice.item=priorityItem
         f.priorityChoice.label:SetText("Priority: "..self.Supplies.Priority(context,priorityItem))
-        f.priorityChoice:ClearAllPoints(); f.priorityChoice:SetPoint("TOPRIGHT",-40,-(y-34))
+        f.priorityChoice:ClearAllPoints(); f.priorityChoice:SetPoint("TOPRIGHT",-40,-y)
     end
     f.userRemove:SetShown(customDetail and true or false)
     if customDetail then
-        f.userRemove:ClearAllPoints(); f.userRemove:SetPoint("TOPLEFT",f.back,"TOPRIGHT",8,0)
+        f.userRemove:ClearAllPoints(); f.userRemove:SetPoint("TOPLEFT",left,-y)
     end
+    if priorityItem or customDetail then y=y+34 end
     local userPage=doc.view=="supplies" and self.state.filter=="User" and not doc.isDetail
     f.userEntry:SetShown(userPage)
     if userPage then

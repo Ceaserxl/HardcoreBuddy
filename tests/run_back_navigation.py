@@ -1,0 +1,44 @@
+"""One fixed, clickable Back control for nested pages across the main window."""
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from render_layout import boot
+
+lua, addon = boot()
+lua.execute('''
+local A=TestAddon
+local f=A.window
+local function back()
+    assert(f.back:IsVisible(),"Shared Back is hidden")
+    local x,y,w,h=f.back:GetRect()
+    local wx,wy,ww=f:GetRect()
+    assert(x==wx+ww-22-w and y==wy+f.headerHeight+5,"Back moved between pages")
+    assert(MOCK.HitTest(x+w/2,y+h/2)==f.back,"Back cannot be clicked")
+    for _,tab in ipairs(f.tabs) do
+        local tx,ty,tw,th=tab:GetRect()
+        assert(x>=tx+tw or y>=ty+th or x+w<=tx or y+h<=ty,"Tab overlaps Back")
+    end
+    MOCK.Click(f.back)
+end
+for _,page in ipairs({"Stat Weights","Gear Snapshot"}) do
+    A:OpenSettings("Gear Advisor"); A.Settings:OpenGearPage(page)
+    A.Settings.scroll:SetVerticalScroll(100)
+    back(); assert(not A.state.gearPage and A.state.filter=="Gear Advisor")
+end
+A:Navigate("petguide"); back(); assert(A.state.view=="training")
+A:Navigate("advisors"); A.state.filter="Map"; A:Refresh(true)
+A.MapAdvisor:Activate({command="zones"})
+back(); assert(not A.state.mapZonePicker and A.state.filter=="Map")
+A:Navigate("instances"); A:Activate({kind="instance",id="rfc"})
+back(); assert(not A.state.instance and A.state.view=="instances")
+-- Current instance strips cannot move return navigation.
+IsInInstance=function() return true,"party" end
+GetInstanceInfo=function() return "Ragefire Chasm","party",1,"Normal",5,0,false,389 end
+A:Navigate("supplies"); A:OpenCurrentInstance()
+back(); assert(A.state.view=="supplies")
+assert(not f.back:IsVisible(),"Back remains visible at a root page")
+print("PASS: fixed shared Back position, hit testing, scrolling and nested return paths.")
+''')
+
+# Run the wider layout checks with the current TOC, including nested supplies.
+lua.execute(Path(__file__).with_name('redesign.lua').read_text())

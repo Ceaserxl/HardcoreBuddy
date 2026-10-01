@@ -98,7 +98,7 @@ function M:PlacePins()
         if pin:IsShown() and pin.cluster then
             pin:SetFrameLevel(frameLevel)
             pin:ClearAllPoints(); pin:SetPoint("CENTER",canvas,"TOPLEFT",pin.cluster.x*canvas:GetWidth(),-pin.cluster.y*canvas:GetHeight())
-            pin:SetSize(22/math.max(0.1,scale),22/math.max(0.1,scale))
+            pin:SetSize(26/math.max(0.1,scale),26/math.max(0.1,scale))
         end
     end
 end

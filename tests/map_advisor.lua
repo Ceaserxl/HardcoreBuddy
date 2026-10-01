@@ -63,7 +63,7 @@ for _,p in ipairs(M.pins) do if p:IsShown() then
     assert(relative==canvas and anchor=="TOPLEFT")
     assert(x==p.cluster.x*1002 and y==-p.cluster.y*668)
 end end
-scale=2; map:OnCanvasScaleChanged(); assert(M.pins[1]:GetWidth()==11)
+scale=2; map:OnCanvasScaleChanged(); assert(M.pins[1]:GetWidth()==13)
 canvas:SetSize(900,600); map:OnCanvasSizeChanged()
 local _,_,_,pinX,pinY=M.pins[1]:GetPoint()
 assert(pinX==M.pins[1].cluster.x*900 and pinY==-M.pins[1].cluster.y*600)
