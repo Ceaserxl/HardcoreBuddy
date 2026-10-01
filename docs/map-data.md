@@ -9,6 +9,8 @@ live spawn detection and discovery credit are outside this feature.
 - **Unchanged** leaves unexplored terrain hidden; **Reveal all** draws the map
   terrain; **Tint unexplored** draws it with a translucent blue tint (default).
 - Separate Dangerous, Rare, Elite and World boss filters control pins and lists.
+  Their map icons are a red cross, silver moon, gold star and skull, respectively.
+  Matching icons appear beside each filter and in marker tooltips.
 - **Silent zone-entry notice** is off by default. When enabled it prints a short
   chat message, with no sound or banner, upon entering a catalogued zone.
   Notices defer during combat, suppress dungeon/raid zones and throttle repeat

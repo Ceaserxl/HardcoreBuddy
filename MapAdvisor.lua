@@ -3,7 +3,13 @@ local addonName,A=...
 local M={pins={},exploration={},hooks={},notified={}}; A.MapAdvisor=M
 local colors={danger={1,0.3,0.2},rare={0.75,0.85,1},elite={1,0.7,0.2},boss={0.9,0.3,1}}
 local names={danger="Dangerous",rare="Rare",elite="Elite",boss="World boss"}
-local symbols={danger="!",rare="R",elite="E",boss="B"}
+local icons={
+    danger="Interface\\TargetingFrame\\UI-RaidTargetingIcon_7",
+    rare="Interface\\TargetingFrame\\UI-RaidTargetingIcon_5",
+    elite="Interface\\TargetingFrame\\UI-RaidTargetingIcon_1",
+    boss="Interface\\TargetingFrame\\UI-RaidTargetingIcon_8",
+}
+local function iconLabel(kind) return "|T"..icons[kind]..":16:16:0:0|t "..names[kind] end
 local priority={danger=2,rare=1,elite=3,boss=4}
 local function action(command,id) return {kind="mapAdvisor",command=command,id=id} end
 local function row(title,body,command,id) return {title=title,body=body,action=command and action(command,id)} end
@@ -73,7 +79,7 @@ function M:Tooltip(pin)
     GameTooltip:SetText("HardcoreBuddy: known danger area",1,0.8,0.4)
     for index,record in ipairs(pin.cluster.records) do
         if index>10 then GameTooltip:AddLine("+ "..(#pin.cluster.records-10).." more: Advisors > Map",1,1,1); break end
-        GameTooltip:AddLine(record.npc.name.." | "..level(record.npc).." | "..names[record.npc.kind],unpack(colors[record.npc.kind]))
+        GameTooltip:AddLine(record.npc.name.." | "..level(record.npc).." | "..iconLabel(record.npc.kind),unpack(colors[record.npc.kind]))
         if record.npc.note then GameTooltip:AddLine(record.npc.note,0.85,0.85,0.75,true) end
     end
     GameTooltip:AddLine("Recorded spawn areas; creatures may roam or be absent.",0.7,0.7,0.7,true)
@@ -93,7 +99,6 @@ function M:PlacePins()
             pin:SetFrameLevel(frameLevel)
             pin:ClearAllPoints(); pin:SetPoint("CENTER",canvas,"TOPLEFT",pin.cluster.x*canvas:GetWidth(),-pin.cluster.y*canvas:GetHeight())
             pin:SetSize(17/math.max(0.1,scale),17/math.max(0.1,scale))
-            pin.label:SetFont(STANDARD_TEXT_FONT,11/math.max(0.1,scale),"OUTLINE")
         end
     end
 end
@@ -106,17 +111,14 @@ function M:RefreshPins()
     for index,cluster in ipairs(self:Clusters(map:GetMapID())) do
         local pin=self.pins[index]
         if not pin then
-            pin=CreateFrame("Frame",nil,canvas,"BackdropTemplate"); self.pins[index]=pin
+            pin=CreateFrame("Frame",nil,canvas); self.pins[index]=pin
             pin:EnableMouse(true)
-            pin:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8x8",edgeFile="Interface\\Buttons\\WHITE8x8",edgeSize=1})
-            pin:SetBackdropColor(0.03,0.03,0.03,0.9)
-            pin.label=pin:CreateFontString(nil,"OVERLAY","GameFontNormalSmall"); pin.label:SetAllPoints()
+            pin.icon=pin:CreateTexture(nil,"ARTWORK"); pin.icon:SetAllPoints()
             pin:SetScript("OnEnter",function(p) M:Tooltip(p) end)
             pin:SetScript("OnLeave",function() GameTooltip:Hide() end)
             pin:SetScript("OnHide",function(p) if GameTooltip.IsOwned and GameTooltip:IsOwned(p) then GameTooltip:Hide() end end)
         end
-        pin.cluster=cluster; pin.label:SetText(symbols[cluster.kind])
-        pin.label:SetTextColor(unpack(colors[cluster.kind])); pin:SetBackdropBorderColor(unpack(colors[cluster.kind])); pin:Show()
+        pin.cluster=cluster; pin.icon:SetTexture(icons[cluster.kind]); pin:Show()
     end
     self:PlacePins()
 end
@@ -231,7 +233,7 @@ function M:Document(context,state)
     end
     local id=state.mapZone or self:CurrentMap(); local zone=A.Data.MapZones[id]
     local blocks={row("Choose a zone","Browse the Classic outdoor zones and cities above.")}
-    doc.cards[1]={title=zone and zone.name or "Map Advisor",note="! Dangerous  |  R Rare  |  E Elite  |  B World boss. Filtered for your faction.",blocks=blocks}
+    doc.cards[1]={title=zone and zone.name or "Map Advisor",note="Filtered for your faction. Hover map icons for NPC details.",blocks=blocks}
     if zone then
         blocks={}
         for _,r in ipairs(self:Records(id)) do
@@ -271,7 +273,7 @@ function M:LayoutControls(parent,left,top,width,visible)
             label(caption,x+30,y+4,w)
             b:SetScript("OnClick",function() s[key]=not not b:GetChecked(); M:Changed() end); f.checks[key]=b
         end
-        for i,key in ipairs({"danger","rare","elite","boss"}) do check(key,names[key],16+(i-1)*177,108,135) end
+        for i,key in ipairs({"danger","rare","elite","boss"}) do check(key,iconLabel(key),16+(i-1)*177,108,135) end
         check("notify","Silent zone-entry notice (chat only)",16,146,650)
         for i,entry in ipairs({{"zones","Browse zones"},{"open","Open zone map"},{"current","Follow current zone"}}) do
             local command=entry[1]; local b=CreateFrame("Button",nil,f,"BackdropTemplate")
