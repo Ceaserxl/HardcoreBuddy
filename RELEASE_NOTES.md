@@ -1,5 +1,7 @@
 # Unreleased
 
+- Hovered auction upgrade tooltips and Shift comparisons now stay visible during
+  scan updates and refresh when the item under the pointer changes.
 - Gear scoring now prefers displayed intrinsic attack-power and ranged
   attack-power bonuses over conflicting API values, correcting Assault Band's
   upgrade percentages while continuing to exclude applied enchants.

@@ -273,9 +273,6 @@ end
 
 function U:Refresh()
     if not self.panel then return end
-    -- Visible rows are reused as results change; never leave the old item's
-    -- equipped comparisons attached to a row now displaying another item.
-    self:HideTooltip()
     local list={}
     if self.setup then
         list=self.setup.components
@@ -335,6 +332,18 @@ function U:Refresh()
             frame.cost:SetText(row and (row.owned and "Owned" or (row.buyout==0 and "Bid " or "")..money(price(row))) or "")
             frame.action:SetText(row and (self.slot and (row.weaponSet and "View setup" or row.owned and "Keep item" or select(2,price(row)))
                 or ("View all ("..entry.total..")")) or "")
+        end
+    end
+    -- Scan progress refreshes the list frequently. Keep an unchanged hovered
+    -- item visible; rebuild only when the pooled row's item or listing changes.
+    local owner=GameTooltip:IsShown() and GameTooltip:GetOwner()
+    if owner and owner.hardcoreBuddyAuctionRow then
+        local entry=owner.entry
+        local item=entry and (self.slot and entry or entry.best)
+        if not self.panel:IsShown() or not owner:IsShown() or not item then
+            self:HideTooltip(owner)
+        elseif item~=owner.tooltipItem or item.auctions~=owner.tooltipAuctions then
+            owner:GetScript("OnEnter")(owner)
         end
     end
 end
@@ -416,6 +425,7 @@ function U:Attach()
                     GameTooltip:AddLine(item.label..(item.owned and " | Equipped" or " | "..item.auctions.." listing(s)"),0.9,0.75,0.45)
                     if item.count>1 then GameTooltip:AddLine("Listed stack: "..item.count,1,0.8,0.4) end
                 end
+                self.tooltipItem=item; self.tooltipAuctions=item.auctions
                 GameTooltip:Show()
                 self:UpdateTooltip()
             end

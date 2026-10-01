@@ -266,13 +266,20 @@ equipped=true; nativeTooltipTick()
 check(not ShoppingTooltip1:IsShown(),"Always-compare skips already equipped items like the native tooltip")
 shift=true; nativeTooltipTick(); check(ShoppingTooltip1:IsShown(),"Explicit Shift still compares an equipped item")
 equipped=false; always=false
+local previousLink=GameTooltip.link
+local tooltipSets=0
+local setHyperlink=GameTooltip.SetHyperlink
+GameTooltip.SetHyperlink=function(self,link) tooltipSets=tooltipSets+1; return setHyperlink(self,link) end
 U:Refresh()
-check(not GameTooltip:IsShown() and not ShoppingTooltip1:IsShown(),"Refreshing pooled rows cannot leave stale comparisons")
+check(GameTooltip:IsShown() and ShoppingTooltip1:IsShown() and GameTooltip.link==previousLink,
+    "Progress refresh keeps the hovered item and equipped comparisons visible")
+check(tooltipSets==0,"Unchanged progress refresh does not rebuild or flicker the tooltip")
 hovered.scripts.OnEnter(hovered); MOCK.Click(hovered); MOCK.Click(U.rows[1])
 local part=U.rows[1]; part.scripts.OnEnter(part)
 check(ShoppingTooltip1:IsShown() and ShoppingTooltip1.comparedLink==part.entry.link,"Weapon setup components support comparison too")
 local other=CreateFrame("Frame"); GameTooltip:SetOwner(other,"ANCHOR_RIGHT"); GameTooltip:Show()
 local previous=compareCalls; part:UpdateTooltip(); part.scripts.OnLeave(part)
+U:Refresh()
 check(GameTooltip:IsShown() and compareCalls==previous,"Does not update or hide another frame's tooltip")
 part.scripts.OnEnter(part); AuctionFrameTab_OnClick(AuctionFrameTab1)
 check(not GameTooltip:IsShown() and not ShoppingTooltip1:IsShown(),"Leaving the auction upgrades tab clears comparisons")
@@ -318,4 +325,27 @@ check(U.armorOnly.label:GetText()=="Best Armor: Mail","Armor label updates when 
 local _,sy,_,sh=U.start:GetRect(); local _,cy,_,ch=U.armorOnly:GetRect(); local _,wy=U.weaponButton:GetRect()
 check(cy>=sy+sh and cy+ch<wy,"Checkbox fits directly below Scan upgrades without overlapping Weapon setups")
 U.armorOnly:SetChecked(false); MOCK.Click(U.armorOnly)
+
+-- Hover after head results arrive, then continue querying the remaining slots.
+F.reset("HUNTER",40,{31,0,0}); F.equip(1,old)
+U.weaponsOnly=false; pages[4]={{item=best},{item=good}}; pages[2]={}
+U:Start(); tick(); pending=false; MOCK.FireAll("AUCTION_ITEM_LIST_UPDATE"); tick()
+check(U.scan and U.scan.search==2,"Head results arrive before later slot queries")
+hovered=U.rows[1]; shift=true; hovered.scripts.OnEnter(hovered)
+local setsBefore=tooltipSets
+tick()
+check(GameTooltip:IsShown() and GameTooltip.link==best.link and ShoppingTooltip1:IsShown(),
+    "Starting the next slot query preserves the hovered upgrade and Shift comparisons")
+finish()
+check(GameTooltip:IsShown() and tooltipSets==setsBefore,"Tooltip stays open without rebuilding throughout the remaining scan and completion")
+local current=U.results[1][1]; current.auctions=current.auctions+1; U:Refresh()
+check(GameTooltip:IsShown() and tooltipSets==setsBefore+1
+    and GameTooltip.lines[#GameTooltip.lines][1]:find("2 listing(s)",1,true),
+    "Updated listing count refreshes the visible tooltip")
+table.remove(U.results[1],1); U:Refresh()
+check(GameTooltip:IsShown() and GameTooltip.link==good.link and ShoppingTooltip1.comparedLink==good.link,
+    "Reused hovered row updates both item and equipped comparisons")
+U.results[1]={}; U:Refresh()
+check(not GameTooltip:IsShown() and not ShoppingTooltip1:IsShown(),"Removing the hovered item clears its tooltips")
+GameTooltip.SetHyperlink=setHyperlink
 print("PASS: "..checks.." auction upgrade assertions")
