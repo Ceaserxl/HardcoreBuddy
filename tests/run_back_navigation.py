@@ -15,7 +15,7 @@ local function back()
     local x,y,w,h=f.back:GetRect()
     local wx,wy,ww=f:GetRect()
     local _,contentTop=f.sidebar:GetRect()
-    assert(x==wx+184 and y==contentTop,"Back is not above the left edge of the content")
+    assert(x==wx+(A.state.view=="deaths" and 22 or 184) and y==contentTop,"Back is not above the left edge of the content")
     assert(MOCK.HitTest(x+w/2,y+h/2)==f.back,"Back cannot be clicked")
     for _,tab in ipairs(f.tabs) do
         local tx,ty,tw,th=tab:GetRect()

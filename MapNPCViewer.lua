@@ -37,10 +37,19 @@ local function createViewer(parent)
     f.paging=label(222,12,20)
     f.help=label(342,12,58)
     f.help:SetText("Drag to rotate. Scroll to zoom.\nUse Reset view to re-center.")
+    -- Resolve NPC -> creature display through the native PlayerModel, then use
+    -- a ModelScene actor's actual bounds instead of creature portrait cameras.
+    local scene=CreateFrame("ModelScene",nil,f.modelBorder); f.scene=scene
+    scene:SetPoint("TOPLEFT",1,-1); scene:SetPoint("BOTTOMRIGHT",-1,1)
+    scene:SetCameraFieldOfView(math.rad(35)); scene:SetCameraNearClip(0.01); scene:SetCameraFarClip(100)
+    scene:SetCameraOrientationByAxisVectors(-1,0,0,0,-1,0,0,0,1)
+    scene:SetLightVisible(true); scene:SetLightAmbientColor(0.7,0.7,0.7)
+    scene:SetLightDiffuseColor(0.8,0.8,0.8); scene:SetLightDirection(-1,0,-1)
+    local actor=scene:CreateActor(); f.actor=actor
     local model=CreateFrame("PlayerModel",nil,f.modelBorder); f.model=model
-    model:SetPoint("CENTER"); model:SetSize(392,392)
+    model:SetPoint("CENTER"); model:SetSize(1,1); model:SetAlpha(0); model:EnableMouse(false)
     f.status=CreateFrame("Frame",nil,f.modelBorder)
-    f.status:SetAllPoints(); f.status:SetFrameLevel(model:GetFrameLevel()+5)
+    f.status:SetAllPoints(); f.status:SetFrameLevel(scene:GetFrameLevel()+5)
     f.loading=f.status:CreateFontString(nil,"OVERLAY","GameFontHighlight")
     f.loading:SetFont(STANDARD_TEXT_FONT,16,""); f.loading:SetPoint("CENTER",0,12)
     f.loading:SetSize(300,42); f.loading:SetJustifyH("CENTER")
@@ -59,21 +68,41 @@ local function createViewer(parent)
     end
 
     function f:ApplyCamera()
-        -- Rebuild the native full-body camera before applying user zoom. A second
-        -- pass after loading handles models whose camera data arrives later.
-        model:SetPosition(0,0,0)
-        model:SetModelScale(1)
-        model:RefreshCamera()
-        model:SetPortraitZoom(0)
-        model:SetCamDistanceScale(self.distance or DEFAULT_DISTANCE)
-        model:SetFacing(self.facing or 0.35)
+        local bounds=self.bounds; if not bounds then return end
+        local facing=self.facing or 0.35
+        local c,s=math.cos(facing),math.sin(facing)
+        actor:SetScale(1/bounds.radius); actor:SetYaw(facing)
+        actor:SetPosition((-bounds.x*c+bounds.y*s)/bounds.radius,(-bounds.x*s-bounds.y*c)/bounds.radius,-bounds.z/bounds.radius)
+        local aspect=math.max(0.1,scene:GetWidth()/math.max(1,scene:GetHeight()))
+        local half=math.atan(math.tan(math.rad(35)/2)*math.min(1,aspect))
+        local distance=1.08/math.sin(half)*(self.distance or DEFAULT_DISTANCE)/DEFAULT_DISTANCE
+        scene:SetCameraPosition(distance,0,0)
+        self.cameraDistance=distance
     end
     function f:Loaded()
         if not self:IsVisible() or not self.npcID or not self.waiting then return end
         local id=model:GetModelFileID()
         if not id or id<=0 then return end
+        local display=model:GetDisplayInfo()
+        if not display or display<=0 then return end
+        if self.requestedDisplay~=display then
+            self.requestedDisplay=display
+            local ok,result=pcall(actor.SetModelByCreatureDisplayID,actor,display)
+            -- Do not restart a failed/uncached display on every rendered frame.
+            -- The existing three-second retry timer owns subsequent requests.
+            if not ok or result==false then return end
+        end
+        local actorFile=actor:GetModelFileID()
+        if not actorFile or actorFile<=0 then return end
+        local bottom,top=actor:GetMaxBoundingBox()
+        if not bottom or not top then return end
+        local dx,dy,dz=top.x-bottom.x,top.y-bottom.y,top.z-bottom.z
+        local radius=math.sqrt(dx*dx+dy*dy+dz*dz)/2
+        if radius~=radius or radius<=0 or radius==math.huge then return end
+        self.bounds={x=(bottom.x+top.x)/2,y=(bottom.y+top.y)/2,z=(bottom.z+top.z)/2,radius=radius}
         self.waiting=nil; self.settle=0; self.settlePass=0
         self:ApplyCamera()
+        actor:SetShown(true)
         self:Status("loaded")
     end
     function f:RequestModel(reset)
@@ -81,6 +110,8 @@ local function createViewer(parent)
         if reset then self.attempts=0 end
         self.attempts=(self.attempts or 0)+1
         self.waiting=0; self.animationTime=0; self.settle=nil; self.dragging=nil
+        self.requestedDisplay=nil; self.bounds=nil; actor:SetShown(false); actor:ClearModel()
+        actor:SetScale(1); actor:SetPosition(0,0,0); actor:SetYaw(0)
         model:ClearModel()
         self:Status("loading")
         -- Missing or uncached creature displays can throw or return no model.
@@ -88,12 +119,12 @@ local function createViewer(parent)
         pcall(model.SetCreature,model,self.npcID)
     end
     model:SetScript("OnModelLoaded",function() f:Loaded() end)
-    model:EnableMouse(true); model:EnableMouseWheel(true)
-    model:SetScript("OnMouseDown",function(_,button)
+    scene:EnableMouse(true); scene:EnableMouseWheel(true)
+    scene:SetScript("OnMouseDown",function(_,button)
         if button=="LeftButton" then f.dragging=GetCursorPosition(); f.settle=nil end
     end)
-    model:SetScript("OnMouseUp",function() f.dragging=nil end)
-    model:SetScript("OnMouseWheel",function(_,delta)
+    scene:SetScript("OnMouseUp",function() f.dragging=nil end)
+    scene:SetScript("OnMouseWheel",function(_,delta)
         f.settle=nil
         f.distance=math.max(0.5,math.min(8,(f.distance or DEFAULT_DISTANCE)-delta*0.15))
         f:ApplyCamera()
@@ -101,7 +132,7 @@ local function createViewer(parent)
     model:SetScript("OnUpdate",function(_,elapsed)
         if not f:IsVisible() or not f.npcID then return end
         if f.dragging then
-            local x=GetCursorPosition(); f.facing=(f.facing or 0.35)+(x-f.dragging)*0.015; f.dragging=x; model:SetFacing(f.facing)
+            local x=GetCursorPosition(); f.facing=(f.facing or 0.35)+(x-f.dragging)*0.015; f.dragging=x; f:ApplyCamera()
         end
         if f.waiting then
             f.waiting=f.waiting+elapsed
@@ -139,7 +170,7 @@ local function createViewer(parent)
         f:ApplyCamera(); f.settle=0; f.settlePass=0
     end)
     f:SetScript("OnHide",function()
-        f.dragging=nil; f.waiting=nil; f.settle=nil; f.npcID=nil; model:ClearModel()
+        f.dragging=nil; f.waiting=nil; f.settle=nil; f.npcID=nil; model:ClearModel(); actor:SetShown(false); actor:ClearModel()
     end)
     return f
 end
@@ -153,8 +184,8 @@ function M:LayoutViewer(parent,width,visible,height)
     local frameHeight=(height or 416)/scale
     f:SetScale(scale); f:SetSize(width/scale,frameHeight)
     f.info:SetHeight(frameHeight); f.modelBorder:SetSize(width/scale-312,frameHeight)
-    local modelSize=math.min(f.modelBorder:GetWidth(),frameHeight)-24
-    f.model:SetSize(modelSize,modelSize)
+    f.scene:SetSize(f.modelBorder:GetWidth()-2,frameHeight-2)
+    if f.bounds then f:ApplyCamera() end
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",0,0)
     local ids=A.state.mapNPCs
     local index=math.max(1,math.min(#ids,A.state.mapNPCPage or 1)); A.state.mapNPCPage=index

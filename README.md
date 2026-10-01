@@ -22,17 +22,17 @@ grimoires have separate sections, with the matching demon listed for each book.
 ## Settings
 
 Open the **Settings** tab or use `/hcb settings`. The sidebar groups General,
-Gear Advisor, Talent Advisor, Auction House, Death Alerts, Low Health, NPC Alerts,
+Gear Advisor, Talent Advisor, Auction House, Death Journal, Low Health, NPC Alerts,
 Map and Debug. Long pages scroll. Existing saved preferences are kept.
 Pages use the Map settings layout: clear headings, bordered sections and paired
 cards for related controls. Companion and Advisor overviews use matching cards;
-supply tables, spell lists and death reports keep full-width rows. Alert sliders
+Supplies, Spells and Zones use two-column cards. Death reports keep full-width rows. Alert sliders
 show their percentage inside the control.
 General includes the minimap button, field kit upgrade notices, recentering and
-Preparation reminders. Death Alerts includes banner appearance; NPC Alerts
+Preparation reminders. Death Journal includes alerts, banner appearance, history import and report retention; NPC Alerts
 contains separate rare and elite controls on the same scrolling page.
-Carry quantities and item priorities remain in Supplies; talent paths remain in
-Advisors. `/hcb health` and `/hcb deaths settings` open their Settings sections.
+Carry quantities and item priorities remain in Supplies; talent paths are selected in
+Settings > Talent Advisor. `/hcb health` and `/hcb deaths settings` open their Settings sections.
 Nested pages share **< Back** above the upper-left of the content. It stays
 in place while scrolling; the auction upgrades window uses the same placement.
 Supplies opens to **All** by default.
@@ -81,6 +81,10 @@ Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
 - Excludes applied enchants and armor kits from both scores.
 - Hardcore talent paths for all nine classes, with current ranks, next-point advice,
   explicit respec guidance and a Point-by-point path button opening a continuous list.
+- **Apply unused points** spends available points along your selected path.
+  **Automatically apply unused points** is optional and off by default, saved per character.
+  Both require your live character, a matching path and no combat; each point waits
+  for server confirmation. Spending points requires a respec to undo.
 - WoW's existing talent rank numbers show current/recommended ranks for your
   selected build, such as **2/5**.
 - Separate **Disable Gear Advisor** and **Disable Talent Advisor** buttons in their
@@ -130,7 +134,7 @@ Category filters show known dangerous NPCs, rares, elites and bosses.
 Map markers use Blizzard's silver rare and gold elite icons, a skull for world
 bosses and a warning icon for dangerous NPCs. Hover for NPC names and details.
 Map settings include Blizzard's tint color picker and a separate opacity slider,
-an icon picker for each category,
+a six-column picker of native transparent map and raid symbols for each category,
 and marker size (12–40 pixels) and opacity (10–100%). Exploration, NPC markers
 and Zone notices each have a Reset button. Reset all restores defaults for all
 three Map sections without changing other addon settings.
@@ -138,12 +142,12 @@ Only nearly overlapping points combine. The distance follows icon size (16 pixel
 at the default 18-pixel size), and changing size recalculates the groups. Every
 point must be close to every other point; nearby chains cannot collapse an entire camp. Zooming
 in separates locations that are far enough apart on screen.
-Browse any Classic zone or follow your current zone under **Advisors > Map**.
+Use the **Browse zones** row under **Advisors > Map** to choose a zone or return to your current zone. The zone name appears above its NPC list.
 **Silent zone-entry notice** lists known dangers in chat without playing a sound
 and is enabled by default; existing opt-outs are preserved. Click a marker to
 open its NPC's 3D preview inside **Advisors > Map**. Clustered markers provide
 Previous/Next NPC controls. Drag to rotate, scroll to zoom, and use Back to return.
-Models depend on client availability; a failed load offers Retry.
+The bordered viewer uses a native ModelScene, fits the full creature bounds and centers the model while rotating. Models depend on client availability; loading is animated, retries are automatic, and a failed load offers Retry.
 Pins mark recorded spawn areas, not live sightings; missing
 coordinates stay clearly labelled in the zone list. See [sources and coverage](docs/map-data.md).
 
@@ -223,7 +227,7 @@ each guide retains its complete packing list.
 
 ## Death journal and alerts
 
-**Settings > Death Alerts** defaults to **Original (Deathlog default)**, the
+**Settings > Death Journal** defaults to **Original (Deathlog default)**, the
 original WoW raid-warning sound used before the custom bell. It now supports the
 same independent 0-100% volume slider as the custom bell and five Deathlog
 clips (Hero Fallen, Arugal, Dread Hunger, Hunger Games and Golf Clap). Set it to 0%
@@ -232,18 +236,22 @@ Deathlog does not need to be installed. Credits and original sources are in
 `Media/Deaths/Deathlog/README.md`.
 
 HardcoreDeaths is built into HardcoreBuddy. Select the **Death Journal** tab in the main
-window, right-click the shared minimap button, or use `/hcb deaths`. The `/hd` and
+window, right-click the shared minimap button, or use `/hcb deaths`.
+Reports use the full content width with no sidebar. **Clear reports** asks for a
+second click within five seconds. The **Death Journal settings** row opens the
+combined settings page. **Import Deathlog** is there, along with **Keep reports
+for** (1–3650 days; default 30). Expired reports are removed automatically. The `/hd` and
 `/hardcoredeaths` aliases also open this page.
 
 Reports and player details appear in the right-hand content area. Death options
-and banner appearance are together in **Settings > Death Alerts**.
+and banner appearance are together in **Settings > Death Journal**.
 The main window controls positioning and scale; compact feed and alert overlays
 keep their separate position/scale settings.
 
 The journal uses separate Level, Adventurer, Location, Cause, Source and When
 columns, plus summary statistics and search/minimum-level controls. Leading
 "a"/"an" is omitted from displayed causes; original reports remain in details.
-Under **Settings > Death Alerts**, set **Alert display duration** from 1 to 30
+Under **Settings > Death Journal**, set **Alert display duration** from 1 to 30
 seconds (default 3). Press Enter or leave the field to save; Escape cancels an
 edit. The alert remains visible for that duration, then fades for half a second.
 The setting applies to new alerts and previews and survives login.
@@ -273,7 +281,7 @@ It lasts four seconds, then fades. Click it to open the live kit; the complete
 list is also printed in chat. Unchanged levels stay quiet, and preview settings
 do not affect detection.
 
-The appearance section of **Settings > Death Alerts** offers Compact (default), Banner, and Text-only
+The appearance section of **Settings > Death Journal** offers Compact (default), Banner, and Text-only
 death alerts. Background opacity is independent of text. **Unlock and move**
 keeps a silent preview visible while you drag; **Save position** locks it and
 restores click-through behavior. All styles share a saved position and scale

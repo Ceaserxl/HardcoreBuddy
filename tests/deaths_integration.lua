@@ -99,7 +99,7 @@ for _,screen in ipairs({{1920,1080},{1024,768},{640,480}}) do
     A:RestoreWindow(); A:Refresh()
     local hx,hy,hw,hh=H.host:GetRect()
     local wx,wy,ww,wh=A.window:GetRect()
-    assert(hx>=wx+180 and hy>wy+100 and hx+hw<=wx+ww and hy+hh<=wy+wh-40)
+    assert(hx>=wx+20 and hy>wy+100 and hx+hw<=wx+ww and hy+hh<=wy+wh-40)
     for _,row in ipairs(H.window.rows) do
         if row:IsVisible() then
             local rx,ry,rw,rh=row:GetRect()
@@ -178,7 +178,7 @@ do
 end
 print("PASS: All 5,000 imported reports are reachable with a bounded row pool; fractional offsets and shrinking histories are handled.")
 
-assert(A.window.filters[1].label:GetText()=="Reports" and not A.window.filters[2]:IsShown(),"Journal only contains reports")
+assert(not A.window.sidebar:IsShown() and not A.window.filters[1]:IsShown(),"Journal has no sidebar")
 local count=#H.db.records
 A:OpenDeaths("Options")
 assert(H.options:IsVisible())
@@ -199,7 +199,7 @@ H.db.records=savedRecords
 H:Refresh()
 print("PASS: Watching removed; real-record preview prefers current realm, falls back across realms, preserves history and uses samples only for empty history.")
 
-assert(A.state.view=="settings" and A.state.filter=="Death Alerts","Death preferences live in Settings")
+assert(A.state.view=="settings" and A.state.filter=="Death Journal","Death preferences live in Settings")
 assert(H.db.settings.alertDuration==3,"existing installs keep three-second hold")
 for _,pair in ipairs({{-1,1},{0,1},{1,1},{30,30},{90,30},{7.8,7},{"bad",3},{math.huge,3},{0/0,3}}) do
     assert(H.NormalizeAlertDuration(pair[1])==pair[2])

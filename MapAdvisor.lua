@@ -33,28 +33,17 @@ for _,entry in ipairs({{"circle",2},{"triangle",4},{"moon",5},{"square",6},{"sku
     icons[entry[1]]={fallback="Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..entry[2]}
     M.iconChoices[#M.iconChoices+1]=entry[1]
 end
+-- Native map symbols have transparent silhouettes rather than square spell art.
 for _,entry in ipairs({
-    {"wolf","Wolf","Ability_Hunter_Pet_Wolf"},{"bear","Bear","Ability_Hunter_Pet_Bear"},
-    {"cat","Cat","Ability_Hunter_Pet_Cat"},{"boar","Boar","Ability_Hunter_Pet_Boar"},
-    {"raptor","Raptor","Ability_Hunter_Pet_Raptor"},{"spider","Spider","Ability_Hunter_Pet_Spider"},
-    {"bat","Bat","Ability_Hunter_Pet_Bat"},{"owl","Owl","Ability_Hunter_Pet_Owl"},
-    {"scorpid","Scorpid","Ability_Hunter_Pet_Scorpid"},{"turtle","Turtle","Ability_Hunter_Pet_Turtle"},
-    {"gorilla","Gorilla","Ability_Hunter_Pet_Gorilla"},{"hyena","Hyena","Ability_Hunter_Pet_Hyena"},
-    {"crocodile","Crocolisk","Ability_Hunter_Pet_Crocolisk"},{"serpent","Wind serpent","Ability_Hunter_Pet_WindSerpent"},
-    {"bird","Carrion bird","Ability_Hunter_Pet_Vulture"},{"tallstrider","Tallstrider","Ability_Hunter_Pet_TallStrider"},
-    {"dragon","Dragon","INV_Misc_Head_Dragon_01"},{"demon","Demon","Spell_Shadow_SummonFelHunter"},
-    {"fire","Fire","Spell_Fire_FlameBolt"},{"frost","Frost","Spell_Frost_FrostBolt02"},
-    {"lightning","Lightning","Spell_Nature_Lightning"},{"poison","Poison","Ability_Rogue_DualWeild"},
-    {"shadow","Shadow","Spell_Shadow_ShadowBolt"},{"arcane","Arcane","Spell_Nature_StarFall"},
-    {"holy","Holy","Spell_Holy_HolyBolt"},{"shield","Shield","Ability_Defend"},
-    {"sword","Sword","Ability_MeleeDamage"},{"bow","Bow","Ability_Marksmanship"},
-    {"stealth","Stealth","Ability_Stealth"},{"trap","Trap","Spell_Frost_ChainsOfIce"},
-    {"fear","Fear","Spell_Shadow_Possession"},{"bleed","Bleed","Ability_Gouge"},
-    {"heal","Healing","Spell_Holy_Heal"},{"stun","Stun","Ability_ThunderBolt"},
-    {"eye","Eye","Spell_Shadow_DetectInvisibility"},{"paw","Paw","Ability_Druid_Maul"},
+    {"inn","Inn","Innkeeper"},{"flight","Flight path","FlightMaster"},
+    {"repair","Repair","Repair"},{"stable","Stable","StableMaster"},
+    {"bank","Bank","Banker"},{"auction","Auction house","Auctioneer"},
+    {"trainer","Trainer","Profession"},{"food","Food","Food"},
+    {"reagents","Reagents","Reagents"},{"mailbox","Mailbox","Mailbox"},
+    {"poisons","Poison","Poisons"},{"battle","Battleground","BattleMaster"},
 }) do
     local key=entry[1]; names[key]=entry[2]
-    icons[key]={fallback="Interface\\Icons\\"..entry[3]}
+    icons[key]={fallback="Interface\\Minimap\\Tracking\\"..entry[3]}
     M.iconChoices[#M.iconChoices+1]=key
 end
 function M:IconName(key) return names[key] or (key:sub(1,1):upper()..key:sub(2)) end
@@ -331,8 +320,8 @@ function M:Document(context,state)
     end
     local id=state.mapZone or self:CurrentMap(); local zone=A.Data.MapZones[id]
     local settingsRow=row("Map settings","Configure map reveal, marker categories and silent zone-entry notices.","settings")
-    local blocks={settingsRow,row("Choose a zone","Browse the Classic outdoor zones and cities above.")}
-    doc.cards[1]={title=zone and zone.name or "Map Advisor",note="Known locations, filtered for your faction.",blocks=zone and {settingsRow} or blocks}
+    local blocks={row("Browse zones","Choose a zone to explore its recorded NPCs.","zones"),settingsRow}
+    doc.cards[1]={title="Map Advisor",note="Explore known locations and prepare for dangerous encounters.",blocks=blocks}
     if zone then
         blocks={}
         for _,r in ipairs(self:Records(id)) do
@@ -342,30 +331,14 @@ function M:Document(context,state)
                 (r.npc.note and ("\n"..r.npc.note) or ""),"npc",r.id)
         end
         if #blocks==0 then blocks[1]=row("No matching dangers in this catalogue","Adjust the filters in Map settings. An empty list does not guarantee a safe zone.") end
-        doc.cards[2]={title="NPCs",note="Click a name to view its model and details.",blocks=blocks}
+        doc.cards[2]={title=zone.name,note="NPCs | Click a name to view its model and details.",blocks=blocks}
     end
     return doc
 end
 
-function M:LayoutControls(parent,left,top,width,visible)
-    visible=visible and not A.state.mapNPCs
-    if not self.navigation and not visible then return 0 end
-    if not self.navigation then
-        local f=CreateFrame("Frame",nil,parent); self.navigation=f
-        for i,entry in ipairs({{"zones","Browse zones"},{"open","Open zone map"},{"current","Follow current zone"}}) do
-            local command=entry[1]; local b=CreateFrame("Button",nil,f,"BackdropTemplate")
-            b:SetSize(220,28); b:SetPoint("TOPLEFT",16+(i-1)*232,-8); A.Skin.Button(b,"utility")
-            b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetAllPoints(); b.label:SetText(entry[2])
-            b:SetScript("OnClick",function()
-                local id=A.state.mapZone or M:CurrentMap()
-                if command~="open" or id then M:Activate(action(command,id)) end
-            end)
-        end
-    end
-    local f=self.navigation; f:SetShown(visible); if not visible then return 0 end
-    local scale=math.min(1,width/744); f:SetScale(scale); f:SetSize(width/scale,44)
-    f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
-    return 52*scale
+function M:LayoutControls()
+    if self.navigation then self.navigation:Hide() end
+    return 0
 end
 
 local events=CreateFrame("Frame"); M.events=events

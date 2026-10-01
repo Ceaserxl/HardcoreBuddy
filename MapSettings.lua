@@ -19,6 +19,7 @@ function M:OpenTintPicker()
     local changed=function() apply(picker:GetColorRGB()) end
     local cancel=function() apply(r,g,b) end
     picker:SetFrameStrata("FULLSCREEN_DIALOG")
+    picker:SetFrameLevel(200)
     if picker.SetupColorPickerAndShow then
         picker:SetupColorPickerAndShow({r=r,g=g,b=b,hasOpacity=false,swatchFunc=changed,cancelFunc=cancel})
     else

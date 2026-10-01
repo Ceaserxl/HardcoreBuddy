@@ -114,6 +114,9 @@ frame:SetScript("OnUpdate", function(_, elapsed)
     elapsedTotal = elapsedTotal + elapsed
     if elapsedTotal < 15 then return end
     elapsedTotal = 0
+    if H.db and (not H.lastPrune or GetTime()-H.lastPrune>=60) then
+        H.lastPrune=GetTime(); H:PruneReports()
+    end
     if H.officialChannelReady then H:EnsureOfficialChannel() end
     for sender, stamp in pairs(senderTimes) do
         if GetTime() - stamp > 60 then senderTimes[sender] = nil end

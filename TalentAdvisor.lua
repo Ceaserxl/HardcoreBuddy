@@ -1,10 +1,10 @@
--- Independent Classic talent recommendations. Spending a point always requires
--- a deliberate click and a fresh read of the player's real talent tree.
+-- Independent Classic talent recommendations with opt-in, acknowledged spending.
 local _,A=...
 local T={}; A.TalentAdvisor=T
 function T:IsEnabled() return A.db and A.db.talentAdvisorEnabled~=false end
 function T:SetEnabled(enabled)
     A.db.talentAdvisorEnabled=not not enabled
+    if enabled then self.checkAutomatic=true end
     if A.TalentRanks then A.TalentRanks:Refresh() end
     if A.window and A.window:IsShown() then A:Refresh() end
 end
@@ -120,6 +120,7 @@ end
 
 function T:LearnNext(expectedBuild,expectedKey,expectedRank)
     if not self:IsEnabled() then return false end
+    if A:GetContext().mode=="preview" then return false end
     if InCombatLockdown and InCombatLockdown() then A:Print("Spend talent points after combat."); return false end
     local _,class=UnitClass("player"); local level=UnitLevel("player")
     local build=self:Build(class,level)
@@ -135,6 +136,37 @@ function T:LearnNext(expectedBuild,expectedKey,expectedRank)
     if live.unspent<1 or plan.spent>=level-9 or not LearnTalent then return false end
     LearnTalent(nextPoint.tree,live.indices[nextPoint.key],false)
     return true
+end
+
+function T:ApplyUnused(automatic)
+    if self.applying or not self:IsEnabled() or not A.characterDB then return false end
+    if A:GetContext().mode=="preview" or (InCombatLockdown and InCombatLockdown()) then return false end
+    local _,class=UnitClass("player"); local level=UnitLevel("player")
+    local build=self:Build(class,level)
+    local live=self:ReadCurrent(class,level)
+    if not build or not live or live.unspent<1 then return false end
+    self.applying={build=build.id,class=class,automatic=automatic,elapsed=0}
+    A.needsRefresh=true
+    self:ContinueApplying()
+    return true
+end
+
+function T:ContinueApplying()
+    local run=self.applying; if not run then return end
+    if not self:IsEnabled() or A:GetContext().mode=="preview" or (InCombatLockdown and InCombatLockdown())
+        or (run.automatic and not A.characterDB.autoApplyTalents) then self.applying=nil; return end
+    local _,class=UnitClass("player"); local level=UnitLevel("player")
+    local build=self:Build(class,level); local live=self:ReadCurrent(class,level)
+    if not live or class~=run.class or not build or build.id~=run.build then self.applying=nil; return end
+    -- A server update must acknowledge the last request before another is sent.
+    if run.key then
+        if live.ranks[run.key]~=run.rank then return end
+        run.key=nil; run.elapsed=0
+    end
+    local nextPoint=self.Plan(class,level,build,live.ranks).next
+    if live.unspent<1 or not nextPoint then self.applying=nil; return end
+    run.key=nextPoint.key; run.rank=nextPoint.rank; run.elapsed=0
+    if not self:LearnNext(build.id,nextPoint.key,nextPoint.rank) then self.applying=nil end
 end
 
 function T:OpenTalents()
@@ -239,8 +271,23 @@ function T:Document(context,state)
 end
 
 local events=CreateFrame("Frame"); T.events=events
-for _,event in ipairs({"CHARACTER_POINTS_CHANGED","PLAYER_TALENT_UPDATE","PLAYER_LEVEL_UP","PLAYER_ENTERING_WORLD","ADDON_LOADED"}) do events:RegisterEvent(event) end
+for _,event in ipairs({"CHARACTER_POINTS_CHANGED","PLAYER_TALENT_UPDATE","PLAYER_LEVEL_UP","PLAYER_ENTERING_WORLD","PLAYER_REGEN_ENABLED","ADDON_LOADED"}) do events:RegisterEvent(event) end
 events:SetScript("OnEvent",function(_,event,name)
     if event=="ADDON_LOADED" and name~="Blizzard_TalentUI" then return end
+    T.checkAutomatic=true
     if A.window and A.window:IsShown() and A.state and A.state.view=="advisors" then A:Refresh() end
+end)
+events:SetScript("OnUpdate",function(_,elapsed)
+    if T.applying then
+        T.applying.elapsed=T.applying.elapsed+elapsed
+        T.pollElapsed=(T.pollElapsed or 0)+elapsed
+        if T.pollElapsed<0.2 then return end
+        T.pollElapsed=0
+        if T.applying.elapsed>4 then T.applying=nil; A:Print("Talent application stopped: waiting for the server. Try Apply unused points again.")
+        else T:ContinueApplying() end
+        if not T.applying then A.needsRefresh=true end
+    elseif T.checkAutomatic then
+        T.checkAutomatic=nil
+        if A.characterDB and A.characterDB.autoApplyTalents then T:ApplyUnused(true) end
+    end
 end)

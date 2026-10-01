@@ -84,8 +84,33 @@ function S.LayoutSections(parent,width)
 end
 function S.SectionBackdrop(parent,top,height,column)
     local panel=S.Section(parent,"",top,height,column)
-    panel:SetFrameLevel(math.max(0,parent:GetFrameLevel()-1))
+    -- Regions on the page's BACKGROUND cannot cover page text or child controls.
+    -- A lower-level child frame can disappear behind its own opaque parent.
+    panel:SetBackdrop(nil); panel:EnableMouse(false)
+    local fill=parent:CreateTexture(nil,"BACKGROUND",nil,-7)
+    fill:SetTexture(WHITE); fill:SetAllPoints(panel); fill:SetVertexColor(unpack(styles.card.fill))
+    panel.sectionFill=fill; panel.backgroundEdges={}
+    for i=1,4 do
+        local edge=parent:CreateTexture(nil,"BACKGROUND",nil,-6); edge:SetTexture(WHITE)
+        edge:SetVertexColor(unpack(styles.card.border)); panel.backgroundEdges[i]=edge
+        if i==1 or i==2 then
+            local side=i==1 and "TOP" or "BOTTOM"
+            edge:SetPoint(side.."LEFT",panel,side.."LEFT",0,0); edge:SetPoint(side.."RIGHT",panel,side.."RIGHT",0,0); edge:SetHeight(1)
+        else
+            local side=i==3 and "LEFT" or "RIGHT"
+            edge:SetPoint("TOP"..side,panel,"TOP"..side,0,0); edge:SetPoint("BOTTOM"..side,panel,"BOTTOM"..side,0,0); edge:SetWidth(1)
+        end
+    end
+    panel:HookScript("OnHide",function() fill:Hide(); for _,edge in ipairs(panel.backgroundEdges) do edge:Hide() end end)
+    panel:HookScript("OnShow",function() fill:Show(); for _,edge in ipairs(panel.backgroundEdges) do edge:Show() end end)
     return panel
+end
+
+function S.Rebase(frame,level)
+    frame:SetFrameLevel(level)
+    if frame.GetChildren then
+        for _,child in ipairs({frame:GetChildren()}) do S.Rebase(child,level+2) end
+    end
 end
 function S.InlineSlider(slider,suffix,step)
     slider:SetHeight(28)

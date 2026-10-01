@@ -207,7 +207,7 @@ check(not allText(pack.cards):find("Equipped",1,true),"Preview implies actual ge
 A:SetProfile("mode","live"); A:Navigate("supplies")
 local supply=A.window.cards[1].content.blocks[1]
 check(not supply.block.guideTone and supply.body.fontSize==11,"Guide style leaked into supply row")
-check(supply:GetHeight()==46,"Supply row geometry changed")
+check(supply.supplyTile and supply:GetHeight()==136,"Supply card layout was not restored")
 GetInstanceInfo=nil
 check(I.Current()==nil,"Missing instance API fallback")
 print("PASS: "..checks.." instance assertions; 35 compact packing lists, current routing, search, navigation, inventory and pooled layout.")

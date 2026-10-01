@@ -96,6 +96,12 @@ function H:ShowDetails(record)
     local filter=addon.state and addon.state.view=="deaths" and addon.state.filter
     addon:OpenDeaths(filter~="Options" and filter or "Reports",record)
 end
+function H:JournalColumns(width)
+    local extra=math.max(0,(width-816)/3)
+    return {{"LEVEL",6,36,"level"},{"ADVENTURER",52,140+extra,"name"},
+        {"LOCATION",202+extra,170+extra,"zone"},{"CAUSE",382+extra*2,208+extra,"cause"},
+        {"SOURCE",600+extra*3,96,"source"},{"WHEN",width-108,70,"age"}}
+end
 function H:MakeRow(parent, index, y, mini)
     local row = CreateFrame("Button", nil, parent,"BackdropTemplate")
     row:SetPoint("TOPLEFT", mini and 8 or 12, y)
@@ -174,6 +180,10 @@ function H:RefreshJournalRows()
         row:SetPoint("TOPLEFT",12,-(index-1)*32)
         row:SetPoint("TOPRIGHT",-12,-(index-1)*32)
         row.bg:SetColorTexture(1,1,1,index%2==0 and 0.04 or 0)
+        for _,column in ipairs(self:JournalColumns(f.listContent:GetWidth())) do
+            local label=row[column[4]]
+            label:ClearAllPoints(); label:SetPoint("LEFT",column[2],0); label:SetWidth(column[3])
+        end
         self:PaintRow(row,records[index],false)
     end
     for i=count+1,#f.rows do self:PaintRow(f.rows[i],nil,false) end
@@ -270,11 +280,21 @@ function H:ShowAlert(record, preview)
 end
 function H:LayoutPage(parent,left,top,width,height,state)
     self.host:SetParent(parent)
+    if addon.Skin.Rebase then addon.Skin.Rebase(self.host,parent:GetFrameLevel()+2) end
     self.host:ClearAllPoints()
     self.host:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.host:SetSize(width,height)
     addon.Skin.LayoutSections(self.window,width)
-    self.window.tableCard:SetHeight(math.max(40,height-194))
+    for i,stat in ipairs(self.window.stats) do
+        local cell=(width-56)/3
+        stat:ClearAllPoints(); stat:SetPoint("TOPLEFT",16+(i-1)*(cell+12),-64); stat:SetWidth(cell)
+    end
+    self.window.clear:ClearAllPoints(); self.window.clear:SetPoint("TOPRIGHT",-16,-122)
+    local columns=self:JournalColumns(width)
+    for i,label in ipairs(self.window.columnLabels) do
+        label:ClearAllPoints(); label:SetPoint("TOPLEFT",columns[i][2]+12,-163); label:SetWidth(columns[i][3])
+    end
+    self.window.tableCard:SetHeight(math.max(40,height-242))
     addon.Skin.LayoutSections(self.details,width)
     self.details.bodyCard:SetHeight(math.max(40,height-114))
     addon.Skin.LayoutSections(self.options,width)
@@ -284,12 +304,12 @@ function H:LayoutPage(parent,left,top,width,height,state)
     local combined=state.filter=="Settings"
     self.window:SetShown(not combined and state.filter~="Options" and state.filter~="Appearance" and not state.deathRecord)
     self.options:ClearAllPoints()
-    if combined then self.options:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,0); self.options:SetSize(width,480)
+    if combined then self.options:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,0); self.options:SetSize(width,656)
     else self.options:SetAllPoints(self.host) end
     self.options:SetShown((combined or state.filter=="Options") and not state.deathRecord)
     if self.appearance then
         self.appearance:ClearAllPoints()
-        if combined then self.appearance:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,-492); self.appearance:SetSize(width,440)
+        if combined then self.appearance:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,-668); self.appearance:SetSize(width,440)
         else self.appearance:SetAllPoints(self.host) end
         self.appearance:SetShown((combined or state.filter=="Appearance") and not state.deathRecord)
     end
@@ -318,8 +338,10 @@ function H:BuildUI()
     title:SetText("Death Journal"); title:SetTextColor(unpack(GOLD))
     f.realm=Text(f,12,"TOPLEFT",12,-42,650); f.realm:SetTextColor(unpack(MUTED))
     f.tableCard=addon.Skin.SectionBackdrop(f,154,274)
+    f.stats={}
     for i,entry in ipairs({{"count","REPORTS"},{"average","AVERAGE LEVEL"},{"highest","HIGHEST LEVEL"}}) do
         local stat=CreateFrame("Frame",nil,f,"BackdropTemplate")
+        f.stats[i]=stat
         stat:SetSize(246,48); stat:SetPoint("TOPLEFT",16+(i-1)*258,-64)
         addon.Skin.Paint(stat,"card")
         local label=Text(stat,10,"TOPLEFT",12,-7,210); label:SetText(entry[2]); label:SetTextColor(unpack(MUTED))
@@ -345,12 +367,21 @@ function H:BuildUI()
     minimum:SetText("0")
     minimum:SetScript("OnTextChanged", function(box) self.minLevel=math.max(0,math.min(60,tonumber(box:GetText()) or 0));self.window.listScroll:SetVerticalScroll(0);self:Refresh() end)
     minimum:SetScript("OnEscapePressed", function(box) box:ClearFocus() end)
-    f.import=Button(f,"Import Deathlog",160,600,-122,function() self:ImportLegacy() end)
-    local columns={{"LEVEL",18,40},{"ADVENTURER",64,140},{"LOCATION",214,170},{"CAUSE",394,208},{"SOURCE",612,96},{"WHEN",724,64}}
-    for _,c in ipairs(columns) do local label=Text(f,10,"TOPLEFT",c[2],-163,c[3]); label:SetText(c[1]); label:SetTextColor(unpack(MUTED)) end
+    f.clear=Button(f,"Clear reports",160,600,-122,function(button)
+        if button.confirmUntil and GetTime()<button.confirmUntil then
+            button.confirmUntil=nil; button.label:SetText("Clear reports"); self:ClearReports()
+        else button.confirmUntil=GetTime()+5; button.label:SetText("Confirm clear") end
+    end)
+    f.clear:SetScript("OnUpdate",function(button)
+        if button.confirmUntil and GetTime()>=button.confirmUntil then button.confirmUntil=nil; button.label:SetText("Clear reports") end
+    end)
+    f.settings=Button(f,"Death Journal settings  >",720,0,0,function() addon:OpenSettings("Death Journal") end)
+    f.settings:ClearAllPoints(); f.settings:SetPoint("BOTTOMLEFT",12,8); f.settings:SetPoint("BOTTOMRIGHT",-12,8); f.settings:SetHeight(34)
+    f.columnLabels={}
+    for _,c in ipairs(self:JournalColumns(816)) do local label=Text(f,10,"TOPLEFT",c[2]+12,-163,c[3]); label:SetText(c[1]); label:SetTextColor(unpack(MUTED)); f.columnLabels[#f.columnLabels+1]=label end
     f.rows = {}
     f.listScroll=CreateFrame("ScrollFrame","HardcoreBuddyDeathJournalScrollFrame",f,"UIPanelScrollFrameTemplate")
-    f.listScroll:SetPoint("TOPLEFT",0,-180); f.listScroll:SetPoint("BOTTOMRIGHT",0,40)
+    f.listScroll:SetPoint("TOPLEFT",0,-180); f.listScroll:SetPoint("BOTTOMRIGHT",0,88)
     f.listScroll:EnableMouseWheel(true)
     f.listScroll:SetScript("OnMouseWheel",function(scroll,delta)
         scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*96)))
@@ -359,7 +390,7 @@ function H:BuildUI()
     f.listContent=CreateFrame("Frame",nil,f.listScroll)
     f.listContent:SetSize(816,1); f.listScroll:SetScrollChild(f.listContent)
     f.empty=Text(f.listScroll,15,"CENTER",0,0,650);f.empty:SetJustifyH("CENTER");f.empty:SetWordWrap(true)
-    f.hotspot=Text(f,11,"BOTTOMLEFT",16,20,560); f.hotspot:SetTextColor(unpack(MUTED))
+    f.hotspot=Text(f,11,"BOTTOMLEFT",16,64,560); f.hotspot:SetTextColor(unpack(MUTED))
 
     local mini=Panel("HardcoreBuddyDeathsFeed",360,218);self.mini=mini
     addon.Skin.Paint(mini,"menu")
@@ -446,7 +477,7 @@ function H:BuildUI()
     addon.Skin.SectionBackdrop(options,82,344,1).title:SetText("Reports & sound")
     addon.Skin.SectionBackdrop(options,82,344,2).title:SetText("Display & volume")
     local optionsTitle=Text(options,22,"TOPLEFT",12,-12,700)
-    optionsTitle:SetText("Death Alerts"); optionsTitle:SetTextColor(unpack(addon.Skin.colors.gold))
+    optionsTitle:SetText("Death Journal"); optionsTitle:SetTextColor(unpack(addon.Skin.colors.gold))
     local intro=Text(options,12,"TOPLEFT",20,-46,720)
     intro:SetText("Using another death alert addon? Turn off HardcoreBuddy death alerts below.\nYour journal and compact feed will keep recording reports."); intro:SetTextColor(unpack(MUTED))
     options.checks={}
@@ -514,9 +545,24 @@ function H:BuildUI()
     end)
     addon.Skin.InlineSlider(volume,"%",10)
     options.preview=Button(options,"Preview alert",140,0,0,function() duration:ClearFocus(); self:Slash("test") end)
-    options.preview:ClearAllPoints(); options.preview:SetPoint("BOTTOMLEFT",options,"BOTTOMLEFT",20,18)
+    options.preview:ClearAllPoints(); options.preview:SetPoint("TOPLEFT",20,-440)
     local reset=Button(options,"Reset overlay positions",184,0,0,function()self:Slash("resetposition")end)
-    reset:ClearAllPoints(); reset:SetPoint("BOTTOMLEFT",options,"BOTTOMLEFT",170,18)
+    reset:ClearAllPoints(); reset:SetPoint("TOPLEFT",170,-440)
+    addon.Skin.SectionBackdrop(options,484,160).title:SetText("Journal history")
+    options.import=Button(options,"Import Deathlog",240,28,-528,function() self:ImportLegacy() end)
+    Text(options,12,"TOPLEFT",28,-572,330):SetText("Import saved reports from a loaded Deathlog history.")
+    Text(options,13,"TOPLEFT",436,-528,300):SetText("Keep reports for")
+    local retention=Edit(options,64,436,-554,true); options.retention=retention
+    retention:SetText(tostring(self.db.settings.retentionDays or 30))
+    Text(options,12,"TOPLEFT",510,-561,150):SetText("days (1-3650)")
+    Text(options,11,"TOPLEFT",436,-600,290):SetText("Older reports are removed automatically.")
+    local function saveRetention(box)
+        self.db.settings.retentionDays=tonumber(box:GetText()) or self.db.settings.retentionDays
+        self:PruneReports(); box:SetText(tostring(self.db.settings.retentionDays)); self:Refresh()
+    end
+    retention:SetScript("OnEditFocusLost",saveRetention)
+    retention:SetScript("OnEnterPressed",function(box) box:ClearFocus() end)
+    retention:SetScript("OnEscapePressed",function(box) box:SetText(tostring(self.db.settings.retentionDays)); box:ClearFocus() end)
     host:SetScript("OnHide",function()
         search:ClearFocus(); minimum:ClearFocus(); alertLevel:ClearFocus(); duration:ClearFocus(); GameTooltip:Hide()
     end)

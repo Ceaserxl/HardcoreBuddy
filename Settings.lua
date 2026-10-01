@@ -1,8 +1,8 @@
 local _,A=...
-local S={sections={"General","Gear Advisor","Talent Advisor","Auction House","Death Alerts","Low Health","NPC Alerts","Map","Debug"}}
+local S={sections={"General","Gear Advisor","Talent Advisor","Auction House","Death Journal","Low Health","NPC Alerts","Map","Debug"}}
 A.Settings=S
 local Skin=A.Skin
-local aliases={["Death Banner"]="Death Alerts",Rares="NPC Alerts",Elites="NPC Alerts",Preparation="General"}
+local aliases={["Death Banner"]="Death Journal",["Death Alerts"]="Death Journal",Rares="NPC Alerts",Elites="NPC Alerts",Preparation="General"}
 function S:Section(section) return aliases[section] or section or "General" end
 
 local function label(parent,text,size,x,y,width)
@@ -49,6 +49,7 @@ function S:CommitInputs()
     for _,page in pairs(A.CreatureAlerts.pages or {}) do page.duration:ClearFocus() end
     if A.Deaths.options then
         A.Deaths.options.duration:ClearFocus(); A.Deaths.options.alertLevel:ClearFocus()
+        if A.Deaths.options.retention then A.Deaths.options.retention:ClearFocus() end
     end
 end
 
@@ -161,11 +162,18 @@ function S:Create(parent)
     talent.toggle=button(talent,"",18,function() A.TalentAdvisor:SetEnabled(not A.TalentAdvisor:IsEnabled()) end,200)
     talent.toggle:ClearAllPoints(); talent.toggle:SetPoint("TOPLEFT",520,-18)
     talent.context=label(talent,"",12,12,46,700)
-    label(talent,"Choose your talent path here. Its scoring profile also controls gear advice, auction upgrades and item markers. Selecting a path does not spend talent points.",12,12,76,700)
+    label(talent,"Choose your talent path here. Its scoring profile also controls gear advice, auction upgrades and item markers. Review your path before enabling automatic application.",12,12,76,700)
     talent.builds={}
     local maxBuilds=0
     for _,builds in pairs(A.Data.AdvisorBuilds) do maxBuilds=math.max(maxBuilds,#builds) end
-    talent.paths=Skin.Section(talent,"Talent paths",140,60+(maxBuilds+1)*52)
+    talent.spending=Skin.Section(talent,"Apply talent points",140,152)
+    talent.apply=button(talent.spending,"Apply unused points",48,function() A.TalentAdvisor:ApplyUnused(false) end,280)
+    talent.auto=check(talent.spending,"Automatically apply unused points",96,function() return A.characterDB.autoApplyTalents==true end,function(value)
+        A.characterDB.autoApplyTalents=value
+        if value then A.TalentAdvisor:ApplyUnused(true) else A.TalentAdvisor.applying=nil end
+    end)
+    label(talent.spending,"Uses your selected path. Stops if your learned talents do not match. Points cannot be undone without a respec.",12,340,48,350)
+    talent.paths=Skin.Section(talent,"Talent paths",304,60+(maxBuilds+1)*52)
     for i=1,maxBuilds+1 do
         local b=button(talent.paths,"",52+(i-1)*52,function(self)
             A.TalentAdvisor:Activate({command=self.buildID and "build" or "defaultBuild",id=self.buildID,class=self.class})
@@ -173,7 +181,7 @@ function S:Create(parent)
         b:SetHeight(46); b.label:SetHeight(46); b.label:SetFont(STANDARD_TEXT_FONT,12,"")
         talent.builds[i]=b
     end
-    talent.contentHeight=212+(maxBuilds+1)*52
+    talent.contentHeight=376+(maxBuilds+1)*52
 
     local auction=self.pages["Auction House"]
     label(auction,"Filters and saved scans for the auction house Upgrades tab.",12,12,46,700)
@@ -206,7 +214,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local pageName=section
     if section=="Gear Advisor" and A.state.gearPage=="Stat Weights" then pageName=A.state.gearPage end
     local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 440
-    if section=="Death Alerts" then contentHeight=932 end
+    if section=="Death Journal" then contentHeight=1108 end
     if section=="Map" then contentHeight=A.state.mapIconKind and A.MapAdvisor:IconPickerHeight() or A.MapAdvisor:SettingsHeight() end
     if pageName=="Debug" then A.DebugDump:Refresh() end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
@@ -236,6 +244,11 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local class=tokens[context.characterClass]
     local talent=self.pages["Talent Advisor"]
     talent.toggle.label:SetText(A.TalentAdvisor:IsEnabled() and "Disable Talent Advisor" or "Enable Talent Advisor")
+    talent.auto:Sync()
+    local live=context.mode~="preview" and A.TalentAdvisor:ReadCurrent(class,context.level)
+    talent.apply:SetEnabled(A.TalentAdvisor:IsEnabled() and live and live.unspent>0 and not A.TalentAdvisor.applying or false)
+    talent.apply.label:SetText(A.TalentAdvisor.applying and "Applying talent points..." or "Apply unused points"..(live and (" ("..live.unspent..")") or ""))
+    talent.auto:SetEnabled(context.mode~="preview")
     local builds=A.Data.AdvisorBuilds[class] or {}
     local selected,manual=A.TalentAdvisor:Build(class,context.level)
     talent.context:SetText(context.characterClass.." | Level "..context.level..(context.mode=="preview" and " | Planning another character" or " | Your character"))
@@ -248,7 +261,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
         Skin.ButtonState(b,b.selected,nil,false)
     end
     talent.paths:SetHeight(60+(#builds+1)*52)
-    talent.contentHeight=212+(#builds+1)*52
+    talent.contentHeight=376+(#builds+1)*52
     if pageName=="Talent Advisor" then self.content:SetHeight(math.max(talent.contentHeight,height/scale)) end
     local auction=self.pages["Auction House"]; auction.armor:Sync()
     local armor=profile and ({"Cloth","Leather","Mail","Plate"})[A.GearAdvisor.HighestArmorSubclass(profile)] or "..."
@@ -267,7 +280,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     if section=="General" then A.Readiness:LayoutSettings(general,12,314,contentWidth-24,342,true)
     elseif A.Readiness.options then A.Readiness.options:Hide() end
     A.MapAdvisor:LayoutSettings(content,0,0,contentWidth,section=="Map")
-    if section=="Death Alerts" then
+    if section=="Death Journal" then
         A.Deaths:LayoutPage(content,0,0,contentWidth,contentHeight,{filter="Settings"})
         A.Deaths.host:Show()
     end

@@ -293,6 +293,25 @@ local function renderBlock(frame, block, width)
     -- Pooled rows may retain the same size, so OnSizeChanged is not guaranteed.
     -- Lay out the artwork only after the row's final height and anchors settle.
     if paintedRow then Skin.RowArtwork(frame) end
+    if block.supply and frame.supplyTile then
+        -- Compact supply cards keep quantities together without a dense table.
+        frame:SetHeight(136); y=136
+        frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
+        measure(frame.title,block.title,width-68,52,10); frame.title:SetHeight(30)
+        measure(frame.body,block.body,width-68,52,42); frame.body:SetHeight(32)
+        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-10)
+        frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPLEFT",12,-80); frame.priority:SetSize(width-24,14)
+        frame.count:ClearAllPoints(); frame.count:SetPoint("TOPLEFT",12,-105); frame.count:SetSize(108,22)
+        frame.count:SetJustifyH("LEFT"); frame.count:SetText("In bags: "..(block.count~=nil and tostring(block.count) or "?"))
+        if not frame.carryLabel then frame.carryLabel=font(frame,11,MUTED) end
+        frame.carryLabel:Show(); measure(frame.carryLabel,"Carry",40,126,107)
+        frame.carryLabel:SetShown(frame.quantity:IsShown())
+        frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",168,-98); frame.quantity:SetSize(40,28)
+        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPLEFT",width-92,-102); frame.stock:SetWidth(84)
+        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPLEFT",width-92,-98)
+        frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("TOPLEFT",frame.stock,"BOTTOMLEFT",0,-4)
+        Skin.RowArtwork(frame)
+    elseif frame.carryLabel then frame.carryLabel:Hide() end
     if block.guideTone then
         local tone=block.guideTone
         local color=tone=="danger" and {0.96,0.55,0.40} or tone=="tool" and {0.48,0.78,0.73} or GOLD
@@ -306,64 +325,43 @@ local function renderBlock(frame, block, width)
     end
     return y
 end
-renderBlocks = function(parent, blocks, width, beforeSupply)
+renderBlocks = function(parent, blocks, width)
     local y=0
-    local headingShown=false
     local pending
     for index, block in ipairs(blocks) do
-        if beforeSupply and block.supply and not headingShown then
-            y=y+beforeSupply(y); headingShown=true
-        end
         local frame=parent.blocks[index]
         if not frame then frame=newBlock(parent); parent.blocks[index]=frame end
-        local paired=parent.gridStart and index>=parent.gridStart and not block.supply and not block.columns and not block.fields
+        local paired=parent.gridStart and index>=parent.gridStart and (not block.supply or parent.supplyGrid) and not block.columns and not block.fields
         if pending and not paired then y=y+pending:GetHeight()+12; pending=nil end
         local cellWidth=paired and (width-12)/2 or width
         frame:ClearAllPoints(); frame:SetPoint("TOPLEFT",pending and cellWidth+12 or 0,-y)
+        frame.supplyTile=block.supply and paired
         local height=renderBlock(frame,block,cellWidth)
         if pending then
             height=math.max(height,pending:GetHeight()); pending:SetHeight(height); frame:SetHeight(height)
             y=y+height+12; pending=nil
         elseif paired and index<#blocks then pending=frame
-        else y=y+height+(block.supply and 4 or 12) end
+        else y=y+height+(block.supply and not paired and 4 or 12) end
         if block.supply then
             local shade=index%2==0 and 0.075 or 0.045
             frame:SetBackdropColor(shade,shade+0.009,shade+0.014,1)
         end
     end
     for index=#blocks+1,#parent.blocks do parent.blocks[index]:Hide() end
-    return math.max(1,y-(blocks[#blocks] and (blocks[#blocks].supply and 4 or 12) or 0))
+    return math.max(1,y-(blocks[#blocks] and (blocks[#blocks].supply and not parent.supplyGrid and 4 or 12) or 0))
 end
-local function renderCard(frame, data, width, compactSupplies)
+local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
-    Skin.Paint(frame,data.supplyTable and "card" or "note")
+    Skin.Paint(frame,"note")
     frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and 22 or 15,"")
-    local compactHeader=compactSupplies and data.supplyTable
-    frame.title:SetShown(not compactHeader); frame.note:SetShown(not compactHeader)
-    local y=compactHeader and 4 or 14
-    if not compactHeader then
-        y=y+measure(frame.title, data.title, width-28, 14, y)+5
-        y=y+measure(frame.note, data.note, width-28, 14, y)+12
-    end
-    frame.headers=frame.headers or {}
-    for _,label in ipairs(frame.headers) do label:Hide() end
-    local beforeSupply
-    if data.supplyTable then
-        local contentWidth=width-24
-        beforeSupply=function(offset)
-            local headerHeight=compactHeader and 18 or 25
-            local descriptionX=52+math.floor((contentWidth-262)*0.42)+16
-            for i,entry in ipairs({{"Item",0,descriptionX-16},{"Description",descriptionX,contentWidth-210-descriptionX},{"In bags",contentWidth-204,52},{"Carry",contentWidth-144,48},{"Status",contentWidth-88,88}}) do
-                local label=frame.headers[i] or font(frame,11,MUTED); frame.headers[i]=label; label:Show()
-                measure(label,entry[1],entry[3],12+entry[2],y+offset)
-                if compactHeader then headerHeight=math.max(headerHeight,math.ceil(label:GetStringHeight())+4) end
-            end
-            return headerHeight
-        end
-    end
+    frame.title:Show(); frame.note:Show()
+    local y=14
+    y=y+measure(frame.title, data.title, width-28, 14, y)+5
+    y=y+measure(frame.note, data.note, width-28, 14, y)+12
     frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT", 12, -y); frame.content:SetWidth(width-24)
-    frame.content.gridStart=frame.gridStart
-    local height=renderBlocks(frame.content, data.blocks, width-24,beforeSupply)
+    frame.content.supplyGrid=data.supplyTable
+    frame.content.gridStart=data.supplyTable and 1 or frame.gridStart
+    local height=renderBlocks(frame.content, data.blocks, width-24)
     frame.content:SetHeight(height); y=y+height+8; frame:SetHeight(y)
     return y
 end
@@ -389,7 +387,7 @@ function addon:CreateWindow()
     if self.window then return end
     local f=CreateFrame("Frame", "HardcoreBuddyWindow", UIParent, "BackdropTemplate")
     self.window=f
-    f:Hide(); f:SetFrameStrata("DIALOG"); f:SetClampedToScreen(true); f:SetMovable(true); f:SetResizable(false); f:EnableMouse(true)
+    f:Hide(); f:SetFrameStrata("DIALOG"); f:SetFrameLevel(20); f:SetClampedToScreen(true); f:SetMovable(true); f:SetResizable(false); f:EnableMouse(true)
     Skin.Paint(f,"window"); f.chrome=Skin.DecorateWindow(f)
     f.title=font(f, 26, GOLD); f.title:SetText("HardcoreBuddy")
     f.subtitle=font(f, 12, WHITE)
@@ -459,7 +457,7 @@ function addon:CreateWindow()
     end)
 
     f.classMenu=CreateFrame("Frame",nil,f,"BackdropTemplate"); f.classMenu:SetSize(132,9*30+12)
-    f.classMenu:SetPoint("TOPLEFT",f.class,"BOTTOMLEFT",0,-2); f.classMenu:SetFrameStrata("FULLSCREEN_DIALOG"); Skin.Paint(f.classMenu,"menu"); f.classMenu:Hide()
+    f.classMenu:SetPoint("TOPLEFT",f.class,"BOTTOMLEFT",0,-2); f.classMenu:SetFrameStrata("FULLSCREEN_DIALOG"); f.classMenu:SetFrameLevel(100); Skin.Paint(f.classMenu,"menu"); f.classMenu:Hide()
     for index,class in ipairs(P.classes) do
         local b=button(f.classMenu,class,120,function() f.classMenu:Hide(); self:SetProfile("characterClass",class) end)
         b:SetPoint("TOPLEFT",6,-6-(index-1)*30)
@@ -654,7 +652,7 @@ function addon:Refresh(resetScroll)
 end
 local FILTER_ICONS={
     General="Trade_Engineering",["Gear Advisor"]="INV_Chest_Chain",["Auction House"]="INV_Misc_Coin_01",
-    ["Death Alerts"]="INV_Misc_Book_09",["NPC Alerts"]="Ability_Warrior_BattleShout",
+    ["Death Journal"]="INV_Misc_Book_09",["NPC Alerts"]="Ability_Warrior_BattleShout",
     Gear="INV_Chest_Chain",Talents="Ability_Marksmanship",Map="INV_Misc_Map_01",["Talent Advisor"]="INV_Misc_Book_11",
     Essentials="INV_Misc_Bag_08",Preparation="INV_Misc_Note_01",Appearance="INV_Misc_Book_09",
     ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
@@ -753,11 +751,11 @@ function addon:Layout()
     end
     local instancePage=doc.view=="instances"
     local navigation=doc.view=="advisors" and {"Gear","Talents","Map"} or instancePage and self.Instances.Navigation(self.state)
-        or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {"Reports"}
+        or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {}
         or doc.view=="training" and C.Tabs(context)
         or doc.view=="petguide" and {"Families","Abilities","Pets","Care"}
         or addon.Supplies.filters
-    local sidebar=true
+    local sidebar=doc.view~="deaths"
     local left=sidebar and 184 or 22
     local bodyWidth=width-left-40
     f.sidebar:SetShown(sidebar)
@@ -891,7 +889,7 @@ function addon:Layout()
     local deathPage=doc.view=="deaths"
     f.scroll:SetShown(not deathPage and doc.view~="settings")
     if self.Deaths and self.Deaths.host then
-        local deathSettings=doc.view=="settings" and self.state.filter=="Death Alerts"
+        local deathSettings=doc.view=="settings" and self.Settings:Section(self.state.filter)=="Death Journal"
         self.Deaths.host:SetShown(deathPage or deathSettings)
         if deathPage then self.Deaths:LayoutPage(f,left,y,bodyWidth,height-y-46,self.state) end
     end
@@ -908,9 +906,11 @@ function addon:Layout()
         end
         c:ClearAllPoints(); c:SetPoint("TOPLEFT",0,-top)
         c.firstCard=index==1
-        c.gridStart=not doc.isDetail and (doc.view=="training" and (not self.state.filter or self.state.filter=="Overview") and index==1 and 3
+        c.gridStart=not doc.isDetail and (doc.view=="training" and (self.state.filter=="Spells" or self.state.filter=="Zones") and 1
+            or doc.view=="training" and (not self.state.filter or self.state.filter=="Overview") and index==1 and 3
+            or doc.view=="advisors" and self.state.filter=="Map" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and 1
             or doc.view=="advisors" and self.state.filter~="Map" and not self.state.talentPath and 1) or nil
-        top=top+renderCard(c,data,contentWidth,short and doc.view=="supplies" and not doc.isDetail)+10
+        top=top+renderCard(c,data,contentWidth)+10
     end
     for i=#doc.cards+1,#f.cards do f.cards[i]:Hide() end
     f.content:SetHeight(math.max(1,top)); f.scroll:UpdateScrollChildRect()

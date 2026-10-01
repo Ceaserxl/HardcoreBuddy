@@ -43,6 +43,30 @@ function CreateFrame(kind,name,parent,template)
         function f:RefreshCamera() self.cameraRefreshes=(self.cameraRefreshes or 0)+1 end
         function f:SetFacing(value) self.facing=value end
         function f:GetModelFileID() return self.modelFileID or 0 end
+        function f:GetDisplayInfo() return self.modelFileID and (self.creatureID or 1) end
+    end
+    if kind=="ModelScene" then
+        function f:CreateActor()
+            local a={}
+            function a:ClearModel() self.file=nil; self.display=nil end
+            function a:SetModelByCreatureDisplayID(id) self.display=id; self.file=id; return true end
+            function a:GetModelFileID() return self.file end
+            function a:GetMaxBoundingBox() return self.bottom or {x=-1,y=-1,z=0}, self.top or {x=1,y=1,z=4} end
+            function a:SetShown(value) self.shown=value end
+            function a:SetScale(value) self.scale=value end
+            function a:SetYaw(value) self.yaw=value end
+            function a:SetPosition(x,y,z) self.position={x,y,z} end
+            self.actor=a; return a
+        end
+        function f:SetCameraPosition(x,y,z) self.camera={x,y,z}; self.cameraUpdates=(self.cameraUpdates or 0)+1 end
+        function f:SetCameraFieldOfView(v) self.fov=v end
+        function f:SetCameraNearClip(v) self.near=v end
+        function f:SetCameraFarClip(v) self.far=v end
+        function f:SetCameraOrientationByAxisVectors(...) self.axes={...} end
+        function f:SetLightVisible(v) self.lightVisible=v end
+        function f:SetLightAmbientColor(...) self.ambient={...} end
+        function f:SetLightDiffuseColor(...) self.diffuse={...} end
+        function f:SetLightDirection(...) self.lightDirection={...} end
     end
     if template and template:find("BackdropTemplate",1,true) then
         f.scripts.OnSizeChanged=function(self) self.backdropResizeCalls=(self.backdropResizeCalls or 0)+1 end
@@ -244,6 +268,13 @@ function methods:ClearFocus() local had=self.focus; self.focus=false; if had and
 function methods:SetFocus() self.focus=true end
 function methods:SetResizeBounds(a,b,c,d) assert(a<=c and b<=d); self.bounds={a,b,c,d} end
 function methods:SetFrameLevel(value) self.frameLevel=value end
+function methods:GetChildren()
+    local children={}
+    for _,f in ipairs(MOCK.frames) do
+        if f.parent==self and f.kind~="Texture" and f.kind~="FontString" then children[#children+1]=f end
+    end
+    return unpack(children)
+end
 function methods:GetFrameLevel()
     if self.kind=="Texture" or self.kind=="FontString" then return self.parent and self.parent:GetFrameLevel() or 0 end
     return self.frameLevel or (self.parent and self.parent:GetFrameLevel()+1) or 0

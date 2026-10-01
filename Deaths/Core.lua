@@ -6,7 +6,7 @@ H.channelPassword = "hcdeathalertschannelpw"
 H.defaults = {
     scale = 1, mini = true, alerts = true, sound = true, locked = true,
     alertStyle = "Compact", backgroundOpacity = 65,
-    community = false, minAlertLevel = 1, alertDuration = 3, volume = 70, alertSound = "RaidWarning",
+    community = false, minAlertLevel = 1, alertDuration = 3, volume = 70, alertSound = "RaidWarning", retentionDays = 30,
 }
 H.soundChoices={
     {id="RaidWarning",name="Original (Deathlog default)"},
@@ -90,7 +90,32 @@ function H:Initialize()
     self:ApplySettings()
     self:Refresh()
     self:MigrateStandalone()
+    self:PruneReports()
+    self:Refresh()
     if addon.window then addon:Refresh() end
+end
+function H:PruneReports()
+    if not self.db then return end
+    local days=tonumber(self.db.settings.retentionDays) or 30
+    if days~=days or days==math.huge or days==-math.huge then days=30 end
+    days=math.max(1,math.min(3650,math.floor(days)))
+    self.db.settings.retentionDays=days
+    local cutoff=time()-days*86400
+    local records=self.db.records; local write=1
+    for read=1,#records do
+        local record=records[read]
+        if type(record.date)=="number" and record.date>=cutoff then records[write]=record; write=write+1 end
+    end
+    for i=#records,write,-1 do records[i]=nil end
+end
+
+function H:ClearReports()
+    -- Cancel a running import so it cannot refill a cleared journal.
+    self.importGeneration=(self.importGeneration or 0)+1; self.importing=false
+    self.db.records={}; self.alertedRecords=nil
+    if addon.state then addon.state.deathRecord=nil end
+    if self.window then self.window.listScroll:SetVerticalScroll(0) end
+    self:Refresh()
 end
 local function copy(value)
     if type(value) ~= "table" then return value end
@@ -122,6 +147,8 @@ function H:MigrateStandalone()
 end
 function H:Add(record, silent, nativeAlert)
     if not self.db then return end
+    self:PruneReports()
+    if record.date and record.date<time()-self.db.settings.retentionDays*86400 then return false end
     local added, current = self.Insert(self.db.records, record, self.MAX_RECORDS)
     self:Refresh()
     -- A chat report can precede its native warning. Deduplicate storage and
@@ -168,6 +195,8 @@ function H:ImportLegacy()
         return
     end
     self.importing = true
+    self.importGeneration=(self.importGeneration or 0)+1
+    local generation=self.importGeneration
     local count, checked = 0, 0
     local worker = coroutine.create(function()
         local staged = {}
@@ -203,10 +232,12 @@ function H:ImportLegacy()
         table.sort(self.db.records, function(a,b) return a.date < b.date end)
     end)
     local function step()
+        if generation~=self.importGeneration then return end
         local ok, err = coroutine.resume(worker)
         if not ok then self.importing = false; self:Print("Import stopped: " .. tostring(err)); return end
         if coroutine.status(worker) == "dead" then
             self.importing = false
+            self:PruneReports()
             self:Refresh()
             self:Print("Imported " .. count .. " reports. History is now saved in HardcoreBuddyDB; Deathlog may be disabled.")
         else C_Timer.After(0.05, step) end

@@ -112,7 +112,7 @@ end
 function D:Show()
     if not self.window then
         local f=CreateFrame("Frame","HardcoreBuddyAuctionDiagnostics",UIParent,"BackdropTemplate"); self.window=f
-        f:SetSize(680,450); f:SetPoint("CENTER"); f:SetFrameStrata("DIALOG"); f:EnableMouse(true)
+        f:SetSize(680,450); f:SetPoint("CENTER"); f:SetFrameStrata("DIALOG"); f:SetFrameLevel(120); f:EnableMouse(true)
         f:SetClampedToScreen(true); A.Skin.Paint(f,"card")
         local title=f:CreateFontString(nil,"OVERLAY","GameFontNormalLarge"); title:SetPoint("TOPLEFT",16,-14)
         title:SetSize(640,22); title:SetJustifyH("LEFT")

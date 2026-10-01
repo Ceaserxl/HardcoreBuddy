@@ -2,7 +2,7 @@ local A=TestAddon
 local S=A.Settings
 local count=0
 local function check(ok,why) count=count+1; assert(ok,why) end
-check(table.concat(S.sections,",")=="General,Gear Advisor,Talent Advisor,Auction House,Death Alerts,Low Health,NPC Alerts,Map,Debug","Consolidated sidebar order")
+check(table.concat(S.sections,",")=="General,Gear Advisor,Talent Advisor,Auction House,Death Journal,Low Health,NPC Alerts,Map,Debug","Consolidated sidebar order")
 local settingsTab
 for _,tab in ipairs(A.window.tabs) do
     check(tab.view~="alerts","Old Alerts tab is replaced by Settings")
@@ -16,7 +16,7 @@ for i,name in ipairs(S.sections) do
     MOCK.Click(A.window.filters[i])
     check(A.state.filter==name and S.scroll:IsVisible() and not A.window.scroll:IsShown(),"Section opens: "..name)
     for pageName,page in pairs(S.pages) do check(page:IsVisible()==(pageName==name),"Correct settings parent: "..pageName) end
-    check(A.Deaths.options:IsVisible()==(name=="Death Alerts") and A.Deaths.appearance:IsVisible()==(name=="Death Alerts"),"Death controls share one tab")
+    check(A.Deaths.options:IsVisible()==(name=="Death Journal") and A.Deaths.appearance:IsVisible()==(name=="Death Journal"),"Death controls share one tab")
     if A.LowHealth.page then check(A.LowHealth.page:IsVisible()==(name=="Low Health"),"Health page visibility") end
     for _,page in pairs(A.CreatureAlerts.pages or {}) do check(page:IsVisible()==(name=="NPC Alerts"),"Both NPC categories share one tab") end
     check(A.Readiness.options:IsVisible()==(name=="General"),"Preparation is nested in General")
@@ -42,7 +42,7 @@ check(A.Deaths.options.duration:HasFocus() and A.Deaths.options.duration:GetText
     "Ordinary refresh does not hide the active settings page or interrupt edits")
 A:OpenDeaths("Appearance")
 check(A.Deaths.db.settings.alertDuration==12,"Leaving death settings commits its pending duration")
-check(A.state.filter=="Death Alerts" and A.Deaths.appearance:IsVisible() and A.Deaths.options:IsVisible(),"Appearance shortcut opens combined death settings")
+check(A.state.filter=="Death Journal" and A.Deaths.appearance:IsVisible() and A.Deaths.options:IsVisible(),"Appearance shortcut opens combined death settings")
 local _,optionY,_,optionH=A.Deaths.options:GetRect()
 local _,appearanceY,_,appearanceH=A.Deaths.appearance:GetRect()
 check(appearanceY>optionY+optionH,"Combined death sections do not overlap")
@@ -52,7 +52,7 @@ local _,buttonY,_,buttonH=A.Deaths.appearance.move:GetRect()
 check(buttonY>=scrollY and buttonY+buttonH<=scrollY+scrollH,"Banner controls remain reachable by scrolling")
 A:OpenDeaths()
 check(A.state.view=="deaths" and A.Deaths.window:IsVisible() and not S.scroll:IsShown(),"Journal remains a separate reports page")
-check(A.window.filters[1].label:GetText()=="Reports" and not A.window.filters[2]:IsShown(),"Journal no longer has scattered settings sections")
+check(not A.window.sidebar:IsShown() and not A.window.filters[1]:IsShown(),"Journal has no sidebar")
 A:HandleSlashCommand("settings")
 local general=S.pages.General
 general.minimap:SetChecked(false); MOCK.Click(general.minimap)
