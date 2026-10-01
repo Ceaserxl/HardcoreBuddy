@@ -144,6 +144,8 @@ function addon:GetContext()
     local profile = self.db.profile
     local context = {characterClass=profile.characterClass, level=profile.level,
         detailed=profile.detailed, mode=profile.mode}
+    local maxHealth=UnitHealthMax and UnitHealthMax("player")
+    if type(maxHealth)=="number" and maxHealth>0 and maxHealth<math.huge then context.maxHealth=maxHealth end
     local characterLevel=self.levelOverride or UnitLevel("player")
     if validLevel(characterLevel) then context.characterLevel=characterLevel end
     local faction=type(UnitFactionGroup)=="function" and UnitFactionGroup("player") or nil
@@ -278,7 +280,7 @@ function addon:Initialize()
         self:HandleSlashCommand(message)
     end
     for _, event in ipairs({"PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA", "PLAYER_LEVEL_UP", "PLAYER_XP_UPDATE", "UNIT_PET", "UNIT_LEVEL", "UNIT_FACTION", "BAG_UPDATE_DELAYED", "DISPLAY_SIZE_CHANGED", "UI_SCALE_CHANGED",
-        "PLAYER_EQUIPMENT_CHANGED", "UNIT_INVENTORY_CHANGED", "PET_BAR_UPDATE", "SKILL_LINES_CHANGED", "SPELLS_CHANGED", "TRADE_SKILL_UPDATE", "TRADE_SKILL_SHOW", "GET_ITEM_INFO_RECEIVED"}) do
+        "PLAYER_EQUIPMENT_CHANGED", "UNIT_MAXHEALTH", "UNIT_INVENTORY_CHANGED", "PET_BAR_UPDATE", "SKILL_LINES_CHANGED", "SPELLS_CHANGED", "TRADE_SKILL_UPDATE", "TRADE_SKILL_SHOW", "GET_ITEM_INFO_RECEIVED"}) do
         self.events:RegisterEvent(event)
     end
     if self.db.window.visible then self:CreateWindow(); self.window:Show(); self:Refresh() end
@@ -312,6 +314,7 @@ events:SetScript("OnEvent", function(self, event, arg, success)
         if event == "UNIT_LEVEL" and arg ~= "pet" and arg ~= "player" then return end
         if event == "UNIT_FACTION" and arg ~= "player" then return end
         if event == "UNIT_INVENTORY_CHANGED" and arg ~= "player" then return end
+        if event == "UNIT_MAXHEALTH" and arg ~= "player" then return end
         if event == "PLAYER_XP_UPDATE" and arg ~= "player" then return end
         if event == "PLAYER_LEVEL_UP" and validLevel(arg) then
             addon.levelOverride = arg
@@ -321,7 +324,7 @@ events:SetScript("OnEvent", function(self, event, arg, success)
         if event == "PLAYER_ENTERING_WORLD" or (event == "PLAYER_XP_UPDATE" and UnitLevel("player") >= (addon.levelOverride or 0)) then addon.levelOverride = nil end
         if (event == "DISPLAY_SIZE_CHANGED" or event == "UI_SCALE_CHANGED") and addon.window then addon:RestoreWindow() end
         if addon.minimap and (event == "PLAYER_ENTERING_WORLD" or event == "DISPLAY_SIZE_CHANGED" or event == "UI_SCALE_CHANGED") then addon:PositionMinimapButton() end
-        if addon.window and addon.window:IsShown() and (addon.db.profile.mode == "live" or event=="BAG_UPDATE_DELAYED" or professionEvent or event=="PLAYER_ENTERING_WORLD" or event=="ZONE_CHANGED_NEW_AREA" or event=="UNIT_FACTION"
+        if addon.window and addon.window:IsShown() and (addon.db.profile.mode == "live" or event=="UNIT_MAXHEALTH" or event=="BAG_UPDATE_DELAYED" or professionEvent or event=="PLAYER_ENTERING_WORLD" or event=="ZONE_CHANGED_NEW_AREA" or event=="UNIT_FACTION"
             or event == "DISPLAY_SIZE_CHANGED" or event == "UI_SCALE_CHANGED") then addon:Refresh() end
     end
 end)

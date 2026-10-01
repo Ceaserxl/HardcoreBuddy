@@ -319,6 +319,15 @@ Use the mouse wheel or scrollbar for longer lists. There is no resize grip.
 
 ## Supplies and item details
 
+Open Bandages for **Recommended Based on Health**: the lowest rank whose full
+channel heals your maximum health, or the strongest Classic rank when none covers
+it. Only craftable recommendations appear. **Highest Rank Available** shows your
+best learned recipe when it differs, or serves as the fallback. **Show all** reveals
+the remaining ranks and First Aid training. Planning uses your current character's
+health and profession; cloth inventory is not a crafting gate.
+
+Companion spell costs use trainer-style gold, silver and copper icons.
+
 Supplies opens to All. Each card shows its classification at the upper right and
 **(owned/target)** with a stock bar at the lower right. Zero owned shows **Missing**.
 Healing/mana potions are under Emergency; elixirs are under Buffs.

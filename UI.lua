@@ -399,6 +399,7 @@ local function renderCard(frame, data, width)
     frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT", 12, -y); frame.content:SetWidth(width-24)
     frame.content.supplyGrid=data.supplyTable
     frame.content.gridStart=data.supplyTable and 1 or frame.gridStart
+    if data.fullWidth then frame.content.gridStart=nil end
     local height=renderBlocks(frame.content, data.blocks, width-24)
     frame.content:SetHeight(height); y=y+height+8; frame:SetHeight(y)
     return y
@@ -639,6 +640,9 @@ function addon:OpenCurrentInstance()
     self:Refresh(true)
 end
 function addon:Activate(action)
+    if action.kind=="bandageRanks" then
+        self:CommitInputs(); self.state.showAllBandages=not self.state.showAllBandages; self:Refresh(true); return
+    end
     if action.kind=="mapAdvisor" then self.MapAdvisor:Activate(action); return end
     if action.kind=="advisor" and self.TalentAdvisor then self.TalentAdvisor:Activate(action); return end
     self:CommitInputs(); self.window.classMenu:Hide()

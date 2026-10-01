@@ -8,16 +8,16 @@ addon.Professions = P
 P.autoFamilies = {bandage=true, dummy=true, antivenom=true}
 P.recipes = {
     bandage = {
-        {itemId=1251, spellId=3275, craftSkill=1, useSkill=1},
-        {itemId=2581, spellId=3276, craftSkill=40, useSkill=20},
-        {itemId=3530, spellId=3277, craftSkill=80, useSkill=50},
-        {itemId=3531, spellId=3278, craftSkill=115, useSkill=75},
-        {itemId=6450, spellId=7928, craftSkill=150, useSkill=100},
-        {itemId=6451, spellId=7929, craftSkill=180, useSkill=125},
-        {itemId=8544, spellId=10840, craftSkill=210, useSkill=150},
-        {itemId=8545, spellId=10841, craftSkill=240, useSkill=175},
-        {itemId=14529, spellId=18629, craftSkill=260, useSkill=200},
-        {itemId=14530, spellId=18630, craftSkill=290, useSkill=225},
+        {itemId=1251, healing=66, spellId=3275, craftSkill=1, useSkill=1},
+        {itemId=2581, healing=114, spellId=3276, craftSkill=40, useSkill=20},
+        {itemId=3530, healing=161, spellId=3277, craftSkill=80, useSkill=50},
+        {itemId=3531, healing=301, spellId=3278, craftSkill=115, useSkill=75},
+        {itemId=6450, healing=400, spellId=7928, craftSkill=150, useSkill=100},
+        {itemId=6451, healing=640, spellId=7929, craftSkill=180, useSkill=125},
+        {itemId=8544, healing=800, spellId=10840, craftSkill=210, useSkill=150},
+        {itemId=8545, healing=1104, spellId=10841, craftSkill=240, useSkill=175},
+        {itemId=14529, healing=1360, spellId=18629, craftSkill=260, useSkill=200},
+        {itemId=14530, healing=2000, spellId=18630, craftSkill=290, useSkill=225},
     },
     dummy = {
         {itemId=4366, spellId=3932, craftSkill=85, useSkill=85},
@@ -170,6 +170,22 @@ function P.Best(snapshot,family)
     local minimum=P.recipes[family][1].craftSkill
     return {status="untrained",skill=skill,note=skill<minimum and ("Requires "..familyName.." "..minimum)
         or missingRecipe[family]}
+end
+
+-- Full-channel healing from the bundled Classic Era item descriptions.
+function P.BandagePlan(context)
+    local health=context.maxHealth
+    local plan={highest=P.Best(context.professions,"bandage")}
+    if type(health)~="number" or health~=health or health<=0 or health==math.huge then return plan end
+    for _,recipe in ipairs(P.recipes.bandage) do
+        plan.recommended=recipe
+        if recipe.healing>=health then break end
+    end
+    local snapshot=context.professions or {}
+    local skill=snapshot.skills and snapshot.skills.bandage
+    plan.canMake=type(skill)=="number" and skill>=plan.recommended.craftSkill
+        and (snapshot.known or {})[plan.recommended.spellId]==true
+    return plan
 end
 
 -- Prefer the strongest missing tier craftable at the current skill. Otherwise

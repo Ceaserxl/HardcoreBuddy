@@ -68,6 +68,10 @@ local function rankState(block,record,context)
     if automatic then
         block.autoRank=true
         block.readOnlyTarget=selected~=record.itemId
+        if record.groupFamily=="bandage" then
+            local plan=A.Professions.BandagePlan(context)
+            if plan.canMake and plan.recommended.itemId==record.itemId then block.readOnlyTarget=false end
+        end
         block.pickRank=false
         if not block.readOnlyTarget then
             block.body=automatic.note
@@ -143,6 +147,54 @@ local function supplyRows(context,state,onlyFamily)
     local visible={}
     for _,b in ipairs(blocks) do if not b.omit then visible[#visible+1]=b end end
     return visible,summary
+end
+local function bandageCards(context,state)
+    local plan=A.Professions.BandagePlan(context)
+    local items={}
+    for _,item in ipairs(D.Items.items) do if item.family=="bandage" then items[item.itemId]=item end end
+    local displayed={}
+    local function bandage(id)
+        local item=items[id]; if not item then return end
+        local record=S.Record(context,item,"bandage")
+        local block=supplyRow(record); rankState(block,record,context)
+        block.editTarget=true; block.body=(item.detail or item.short):gsub("^Use: ","")
+        displayed[id]=true
+        return block
+    end
+    local note=context.maxHealth and ("Maximum health: "..math.floor(context.maxHealth).." | Lowest rank that covers your full health.")
+        or "Maximum health unavailable. Showing your highest craftable rank."
+    if context.mode=="preview" then note=note.." Uses your current character's health and First Aid." end
+    local cards={card("Bandages",note,{})}
+    cards[1].headerAction={label=state.showAllBandages and "Show fewer" or "Show all",action={kind="bandageRanks"}}
+    local recommended=plan.recommended
+    if recommended and plan.canMake then
+        local note=recommended.healing<context.maxHealth and "No bandage covers your full health; this is the strongest Classic rank."
+            or "You know this recipe and have the First Aid skill to make it."
+        local section=card("Recommended Based on Health",note,{bandage(recommended.itemId)})
+        section.supplyTable=true; section.fullWidth=true; cards[#cards+1]=section
+    elseif recommended then
+        cards[1].note=cards[1].note.."\n"..items[recommended.itemId].name.." is the health-based recommendation; "..
+            (plan.highest.status=="unknown" and "First Aid or recipe data is unavailable." or "you cannot make it yet.")
+    end
+    local highest=plan.highest
+    if highest.itemId and (not plan.canMake or highest.itemId~=recommended.itemId) then
+        local section=card("Highest Rank Available",highest.note,{bandage(highest.itemId)})
+        section.supplyTable=true; section.fullWidth=true; cards[#cards+1]=section
+    elseif not highest.itemId and not plan.canMake then
+        cards[#cards+1]=card("Highest Rank Available",highest.note,{row("No confirmed craftable rank","Learn First Aid and the recipe to unlock a recommendation. Use Show all for ranks and training.")})
+    end
+    if state.showAllBandages then
+        local blocks={}
+        for _,recipe in ipairs(A.Professions.recipes.bandage) do
+            if not displayed[recipe.itemId] then blocks[#blocks+1]=bandage(recipe.itemId) end
+        end
+        if #blocks>0 then
+            local section=card("Other ranks","Reference ranks; your learned recipes determine what you can make.",blocks)
+            section.supplyTable=true; cards[#cards+1]=section
+        end
+        cards[#cards+1]=card("First Aid training",nil,professionBlocks(context,"bandage"))
+    end
+    return cards
 end
 local function petRow(pet,index)
     return row(pet.name,pet.level.."  |  "..families[pet.family].name.."  |  "..pet.zone,
@@ -254,7 +306,10 @@ function C.Build(context,state)
     local result={context=context,cards={},view=state.view or "supplies",continuous=true,page=1,pages=1}
     if result.view=="now" then result.view="supplies" end
     local view=result.view
-    if state.detail then result.cards[1]=C.Detail(context,state.detail); result.isDetail=true
+    if state.detail then
+        if state.detail.kind=="supplyFamily" and state.detail.family=="bandage" then result.cards=bandageCards(context,state)
+        else result.cards[1]=C.Detail(context,state.detail) end
+        result.isDetail=true
     elseif view=="supplies" then
         result.filters=S.filters
         local rows,summary=supplyRows(context,state)

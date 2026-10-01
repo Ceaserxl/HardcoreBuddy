@@ -27,10 +27,14 @@ end
 
 local function costText(copper)
     if copper==0 then return "Free" end
+    if GetCoinTextureString then return GetCoinTextureString(copper,12) end
     local parts={}
-    if copper>=10000 then parts[#parts+1]=math.floor(copper/10000).."g" end
-    if copper>=100 then parts[#parts+1]=math.floor(copper/100)%100 .."s" end
-    if copper%100>0 then parts[#parts+1]=copper%100 .."c" end
+    local function coin(value,kind)
+        if value>0 then parts[#parts+1]=value.."|TInterface\\MoneyFrame\\UI-"..kind.."Icon:12:12:2:0|t" end
+    end
+    coin(math.floor(copper/10000),"Gold")
+    coin(math.floor(copper/100)%100,"Silver")
+    coin(copper%100,"Copper")
     return table.concat(parts," ")
 end
 
