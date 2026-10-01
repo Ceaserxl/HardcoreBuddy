@@ -1,5 +1,8 @@
 # Unreleased
 
+- Added saved diagnostics for skipped auction listings, including the precise
+  failure stage, item and equipped comparison data, and retry timing. Open the
+  copyable report with Scan details or `/hcb auction debug`.
 - Redesigned auction upgrades with persistent slot navigation, a focused best
   upgrades overview, modern item cards, explicit bid/buyout labels, a scan
   progress bar and clearer weapon comparisons and empty states.

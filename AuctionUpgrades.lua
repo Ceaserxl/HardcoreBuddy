@@ -104,6 +104,7 @@ function U:UpdateTooltipComparison(row)
 end
 
 function U:Stop(message)
+    A.AuctionDiagnostics:Finish(self.scan,message)
     self.scan=nil
     if message then self.message=message end
     self:Refresh()
@@ -162,13 +163,23 @@ function U:ReadAuction(index)
     local name,icon,count,_,usable,_,_,minimum,increment,buyout,bid=GetAuctionItemInfo("list",index)
     if usable==false then return true end
     local link=GetAuctionItemLink("list",index)
-    if not name or not link or not count or not buyout or not minimum then return false end
+    local function unavailable(stage,reason,item,slot)
+        return false,{stage=stage,reason=reason,name=name,link=link,item=item,comparisonSlot=slot,
+            auction={name=name,count=count,usable=usable,minimum=minimum,increment=increment,buyout=buyout,bid=bid}}
+    end
+    if not name or not link or not count or not buyout or not minimum then
+        local missing={}
+        for _,field in ipairs({{"name",name},{"item link",link},{"stack count",count},{"buyout price",buyout},{"minimum bid",minimum}}) do
+            if field[2]==nil then missing[#missing+1]=field[1] end
+        end
+        return unavailable("auction data","Missing "..table.concat(missing,", "))
+    end
     local cached=scan.cache[link]
     if cached==false then return true end
     if not cached then
         local item,reason=G:Read(link)
         if reason=="unsupported" then scan.cache[link]=false; return true end
-        if not item then return false end
+        if not item then return unavailable("item data",reason or "Item reader returned no data") end
         if not G.Allowed(item,self.profile) then scan.cache[link]=false; return true end
         if scan.highestArmor and armorSlots[item.equip] and item.subclassID~=scan.highestArmor then
             scan.cache[link]=false; return true
@@ -177,12 +188,16 @@ function U:ReadAuction(index)
         for _,row in ipairs(rows) do
             -- Structural exclusions (unique items / two-handed constraints)
             -- are final; incomplete native data is retried before skipping.
-            if row.status=="unknown" and (row.text:find("loading") or row.text:find("incomplete") or row.text:find("unavailable")) then return false end
+            if row.status=="unknown" and (row.text:find("loading") or row.text:find("incomplete") or row.text:find("unavailable")) then
+                return unavailable("gear comparison",row.text,item,row.slot)
+            end
         end
         cached={item=item,rows=rows}; scan.cache[link]=cached
     end
     local nextBid=(bid or 0)>0 and bid+(increment or 0) or minimum
-    if not scan.weapons:Add(cached.item,icon,buyout,nextBid,count) then return false end
+    if not scan.weapons:Add(cached.item,icon,buyout,nextBid,count) then
+        return unavailable("weapon score","Main-hand or off-hand stat score is incomplete",cached.item)
+    end
     self:Add(cached.item,cached.rows,link,icon,buyout,nextBid,count)
     return true
 end
@@ -223,11 +238,17 @@ function U:Tick()
                 else scan.phase="query"; scan.since=now(); self:Refresh() end
                 return
             end
-            if self:ReadAuction(scan.index) then scan.index=scan.index+1; scan.itemSince=nil
+            local read,detail=self:ReadAuction(scan.index)
+            if read then
+                scan.index=scan.index+1; scan.itemSince=nil; scan.itemAttempts=nil; scan.firstReason=nil
             else
                 scan.itemSince=scan.itemSince or now()
+                scan.itemAttempts=(scan.itemAttempts or 0)+1
+                scan.firstReason=scan.firstReason or (detail and detail.reason)
                 if now()-scan.itemSince<10 then return end
-                scan.skipped=scan.skipped+1; scan.index=scan.index+1; scan.itemSince=nil
+                scan.skipped=scan.skipped+1
+                A.AuctionDiagnostics:Record(scan,detail)
+                scan.index=scan.index+1; scan.itemSince=nil; scan.itemAttempts=nil; scan.firstReason=nil
             end
         end
     elseif scan.phase=="weapons" then
@@ -345,6 +366,9 @@ function U:Refresh()
         or self.slot and (#list.." upgrades | Best score first | Hold Shift to compare")
         or self.weaponsOnly and advice or "Choose a slot to see all upgrades. Hold Shift to compare.")
     self.status:SetText(self.message or "Start a scan to find upgrades. You can browse results as they arrive.")
+    local diagnostics=A.characterDB and A.characterDB.auctionDiagnostics
+    self.diagnosticsButton:SetShown(diagnostics~=nil)
+    self.status:SetWidth(diagnostics and 620 or 762)
     self.status:SetTextColor(unpack(self.stale and Skin.colors.red or self.scan and Skin.colors.gold
         or self.complete and Skin.colors.green or Skin.colors.muted))
     self.progressFill:SetWidth(math.max(1,762*(self.progress or 0)))
@@ -535,6 +559,8 @@ function U:Attach()
     self.progressFill=panel:CreateTexture(nil,"ARTWORK"); self.progressFill:SetTexture("Interface\\Buttons\\WHITE8x8")
     self.progressFill:SetPoint("TOPLEFT",14,-336); self.progressFill:SetSize(1,3)
     self.status=label(panel,"",14,-345,762,Skin.colors.muted,10)
+    self.diagnosticsButton=button(panel,"Scan details",128,function() A.AuctionDiagnostics:Show() end)
+    self.diagnosticsButton:SetPoint("TOPRIGHT",-14,-345)
     panel:Hide()
     panel:SetScript("OnHide",function()
         self:HideTooltip()

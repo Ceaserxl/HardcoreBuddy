@@ -251,6 +251,7 @@ function methods:IsResizable() return self.resizable or false end
 function methods:StartSizing(point) self.sizing=point; MOCK.sizingCalls=(MOCK.sizingCalls or 0)+1 end
 function methods:SetWordWrap(value) self.wordWrap=not not value end
 function methods:SetMultiLine(value) self.multiLine=not not value end
+function methods:HighlightText(first,last) self.selection={first or 0,last or #self:GetText()} end
 for _,name in ipairs({"SetClampedToScreen","SetMovable","RegisterForDrag","StartMoving","StopMovingOrSizing","SetAutoFocus","SetNumeric","SetMaxLetters","EnableMouseWheel","UpdateScrollChildRect","SetCursorPosition"}) do
     methods[name]=function() end
 end

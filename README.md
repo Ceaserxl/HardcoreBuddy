@@ -103,6 +103,12 @@ changes require a new scan. Prices are for the full listing, not per item.
 Empty slots show **Empty slot** instead of an invented percentage. Weapon setups
 compare both hands together; other slots are compared independently.
 
+If listings cannot be read, click **Scan details** or use **`/hcb auction debug`**.
+The copyable report includes the item link, failure reason, search slot/page,
+retry timing, item stats and native tooltip text. The latest failed scan is saved
+per character across reloads, limited to 25 skipped listings. A successful scan
+does not erase that report. Click **Select report**, then **Ctrl+C** to copy it.
+
 ## Dungeons and raids
 
 The **Dungeons** and **Raids** tabs contain 28 dungeon routes/wings and all seven

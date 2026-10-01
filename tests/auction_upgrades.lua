@@ -166,6 +166,53 @@ pages[4][1].noLink=nil; finish()
 check(U.complete and U.results[1],"Delayed item data eventually included")
 pages[4]={{item=good,noLink=true}}; U:Start(); finish()
 check(not U.complete and U.message:find("1 listing could not be read",1,true),"Unavailable data explains skipped listings")
+local diagnostics=A.characterDB.auctionDiagnostics
+local failure=diagnostics.entries[1]
+check(diagnostics.skipped==1 and failure.stage=="auction data" and failure.reason=="Missing item link",
+    "Skipped listing records its exact failure stage and missing field")
+check(failure.name==good.name and failure.search=="Head" and failure.page==1 and failure.index==1
+    and failure.attempts>1 and failure.waitSeconds>=10,"Diagnostic includes listing identity, query position and retry timing")
+check(diagnostics.checked==1 and diagnostics.outcome==U.message,"Completed report retains scan totals and outcome")
+MOCK.Click(U.diagnosticsButton)
+local debugWindow=A.AuctionDiagnostics.window
+check(debugWindow:IsShown() and debugWindow.edit:GetText():find("Missing item link",1,true),"Scan details opens a copyable failure report")
+MOCK.Click(debugWindow.selectAll)
+check(debugWindow.edit:HasFocus() and debugWindow.edit.selection[2]==#debugWindow.edit:GetText(),"Select report selects all diagnostic text for copying")
+debugWindow.edit.scripts.OnEscapePressed(debugWindow.edit)
+check(not debugWindow:IsShown() and not debugWindow.edit:HasFocus(),"Closing report releases keyboard focus")
+A:HandleSlashCommand("auction debug")
+check(debugWindow:IsShown(),"Diagnostics can also be opened through the slash command")
+debugWindow:Hide()
+pages[4]={{item=good}}; U:Start(); finish()
+check(A.characterDB.auctionDiagnostics==diagnostics,"A successful rescan preserves the latest failed scan for investigation")
+local noStats=F.item("INVTYPE_HEAD",{},4,1,{{"+10 Agility"}}); noStats.stats=nil
+pages[4]={{item=noStats}}; U:Start(); finish()
+failure=A.characterDB.auctionDiagnostics.entries[1]
+check(failure.stage=="item data" and failure.reason=="Item stats loading" and failure.candidate.tooltip[2]=="+10 Agility",
+    "Item API failure is distinguished from auction data and retains the native tooltip")
+local invalid=F.item("INVTYPE_HEAD",{ITEM_MOD_AGILITY_SHORT=0/0},4,1)
+pages[4]={{item=invalid}}; U:Start(); finish()
+failure=A.characterDB.auctionDiagnostics.entries[1]
+check(failure.stage=="gear comparison" and failure.reason=="Item stats incomplete" and failure.comparisonSlot==1,
+    "Incomplete scoring records the affected comparison slot")
+check(type(failure.candidate.stats.ITEM_MOD_AGILITY_SHORT)=="string" and failure.equipped[1].slot==1,
+    "Invalid numbers are saved safely with equipped-item context")
+pages[4]={{item=good}}; U:Start(); U.scan.weapons.Add=function() return false end; finish()
+failure=A.characterDB.auctionDiagnostics.entries[1]
+check(failure.stage=="weapon score" and #failure.equipped==2,"Weapon scoring failure includes both equipped hand slots")
+check(failure.candidate.link==good.link and failure.candidate.stats.ITEM_MOD_AGILITY_SHORT==15,"Diagnostic stores independent scoring evidence")
+local original=good.stats.ITEM_MOD_AGILITY_SHORT; good.stats.ITEM_MOD_AGILITY_SHORT=999
+check(failure.candidate.stats.ITEM_MOD_AGILITY_SHORT==15,"Saved diagnostic data is not a shared mutable item API table")
+good.stats.ITEM_MOD_AGILITY_SHORT=original
+local retained=A.characterDB.auctionDiagnostics; local reportText=A.AuctionDiagnostics:Text()
+U.scan=nil; U.results={}; A.characterDB={auctionDiagnostics=retained}
+check(A.AuctionDiagnostics:Text()==reportText,"Diagnostics can be reconstructed from per-character saved data without scan state")
+local limit=A.AuctionDiagnostics.limit; A.AuctionDiagnostics.limit=1
+pages[4]={{item=good,noLink=true},{item=good,noLink=true}}; U:Start(); finish()
+check(A.characterDB.auctionDiagnostics.skipped==2 and #A.characterDB.auctionDiagnostics.entries==1,
+    "Diagnostic storage is bounded while preserving the full skipped count")
+A.AuctionDiagnostics.limit=limit
+check(A.AuctionDiagnostics:Text():find("first 1 skipped listings",1,true),"Report discloses truncated diagnostic storage")
 pages[4]={}; U:Start(); tick(); pending=false; tick(21)
 check(not U.scan and U.message:find("timed out"),"Missing server response times out safely")
 ready=false; U:Start(); tick(31)
