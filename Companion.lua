@@ -230,7 +230,7 @@ function C.Detail(context, action)
 end
 
 function C.Build(context,state)
-    if (state.view=="dungeons" or state.view=="raids") and not state.detail then
+    if (state.view=="instances" or state.view=="dungeons" or state.view=="raids") and not state.detail then
         return A.Instances.Build(context,state)
     end
     local result={context=context,cards={},view=state.view or "supplies",continuous=true,page=1,pages=1}

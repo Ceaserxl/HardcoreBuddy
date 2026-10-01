@@ -53,6 +53,7 @@ for id,t in pairs(D.tools) do check(t.itemId==id and t.icon and #t.description>1
 
 -- Directory tiles, not just direct model calls, lead to the correct guide.
 A:Navigate("dungeons")
+click(A.window.atLevel)
 local tile=A.window.cards[1].content.blocks[1].columns[1].blocks[1]
 click(tile)
 check(A.state.instance=="rfc","Directory tile opened wrong guide")
@@ -64,6 +65,7 @@ instance(nil,"none","World")
 MOCK.class="HUNTER"; MOCK.level=60; A:SetProfile("mode","live")
 for _,g in ipairs(D.guides) do
     A:Navigate(g.kind); A:Activate({kind="instance",id=g.id})
+    A.state.showAllInstances=true
     check(A.state.instance==g.id and A.document.guide.id==g.id,"Wrong selected instance")
     check(A.document.pages==1 and A.document.continuous,"Packing list was paginated away")
     check(#A.document.cards>=1 and #A.document.cards<=2,"Packing list grew extra sections")
@@ -85,21 +87,54 @@ for _,g in ipairs(D.guides) do
     click(A.window.cards[1].content.blocks[1].columns[1].blocks[1])
     check(A.state.view=="supplies" and A.state.filter=="Potions","Essentials link failed")
     A:Back(); check(A.state.instance==g.id,"Supply Back lost instance")
-    nav(g.kind=="raids" and "All raids" or "All dungeons")
+    nav(g.kind=="raids" and "Raids" or "Dungeons")
     check(not A.state.instance and A.document.total==(g.kind=="raids" and 7 or 28),"Back to directory")
 end
-A:Navigate("dungeons"); A:Activate({kind="instance",id="rfc"}); nav("High levels")
-check(not A.state.instance and A.document.total>0,"Level filter did not exit packing list")
+A:Navigate("instances"); A:Activate({kind="instance",id="rfc"}); nav("Dungeons")
+check(not A.state.instance and A.document.total>0,"Category filter did not exit packing list")
 
 local ctx=A:GetContext()
-local function count(view,filter,query)
-    return I.Build(ctx,{view=view,filter=filter,query=query}).total
+local function count(filter,query)
+    return I.Build(ctx,{view="instances",filter=filter,query=query,showAllInstances=true}).total
 end
-check(count("dungeons","All dungeons","Gnomeregan")==1,"Instance search")
-check(count("dungeons","All dungeons","Feralas")==3,"Zone search")
-check(count("dungeons","All dungeons","zzzzno")==0,"Search empty state")
-check(count("raids","20 players")==2 and count("raids","40 players")==5,"Raid size filters")
-check(count("dungeons","Early levels")+count("dungeons","Mid levels")+count("dungeons","High levels")==28,"Level filters cover all dungeons")
+check(count("Dungeons","Gnomeregan")==1,"Instance search")
+check(count("Dungeons","Feralas")==3,"Zone search")
+check(count("Dungeons","zzzzno")==0,"Search empty state")
+check(count("Raids")==7 and count("Dungeons")==28 and count("All")==35,"Combined directory categories")
+
+-- Inclusive range margins, at every Classic level, without filtering packing items.
+for level=1,60 do
+    ctx.level=level
+    local expected=0
+    for _,g in ipairs(D.guides) do if level>=g.low-3 and level<=g.high+3 then expected=expected+1 end end
+    check(I.Build(ctx,{view="instances"}).total==expected,"Near-level filtering at "..level)
+    check(I.Build(ctx,{view="instances",showAllInstances=true}).total==35,"Show all at "..level)
+end
+ctx.level=12
+check(I.Build(ctx,{view="instances",query="Ragefire"}).total==0,"Below lower margin")
+ctx.level=13
+check(I.Build(ctx,{view="instances",query="Ragefire"}).total==1,"Inclusive lower margin")
+ctx.level=23
+check(I.Build(ctx,{view="instances",query="Ragefire"}).total==1,"Inclusive upper margin")
+ctx.level=24
+check(I.Build(ctx,{view="instances",query="Ragefire"}).total==0,"Above upper margin")
+ctx.level=60
+A:Navigate("instances")
+local combinedTabs=0
+for _,b in ipairs(A.window.tabs) do
+    check(b.view~="raids" and b.view~="dungeons","Separate top tab remains")
+    if b.view=="instances" then combinedTabs=combinedTabs+1 end
+end
+check(combinedTabs==1,"Missing combined tab")
+check(A.window.atLevel:IsShown() and A.window.atLevel.label:GetText()=="Show all","Missing Show all")
+click(A.window.atLevel)
+check(A.document.total==35 and A.window.atLevel.label:GetText()=="Near my level","Show all toggle")
+nav("Raids"); check(A.document.total==7,"Show all category")
+nav("All")
+A:Activate({kind="instance",id="rfc"}); A:Back()
+check(A.state.showAllInstances and A.document.total==35,"Back lost Show all")
+click(A.window.atLevel)
+check(not A.state.showAllInstances and A.document.total<35,"Return to near level")
 
 -- Exact map identity, not localized name; multiple wings never guessed.
 for map,expected in pairs(expectedMaps) do
@@ -109,7 +144,7 @@ for map,expected in pairs(expectedMaps) do
     A:Navigate("supplies")
     check(A.window.currentInstance:IsShown(),"Current section missing outside guides")
     click(A.window.currentInstance)
-    check(A.state.view==g.kind,"Wrong current tab")
+    check(A.state.view=="instances","Wrong current tab")
     if expected==1 then check(A.state.instance==g.id,"Current guide did not open")
     else check(not A.state.instance and A.document.total==expected,"Ambiguous wing was guessed") end
     A:Back(); check(A.state.view=="supplies","Current button broke Back")
@@ -117,7 +152,7 @@ end
 instance(99999,"raid","Unknown raid")
 click(A.window.currentInstance)
 check(A.state.unknownInstance and A.document.total==0,"Unknown instance incorrectly mapped")
-nav("All raids"); check(A.document.total==7,"Cannot leave unsupported instance page")
+nav("Raids"); check(A.document.total==7,"Cannot leave unsupported instance page")
 instance(1234,"pvp","Battleground")
 check(not A.window.currentInstance:IsShown(),"PvP incorrectly shown as raid")
 instance(nil,"none","World")

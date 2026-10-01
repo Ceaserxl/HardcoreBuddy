@@ -34,9 +34,8 @@ function I.Current()
     return {name=name or "Unknown instance",map=map,guides=guides,
         view=guides[1] and guides[1].kind or (kind=="raid" and "raids" or "dungeons")}
 end
-function I.Navigation(state)
-    return state.view=="raids" and {"All raids","20 players","40 players"}
-        or {"All dungeons","Early levels","Mid levels","High levels"}
+function I.Navigation()
+    return {"All","Dungeons","Raids"}
 end
 local function toolRow(id,context,g)
     local t=D.tools[id]
@@ -76,41 +75,43 @@ local function matches(g,query)
     return true
 end
 function I.Build(context,state)
-    local raid=state.view=="raids"
-    local result={context=context,view=state.view,cards={},continuous=true,page=1,pages=1,total=0,instanceGuide=true}
+    local result={context=context,view="instances",cards={},continuous=true,page=1,pages=1,total=0,instanceGuide=true}
     local g=I.byId[state.instance]
-    if g and g.kind==state.view then
+    if g then
         result.guide=g
         result.cards=packingList(g,context)
         return result
     end
-    local filter=state.filter or (raid and "All raids" or "All dungeons")
+    local filter=state.filter or "All"
     local valid=false
     for _,name in ipairs(I.Navigation(state)) do if filter==name then valid=true end end
-    if not valid then filter=raid and "All raids" or "All dungeons" end
+    if not valid then filter="All" end
     result.searchable=true
+    result.levelFilter=not state.currentMap and not state.unknownInstance
     local list={}
+    local hidden=0
     for _,entry in ipairs(D.guides) do
-        local band=filter=="Early levels" and entry.low<40 or filter=="Mid levels" and entry.low>=40 and entry.low<55
-            or filter=="High levels" and entry.low>=55 or filter=="20 players" and entry.players==20
-            or filter=="40 players" and entry.players==40
-            or filter=="All dungeons" or filter=="All raids"
-        if entry.kind==state.view and band and (not state.currentMap or entry.map==state.currentMap)
+        local kind=filter=="All" or (filter=="Dungeons" and entry.kind=="dungeons") or (filter=="Raids" and entry.kind=="raids")
+        if kind and (not state.currentMap or entry.map==state.currentMap)
             and not state.unknownInstance and matches(entry,state.query) then
-            list[#list+1]=entry
+            if state.showAllInstances or state.currentMap or (context.level>=entry.low-3 and context.level<=entry.high+3) then
+                list[#list+1]=entry
+            else hidden=hidden+1 end
         end
     end
-    local title=state.currentMap and (state.currentName or "Current instance") or (raid and "Raids" or "Dungeons")
+    local title=state.currentMap and (state.currentName or "Current instance") or (filter=="All" and "Dungeons & Raids" or filter)
     local note=state.currentMap and "Choose your wing to see levels and items to bring."
-        or "Suggested full-run levels. Select an instance for items to bring."
+        or (state.showAllInstances and "All levels. " or (context.mode=="preview" and "Planned level: " or "Your level: ")..context.level..". Showing ranges within 3 levels. ")
+            .."Select an instance for items to bring.\nRanges are suggested full-run levels."
+    if hidden>0 then note=note.." "..hidden.." hidden by level; Show all to browse them." end
     local tiles={}
     for _,entry in ipairs(list) do
-        tiles[#tiles+1]=row(entry.name,levels(entry),"link",{kind="instance",id=entry.id},entry.zone.."  |  "..entry.players.." players")
+        tiles[#tiles+1]=row(entry.name,levels(entry),"link",{kind="instance",id=entry.id},(entry.kind=="raids" and "Raid" or "Dungeon").."  |  "..entry.players.." players  |  "..entry.zone)
     end
     local blocks=columns(tiles)
     if #list==0 then
         blocks[1]=row(state.unknownInstance and "No Classic Era entry for this instance" or "No matching instances",
-            state.unknownInstance and "Choose All dungeons or All raids to browse." or "Search by instance or zone, or choose another level group.","plain")
+            state.unknownInstance and "Choose All, Dungeons or Raids to browse." or "Try Show all, choose another category, or change your search.","plain")
     end
     result.cards={card(title,note,blocks)}; result.total=#list
     return result

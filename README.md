@@ -151,9 +151,12 @@ does not erase that report. Click **Select report**, then **Ctrl+C** to copy it.
 
 ## Dungeons and raids
 
-The **Dungeons** and **Raids** tabs contain 28 dungeon routes/wings and all seven
-Classic Era raids. Search by instance or zone, or filter by level band or raid
-size. Each entry shows its suggested level range and a compact list of items
+The **Dungeons & Raids** tab contains 28 dungeon routes/wings and all seven
+Classic Era raids, with All, Dungeons and Raids categories. By default, entries
+appear when your live or planned level falls within their suggested range,
+including three levels below or above it. **Show all** includes every level;
+**Near my level** restores the filter. Search by instance or zone.
+Each entry shows its suggested level range and a compact list of items
 to bring, with icons, requirements, tooltips and live bag counts. Item rows name
 the relevant mobs and abilities, including whether to use a potion before an
 effect or to cleanse afterward. Everyday
@@ -164,6 +167,8 @@ While inside an instance, **Current Dungeon** or **Current Raid** appears above
 the content on every tab. Click it to open the packing list. Shared instances such as
 Scarlet Monastery open a wing chooser. Detection follows your actual location
 even while editing a planned character. Zygor and DBM are not required.
+The current instance remains accessible regardless of the level filter, and
+each guide retains its complete packing list.
 
 ## Death journal and alerts
 

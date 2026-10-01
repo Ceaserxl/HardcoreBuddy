@@ -406,7 +406,7 @@ function addon:CreateWindow()
         if self.db.profile.mode == "preview" and (key=="UP" or key=="DOWN") then commit(f.level); self:SetLevel(self.db.profile.level+(key=="UP" and 1 or -1)) end
     end)
     f.tabs={}
-    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"advisors","Advisors",100},{"deaths","Death Journal",122},{"dungeons","Dungeons",100},{"raids","Raids",100},{"settings","Settings",100}}) do
+    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"advisors","Advisors",100},{"deaths","Death Journal",122},{"instances","Dungeons & Raids",154},{"settings","Settings",100}}) do
         local id=tab[1]
         local b=button(f,tab[2],tab[3],function() self:Navigate(id) end); b.view=id; Skin.Button(b,"tab"); f.tabs[#f.tabs+1]=b
     end
@@ -434,7 +434,11 @@ function addon:CreateWindow()
     end)
     f.search:SetScript("OnEscapePressed",function(edit) edit:ClearFocus() end)
     f.clear=button(f,"Clear",54,function() self.state.query=""; f.search:SetText(""); self.state.page=1; self:Refresh(true) end)
-    f.atLevel=button(f,"Any level",112,function() self.state.atLevel=not self.state.atLevel; self.state.page=1; self:Refresh(true) end)
+    f.atLevel=button(f,"Any level",112,function()
+        if self.state.view=="instances" then self.state.showAllInstances=not self.state.showAllInstances
+        else self.state.atLevel=not self.state.atLevel end
+        self.state.page=1; self:Refresh(true)
+    end)
 
     f.classMenu=CreateFrame("Frame",nil,f,"BackdropTemplate"); f.classMenu:SetSize(132,9*30+12)
     f.classMenu:SetPoint("TOPLEFT",f.class,"BOTTOMLEFT",0,-2); f.classMenu:SetFrameStrata("FULLSCREEN_DIALOG"); Skin.Paint(f.classMenu,"menu"); f.classMenu:Hide()
@@ -561,6 +565,9 @@ function addon:Navigate(view)
     if view=="alerts" then self:OpenSettings("Low Health"); return end
     self:CommitInputs()
     self.state={view=view=="now" and "supplies" or view,filter=(view=="supplies" or view=="now") and "Food & drink" or nil,page=1}; self.history={}
+    if view=="dungeons" or view=="raids" then
+        self.state.view="instances"; self.state.filter=view=="raids" and "Raids" or "Dungeons"
+    end
     self.window.classMenu:Hide()
     self.window.search:ClearFocus(); self:Refresh(true)
 end
@@ -570,10 +577,10 @@ function addon:OpenCurrentInstance()
     self:CommitInputs(); self.window.classMenu:Hide(); self.window.search:ClearFocus()
     self.history=self.history or {}; self.history[#self.history+1]=self.state
     if #current.guides==1 then
-        self.state={view=current.view,instance=current.guides[1].id,page=1}
+        self.state={view="instances",instance=current.guides[1].id,page=1}
     else
-        self.state={view=current.view,currentMap=current.map,currentName=current.name,
-            unknownInstance=#current.guides==0,filter=current.view=="raids" and "All raids" or "All dungeons",page=1}
+        self.state={view="instances",currentMap=current.map,currentName=current.name,
+            unknownInstance=#current.guides==0,filter=current.view=="raids" and "Raids" or "Dungeons",page=1}
     end
     self:Refresh(true)
 end
@@ -585,7 +592,7 @@ function addon:Activate(action)
     if action.kind=="instance" then
         local g=self.Instances.byId[action.id]
         if not g then table.remove(self.history); return end
-        self.state={view=g.kind,instance=g.id,page=1}
+        self.state={view="instances",instance=g.id,filter=self.state.filter,showAllInstances=self.state.showAllInstances,page=1}
     elseif action.view then self.state={view=action.view,filter=action.filter,query=action.query,page=1}
     else self.state={view=self.state.view,filter=self.state.filter,query=self.state.query,detail=action,page=1} end
     self.window.search:ClearFocus(); self:Refresh(true)
@@ -598,7 +605,7 @@ function addon:Refresh(resetScroll)
     if not self.window then return end
     local context=self:GetContext()
     if self.lastClass and self.lastClass~=context.characterClass and not (self.state and
-        (self.state.view=="deaths" or self.state.view=="settings" or self.state.view=="dungeons" or self.state.view=="raids" or self.state.view=="advisors")) then self.state=nil; self.history={} end
+        (self.state.view=="deaths" or self.state.view=="settings" or self.state.view=="instances" or self.state.view=="advisors")) then self.state=nil; self.history={} end
     self.lastClass=context.characterClass
     self.state=self.state or {view="supplies",filter="Food & drink",page=1}; self.history=self.history or {}
     if self.state.view=="settings" then self.state.filter=self.Settings:Section(self.state.filter) end
@@ -709,7 +716,7 @@ function addon:Layout()
         strip.hint:SetText(#current.guides>1 and "Choose your wing  >" or "Items to bring  >")
         y=y+56
     end
-    local instancePage=doc.view=="dungeons" or doc.view=="raids"
+    local instancePage=doc.view=="instances"
     local navigation=doc.view=="advisors" and {"Gear","Talents","Map"} or instancePage and self.Instances.Navigation(self.state)
         or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {"Reports"}
         or doc.view=="training" and (context.characterClass=="Hunter" and {"Overview","Pet Training","Pet Guide","First Aid","Engineering","Cooking"} or {"Overview","First Aid","Engineering","Cooking"})
@@ -721,7 +728,7 @@ function addon:Layout()
     f.sidebar:SetShown(sidebar)
     if sidebar then
         f.sidebar:ClearAllPoints(); f.sidebar:SetPoint("TOPLEFT",20,-y); f.sidebar:SetPoint("BOTTOMLEFT",20,46); f.sidebar:SetWidth(148)
-        f.sidebarTitle:SetText(doc.view=="settings" and "SETTINGS" or doc.view=="advisors" and "ADVISORS" or instancePage and (doc.view=="raids" and "RAIDS" or "DUNGEONS") or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or "FIELD KIT")
+        f.sidebarTitle:SetText(doc.view=="settings" and "SETTINGS" or doc.view=="advisors" and "ADVISORS" or instancePage and "INSTANCES" or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or "FIELD KIT")
         f.sidebarNote:SetText(doc.view=="settings" and "Your preferences.\nOne place." or instancePage and "Levels and\nitems to bring." or doc.view=="deaths" and "Every journey\nleaves a story." or doc.view=="petguide" and "Find a companion.\nLearn its strengths." or "Pack with purpose.\nEvery slot matters.")
         f.sidebarNote:SetShown(height-y-46>35+#navigation*41+70)
     end
@@ -734,7 +741,7 @@ function addon:Layout()
                 addon:CommitInputs(); addon.window.classMenu:Hide()
                 addon.state.detail=nil; addon.state.deathRecord=nil; addon.state.gearPage=nil; addon.history={}; addon.state.page=1
                 if addon.state.view=="petguide" and self.filter=="< Companion" then addon:Navigate("training"); return end
-                if addon.state.view=="dungeons" or addon.state.view=="raids" then
+                if addon.state.view=="instances" then
                     addon.state.filter=self.filter
                     addon.state.currentMap=nil; addon.state.currentName=nil; addon.state.unknownInstance=nil
                     addon.state.instance=nil
@@ -821,7 +828,7 @@ function addon:Layout()
     f.atLevel:SetShown(searchable and doc.levelFilter)
     if searchable then
         local extra=doc.levelFilter
-        f.atLevel.label:SetText(self.state.atLevel and "Within my level" or "Any level")
+        f.atLevel.label:SetText(instancePage and (self.state.showAllInstances and "Near my level" or "Show all") or (self.state.atLevel and "Within my level" or "Any level"))
         local extraButton=f.atLevel
         if extra then extraButton:SetWidth(math.max(112,math.ceil(extraButton.label:GetStringWidth())+22)) end
         local labelWidth=math.ceil(f.searchLabel:GetStringWidth())+6
@@ -838,7 +845,7 @@ function addon:Layout()
         f.clear:ClearAllPoints(); f.clear:SetPoint("TOPRIGHT",-40-extraWidth,-y)
         f.clear:SetHeight(rowHeight)
         f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("TOPRIGHT",-40,-y-(wrapExtra and rowHeight+6 or 0))
-        active(f.atLevel,self.state.atLevel)
+        active(f.atLevel,instancePage and self.state.showAllInstances or self.state.atLevel)
         y=y+rowHeight+8+(wrapExtra and 34 or 0)
     end
     y=y+self.MapAdvisor:LayoutControls(f,left,y,bodyWidth,doc.view=="advisors" and self.state.filter=="Map")
