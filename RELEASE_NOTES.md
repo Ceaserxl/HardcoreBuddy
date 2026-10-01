@@ -1,5 +1,9 @@
 # Unreleased
 
+- Companion > Spells now separates Hunter pet trainer/taming abilities and
+  Warlock demon grimoires into pet sections in next-level and all-future views.
+- Tint color now uses Blizzard's color picker with live preview and Cancel;
+  the existing opacity slider remains available.
 - Talent Advisor's Point-by-point path now opens a separate scrolling page.
 - Map marker categories now open an icon picker with previews of every available
   choice. Icon size also adjusts clustering distance and rebuilds nearby groups.

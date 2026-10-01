@@ -16,6 +16,8 @@ Use the mouse wheel or scrollbar to browse the full list.
 Choose **Show all future spells** to browse later levels, with spell icons,
 ranks, reference training costs and talent requirements. Hover for spell details.
 All nine Classic Era classes are included; What's Training? is not required.
+Hunter pet abilities include trainer ranks and taming sources. Warlock demon
+grimoires have separate sections, with the matching demon listed for each book.
 
 ## Settings
 
@@ -123,7 +125,8 @@ reveal unexplored outdoor terrain or tint unexplored areas translucent blue.
 Category filters show known dangerous NPCs, rares, elites and bosses.
 Map markers use Blizzard's silver rare and gold elite icons, a skull for world
 bosses and a warning icon for dangerous NPCs. Hover for NPC names and details.
-Map settings include RGB tint color and opacity, an icon picker for each category,
+Map settings include Blizzard's tint color picker and a separate opacity slider,
+an icon picker for each category,
 and marker size (12–40 pixels) and opacity (10–100%). Reset appearance restores
 the original visuals without changing category filters or notice preferences.
 Only nearly overlapping points combine. The distance follows icon size (16 pixels

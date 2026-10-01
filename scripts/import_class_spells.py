@@ -35,6 +35,8 @@ def main():
                 RaceFilter=function(t) return t end, AddOverriddenSpells=function() end}
         end''')(name.upper())
         lua.execute((args.source / 'Classes' / 'Vanilla' / (name + '.lua')).read_text(), 'OfflineImport', source)
+        if name == 'Hunter':
+            lua.execute((args.source / 'Classes' / 'Vanilla' / 'HunterPets.lua').read_text(), 'OfflineImport', source)
         lines.append('    ["' + name + '"]={')
         for level, entries in sorted(source.SpellsByLevel.items()):
             assert 1 <= level <= 60
@@ -44,14 +46,36 @@ def main():
                 # The source records Hemorrhage's prior ranks but omits its talent flag.
                 if name == 'Rogue' and entry.id in (17347, 17348):
                     entry.requiredTalentId = 16511
+                if name == 'Hunter' and source.PetAbilityIds[entry.id]:
+                    entry.pet = True
                 lines.append('            ' + encode(entry) + ',')
                 count += 1
             lines.append('        },')
         lines.append('    },')
     lines.append('}')
+    source = lua.table_from({'currentClass': 'WARLOCK'})
+    lua.execute((args.source / 'Classes' / 'Vanilla' / 'WarlockTomes.lua').read_text(), 'OfflineImport', source)
+    lines.append('A.Data.DemonGrimoires={')
+    tomes = 0
+    for level, entries in sorted(source.TomesByLevel.items()):
+        unique = {}
+        for _, entry in sorted(entries.items()):
+            if entry.itemId not in unique:
+                unique[entry.itemId] = lua.table_from({'itemId': entry.itemId,
+                    'id': source.TomeTaughtSpells[entry.itemId], 'cost': entry.cost,
+                    'family': entry.family})
+            else:
+                unique[entry.itemId].family += ' / ' + entry.family
+        lines.append('    [' + str(level) + ']={')
+        for item, entry in sorted(unique.items()):
+            assert entry.id and entry.id > 0
+            lines.append('        ' + encode(entry) + ',')
+            tomes += 1
+        lines.append('    },')
+    lines.append('}')
     (ROOT / 'Data' / 'ClassSpells.lua').write_text('\n'.join(lines) + '\n', encoding='utf-8')
     (ROOT / 'docs' / 'WHATS_TRAINING_LICENSE.txt').write_bytes((args.source / 'LICENSE').read_bytes())
-    print(f'Imported {count} trainer spells across 9 Vanilla classes.')
+    print(f'Imported {count} trainer spells across 9 Vanilla classes and {tomes} demon grimoires.')
 
 
 if __name__ == '__main__':

@@ -1,6 +1,30 @@
 local _,A=...
 local M,Skin=A.MapAdvisor,A.Skin
 
+function M:OpenTintPicker()
+    local picker=ColorPickerFrame
+    if not picker then A:Print("Blizzard's color picker is unavailable."); return end
+    picker:Hide()
+    local s=self:Settings()
+    local r,g,b=s.tintR,s.tintG,s.tintB
+    local function apply(red,green,blue)
+        local settings=M:Settings()
+        settings.tintR,settings.tintG,settings.tintB=red,green,blue
+        M.appearanceAt=GetTime()+0.05
+        if M.controls then M.controls.swatch:SetVertexColor(red,green,blue,settings.tintAlpha) end
+    end
+    local changed=function() apply(picker:GetColorRGB()) end
+    local cancel=function() apply(r,g,b) end
+    picker:SetFrameStrata("FULLSCREEN_DIALOG")
+    if picker.SetupColorPickerAndShow then
+        picker:SetupColorPickerAndShow({r=r,g=g,b=b,hasOpacity=false,swatchFunc=changed,cancelFunc=cancel})
+    else
+        picker.hasOpacity=false; picker.opacityFunc=nil
+        picker.func=nil; picker:SetColorRGB(r,g,b)
+        picker.func=changed; picker.cancelFunc=cancel; picker:Show()
+    end
+end
+
 function M:LayoutSettings(parent,left,top,width,visible)
     local picking=visible and A.state.mapIconKind~=nil
     self:LayoutIconPicker(parent,left,top,width,picking)
@@ -57,9 +81,8 @@ function M:LayoutSettings(parent,left,top,width,visible)
             end)
             f.sliders[key]=b
         end
-        slider("tintR","Red",16,220,210,0,255,0.35,255,"")
-        slider("tintG","Green",253,220,210,0,255,0.65,255,"")
-        slider("tintB","Blue",490,220,210,0,255,1,255,"")
+        f.tintColor=button("Choose tint color",16,220,210,function() M:OpenTintPicker() end)
+        label("Use Blizzard's color picker. Cancel restores the previous color.",253,228,450)
         slider("tintAlpha","Tint opacity",16,280,328,0,100,0.55,100,"%")
         label("0% is transparent; 100% is opaque. Applies to Tint unexplored.",372,289,328)
         label("NPC marker appearance",16,346,700):SetTextColor(unpack(Skin.colors.gold))

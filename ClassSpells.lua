@@ -34,8 +34,41 @@ local function costText(copper)
     return table.concat(parts," ")
 end
 
+-- Hunter ranks use the reviewed pet guide, including skills learned by taming.
+-- Use the later of pet level, taming-source level and the level-10 pet unlock.
+function S.PetEntries(context)
+    if context.characterClass=="Warlock" then return A.Data.DemonGrimoires end
+    local levels={}
+    if context.characterClass~="Hunter" then return levels end
+    for _,ability in ipairs(A.Data.PetGuide.abilities) do
+        for index,rank in ipairs(ability.ranks) do
+            local source
+            if not rank.trainer then
+                for _,candidate in ipairs(rank.sources or {}) do
+                    if not source or candidate.minLevel<source.minLevel
+                        or candidate.minLevel==source.minLevel and candidate.classification=="Normal" and source.classification~="Normal" then source=candidate end
+                end
+            end
+            if rank.trainer or source then
+                local level=math.max(10,rank.petLevel,source and source.minLevel or 0)
+                local icon=A.Data.PetSkillIcons and A.Data.PetSkillIcons[ability.name]
+                local body=rank.trainer and "Pet trainer | Teach through Beast Training."
+                    or ("Tame "..source.name.." (level "..source.minLevel..") in "..source.zone.."."
+                        ..(source.classification~="Normal" and (" "..source.classification.." encounter.") or ""))
+                levels[level]=levels[level] or {}
+                levels[level][#levels[level]+1]={title=ability.name.." | Rank "..rank.rank,
+                    body=body.." Pet level "..rank.petLevel.." | "..rank.trainingPoints.." training points.",
+                    meta=rank.effect,icon=icon and ("/images/"..icon..".jpg") or 134400,
+                    action={kind="rank",id=ability.id,index=index},level=level}
+            end
+        end
+    end
+    return levels
+end
+
 function S.Build(context,state)
     local data=A.Data.ClassSpells[context.characterClass] or {}
+    local pets=S.PetEntries(context)
     local race
     -- Keep racial spells tied to the real character's race in planning mode too.
     if UnitRace then local _,_,id=UnitRace("player"); race=id end
@@ -44,7 +77,7 @@ function S.Build(context,state)
     for level=context.level+1,60 do
         local blocks={}
         for _,entry in ipairs(data[level] or {}) do
-            if allowed(entry,context,race) then
+            if not entry.pet and allowed(entry,context,race) then
                 if not nextLevel then nextLevel=level end
                 if state.showAllFutureSpells or level==nextLevel then
                     local name,rank,icon=spellInfo(entry.id)
@@ -65,11 +98,32 @@ function S.Build(context,state)
             table.sort(blocks,function(a,b) if a.title==b.title then return a.spellId<b.spellId end; return a.title<b.title end)
             cards[#cards+1]={title="Level "..level,blocks=blocks}
         end
+        local petBlocks={}
+        for _,entry in ipairs(pets[level] or {}) do
+            if not nextLevel then nextLevel=level end
+            if state.showAllFutureSpells or level==nextLevel then
+                local row=entry
+                if context.characterClass=="Warlock" then
+                    local name,rank,icon=spellInfo(entry.id)
+                    row={title=name..(rank and rank~="" and (" | "..rank) or ""),
+                        body=entry.family.." | Grimoire from a demon trainer | Listed cost: "..costText(entry.cost),
+                        meta="Summon the matching demon to teach it with this grimoire.",
+                        icon=icon,spellId=entry.id,itemId=entry.itemId,level=level}
+                end
+                if (row.title.." "..row.body):lower():find(query,1,true) then petBlocks[#petBlocks+1]=row; total=total+1 end
+            end
+        end
+        if #petBlocks>0 then
+            table.sort(petBlocks,function(a,b) return a.title<b.title end)
+            cards[#cards+1]={title="Level "..level.." | "..(context.characterClass=="Hunter" and "Pet abilities" or "Demon grimoires"),blocks=petBlocks}
+        end
         if nextLevel and not state.showAllFutureSpells then break end
     end
     local note=(context.mode=="preview" and "Planned level " or "Your level ")..context.level.." | "..context.characterClass
         .."\nTrainer prices may vary. Talent ranks require the named talent. Earlier ranks and class quests may be required."
     if context.mode=="preview" then note=note.." Uses your current faction and race." end
+    if context.characterClass=="Hunter" then note=note.."\nPet abilities include trainer ranks and taming sources. Pet level, family and training points still apply. Open a rank for all sources."
+    elseif context.characterClass=="Warlock" then note=note.."\nDemon grimoires are grouped separately. They require the matching summoned demon." end
     if #cards==0 then cards[1]={title=nextLevel and "No matching spells" or "No future training",
         blocks={{title=nextLevel and "Try clearing your search or showing all future spells." or "No later trainer spells in the Classic Era level 1-60 list."}}} end
     table.insert(cards,1,{title=state.showAllFutureSpells and "All future spells" or (nextLevel and "Next training: level "..nextLevel or "Spells"),note=note,blocks={}})

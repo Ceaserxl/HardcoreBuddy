@@ -56,6 +56,45 @@ assert(human[19236] and not human[19296] and nightElf[19296] and not nightElf[19
 assert(ids(build("Mage",23))[12505].body:find("Requires talent: Spell 11366",1,true))
 assert(build("Mage",40,false,nil,"no matching text").total==0)
 assert(build("Mage",40,false,nil,nil,"preview").cards[1].note:find("Planned level 40",1,true))
+local hunterPets=A.ClassSpells.PetEntries({characterClass="Hunter"})
+local ranks,petRanks={},0
+for level,entries in pairs(hunterPets) do
+    for _,row in ipairs(entries) do
+        assert(level>=10 and level<=60 and row.level==level)
+        local key=row.action.id..":"..row.action.index
+        assert(not ranks[key],"Each Hunter pet rank appears once")
+        ranks[key]=row; petRanks=petRanks+1
+        assert(row.icon and row.meta and row.body:find("training points",1,true))
+    end
+end
+assert(ranks["screech:1"] and ranks["growl:1"] and ranks["greatstamina:10"],"Tamed and trainer ranks are covered")
+assert(ranks["screech:1"].body:find("Tame ",1,true) and ranks["growl:1"].body:find("Pet trainer",1,true))
+local expected=0
+for _,ability in ipairs(A.Data.PetGuide.abilities) do
+    for _,rank in ipairs(ability.ranks) do if rank.trainer or #rank.sources>0 then expected=expected+1 end end
+end
+assert(petRanks==expected,"All Hunter ranks with verified training sources are included")
+local hunter=build("Hunter",9)
+local nextPets=0
+for _,card in ipairs(hunter.cards) do for _,row in ipairs(card.blocks) do if row.action and row.action.kind=="rank" then nextPets=nextPets+1; assert(row.level==10) end end end
+assert(nextPets>0,"Next-level view includes Hunter pet unlocks")
+local grimoires,bookIDs=0,{}
+for level,entries in pairs(A.Data.DemonGrimoires) do
+    for _,entry in ipairs(entries) do
+        assert(level>=4 and level<=60 and entry.id and entry.itemId and entry.family)
+        assert(not bookIDs[entry.itemId],"Shared Succubus/Incubus books are not duplicated")
+        bookIDs[entry.itemId]=entry; grimoires=grimoires+1
+    end
+end
+assert(grimoires==59 and bookIDs[16375].family=="Succubus / Incubus")
+local warlock=ids(build("Warlock",3))
+assert(warlock[6307] and warlock[6307].itemId==16321 and warlock[6307].body:find("Imp",1,true))
+assert(ids(build("Warlock",39))[7811].body:find("Voidwalker",1,true))
+assert(ids(build("Warlock",31))[19478].body:find("Felhunter",1,true))
+assert(not ids(build("Mage",3,true))[6307],"Pet spells do not leak to other classes")
+assert(build("Warlock",30,true,nil,"Incubus").total>0,"Search includes demon family")
+assert(build("Hunter",10,true,nil,"Screech").total>0,"Search includes tame skills")
+print("PASS: "..petRanks.." Hunter pet ranks with trainer/taming sources and 59 unique Warlock grimoires; separate next-level/all-future pet sections.")
 for _,class in ipairs({"MAGE","HUNTER","WARRIOR"}) do
     MOCK.class=class; MOCK.level=40; A.db.profile.mode="live"; A.lastClass=nil; A:Navigate("training")
     local tab

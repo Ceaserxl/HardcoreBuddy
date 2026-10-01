@@ -22,7 +22,21 @@ retained in the source data but not presented as a verified training prerequisit
 Costs are reference prices from the source dataset, not a live trainer quote;
 they are not adjusted for the character's reputation or other discounts.
 
-This is a future class-trainer reference, not a list of unlearned past spells,
-quest rewards, dropped spell books or demon grimoires. Hunter trainer entries
-include trainer-taught pet abilities; Companion > Pet Training remains the guide
-for abilities learned by taming beasts.
+Hunter pet abilities appear in separate level sections using the reviewed Pet
+Guide ranks. Trainer abilities are removed from the ordinary class-spell rows to
+avoid duplicates. Each pet rank shows its pet level, training points and either
+the pet trainer or a taming source; clicking opens full rank/source details.
+The planning level is the maximum of level 10, required pet level and earliest
+verified taming-source level. Ranks without a verified trainer or taming source
+are omitted (currently Charge 4 and Lightning Breath 1). Pet family restrictions
+still apply; the list is a future reference, not an active-pet upgrade check.
+
+Warlocks have separate demon-grimoire sections with 59 unique books from the
+licensed Vanilla WarlockTomes dataset. Each includes the taught spell, demon
+family and reference cost. Shared Succubus/Incubus books appear once. The matching
+demon must be summoned to teach it. All pet entries participate in next-level,
+all-future and search views. Companion > Pet Training continues to check the
+active Hunter pet's learned ranks.
+
+This is a future training reference, not a list of unlearned past spells,
+quest rewards or dropped spell books.

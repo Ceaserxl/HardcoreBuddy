@@ -37,7 +37,9 @@ The default size is adjustable from 12–40 pixels, with 10–100% icon opacity.
 Each category opens a picker listing the rare, elite, skull, warning, star, diamond
 and cross icons, with previews and a selected indicator. The shared Back button
 returns to Map settings.
-Tint RGB and opacity are editable independently of Reveal all and Unchanged.
+Tint RGB uses Blizzard's native color picker, with live preview and Cancel
+restoring the original color. A separate opacity slider preserves the existing
+transparency setting. Both are independent of Reveal all and Unchanged.
 Appearance resets preserve category filters and silent notice preferences.
 Silent zone notices default on for unset preferences; explicit opt-outs remain.
 

@@ -186,8 +186,26 @@ C_Texture=previousTexture; M.Records=records
 s.notify=false
 A:OpenSettings("Map")
 local controls=M.controls
-controls.sliders.tintR:SetValue(255); controls.sliders.tintG:SetValue(0)
-controls.sliders.tintB:SetValue(128); controls.sliders.tintAlpha:SetValue(25)
+ColorPickerFrame=CreateFrame("Frame")
+function ColorPickerFrame:GetColorRGB() return self.r,self.g,self.b end
+function ColorPickerFrame:SetupColorPickerAndShow(info) self.info=info; self.r,self.g,self.b=info.r,info.g,info.b; self:Show() end
+MOCK.Click(controls.tintColor)
+assert(ColorPickerFrame.info.r==s.tintR and not ColorPickerFrame.info.hasOpacity,"Native color picker opens with saved RGB")
+ColorPickerFrame.r,ColorPickerFrame.g,ColorPickerFrame.b=1,0,128/255
+ColorPickerFrame.info.swatchFunc()
+assert(s.tintR==1 and s.tintG==0 and s.tintB==128/255,"Native picker previews RGB")
+ColorPickerFrame.info.cancelFunc()
+assert(s.tintR==0.35 and s.tintG==0.65 and s.tintB==1,"Cancel restores RGB")
+ColorPickerFrame.info.swatchFunc(); ColorPickerFrame:Hide()
+-- Classic fallback uses the same saved color and restores it on cancel.
+ColorPickerFrame.SetupColorPickerAndShow=nil
+function ColorPickerFrame:SetColorRGB(r,g,b) self.r,self.g,self.b=r,g,b end
+MOCK.Click(controls.tintColor)
+ColorPickerFrame.r,ColorPickerFrame.g,ColorPickerFrame.b=0,1,0
+ColorPickerFrame.func(); assert(s.tintG==1)
+ColorPickerFrame.cancelFunc(); ColorPickerFrame:Hide()
+assert(s.tintR==1 and s.tintG==0 and s.tintB==128/255 and s.tintAlpha==0.55,"Color choice leaves opacity unchanged")
+controls.sliders.tintAlpha:SetValue(25)
 controls.sliders.iconSize:SetValue(30); controls.sliders.iconAlpha:SetValue(40)
 now=now+1; M.events.scripts.OnUpdate(M.events)
 mapID=1436; art=1240; scale=1; s.reveal="tint"; known={}
