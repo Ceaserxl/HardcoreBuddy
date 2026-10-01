@@ -152,37 +152,20 @@ end
 function G:CurrentProfile()
     local _,class=UnitClass("player")
     local level=UnitLevel("player")
-    local saved=A.characterDB and A.characterDB.advisors
-    local manual=saved and saved.gearProfile
-    if manual then
-        local selected=self.Profile(class,level,nil,manual)
-        if selected then selected.manual=true; return selected end
+    if A.TalentAdvisor then
+        local build,manual=A.TalentAdvisor:Build(class,level)
+        if build then
+            local profile=self.Profile(class,level,nil,build.profile)
+            if profile then
+                profile.buildID=build.id; profile.buildName=build.name
+                profile.manual=manual; profile.fromBuild=true
+                return profile
+            end
+        end
     end
     local fallback=self.Profile(class,level)
-    if not fallback then return end
-    if level<10 then fallback.fallback=true; return fallback end
-    local modern=C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo
-    if not modern and not GetTalentTabInfo then fallback.fallback=true; return fallback end
-    local points,best,bestPoints={},nil,-1
-    for tab=1,3 do
-        local name,spent
-        if modern then
-            local _,treeName,_,_,_,_,treePoints=modern(tab,false,false)
-            name,spent=treeName,treePoints
-        else
-            local first,second,third,_,fifth=GetTalentTabInfo(tab,false,false)
-            if type(first)=="string" then name,spent=first,third else name,spent=second,fifth end
-        end
-        if type(name)~="string" or name=="" or not number(spent) then
-            fallback.fallback=true; return fallback
-        end
-        points[tab]=spent
-        if spent>bestPoints then best,bestPoints=tab,spent end
-    end
-    local result=bestPoints>0 and self.Profile(class,level,best) or fallback
-    result.talents=table.concat(points," / ")
-    result.fallback=bestPoints==0
-    return result
+    if fallback then fallback.fallback=true end
+    return fallback
 end
 
 -- Private tooltip reads localized restriction colors and DPS when the API lacks it.
@@ -492,7 +475,10 @@ function G:Comparisons(item,p,slotOnly)
         if reason or candidateScore==nil or oldScore==nil then
             row.text=reason or "Item stats incomplete"; row.status="unknown"
         elseif oldScore==0 then
-            row.text=not equipped and "Upgrade: empty slot" or "No scored baseline"; row.status=not equipped and "up" or "equal"
+            row.zeroBaseline=equipped~=nil
+            row.status=candidateScore>0 and "up" or candidateScore<0 and "down" or "equal"
+            row.text=candidateScore>0 and (not equipped and "Upgrade: empty slot" or "Upgrade: zero-score baseline")
+                or candidateScore<0 and "Downgrade: zero-score baseline" or "No scored baseline"
         else
             -- Floor to two decimals, including negative changes, to match the
             -- reference display. This calculation has no external dependency.

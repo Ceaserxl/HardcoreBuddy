@@ -1,5 +1,11 @@
 # Unreleased
 
+- Moved build selection to Settings > Talent Advisor. Gear scoring now follows
+  that build, replacing the independent scoring-profile selector.
+- Added green upgrade arrows and icon borders to native bag items and quest
+  reward choices, with an independent toggle under Gear Advisor settings.
+  Two-handed hints include both hands; unavailable data remains unmarked.
+- Fixed comparisons against zero-score gear and negative-stat empty-slot items.
 - Restored Best Armor beneath Scan upgrades in the auction window, synchronized
   with Settings. Missing-essentials and departure reminders now default on;
   existing saved choices are preserved.

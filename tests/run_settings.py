@@ -8,7 +8,7 @@ lua.execute((ROOT/'tests/settings.lua').read_text(encoding='utf-8'))
 if '--render' in sys.argv:
     target=ROOT/'.release/settings-previews'
     target.mkdir(parents=True,exist_ok=True)
-    for section in ['General','Gear Advisor','Auction House','Death Alerts','Death Banner','Low Health','Rares','Preparation']:
+    for section in ['General','Gear Advisor','Talent Advisor','Auction House','Death Alerts','Death Banner','Low Health','Rares','Preparation']:
         addon.OpenSettings(addon,section)
         composite(lua.globals().MOCK.frames,addon.window).save(target/(section.lower().replace(' ','-')+'.png'))
     print('Offline settings previews:',target)

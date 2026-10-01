@@ -1,5 +1,5 @@
 local _,A=...
-local S={sections={"General","Gear Advisor","Auction House","Death Alerts","Death Banner","Low Health","Rares","Elites","Preparation"}}
+local S={sections={"General","Gear Advisor","Talent Advisor","Auction House","Death Alerts","Death Banner","Low Health","Rares","Elites","Preparation"}}
 A.Settings=S
 local Skin=A.Skin
 
@@ -52,7 +52,7 @@ function S:Create(parent)
     end)
     scroll:SetScript("OnHide",function() self:CommitInputs() end)
     self.pages={}
-    for _,name in ipairs({"General","Gear Advisor","Auction House"}) do
+    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House"}) do
         local page=CreateFrame("Frame",nil,content); page:SetAllPoints(content); page:Hide(); self.pages[name]=page
         label(page,name,22,20,18,700):SetTextColor(unpack(Skin.colors.gold))
     end
@@ -66,24 +66,35 @@ function S:Create(parent)
     end)
     general.reset=button(general,"Recenter main window",218,function() A:HandleSlashCommand("reset") end)
     label(general,"Open this tab anytime with /hcb settings.",12,20,276,700)
-    label(general,"Carry quantities and item priorities stay in Supplies. Talent paths stay in Advisors.",12,20,318,700)
+    label(general,"Carry quantities and item priorities stay in Supplies. Point-by-point talent advice stays in Advisors.",12,20,318,700)
 
     local gear=self.pages["Gear Advisor"]
     label(gear,"Choose how equipment upgrades are shown and scored for your current character.",13,20,56,700)
     gear.enabled=check(gear,"Show gear advisor in item tooltips",102,function() return A.db.gearAdvisorEnabled~=false end,function(value)
         A.db.gearAdvisorEnabled=value; A.GearAdvisor:RefreshTooltips()
     end)
-    label(gear,"Scoring profile",15,20,164,700):SetTextColor(unpack(Skin.colors.gold))
-    label(gear,"Automatic follows your talents. A selected role overrides it for this character.",12,20,192,700)
-    gear.profiles={}
-    for i=1,5 do
-        local b=button(gear,"",224+(i-1)*36,function(self)
-            A.TalentAdvisor:Activate({kind="advisor",command="profile",id=self.profileID})
-            A.AuctionUpgrades:Invalidate()
-        end,400)
-        gear.profiles[i]=b
+    gear.markers=check(gear,"Mark gear upgrades in bags and quest rewards",150,function() return A.db.gearUpgradeMarkers~=false end,function(value)
+        A.db.gearUpgradeMarkers=value
+        if A.GearIndicators then A.GearIndicators:Invalidate() end
+    end)
+    gear.profile=label(gear,"",14,20,212,700)
+    button(gear,"Choose build in Talent Advisor",276,function() A:OpenSettings("Talent Advisor") end,400)
+    label(gear,"Scoring follows your live character's Talent Advisor build. All usable armor types are compared by stats.",12,20,332,700)
+
+    local talent=self.pages["Talent Advisor"]
+    talent.context=label(talent,"",14,20,56,700)
+    label(talent,"Choose your talent path here. Its scoring profile also controls gear advice, auction upgrades and item markers. Selecting a path does not spend talent points.",12,20,88,700)
+    talent.builds={}
+    local maxBuilds=0
+    for _,builds in pairs(A.Data.AdvisorBuilds) do maxBuilds=math.max(maxBuilds,#builds) end
+    for i=1,maxBuilds+1 do
+        local b=button(talent,"",156+(i-1)*52,function(self)
+            A.TalentAdvisor:Activate({command=self.buildID and "build" or "defaultBuild",id=self.buildID,class=self.class})
+        end,700)
+        b:SetHeight(46); b.label:SetHeight(46); b.label:SetFont(STANDARD_TEXT_FONT,12,"")
+        talent.builds[i]=b
     end
-    label(gear,"Every usable armor type is scored on stats. These settings use your live character, even while planning another.",12,20,422,700)
+    talent.contentHeight=176+(maxBuilds+1)*52
 
     local auction=self.pages["Auction House"]
     label(auction,"Filters for the Upgrades tab at the auction house. Saved per character.",13,20,56,700)
@@ -108,24 +119,32 @@ function S:Layout(parent,left,top,width,height,section,visible)
     section=section or "General"
     local scale=math.min(1,(width-22)/760)
     local contentWidth=(width-22)/scale
-    local contentHeight=section=="Gear Advisor" and 480 or 440
+    local contentHeight=section=="Talent Advisor" and self.pages["Talent Advisor"].contentHeight or section=="Gear Advisor" and 480 or 440
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.scroll:SetSize(width-22,height)
     self.content:SetScale(scale); self.content:SetSize(contentWidth,math.max(contentHeight,height/scale))
     for name,page in pairs(self.pages) do page:SetShown(name==section) end
     local general=self.pages.General; general.minimap:Sync(); general.kit:Sync()
-    local gear=self.pages["Gear Advisor"]; gear.enabled:Sync()
-    local _,class=UnitClass("player")
-    local profiles=A.Data.AdvisorGear[class] or {}
-    local selected=A.characterDB.advisors and A.characterDB.advisors.gearProfile
-    for i,b in ipairs(gear.profiles) do
-        local profile=profiles[i-1]
-        b:SetShown(i==1 or profile~=nil); b.profileID=profile and profile.id or nil
-        b.label:SetText(i==1 and "Automatic from talents" or profile and profile.name or "")
-        b.selected=selected==b.profileID; Skin.ButtonState(b,b.selected,false,false)
+    local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync()
+    local profile=A.GearAdvisor:CurrentProfile()
+    gear.profile:SetText(profile and ("Scoring: "..profile.name.."\nBuild: "..(profile.buildName or "Leveling default")) or "Character data loading")
+    local context=A:GetContext()
+    -- Presentation class names are used by the planner; build data uses tokens.
+    local tokens={Druid="DRUID",Hunter="HUNTER",Mage="MAGE",Paladin="PALADIN",Priest="PRIEST",Rogue="ROGUE",Shaman="SHAMAN",Warlock="WARLOCK",Warrior="WARRIOR"}
+    local class=tokens[context.characterClass]
+    local talent=self.pages["Talent Advisor"]
+    local builds=A.Data.AdvisorBuilds[class] or {}
+    local selected,manual=A.TalentAdvisor:Build(class,context.level)
+    talent.context:SetText(context.characterClass.." | Level "..context.level..(context.mode=="preview" and " | Planning another character" or " | Your character"))
+    for i,b in ipairs(talent.builds) do
+        local build=builds[i-1]
+        b:SetShown(i==1 or build~=nil); b.buildID=build and build.id or nil; b.class=class
+        local score=build and A.GearAdvisor.Profile(class,context.level,nil,build.profile)
+        b.label:SetText(i==1 and ("Automatic Hardcore path\n"..(selected and selected.name or "")) or build and (build.name.."\nLevels "..build.minLevel.."-"..build.maxLevel.." | Scoring: "..(score and score.name or "Unavailable")) or "")
+        b.selected=i==1 and not manual or manual and build and selected.id==build.id or false
+        Skin.ButtonState(b,b.selected,false,false)
     end
     local auction=self.pages["Auction House"]; auction.armor:Sync()
-    local profile=A.GearAdvisor:CurrentProfile()
     local armor=profile and ({"Cloth","Leather","Mail","Plate"})[A.GearAdvisor.HighestArmorSubclass(profile)] or "..."
     auction.armor.label:SetText("Best Armor: "..armor)
     local saved=A.characterDB.auctionLastScan

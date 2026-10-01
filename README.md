@@ -54,7 +54,8 @@ unknown. Planning mode shows a level-based reference without checking live gear.
 Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
 
 - Color-coded gear upgrade/downgrade percentages using Classic specialization stat weights.
-- Automatically follows your current talent tree, with a selectable scoring profile.
+- Follows the build selected in **Settings → Talent Advisor**, including automatic Hardcore leveling paths.
+- Green arrows and borders mark upgrades in native bags and quest reward choices.
 - Compares every usable armor material by slot, without penalizing lighter armor.
 - Shows both ring/trinket slots, handles two-handed replacements and lists stat losses.
 - Excludes applied enchants and armor kits from both scores.

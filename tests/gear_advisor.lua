@@ -131,14 +131,28 @@ C_SpecializationInfo={GetSpecializationInfo=function(tab) return tab,"Tree "..ta
 GetTalentTabInfo=function() error("Deprecated API used") end
 check(G:CurrentProfile().name=="Beast Mastery","Modern API points are return seven")
 talents={0,nil,0}
-check(G:CurrentProfile().fallback==true,"Missing talent data has a labeled leveling default")
+check(G:CurrentProfile().fromBuild and G:CurrentProfile().name=="Beast Mastery","Build scoring works even while talent APIs are loading")
 C_SpecializationInfo=nil; GetTalentTabInfo=legacy
-reset("DRUID",60,{0,0,51}); check(G:CurrentProfile().name=="Restoration","Druid tree maps past feral tank role")
+reset("DRUID",60,{0,0,51}); check(G:CurrentProfile().id==A.TalentAdvisor:Build("DRUID",60).profile,"Druid scoring follows its selected path, not spent-tree totals")
 A.characterDB.advisors={gearProfile=3}
-check(G:CurrentProfile().name=="Feral TANK","Manual feral tank role")
-reset("MAGE",30,{10,10,0}); check(G:CurrentProfile().name=="Arcane","Stable tree-order tie")
+check(G:CurrentProfile().id==A.TalentAdvisor:Build("DRUID",60).profile,"Obsolete separate gear role cannot override the talent path")
+reset("MAGE",30,{10,10,0}); check(G:CurrentProfile().name=="Frost","Path controls scoring despite tied or divergent spent talents")
 A.db.profile.mode="preview"; A.db.profile.characterClass="Warrior"; A.db.profile.level=60
 check(G:CurrentProfile().class=="MAGE" and G:CurrentProfile().level==30,"Planned character does not change live scoring")
+
+for class,builds in pairs(A.Data.AdvisorBuilds) do
+    for level=1,60 do
+        reset(class,level)
+        local selected=A.TalentAdvisor:Build(class,level)
+        check(G:CurrentProfile().id==selected.profile,"All classes and levels follow the automatic talent path")
+        for _,build in ipairs(builds) do
+            A.characterDB.advisors={builds={[class]=build.id},gearProfile=999}
+            local p=G:CurrentProfile()
+            check(p and p.id==build.profile and p.buildID==build.id and p.manual,"Every selectable build maps to valid weights at every level")
+            for _,weight in pairs(p.weights) do check(weight==weight and weight>=0 and weight<math.huge,"Finite nonnegative build weights") end
+        end
+    end
+end
 
 -- Reproduce the user's actual item comparisons with reference weights.
 reset("HUNTER",40,{31,0,0})
@@ -246,7 +260,7 @@ equipment[1]=old
 check(row(better).text=="+20.00% Upgrade" and row(worse).text=="-20.00% Downgrade","Percentage and direction")
 check(row(old).percent==0,"Identical items compare equally")
 equipment[1]=item("INVTYPE_HEAD",{})
-check(row(better).text=="No scored baseline" and row(better).percent==nil,"Zero baseline")
+check(row(better).text=="Upgrade: zero-score baseline" and row(better).status=="up" and row(better).percent==nil,"Zero baseline")
 equipment[1]=nil
 check(row(better).status=="up" and row(better).percent==nil,"Empty slot")
 equipment[1]={id=old.id,link="item:999:0"}

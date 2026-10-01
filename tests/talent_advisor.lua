@@ -94,10 +94,10 @@ check(A.window.sidebarTitle:GetText()=="ADVISORS","Sidebar identity")
 local lesson=A.document.cards[1].blocks[3]
 check(lesson.action and lesson.action.command=="learn" and lesson.icon==132127,"Visible single-point button and native icon")
 check(calls==1,"Opening advisor never spends a point")
-A:Activate({view="advisors",filter="Builds"})
-check(A.document.cards[1].title=="Hunter talent paths","Build navigation")
+A:Activate(A.document.cards[1].blocks[1].action)
+check(A.state.view=="settings" and A.state.filter=="Talent Advisor","Build selection moved to Talent Advisor settings")
 T:Activate({kind="advisor",command="build",class="HUNTER",id=1})
-check(A.state.filter=="Talents" and T:Build("HUNTER",40).id==1,"Persistent selected path")
+check(A.state.filter=="Talent Advisor" and T:Build("HUNTER",40).id==1,"Persistent selected path")
 local names={DRUID="Druid",HUNTER="Hunter",MAGE="Mage",PALADIN="Paladin",PRIEST="Priest",ROGUE="Rogue",SHAMAN="Shaman",WARLOCK="Warlock",WARRIOR="Warrior"}
 for class,name in pairs(names) do
     A.db.profile.mode="preview"; A.db.profile.characterClass=name; A.db.profile.level=60
@@ -109,10 +109,10 @@ end
 check(calls==1,"Previewing all classes never spends")
 A.db.profile.mode="live"; A:HandleSlashCommand("gear")
 check(A.state.filter=="Gear","Gear slash opens settings")
-T:Activate({kind="advisor",command="profile",id=2})
-check(A.GearAdvisor:CurrentProfile().name=="Marksmanship","Manual gear role persists")
-T:Activate({kind="advisor",command="profile"})
-check(not A.characterDB.advisors.gearProfile,"Automatic role restored")
+T:Activate({kind="advisor",command="build",class="HUNTER",id=1})
+check(A.GearAdvisor:CurrentProfile().id==T:Build("HUNTER",40).profile,"Talent path sets the gear role")
+T:Activate({kind="advisor",command="defaultBuild",class="HUNTER"})
+check(not A.GearAdvisor:CurrentProfile().manual,"Automatic path restored")
 A:HandleSlashCommand("gear off"); check(not A.db.gearAdvisorEnabled,"Gear can be disabled")
 A:HandleSlashCommand("gear on"); check(A.db.gearAdvisorEnabled,"Gear can be enabled")
 A:HandleSlashCommand("talents")

@@ -74,6 +74,7 @@ local function change(row)
     if row.part then return row.owned and "Equipped" or "Included" end
     if row.percent then return string.format(row.percent>0 and "+%.2f%%" or "%.2f%%",row.percent) end
     if row.weaponSet and not row.emptyBaseline then return "No baseline" end
+    if row.zeroBaseline then return "Zero baseline" end
     return "Empty slot"
 end
 local function changeColor(row)
@@ -155,7 +156,7 @@ function U:Add(item,rows,link,icon,buyout,bid,count)
             local list=self.results[comparison.slot] or {}; self.results[comparison.slot]=list
             local record={key=key,link=link,name=item.name,icon=icon,percent=comparison.percent,
                 score=G.Score(item,self.profile,comparison.slot) or 0,label=comparison.label,
-                buyout=buyout,bid=bid,count=count,auctions=1}
+                buyout=buyout,bid=bid,count=count,auctions=1,zeroBaseline=comparison.zeroBaseline}
             local found
             for i,old in ipairs(list) do
                 if old.key==key then
@@ -426,7 +427,7 @@ function U:Refresh()
                 detail=detail.." | "..entry.total.." "..noun..(entry.total==1 and "" or "s")
             end
             frame.slot:SetText(detail)
-            frame.percent:SetText(row and (row.percent==nil and not row.part and not row.weaponSet and "Empty slot" or change(row)) or "--")
+            frame.percent:SetText(row and change(row) or "--")
             frame.percent:SetTextColor(unpack(row and changeColor(row) or Skin.colors.muted))
             local value,kind
             if row then value,kind=price(row) end

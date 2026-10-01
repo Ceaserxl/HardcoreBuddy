@@ -1,7 +1,8 @@
 # Gear and talent advisors
 
-Open **Advisors** in the main window. The sidebar offers **Gear**, **Talents**
-and **Builds**. `/hcb gear` and `/hcb talents` open the relevant page.
+Open **Advisors** in the main window. The sidebar offers **Gear** and **Talents**.
+Choose builds in **Settings > Talent Advisor**. `/hcb gear` and `/hcb talents`
+open the advice pages.
 
 ## Gear scoring
 
@@ -12,11 +13,11 @@ This measures the relative item score, not simulated DPS or
 survival. Zero-score and empty baselines have descriptive labels.
 
 Thirty Classic profiles cover every talent tree in all nine classes, plus Feral
-tanking, melee Hunter and Fury/Protection. Automatic selection uses the live
-character's most-invested tree, with tree order breaking ties. Until talent data
-is available, or before spending any points, it clearly labels a leveling
-default. Manual profile choices are saved per character. Edit Character never
-changes the live gear-scoring character.
+tanking, melee Hunter and Fury/Protection. The live character's Talent Advisor
+build selects the scoring profile; there is no separate gear-profile setting.
+Automatic Hardcore paths change phases with level. A manually selected path
+persists per character and class. Existing standalone gear-profile overrides are
+ignored. Edit Character never changes the live gear-scoring character.
 
 All usable armor materials compete by slot. There is no lighter-armor penalty
 and no requirement to match the equipped material. Class, level and native red
@@ -37,6 +38,24 @@ Weapon DPS uses the native tooltip's displayed precision, matching the reference
 scorer, ahead of the item API's higher-precision value. Enhancements are removed
 before reading that tooltip. New snapshots identify this as `classic-weighted-v3`;
 older saved snapshots retain their original scores and model identifier.
+
+## Upgrade markers
+
+Native bag items and quest reward choices show a small green up arrow and green
+icon border when they beat equipped gear for at least one eligible slot. These
+use the same build, restrictions and intrinsic-stat calculations as tooltips.
+Two-handed markers compare both replaced hands. Zero-score baselines use the
+score difference without inventing a percentage. Missing item data stays unmarked
+until it loads. Markers refresh after gear, level, build or inventory changes;
+recycled buttons clear old hints. They do not pick or equip items automatically.
+
+Toggle these in **Settings > Gear Advisor** independently of tooltip advice.
+Markers support Blizzard's native bags and quest reward/quest-log choices;
+replacement bag interfaces need their own integration. Work runs in batches of
+at most four visible buttons per frame and caches repeated comparisons.
+Native hooks were checked against Blizzard's Classic Era
+[container UI source](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_UIPanels_Game/Classic/ContainerFrame_Shared.lua)
+and [quest UI source](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_UIPanels_Game/Vanilla/QuestInfo.lua).
 
 ## Auction weapon setups
 
@@ -66,7 +85,7 @@ bid/buyout setups. Open a setup to inspect and search for each component.
 
 This remains a weighted-stat comparison, not a combat simulation: attack speed,
 dual-wield combat penalties, shield utility and effects are not independently
-simulated. Choose the appropriate scoring profile and inspect the individual
+simulated. Choose the appropriate talent build and inspect the individual
 items before changing weapon styles.
 
 ## Talent advice

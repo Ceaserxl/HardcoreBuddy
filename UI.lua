@@ -611,7 +611,7 @@ end
 local FILTER_ICONS={
     General="Trade_Engineering",["Gear Advisor"]="INV_Chest_Chain",["Auction House"]="INV_Misc_Coin_01",
     ["Death Alerts"]="INV_Misc_Book_09",["Death Banner"]="INV_Misc_Book_09",
-    Gear="INV_Chest_Chain",Talents="Ability_Marksmanship",Builds="INV_Misc_Book_11",
+    Gear="INV_Chest_Chain",Talents="Ability_Marksmanship",["Talent Advisor"]="INV_Misc_Book_11",
     Essentials="INV_Misc_Bag_08",Preparation="INV_Misc_Note_01",Appearance="INV_Misc_Book_09",
     ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
     ["Reports"]="INV_Misc_Book_09",Options="Trade_Engineering",["All"]="INV_Misc_Bag_08",["Food & drink"]="INV_Misc_Food_11",Buffs="INV_Potion_27",
@@ -708,7 +708,7 @@ function addon:Layout()
         y=y+56
     end
     local instancePage=doc.view=="dungeons" or doc.view=="raids"
-    local navigation=doc.view=="advisors" and {"Gear","Talents","Builds"} or instancePage and self.Instances.Navigation(self.state)
+    local navigation=doc.view=="advisors" and {"Gear","Talents"} or instancePage and self.Instances.Navigation(self.state)
         or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {"Reports"}
         or doc.view=="training" and (context.characterClass=="Hunter" and {"Overview","Pet Training","Pet Guide","First Aid","Engineering","Cooking"} or {"Overview","First Aid","Engineering","Cooking"})
         or doc.view=="petguide" and {"< Companion","Families","Abilities","Pets","Care"}

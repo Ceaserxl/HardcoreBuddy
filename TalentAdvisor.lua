@@ -141,12 +141,11 @@ end
 
 function T:Activate(a)
     if a.command=="settings" then A:OpenSettings("Gear Advisor"); return end
+    if a.command=="talentSettings" then A:OpenSettings("Talent Advisor"); return end
     local s=settings(); if not s then return end
     if a.command=="build" then
         if D.AdvisorBuilds[a.class] and D.AdvisorBuilds[a.class][a.id] then s.builds[a.class]=a.id end
-        A.state.filter="Talents"
-    elseif a.command=="defaultBuild" then s.builds[a.class]=nil; A.state.filter="Talents"
-    elseif a.command=="profile" then s.gearProfile=a.id
+    elseif a.command=="defaultBuild" then s.builds[a.class]=nil
     elseif a.command=="toggleGear" then A.db.gearAdvisorEnabled=A.db.gearAdvisorEnabled==false
     elseif a.command=="learn" then self:LearnNext(a.id,a.key,a.rank)
     elseif a.command=="open" then self:OpenTalents()
@@ -154,6 +153,11 @@ function T:Activate(a)
         if InCombatLockdown and InCombatLockdown() then A:Print("Open Gear Snapshot after combat."); return end
         if ToggleCharacter and CharacterFrame and not CharacterFrame:IsShown() then ToggleCharacter("PaperDollFrame") end
         if A.GearSnapshot then A.GearSnapshot:Show() end
+    end
+    if a.command=="build" or a.command=="defaultBuild" then
+        s.gearProfile=nil
+        if A.AuctionUpgrades then A.AuctionUpgrades:Invalidate() end
+        if A.GearIndicators then A.GearIndicators:Invalidate() end
     end
     A.GearAdvisor.revision=A.GearAdvisor.revision+1
     A.GearAdvisor:RefreshTooltips(); A:Refresh(true)
@@ -169,8 +173,9 @@ function T:Document(context,state)
     local preview=context.mode=="preview"
     if filter=="Gear" then
         local profile=A.GearAdvisor:CurrentProfile()
-        local description=profile and (profile.name..(profile.manual and " | Selected profile" or profile.fallback and " | Leveling default" or " | Your current talents")) or "Character data loading"
-        local blocks={row("Gear advisor settings", "Configure tooltips and your scoring profile in Settings.",action("settings")),
+        local description=profile and (profile.name.." | "..(profile.buildName or "Leveling default")) or "Character data loading"
+        local blocks={row("Gear advisor settings", "Configure tooltips and upgrade markers in Settings.",action("settings")),
+            row("Talent Advisor settings","Your selected talent build determines gear scoring.",action("talentSettings")),
             row("Snapshot current gear","Save your equipment in the Character window for offline review.",action("snapshot"))}
         doc.cards[#doc.cards+1]=card("Gear Advisor",description,blocks)
         doc.cards[#doc.cards+1]=card("Reading the score","Percentage change in weighted item stats, not a damage or survival simulation.",{
@@ -179,20 +184,11 @@ function T:Document(context,state)
         return doc
     end
     local build,manual=self:Build(class,level)
-    if filter=="Builds" then
-        local choices={row("Automatic Hardcore path","Select the default path for your level, including planned respec phases.",action("defaultBuild",nil,class),not manual and "Selected" or nil)}
-        for _,b in ipairs(D.AdvisorBuilds[class]) do
-            choices[#choices+1]=row(b.name,"Levels "..b.minLevel.."-"..b.maxLevel.." | "..#b.steps.." points",
-                action("build",b.id,class),build.id==b.id and "Selected" or nil)
-        end
-        doc.cards[1]=card(context.characterClass.." talent paths","Hardcore leveling paths. Use Edit Character to browse any class.",choices)
-        return doc
-    end
     local live,reason
     if not preview then live,reason=self:ReadCurrent(class,level) else reason="Preview: no talent points will be spent." end
     local ranks=live and live.ranks or {}
     local plan=self.Plan(class,level,build,ranks)
-    local top={row("Choose a talent path",build.name,{view="advisors",filter="Builds"})}
+    local top={row("Choose a talent path",build.name,action("talentSettings"))}
     if live then
         top[#top+1]=row(plan.status,live.points.." spent | "..live.unspent.." unspent",
             action("open"),#plan.divergences>0 and table.concat(plan.divergences,", ") or nil)
