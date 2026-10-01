@@ -2,8 +2,8 @@ local _,A=...
 local U={results={},offset=0}; A.AuctionUpgrades=U
 local G,Skin=A.GearAdvisor,A.Skin
 local visibleRows=5
-local checkedBySearch={{1},{2},{3},{5},{6},{7},{8},{9},{10},{11,12},{13,14},{15},{16},{17},{16},{18}}
-local slots={1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18}
+local checkedBySearch={{1},{2},{3},{5},{6},{7},{8},{9},{10},{15},{11,12},{13,14},{16},{17},{16},{18}}
+local slots={1,2,3,5,6,7,8,9,10,15,11,12,13,14,16,17,18}
 local names={[1]="Head",[2]="Neck",[3]="Shoulders",[5]="Chest",[6]="Waist",[7]="Legs",[8]="Feet",
     [9]="Wrists",[10]="Hands",[11]="Ring 1",[12]="Ring 2",[13]="Trinket 1",[14]="Trinket 2",
     [15]="Back",[16]="Main hand",[17]="Off hand",[18]="Ranged",twoHand="Two-handed",paired="1H + off hand"}
@@ -14,7 +14,7 @@ local searches={
     {"Head",true,{4,1}}, {"Neck",false,{4,2}}, {"Shoulders",true,{4,3}},
     {"Chest",true,{4,5},{4,20}}, {"Waist",true,{4,6}}, {"Legs",true,{4,7}},
     {"Feet",true,{4,8}}, {"Wrists",true,{4,9}}, {"Hands",true,{4,10}},
-    {"Rings",false,{4,11}}, {"Trinkets",false,{4,12}}, {"Back",false,{4,16}},
+    {"Back",false,{4,16}}, {"Rings",false,{4,11}}, {"Trinkets",false,{4,12}},
     {"Main hand",false,{2,13},{2,21}}, {"Off hand",false,{2,22},{4,14},{4,23}},
     {"Two-handed",false,{2,17}}, {"Ranged",false,{2,15},{2,25},{2,26}},
 }
