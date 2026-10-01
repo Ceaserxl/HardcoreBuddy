@@ -230,6 +230,7 @@ function C.Detail(context, action)
 end
 
 function C.Build(context,state)
+    if state.view=="training" and state.filter=="Zones" and not state.detail then return A.LevelingZones.Build(context,state) end
     if (state.view=="instances" or state.view=="dungeons" or state.view=="raids") and not state.detail then
         return A.Instances.Build(context,state)
     end

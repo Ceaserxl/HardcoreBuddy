@@ -436,6 +436,7 @@ function addon:CreateWindow()
     f.clear=button(f,"Clear",54,function() self.state.query=""; f.search:SetText(""); self.state.page=1; self:Refresh(true) end)
     f.atLevel=button(f,"Any level",112,function()
         if self.state.view=="instances" then self.state.showAllInstances=not self.state.showAllInstances
+        elseif self.state.view=="training" and self.state.filter=="Zones" then self.state.showAllZones=not self.state.showAllZones
         else self.state.atLevel=not self.state.atLevel end
         self.state.page=1; self:Refresh(true)
     end)
@@ -641,7 +642,7 @@ local FILTER_ICONS={
     Emergency="INV_Misc_Bandage_12",Potions="INV_Potion_54",Class="INV_Misc_Rune_01",Optional="INV_Misc_PocketWatch_01",User="INV_Misc_Note_01",Scrolls="INV_Scroll_03",Families="Ability_Hunter_BeastTaming",
     Abilities="Ability_Hunter_BeastCall",Pets="Ability_Hunter_Pet_Bear",Care="Ability_Hunter_MendPet",
     ["Pet Guide"]="Ability_Hunter_Pet_Bear",
-    Overview="INV_Misc_Book_09",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",
+    Overview="INV_Misc_Book_09",Zones="INV_Misc_Map_01",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",
 }
 function addon:Layout()
     local f,doc=self.window,self.document
@@ -733,7 +734,7 @@ function addon:Layout()
     local instancePage=doc.view=="instances"
     local navigation=doc.view=="advisors" and {"Gear","Talents","Map"} or instancePage and self.Instances.Navigation(self.state)
         or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {"Reports"}
-        or doc.view=="training" and (context.characterClass=="Hunter" and {"Overview","Pet Training","Pet Guide","First Aid","Engineering","Cooking"} or {"Overview","First Aid","Engineering","Cooking"})
+        or doc.view=="training" and (context.characterClass=="Hunter" and {"Overview","Zones","Pet Training","Pet Guide","First Aid","Engineering","Cooking"} or {"Overview","Zones","First Aid","Engineering","Cooking"})
         or doc.view=="petguide" and {"Families","Abilities","Pets","Care"}
         or addon.Supplies.filters
     local sidebar=true
@@ -763,7 +764,8 @@ function addon:Layout()
                 end
                 if addon.state.view=="training" then
                     if self.filter=="Pet Guide" then addon:Navigate("petguide"); return end
-                    addon.state.filter=self.filter=="Pet Training" and "Pet Training" or nil
+                    addon.state.filter=(self.filter=="Pet Training" or self.filter=="Zones") and self.filter or nil
+                    addon.state.query=nil
                     local family=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[self.filter]
                     if family then addon:Activate({kind="profession",family=family}); return end
                 else
@@ -795,7 +797,7 @@ function addon:Layout()
         if doc.view=="training" then
             local family=self.state.detail and self.state.detail.family
             selected=family=="bandage" and "First Aid" or family=="antivenom" and "First Aid"
-                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or self.state.filter=="Pet Training" and "Pet Training" or "Overview"
+                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or self.state.filter=="Pet Training" and "Pet Training" or self.state.filter=="Zones" and "Zones" or "Overview"
         end
         active(b,selected==label)
     end
@@ -836,12 +838,15 @@ function addon:Layout()
         f.ammoChoice.label:SetText("Plan ammo: "..(context.previewAmmo or "arrows"))
         f.ammoChoice:ClearAllPoints(); f.ammoChoice:SetPoint("TOPLEFT",left,-y); y=y+34
     end
-    local searchable=(doc.view=="petguide" or instancePage) and doc.searchable
+    local zonePage=doc.view=="training" and self.state.filter=="Zones"
+    local rangePage=instancePage or zonePage
+    local showAll=zonePage and self.state.showAllZones or instancePage and self.state.showAllInstances
+    local searchable=(doc.view=="petguide" or rangePage) and doc.searchable
     f.search:SetShown(searchable); f.searchLabel:SetShown(searchable); f.clear:SetShown(searchable)
     f.atLevel:SetShown(searchable and doc.levelFilter)
     if searchable then
         local extra=doc.levelFilter
-        f.atLevel.label:SetText(instancePage and (self.state.showAllInstances and "Near my level" or "Show all") or (self.state.atLevel and "Within my level" or "Any level"))
+        f.atLevel.label:SetText(rangePage and (showAll and "Near my level" or "Show all") or (self.state.atLevel and "Within my level" or "Any level"))
         local extraButton=f.atLevel
         if extra then extraButton:SetWidth(math.max(112,math.ceil(extraButton.label:GetStringWidth())+22)) end
         local labelWidth=math.ceil(f.searchLabel:GetStringWidth())+6
@@ -858,7 +863,7 @@ function addon:Layout()
         f.clear:ClearAllPoints(); f.clear:SetPoint("TOPRIGHT",-40-extraWidth,-y)
         f.clear:SetHeight(rowHeight)
         f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("TOPRIGHT",-40,-y-(wrapExtra and rowHeight+6 or 0))
-        active(f.atLevel,instancePage and self.state.showAllInstances or self.state.atLevel)
+        active(f.atLevel,rangePage and showAll or self.state.atLevel)
         y=y+rowHeight+8+(wrapExtra and 34 or 0)
     end
     y=y+self.MapAdvisor:LayoutControls(f,left,y,bodyWidth,doc.view=="advisors" and self.state.filter=="Map")

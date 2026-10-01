@@ -85,21 +85,27 @@ Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
 
 The gear percentage measures weighted item stats, not simulated damage or survival.
 Procs, active item effects and set bonuses are excluded. See [advisor details](docs/advisors.md).
+## Leveling zones
+
+Open **Companion > Zones** for faction-specific Classic leveling recommendations.
+The list follows your current or planned level, showing recommended ranges within
+three levels on either side. **Show all** displays every recommended range for
+your faction. Search by zone name or click a row to open its map. See the
+[zone guide sources and filtering details](docs/leveling-zones.md).
+
 ## Debug dump
 
 Use **Settings > Debug > Dump Data** to capture HardcoreBuddy settings, saved
 history, caches, runtime state and reference data, plus available character,
 equipment, talents, bags/bank, quests, spells, skills, pet and aura information.
 An animated progress bar tracks work spread across frames. The completed dump
-is cached in full per character. The text box displays parts of at most 8 KB
-to keep native text selection responsive. **Copy** selects the current part;
-press **Ctrl+C** (Cmd+C on Mac), paste, then use **Next part**. Paste parts in
-order to reconstruct the dump. `/reload` or log out to write the complete cache
-to disk in the character's `SavedVariables/HardcoreBuddy.lua` file. Opening
-Debug restores the last dump without recapturing.
-The textbox is editable before copying, with a persistent **Ctrl + C to copy**
-label. Copy selects all displayed text, including your edits. Edits are retained
-while browsing parts until a new dump or reload; the original cache is preserved.
+is cached in full per character and fills one editable, scrollable textbox.
+There is no Copy button or automatic text selection. Click the textbox, select
+text manually (Ctrl+A selects all), then press **Ctrl+C** as the label indicates.
+`/reload` or log out writes the complete cache to the character's
+`SavedVariables/HardcoreBuddy.lua` file. Opening Debug restores the last dump
+without recapturing. Text edits persist while the addon is open; a new dump or
+reload restores the captured data. Editing does not change the original cache.
 Unavailable APIs are labelled; bank information depends on the bank being open.
 The dump includes only HardcoreBuddy-owned data and player APIs, not other
 addons. UI objects and functions are represented by markers. Shared tables and
