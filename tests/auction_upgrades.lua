@@ -314,6 +314,13 @@ end
 local hovered=U.rows[1]
 hovered.scripts.OnEnter(hovered)
 check(ShoppingTooltip1:IsShown() and ShoppingTooltip2:IsShown(),"Unmodified hover shows equipped comparisons even with always-compare disabled")
+local stableCalls=compareCalls
+for i=1,20 do nativeTooltipTick() end
+check(compareCalls==stableCalls and ShoppingTooltip1:IsShown() and ShoppingTooltip2:IsShown(),
+    "Repeated native tooltip updates do not clear and rebuild equipped comparisons")
+ShoppingTooltip2:Hide(); nativeTooltipTick()
+check(compareCalls==stableCalls+1 and ShoppingTooltip2:IsShown(),"A lost comparison is restored once")
+nativeTooltipTick(); check(compareCalls==stableCalls+1,"Restored comparisons remain stable on later updates")
 shift=true; nativeTooltipTick()
 check(ShoppingTooltip1:IsShown() and ShoppingTooltip2:IsShown(),"Pressing Shift while hovered opens equipped comparisons")
 check(ShoppingTooltip1.comparedLink==GameTooltip.link,"Compares the hovered upgrade's exact item link")
@@ -408,9 +415,14 @@ check(GameTooltip:IsShown() and GameTooltip.link==best.link and ShoppingTooltip1
 finish()
 check(GameTooltip:IsShown() and tooltipSets==setsBefore,"Tooltip stays open without rebuilding throughout the remaining scan and completion")
 local current=U.results[1][1]; current.auctions=current.auctions+1; U:Refresh()
-check(GameTooltip:IsShown() and tooltipSets==setsBefore+1
-    and GameTooltip.lines[#GameTooltip.lines-1][1]:find("2 listing(s)",1,true),
-    "Updated listing count refreshes the visible tooltip")
+check(GameTooltip:IsShown() and tooltipSets==setsBefore
+    and _G[GameTooltip:GetName().."TextLeft"..hovered.tooltipDetailsLine]:GetText():find("2 listing(s)",1,true),
+    "Updated listing count changes the footer without rebuilding either tooltip")
+local comparisonBefore=compareCalls
+local replacement={}; for key,value in pairs(current) do replacement[key]=value end
+replacement.buyout=1; U.results[1][1]=replacement; U:Refresh(); nativeTooltipTick()
+check(tooltipSets==setsBefore and compareCalls==comparisonBefore and hovered.tooltipItem==replacement,
+    "A cheaper auction for the same item preserves visible equipped comparisons")
 table.remove(U.results[1],1); U:Refresh()
 check(GameTooltip:IsShown() and GameTooltip.link==good.link and ShoppingTooltip1.comparedLink==good.link,
     "Reused hovered row updates both item and equipped comparisons")

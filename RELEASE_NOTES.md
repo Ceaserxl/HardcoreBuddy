@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fixed equipped comparison flicker during auction scans by reusing visible
+  tooltips and updating listing counts without rebuilding item comparisons.
 - Auction upgrade hovers now show equipped-item comparisons automatically,
   without requiring Shift.
 - Added saved diagnostics for skipped auction listings, including the precise

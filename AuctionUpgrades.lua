@@ -89,15 +89,28 @@ end
 function U:HideTooltip(row)
     local owner=GameTooltip:GetOwner()
     if owner and owner.hardcoreBuddyAuctionRow and (not row or owner==row) then
+        owner.comparisonState=nil
         hideComparisons(); GameTooltip:Hide()
     end
 end
 
 function U:UpdateTooltipComparison(row)
     if GameTooltip:GetOwner()~=row or not GameTooltip:IsShown() then return end
-    -- These rows are explicitly for comparing upgrades. Show equipped items
-    -- automatically, without changing the player's global tooltip preference.
-    if GameTooltip_ShowCompareItem then GameTooltip_ShowCompareItem(GameTooltip) end
+    local _,link=GameTooltip:GetItem()
+    if not link or not GameTooltip_ShowCompareItem then return end
+    -- The native comparison call clears/reanchors the shopping tooltips.
+    -- Reuse them across owner OnUpdate calls instead of rebuilding every tick.
+    local state=row.comparisonState
+    if state and state.link==link then
+        local intact=true
+        for _,tip in ipairs(state.visible) do if not tip:IsShown() then intact=false; break end end
+        if intact then return end
+    end
+    GameTooltip_ShowCompareItem(GameTooltip)
+    state={link=link,visible={}}; row.comparisonState=state
+    for _,tip in ipairs(GameTooltip.shoppingTooltips or {}) do
+        if tip:IsShown() then state.visible[#state.visible+1]=tip end
+    end
 end
 
 function U:Stop(message)
@@ -266,6 +279,8 @@ end
 function U:Invalidate()
     if not self.profile then return end
     self.stale=true; self.complete=false
+    local owner=GameTooltip:GetOwner()
+    if owner and owner.hardcoreBuddyAuctionRow then owner.tooltipItem=nil end
     self:Stop("Gear or talents changed. Scan again to refresh upgrades.")
 end
 
@@ -418,7 +433,17 @@ function U:Refresh()
         local entry=owner.entry
         local item=entry and (self.slot and entry or entry.best)
         if not self.panel:IsShown() or not owner:IsShown() or not item then self:HideTooltip(owner)
-        elseif item~=owner.tooltipItem or item.auctions~=owner.tooltipAuctions then owner:GetScript("OnEnter")(owner) end
+        elseif item~=owner.tooltipItem or item.auctions~=owner.tooltipAuctions then
+            local old=owner.tooltipItem
+            local details=owner.tooltipDetailsLine and _G[GameTooltip:GetName().."TextLeft"..owner.tooltipDetailsLine]
+            if old and not item.weaponSet and old.link==item.link and old.owned==item.owned
+                and old.label==item.label and old.count==item.count and details then
+                -- A new price/listing record for the same item does not change
+                -- its equipped comparison. Update our footer in place.
+                details:SetText(item.label..(item.owned and " | Equipped" or " | "..item.auctions.." listing(s)"))
+                owner.tooltipItem=item; owner.tooltipAuctions=item.auctions
+            else owner:GetScript("OnEnter")(owner) end
+        end
     end
 end
 
@@ -511,6 +536,7 @@ function U:Attach()
             U:HideTooltip()
             local entry=self.entry; local item=entry and (U.slot and entry or entry.best)
             if item then GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink(item.link)
+                self.tooltipDetailsLine=nil
                 if item.weaponSet then
                     GameTooltip:AddLine(" ")
                     GameTooltip:AddLine("Complete setup vs equipped: "..change(item),unpack(changeColor(item)))
@@ -521,6 +547,7 @@ function U:Attach()
                     GameTooltip:AddLine("Total: "..(item.owned and "No purchase" or money(price(item)).." ("..item.priceLabel..")"),0.9,0.75,0.45)
                     GameTooltip:AddLine("Weighted stats; not a damage or survival simulation.",0.65,0.65,0.56,true)
                 else
+                    self.tooltipDetailsLine=GameTooltip:NumLines()+1
                     GameTooltip:AddLine(item.label..(item.owned and " | Equipped" or " | "..item.auctions.." listing(s)"),0.9,0.75,0.45)
                     if item.count>1 then GameTooltip:AddLine("Listed stack: "..item.count,1,0.8,0.4) end
                 end
