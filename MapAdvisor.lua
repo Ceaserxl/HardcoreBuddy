@@ -84,8 +84,13 @@ function M:PlacePins()
     local map=WorldMapFrame
     if not map or not map.GetCanvas then return end
     local canvas=map:GetCanvas(); local scale=map.GetCanvasScale and map:GetCanvasScale() or 1
+    -- Native map pins use levels around 2000, far above the canvas itself.
+    local manager=map.GetPinFrameLevelsManager and map:GetPinFrameLevelsManager()
+    local top=manager and manager:GetValidFrameLevel("PIN_FRAME_LEVEL_TOPMOST",10000) or 2000
+    local frameLevel=math.max(canvas:GetFrameLevel()+30,top+1)
     for _,pin in ipairs(self.pins) do
         if pin:IsShown() and pin.cluster then
+            pin:SetFrameLevel(frameLevel)
             pin:ClearAllPoints(); pin:SetPoint("CENTER",canvas,"TOPLEFT",pin.cluster.x*canvas:GetWidth(),-pin.cluster.y*canvas:GetHeight())
             pin:SetSize(17/math.max(0.1,scale),17/math.max(0.1,scale))
             pin.label:SetFont(STANDARD_TEXT_FONT,11/math.max(0.1,scale),"OUTLINE")
@@ -102,7 +107,7 @@ function M:RefreshPins()
         local pin=self.pins[index]
         if not pin then
             pin=CreateFrame("Frame",nil,canvas,"BackdropTemplate"); self.pins[index]=pin
-            pin:EnableMouse(true); pin:SetFrameLevel(canvas:GetFrameLevel()+30)
+            pin:EnableMouse(true)
             pin:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8x8",edgeFile="Interface\\Buttons\\WHITE8x8",edgeSize=1})
             pin:SetBackdropColor(0.03,0.03,0.03,0.9)
             pin.label=pin:CreateFontString(nil,"OVERLAY","GameFontNormalSmall"); pin.label:SetAllPoints()
