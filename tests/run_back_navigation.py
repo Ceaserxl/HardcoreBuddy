@@ -8,11 +8,14 @@ lua, addon = boot()
 lua.execute('''
 local A=TestAddon
 local f=A.window
+assert(A.state.view=="supplies" and A.state.filter=="All","First open defaults to All supplies")
+A:Navigate("supplies"); assert(A.state.filter=="All","Supplies navigation defaults to All")
 local function back()
     assert(f.back:IsVisible(),"Shared Back is hidden")
     local x,y,w,h=f.back:GetRect()
     local wx,wy,ww=f:GetRect()
-    assert(x==wx+ww-22-w and y==wy+f.headerHeight+5,"Back moved between pages")
+    local _,contentTop=f.sidebar:GetRect()
+    assert(x==wx+184 and y==contentTop,"Back is not above the left edge of the content")
     assert(MOCK.HitTest(x+w/2,y+h/2)==f.back,"Back cannot be clicked")
     for _,tab in ipairs(f.tabs) do
         local tx,ty,tw,th=tab:GetRect()
@@ -31,7 +34,7 @@ A.MapAdvisor:Activate({command="zones"})
 back(); assert(not A.state.mapZonePicker and A.state.filter=="Map")
 A:Navigate("instances"); A:Activate({kind="instance",id="rfc"})
 back(); assert(not A.state.instance and A.state.view=="instances")
--- Current instance strips cannot move return navigation.
+-- Current instance strips keep Back aligned with the content below them.
 IsInInstance=function() return true,"party" end
 GetInstanceInfo=function() return "Ragefire Chasm","party",1,"Normal",5,0,false,389 end
 A:Navigate("supplies"); A:OpenCurrentInstance()

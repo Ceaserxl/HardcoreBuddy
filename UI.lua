@@ -201,7 +201,7 @@ local function renderBlock(frame, block, width)
     end
     local x = (icon and 52 or 12) + (block.child and 8 or 0)
     local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), 8
-    frame.title:SetTextColor(unpack(block.supply and WHITE or block.action and GOLD or WHITE))
+    frame.title:SetTextColor(unpack(block.titleColor or (block.supply and WHITE or block.action and GOLD or WHITE)))
     local height
     if block.supply then
         local nameWidth=math.floor(available*0.42)
@@ -564,7 +564,7 @@ end
 function addon:Navigate(view)
     if view=="alerts" then self:OpenSettings("Low Health"); return end
     self:CommitInputs()
-    self.state={view=view=="now" and "supplies" or view,filter=(view=="supplies" or view=="now") and "Food & drink" or nil,page=1}; self.history={}
+    self.state={view=view=="now" and "supplies" or view,filter=(view=="supplies" or view=="now") and "All" or nil,page=1}; self.history={}
     if view=="dungeons" or view=="raids" then
         self.state.view="instances"; self.state.filter=view=="raids" and "Raids" or "Dungeons"
     end
@@ -619,7 +619,7 @@ function addon:Refresh(resetScroll)
     if self.lastClass and self.lastClass~=context.characterClass and not (self.state and
         (self.state.view=="deaths" or self.state.view=="settings" or self.state.view=="instances" or self.state.view=="advisors")) then self.state=nil; self.history={} end
     self.lastClass=context.characterClass
-    self.state=self.state or {view="supplies",filter="Food & drink",page=1}; self.history=self.history or {}
+    self.state=self.state or {view="supplies",filter="All",page=1}; self.history=self.history or {}
     if self.state.view=="settings" then self.state.filter=self.Settings:Section(self.state.filter) end
     -- Supplies has no hidden search or shortage filter after its controls were
     -- removed. Back navigation and old in-memory state must show the full kit.
@@ -671,7 +671,7 @@ function addon:Layout()
     f.drag:SetWidth(math.max(1,width-modeWidth-59))
     f.title:SetWidth(math.max(140,width-titleX-modeWidth-67))
     local x,y=22,f.headerHeight+4
-    local right=width-134 -- Reserve the same Back location even on root pages.
+    local right=width-22
     for _,b in ipairs(f.tabs) do
         b:Show()
         if b:IsShown() then
@@ -681,7 +681,6 @@ function addon:Layout()
         end
     end
     y=y+36
-    Skin.PlaceBackButton(f.back,f,f.headerHeight+5)
     f.class:SetShown(preview); f.levelGroup:SetShown(preview)
     f.class.label:SetText(context.characterClass)
     f.class:SetWidth(math.max(compact and 88 or 104,math.ceil(f.class.label:GetStringWidth())+22))
@@ -800,6 +799,8 @@ function addon:Layout()
     end
     for i=#navigation+1,#f.filters do f.filters[i]:Hide() end
     if doc.filters and not sidebar then y=y+34 end
+    Skin.PlaceBackButton(f.back,f,y,left)
+    local backRow=self:CanGoBack()
     local customDetail=doc.isDetail and self.state.detail and self.state.detail.item and self.state.detail.item.userItem
     local priorityItem=doc.isDetail and self.state.detail and self.state.detail.item
     if doc.isDetail and self.state.detail and self.state.detail.kind=="supplyFamily" then
@@ -814,9 +815,9 @@ function addon:Layout()
     end
     f.userRemove:SetShown(customDetail and true or false)
     if customDetail then
-        f.userRemove:ClearAllPoints(); f.userRemove:SetPoint("TOPLEFT",left,-y)
+        f.userRemove:ClearAllPoints(); f.userRemove:SetPoint("TOPLEFT",left+108,-y)
     end
-    if priorityItem or customDetail then y=y+34 end
+    if backRow or priorityItem or customDetail then y=y+34 end
     local userPage=doc.view=="supplies" and self.state.filter=="User" and not doc.isDetail
     f.userEntry:SetShown(userPage)
     if userPage then

@@ -372,6 +372,9 @@ function U:Refresh()
     self.start:SetEnabled(enabled)
     self.back:SetShown(self.slot~=nil or self.weaponsOnly)
     self.back:SetText("< Back")
+    local headingX=self.back:IsShown() and 312 or 204
+    self.heading:ClearAllPoints(); self.heading:SetPoint("TOPLEFT",headingX,-78); self.heading:SetWidth(762-headingX)
+    self.hint:ClearAllPoints(); self.hint:SetPoint("TOPLEFT",headingX,-99); self.hint:SetWidth(762-headingX)
     self.overview:PaintState(not self.slot and not self.weaponsOnly)
     self.weaponButton:PaintState(self.weaponsOnly or self.slot=="paired" or self.slot=="twoHand")
     for slot,tab in pairs(self.slotButtons) do tab:PaintState(self.slot==slot) end
@@ -520,7 +523,7 @@ function U:Attach()
         if U.setup then U.setup=nil elseif U.slot then U.slot=nil else U.weaponsOnly=false end
         U.offset=0; U:Refresh()
     end)
-    Skin.PlaceBackButton(self.back,panel,76,14,24)
+    Skin.PlaceBackButton(self.back,panel,76,204,24)
     label(panel,"ITEM / SLOT",252,-117,260,Skin.colors.muted,9)
     label(panel,"SCORE CHANGE",526,-117,95,Skin.colors.muted,9)
     local priceHeader=label(panel,"LISTING PRICE",640,-117,120,Skin.colors.muted,9); priceHeader:SetJustifyH("RIGHT")

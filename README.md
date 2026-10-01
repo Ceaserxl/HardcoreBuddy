@@ -22,8 +22,9 @@ Preparation reminders. Death Alerts includes banner appearance; NPC Alerts
 contains separate rare and elite controls on the same scrolling page.
 Carry quantities and item priorities remain in Supplies; talent paths remain in
 Advisors. `/hcb health` and `/hcb deaths settings` open their Settings sections.
-Nested pages share **< Back** at the upper-right of the navigation area. It stays
-in place while scrolling; the auction upgrades window uses the same position.
+Nested pages share **< Back** above the upper-left of the content. It stays
+in place while scrolling; the auction upgrades window uses the same placement.
+Supplies opens to **All** by default.
 
 ## Supply priorities and preparation
 
@@ -96,6 +97,8 @@ Category filters show known dangerous NPCs, rares, elites and bosses.
 Map symbols use black outlines and transparent backgrounds: a red warning
 triangle for dangers, a silver star for rares, a gold sword for elites and a
 white skull for world bosses. Hover a marker for NPC names and details.
+Nearby locations share one smaller marker and a combined tooltip. Zooming in
+separates locations that are far enough apart on screen.
 Browse any Classic zone or follow your current zone under **Advisors > Map**.
 An optional **Silent zone-entry notice** lists known dangers in chat without
 playing a sound. Pins mark recorded spawn areas, not live sightings; missing
@@ -386,9 +389,11 @@ remaining in-game checks.
 
 ## Hunter pet spell upgrades
 
-**Supplies > Class** shows the active Hunter pet's learned spell ranks and the
-highest obtainable upgrade that meets both Hunter and pet level requirements.
-Each upgrade lists a beast, level range and zone, or directs you to a pet trainer.
+**Supplies > Class** shows the highest currently available rank for each of the
+active Hunter pet's skills, respecting both Hunter and pet level requirements.
+Ranks are green when the pet has them and red when training is needed; future
+ranks are not shown. Missing upgrades list a beast, level range and zone, or
+direct you to a pet trainer. Temporary-tame instructions sit below the title.
 Click a skill to inspect its rank and sources. Normal outdoor beasts and nearby
 faction routes are preferred over elite/group sources. Check Beast Training
 before taming if your Hunter already knows the upgrade. Preview mode and missing

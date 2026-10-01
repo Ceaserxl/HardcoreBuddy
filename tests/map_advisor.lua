@@ -63,7 +63,7 @@ for _,p in ipairs(M.pins) do if p:IsShown() then
     assert(relative==canvas and anchor=="TOPLEFT")
     assert(x==p.cluster.x*1002 and y==-p.cluster.y*668)
 end end
-scale=2; map:OnCanvasScaleChanged(); assert(M.pins[1]:GetWidth()==13)
+scale=2; map:OnCanvasScaleChanged(); assert(M.pins[1]:GetWidth()==9)
 canvas:SetSize(900,600); map:OnCanvasSizeChanged()
 local _,_,_,pinX,pinY=M.pins[1]:GetPoint()
 assert(pinX==M.pins[1].cluster.x*900 and pinY==-M.pins[1].cluster.y*600)
@@ -124,3 +124,31 @@ assert(A.state.view=="settings" and A.state.filter=="Map" and M.controls:IsVisib
 local before=s.rare; M.controls.checks.rare:SetChecked(not before)
 MOCK.Click(M.controls.checks.rare); assert(s.rare~=before)
 A:Navigate("supplies"); assert(not M.controls:IsShown())
+
+-- Nearby locations merge even across the former 3-percent cell boundary.
+local records=M.Records
+local function record(id,name,kind,locations)
+    return {id=id,npc={name=name,kind=kind,min=20,max=22,locations={[1436]=locations}}}
+end
+local fixture={record(1,"Rare neighbour","rare",{{2.9,10},{3,10}}),
+    record(2,"Elite neighbour","elite",{{5.1,10}}),record(3,"Far away","danger",{{70,70}})}
+M.Records=function() return fixture end
+mapID=1436; scale=1; canvas:SetSize(1000,1000)
+map:OnCanvasSizeChanged()
+local clusters=M:Clusters(1436)
+assert(#clusters==2 and #clusters[1].records==2 and clusters[1].kind=="elite","Close mixed categories combine; duplicate NPC locations appear once")
+M:Tooltip(M.pins[1])
+assert(GameTooltip.lines[1]:find("2 NPCs",1,true))
+assert(GameTooltip.lines[2]:find("Rare neighbour",1,true))
+assert(GameTooltip.lines[3]:find("Elite neighbour",1,true))
+assert(M.pins[1]:GetWidth()==18,"Smaller map icons")
+scale=2; map:OnCanvasScaleChanged()
+local shown=0; for _,p in ipairs(M.pins) do if p:IsShown() then shown=shown+1 end end
+assert(shown==3 and M.pins[1]:GetWidth()==9,"Zoom rebuilds clusters without enlarging icons")
+scale=1; map:OnCanvasScaleChanged()
+assert(not M.pins[3]:IsShown(),"Merged pins leave no stale icon")
+fixture={}
+for i=1,12 do fixture[i]=record(i,"Grouped NPC "..i,"rare",{{30+i/100,30}}) end
+M:RefreshPins(); M:Tooltip(M.pins[1])
+assert(GameTooltip.lines[13]:find("Grouped NPC 12",1,true),"Combined tooltip includes every NPC")
+M.Records=records

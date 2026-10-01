@@ -11,6 +11,7 @@ local icons={
 }
 local function iconLabel(kind) return "|T"..icons[kind]..":18:18:0:0|t "..names[kind] end
 local priority={danger=2,rare=1,elite=3,boss=4}
+local PIN_SIZE,CLUSTER_RADIUS=18,28
 local function action(command,id) return {kind="mapAdvisor",command=command,id=id} end
 local function row(title,body,command,id) return {title=title,body=body,action=command and action(command,id)} end
 
@@ -52,18 +53,49 @@ function M:Records(id)
 end
 
 function M:Clusters(id)
-    local clusters,byCell={},{}
+    -- Screen-distance grouping joins neighbours across grid boundaries. The
+    -- grid only limits distance checks; connected points share one tooltip.
+    local map=WorldMapFrame
+    local canvas=map and map.GetCanvas and map:GetCanvas()
+    local scale=map and map.GetCanvasScale and map:GetCanvasScale() or 1
+    local width=(canvas and canvas:GetWidth() or 1002)*scale
+    local height=(canvas and canvas:GetHeight() or 668)*scale
+    local points,buckets={},{}
+    local function root(point)
+        while point.parent~=point do point.parent=point.parent.parent; point=point.parent end
+        return point
+    end
     for _,record in ipairs(self:Records(id)) do
         for _,xy in ipairs(record.npc.locations[id] or {}) do
-            local key=math.floor(xy[1]/3)..":"..math.floor(xy[2]/3)
-            local cell=byCell[key]
-            if not cell then
-                cell={x=xy[1]/100,y=xy[2]/100,records={},seen={},kind=record.npc.kind}
-                byCell[key]=cell; clusters[#clusters+1]=cell
-            end
-            if not cell.seen[record.id] then cell.records[#cell.records+1]=record; cell.seen[record.id]=true end
-            if priority[record.npc.kind]>priority[cell.kind] then cell.kind=record.npc.kind end
+            local p={x=xy[1]/100,y=xy[2]/100,record=record}
+            p.px=p.x*width; p.py=p.y*height; p.parent=p
+            local gx,gy=math.floor(p.px/CLUSTER_RADIUS),math.floor(p.py/CLUSTER_RADIUS)
+            for x=gx-1,gx+1 do for y=gy-1,gy+1 do
+                for _,near in ipairs(buckets[x..":"..y] or {}) do
+                    local dx,dy=p.px-near.px,p.py-near.py
+                    if dx*dx+dy*dy<=CLUSTER_RADIUS*CLUSTER_RADIUS then root(near).parent=root(p) end
+                end
+            end end
+            local key=gx..":"..gy
+            buckets[key]=buckets[key] or {}; buckets[key][#buckets[key]+1]=p
+            points[#points+1]=p
         end
+    end
+    local clusters,byRoot={},{}
+    for _,p in ipairs(points) do
+        local key=root(p); local cell=byRoot[key]; local record=p.record
+        if not cell then
+            cell={x=0,y=0,count=0,records={},seen={},kind=record.npc.kind}
+            byRoot[key]=cell; clusters[#clusters+1]=cell
+        end
+        cell.x=cell.x+p.x; cell.y=cell.y+p.y; cell.count=cell.count+1
+        if not cell.seen[record.id] then
+            cell.records[#cell.records+1]=record; cell.seen[record.id]=true
+        end
+        if priority[record.npc.kind]>priority[cell.kind] then cell.kind=record.npc.kind end
+    end
+    for _,cell in ipairs(clusters) do
+        cell.x=cell.x/cell.count; cell.y=cell.y/cell.count
     end
     return clusters
 end
@@ -76,11 +108,11 @@ end
 function M:Tooltip(pin)
     if not pin.cluster or not GameTooltip then return end
     GameTooltip:SetOwner(pin,"ANCHOR_RIGHT")
-    GameTooltip:SetText("HardcoreBuddy: known danger area",1,0.8,0.4)
-    for index,record in ipairs(pin.cluster.records) do
-        if index>10 then GameTooltip:AddLine("+ "..(#pin.cluster.records-10).." more: Advisors > Map",1,1,1); break end
+    local count=#pin.cluster.records
+    GameTooltip:SetText("HardcoreBuddy: known danger area"..(count>1 and (" ("..count.." NPCs)") or ""),1,0.8,0.4,1,true)
+    for _,record in ipairs(pin.cluster.records) do
         GameTooltip:AddLine(record.npc.name.." | "..level(record.npc).." | "..iconLabel(record.npc.kind),unpack(colors[record.npc.kind]))
-        if record.npc.note then GameTooltip:AddLine(record.npc.note,0.85,0.85,0.75,true) end
+        if count==1 and record.npc.note then GameTooltip:AddLine(record.npc.note,0.85,0.85,0.75,true) end
     end
     GameTooltip:AddLine("Recorded spawn areas; creatures may roam or be absent.",0.7,0.7,0.7,true)
     GameTooltip:Show()
@@ -98,7 +130,7 @@ function M:PlacePins()
         if pin:IsShown() and pin.cluster then
             pin:SetFrameLevel(frameLevel)
             pin:ClearAllPoints(); pin:SetPoint("CENTER",canvas,"TOPLEFT",pin.cluster.x*canvas:GetWidth(),-pin.cluster.y*canvas:GetHeight())
-            pin:SetSize(26/math.max(0.1,scale),26/math.max(0.1,scale))
+            pin:SetSize(PIN_SIZE/math.max(0.1,scale),PIN_SIZE/math.max(0.1,scale))
         end
     end
 end
@@ -168,8 +200,8 @@ function M:Attach()
     if not self.hooks.map then
         map:HookScript("OnShow",function() M:Attach(); M:RefreshPins() end)
         if map.SetMapID then hooksecurefunc(map,"SetMapID",function() M:RefreshPins() end) end
-        if map.OnCanvasScaleChanged then hooksecurefunc(map,"OnCanvasScaleChanged",function() M:PlacePins() end) end
-        if map.OnCanvasSizeChanged then hooksecurefunc(map,"OnCanvasSizeChanged",function() M:PlacePins() end) end
+        if map.OnCanvasScaleChanged then hooksecurefunc(map,"OnCanvasScaleChanged",function() M:RefreshPins() end) end
+        if map.OnCanvasSizeChanged then hooksecurefunc(map,"OnCanvasSizeChanged",function() M:RefreshPins() end) end
         self.hooks.map=true
     end
     if map.EnumeratePinsByTemplate then

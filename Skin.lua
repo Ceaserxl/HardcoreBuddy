@@ -212,11 +212,11 @@ function S.ButtonState(button,active,hovered,pressed)
 
 end
 
--- Keep return navigation at the upper-right of each window's navigation area.
-function S.PlaceBackButton(button,parent,top,right,height)
+-- Return navigation belongs directly above the content, aligned to its left edge.
+function S.PlaceBackButton(button,parent,top,left,height)
     button:ClearAllPoints()
     button:SetSize(100,height or 28)
-    button:SetPoint("TOPRIGHT",parent,"TOPRIGHT",-(right or 22),-top)
+    button:SetPoint("TOPLEFT",parent,"TOPLEFT",left or 22,-top)
 end
 
 function S.IconBorder(parent,icon)

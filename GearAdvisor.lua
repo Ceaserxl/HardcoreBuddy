@@ -607,6 +607,7 @@ function G:Add(tip)
             lines[#lines+1]={row and row.label or "",row and row.text or "",colors[row and row.status or "equal"]}
             lines[#lines+1]={row and row.gains and "Stats gained" or "",row and row.gains or "",colors.up}
             lines[#lines+1]={row and row.losses and "Stats lost" or "",row and row.losses or "",colors.down}
+            lines[#lines+1]={row and row.losses and " " or "","",colors.equal}
         end
         local state=tip.hardcoreBuddyGear
         local name=tip.GetName and tip:GetName()

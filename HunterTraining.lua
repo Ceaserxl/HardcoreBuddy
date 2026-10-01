@@ -59,21 +59,16 @@ local function sourceFor(rank,context,availableOnly)
     return best
 end
 
-function H.Upgrade(ability,current,context)
-    local best,bestIndex,bestSource,nextRank,nextIndex,nextSource
+function H.Available(ability,context)
+    local best,bestIndex,bestSource
     for index,rank in ipairs(ability.ranks) do
-        if rank.rank>current then
-            local source=not rank.trainer and sourceFor(rank,context,true) or nil
-            if context.petLevel and context.level>=10 and rank.petLevel<=context.petLevel
-                and (rank.trainer or source) then
-                best,bestIndex,bestSource=rank,index,source
-            elseif not nextRank then
-                nextRank,nextIndex,nextSource=rank,index,sourceFor(rank,context,false)
-            end
+        local source=not rank.trainer and sourceFor(rank,context,true) or nil
+        if context.petLevel and context.level>=10 and rank.petLevel<=context.petLevel
+            and (rank.trainer or source) and (not best or rank.rank>best.rank) then
+            best,bestIndex,bestSource=rank,index,source
         end
     end
-    if best then return best,bestIndex,bestSource,true end
-    return nextRank,nextIndex,nextSource,false
+    return best,bestIndex,bestSource
 end
 
 function H.Card(context)
@@ -85,35 +80,38 @@ function H.Card(context)
     end
     local snapshot=H.Read()
     if not snapshot.available then card.note=snapshot.reason; return card end
-    card.note="Current ranks belong to your active pet. Click a skill for rank requirements and taming sources."
+    card.note="Available ranks for your Hunter and pet levels. Green: your active pet has it. Red: training needed.\n"
+        .."For a temporary tame, stable your main pet first. Tame the source beast and let it use the skill until you learn it, then retrieve your pet and teach it through Beast Training. Family, training points and active-skill limits still apply."
     for _,ability in ipairs(A.Data.PetGuide.abilities) do
         local learned=snapshot.spells[ability.id]
         if learned then
-            local title=ability.name.." | Current: "..(learned.rank and "Rank "..learned.rank or "rank unknown")
+            local rank,index,source=H.Available(ability,context)
+            local title=ability.name.." | "..(rank and "Rank "..rank.rank or "Available rank unknown")
+            local titleColor
             local body="Rank information is unavailable; no upgrade is assumed."
             local action={kind="ability",id=ability.id}
-            if learned.rank then
-                local rank,index,source,ready=H.Upgrade(ability,learned.rank,context)
-                if rank then
-                    title=title..(ready and " | Upgrade: Rank " or " | Next: Rank ")..rank.rank
+            if rank then
+                action={kind="rank",id=ability.id,index=index}
+                if not learned.rank then
+                    title=title.." | learned rank unknown"
+                elseif learned.rank>=rank.rank then
+                    titleColor={0.42,0.84,0.59}
+                    body="Your pet already has this rank or higher."
+                else
+                    titleColor={0.94,0.47,0.39}
                     body=rank.trainer and "Learn at a pet trainer, then teach through Beast Training."
                         or source and ("Tame "..source.name.." (Lv "..source.minLevel
                             ..(source.maxLevel~=source.minLevel and "-"..source.maxLevel or "")..") in "..source.zone..".")
                         or "No verified taming source is listed."
                     if source and source.classification~="Normal" then body=body.." "..source.classification.." encounter." end
-                    if not ready then body=body.." Requires pet level "..rank.petLevel
-                        ..(source and "; Hunter level "..math.max(10,source.minLevel) or "; Hunter level 10").."." end
                     body=body.." Check Beast Training first if you already learned this rank."
-                    action={kind="rank",id=ability.id,index=index}
-                else body="Highest listed rank learned." end
+                end
             end
             local icon=A.Data.PetSkillIcons and A.Data.PetSkillIcons[ability.name]
-            card.blocks[#card.blocks+1]={title=title,body=body,action=action,
+            card.blocks[#card.blocks+1]={title=title,titleColor=titleColor,body=body,action=action,
                 icon=icon and ("/images/"..icon..".jpg") or nil}
         end
     end
     if #card.blocks==0 then card.note="No supported pet spell ranks are available yet. Reopen after your pet's spellbook loads." end
-    card.blocks[#card.blocks+1]={title="Learning from a temporary tame",
-        body="Stable your main pet first. Tame the source beast and let it use the skill until you learn it. Retrieve your pet and teach it through Beast Training. Pet level, family, training points and active-skill limits still apply."}
     return card
 end
