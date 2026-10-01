@@ -421,13 +421,18 @@ function G:Equipped(slot)
     return item,reason
 end
 
+function G.CanDualWield(p)
+    local dual=(p.class=="ROGUE" and p.level>=10) or ((p.class=="WARRIOR" or p.class=="HUNTER") and p.level>=20)
+    if dual and IsSpellKnown then dual=IsSpellKnown(674) end
+    return dual
+end
+
 function G:Comparisons(item,p)
     local candidates={}
     -- Slot, not armor subclass, chooses the baseline. Robes and chest armor
     -- both replace slot 5; stats decide the result across cloth/leather/mail/plate.
     for _,slot in ipairs(slots[item.equip]) do candidates[#candidates+1]=slot end
-    local dual=(p.class=="ROGUE" and p.level>=10) or ((p.class=="WARRIOR" or p.class=="HUNTER") and p.level>=20)
-    if dual and IsSpellKnown then dual=IsSpellKnown(674) end
+    local dual=self.CanDualWield(p)
     if item.equip=="INVTYPE_WEAPON" and dual then candidates[#candidates+1]=17 end
     local rows={}
     for _,slot in ipairs(candidates) do

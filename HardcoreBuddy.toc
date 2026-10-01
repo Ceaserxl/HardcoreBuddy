@@ -45,6 +45,7 @@ HunterTooltips.lua
 GearAdvisor.lua
 TalentAdvisor.lua
 GearSnapshot.lua
+WeaponSetAdvisor.lua
 AuctionUpgrades.lua
 
 Deaths\Model.lua

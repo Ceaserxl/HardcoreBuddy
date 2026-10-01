@@ -31,6 +31,37 @@ included; procs, use effects and set bonuses are excluded. Lost stats appear in
 red even when the total item score improves. Hunter melee stat sticks and feral
 weapons do not receive irrelevant weapon-DPS value.
 
+## Auction weapon setups
+
+The auction house's **Upgrades > Weapon setups** compares complete configurations.
+The baseline is the sum of the equipped main-hand and off-hand scores. A candidate
+two-hander supplies one score; a one-handed weapon and its off-hand supply two.
+Both percentages use the same formula and rounding as the gear advisor. Ordinary
+single-item tooltip percentages are unchanged and can differ from a setup's
+percentage because their replaced baseline is different.
+
+The scan retains usable weapon candidates even if they are not individual upgrades.
+It combines them with scanned shields, held off-hands, legal off-hand weapons and
+currently equipped pieces. This finds pairs that beat a staff even when neither
+piece alone does, and allows upgrading one hand while retaining the other.
+Unique-item rules, learned dual wield and main-hand-only restrictions apply.
+Two copies of one auction variant require two actual listings; their two prices
+are added rather than duplicating the cheapest price. An equipped copy may pair
+with a purchased copy when permitted.
+
+Each main-hand and off-hand candidate gets its highest-scoring compatible partner;
+duplicate setups are collapsed. This exposes alternatives for either slot without
+storing every possible combination. Work yields between frames, with a bounded
+visible row pool. Equipped setups remain as zero-change options and negative
+alternatives are retained for comparison. Items in bags are not searched.
+Combined prices include all required purchases and identify bid-only or mixed
+bid/buyout setups. Open a setup to inspect and search for each component.
+
+This remains a weighted-stat comparison, not a combat simulation: attack speed,
+dual-wield combat penalties, shield utility and effects are not independently
+simulated. Choose the appropriate scoring profile and inspect the individual
+items before changing weapon styles.
+
 ## Talent advice
 
 Sixteen Hardcore paths cover levels 10-60 across all nine Classic classes.
@@ -82,6 +113,9 @@ slot handling, item-loading failures, enhancement stripping and tooltip reuse.
 rank and prerequisite rules and tests live allocation safeguards and navigation.
 `tests/run_gear_snapshot.py` verifies manual capture, saved-data independence,
 native Character-window integration and offline reload of the saved fixture.
+`tests/run_auction_upgrades.py` verifies auction scanning, complete weapon setups,
+both purchase links, legal pairings, duplicate availability/prices, equipped-item
+reuse, score baselines, yielding and continuous result navigation.
 
 These are automated API/layout fixtures. Actual client appearance and live point
 spending must still be checked in WoW; the tests do not constitute a live session.

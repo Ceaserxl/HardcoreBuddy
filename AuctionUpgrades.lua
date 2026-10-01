@@ -4,7 +4,7 @@ local G,Skin=A.GearAdvisor,A.Skin
 local slots={1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18}
 local names={[1]="Head",[2]="Neck",[3]="Shoulders",[5]="Chest",[6]="Waist",[7]="Legs",[8]="Feet",
     [9]="Wrists",[10]="Hands",[11]="Ring 1",[12]="Ring 2",[13]="Trinket 1",[14]="Trinket 2",
-    [15]="Back",[16]="Main hand",[17]="Off hand",[18]="Ranged"}
+    [15]="Back",[16]="Main hand",[17]="Off hand",[18]="Ranged",twoHand="Two-handed",paired="1H + off hand"}
 local classes={4,2} -- Armor (including jewelry), then weapons; all usable materials.
 local function now() return GetTime() end
 local function profileKey(p)
@@ -21,10 +21,21 @@ end
 local function better(a,b)
     if a.percent~=b.percent then return (a.percent or -math.huge)>(b.percent or -math.huge) end
     if not a.percent and a.score~=b.score then return a.score>b.score end
+    if (not not a.owned)~=(not not b.owned) then return a.owned end
     if (a.buyout>0)~=(b.buyout>0) then return a.buyout>0 end
     local ap,bp=price(a),price(b)
     if ap~=bp then return ap<bp end
-    return a.link<b.link
+    return (a.key or a.link)<(b.key or b.link)
+end
+local function change(row)
+    if row.part then return row.owned and "Equipped" or "Included" end
+    if row.percent then return string.format(row.percent>0 and "+%.2f%%" or "%.2f%%",row.percent) end
+    if row.weaponSet and not row.emptyBaseline then return "No baseline" end
+    return "Empty slot"
+end
+local function changeColor(row)
+    return row.part and Skin.colors.muted or row.percent and row.percent<0 and Skin.colors.red
+        or row.percent==0 and Skin.colors.muted or Skin.colors.green
 end
 
 function U:Stop(message)
@@ -38,13 +49,18 @@ function U:Start()
     if not self.open or not self.panel or not self.panel:IsShown() then return end
     local p=G:CurrentProfile()
     if not p then self:Stop("Talent data is loading. Try again in a moment."); return end
+    local equipped={}
     for _,slot in ipairs(slots) do
-        local _,reason=G:Equipped(slot)
+        local item,reason=G:Equipped(slot)
         if reason and reason~="unsupported" then self:Stop("Equipped gear is loading. Try again in a moment."); return end
+        if slot==16 or slot==17 then equipped[slot]=item end
     end
-    self.results={}; self.slot=nil; self.offset=0; self.complete=false; self.stale=false
+    local weapons,reason=A.WeaponSetAdvisor.New(p,equipped)
+    if not weapons then self:Stop(reason); return end
+    self.results={}; self.slot=nil; self.setup=nil; self.offset=0; self.complete=false; self.stale=false
+    self.weaponBaseline=weapons.baseline
     self.profile=p; self.profileKey=profileKey(p)
-    self.scan={class=1,page=0,phase="query",since=now(),seen=0,skipped=0,cache={}}
+    self.scan={class=1,page=0,phase="query",since=now(),seen=0,skipped=0,cache={},weapons=weapons}
     self.message="Waiting for the auction house..."; self:Refresh()
 end
 
@@ -94,7 +110,9 @@ function U:ReadAuction(index)
         end
         cached={item=item,rows=rows}; scan.cache[link]=cached
     end
-    self:Add(cached.item,cached.rows,link,icon,buyout,(bid or 0)>0 and bid+(increment or 0) or minimum,count)
+    local nextBid=(bid or 0)>0 and bid+(increment or 0) or minimum
+    if not scan.weapons:Add(cached.item,icon,buyout,nextBid,count) then return false end
+    self:Add(cached.item,cached.rows,link,icon,buyout,nextBid,count)
     return true
 end
 
@@ -124,10 +142,8 @@ function U:Tick()
                 if batch>0 and (scan.page+1)*50<total then scan.page=scan.page+1
                 else scan.class=scan.class+1; scan.page=0 end
                 if scan.class>#classes then
-                    self.complete=scan.skipped==0
-                    local prefix=self.complete and "Scan complete" or "Partial results"
-                    self:Stop(string.format("%s | %d auctions checked%s",prefix,scan.seen,
-                        scan.skipped>0 and (" | "..scan.skipped.." unavailable; scan again") or ""))
+                    scan.phase="weapons"; scan.worker=coroutine.create(function() return scan.weapons:Build() end)
+                    self.message="Comparing two-handed and main-hand/off-hand setups..."; self:Refresh()
                 else scan.phase="query"; scan.since=now(); self:Refresh() end
                 return
             end
@@ -137,6 +153,17 @@ function U:Tick()
                 if now()-scan.itemSince<10 then return end
                 scan.skipped=scan.skipped+1; scan.index=scan.index+1; scan.itemSince=nil
             end
+        end
+    elseif scan.phase=="weapons" then
+        local ok,result=coroutine.resume(scan.worker)
+        if not ok then
+            self:Stop("Weapon comparison unavailable. Results are partial; scan again.")
+            if geterrorhandler then geterrorhandler()(result) end
+        elseif coroutine.status(scan.worker)=="dead" then
+            self.results.twoHand=result.twoHand; self.results.paired=result.paired
+            self.complete=scan.skipped==0
+            self:Stop(string.format("%s | %d auctions checked%s",self.complete and "Scan complete" or "Partial results",scan.seen,
+                scan.skipped>0 and (" | "..scan.skipped.." unavailable; scan again") or ""))
         end
     end
 end
@@ -148,6 +175,7 @@ function U:Invalidate()
 end
 
 function U:Find(row)
+    if row and row.owned then return end
     if self.stale then self.message="Gear or talents changed. Scan again before opening an upgrade."; self:Refresh(); return end
     if self.scan or not row or not CanSendAuctionQuery("list") then
         self.message="Wait for the scan to finish, or stop it, before opening an auction."; self:Refresh(); return
@@ -177,11 +205,14 @@ end
 function U:Refresh()
     if not self.panel then return end
     local list={}
-    if self.slot then
+    if self.setup then
+        list=self.setup.components
+    elseif self.slot then
         for _,row in ipairs(self.results[self.slot] or {}) do list[#list+1]=row end
         table.sort(list,better)
     else
-        for _,slot in ipairs(slots) do
+        for _,slot in ipairs(self.weaponsOnly and {16,17} or slots) do
+            slot=slot==16 and "twoHand" or slot==17 and "paired" or slot
             local candidates=self.results[slot] or {}; table.sort(candidates,better)
             list[#list+1]={slot=slot,best=candidates[1],total=#candidates}
         end
@@ -191,24 +222,44 @@ function U:Refresh()
     self.scroll:SetMinMaxValues(0,math.max(0,#list-7)); self.scroll:SetValue(self.offset)
     self.scroll:SetShown(#list>7)
     self.start:SetText(self.scan and "Stop scan" or "Scan upgrades")
-    self.back:SetShown(self.slot~=nil)
+    self.back:SetShown(self.slot~=nil or self.weaponsOnly)
+    self.weaponButton:SetShown(not self.slot and not self.weaponsOnly)
     local p=self.profile or G:CurrentProfile()
     self.subtitle:SetText((p and (p.name.." | Level "..p.level) or "Waiting for character data").." | Equipped gear comparisons")
-    self.heading:SetText(self.slot and (names[self.slot].." - all upgrades") or "Best upgrade per slot")
+    local weaponView=self.slot=="paired" or self.slot=="twoHand"
+    self.heading:SetText(self.setup and ("Both hands vs equipped: "..change(self.setup).." | Score "..string.format("%.1f",self.setup.score))
+        or self.slot and (names[self.slot]..(weaponView and " - weapon setups" or " - all upgrades"))
+        or self.weaponsOnly and ("Weapon setups | Equipped score: "..string.format("%.1f",self.weaponBaseline or 0)) or "Best upgrade per slot")
     self.status:SetText(self.message or "Scan the auction house to find upgrades for your current gear.")
-    self.hint:SetText(self.slot and "Click an item to find its auctions. Prices are per listing; check the exact variant before buying."
-        or "Click a slot to see every upgrade. Empty slots use item score. Each slot is compared separately.")
+    local bestTwo=self.results.twoHand and self.results.twoHand[1]
+    local bestPair=self.results.paired and self.results.paired[1]
+    local advice=bestTwo and bestPair and (bestTwo.score==bestPair.score and "Equal scores"
+        or "Higher score: "..(bestTwo.score>bestPair.score and "Two-handed" or "1H + off hand")) or "Compare both weapon styles"
+    self.hint:SetText(self.setup and (self.setup.emptyOff and "Off hand left empty. " or "").."Click a listed item to find its auctions. Total setup score compares both hands."
+        or weaponView and "Both hands vs equipped. Each item uses its best legal partner. Click a setup to see both items."
+        or self.slot and "Click an item to find its auctions. Prices are per listing; check the exact variant before buying."
+        or self.weaponsOnly and (advice..". Percentages compare total weapon score against your equipped setup.")
+        or "Click a slot for alternatives. Weapon rows compare complete setups against both equipped hands.")
     for index,frame in ipairs(self.rows) do
         local entry=list[self.offset+index]; frame.entry=entry; frame:SetShown(entry~=nil)
         if entry then
             local row=self.slot and entry or entry.best
-            frame.slot:SetText(self.slot and tostring(self.offset+index) or names[entry.slot])
+            frame.slot:SetText(self.setup and entry.label or self.slot and tostring(self.offset+index) or names[entry.slot])
             frame.icon:SetTexture(row and row.icon or nil)
-            frame.item:SetText(row and row.name or (self.profile and (self.complete and "No upgrades found" or "No upgrades found yet") or "Ready to scan"))
+            local weaponRow=entry.slot=="twoHand" or entry.slot=="paired"
+            frame.item:SetText(row and row.name or (self.profile and (weaponRow and "No usable setup found"
+                or self.complete and "No upgrades found" or "No upgrades found yet") or "Ready to scan"))
+            local pair=row and row.weaponSet and #row.components==2
+            frame.item:SetFont(STANDARD_TEXT_FONT,pair and 11 or 12,"")
+            frame.item:SetHeight(pair and 28 or 20)
+            frame.item:SetPoint("TOPLEFT",132,pair and -1 or -5)
+            if pair then frame.item:SetText("MH: "..row.components[1].name.."\nOH: "..row.components[2].name) end
             frame.item:SetTextColor(unpack(row and Skin.colors.white or Skin.colors.muted))
-            frame.percent:SetText(row and (row.percent and string.format("+%.2f%%",row.percent) or "Empty slot") or "")
-            frame.cost:SetText(row and ((row.buyout==0 and "Bid " or "")..money(price(row))) or "")
-            frame.action:SetText(row and (self.slot and select(2,price(row)) or ("View all ("..entry.total..")")) or "")
+            frame.percent:SetText(row and change(row) or "")
+            frame.percent:SetTextColor(unpack(row and changeColor(row) or Skin.colors.muted))
+            frame.cost:SetText(row and (row.owned and "Owned" or (row.buyout==0 and "Bid " or "")..money(price(row))) or "")
+            frame.action:SetText(row and (self.slot and (row.weaponSet and "View setup" or row.owned and "Keep item" or select(2,price(row)))
+                or ("View all ("..entry.total..")")) or "")
         end
     end
 end
@@ -231,8 +282,15 @@ function U:Attach()
     label(panel,"HardcoreBuddy Upgrades",14,-8,440,Skin.colors.gold,16)
     self.subtitle=label(panel,"",14,-31,610,Skin.colors.muted,11)
     self.start=button(panel,"Scan upgrades",130,function() U:Start() end); self.start:SetPoint("TOPRIGHT",-14,-12)
-    self.heading=label(panel,"",14,-59,570,Skin.colors.gold)
-    self.back=button(panel,"All slots",95,function() U.slot=nil; U.offset=0; U:Refresh() end)
+    self.heading=label(panel,"",14,-59,620,Skin.colors.gold)
+    self.weaponButton=button(panel,"Weapon setups",130,function()
+        U.weaponsOnly=true; U.offset=0; U:Refresh()
+    end)
+    self.weaponButton:SetPoint("TOPRIGHT",-14,-55)
+    self.back=button(panel,"Back",95,function()
+        if U.setup then U.setup=nil elseif U.slot then U.slot=nil else U.weaponsOnly=false end
+        U.offset=0; U:Refresh()
+    end)
     self.back:SetPoint("TOPRIGHT",-14,-55)
     label(panel,"Slot",14,-83,90,Skin.colors.muted,10)
     label(panel,"Item",144,-83,280,Skin.colors.muted,10)
@@ -254,8 +312,19 @@ function U:Attach()
         row:SetScript("OnEnter",function(self)
             local entry=self.entry; local item=entry and (U.slot and entry or entry.best)
             if item then GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink(item.link)
-                GameTooltip:AddLine(item.label.." | "..item.auctions.." listing(s)",0.9,0.75,0.45)
-                if item.count>1 then GameTooltip:AddLine("Listed stack: "..item.count,1,0.8,0.4) end
+                if item.weaponSet then
+                    GameTooltip:AddLine(" ")
+                    GameTooltip:AddLine("Complete setup vs equipped: "..change(item),unpack(changeColor(item)))
+                    for _,part in ipairs(item.components) do
+                        GameTooltip:AddLine(part.label..": "..part.name..(part.owned and " (equipped)" or ""),0.9,0.75,0.45,true)
+                    end
+                    if item.emptyOff then GameTooltip:AddLine("Off hand: empty",0.9,0.75,0.45) end
+                    GameTooltip:AddLine("Total: "..(item.owned and "No purchase" or money(price(item)).." ("..item.priceLabel..")"),0.9,0.75,0.45)
+                    GameTooltip:AddLine("Weighted stats; not a damage or survival simulation.",0.65,0.65,0.56,true)
+                else
+                    GameTooltip:AddLine(item.label..(item.owned and " | Equipped" or " | "..item.auctions.." listing(s)"),0.9,0.75,0.45)
+                    if item.count>1 then GameTooltip:AddLine("Listed stack: "..item.count,1,0.8,0.4) end
+                end
                 GameTooltip:Show()
             end
         end)
@@ -263,7 +332,8 @@ function U:Attach()
         row:SetScript("OnClick",function(self)
             if not self.entry then return end
             GameTooltip:Hide()
-            if U.slot then U:Find(self.entry)
+            if self.entry.weaponSet then U.setup=self.entry; U.offset=0; U:Refresh()
+            elseif U.slot then U:Find(self.entry)
             elseif self.entry.total>0 then U.slot=self.entry.slot; U.offset=0; U:Refresh() end
         end)
     end

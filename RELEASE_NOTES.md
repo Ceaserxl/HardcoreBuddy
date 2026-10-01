@@ -1,5 +1,9 @@
 # Unreleased
 
+- Added auction-house Weapon setups: compare two-handed weapons against complete
+  main-hand/off-hand pairs using the same equipped baseline. Includes upgrades
+  for either or both hands, equipped-item reuse, shields, caster off-hands,
+  legal dual wield, separate purchase links and combined listing prices.
 - Added a native-style Upgrades tab at the auction house: scan for the best
   percentage upgrade per slot, browse all alternatives with continuous scrolling,
   and open matching auctions in Browse. Uses the standalone gear advisor and

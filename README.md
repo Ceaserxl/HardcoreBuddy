@@ -73,12 +73,22 @@ the native auction-tab style and works without any other auction addon.
 - Click an alternative to search for its auctions in the normal Browse tab.
   Confirm the exact item variant and current price there before purchasing.
 
+Use **Weapon setups** to compare **Two-handed** against **1H + off hand**. Both
+percentages use the total score of your currently equipped hands. The paired
+view considers replacing either item, replacing both, or reusing equipped gear;
+it includes shields, caster off-hands and dual-wield weapons where usable.
+Each candidate is shown with its best legal partner. Open a setup to see both
+items and search for either purchase. The total price includes every required
+listing. Your equipped setup remains available as a zero-change option, and
+lower-scoring alternatives appear in red. These are weighted gear scores, not
+simulated damage or survival estimates.
+
 Scanning takes time because the auction house returns one page at a time. Keep
 the Upgrades tab open; another auction search or changing tabs stops the scan.
 Stopped scans and missing data are labeled as partial results. Gear or talent
 changes require a new scan. Prices are for the full listing, not per item.
-Empty slots show **Empty slot** instead of an invented percentage. Each slot's
-recommendation is independent; this is not a combined shopping-list optimizer.
+Empty slots show **Empty slot** instead of an invented percentage. Weapon setups
+compare both hands together; other slots are compared independently.
 
 ## Dungeons and raids
 

@@ -7,3 +7,4 @@ from render_layout import boot, ROOT
 lua, addon = boot()
 lua.execute((ROOT / 'tests/gear_advisor.lua').read_text(encoding='utf-8'))
 lua.execute((ROOT / 'tests/auction_upgrades.lua').read_text(encoding='utf-8'))
+lua.execute((ROOT / 'tests/weapon_sets.lua').read_text(encoding='utf-8'))
