@@ -556,8 +556,8 @@ function H:BuildUI()
     Text(options,13,"TOPLEFT",436,-528,300):SetText("Keep reports for")
     local retention=Edit(options,64,436,-554,true); options.retention=retention
     retention:SetText(tostring(self.db.settings.retentionDays or 30))
-    Text(options,12,"TOPLEFT",510,-561,150):SetText("days (1-3650)")
-    Text(options,11,"TOPLEFT",436,-600,290):SetText("Older reports are removed automatically.")
+    Text(options,12,"TOPLEFT",510,-561,150):SetText("days (0-3650)")
+    Text(options,11,"TOPLEFT",436,-600,290):SetText("0 = Never remove reports automatically.")
     local function saveRetention(box)
         self.db.settings.retentionDays=tonumber(box:GetText()) or self.db.settings.retentionDays
         self:PruneReports(); box:SetText(tostring(self.db.settings.retentionDays)); self:Refresh()

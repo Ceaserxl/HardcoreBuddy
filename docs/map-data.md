@@ -6,8 +6,8 @@ live spawn detection and discovery credit are outside this feature.
 
 ## Controls
 
-Reveal, marker filters and zone-entry notices are in **Settings > Map**. The
-**Map settings** row in **Companion > Zone Advisor** opens that page. **Browse zones**
+Reveal, marker filters and zone-entry notices are in **Settings > Zone Advisor**. The
+**Zone Advisor settings** row in **Companion > Zone Advisor** opens that page. **Browse zones**
 offers a full-width **Use my current zone** row. Leveling recommendations open
 the selected zone's advisor, with **Open Map** beside the zone name.
 
@@ -36,7 +36,7 @@ The default size is adjustable from 12–40 pixels, with 10–100% icon opacity.
 Each category opens a six-column grid of 48 native icons: the default markers,
 all eight raid targets, beasts and spell symbols. Choices have previews, names,
 hover tooltips and a selected indicator; the grid scrolls. The shared Back button
-returns to Map settings.
+returns to Zone Advisor settings.
 Tint RGB uses Blizzard's native color picker, with live preview and Cancel
 restoring the original color. A separate opacity slider preserves the existing
 transparency setting. Both are independent of Reveal all and Unchanged.
@@ -47,10 +47,10 @@ restores the silent notice default. Reset all restores all three Map sections
 without changing other addon settings.
 Silent zone notices default on for unset preferences; explicit opt-outs remain.
 
-The zone heading and Map settings link sit above a separate NPC list. Clicking
+The zone heading and Zone Advisor settings link sit above a separate NPC list. Clicking
 an NPC name opens its model; Back returns to that zone list.
-Clicking a marker opens a native PlayerModel inside HardcoreBuddy's Advisors >
-Map page. A copied, deduplicated NPC list keeps paging stable across map refreshes.
+Clicking a marker opens a native PlayerModel inside HardcoreBuddy's Companion >
+Zone Advisor page. A copied, deduplicated NPC list keeps paging stable across map refreshes.
 Previous/Next controls show each clustered NPC; Back restores the prior addon
 page. Details and controls occupy the left panel; a larger square viewport sits
 inside a bordered panel on the right. Both panels match the surrounding cards

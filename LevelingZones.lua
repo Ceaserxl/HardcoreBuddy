@@ -26,6 +26,11 @@ function Z.Build(context,state)
     local note=(context.mode=="preview" and "Planned level " or "Your level ")..level.." | "..(faction or "Unknown faction")
         ..(state.showAllZones and " | All levels" or " | Ranges within 3 levels")
         .."\nClick a zone to review its dangers and NPCs in Zone Advisor. For Hardcore, favor green quests and check individual enemy levels."
-    return {view="training",context=context,cards={{title="Recommended leveling zones",note=note,blocks=blocks}},
-        continuous=true,page=1,pages=1,total=total,searchable=true,levelFilter=true}
+    return {view="training",context=context,cards={
+        {title="Zone Advisor",note="Choose where to level and prepare for the dangers ahead.",
+            headerAction={label="Settings",action={kind="mapAdvisor",command="settings"}},blocks={
+                {title="Use my current zone",body="View nearby dangers and NPCs.",action={kind="mapAdvisor",command="current"}},
+                {title="Browse all zones",body="Explore every outdoor zone and city.",action={kind="mapAdvisor",command="zones"}}}},
+        {title="Recommended leveling zones",note=note,blocks=blocks}},
+        zoneRecommendations=true,continuous=true,page=1,pages=1,total=total,searchable=true,levelFilter=true}
 end

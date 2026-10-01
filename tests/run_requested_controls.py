@@ -72,6 +72,14 @@ now=now+1; H:PruneReports(); assert(#H.db.records==1 and H.db.records[1].name=="
 A:OpenSettings("Death Journal")
 local edit=H.options.retention; edit:SetFocus(); edit:SetText("1"); A:OpenSettings("Map")
 assert(H.db.settings.retentionDays==1)
+edit:SetFocus(); edit:SetText("0"); A:OpenSettings("Zone Advisor")
+assert(H.db.settings.retentionDays==0,"Zero persists through settings navigation")
+local oldLimit=H.MAX_RECORDS; H.MAX_RECORDS=1
+assert(H:Add({name="Ancient",date=now-4000*86400,realm=H.realm,source="Blizzard",level=20},true))
+assert(#H.db.records==2,"Never keeps old reports beyond count limit")
+now=now+4001*86400; H:PruneReports(); assert(#H.db.records==2,"Never survives passage of time")
+H.MAX_RECORDS=oldLimit
+H.db.records={{name="Recent",date=now,realm=H.realm,source="Blizzard",level=20}}
 H.db.settings.retentionDays=math.huge; H:PruneReports(); assert(H.db.settings.retentionDays==30)
 H.db.settings.retentionDays=-5; H:PruneReports(); assert(H.db.settings.retentionDays==1)
 A:OpenDeaths(); assert(not A.window.sidebar:IsShown() and not H.window.import)
@@ -88,6 +96,12 @@ H:ClearReports()
 for _,fn in ipairs(queued) do fn() end
 assert(#H.db.records==0 and not H.importing,"Queued import callbacks cannot repopulate a cleared journal")
 C_Timer.After=after
+H.db.settings.retentionDays=0; H.MAX_RECORDS=1
+deathlog_data={[H.realm]={}}
+for i=1,3 do deathlog_data[H.realm][i]={name="OldImport"..i,date=now-4000*86400,level=20} end
+H:ImportLegacy()
+assert(not H.importing and #H.db.records==3,"Never also preserves unlimited old imported reports")
+H.MAX_RECORDS=oldLimit
 print("PASS: Retention boundaries and validation, persisted edits, journal settings link, no sidebar, confirmed clear and import cancellation.")
 ''')
 
@@ -119,7 +133,7 @@ assert(requests==1 and f.modelState=="loading","Uncached actor requests do not r
 f.model.scripts.OnUpdate(f.model,3); f.model.modelFileID=123; f.model.scripts.OnUpdate(f.model,0.1)
 assert(requests==2,"Retry timer owns the next display request")
 f.actor.SetModelByCreatureDisplayID=loader
-for _,tab in ipairs({"Spells","Zones"}) do
+for _,tab in ipairs({"Spells","Zone Advisor"}) do
     A:Navigate("training"); A.state.filter=tab; A:Refresh(true)
     local checked=0
     for _,card in ipairs(A.window.cards) do

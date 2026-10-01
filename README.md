@@ -23,10 +23,10 @@ grimoires have separate sections, with the matching demon listed for each book.
 
 Open the **Settings** tab or use `/hcb settings`. The sidebar groups General,
 Gear Advisor, Talent Advisor, Auction House, Death Journal, Low Health, NPC Alerts,
-Map and Debug. Long pages scroll. Existing saved preferences are kept.
-Pages use the Map settings layout: clear headings, bordered sections and paired
+Zone Advisor and Debug. Long pages scroll. Existing saved preferences are kept.
+Pages use the Zone Advisor settings layout: clear headings, bordered sections and paired
 cards for related controls. Companion and Advisor overviews use matching cards;
-Supplies, Spells and Zones use two-column cards. Death reports keep full-width rows. Alert sliders
+Supplies, Spells and Zone Advisor use two-column cards. Death reports keep full-width rows. Alert sliders
 show their percentage inside the control.
 General includes the minimap button, field kit upgrade notices, recentering and
 Preparation reminders. Death Journal includes alerts, banner appearance, history import and report retention; NPC Alerts
@@ -102,10 +102,10 @@ The gear percentage measures weighted item stats, not simulated damage or surviv
 Procs, active item effects and set bonuses are excluded. See [advisor details](docs/advisors.md).
 ## Leveling zones
 
-Open **Companion > Zones** for faction-specific Classic leveling recommendations.
+Open **Companion > Zone Advisor** for faction-specific Classic leveling recommendations.
 The list follows your current or planned level, showing recommended ranges within
 three levels on either side. **Show all** displays every recommended range for
-your faction. Search by zone name or click a row to open its map. See the
+your faction. Search by zone name or click a row to review its NPCs and open its map. See the
 [zone guide sources and filtering details](docs/leveling-zones.md).
 
 ## Debug dump
@@ -128,12 +128,12 @@ cycles use `$ref` paths. Existing gear snapshots remain part of the dump.
 
 ## Zone Advisor
 
-Open **Settings > Map**, or the **Map settings** row in **Companion > Zone Advisor**, to
+Open **Settings > Zone Advisor**, or the **Zone Advisor settings** row in **Companion > Zone Advisor**, to
 reveal unexplored outdoor terrain or tint unexplored areas translucent blue.
 Category filters show known dangerous NPCs, rares, elites and bosses.
 Map markers use Blizzard's silver rare and gold elite icons, a skull for world
 bosses and a warning icon for dangerous NPCs. Hover for NPC names and details.
-Map settings include Blizzard's tint color picker and a separate opacity slider,
+Zone Advisor settings include Blizzard's tint color picker and a separate opacity slider,
 a six-column picker of native transparent map and raid symbols for each category,
 and marker size (12–40 pixels) and opacity (10–100%). Exploration, NPC markers
 and Zone notices each have a Reset button. Reset all restores defaults for all
@@ -240,7 +240,7 @@ window, right-click the shared minimap button, or use `/hcb deaths`.
 Reports use the full content width with no sidebar. **Clear reports** asks for a
 second click within five seconds. **Settings** beside the journal title opens the
 combined settings page. **Import Deathlog** is there, along with **Keep reports
-for** (1–3650 days; default 30). Expired reports are removed automatically. The `/hd` and
+for** (0-3650 days; default 30). Set **0** to keep reports indefinitely without age or count pruning. Positive values remove expired reports automatically. The `/hd` and
 `/hardcoredeaths` aliases also open this page.
 
 Reports and player details appear in the right-hand content area. Death options

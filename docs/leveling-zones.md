@@ -1,6 +1,6 @@
 # Companion leveling zones
 
-Companion > Zones lists suggested Classic Era questing bands for the character's
+Companion > Zone Advisor lists suggested Classic Era questing bands for the character's
 faction. These are recommended visit ranges, not the minimum and maximum level
 of every mob in the zone. They follow the faction questing progression in
 [Wowhead's Classic leveling guide](https://www.wowhead.com/classic/guide/classic-wow-leveling),

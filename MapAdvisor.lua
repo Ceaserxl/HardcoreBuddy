@@ -291,7 +291,7 @@ function M:NotifyZone()
 end
 
 function M:Activate(a)
-    if a.command=="settings" then A:OpenSettings("Map"); return
+    if a.command=="settings" then A:OpenSettings("Zone Advisor"); return
     elseif a.command=="npc" then self:OpenNPCs({records={{id=a.id}}}); return
     elseif a.command=="zones" then A.state.mapZonePicker=true
     elseif a.command=="zone" then
@@ -299,7 +299,9 @@ function M:Activate(a)
         A:CommitInputs(); A.history=A.history or {}; A.history[#A.history+1]=A.state
         if A.window then A.window.search:ClearFocus(); A.window.classMenu:Hide() end
         A.state={view="training",filter="Zone Advisor",mapZone=a.id}
-    elseif a.command=="current" then A.state.mapZone=nil; A.state.mapZonePicker=nil
+    elseif a.command=="current" then
+        A:CommitInputs(); A.history=A.history or {}; A.history[#A.history+1]=A.state
+        A.state={view="training",filter="Zone Advisor",mapCurrent=true}
     elseif a.command=="open" then
         if InCombatLockdown and InCombatLockdown() then A:Print("Open the map after combat."); return end
         if not WorldMapFrame and C_AddOns and C_AddOns.LoadAddOn then C_AddOns.LoadAddOn("Blizzard_WorldMap") end
@@ -315,6 +317,9 @@ end
 function M:Document(context,state)
     local doc={view="training",context=context,cards={}}
     if state.mapNPCs then return doc end
+    if not state.mapZone and not state.mapCurrent and not state.mapZonePicker then
+        return A.LevelingZones.Build(context,state)
+    end
     if state.mapZonePicker then
         local zones={}; for id,z in pairs(A.Data.MapZones) do zones[#zones+1]={id=id,zone=z} end
         table.sort(zones,function(a,b) return a.zone.name<b.zone.name end)
@@ -323,7 +328,7 @@ function M:Document(context,state)
         doc.cards[1]={title="Choose a zone",note="Classic Era outdoor zones and cities",blocks=blocks}; return doc
     end
     local id=state.mapZone or self:CurrentMap(); local zone=A.Data.MapZones[id]
-    local settingsRow=row("Map settings","Configure map reveal, marker categories and silent zone-entry notices.","settings")
+    local settingsRow=row("Zone Advisor settings","Configure map reveal, marker categories and silent zone-entry notices.","settings")
     local blocks={row("Browse zones","Choose a zone to explore its recorded NPCs.","zones"),settingsRow}
     doc.cards[1]={title="Zone Advisor",note="Explore known locations and prepare for dangerous encounters.",blocks=blocks}
     if zone then
@@ -334,7 +339,7 @@ function M:Document(context,state)
             blocks[#blocks+1]=row(r.npc.name,level(r.npc).." | "..names[r.npc.kind].." | "..location..
                 (r.npc.note and ("\n"..r.npc.note) or ""),"npc",r.id)
         end
-        if #blocks==0 then blocks[1]=row("No matching dangers in this catalogue","Adjust the filters in Map settings. An empty list does not guarantee a safe zone.") end
+        if #blocks==0 then blocks[1]=row("No matching dangers in this catalogue","Adjust the filters in Zone Advisor settings. An empty list does not guarantee a safe zone.") end
         doc.cards[2]={title=zone.name,headerAction={label="Open Map",action={kind="mapAdvisor",command="open",id=id}},note="NPCs | Click a name to view its model and details.",blocks=blocks}
     else
         doc.cards[2]={title="Choose a zone",note="Your current area is not in the outdoor zone catalogue. Use Browse zones to select one.",blocks={}}

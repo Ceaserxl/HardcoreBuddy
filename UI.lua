@@ -489,7 +489,7 @@ function addon:CreateWindow()
     f.clear=button(f,"Clear",54,function() self.state.query=""; f.search:SetText(""); self.state.page=1; self:Refresh(true) end)
     f.atLevel=button(f,"Any level",112,function()
         if self.state.view=="instances" then self.state.showAllInstances=not self.state.showAllInstances
-        elseif self.state.view=="training" and self.state.filter=="Zones" then self.state.showAllZones=not self.state.showAllZones
+        elseif self.state.view=="training" and self.document.zoneRecommendations then self.state.showAllZones=not self.state.showAllZones
         elseif self.state.view=="training" and self.state.filter=="Spells" then self.state.showAllFutureSpells=not self.state.showAllFutureSpells
         else self.state.atLevel=not self.state.atLevel end
         self.state.page=1; self:Refresh(true)
@@ -680,6 +680,7 @@ function addon:Refresh(resetScroll)
         (self.state.view=="deaths" or self.state.view=="settings" or self.state.view=="instances" or self.state.view=="advisors")) then self.state=nil; self.history={} end
     self.lastClass=context.characterClass
     self.state=self.state or {view="supplies",filter="All",page=1}; self.history=self.history or {}
+    if self.state.view=="training" and self.state.filter=="Zones" then self.state.filter="Zone Advisor" end
     if self.state.view=="settings" then self.state.filter=self.Settings:Section(self.state.filter) end
     -- Supplies has no hidden search or shortage filter after its controls were
     -- removed. Back navigation and old in-memory state must show the full kit.
@@ -699,7 +700,7 @@ local FILTER_ICONS={
     Emergency="INV_Misc_Bandage_12",Potions="INV_Potion_54",Class="INV_Misc_Rune_01",Optional="INV_Misc_PocketWatch_01",User="INV_Misc_Note_01",Scrolls="INV_Scroll_03",Families="Ability_Hunter_BeastTaming",
     Abilities="Ability_Hunter_BeastCall",Pets="Ability_Hunter_Pet_Bear",Care="Ability_Hunter_MendPet",
     ["Pet Guide"]="Ability_Hunter_Pet_Bear",
-    Overview="INV_Misc_Book_09",["Zone Advisor"]="INV_Misc_Map_01",Zones="INV_Misc_Map_01",Spells="INV_Misc_Book_07",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",
+    Overview="INV_Misc_Book_09",["Zone Advisor"]="INV_Misc_Map_01",Spells="INV_Misc_Book_07",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",
 }
 function addon:Layout()
     local f,doc=self.window,self.document
@@ -821,8 +822,8 @@ function addon:Layout()
                 end
                 if addon.state.view=="training" then
                     if self.filter=="Pet Guide" then addon:Navigate("petguide"); return end
-                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Pet Training" or self.filter=="Zones" or self.filter=="Spells") and self.filter or nil
-                    addon.state.query=nil; addon.state.mapNPCs=nil; addon.state.mapZonePicker=nil; addon.state.mapZone=nil
+                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Pet Training" or self.filter=="Spells") and self.filter or nil
+                    addon.state.query=nil; addon.state.mapNPCs=nil; addon.state.mapZonePicker=nil; addon.state.mapZone=nil; addon.state.mapCurrent=nil
                     local family=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[self.filter]
                     if family then addon:Activate({kind="profession",family=family}); return end
                 else
@@ -854,7 +855,7 @@ function addon:Layout()
         if doc.view=="training" then
             local family=self.state.detail and self.state.detail.family
             selected=family=="bandage" and "First Aid" or family=="antivenom" and "First Aid"
-                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or self.state.filter=="Pet Training" and "Pet Training" or self.state.filter=="Zone Advisor" and "Zone Advisor" or self.state.filter=="Zones" and "Zones" or self.state.filter=="Spells" and "Spells" or "Overview"
+                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or self.state.filter=="Pet Training" and "Pet Training" or self.state.filter=="Zone Advisor" and "Zone Advisor" or self.state.filter=="Spells" and "Spells" or "Overview"
         end
         active(b,selected==label)
     end
@@ -895,7 +896,7 @@ function addon:Layout()
         f.ammoChoice.label:SetText("Plan ammo: "..(context.previewAmmo or "arrows"))
         f.ammoChoice:ClearAllPoints(); f.ammoChoice:SetPoint("TOPLEFT",left,-y); y=y+34
     end
-    local zonePage=doc.view=="training" and self.state.filter=="Zones"
+    local zonePage=doc.zoneRecommendations
     local spellPage=doc.view=="training" and self.state.filter=="Spells"
     local rangePage=instancePage or zonePage
     local showAll=zonePage and self.state.showAllZones or instancePage and self.state.showAllInstances or spellPage and self.state.showAllFutureSpells
@@ -945,7 +946,7 @@ function addon:Layout()
         end
         c:ClearAllPoints(); c:SetPoint("TOPLEFT",0,-top)
         c.firstCard=index==1
-        c.gridStart=not doc.isDetail and (doc.view=="training" and (self.state.filter=="Spells" or self.state.filter=="Zones") and 1
+        c.gridStart=not doc.isDetail and (doc.view=="training" and (self.state.filter=="Spells" or self.document.zoneRecommendations) and 1
             or doc.view=="training" and (not self.state.filter or self.state.filter=="Overview") and index==1 and 3
             or doc.view=="training" and self.state.filter=="Zone Advisor" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)
             or doc.view=="advisors" and not self.state.talentPath and 1) or nil

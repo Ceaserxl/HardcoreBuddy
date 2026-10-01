@@ -1,8 +1,8 @@
 local _,A=...
-local S={sections={"General","Gear Advisor","Talent Advisor","Auction House","Death Journal","Low Health","NPC Alerts","Map","Debug"}}
+local S={sections={"General","Gear Advisor","Talent Advisor","Auction House","Death Journal","Low Health","NPC Alerts","Zone Advisor","Debug"}}
 A.Settings=S
 local Skin=A.Skin
-local aliases={["Death Banner"]="Death Journal",["Death Alerts"]="Death Journal",Rares="NPC Alerts",Elites="NPC Alerts",Preparation="General"}
+local aliases={Map="Zone Advisor",["Death Banner"]="Death Journal",["Death Alerts"]="Death Journal",Rares="NPC Alerts",Elites="NPC Alerts",Preparation="General"}
 function S:Section(section) return aliases[section] or section or "General" end
 
 local function label(parent,text,size,x,y,width)
@@ -215,7 +215,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     if section=="Gear Advisor" and A.state.gearPage=="Stat Weights" then pageName=A.state.gearPage end
     local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 440
     if section=="Death Journal" then contentHeight=1108 end
-    if section=="Map" then contentHeight=A.state.mapIconKind and A.MapAdvisor:IconPickerHeight() or A.MapAdvisor:SettingsHeight() end
+    if section=="Zone Advisor" then contentHeight=A.state.mapIconKind and A.MapAdvisor:IconPickerHeight() or A.MapAdvisor:SettingsHeight() end
     if pageName=="Debug" then A.DebugDump:Refresh() end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.scroll:SetSize(width-22,height)
@@ -279,7 +279,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     else for _,page in pairs(A.CreatureAlerts.pages or {}) do page:Hide() end end
     if section=="General" then A.Readiness:LayoutSettings(general,12,314,contentWidth-24,342,true)
     elseif A.Readiness.options then A.Readiness.options:Hide() end
-    A.MapAdvisor:LayoutSettings(content,0,0,contentWidth,section=="Map")
+    A.MapAdvisor:LayoutSettings(content,0,0,contentWidth,section=="Zone Advisor")
     if section=="Death Journal" then
         A.Deaths:LayoutPage(content,0,0,contentWidth,contentHeight,{filter="Settings"})
         A.Deaths.host:Show()

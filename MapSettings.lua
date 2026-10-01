@@ -65,7 +65,7 @@ function M:LayoutSettings(parent,left,top,width,visible)
             b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE"); b.label:SetText(text)
             b:SetScript("OnClick",click); f.buttons[#f.buttons+1]=b; return b
         end
-        label(f,"Map",12,12,480,22):SetTextColor(unpack(Skin.colors.gold))
+        label(f,"Zone Advisor",12,12,480,22):SetTextColor(unpack(Skin.colors.gold))
         label(f,"Choose how terrain, NPC markers and zone notices appear.",12,46,700)
         f.resetAll=button(f,"Reset all",0,12,120,function() M:ResetSettings("all") end)
         f.resetAll:ClearAllPoints(); f.resetAll:SetPoint("TOPRIGHT",-12,-12)
@@ -181,7 +181,7 @@ function M:LayoutIconPicker(parent,left,top,width,visible)
         f.title=f:CreateFontString(nil,"OVERLAY","GameFontHighlight"); f.title:SetPoint("TOPLEFT",16,-16)
         f.title:SetTextColor(unpack(Skin.colors.gold))
         local note=f:CreateFontString(nil,"OVERLAY","GameFontHighlight"); note:SetPoint("TOPLEFT",16,-44)
-        note:SetText("Choose an icon. Use Back to return to Map settings.")
+        note:SetText("Choose an icon. Use Back to return to Zone Advisor settings.")
         f.choices={}
         for i,choice in ipairs(self.iconChoices) do
             local key=choice

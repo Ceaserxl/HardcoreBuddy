@@ -2,7 +2,7 @@ local A=TestAddon
 local S=A.Settings
 local count=0
 local function check(ok,why) count=count+1; assert(ok,why) end
-check(table.concat(S.sections,",")=="General,Gear Advisor,Talent Advisor,Auction House,Death Journal,Low Health,NPC Alerts,Map,Debug","Consolidated sidebar order")
+check(table.concat(S.sections,",")=="General,Gear Advisor,Talent Advisor,Auction House,Death Journal,Low Health,NPC Alerts,Zone Advisor,Debug","Consolidated sidebar order")
 local settingsTab
 for _,tab in ipairs(A.window.tabs) do
     check(tab.view~="alerts","Old Alerts tab is replaced by Settings")
@@ -20,7 +20,7 @@ for i,name in ipairs(S.sections) do
     if A.LowHealth.page then check(A.LowHealth.page:IsVisible()==(name=="Low Health"),"Health page visibility") end
     for _,page in pairs(A.CreatureAlerts.pages or {}) do check(page:IsVisible()==(name=="NPC Alerts"),"Both NPC categories share one tab") end
     check(A.Readiness.options:IsVisible()==(name=="General"),"Preparation is nested in General")
-    if A.MapAdvisor.controls then check(A.MapAdvisor.controls:IsVisible()==(name=="Map"),"Map controls live in Settings") end
+    if A.MapAdvisor.controls then check(A.MapAdvisor.controls:IsVisible()==(name=="Zone Advisor"),"Map controls live in Settings") end
 end
 check(A.LowHealth.settings.volume==30 and A.Deaths.db.settings.alertDuration==8,"Moving controls preserves saved preferences")
 A:HandleSlashCommand("health")

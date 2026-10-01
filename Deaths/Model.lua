@@ -59,7 +59,7 @@ end
 local rank = { Community = 1, Imported = 2, Blizzard = 3, Self = 4 }
 function H.Insert(records, record, limit)
     if type(record) ~= "table" or type(record.name) ~= "string" or record.name == "" then return false end
-    -- Bounded history makes incoming traffic and saved-variable size predictable.
+    -- Merge duplicate reports before inserting in chronological order.
     for i = #records, 1, -1 do
         local old = records[i]
         if H.Same(old, record) then

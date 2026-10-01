@@ -98,8 +98,9 @@ function H:PruneReports()
     if not self.db then return end
     local days=tonumber(self.db.settings.retentionDays) or 30
     if days~=days or days==math.huge or days==-math.huge then days=30 end
-    days=math.max(1,math.min(3650,math.floor(days)))
+    days=days==0 and 0 or math.max(1,math.min(3650,math.floor(days)))
     self.db.settings.retentionDays=days
+    if days==0 then return end
     local cutoff=time()-days*86400
     local records=self.db.records; local write=1
     for read=1,#records do
@@ -107,6 +108,10 @@ function H:PruneReports()
         if type(record.date)=="number" and record.date>=cutoff then records[write]=record; write=write+1 end
     end
     for i=#records,write,-1 do records[i]=nil end
+end
+
+function H:ReportLimit()
+    return self.db.settings.retentionDays==0 and math.huge or self.MAX_RECORDS
 end
 
 function H:ClearReports()
@@ -137,7 +142,7 @@ function H:MigrateStandalone()
     end
     for _, record in ipairs(type(legacy.records) == "table" and legacy.records or {}) do
         if type(record) == "table" and type(record.date) == "number" then
-            self.Insert(self.db.records, copy(record), self.MAX_RECORDS)
+            self.Insert(self.db.records, copy(record), self:ReportLimit())
         end
     end
     self.db.importedHardcoreDeaths = true
@@ -148,8 +153,8 @@ end
 function H:Add(record, silent, nativeAlert)
     if not self.db then return end
     self:PruneReports()
-    if record.date and record.date<time()-self.db.settings.retentionDays*86400 then return false end
-    local added, current = self.Insert(self.db.records, record, self.MAX_RECORDS)
+    if self.db.settings.retentionDays>0 and record.date and record.date<time()-self.db.settings.retentionDays*86400 then return false end
+    local added, current = self.Insert(self.db.records, record, self:ReportLimit())
     self:Refresh()
     -- A chat report can precede its native warning. Deduplicate storage and
     -- alert delivery separately so the native warning still gets one alert.
@@ -218,15 +223,15 @@ function H:ImportLegacy()
                     checked = checked + 1
                     if checked % 1000 == 0 then
                         table.sort(staged, function(a,b) return a.date > b.date end)
-                        for i = #staged, self.MAX_RECORDS + 1, -1 do staged[i] = nil end
+                        for i = #staged, self:ReportLimit() + 1, -1 do staged[i] = nil end
                     end
                     if checked % 100 == 0 then coroutine.yield() end
                 end
             end
         end
         table.sort(staged, function(a,b) return a.date < b.date end)
-        for i = math.max(1, #staged - self.MAX_RECORDS + 1), #staged do
-            if self.Insert(self.db.records, staged[i], self.MAX_RECORDS) then count = count + 1 end
+        for i = math.max(1, #staged - self:ReportLimit() + 1), #staged do
+            if self.Insert(self.db.records, staged[i], self:ReportLimit()) then count = count + 1 end
             if i % 5 == 0 then coroutine.yield() end
         end
         table.sort(self.db.records, function(a,b) return a.date < b.date end)
