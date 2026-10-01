@@ -217,16 +217,13 @@ end
 function S:Show()
     if inCombat() then A:Print("Open Gear Snapshot after combat."); return end
     if not self:Attach() then return end
-    -- Notify existing Character tab hooks (including other addons), then hide
-    -- Blizzard's subframes through its own switcher. Do not replace handlers,
-    -- append to native tab arrays or alter their widths/positions.
-    if CharacterFrameTab_OnClick then CharacterFrameTab_OnClick(self.tab,"LeftButton") end
+    -- Opened from Advisors; keep the Character window's native tabs unchanged.
     CharacterFrame_ShowSubFrame("HardcoreBuddyGearSnapshotPanel")
     for i=1,CharacterFrame.numTabs or 0 do
         local tab=_G["CharacterFrameTab"..i]
         if tab and PanelTemplates_DeselectTab then PanelTemplates_DeselectTab(tab) end
     end
-    self.panel:Show(); self.tab.active=true; Skin.ButtonState(self.tab,true,false,false)
+    self.panel:Show()
     self:Refresh()
 end
 
@@ -279,17 +276,12 @@ function S:Attach()
     end
     f.hint=label(f,11,Skin.colors.gold); f.hint:SetPoint("BOTTOMLEFT",12,12); f.hint:SetSize(300,32)
     f.hint:SetText("Use /reload or log out to write the snapshot to disk for offline review.")
-    -- Classic's five native tabs already fill the first row. Use a second row
-    -- inside the Character window's existing bottom margin.
-    self.tab=button(CharacterFrame,"Gear Snapshot",134,function() self:Show() end,"HardcoreBuddyCharacterTab")
-    self.tab:SetPoint("BOTTOMLEFT",CharacterFrame,"BOTTOMLEFT",20,14)
     f:SetScript("OnShow",function()
         for _,part in ipairs(self.chrome) do part:Show() end
-        self.tab.active=true; Skin.ButtonState(self.tab,true,false,false)
     end)
     f:SetScript("OnHide",function()
         for _,part in ipairs(self.chrome) do part:Hide() end
-        self.tab.active=false; Skin.ButtonState(self.tab,false,false,false); GameTooltip:Hide()
+        GameTooltip:Hide()
     end)
     hooksecurefunc("CharacterFrame_ShowSubFrame",function(name)
         if name~="HardcoreBuddyGearSnapshotPanel" then f:Hide() end
@@ -297,7 +289,3 @@ function S:Attach()
     self:Refresh()
     return true
 end
-
-local events=CreateFrame("Frame"); S.events=events
-for _,event in ipairs({"ADDON_LOADED","PLAYER_LOGIN","PLAYER_REGEN_ENABLED"}) do events:RegisterEvent(event) end
-events:SetScript("OnEvent",function() S:Attach() end)

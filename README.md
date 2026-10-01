@@ -65,7 +65,7 @@ Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
 
 The gear percentage measures weighted item stats, not simulated damage or survival.
 Procs, active item effects and set bonuses are excluded. See [advisor details](docs/advisors.md).
-The Character window's **Gear Snapshot** tab saves gear and talent information for
+Use **Advisors → Gear → Snapshot current gear** to save gear and talent information for
 offline review; `/reload` or log out to write it to disk.
 
 ## Auction house upgrades

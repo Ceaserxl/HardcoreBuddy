@@ -35,23 +35,24 @@ end
 local combat=true
 InCombatLockdown=function() return combat end
 MOCK.FireAll("ADDON_LOADED","Blizzard_CharacterFrame")
+S:Show()
 check(not S.panel,"Character UI attachment deferred during combat")
 combat=false; MOCK.FireAll("PLAYER_REGEN_ENABLED")
-check(S.panel and S.tab,"Character snapshot tab attaches after combat")
-local panel,tab=S.panel,S.tab
+check(not S.panel and not HardcoreBuddyCharacterTab,"Login and combat events do not add a Character window button or page")
+S:Show()
+local panel=S.panel
+check(panel and not S.tab and not HardcoreBuddyCharacterTab,"Explicit snapshot navigation creates only the page")
 MOCK.FireAll("ADDON_LOADED","AnotherAddon")
-check(S.panel==panel and S.tab==tab,"Repeated addon events never duplicate tabs")
+S:Show()
+check(S.panel==panel,"Repeated navigation reuses the snapshot page")
 check(CharacterFrame.numTabs==6 and #CHARACTERFRAME_SUBFRAMES==6,"Native/other-addon tab counts and subframes unchanged")
-local _,nativeY,_,nativeH=CharacterFrameTab1:GetRect()
-local _,newY=S.tab:GetRect()
-check(newY>=nativeY+nativeH,"Snapshot tab uses free second row without overlapping native tabs")
 CharacterFrame_ShowSubFrame("PaperDollFrame")
-MOCK.Click(S.tab)
-check(panel:IsShown() and not PaperDollFrame:IsShown() and tab.active,"Snapshot tab selects its page and hides paper doll")
-check(nativeClicks==1,"Existing Character tab hooks receive the click")
+S:Show()
+check(panel:IsShown() and not PaperDollFrame:IsShown(),"Snapshot navigation selects its page and hides paper doll")
+check(nativeClicks==0,"Snapshot navigation does not manufacture Character tab clicks")
 for i=1,6 do check(not _G["CharacterFrameTab"..i].selected,"Native tabs deselected on snapshot page") end
 CharacterFrameTab_OnClick(CharacterFrameTab3)
-check(ReputationFrame:IsShown() and not panel:IsShown() and not tab.active,"Native tab returns to its own page")
+check(ReputationFrame:IsShown() and not panel:IsShown(),"Native tab returns to its own page")
 check(not S.chrome[1]:IsShown(),"Snapshot backing never covers native Character pages")
 S:Show(); CharacterFrame_ShowSubFrame("OtherAddonCharacterPanel")
 check(not panel:IsShown() and OtherAddonCharacterPanel:IsShown(),"Other addon subframe switches hide snapshot page")
@@ -59,7 +60,7 @@ combat=true; S:Show()
 check(not panel:IsShown(),"Snapshot navigation does not mutate Character UI during combat")
 combat=false; S:Show()
 check(S.chrome[1]:IsShown(),"Snapshot page supplies its own backing when paper doll artwork hides")
-check(not A.characterDB.gearSnapshot,"Opening the tab never captures automatically")
+check(not A.characterDB.gearSnapshot,"Opening the page never captures automatically")
 
 F.reset("HUNTER",40,{31,0,0})
 A.db.gearAdvisorEnabled=false
