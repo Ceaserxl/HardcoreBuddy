@@ -55,6 +55,7 @@ Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
 
 - Color-coded gear upgrade/downgrade percentages using Classic specialization stat weights.
 - Follows the build selected in **Settings → Talent Advisor**, including automatic Hardcore leveling paths.
+- Edit stat weights in **Settings → Gear Advisor**, with **Restore Defaults** for the active profile.
 - Green arrows and borders mark upgrades in native bags and quest reward choices.
 - Compares every usable armor material by slot, without penalizing lighter armor.
 - Shows both ring/trinket slots, handles two-handed replacements and lists stat losses.

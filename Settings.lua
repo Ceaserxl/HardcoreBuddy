@@ -34,6 +34,8 @@ function A:OpenSettings(section)
 end
 
 function S:CommitInputs()
+    local gear=self.pages and self.pages["Gear Advisor"]
+    if gear then for _,edit in ipairs(gear.weights) do edit:ClearFocus() end end
     if A.LowHealth.page then A.LowHealth.page.threshold:ClearFocus() end
     if A.CreatureAlerts.page then A.CreatureAlerts.page.duration:ClearFocus() end
     if A.Deaths.options then
@@ -69,17 +71,58 @@ function S:Create(parent)
     label(general,"Carry quantities and item priorities stay in Supplies. Point-by-point talent advice stays in Advisors.",12,20,318,700)
 
     local gear=self.pages["Gear Advisor"]
-    label(gear,"Choose how equipment upgrades are shown and scored for your current character.",13,20,56,700)
-    gear.enabled=check(gear,"Show gear advisor in item tooltips",102,function() return A.db.gearAdvisorEnabled~=false end,function(value)
+    gear.profile=label(gear,"",14,20,52,700)
+    label(gear,"Choose how equipment upgrades are shown and scored. Scoring follows your live character's Talent Advisor build and compares all usable armor types by stats.",13,20,84,700)
+    gear.enabled=check(gear,"Show gear advisor in item tooltips",142,function() return A.db.gearAdvisorEnabled~=false end,function(value)
         A.db.gearAdvisorEnabled=value; A.GearAdvisor:RefreshTooltips()
     end)
-    gear.markers=check(gear,"Mark gear upgrades in bags and quest rewards",150,function() return A.db.gearUpgradeMarkers~=false end,function(value)
+    gear.markers=check(gear,"Mark gear upgrades in bags and quest rewards",184,function() return A.db.gearUpgradeMarkers~=false end,function(value)
         A.db.gearUpgradeMarkers=value
         if A.GearIndicators then A.GearIndicators:Invalidate() end
     end)
-    gear.profile=label(gear,"",14,20,212,700)
-    button(gear,"Choose build in Talent Advisor",276,function() A:OpenSettings("Talent Advisor") end,400)
-    label(gear,"Scoring follows your live character's Talent Advisor build. All usable armor types are compared by stats.",12,20,332,700)
+    label(gear,"Stat weights",18,20,240,360):SetTextColor(unpack(Skin.colors.gold))
+    label(gear,"Saved for this character's scoring profile. Use 0 to ignore a stat. Enter to save; Escape to cancel.",12,20,280,700)
+    gear.weightMessage=label(gear,"",12,20,302,700)
+    gear.weights={}
+    gear.restore=button(gear,"Restore Defaults",232,function()
+        self:CommitInputs()
+        A.GearAdvisor:ResetWeights(A.GearAdvisor:CurrentProfile())
+        gear.weightMessage:SetText(""); A:Refresh()
+    end,180)
+    gear.restore:ClearAllPoints(); gear.restore:SetPoint("TOPLEFT",540,-232)
+    for index,entry in ipairs(A.GearAdvisor.WeightFields) do
+        local x=20+((index-1)%2)*360
+        local y=332+math.floor((index-1)/2)*36
+        label(gear,entry[2],12,x,y+7,238)
+        local edit=CreateFrame("EditBox",nil,gear,"BackdropTemplate")
+        gear.weights[index]=edit; edit.weightKey=entry[1]
+        edit:SetSize(90,28); edit:SetPoint("TOPLEFT",x+246,-y)
+        edit:SetFont(STANDARD_TEXT_FONT,13,""); edit:SetAutoFocus(false); edit:SetMaxLetters(16)
+        edit:SetJustifyH("CENTER"); Skin.Paint(edit,"edit")
+        edit:SetScript("OnEditFocusLost",function(e)
+            if not e.profile then return end
+            local value=tonumber(e:GetText())
+            if value~=e.profile.weights[e.weightKey] then
+                if not A.GearAdvisor:SetWeight(e.profile,e.weightKey,value) then
+                    gear.weightMessage:SetText("Enter a number from 0 to 1,000,000.")
+                    gear.weightMessage:SetTextColor(unpack(Skin.colors.red))
+                else
+                    gear.weightMessage:SetText(""); e.profile.weights[e.weightKey]=value
+                end
+            end
+            e:SetText(tostring(e.profile.weights[e.weightKey]))
+        end)
+        edit:SetScript("OnEnterPressed",function(e) e:ClearFocus() end)
+        edit:SetScript("OnEscapePressed",function(e)
+            if e.profile then e:SetText(tostring(e.profile.weights[e.weightKey])) end
+            gear.weightMessage:SetText(""); e:ClearFocus()
+        end)
+        edit:SetScript("OnTabPressed",function(e)
+            e:ClearFocus(); local nextEdit=gear.weights[index%#gear.weights+1]
+            nextEdit:SetFocus(); nextEdit:HighlightText()
+        end)
+    end
+    gear.contentHeight=348+math.ceil(#gear.weights/2)*36
 
     local talent=self.pages["Talent Advisor"]
     talent.context=label(talent,"",14,20,56,700)
@@ -119,7 +162,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     section=section or "General"
     local scale=math.min(1,(width-22)/760)
     local contentWidth=(width-22)/scale
-    local contentHeight=section=="Talent Advisor" and self.pages["Talent Advisor"].contentHeight or section=="Gear Advisor" and 480 or 440
+    local contentHeight=section=="Talent Advisor" and self.pages["Talent Advisor"].contentHeight or section=="Gear Advisor" and self.pages["Gear Advisor"].contentHeight or 440
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.scroll:SetSize(width-22,height)
     self.content:SetScale(scale); self.content:SetSize(contentWidth,math.max(contentHeight,height/scale))
@@ -127,7 +170,16 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local general=self.pages.General; general.minimap:Sync(); general.kit:Sync()
     local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync()
     local profile=A.GearAdvisor:CurrentProfile()
-    gear.profile:SetText(profile and ("Scoring: "..profile.name.."\nBuild: "..(profile.buildName or "Leveling default")) or "Character data loading")
+    gear.profile:SetText(profile and ("Scoring: "..profile.name) or "Character data loading")
+    for _,edit in ipairs(gear.weights) do
+        if edit.profile and profile and (edit.profile.class~=profile.class or edit.profile.id~=profile.id) then edit:ClearFocus() end
+        if not edit:HasFocus() then
+            edit.profile=profile
+            edit:SetText(profile and tostring(profile.weights[edit.weightKey]) or "")
+        end
+        edit:SetEnabled(profile~=nil)
+    end
+    gear.restore:SetEnabled(profile~=nil)
     local context=A:GetContext()
     -- Presentation class names are used by the planner; build data uses tokens.
     local tokens={Druid="DRUID",Hunter="HUNTER",Mage="MAGE",Paladin="PALADIN",Priest="PRIEST",Rogue="ROGUE",Shaman="SHAMAN",Warlock="WARLOCK",Warrior="WARRIOR"}

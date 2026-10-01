@@ -1,5 +1,9 @@
 # Unreleased
 
+- Added editable stat weights and Restore Defaults to Gear Advisor settings,
+  saved per character and scoring profile. Simplified the scoring header.
+- Overview now starts with Before you pull, followed by Shared cooldowns and
+  Self Found; Hunter pet navigation remains in its dedicated sidebar tabs.
 - Moved build selection to Settings > Talent Advisor. Gear scoring now follows
   that build, replacing the independent scoring-profile selector.
 - Added green upgrade arrows and icon borders to native bag items and quest

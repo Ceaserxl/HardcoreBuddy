@@ -19,6 +19,13 @@ Automatic Hardcore paths change phases with level. A manually selected path
 persists per character and class. Existing standalone gear-profile overrides are
 ignored. Edit Character never changes the live gear-scoring character.
 
+**Settings > Gear Advisor** lists all scoring weights. Edit a nonnegative decimal
+and press Enter or leave the field to save; Escape cancels the pending edit.
+Zero ignores that stat. Overrides are saved per character and scoring profile;
+builds using the same profile share its edits. **Restore Defaults** resets only
+the active profile. Other profiles keep their edits. Changed weights immediately
+refresh tooltips and upgrade markers and invalidate old auction results.
+
 All usable armor materials compete by slot. There is no lighter-armor penalty
 and no requirement to match the equipped material. Class, level and native red
 equipment restrictions still apply. Rings and trinkets show both slots; a

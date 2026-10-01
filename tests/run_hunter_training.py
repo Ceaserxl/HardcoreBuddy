@@ -69,6 +69,9 @@ A:Navigate("training")
 assert(A.document.cards[1].title=="Overview")
 assert(A.window.filters[1].active and A.window.filters[2].filter=="Pet Training")
 local overview=A.document.cards[1]
+assert(overview.blocks[1].title=="Before you pull")
+assert(overview.blocks[2].title=="Shared cooldowns and Self Found")
+for _,b in ipairs(overview.blocks) do assert(b.title~="Pet Training" and b.title~="Pet Guide") end
 MOCK.Click(A.window.filters[2])
 assert(A.state.filter=="Pet Training" and A.document.cards[1].title=="Pet training")
 assert(A.window.filters[2].active and not A.window.filters[1].active)
@@ -81,9 +84,7 @@ assert(A.document.isDetail and A.window.filters[2].active)
 A:Back(); assert(A.state.filter=="Pet Training")
 MOCK.Click(A.window.filters[1])
 assert(A.document.cards[1].title==overview.title and A.window.filters[1].active)
-for _,b in ipairs(A.document.cards[1].blocks) do
-    if b.title=="Pet Training" then A:Activate(b.action); break end
-end
+MOCK.Click(A.window.filters[2])
 assert(A.state.filter=="Pet Training" and A.window.filters[2].active)
 MOCK.Click(A.window.filters[3]); assert(A.state.view=="petguide")
 MOCK.Click(A.window.filters[1]); assert(A.state.view=="training" and A.document.cards[1].title=="Overview")

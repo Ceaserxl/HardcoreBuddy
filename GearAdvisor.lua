@@ -159,13 +159,70 @@ function G:CurrentProfile()
             if profile then
                 profile.buildID=build.id; profile.buildName=build.name
                 profile.manual=manual; profile.fromBuild=true
-                return profile
+                return self:ApplyWeights(profile)
             end
         end
     end
     local fallback=self.Profile(class,level)
     if fallback then fallback.fallback=true end
-    return fallback
+    return self:ApplyWeights(fallback)
+end
+
+-- Overrides belong to this character and scoring profile. Builds sharing a
+-- profile share these edits; the bundled defaults remain untouched.
+G.WeightFields={
+    {"strength","Strength"},{"agility","Agility"},{"stamina","Stamina"},{"intellect","Intellect"},{"spirit","Spirit"},
+    {"armor","Armor"},{"health","Health"},{"mana","Mana"},{"attackPower","Attack power"},{"rangedAttackPower","Ranged attack power"},
+    {"meleeDPS","Melee weapon DPS"},{"rangedDPS","Ranged weapon DPS"},{"wandDPS","Wand DPS"},{"feralAttackPower","Feral attack power"},
+    {"hit","Melee / ranged hit (%)"},{"crit","Melee / ranged crit (%)"},
+    {"spellPower","Spell power"},{"healing","Healing power"},{"spellHit","Spell hit (%)"},{"spellCrit","Spell crit (%)"},
+    {"mp5","Mana per 5 seconds"},{"healthRegen","Health regeneration"},{"spellPenetration","Spell penetration"},
+    {"defense","Defense"},{"dodge","Dodge (%)"},{"parry","Parry (%)"},{"block","Block chance (%)"},{"blockValue","Block value"},
+    {"frost","Frost damage"},{"fire","Fire damage"},{"shadow","Shadow damage"},{"nature","Nature damage"},{"arcane","Arcane damage"},{"holy","Holy damage"},
+    {"fireResistance","Fire resistance"},{"frostResistance","Frost resistance"},{"shadowResistance","Shadow resistance"},
+    {"natureResistance","Nature resistance"},{"arcaneResistance","Arcane resistance"},
+}
+function G:ApplyWeights(profile)
+    if not profile then return end
+    local saved=A.characterDB and A.characterDB.advisors
+    local weights=saved and saved.statWeights and saved.statWeights[profile.class..":"..profile.id]
+    if type(weights)=="table" then
+        for key,value in pairs(weights) do
+            if profile.weights[key]~=nil and number(value) and value<=1000000 then
+                profile.weights[key]=value; profile.customWeights=true
+            end
+        end
+    end
+    return profile
+end
+
+function G:WeightsChanged()
+    self.revision=self.revision+1
+    self:RefreshTooltips()
+    if A.AuctionUpgrades then A.AuctionUpgrades:Invalidate() end
+    if A.GearIndicators then A.GearIndicators:Invalidate() end
+end
+
+function G:SetWeight(profile,key,value)
+    if not profile or not A.characterDB or not number(value) or value>1000000 then return false end
+    local defaults=self.Profile(profile.class,profile.level,nil,profile.id)
+    if not defaults or defaults.weights[key]==nil then return false end
+    A.characterDB.advisors=A.characterDB.advisors or {}
+    local saved=A.characterDB.advisors
+    saved.statWeights=saved.statWeights or {}
+    local id=profile.class..":"..profile.id
+    local weights=saved.statWeights[id] or {}
+    if value==defaults.weights[key] then weights[key]=nil else weights[key]=value end
+    saved.statWeights[id]=next(weights) and weights or nil
+    self:WeightsChanged()
+    return true
+end
+
+function G:ResetWeights(profile)
+    local saved=A.characterDB and A.characterDB.advisors
+    if not profile or not saved or not saved.statWeights then return end
+    saved.statWeights[profile.class..":"..profile.id]=nil
+    self:WeightsChanged()
 end
 
 -- Private tooltip reads localized restriction colors and DPS when the API lacks it.
