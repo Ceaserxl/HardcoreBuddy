@@ -239,3 +239,9 @@ The previous combat simulation and recovery experiments have been removed.
 See [map sources and coverage](map-data.md) and the per-zone/per-NPC audit for
 Wowhead research, Classic factual coordinate supplementation, client map-art
 geometry, exclusions and known coverage gaps. All runtime data ships locally.
+
+## Companion spells
+
+See [spell training data](class-spells.md). Classic Era training tables for all
+nine classes are bundled from the MIT-licensed What's Training? Vanilla dataset.
+The source license ships with the addon; no runtime dependency is added.

@@ -1,5 +1,9 @@
 # Unreleased
 
+- Added Companion > Spells with the next training level, all-future toggle,
+  search, spell tooltips and bundled Classic Era trainer data for all nine classes.
+- Reframed map NPC previews with a square full-body viewport and additional
+  zoom-out range to keep models from being cropped vertically.
 - Consolidated death alerts and banner appearance in Death Alerts, rares and
   elites in NPC Alerts, and preparation reminders in General. Map controls now
   live in Settings > Map, linked from the Map advisor. Existing preferences stay.

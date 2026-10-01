@@ -12,6 +12,11 @@ centers it; `/hcb help` lists commands.
 All lists use continuous scrolling, including the Pet Guide and Death Journal.
 Use the mouse wheel or scrollbar to browse the full list.
 
+**Companion > Spells** shows the next spell-training level for your class.
+Choose **Show all future spells** to browse later levels, with spell icons,
+ranks, reference training costs and talent requirements. Hover for spell details.
+All nine Classic Era classes are included; What's Training? is not required.
+
 ## Settings
 
 Open the **Settings** tab or use `/hcb settings`. The sidebar groups General,

@@ -31,17 +31,25 @@ function M:LayoutViewer(parent,width,visible)
         f.details=label(43,12); f.note=label(67,12)
         f.loading=label(143,12)
         local model=CreateFrame("PlayerModel",nil,f); f.model=model
-        model:SetPoint("TOPLEFT",16,-166); model:SetSize(680,224)
+        -- A wide, shallow viewport crops the native full-body camera vertically.
+        model:SetPoint("TOP",f,"TOP",0,-166); model:SetSize(224,224)
+        local function camera(self)
+            self:SetPortraitZoom(0)
+            self:SetCamDistanceScale(f.distance or 1.4)
+            self:SetPosition(0,0,0)
+            self:SetFacing(f.facing or 0.35)
+            self:RefreshCamera()
+        end
         model:SetScript("OnModelLoaded",function(self)
             if not f:IsShown() then return end
             f.loading:SetText("Drag to rotate. Use the mouse wheel to zoom.")
-            self:SetPortraitZoom(f.zoom or 0); self:SetFacing(f.facing or 0.35)
+            camera(self)
         end)
         model:EnableMouse(true); model:EnableMouseWheel(true)
         model:SetScript("OnMouseDown",function(_,button) if button=="LeftButton" then f.dragging=GetCursorPosition() end end)
         model:SetScript("OnMouseUp",function() f.dragging=nil end)
         model:SetScript("OnMouseWheel",function(self,delta)
-            f.zoom=math.max(0,math.min(1,(f.zoom or 0)+delta*0.1)); self:SetPortraitZoom(f.zoom)
+            f.distance=math.max(0.5,math.min(4,(f.distance or 1.4)-delta*0.15)); camera(self)
         end)
         model:SetScript("OnUpdate",function(self,elapsed)
             if f.dragging then
@@ -50,7 +58,7 @@ function M:LayoutViewer(parent,width,visible)
             if f.waiting then
                 f.waiting=f.waiting+elapsed
                 local id=self.GetModelFileID and self:GetModelFileID()
-                if id and id>0 then f.waiting=nil; f.loading:SetText("Drag to rotate. Use the mouse wheel to zoom.")
+                if id and id>0 then f.waiting=nil; camera(self); f.loading:SetText("Drag to rotate. Use the mouse wheel to zoom.")
                 elseif f.waiting>5 then f.waiting=nil; f.loading:SetText("Model unavailable from the client. Use Retry to request it again.") end
             end
         end)
@@ -77,7 +85,7 @@ function M:LayoutViewer(parent,width,visible)
     f.paging:SetText("NPC "..index.." of "..#ids.." in this marker")
     f.previous:SetEnabled(index>1); f.next:SetEnabled(index<#ids)
     if f.npcID~=id then
-        f.npcID=id; f.zoom=0; f.facing=0.35; f.waiting=0
+        f.npcID=id; f.distance=1.4; f.facing=0.35; f.waiting=0
         f.model:ClearModel(); f.loading:SetText("Loading NPC model...")
         f.model:SetPortraitZoom(0); f.model:SetFacing(f.facing)
         local ok=pcall(f.model.SetCreature,f.model,id)

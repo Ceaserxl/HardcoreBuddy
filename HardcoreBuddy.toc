@@ -23,6 +23,7 @@ Data\AdvisorTalents.lua
 Data\MapNPCs.lua
 Data\MapTiles.lua
 Data\LevelingZones.lua
+Data\ClassSpells.lua
 Data\Instances.lua
 Data\InstancesRaids.lua
 Planner.lua
@@ -36,6 +37,7 @@ Guide.lua
 Instances.lua
 HunterTraining.lua
 LevelingZones.lua
+ClassSpells.lua
 Companion.lua
 Skin.lua
 Core.lua
