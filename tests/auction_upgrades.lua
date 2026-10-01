@@ -280,7 +280,7 @@ local trinket=F.item("INVTYPE_TRINKET",{ITEM_MOD_AGILITY_SHORT=5},4,0)
 pages[4]={{item=good},{item=best},{item=mail},{item=robe},{item=chest},{item=cloak},{item=neck},{item=ring},{item=trinket},{item=held}}
 pages[2]={{item=sword,buyout=300}}
 U.armorOnly:SetChecked(true); MOCK.Click(U.armorOnly)
-check(A.characterDB.auctionHighestArmorOnly and U.armorOnly.label:GetText()=="Mail armor only","Checkbox saves per-character preference and labels hunter armor correctly")
+check(A.characterDB.auctionHighestArmorOnly and U.armorOnly.label:GetText()=="Best Armor: Mail","Checkbox saves per-character preference and labels hunter armor correctly")
 local queryStart=#queries
 U:Start(); finish()
 check(#queries-queryStart==16,"Each slot group scans separately, including shared rings/trinkets only once")
@@ -303,9 +303,9 @@ for class,expected in pairs({HUNTER={2,3},SHAMAN={2,3},WARRIOR={3,4},PALADIN={3,
         and G.HighestArmorSubclass({class=class,level=40})==expected[2],"Highest armor follows Classic class and level: "..class)
 end
 F.reset("HUNTER",39,{30,0,0}); U:Refresh()
-check(U.armorOnly.label:GetText()=="Leather armor only","Hunter below 40 uses leather")
+check(U.armorOnly.label:GetText()=="Best Armor: Leather","Hunter below 40 uses leather")
 MOCK.level=40; U:Refresh()
-check(U.armorOnly.label:GetText()=="Mail armor only","Armor label updates when mail unlocks")
+check(U.armorOnly.label:GetText()=="Best Armor: Mail","Armor label updates when mail unlocks")
 local _,sy,_,sh=U.start:GetRect(); local _,cy,_,ch=U.armorOnly:GetRect(); local _,wy=U.weaponButton:GetRect()
 check(cy>=sy+sh and cy+ch<wy,"Checkbox fits directly below Scan upgrades without overlapping Weapon setups")
 U.armorOnly:SetChecked(false); MOCK.Click(U.armorOnly)

@@ -70,7 +70,7 @@ the native auction-tab style and works without any other auction addon.
   scoring profile and percentages as HardcoreBuddy's gear tooltips.
 - Searches one equipment slot at a time, finishing its pages before moving on.
 - The checkbox under **Scan upgrades** restricts body armor to your class's
-  highest armor type for its level (for example, **Mail armor only** for hunters
+  highest armor type for its level (for example, **Best Armor: Mail** for hunters
   at level 40+). Off by default and saved per character. Jewelry, cloaks, shields,
   held off-hands and weapons remain eligible. Changing it requires a fresh scan.
 - Shows listing prices, merges duplicate item variants using their cheapest
