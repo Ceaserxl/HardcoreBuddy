@@ -21,7 +21,7 @@ local function header(page)
     check(near(x,tx) and near(y,ty),"Title aligns to content origin")
     local _,size=h.title:GetFont(); check(size==22,"Consistent title size")
     local _,_,_,sx,sy=h.subtitle:GetPoint()
-    check(sx==0 and sy==-34,"Consistent subtitle origin")
+    check(sx==0 and sy==-30,"Consistent compact subtitle origin")
     if h.action then
         local ax,ay,aw=h.action:GetRect(); local _,_,pw=page:GetRect()
         check(near(ay,y) and near(ax+aw,x+pw-12),"Header action aligns to top right")

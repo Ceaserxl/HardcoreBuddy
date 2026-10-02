@@ -42,7 +42,7 @@ function M:ResetSettings(section)
     if section=="all" or section=="exploration" then self.tintRevision=(self.tintRevision or 0)+1 end
     self:Changed()
 end
-function M:SettingsHeight() return 514 end
+function M:SettingsHeight() return 494 end
 
 function M:LayoutSettings(parent,left,top,width,visible)
     local picking=visible and A.state.mapIconKind~=nil
@@ -72,15 +72,15 @@ function M:LayoutSettings(parent,left,top,width,visible)
         local function section(name,title,description,y,height)
             local panel=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(panel,"card")
             panel:SetPoint("TOPLEFT",0,-y); panel:SetSize(720,height)
-            panel.title=label(panel,title,16,16,460,15); panel.title:SetTextColor(unpack(Skin.colors.gold))
-            panel.description=label(panel,description,16,44,680)
+            panel.title=label(panel,title,16,16,460,15); Skin.TextStyle(panel.title,"section")
+            panel.description=label(panel,description,16,38,680); Skin.TextStyle(panel.description,"subtitle")
             local reset=button(panel,"Reset",0,12,120,function() M:ResetSettings(name) end)
             reset:ClearAllPoints(); reset:SetPoint("TOPRIGHT",-16,-12)
             return panel,reset
         end
-        f.exploration,f.resetExploration=section("exploration","Exploration","Choose how undiscovered areas look on the map.",62,164)
-        f.markers,f.resetMarkers=section("markers","NPC markers","Choose visible categories and click an icon to change it.",238,264)
-        f.notices,f.resetNotices=section("notices","Zone notices","Show known dangers in chat when you enter a zone.",62,164)
+        f.exploration,f.resetExploration=section("exploration","Exploration","Choose how undiscovered areas look on the map.",Skin.layout.headerBottom,160)
+        f.markers,f.resetMarkers=section("markers","NPC markers","Choose visible categories and click an icon to change it.",222,264)
+        f.notices,f.resetNotices=section("notices","Zone notices","Show known dangers in chat when you enter a zone.",Skin.layout.headerBottom,160)
         f.resetExploration:SetWidth(72); f.resetNotices:SetWidth(72)
         for i,mode in ipairs({{"off","Unchanged"},{"full","Reveal all"},{"tint","Tint unexplored"}}) do
             local key=mode[1]
@@ -141,10 +141,10 @@ function M:LayoutSettings(parent,left,top,width,visible)
     Skin.SettingsHeader(f,baseWidth,f.title,f.subtitle,f.resetAll)
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
     local panelWidth=baseWidth-12
-    local explorationWidth=math.floor((panelWidth-12)*0.60)
-    local noticeWidth=panelWidth-12-explorationWidth
+    local explorationWidth=math.floor((panelWidth-Skin.layout.columnGap)*0.60)
+    local noticeWidth=panelWidth-Skin.layout.columnGap-explorationWidth
     f.exploration:SetWidth(explorationWidth); f.notices:SetWidth(noticeWidth); f.markers:SetWidth(panelWidth)
-    f.notices:ClearAllPoints(); f.notices:SetPoint("TOPLEFT",12+explorationWidth,-62)
+    f.notices:ClearAllPoints(); f.notices:SetPoint("TOPLEFT",Skin.layout.columnGap+explorationWidth,-Skin.layout.headerBottom)
     for _,panel in ipairs({f.exploration,f.notices,f.markers}) do
         panel.title:SetWidth(panel:GetWidth()-(panel==f.markers and 168 or 120))
         panel.description:SetWidth(panel:GetWidth()-32)
@@ -175,7 +175,7 @@ end
 
 function M:IconPickerHeight()
     self:LoadIconChoices()
-    return 74+math.ceil(#self.iconChoices/6)*80
+    return Skin.layout.headerBottom+math.ceil(#self.iconChoices/6)*80
 end
 
 function M:LayoutIconPicker(parent,left,top,width,visible)
@@ -219,7 +219,7 @@ function M:LayoutIconPicker(parent,left,top,width,visible)
     local cellWidth=(width/scale-12-5*8)/6
     for i,key in ipairs(self.iconChoices) do
         local b=f.choices[key]
-        b:ClearAllPoints(); b:SetPoint("TOPLEFT",((i-1)%6)*(cellWidth+8),-62-math.floor((i-1)/6)*80)
+        b:ClearAllPoints(); b:SetPoint("TOPLEFT",((i-1)%6)*(cellWidth+8),-Skin.layout.headerBottom-math.floor((i-1)/6)*80)
         b:SetWidth(cellWidth); b.label:SetWidth(cellWidth-12)
         local selected=self:Settings().icons[kind]==key
         b.selected=selected; b.label:SetText(self:IconName(key)); self:SetIconTexture(b.icon,key)

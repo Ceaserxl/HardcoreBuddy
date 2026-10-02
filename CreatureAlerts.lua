@@ -241,8 +241,8 @@ function H:LayoutSettings(parent,x,y,width,height,section,visible)
             t:SetFont(STANDARD_TEXT_FONT,size,""); t:SetPoint("TOPLEFT",16,top); t:SetWidth(650)
             t:SetJustifyH("LEFT"); t:SetText(value); p.labels[#p.labels+1]=t; return t
         end
-        p.title=text("",15,-16); p.title:SetTextColor(unpack(addon.Skin.colors.gold))
-        text("Checks nameplates, target and mouseover. Elites pause in instances; rares stay active.",12,-48)
+        p.title=text("",15,-16); addon.Skin.TextStyle(p.title,"section")
+        addon.Skin.TextStyle(text("Checks nameplates, target and mouseover. Elites pause in instances; rares stay active.",12,-38),"subtitle")
         for i,entry in ipairs({{"enabled","Enable warnings"},{"sound","Play alert sound"},{"nonHostile","Include attackable neutral elites"}}) do
             local key=entry[1]
             local b=CreateFrame("CheckButton",nil,p,"BackdropTemplate"); p.checks[key]=b

@@ -44,19 +44,20 @@ local function createViewer(parent)
     f.info=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(f.info,"card")
     f.info:SetPoint("TOPLEFT"); f.info:SetSize(296,416)
     f.modelBorder=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(f.modelBorder,"card")
-    f.modelBorder:SetPoint("TOPLEFT",312,0)
+    f.modelBorder:SetPoint("TOPLEFT",296+Skin.layout.columnGap,0)
     local function label(y,size,height)
         local t=f.info:CreateFontString(nil,"OVERLAY","GameFontHighlight")
         t:SetFont(STANDARD_TEXT_FONT,size,""); t:SetPoint("TOPLEFT",16,-y)
         t:SetWidth(264); t:SetHeight(height); t:SetJustifyH("LEFT"); t:SetJustifyV("TOP")
         return t
     end
-    f.title=label(16,18,48); f.title:SetTextColor(unpack(Skin.colors.gold))
+    f.title=label(16,22,48); Skin.TextStyle(f.title,"page")
     f.details=label(72,12,32)
     f.note=label(116,12,92)
     f.paging=label(222,12,20)
     f.help=label(342,12,58)
     f.help:SetText("Drag to rotate. Scroll to zoom.\nUse Reset view to re-center.")
+    Skin.TextStyle(f.details,"subtitle"); Skin.TextStyle(f.note,"subtitle"); Skin.TextStyle(f.help,"subtitle")
     -- Resolve NPC -> creature display through the native PlayerModel, then use
     -- a ModelScene actor's actual bounds instead of creature portrait cameras.
     local scene=CreateFrame("ModelScene",nil,f.modelBorder); f.scene=scene
@@ -215,7 +216,7 @@ function M:LayoutViewer(parent,width,visible,height)
     local scale=math.min(1,width/728,(height or 416)/416)
     local frameHeight=(height or 416)/scale
     f:SetScale(scale); f:SetSize(width/scale,frameHeight)
-    f.info:SetHeight(frameHeight); f.modelBorder:SetSize(width/scale-312,frameHeight)
+    f.info:SetHeight(frameHeight); f.modelBorder:SetSize(width/scale-296-Skin.layout.columnGap,frameHeight)
     f.scene:SetSize(f.modelBorder:GetWidth()-2,frameHeight-2)
     if f.bounds then f:UpdateCamera() end
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",0,0)
@@ -226,6 +227,20 @@ function M:LayoutViewer(parent,width,visible,height)
     f.details:SetText("Level "..(npc.min or "?")..(npc.max and npc.max~=npc.min and ("-"..npc.max) or "").." | "..self:IconLabel(npc.kind))
     f.note:SetText(npc.note or "Recorded spawn area; this is a model preview, not a live sighting.")
     f.paging:SetText("NPC "..index.." of "..#ids)
+    -- Fit the text to its content instead of reserving large empty text boxes.
+    local y=16
+    for _,entry in ipairs({{f.title,Skin.layout.titleGap},{f.details,Skin.layout.contentGap},
+        {f.note,Skin.layout.sectionGap},{f.paging,Skin.layout.contentGap}}) do
+        local text,gap=entry[1],entry[2]
+        text:ClearAllPoints(); text:SetPoint("TOPLEFT",f.info,"TOPLEFT",16,-y)
+        text:SetHeight(0); local h=text:GetStringHeight(); text:SetHeight(h)
+        y=y+h+gap
+    end
+    f.previous:ClearAllPoints(); f.previous:SetPoint("TOPLEFT",16,-y)
+    f.next:ClearAllPoints(); f.next:SetPoint("TOPLEFT",150,-y)
+    y=y+30+Skin.layout.sectionGap
+    f.reset:ClearAllPoints(); f.reset:SetPoint("TOPLEFT",150,-y)
+    f.help:ClearAllPoints(); f.help:SetPoint("TOPLEFT",16,-y-30-Skin.layout.contentGap)
     f.previous:SetEnabled(index>1); f.next:SetEnabled(index<#ids)
     if f.npcID~=id then
         f.npcID=id; f.distance=DEFAULT_DISTANCE; f.facing=0.35

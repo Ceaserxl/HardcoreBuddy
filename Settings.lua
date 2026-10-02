@@ -180,8 +180,8 @@ function S:Create(parent)
     end
     local general=self.pages.General
     general.subtitle=label(general,"Window, access and field kit notifications.",12,0,34,700)
-    local access=Skin.Section(general,"Access & window",62,154,1)
-    local kit=Skin.Section(general,"Field kit",62,154,2)
+    local access=Skin.Section(general,"Access & window",Skin.layout.headerBottom,138,1)
+    local kit=Skin.Section(general,"Field kit",Skin.layout.headerBottom,138,2)
     general.minimap=check(access,"Show minimap button",46,function() return not A.db.minimapHidden end,function(value)
         A.db.minimapHidden=not value; A:PositionMinimapButton()
     end)
@@ -190,10 +190,10 @@ function S:Create(parent)
     end)
     general.reset=button(access,"Recenter main window",82,function() A:HandleSlashCommand("reset") end)
     label(kit,"Manage Carry quantities and item priorities in Supplies. Find gear and talent advice in Companion.",12,16,86,300)
-    general.contentHeight=486
+    general.contentHeight=434
     local npc=self.pages["NPC Alerts"]
     npc.subtitle=label(npc,"Configure rare and elite warnings independently.",12,0,34,700)
-    npc.contentHeight=430
+    npc.contentHeight=418
 
     local gear=self.pages["Gear Advisor"]
     gear.toggle=button(gear,"",0,function() A.GearAdvisor:SetEnabled(not A.GearAdvisor:IsEnabled()) end,200)
@@ -201,9 +201,9 @@ function S:Create(parent)
     gear.toggle:SetHeight(28); gear.toggle.label:SetHeight(28); gear.toggle.label:SetJustifyH("CENTER")
     gear.profile=label(gear,"",12,0,34,700)
     gear.description=label(gear,"Choose how upgrades are shown and scored. Scoring follows your Talent Advisor build and compares all usable armor types by stats.",12,0,54,700)
-    local display=Skin.Section(gear,"Display & notifications",96,172,1)
-    local equip=Skin.Section(gear,"Automatic equipment",96,172,2)
-    local scoring=Skin.Section(gear,"Scoring weights",280,84)
+    local display=Skin.Section(gear,"Display & notifications",88,162,1)
+    local equip=Skin.Section(gear,"Automatic equipment",88,162,2)
+    local scoring=Skin.Section(gear,"Scoring weights",258,84)
     gear.enabled=check(display,"Show gear advice in item tooltips",46,function() return A.db.gearAdvisorEnabled~=false end,function(value)
         A.db.gearAdvisorEnabled=value; A.GearAdvisor:RefreshTooltips()
     end)
@@ -220,7 +220,7 @@ function S:Create(parent)
     label(equip,"Waits until you are out of combat. Equipped quest items, including off-hand items, stay under your control.",12,16,90,300)
     gear.openWeights=button(scoring,"Stat Weights",42,function() self:OpenGearPage("Stat Weights") end)
     label(scoring,"Adjust individual stats or restore your build's defaults.",12,320,46,370)
-    gear.contentHeight=376
+    gear.contentHeight=350
     A.DebugDump:Create(self.pages.Debug)
     local weightsPage=self.pages["Stat Weights"]
     weightsPage.profile=label(weightsPage,"",12,0,34,700)
@@ -277,34 +277,34 @@ function S:Create(parent)
     talent.builds={}
     local maxBuilds=0
     for _,builds in pairs(A.Data.AdvisorBuilds) do maxBuilds=math.max(maxBuilds,#builds) end
-    talent.spending=Skin.Section(talent,"Apply talent points",160+maxBuilds*46,124)
+    talent.spending=Skin.Section(talent,"Apply talent points",144+maxBuilds*48,124)
     talent.apply=button(talent.spending,"Apply unused points",42,function() A.TalentAdvisor:ApplyUnused(false) end,280)
     talent.auto=check(talent.spending,"Automatically apply unused points",46,function() return A.characterDB.autoApplyTalents==true end,function(value)
         A.characterDB.autoApplyTalents=value
         if value then A.TalentAdvisor:ApplyUnused(true) else A.TalentAdvisor.applying=nil end
     end)
     label(talent.spending,"Uses your selected path. Stops if your learned talents do not match. Points cannot be undone without a respec.",12,16,86,700)
-    talent.paths=Skin.Section(talent,"Talent paths",100,48+maxBuilds*46)
+    talent.paths=Skin.Section(talent,"Talent paths",88,48+maxBuilds*48)
     for i=1,maxBuilds do
-        local b=button(talent.paths,"",42+(i-1)*46,function(self)
+        local b=button(talent.paths,"",42+(i-1)*48,function(self)
             A.TalentAdvisor:Activate({command=self.automatic and "defaultBuild" or "build",id=self.buildID,class=self.class})
         end,700)
         b:SetHeight(40); b.label:SetHeight(40); b.label:SetFont(STANDARD_TEXT_FONT,12,"")
         talent.builds[i]=b
     end
-    talent.contentHeight=296+maxBuilds*46
+    talent.contentHeight=276+maxBuilds*48
 
     local auction=self.pages["Auction House"]
     auction.subtitle=label(auction,"Filters and saved scans for the auction house Upgrades tab.",12,0,34,700)
-    local filters=Skin.Section(auction,"Armor filter",62,182,1)
-    local scans=Skin.Section(auction,"Saved scans",62,182,2)
+    local filters=Skin.Section(auction,"Armor filter",Skin.layout.headerBottom,176,1)
+    local scans=Skin.Section(auction,"Saved scans",Skin.layout.headerBottom,176,2)
     auction.armor=check(filters,"",56,function() return A.characterDB.auctionHighestArmorOnly==true end,function(value)
         A.AuctionUpgrades:SetHighestArmorOnly(value)
     end)
     label(filters,"Scan only your class's highest available armor type. Accessories and weapons are included. Turn this off to compare all usable armor types.",12,16,102,300)
     auction.cache=label(scans,"",12,16,56,300)
     auction.diagnostics=button(scans,"View scan diagnostics",132,function() A.AuctionDiagnostics:Show() end)
-    auction.contentHeight=256
+    auction.contentHeight=238
 end
 
 function S:Layout(parent,left,top,width,height,section,visible)
@@ -325,7 +325,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local pageName=section
     if section=="Gear Advisor" and A.state.gearPage=="Stat Weights" then pageName=A.state.gearPage end
     local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 282
-    if section=="Death Journal" then contentHeight=682 end
+    if section=="Death Journal" then contentHeight=662 end
     if section=="Zone Advisor" then contentHeight=A.state.mapIconKind and A.MapAdvisor:IconPickerHeight() or A.MapAdvisor:SettingsHeight() end
     if pageName=="Debug" then A.DebugDump:Refresh() end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
@@ -398,10 +398,10 @@ function S:Layout(parent,left,top,width,height,section,visible)
         b.selected=build and selected and selected.id==build.id or false
         Skin.ButtonState(b,b.selected,nil,false)
     end
-    talent.paths:SetHeight(48+#builds*46)
-    talent.spending.sectionTop=talent.paths.sectionTop+talent.paths:GetHeight()+12
+    talent.paths:SetHeight(48+#builds*48)
+    talent.spending.sectionTop=talent.paths.sectionTop+talent.paths:GetHeight()+Skin.layout.sectionGap
     Skin.LayoutSections(talent,contentWidth)
-    talent.contentHeight=296+#builds*46
+    talent.contentHeight=276+#builds*48
     if pageName=="Talent Advisor" then self.content:SetHeight(math.max(talent.contentHeight,height/scale)) end
     local auction=self.pages["Auction House"]; auction.armor:Sync()
     local armor=profile and ({"Cloth","Leather","Mail","Plate"})[A.GearAdvisor.HighestArmorSubclass(profile)] or "..."
@@ -410,14 +410,31 @@ function S:Layout(parent,left,top,width,height,section,visible)
     auction.cache:SetText(saved and ("Last scan: "..saved.recordedAt..". Results are kept across reloads; rescan for current prices.")
         or "Your next auction scan will be saved automatically, including partial results.")
     local content=self.content
+    -- Size explanatory headers to their text; a short description must not
+    -- reserve the height of a wrapped one on a different settings page.
+    for _,name in ipairs({"Gear Advisor","Talent Advisor"}) do
+        local page=self.pages[name]
+        local firstTop=Skin.SettingsHeader(page,contentWidth,page.title,page.profile or page.context,page.toggle,page.description)
+        if name=="Gear Advisor" then
+            page.sectionCards[1].sectionTop=firstTop; page.sectionCards[2].sectionTop=firstTop
+            page.sectionCards[3].sectionTop=firstTop+page.sectionCards[1]:GetHeight()+Skin.layout.sectionGap
+            page.contentHeight=page.sectionCards[3].sectionTop+page.sectionCards[3]:GetHeight()+Skin.layout.sectionGap
+        else
+            page.paths.sectionTop=firstTop
+            page.spending.sectionTop=firstTop+page.paths:GetHeight()+Skin.layout.sectionGap
+            page.contentHeight=page.spending.sectionTop+page.spending:GetHeight()+Skin.layout.sectionGap
+        end
+        Skin.LayoutSections(page,contentWidth)
+        if pageName==name then content:SetHeight(math.max(page.contentHeight,height/scale)) end
+    end
     if section=="Low Health" then A.LowHealth:LayoutSettings(content,0,0,contentWidth,contentHeight,true)
     elseif A.LowHealth.page then A.LowHealth.page:Hide() end
     if section=="NPC Alerts" then
-        local half=(contentWidth-24)/2
-        A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],0,62,half,356,"Rares",true)
-        A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],12+half,62,half,356,"Elites",true)
+        local half=(contentWidth-12-Skin.layout.columnGap)/2
+        A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],0,Skin.layout.headerBottom,half,356,"Rares",true)
+        A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],Skin.layout.columnGap+half,Skin.layout.headerBottom,half,356,"Elites",true)
     else for _,page in pairs(A.CreatureAlerts.pages or {}) do page:Hide() end end
-    if section=="General" then A.Readiness:LayoutSettings(general,0,228,contentWidth-12,246,true)
+    if section=="General" then A.Readiness:LayoutSettings(general,0,200,contentWidth-12,226,true)
     elseif A.Readiness.options then A.Readiness.options:Hide() end
     A.MapAdvisor:LayoutSettings(content,0,0,contentWidth,section=="Zone Advisor")
     if section=="Death Journal" then

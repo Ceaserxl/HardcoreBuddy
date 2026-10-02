@@ -8,6 +8,20 @@ S.colors = {
     green={0.52,0.77,0.47}, red={0.89,0.38,0.30}, amber={0.96,0.67,0.30},
     bronze={0.55,0.39,0.19}, moss={0.27,0.34,0.21}, oxblood={0.35,0.12,0.09},
 }
+-- One hierarchy for all pages; compact rows and alert text have separate roles.
+S.layout={sectionGap=8,columnGap=8,sectionInset=16,titleGap=4,
+    pageTitleGap=4,contentGap=8,pageContentGap=8,subtitleTop=30,headerBottom=54,tableHeaderHeight=22}
+S.textStyles={
+    page={size=22,color="gold"},section={size=15,color="gold"},
+    subtitle={size=12,color="muted"},body={size=12,color="white"},
+    column={size=10,color="muted"},field={size=11,color="gold"},
+}
+function S.TextStyle(label,role)
+    local style=S.textStyles[role]
+    label:SetFont(STANDARD_TEXT_FONT,style.size,"")
+    label:SetTextColor(unpack(S.colors[style.color]))
+    label:SetJustifyH("LEFT"); label:SetJustifyV("TOP")
+end
 
 local WHITE="Interface\\Buttons\\WHITE8x8"
 local DARK="Interface\\DialogFrame\\UI-DialogBox-Background-Dark"
@@ -69,13 +83,17 @@ end
 function S.SettingsHeader(parent,width,title,subtitle,action,detail)
     parent.settingsHeader={title=title,subtitle=subtitle,action=action,detail=detail}
     title:ClearAllPoints(); title:SetPoint("TOPLEFT",parent,"TOPLEFT",0,0)
-    title:SetFont(STANDARD_TEXT_FONT,22,""); title:SetTextColor(unpack(S.colors.gold))
+    S.TextStyle(title,"page")
     title:SetWidth(width-(action and action:GetWidth()+36 or 12)); title:SetJustifyH("LEFT")
+    local bottom=math.max(26,title:GetStringHeight())
     for i,text in ipairs({subtitle,detail}) do
         if text then
-            text:ClearAllPoints(); text:SetPoint("TOPLEFT",parent,"TOPLEFT",0,-(i==1 and 34 or 54))
-            text:SetFont(STANDARD_TEXT_FONT,12,""); text:SetTextColor(unpack(S.colors.muted))
+            local top=math.max(i==1 and S.layout.subtitleTop or 0,bottom+S.layout.titleGap)
+            text:ClearAllPoints(); text:SetPoint("TOPLEFT",parent,"TOPLEFT",0,-top)
+            S.TextStyle(text,"subtitle")
             text:SetWidth(width-12); text:SetJustifyH("LEFT")
+            text:SetHeight(0); local h=math.max(16,text:GetStringHeight()); text:SetHeight(h)
+            bottom=top+h
         end
     end
     if action then
@@ -86,6 +104,7 @@ function S.SettingsHeader(parent,width,title,subtitle,action,detail)
             action.label:SetJustifyH("CENTER"); action.label:SetJustifyV("MIDDLE")
         end
     end
+    return bottom+S.layout.contentGap
 end
 
 function S.Section(parent,title,top,height,column)
@@ -94,18 +113,20 @@ function S.Section(parent,title,top,height,column)
     panel.sectionTop, panel.sectionColumn=top,column
     panel:SetSize(column and 362 or 736,height)
     panel.title=panel:CreateFontString(nil,"OVERLAY","GameFontHighlight")
-    panel.title:SetFont(STANDARD_TEXT_FONT,15,""); panel.title:SetTextColor(unpack(S.colors.gold))
-    panel.title:SetPoint("TOPLEFT",16,-16); panel.title:SetWidth(panel:GetWidth()-32)
+    S.TextStyle(panel.title,"section")
+    local inset=S.layout.sectionInset
+    panel.title:SetPoint("TOPLEFT",inset,-inset); panel.title:SetWidth(panel:GetWidth()-inset*2)
     panel.title:SetJustifyH("LEFT"); panel.title:SetText(title or "")
     parent.sectionCards=parent.sectionCards or {}; parent.sectionCards[#parent.sectionCards+1]=panel
     S.LayoutSections(parent,parent:GetWidth()>0 and parent:GetWidth() or 760)
     return panel
 end
 function S.LayoutSections(parent,width)
-    local full=width-12; local half=(full-12)/2
+    local gap=S.layout.columnGap
+    local full=width-12; local half=(full-gap)/2
     for _,panel in ipairs(parent.sectionCards or {}) do
-        panel:ClearAllPoints(); panel:SetPoint("TOPLEFT",panel.sectionColumn==2 and half+12 or 0,-panel.sectionTop)
-        panel:SetWidth(panel.sectionColumn and half or full); panel.title:SetWidth(panel:GetWidth()-32)
+        panel:ClearAllPoints(); panel:SetPoint("TOPLEFT",panel.sectionColumn==2 and half+gap or 0,-panel.sectionTop)
+        panel:SetWidth(panel.sectionColumn and half or full); panel.title:SetWidth(panel:GetWidth()-S.layout.sectionInset*2)
     end
 end
 function S.SectionBackdrop(parent,top,height,column)

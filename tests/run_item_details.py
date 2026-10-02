@@ -25,7 +25,7 @@ local itemRow,details=rows[1],rows[2]
 local x,y,w,h=itemRow:GetRect(); local dx,dy=details:GetRect()
 local heading=card.itemHeading
 local hx,hy,hw,hh=heading:GetRect()
-assert(h==56 and dx>x+w and hy==dy and y>=hy+hh,"Item section heading aligns with details and sits above the supply row")
+assert(h==56 and dx>x+w and dy==y and y>=hy+hh,"Item Details aligns with the selected item below its section heading")
 assert(heading:GetText()==A.Supplies.GenericTitle(item),"Generic label is the item section heading")
 assert(not itemRow.quantity:IsShown() and card.detailQuantity:IsShown())
 local ex,ey,ew,eh=card.detailQuantity:GetRect()

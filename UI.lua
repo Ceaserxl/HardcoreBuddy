@@ -1,6 +1,7 @@
 local _, addon = ...
 local P, C, Skin = addon.Planner, addon.Companion, addon.Skin
 local GOLD, WHITE, MUTED = Skin.colors.gold, Skin.colors.white, Skin.colors.muted
+local SPACE=Skin.layout
 local STOCK_COLORS={ready={0.42,0.83,0.60},low={1,0.76,0.32},missing={0.96,0.48,0.39},unknown=MUTED,choose=GOLD,off=MUTED}
 
 function addon:InsertUserItemLink(link)
@@ -274,12 +275,12 @@ local function renderBlock(frame, block, width)
     if block.columns then
         frame.title:Hide(); frame.body:Hide(); frame.meta:Hide(); frame.icon:Hide(); frame.iconHit:Hide(); frame.iconBorder:Hide()
         local count = width >= 570 and #block.columns or 1
-        local colWidth = (width - (count - 1) * 14) / count
+        local colWidth = (width - (count - 1) * SPACE.columnGap) / count
         local y, rowHeight = 0, 0
         for index, entries in ipairs(block.columns) do
             local column = frame.columns[index]
             if not column then column=CreateFrame("Frame", nil, frame); column.blocks={}; frame.columns[index]=column end
-            column:Show(); column:ClearAllPoints(); column:SetPoint("TOPLEFT", ((index - 1) % count) * (colWidth + 14), -y)
+            column:Show(); column:ClearAllPoints(); column:SetPoint("TOPLEFT", ((index - 1) % count) * (colWidth + SPACE.columnGap), -y)
             column:SetWidth(colWidth)
             local height = renderBlocks(column, entries, colWidth)
             column:SetHeight(height); rowHeight=math.max(rowHeight, height)
@@ -293,7 +294,7 @@ local function renderBlock(frame, block, width)
                         columnFrame.blocks[1]:SetHeight(rowHeight)
                     end
                 end
-                y=y+rowHeight; rowHeight=0
+                y=y+rowHeight+(index<#block.columns and SPACE.sectionGap or 0); rowHeight=0
             end
         end
         frame:SetHeight(y); return y
@@ -310,7 +311,7 @@ local function renderBlock(frame, block, width)
         if not frame.icon:SetTexture(native) then frame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark") end
     end
     local x = block.textInset or (icon and 52 or 12) + (block.child and 8 or 0)
-    local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), block.supply and 8 or 12
+    local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), block.plain and 0 or block.supply and 8 or 12
     frame.title:SetTextColor(unpack(block.titleColor or (block.supply and WHITE or GOLD)))
     local height
     if block.supply then
@@ -319,8 +320,8 @@ local function renderBlock(frame, block, width)
         local bodyHeight=measure(frame.body,block.body,available-nameWidth-16,x+nameWidth+16,y)
         y=y+math.max(titleHeight,bodyHeight)+3
     else
-        height=measure(frame.title, block.title, available, x, y); if height>0 then y=y+height+3 end
-        height=measure(frame.body, block.body, available, x, y); if height>0 then y=y+height+3 end
+        height=measure(frame.title, block.title, available, x, y); if height>0 then y=y+height+SPACE.titleGap end
+        height=measure(frame.body, block.body, available, x, y); if height>0 then y=y+height+SPACE.titleGap end
     end
     height=measure(frame.meta, block.meta, available, x, y); if height>0 then y=y+height+2 end
     if block.fields then
@@ -336,7 +337,7 @@ local function renderBlock(frame, block, width)
                 frame.fields[index]=field
             end
             local wide=block.singleFieldColumn or data.wide or data.label=="Effect" or data.label=="Materials" or data.label=="Notes"
-            if wide and column>0 then y=y+rowHeight+14; column=0; rowHeight=0 end
+            if wide and column>0 then y=y+rowHeight+SPACE.sectionGap; column=0; rowHeight=0 end
             local cellWidth=wide and width-24 or fieldWidth
             field:Show(); field:ClearAllPoints(); field:SetPoint("TOPLEFT",12+column*(fieldWidth+gap),-y)
             field:SetWidth(cellWidth)
@@ -346,9 +347,9 @@ local function renderBlock(frame, block, width)
             fieldHeight=fieldHeight+measure(field.value,data.value,cellWidth,0,fieldHeight)
             field:SetHeight(fieldHeight)
             rowHeight=math.max(rowHeight,fieldHeight); column=column+1
-            if wide or column==2 then y=y+rowHeight+14; column=0; rowHeight=0 end
+            if wide or column==2 then y=y+rowHeight+SPACE.sectionGap; column=0; rowHeight=0 end
         end
-        if column>0 then y=y+rowHeight+14 end
+        if column>0 then y=y+rowHeight+SPACE.sectionGap end
     end
     if block.supply then
         local color=STOCK_COLORS[block.count==0 and "missing" or block.status] or MUTED
@@ -372,7 +373,7 @@ local function renderBlock(frame, block, width)
         end
         frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPLEFT",width-86,-8)
     end
-    y=block.supply and 46 or (math.max(block.action and 40 or icon and 42 or 0, y)+(block.plain and -3 or 9))
+    y=block.supply and 46 or (math.max(block.action and 40 or icon and 42 or 0, y)+(block.plain and -SPACE.titleGap or SPACE.contentGap))
     frame:SetHeight(y)
     frame.icon:ClearAllPoints()
     if block.supply then
@@ -460,16 +461,16 @@ renderBlocks = function(parent, blocks, width)
         local frame=parent.blocks[index]
         if not frame then frame=newBlock(parent); parent.blocks[index]=frame end
         local paired=parent.gridStart and index>=parent.gridStart and (not block.supply or parent.supplyGrid) and not block.columns and not block.fields
-        if pending and not paired then y=y+pending:GetHeight()+12; pending=nil end
-        local cellWidth=paired and (width-12)/2 or width
-        frame:ClearAllPoints(); frame:SetPoint("TOPLEFT",pending and cellWidth+12 or 0,-y)
+        if pending and not paired then y=y+pending:GetHeight()+SPACE.sectionGap; pending=nil end
+        local cellWidth=paired and (width-SPACE.columnGap)/2 or width
+        frame:ClearAllPoints(); frame:SetPoint("TOPLEFT",pending and cellWidth+SPACE.columnGap or 0,-y)
         frame.supplyTile=block.supply and paired
         local height=renderBlock(frame,block,cellWidth)
         if pending then
             height=math.max(height,pending:GetHeight()); pending:SetHeight(height); frame:SetHeight(height)
-            y=y+height+12; pending=nil
+            y=y+height+SPACE.sectionGap; pending=nil
         elseif paired and index<#blocks then pending=frame
-        else y=y+height+((block.talentColumns or block.spellColumns) and 1 or (block.supply and not paired or block.npcColumns) and 4 or 12) end
+        else y=y+height+((block.talentColumns or block.spellColumns) and 1 or (block.supply and not paired or block.npcColumns) and 4 or SPACE.sectionGap) end
         if block.supply then
             local shade=index%2==0 and 0.075 or 0.045
             frame:SetBackdropColor(shade,shade+0.009,shade+0.014,1)
@@ -479,7 +480,7 @@ renderBlocks = function(parent, blocks, width)
         end
     end
     for index=#blocks+1,#parent.blocks do parent.blocks[index]:Hide() end
-    return math.max(1,y-(blocks[#blocks] and ((blocks[#blocks].talentColumns or blocks[#blocks].spellColumns) and 1 or (blocks[#blocks].supply and not parent.supplyGrid or blocks[#blocks].npcColumns) and 4 or 12) or 0))
+    return math.max(1,y-(blocks[#blocks] and ((blocks[#blocks].talentColumns or blocks[#blocks].spellColumns) and 1 or (blocks[#blocks].supply and not parent.supplyGrid or blocks[#blocks].npcColumns) and 4 or SPACE.sectionGap) or 0))
 end
 local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
@@ -489,9 +490,11 @@ local function renderCard(frame, data, width)
     if frame.defaultChoice then frame.defaultChoice:Hide() end
     if frame.itemHeading then frame.itemHeading:Hide() end
     Skin.Paint(frame,"note")
-    frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and not data.supplyTable and 22 or 15,"")
+    local pageTitle=frame.firstCard and not data.supplyTable
+    Skin.TextStyle(frame.title,pageTitle and "page" or "section")
+    Skin.TextStyle(frame.note,"subtitle")
     frame.title:Show(); frame.note:Show()
-    local y=(frame.firstCard or data.spellTable) and 0 or 14
+    local y=0
     local headerTextWidth=0
     if data.headerText and not frame.headerText then frame.headerText=font(frame,14,GOLD) end
     if frame.headerText then
@@ -518,8 +521,17 @@ local function renderCard(frame, data, width)
         frame.title:Hide(); frame.note:Hide()
     else
         local extraHeaderWidth=data.zoneRangeToggle and addon.window.atLevel:GetWidth()+8 or 0
-        y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 140 or headerTextWidth>0 and headerTextWidth+30 or 12)-extraHeaderWidth, 0, y))+5
-        y=y+measure(frame.note, data.note, width-12, 0, y)+(data.spellTable and 3 or 12)
+        local titleHeight=measure(frame.title,data.title,width-(data.headerAction and 140 or headerTextWidth>0 and headerTextWidth+30 or 12)-extraHeaderWidth,0,y)
+        y=y+math.max(data.headerAction and 28 or 0,titleHeight)
+        if data.note and data.note~="" then
+            if pageTitle then y=math.max(y,SPACE.subtitleTop-SPACE.pageTitleGap) end
+            y=y+(pageTitle and SPACE.pageTitleGap or SPACE.titleGap)
+            y=y+math.max(pageTitle and 16 or 0,measure(frame.note,data.note,width-12,0,y))
+                +(pageTitle and SPACE.pageContentGap or SPACE.contentGap)
+        else
+            frame.note:Hide()
+            y=y+SPACE.contentGap
+        end
     end
     for _,control in ipairs(frame.npcFilters or {}) do control:Hide() end
     for _,label in ipairs(frame.npcHeaders or {}) do label:Hide() end
@@ -532,7 +544,7 @@ local function renderCard(frame, data, width)
             if not label then label=font(frame,10,MUTED); frame.spellHeaders[i]=label end
             label:Show(); placeSpellCell(label,text,i,width-12,y,true)
         end
-        y=y+22
+        y=y+SPACE.tableHeaderHeight
     end
     if data.talentTable then
         frame.talentHeaders=frame.talentHeaders or {}
@@ -541,7 +553,7 @@ local function renderCard(frame, data, width)
             if not label then label=font(frame,10,MUTED); frame.talentHeaders[i]=label end
             label:Show(); placeTalentCell(label,text,i,width-12,y,true)
         end
-        y=y+26
+        y=y+SPACE.tableHeaderHeight
     end
     if data.npcTable then
         frame.npcFilters=frame.npcFilters or {}; frame.npcHeaders=frame.npcHeaders or {}
@@ -559,13 +571,13 @@ local function renderCard(frame, data, width)
             control:ClearAllPoints(); control:SetPoint("TOPLEFT",(i-1)*(buttonWidth+6),-y)
             active(control,(addon.state.zoneNPCFilter or "all")==filter[2])
         end
-        y=y+42
+        y=y+28+SPACE.sectionGap
         for i,text in ipairs({"LEVEL","NPC","TYPE","LOCATION"}) do
             local label=frame.npcHeaders[i]
             if not label then label=font(frame,10,MUTED); frame.npcHeaders[i]=label end
             label:Show(); placeNPCCell(label,text,i,width-12,y)
         end
-        y=y+24
+        y=y+SPACE.tableHeaderHeight
     end
     frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT",0,-y); frame.content:SetWidth(width-12)
     frame.content.supplyGrid=data.supplyTable
@@ -575,22 +587,24 @@ local function renderCard(frame, data, width)
         -- Keep the item, its quantity and alternatives together on the left;
         -- the labeled reference details get their own column on the right.
         local contentWidth=width-12
-        local leftWidth=math.floor((contentWidth-16)/2)
-        local rightWidth=contentWidth-leftWidth-16
+        local leftWidth=math.floor((contentWidth-SPACE.columnGap)/2)
+        local rightWidth=contentWidth-leftWidth-SPACE.columnGap
         local leftHeight,rightHeight=0,0
         if data.itemSectionTitle then
             if not frame.itemHeading then frame.itemHeading=font(frame.content,15,GOLD) end
+            Skin.TextStyle(frame.itemHeading,"section")
             frame.itemHeading:Show()
-            leftHeight=measure(frame.itemHeading,data.itemSectionTitle,leftWidth,0,0)+8
+            leftHeight=measure(frame.itemHeading,data.itemSectionTitle,leftWidth,0,0)+SPACE.contentGap
         end
+        rightHeight=leftHeight
         for i,block in ipairs(data.blocks) do
             local row=frame.content.blocks[i]
             if not row then row=newBlock(frame.content); frame.content.blocks[i]=row end
             local details=block.fields~=nil
             row.supplyTile=false; row:ClearAllPoints()
-            row:SetPoint("TOPLEFT",details and leftWidth+16 or 0,-(details and rightHeight or leftHeight))
+            row:SetPoint("TOPLEFT",details and leftWidth+SPACE.columnGap or 0,-(details and rightHeight or leftHeight))
             local height=renderBlock(row,block,details and rightWidth or leftWidth)
-            if details then rightHeight=rightHeight+height+12 else leftHeight=leftHeight+height+(block.plain and 6 or 12) end
+            if details then rightHeight=rightHeight+height+SPACE.sectionGap else leftHeight=leftHeight+height+SPACE.sectionGap end
             if i==1 and data.quantityRecord then
                 if not frame.detailQuantity then frame.detailQuantity=newBlock(addon.window) end
                 local editor=frame.detailQuantity
@@ -613,12 +627,12 @@ local function renderCard(frame, data, width)
             end
         end
         for i=#data.blocks+1,#frame.content.blocks do frame.content.blocks[i]:Hide() end
-        local height=math.max(leftHeight,rightHeight)-12
-        frame.content:SetHeight(height); y=y+height+8; frame:SetHeight(y)
+        local height=math.max(leftHeight,rightHeight)-SPACE.sectionGap
+        frame.content:SetHeight(height); y=y+height; frame:SetHeight(y)
         return y
     end
     local height=renderBlocks(frame.content, data.blocks, width-12)
-    frame.content:SetHeight(height); y=y+height+(data.spellTable and 4 or 8); frame:SetHeight(y)
+    frame.content:SetHeight(height); y=y+height; frame:SetHeight(y)
     return y
 end
 
@@ -1161,10 +1175,10 @@ function addon:Layout()
         if extra then extraButton:SetWidth(math.max(112,math.ceil(extraButton.label:GetStringWidth())+22)) end
         local labelWidth=math.ceil(f.searchLabel:GetStringWidth())+6
         local rowHeight=math.max(28,math.ceil(f.searchLabel:GetStringHeight())+8)
-        local extraWidth=extra and not zonePage and extraButton:GetWidth()+6 or 0
+        local extraWidth=extra and not zonePage and extraButton:GetWidth()+SPACE.columnGap or 0
         local searchLeft=left+(zonePage and (backRow and 108 or 0) or 108)
-        local rightInset=zonePage and 54 or 40
-        local searchWidth=width-rightInset-searchLeft-labelWidth-8-f.clear:GetWidth()-6-extraWidth
+        local rightInset=zonePage and 54 or (spellPage or instancePage) and 52 or 40
+        local searchWidth=width-rightInset-searchLeft-labelWidth-8-f.clear:GetWidth()-SPACE.columnGap-extraWidth
         local wrapExtra=extra and not zonePage and searchWidth<80
         if wrapExtra then searchWidth=searchWidth+extraWidth; extraWidth=0 end
         f.searchLabel:ClearAllPoints(); f.searchLabel:SetPoint("TOPLEFT",searchLeft,-toolbarY)
@@ -1174,7 +1188,7 @@ function addon:Layout()
         if f.search:GetText()~=(self.state.query or "") then f.search:SetText(self.state.query or "") end
         f.clear:ClearAllPoints(); f.clear:SetPoint("TOPRIGHT",-rightInset-extraWidth,-toolbarY)
         f.clear:SetHeight(rowHeight)
-        f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("TOPRIGHT",-40,-toolbarY-(wrapExtra and rowHeight+6 or 0))
+        f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("TOPRIGHT",-rightInset,-toolbarY-(wrapExtra and rowHeight+SPACE.sectionGap or 0))
         active(f.atLevel,(rangePage or spellPage) and not not showAll or not (rangePage or spellPage) and self.state.atLevel)
     end
     y=y+self.MapAdvisor:LayoutControls(f,left,y,bodyWidth,doc.view=="training" and self.state.filter=="Zone Advisor")
@@ -1203,7 +1217,7 @@ function addon:Layout()
             or doc.view=="training" and self.state.filter=="Zone Advisor" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)
             or doc.advisor and not self.state.talentPath and 1
             or doc.professionPage and index>1 and #data.blocks>1 and 1) or nil
-        top=top+renderCard(c,data,contentWidth)+(data.spellTable and 8 or 10)
+        top=top+renderCard(c,data,contentWidth)+SPACE.sectionGap
         if data.zoneRangeToggle then
             f.atLevel:SetParent(c); f.atLevel:SetFrameLevel(c.headerButton:GetFrameLevel())
             f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("RIGHT",c.headerButton,"LEFT",-8,0)

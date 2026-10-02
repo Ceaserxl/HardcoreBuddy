@@ -73,8 +73,8 @@ function H:BuildAppearance(host)
     a.done:ClearAllPoints(); a.done:SetPoint("TOPLEFT",a,"BOTTOMLEFT",0,-8); a.done:Hide()
     local f=CreateFrame("Frame",nil,host,"BackdropTemplate"); self.appearance=f
     f:SetAllPoints(host); A.Skin.Paint(f,"note"); f:Hide()
-    local style=A.Skin.Section(f,"Alert appearance",62,196,1); f.styleSection=style
-    local position=A.Skin.Section(f,"Alert position",62,196,2); f.positionSection=position
+    local style=A.Skin.Section(f,"Alert appearance",A.Skin.layout.headerBottom,196,1); f.styleSection=style
+    local position=A.Skin.Section(f,"Alert position",A.Skin.layout.headerBottom,196,2); f.positionSection=position
     f.title=label(f,22,0,0,700,"Appearance")
     f.subtitle=label(f,12,0,-34,700,"Choose how much space a death report takes. Background opacity leaves text readable.")
     f.styles={}
@@ -106,8 +106,8 @@ end
 
 function H:LayoutAppearance(width,combined)
     local f=self.appearance
-    f.styleSection.sectionTop=combined and 0 or 62
-    f.positionSection.sectionTop=combined and 0 or 62
+    f.styleSection.sectionTop=combined and 0 or A.Skin.layout.headerBottom
+    f.positionSection.sectionTop=combined and 0 or A.Skin.layout.headerBottom
     A.Skin.LayoutSections(f,width)
     A.Skin.SettingsHeader(f,width,f.title,f.subtitle)
     f.title:SetShown(not combined); f.subtitle:SetShown(not combined)

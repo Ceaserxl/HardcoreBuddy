@@ -173,25 +173,25 @@ end
 function D:Create(page)
     if self.page then return end
     self.page=page
-    Skin.SectionBackdrop(page,62,148).title:SetText("Capture data")
-    Skin.SectionBackdrop(page,222,298).title:SetText("Dump output")
+    Skin.SectionBackdrop(page,Skin.layout.headerBottom,148).title:SetText("Capture data")
+    Skin.SectionBackdrop(page,210,298).title:SetText("Dump output")
     page.subtitle=label(page,"Capture all HardcoreBuddy data and available character details for offline review.",0,34,700)
-    page.dump=button(page,"Dump Data",16,104,function() self:Start() end)
-    page.copyHint=label(page,"Ctrl + C to copy",176,104,530)
-    page.cached=label(page,"",176,126,530)
-    page.status=label(page,"",16,146,700); page.status:SetHeight(30)
+    page.dump=button(page,"Dump Data",16,96,function() self:Start() end)
+    page.copyHint=label(page,"Ctrl + C to copy",176,96,530)
+    page.cached=label(page,"",176,118,530)
+    page.status=label(page,"",16,138,700); page.status:SetHeight(30)
     local track=CreateFrame("Frame",nil,page,"BackdropTemplate"); page.track=track
-    track:SetPoint("TOPLEFT",16,-182); track:SetSize(700,18); Skin.Paint(track,"edit")
+    track:SetPoint("TOPLEFT",16,-174); track:SetSize(700,18); Skin.Paint(track,"edit")
     page.fill=track:CreateTexture(nil,"ARTWORK"); page.fill:SetTexture("Interface\\Buttons\\WHITE8x8"); page.fill:SetVertexColor(0.25,0.7,0.42,1)
     page.fill:SetPoint("TOPLEFT"); page.fill:SetHeight(18)
     page.sheen=track:CreateTexture(nil,"OVERLAY"); page.sheen:SetTexture("Interface\\Buttons\\WHITE8x8")
     page.sheen:SetSize(40,18); page.sheen:SetVertexColor(1,1,1,0.22)
     page.percent=label(track,"",0,0,700); page.percent:SetHeight(18); page.percent:SetJustifyH("CENTER")
     local border=CreateFrame("Frame",nil,page,"BackdropTemplate"); page.outputBorder=border; Skin.Paint(border,"edit")
-    border:SetPoint("TOPLEFT",14,-260); border:SetSize(704,254)
+    border:SetPoint("TOPLEFT",14,-248); border:SetSize(704,254)
     local scroll=CreateFrame("ScrollFrame","HardcoreBuddyDebugTextScroll",page,"UIPanelScrollFrameTemplate"); page.scroll=scroll
     scroll:SetFrameLevel(border:GetFrameLevel()+1)
-    scroll:SetPoint("TOPLEFT",16,-262); scroll:SetSize(680,250)
+    scroll:SetPoint("TOPLEFT",16,-250); scroll:SetSize(680,250)
     local edit=CreateFrame("EditBox",nil,scroll); page.edit=edit
     edit:SetMultiLine(true); edit:SetAutoFocus(false); edit:SetFontObject(ChatFontNormal); edit:SetWidth(670); edit:SetHeight(250); edit:SetMaxLetters(0)
     if edit.SetMaxBytes then edit:SetMaxBytes(0) end
@@ -223,9 +223,9 @@ function D:Create(page)
         if math.abs(wanted-current)>0.5 then scroll:SetVerticalScroll(wanted) end
         page.scrolling=nil
     end)
-    label(page,"Full editable dump. Select text manually (Ctrl + A for all), then Ctrl + C. The original dump stays cached.",16,536,700)
+    label(page,"Full editable dump. Select text manually (Ctrl + A for all), then Ctrl + C. The original dump stays cached.",16,516,700)
     page:SetScript("OnHide",function() edit:ClearFocus() end)
-    page.contentHeight=570; self:Refresh()
+    page.contentHeight=550; self:Refresh()
 end
 
 function D:Layout(width)

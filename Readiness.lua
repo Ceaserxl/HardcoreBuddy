@@ -194,8 +194,8 @@ function R:LayoutSettings(parent,left,top,width,height,visible)
     if not self.settings then return end
     if not self.options then
         local f=CreateFrame("Frame",nil,parent,"BackdropTemplate"); self.options=f; A.Skin.Paint(f,"card")
-        text(f,15,16,-16,700,"Preparation reminders"):SetTextColor(unpack(A.Skin.colors.gold))
-        text(f,12,16,-46,700,"Quiet, optional reminders based on your Essentials priorities and Carry quantities.")
+        A.Skin.TextStyle(text(f,15,16,-16,700,"Preparation reminders"),"section")
+        A.Skin.TextStyle(text(f,12,16,-38,700,"Quiet, optional reminders based on your Essentials priorities and Carry quantities."),"subtitle")
         f.checks={}
         for i,entry in ipairs({{"panel","Show missing essentials while resting in a city or inn"},
             {"departure","Remind me when leaving a resting area with missing essentials"}}) do
@@ -213,22 +213,23 @@ function R:LayoutSettings(parent,left,top,width,height,visible)
         f.previewPanel:SetPoint("TOPLEFT",20,-154)
         f.previewReminder=button(f,"Preview reminder",174,function() self:Preview("reminder") end)
         f.previewReminder:SetPoint("TOPLEFT",f.previewPanel,"TOPRIGHT",12,0)
-        f.priorityHelp=text(f,12,16,-168,330,"Essentials covers your core supplies. Advanced covers situational survival tools; other supplies start as Optional. Open an item to change its priority. Your choices follow that item's family as ranks improve.")
-        f.reminderHelp=text(f,12,390,-168,330,"Set Keep on hand to 0 to skip restocking. Unknown bag or profession data does not trigger a shortage. Reminders are silent, stay out of combat, and are limited to one every five minutes.")
+        f.priorityHelp=text(f,12,16,-148,330,"Essentials covers your core supplies. Advanced covers situational survival tools; other supplies start as Optional. Open an item to change its priority. Your choices follow that item's family as ranks improve.")
+        f.reminderHelp=text(f,12,390,-148,330,"Set Keep on hand to 0 to skip restocking. Unknown bag or profession data does not trigger a shortage. Reminders are silent, stay out of combat, and are limited to one every five minutes.")
     end
     local f=self.options; f:SetShown(visible)
     if not visible then return end
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top); f:SetSize(width,height)
-    local half=(width-12)/2
+    local gap=A.Skin.layout.columnGap
+    local half=(width-gap)/2
     for i,key in ipairs({"panel","departure"}) do
         local check=f.checks[key]
-        check:ClearAllPoints(); check:SetPoint("TOPLEFT",16+(i-1)*(half+12),-76)
+        check:ClearAllPoints(); check:SetPoint("TOPLEFT",16+(i-1)*(half+gap),-64)
         check.label:SetWidth(half-66)
     end
-    f.previewPanel:ClearAllPoints(); f.previewPanel:SetPoint("TOPLEFT",16,-124); f.previewPanel:SetWidth(half-32)
-    f.previewReminder:ClearAllPoints(); f.previewReminder:SetPoint("TOPLEFT",half+28,-124); f.previewReminder:SetWidth(half-32)
+    f.previewPanel:ClearAllPoints(); f.previewPanel:SetPoint("TOPLEFT",16,-112); f.previewPanel:SetWidth(half-32)
+    f.previewReminder:ClearAllPoints(); f.previewReminder:SetPoint("TOPLEFT",half+gap+16,-112); f.previewReminder:SetWidth(half-32)
     f.priorityHelp:SetWidth(half-32)
-    f.reminderHelp:ClearAllPoints(); f.reminderHelp:SetPoint("TOPLEFT",half+28,-168); f.reminderHelp:SetWidth(half-32)
+    f.reminderHelp:ClearAllPoints(); f.reminderHelp:SetPoint("TOPLEFT",half+gap+16,-148); f.reminderHelp:SetWidth(half-32)
     for key,check in pairs(f.checks) do check:SetChecked(self.settings[key]); check.mark:SetText(self.settings[key] and "X" or "") end
 end
 local events=CreateFrame("Frame"); R.events=events

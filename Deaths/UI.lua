@@ -300,19 +300,28 @@ function H:LayoutPage(parent,left,top,width,height,state)
         end
     end
     addon.Skin.LayoutSections(self.window,width)
+    addon.Skin.SettingsHeader(self.window,width,self.window.title,self.window.realm,self.window.settings)
+    addon.Skin.SettingsHeader(self.details,width,self.details.title)
     for i,stat in ipairs(self.window.stats) do
-        local cell=(width-48)/4
-        stat:ClearAllPoints(); stat:SetPoint("TOPLEFT",(i-1)*(cell+12),-64); stat:SetWidth(cell)
+        local cell=(width-12-24)/4
+        stat:ClearAllPoints(); stat:SetPoint("TOPLEFT",(i-1)*(cell+8),-54); stat:SetWidth(cell)
         stat.label:SetWidth(cell-24); stat.value:SetWidth(cell-24)
     end
-    self.window.clear:ClearAllPoints(); self.window.clear:SetPoint("TOPRIGHT",-16,-122)
+    -- Filters belong to the shared navigation toolbar, above the page heading.
+    local journal=self.window
+    journal.clear:ClearAllPoints(); journal.clear:SetPoint("TOPRIGHT",-12,34); journal.clear:SetWidth(130)
+    journal.minimum:ClearAllPoints(); journal.minimum:SetPoint("TOPRIGHT",journal.clear,"TOPLEFT",-8,0)
+    journal.minimumLabel:ClearAllPoints(); journal.minimumLabel:SetPoint("RIGHT",journal.minimum,"LEFT",-8,0)
+    journal.minimumLabel:SetWidth(94)
+    journal.search:ClearAllPoints(); journal.search:SetPoint("TOPLEFT",0,34)
+    journal.search:SetWidth(width-12-130-44-94-24)
     local columns=self:JournalColumns(width)
     for i,label in ipairs(self.window.columnLabels) do
-        label:ClearAllPoints(); label:SetPoint("TOPLEFT",columns[i][2]+12,-163); label:SetWidth(columns[i][3])
+        label:ClearAllPoints(); label:SetPoint("TOPLEFT",columns[i][2]+12,-118); label:SetWidth(columns[i][3])
     end
-    self.window.tableCard:SetHeight(math.max(40,height-162))
+    self.window.tableCard:SetHeight(math.max(40,height-118))
     addon.Skin.LayoutSections(self.details,width)
-    self.details.bodyCard:SetHeight(math.max(40,height-114))
+    self.details.bodyCard:SetHeight(math.max(40,height-42))
     addon.Skin.LayoutSections(self.options,width)
     if self.appearance then addon.Skin.LayoutSections(self.appearance,width) end
     self.mode="all"
@@ -320,7 +329,7 @@ function H:LayoutPage(parent,left,top,width,height,state)
     local combined=state.filter=="Settings"
     self.window:SetShown(not combined and state.filter~="Options" and state.filter~="Appearance" and not state.deathRecord)
     self.options:ClearAllPoints()
-    if combined then self.options:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,0); self.options:SetSize(width,462)
+    if combined then self.options:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,0); self.options:SetSize(width,450)
     else self.options:SetAllPoints(self.host) end
     self.options:SetShown((combined or state.filter=="Options") and not state.deathRecord)
     local options=self.options
@@ -341,14 +350,14 @@ function H:LayoutPage(parent,left,top,width,height,state)
 
     if self.appearance then
         self.appearance:ClearAllPoints()
-        if combined then self.appearance:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,-474); self.appearance:SetSize(width,196)
+        if combined then self.appearance:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,-458); self.appearance:SetSize(width,196)
         else self.appearance:SetAllPoints(self.host) end
         self:LayoutAppearance(width,combined)
         self.appearance:SetShown((combined or state.filter=="Appearance") and not state.deathRecord)
     end
     self.details:SetShown(state.deathRecord~=nil)
-    self.details.body:SetWidth(width-70)
-    self.details.content:SetWidth(width-65)
+    self.details.body:SetWidth(width-44)
+    self.details.content:SetWidth(width-44)
     self.details.content:SetHeight(math.max(1,self.details.body:GetStringHeight()+8))
     self:Refresh()
 end
@@ -367,10 +376,10 @@ function H:BuildUI()
     local f=Page(host)
     self.window=f
     addon.Skin.Paint(f,"note")
-    local title=Text(f,22,"TOPLEFT",0,0,500)
+    local title=Text(f,22,"TOPLEFT",0,0,500); f.title=title
     title:SetText("Death Journal"); title:SetTextColor(unpack(GOLD))
     f.realm=Text(f,12,"TOPLEFT",0,-42,650); f.realm:SetTextColor(unpack(MUTED))
-    f.tableCard=addon.Skin.SectionBackdrop(f,154,274)
+    f.tableCard=addon.Skin.SectionBackdrop(f,110,318)
     f.stats={}
     for i,entry in ipairs({{"count","REPORTS"},{"average","AVERAGE LEVEL"},{"highest","HIGHEST LEVEL"},{"hotspot","MOST REPORTED"}}) do
         local stat=CreateFrame("Frame",nil,f,"BackdropTemplate")
@@ -396,7 +405,7 @@ function H:BuildUI()
         GameTooltip:SetOwner(search,"ANCHOR_RIGHT"); GameTooltip:SetText("Search name, location, cause, guild or message",1,1,1,1,true); GameTooltip:Show()
     end)
     search:SetScript("OnLeave", function() GameTooltip:Hide() end)
-    Text(f,12,"TOPLEFT",374,-129,94):SetText("Minimum level")
+    f.minimumLabel=Text(f,12,"TOPLEFT",374,-129,94); f.minimumLabel:SetText("Minimum level")
     local minimum=Edit(f,44,476,-122,true)
     f.minimum=minimum
     minimum:SetText("0")
@@ -416,7 +425,7 @@ function H:BuildUI()
     for _,c in ipairs(self:JournalColumns(816)) do local label=Text(f,10,"TOPLEFT",c[2]+12,-163,c[3]); label:SetText(c[1]); label:SetTextColor(unpack(MUTED)); f.columnLabels[#f.columnLabels+1]=label end
     f.rows = {}
     f.listScroll=CreateFrame("ScrollFrame","HardcoreBuddyDeathJournalScrollFrame",f,"UIPanelScrollFrameTemplate")
-    f.listScroll:SetPoint("TOPLEFT",0,-180); f.listScroll:SetPoint("BOTTOMRIGHT",0,10)
+    f.listScroll:SetPoint("TOPLEFT",0,-140); f.listScroll:SetPoint("BOTTOMRIGHT",0,10)
     f.listScroll:EnableMouseWheel(true)
     f.listScroll:SetScript("OnMouseWheel",function(scroll,delta)
         scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*96)))
@@ -428,7 +437,7 @@ function H:BuildUI()
 
     local mini=Panel("HardcoreBuddyDeathsFeed",360,218);self.mini=mini
     addon.Skin.Paint(mini,"menu")
-    local feedTitle=Text(mini,16,"TOPLEFT",14,-16,290)
+    local feedTitle=Text(mini,15,"TOPLEFT",14,-16,290)
     feedTitle:SetText("Death Journal"); feedTitle:SetTextColor(unpack(GOLD))
     Drag(mini,"mini",27)
     mini.hide=Button(mini,"-",22,326,-12,function() self.db.settings.mini=false;self:ApplySettings() end)
@@ -452,13 +461,13 @@ function H:BuildUI()
 
     local detail=Page(host); self.details=detail
     addon.Skin.Paint(detail,"note")
-    detail.bodyCard=addon.Skin.SectionBackdrop(detail,54,354)
-    detail.title=Text(detail,19,"TOPLEFT",0,0,390);detail.title:SetTextColor(unpack(GOLD))
+    detail.bodyCard=addon.Skin.SectionBackdrop(detail,34,374)
+    detail.title=Text(detail,22,"TOPLEFT",0,0,390);detail.title:SetTextColor(unpack(GOLD))
     detail.scroll=CreateFrame("ScrollFrame",nil,detail,"UIPanelScrollFrameTemplate")
-    detail.scroll:SetPoint("TOPLEFT",20,-58);detail.scroll:SetPoint("BOTTOMRIGHT",detail,"BOTTOMRIGHT",-40,60)
+    detail.scroll:SetPoint("TOPLEFT",16,-50);detail.scroll:SetPoint("BOTTOMRIGHT",detail,"BOTTOMRIGHT",-28,24)
     detail.content=CreateFrame("Frame",nil,detail.scroll);detail.content:SetSize(375,230)
     detail.scroll:SetScrollChild(detail.content)
-    detail.body=Text(detail.content,13,"TOPLEFT",0,0,370);detail.body:SetWordWrap(true)
+    detail.body=Text(detail.content,12,"TOPLEFT",0,0,370);detail.body:SetWordWrap(true)
     detail.body:SetJustifyV("TOP")
 
     local alert=Panel("HardcoreBuddyDeathsAlert",896,80);self.alert=alert
@@ -508,10 +517,10 @@ function H:BuildUI()
 
     local options=Page(host); self.options=options
     addon.Skin.Paint(options,"note")
-    local history=addon.Skin.Section(options,"Journal reports",62,210,1); options.history=history
-    local overlays=addon.Skin.Section(options,"Live feed & overlays",62,210,2); options.overlays=overlays
-    local reports=addon.Skin.Section(options,"Death alerts",284,178,1); options.reports=reports
-    local display=addon.Skin.Section(options,"Alert sound",284,178,2); options.display=display
+    local history=addon.Skin.Section(options,"Journal reports",54,210,1); options.history=history
+    local overlays=addon.Skin.Section(options,"Live feed & overlays",54,210,2); options.overlays=overlays
+    local reports=addon.Skin.Section(options,"Death alerts",272,178,1); options.reports=reports
+    local display=addon.Skin.Section(options,"Alert sound",272,178,2); options.display=display
     local optionsTitle=Text(options,22,"TOPLEFT",0,0,700); options.title=optionsTitle
     optionsTitle:SetText("Death Journal"); optionsTitle:SetTextColor(unpack(addon.Skin.colors.gold))
     local intro=Text(options,12,"TOPLEFT",0,-34,720); options.subtitle=intro

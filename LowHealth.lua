@@ -81,8 +81,8 @@ function H:LayoutSettings(parent,x,y,width,height,visible)
         end
         page.title=label("Low Health",22,0,0,600)
         page.subtitle=label("Flashing red text and an alarm when health falls below your threshold.",12,0,-34,700)
-        local warning=addon.Skin.Section(page,"Warning",62,208,1)
-        local sound=addon.Skin.Section(page,"Sound",62,208,2)
+        local warning=addon.Skin.Section(page,"Warning",addon.Skin.layout.headerBottom,208,1)
+        local sound=addon.Skin.Section(page,"Sound",addon.Skin.layout.headerBottom,208,2)
         page.checks={}
         for i,entry in ipairs({{"enabled","Enable low health warning"},{"sound","Play alarm sound"}}) do
             local key=entry[1]
