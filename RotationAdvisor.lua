@@ -109,6 +109,18 @@ local function rangeValue(value)
     if value==true or value==1 then return true end
     if value==false or value==0 then return false end
 end
+local function actionSpell(slot)
+    if not slot or not GetActionInfo then return end
+    local kind,id,subtype=GetActionInfo(slot)
+    -- Classic exposes the currently selected spell for spell macros. Let
+    -- Blizzard resolve modifiers, targets and sequences instead of parsing text.
+    if kind=="spell" or kind=="macro" and subtype=="spell" then return id end
+    if kind=="macro" and subtype~="item" and GetMacroSpell then
+        local spell,_,legacyID=GetMacroSpell(id)
+        if type(legacyID)=="number" then return legacyID end
+        if type(spell)=="number" then return spell end
+    end
+end
 local function spellRange(spell,unit)
     local value
     if C_Spell and C_Spell.IsSpellInRange then
@@ -120,9 +132,7 @@ local function spellRange(spell,unit)
     if value==nil and unit=="target" and GetActionInfo then
         for button in pairs(R.highlights) do
             local slot=button.action or button.GetAttribute and button:GetAttribute("action")
-            local kind,id
-            if slot then kind,id=GetActionInfo(slot) end
-            if kind=="spell" and id==spell.id then
+            if actionSpell(slot)==spell.id then
                 if C_ActionBar and C_ActionBar.IsActionInRange then value=rangeValue(C_ActionBar.IsActionInRange(slot)) end
                 if value==nil and IsActionInRange then value=rangeValue(IsActionInRange(slot,unit)) end
                 if value~=nil then return value end
@@ -514,11 +524,9 @@ function R:Highlight(spell,optional)
     self.highlightCount=0
     for button,glow in pairs(self.highlights) do
         local slot=button.action or button.GetAttribute and button:GetAttribute("action")
-        local kind,id
-        if slot and GetActionInfo then kind,id=GetActionInfo(slot) end
         local match=false
-        if spell and kind=="spell" and button:IsVisible() then
-            match=id==spell.id -- Lower ranks with the same name are not the recommended spell.
+        if spell and button:IsVisible() then
+            match=actionSpell(slot)==spell.id -- Preserve exact rank matching for spells and macros.
         end
         if match then colorHighlight(glow,optional) end
         glow:SetShown(match)
@@ -541,6 +549,7 @@ end
 local events=CreateFrame("Frame"); R.events=events
 for _,event in ipairs({"PLAYER_LOGIN","PLAYER_ENTERING_WORLD","PLAYER_LEAVING_WORLD","SPELLS_CHANGED","SPELL_DATA_LOAD_RESULT","PLAYER_TALENT_UPDATE","PLAYER_REGEN_ENABLED","ACTIONBAR_SLOT_CHANGED","ACTIONBAR_PAGE_CHANGED","PLAYER_TARGET_CHANGED","START_AUTOREPEAT_SPELL","STOP_AUTOREPEAT_SPELL"}) do events:RegisterEvent(event) end
 for _,event in ipairs({"UNIT_POWER_UPDATE","UNIT_POWER_FREQUENT","UNIT_MAXPOWER","UNIT_SPELLCAST_START","UNIT_SPELLCAST_STOP","UNIT_SPELLCAST_CHANNEL_START","UNIT_SPELLCAST_CHANNEL_STOP"}) do events:RegisterEvent(event) end
+for _,event in ipairs({"MODIFIER_STATE_CHANGED","UPDATE_MACROS","ACTIONBAR_UPDATE_STATE"}) do events:RegisterEvent(event) end
 events:SetScript("OnEvent",function(_,event,unit)
     if event:sub(1,5)=="UNIT_" then
         if unit=="player" and not R.suspended and R:Mode()~="disabled" then R:Update() end

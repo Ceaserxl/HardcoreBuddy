@@ -726,6 +726,50 @@ do
     GetPowerRegen,GetManaRegen,C_Spell.GetSpellPowerCost=oldRegen,oldMana,oldCosts
     UnitCastingInfo=oldCast; usable[837]=nil; now=savedNow; ready={}; R.powerSample=nil; R:Update()
 end
+do
+    local oldInfo,oldMacro,oldRange=GetActionInfo,GetMacroSpell,C_Spell.IsSpellInRange
+    local oldActionRange=IsActionInRange
+    local selected,kind,subtype=837,'macro','spell'
+    GetActionInfo=function(slot)
+        if slot==1 then return kind,selected,subtype end
+        return oldInfo(slot)
+    end
+    R:Highlight({id=837})
+    check(glow:IsShown(),'Conditional macro resolved to Frostbolt receives the normal spell glow')
+    selected=133
+    R.events.scripts.OnEvent(R.events,'MODIFIER_STATE_CHANGED','LALT',1)
+    check(not glow:IsShown(),'Holding Alt removes Frostbolt guidance from the Fireball branch')
+    R:Highlight({id=133})
+    check(glow:IsShown(),'Fireball branch highlights when Fireball is recommended')
+    selected=837
+    R.events.scripts.OnEvent(R.events,'MODIFIER_STATE_CHANGED','LALT',0)
+    check(glow:IsShown(),'Releasing Alt restores the Frostbolt macro highlight immediately')
+    local starts=glow.ProcStartAnim.plays
+    R:Update(); R:Update()
+    check(glow.ProcStartAnim.plays==starts,'Repeated macro resolution does not restart its animation')
+    selected=205; R:Highlight({id=837})
+    check(not glow:IsShown(),'Explicit lower-rank macro does not match the recommended rank')
+    selected=1; subtype=nil
+    GetMacroSpell=function(id) check(id==1,'Legacy lookup receives the macro index'); return 837 end
+    R:Highlight({id=837}); check(glow:IsShown(),'Macro-index clients resolve their selected spell through GetMacroSpell')
+    GetMacroSpell=function() return 'Frostbolt','Rank 3',837 end
+    R:Highlight({id=837}); check(glow:IsShown(),'Older name-rank-ID macro results preserve exact matching')
+    GetMacroSpell=function() return nil end
+    R:Highlight({id=837}); check(not glow:IsShown(),'Unresolved or empty macro clears stale guidance')
+    subtype='item'; selected=837; GetMacroSpell=forbidden
+    R:Highlight({id=837}); check(not glow:IsShown(),'Item macro is not mistaken for a spell with the same ID')
+    kind='item'; R:Highlight({id=837}); check(not glow:IsShown(),'Ordinary items are not highlighted as spells')
+    kind='macro'; subtype='spell'
+    C_Spell.IsSpellInRange=function() end
+    IsActionInRange=function(slot) return slot==1 and 1 or nil end
+    check(R:SpellState(R.spells.frostbolt,'target').range==true,'Macro slots supply range fallback for their selected spell')
+    IsActionInRange=function() return 0 end
+    check(R:SpellState(R.spells.frostbolt,'target').range==false,'Macro range fallback preserves out-of-range results')
+    action:Hide(); R:Highlight({id=837}); check(not glow:IsShown(),'Hidden macro button does not glow')
+    action:Show()
+    GetActionInfo,GetMacroSpell,C_Spell.IsSpellInRange=oldInfo,oldMacro,oldRange
+    IsActionInRange=oldActionRange; R:Update()
+end
 MOCK.RotationChecks=count
 print("PASS: "..count.." rotation checks: priorities, live reads, rank changes, conservative AoE, mode state, UI and highlight lifecycle.")
 ''')
