@@ -85,13 +85,16 @@ function R:BuildFrames()
         row.vendor:SetTextColor(unpack(A.Skin.colors.muted))
         row.need=text(row,11,236,-3,70); row.need:SetJustifyH("RIGHT"); row.need:SetWordWrap(false); row.need:SetHeight(16)
         row:SetScript("OnEnter",function()
-            GameTooltip:SetOwner(row,"ANCHOR_LEFT"); GameTooltip:SetText(row.name:GetText(),1,0.82,0,1)
-            GameTooltip:AddLine(row.vendorName and ("Click to mark "..row.vendorName.." on the map and minimap. Vendor stock may vary.")
-                or "No known vendor in this zone for this item. Open Essentials for acquisition details.",0.8,0.8,0.7,true)
+            GameTooltip:SetOwner(row,"ANCHOR_LEFT")
+            if row.itemID then GameTooltip:SetHyperlink("item:"..row.itemID)
+            else GameTooltip:SetText(row.name:GetText(),1,0.82,0,1) end
+            GameTooltip:AddLine(" ")
             if row.vendorLocation and row.vendorLocation.alternativeName then
                 GameTooltip:AddLine("Equivalent food: "..row.vendorLocation.alternativeName,1,.82,.3,true)
                 GameTooltip:AddLine("Choose it as your default in Supplies to track and restock it.",.8,.8,.7,true)
             end
+            GameTooltip:AddLine(row.vendorName and ("Click to mark "..row.vendorName.." on the map and minimap. Vendor stock may vary.")
+                or "No known vendor in this zone for this item. Open Essentials for acquisition details.",0.8,0.8,0.7,true)
             GameTooltip:Show()
         end)
         row:SetScript("OnLeave",function() GameTooltip:Hide() end)
@@ -156,6 +159,7 @@ function R:ShowPanel(missing,preview)
             local getIcon=C_Item and C_Item.GetItemIconByID or GetItemIcon
             row.icon:SetTexture(getIcon and getIcon(item.itemId) or "Interface\\Icons\\INV_Misc_Bag_08")
             row.name:SetText(item.name)
+            row.itemID=item.itemId
             local vendor=entry.vendor
             row.vendorName=vendor and vendor.name or nil
             row.vendorLocation=vendor or nil
