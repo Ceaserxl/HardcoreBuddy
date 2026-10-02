@@ -332,6 +332,7 @@ function C.Build(context,state)
         else result.cards[1]=C.Detail(context,state.detail) end
         result.isDetail=true
     elseif view=="supplies" then
+        if state.filter=="Food & drink" then state.filter="Food & Drink" end
         result.filters=S.filters
         local rows,summary=supplyRows(context,state)
         result.summary=summary

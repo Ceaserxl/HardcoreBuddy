@@ -816,7 +816,7 @@ local FILTER_ICONS={
     Gear="INV_Chest_Chain",Talents="Ability_Marksmanship",Map="INV_Misc_Map_01",["Talent Advisor"]="INV_Misc_Book_11",
     Essentials="INV_Misc_Bag_08",Preparation="INV_Misc_Note_01",Appearance="INV_Misc_Book_09",
     ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
-    ["Reports"]="INV_Misc_Book_09",Options="Trade_Engineering",["All"]="INV_Misc_Bag_08",["Food & drink"]="INV_Misc_Food_11",Buffs="INV_Potion_27",
+    ["Reports"]="INV_Misc_Book_09",Options="Trade_Engineering",["All"]="INV_Misc_Bag_08",["Food & Drink"]="INV_Misc_Food_11",Buffs="INV_Potion_27",
     Emergency="INV_Misc_Bandage_12",Potions="INV_Potion_54",Class="INV_Misc_Rune_01",Optional="INV_Misc_PocketWatch_01",User="INV_Misc_Note_01",Scrolls="INV_Scroll_03",Families="Ability_Hunter_BeastTaming",
     Abilities="Ability_Hunter_BeastCall",Pets="Ability_Hunter_Pet_Bear",Care="Ability_Hunter_MendPet",
     ["Pet Guide"]="Ability_Hunter_Pet_Bear",
@@ -963,7 +963,7 @@ function addon:Layout()
             b.navIcon:SetTexCoord(0.08,0.92,0.08,0.92)
             f.filters[i]=b
         end
-        local tabWidth=label=="Food & drink" and 98 or label=="Emergency" and 94 or label=="All" and 44 or label=="Buffs" and 62 or 74
+        local tabWidth=label=="Food & Drink" and 98 or label=="Emergency" and 94 or label=="All" and 44 or label=="Buffs" and 62 or 74
         b.filter=label; b.label:SetText(label); b.label:SetFont(STANDARD_TEXT_FONT,instancePage and 11 or 12,""); b:Show(); b:ClearAllPoints()
         local iconPath=FILTER_ICONS[label] or "INV_Misc_Book_09"
         if not iconPath:find("\\",1,true) then iconPath="Interface\\Icons\\"..iconPath end

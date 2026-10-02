@@ -3,7 +3,7 @@ local _, addon = ...
 local P = addon.Planner
 local S = {}
 addon.Supplies = S
-S.categories = {"All", "Food & drink", "Buffs", "Potions", "Emergency", "Class", "Scrolls", "Optional", "User"}
+S.categories = {"All", "Food & Drink", "Buffs", "Potions", "Emergency", "Class", "Scrolls", "Optional", "User"}
 S.filters={"All","Essentials"}
 for i=2,#S.categories do S.filters[#S.filters+1]=S.categories[i] end
 S.priorities={"Essentials","Advanced","Optional"}
@@ -11,10 +11,25 @@ local essentials={recovery=true,drink=true,wellfed=true,manafood=true,bandage=tr
     ammunition=true,["Swiftness Potion"]=true,["Swim Speed Potion"]=true}
 local advanced={["Flask of Petrification"]=true,["Limited Invulnerability Potion"]=true,
     ["Free Action Potion"]=true,["Restorative Potion"]=true,["Living Action Potion"]=true,["Light of Elune"]=true}
+local casterFood={Mage=true,Priest=true,Warlock=true}
+local function primaryBuffFood(context)
+    if casterFood[context.characterClass] then
+        for _,food in ipairs(addon.Data.Items.items) do
+            if food.family=="manafood" and P.AvailableAt(food)<=context.level
+                and P.MatchesClass(food,context.characterClass) and P.MatchesFaction(food,P.ContextFaction(context)) then
+                return "manafood"
+            end
+        end
+    end
+    return "wellfed"
+end
 function S.Priority(context,item)
     local saved=context.priorities or {}
     local choice=saved[item.family] or saved[item.itemId] or saved[tostring(item.itemId)]
     for _,value in ipairs(S.priorities) do if choice==value then return value end end
+    if item.family=="wellfed" or item.family=="manafood" then
+        return item.family==primaryBuffFood(context) and "Essentials" or "Optional"
+    end
     return essentials[item.family] and "Essentials" or advanced[item.family] and "Advanced" or "Optional"
 end
 
@@ -32,7 +47,7 @@ local function defaultCategory(item)
     if item.group == "Scrolls" then return "Scrolls" end
     if item.family == "healing" or item.family == "mana" then return "Emergency" end
     if item.group == "Route-specific backups" or item.alternative then return "Optional" end
-    if item.group == "Food & drink" then return "Food & drink" end
+    if item.group == "Food & drink" then return "Food & Drink" end
     if item.group == "Potions & elixirs" then return "Buffs" end
     return "Emergency"
 end
@@ -139,7 +154,7 @@ end
 function S.Build(context, state)
     state = state or {}
     local category = state.category or state.filter or "All"
-    if category == "Recovery" then category = "Food & drink" end
+    if category == "Recovery" or category == "Food & drink" then category = "Food & Drink" end
     local stock = state.stock or "All"
     local plan = P.BuildList(context.characterClass, context.level, P.ContextFaction(context))
     local rows, seen = {}, {}

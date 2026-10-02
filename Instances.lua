@@ -56,7 +56,7 @@ end
 local function packingList(g,context)
     local blocks={{columns={
         {row("Potions",nil,"link",{view="supplies",filter="Potions"})},
-        {row("Food & drink",nil,"link",{view="supplies",filter="Food & drink"})},
+        {row("Food & Drink",nil,"link",{view="supplies",filter="Food & Drink"})},
         {row("Bandages & tools",nil,"link",{view="supplies",filter="Emergency"})},
         {row("Class supplies",nil,"link",{view="supplies",filter="Class"})},
     }}}
