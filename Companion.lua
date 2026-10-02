@@ -347,6 +347,16 @@ function C.Detail(context, action)
             if alternatives then block.rightColumn=true end
             if block.child and block.itemId then block.child=nil end
         end
+        if item.itemId==5816 then
+            out.blocks[#out.blocks+1]={title="How to Obtain",plain=true,textInset=0,rightColumn=true}
+            local completed=C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted or IsQuestFlaggedCompleted
+            for _,quest in ipairs({{1016,"Elemental Bracers"},{1017,"Mage Summoner"}}) do
+                local done=completed and completed(quest[1])
+                local status=done==true and "|cff66ee99Completed|r" or done==false and "|cffff6666Not completed|r" or "Status unknown"
+                out.blocks[#out.blocks+1]={title=quest[2],body=status,rightColumn=true,
+                    action={kind="questLink",questId=quest[1],name=quest[2]}}
+            end
+        end
         return out
     end
     if kind=="supplyFamily" then

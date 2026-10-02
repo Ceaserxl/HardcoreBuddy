@@ -1027,6 +1027,19 @@ function addon:OpenCurrentInstance()
     self:Refresh(true)
 end
 function addon:Activate(action)
+    if action.kind=="questLink" then
+        StaticPopupDialogs.HARDCOREBUDDY_QUEST_LINK={
+            text="%s\nCtrl + C to copy the Wowhead link",button1=CLOSE or "Close",
+            hasEditBox=true,editBoxWidth=320,timeout=0,whileDead=true,hideOnEscape=true,
+            OnShow=function(frame,data)
+                local edit=frame.editBox or frame.EditBox
+                if edit then edit:SetText(data); edit:SetFocus(); edit:HighlightText() end
+            end,
+            EditBoxOnEscapePressed=function(edit) edit:GetParent():Hide() end,
+        }
+        StaticPopup_Show("HARDCOREBUDDY_QUEST_LINK",action.name,nil,"https://www.wowhead.com/classic/quest="..action.questId)
+        return
+    end
     if action.kind=="supplyDefault" then
         self:CommitInputs()
         if self.Supplies.DefaultGroup(self:GetContext(),action.item) or self.Supplies.CanDefaultBandage(self:GetContext(),action.item) then

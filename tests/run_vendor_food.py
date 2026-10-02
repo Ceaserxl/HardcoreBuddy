@@ -16,11 +16,26 @@ end
 local elune
 for _,item in ipairs(A.Data.Items.items) do if item.itemId==5816 then elune=item end end
 local ctx={characterClass='Mage',level=40,faction='Alliance',inventory={available=true,counts={}},targets={[5816]=99}}
-C_QuestLog={IsQuestFlaggedCompleted=function(id) assert(id==1017); return false end}
+C_QuestLog={IsQuestFlaggedCompleted=function(id) assert(id==1016 or id==1017); return false end}
 local r=A.Supplies.Record(ctx,elune)
 assert(r.target==1 and r.count==0 and r.name:find('(Obtainable)',1,true) and not r.refillNeeded)
 local detail=A.Companion.Detail(ctx,{kind='item',item=elune})
 assert(not detail.quantityRecord,'Quest reward has no refill controls')
+local chain={}
+for _,b in ipairs(detail.blocks) do
+    if b.action and b.action.kind=='questLink' then
+        assert(b.rightColumn and b.body:find('Not completed',1,true)); chain[#chain+1]=b.action.questId
+    end
+end
+assert(chain[1]==1016 and chain[2]==1017 and #chain==2)
+StaticPopupDialogs={}
+StaticPopup_Show=function(key,name,unused,url)
+    assert(name=='Elemental Bracers' and url=='https://www.wowhead.com/classic/quest=1016')
+    local edit=CreateFrame('EditBox')
+    StaticPopupDialogs[key].OnShow({editBox=edit},url)
+    assert(edit:GetText()==url)
+end
+A:Activate({kind='questLink',questId=1016,name='Elemental Bracers'})
 C_QuestLog.IsQuestFlaggedCompleted=function() return true end
 r=A.Supplies.Record(ctx,elune)
 assert(r.count==0 and r.target==1 and not r.name:find('Obtainable'))
