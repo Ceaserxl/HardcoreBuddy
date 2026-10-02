@@ -256,15 +256,31 @@ function R.Decide(s)
     end
     return nil,"No usable spell: check mana, range and learned spells."
 end
+local function pulseHighlight(glow,elapsed)
+    glow.elapsed=(glow.elapsed or 0)+elapsed
+    local pulse=.5+.5*math.cos(glow.elapsed*math.pi*2)
+    glow.halo:SetAlpha(.65+.35*pulse)
+    glow:SetBackdropBorderColor(1,.75+.2*pulse,.15+.3*pulse,1)
+end
 function R:PrepareHighlights()
     if combat() then return end
     for _,prefix in ipairs({"ActionButton","MultiBarBottomLeftButton","MultiBarBottomRightButton","MultiBarRightButton","MultiBarLeftButton","MultiBar5Button","MultiBar6Button","MultiBar7Button"}) do
         for i=1,12 do
             local button=_G[prefix..i]
             if button and not self.highlights[button] then
-                local glow=button:CreateTexture(nil,"OVERLAY",nil,7)
-                glow:SetTexture("Interface\\Buttons\\UI-ActionButton-Border"); glow:SetBlendMode("ADD")
-                glow:SetPoint("TOPLEFT",-8,8); glow:SetPoint("BOTTOMRIGHT",8,-8); glow:SetVertexColor(1,.8,.15,1); glow:Hide()
+                -- Separate from the button's cooldown and native proc artwork.
+                -- Created out of combat; only our own visual overlay changes later.
+                local glow=CreateFrame("Frame",nil,button,"BackdropTemplate")
+                glow:SetPoint("TOPLEFT",-1,1); glow:SetPoint("BOTTOMRIGHT",1,-1)
+                glow:SetFrameLevel(button:GetFrameLevel()+8); glow:EnableMouse(false)
+                glow:SetBackdrop({edgeFile="Interface\\Buttons\\WHITE8x8",edgeSize=3})
+                glow.halo=glow:CreateTexture(nil,"OVERLAY",nil,7)
+                glow.halo:SetTexture("Interface\\Buttons\\UI-ActionButton-Border"); glow.halo:SetBlendMode("ADD")
+                glow.halo:SetPoint("TOPLEFT",-14,14); glow.halo:SetPoint("BOTTOMRIGHT",14,-14)
+                glow.halo:SetVertexColor(1,.9,.35,1)
+                glow:SetScript("OnShow",function(self) self.elapsed=0; pulseHighlight(self,0) end)
+                glow:SetScript("OnUpdate",pulseHighlight)
+                pulseHighlight(glow,0); glow:Hide()
                 self.highlights[button]=glow
             end
         end
@@ -281,7 +297,7 @@ function R:Highlight(spell)
             match=id==spell.id -- Lower ranks with the same name are not the recommended spell.
         end
         glow:SetShown(match)
-        if match then self.highlightCount=self.highlightCount+1; glow:SetAlpha(.65+.3*math.sin(clock()*5)^2) end
+        if match then self.highlightCount=self.highlightCount+1 end
     end
 end
 function R:Update()
