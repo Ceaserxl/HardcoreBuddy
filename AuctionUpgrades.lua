@@ -509,7 +509,7 @@ function U:Attach()
     PanelTemplates_TabResize(tab,0,nil,36)
     tab:SetScript("OnClick",function(self) AuctionFrameTab_OnClick(self) end)
     local panel=CreateFrame("Frame",nil,AuctionFrame,"BackdropTemplate"); self.panel=panel
-    panel:SetPoint("TOPLEFT",AuctionFrame,"TOPLEFT",19,-55)
+    panel:SetPoint("TOPLEFT",AuctionFrame,"TOPLEFT",14,-55)
     panel:SetSize(AuctionFrame:GetWidth()-28,AuctionFrame:GetHeight()-70)
     panel:SetFrameLevel(AuctionFrame:GetFrameLevel()+10); panel:EnableMouse(true)
     Skin.Paint(panel,"card"); panel:SetBackdropColor(0.025,0.031,0.037,1)
