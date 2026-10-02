@@ -65,7 +65,7 @@ local prefix=GameTooltip:GetName()..'TextLeft'
 local altStart=vendorLine+2
 assert(_G[prefix..altStart]:GetText():find('SurvivorShield.tga',1,true),'Alt title includes shield icon')
 assert(_G[prefix..vendorLine]:GetText()=='Vendor prices','Existing vendor text preserved')
-assert(GameTooltip:NumLines()==altStart+5 and _G[prefix..(altStart+5)]:GetText()~=' ','Alt section ends on its final detail, without a blank line')
+assert(GameTooltip:NumLines()==altStart+3 and _G[prefix..(altStart+3)]:GetText()~=' ','Alt section ends on its final character, without a blank line')
 G:Add(GameTooltip)
 assert(_G[prefix..altStart]:GetText():find('Alt Advisor',1,true),'Gear refresh preserves Alt section')
 local count=GameTooltip:NumLines(); bagAdvice(); assert(GameTooltip:NumLines()==count,'No duplicate Alt section')

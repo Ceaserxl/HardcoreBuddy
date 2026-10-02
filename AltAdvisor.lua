@@ -122,9 +122,8 @@ function Alt:Add(tip)
         for index,entry in ipairs(upgrades) do
             if index>1 then lines[#lines+1]={" ","",{.65,.65,.65}} end
             local c,row=entry.character,entry.row
-            lines[#lines+1]={c.name.." - Level "..c.profile.level,
+            lines[#lines+1]={c.name.." - Lvl "..c.profile.level.." - "..row.label,
                 row.percent and string.format("+%.2f%%",row.percent) or (row.zeroBaseline and "Zero baseline" or "Empty slot"),{1,.82,.4},{.38,.84,.6}}
-            lines[#lines+1]={row.label.." | "..c.profile.name,"",{.65,.65,.65}}
         end
         G:Add(tip)
         tip:AddLine(" ")
