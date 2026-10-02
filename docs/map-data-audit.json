@@ -232,12 +232,6 @@
     }
   },
   "missingLocations": [
-    6239,
-    6549,
-    7664,
-    7734,
-    7735,
-    8075,
     8391,
     8996,
     9043,
@@ -2644,118 +2638,118 @@
     },
     "5915": {
       "reference": "https://www.wowhead.com/classic/npc=5915?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "5916": {
       "reference": "https://www.wowhead.com/classic/npc=5916?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "5928": {
       "reference": "https://www.wowhead.com/classic/npc=5928?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "5930": {
       "reference": "https://www.wowhead.com/classic/npc=5930?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "5931": {
       "reference": "https://www.wowhead.com/classic/npc=5931?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "5932": {
       "reference": "https://www.wowhead.com/classic/npc=5932?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "5933": {
       "reference": "https://www.wowhead.com/classic/npc=5933?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "5934": {
       "reference": "https://www.wowhead.com/classic/npc=5934?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "5935": {
       "reference": "https://www.wowhead.com/classic/npc=5935?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "5937": {
       "reference": "https://www.wowhead.com/classic/npc=5937?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6026": {
       "reference": "https://www.wowhead.com/classic/npc=6026?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6109": {
       "reference": "https://www.wowhead.com/classic/npc=6109?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6118": {
       "reference": "https://www.wowhead.com/classic/npc=6118?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6129": {
       "reference": "https://www.wowhead.com/classic/npc=6129?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6130": {
       "reference": "https://www.wowhead.com/classic/npc=6130?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6131": {
       "reference": "https://www.wowhead.com/classic/npc=6131?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6132": {
       "reference": "https://www.wowhead.com/classic/npc=6132?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6140": {
       "reference": "https://www.wowhead.com/classic/npc=6140?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6143": {
       "reference": "https://www.wowhead.com/classic/npc=6143?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6144": {
       "reference": "https://www.wowhead.com/classic/npc=6144?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6146": {
       "reference": "https://www.wowhead.com/classic/npc=6146?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6147": {
       "reference": "https://www.wowhead.com/classic/npc=6147?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6148": {
       "reference": "https://www.wowhead.com/classic/npc=6148?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6208": {
       "reference": "https://www.wowhead.com/classic/npc=6208?classic",
@@ -2784,8 +2778,8 @@
     },
     "6239": {
       "reference": "https://www.wowhead.com/classic/npc=6239?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6391": {
       "reference": "https://www.wowhead.com/classic/npc=6391?classic",
@@ -2794,188 +2788,188 @@
     },
     "6498": {
       "reference": "https://www.wowhead.com/classic/npc=6498?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6499": {
       "reference": "https://www.wowhead.com/classic/npc=6499?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6500": {
       "reference": "https://www.wowhead.com/classic/npc=6500?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6501": {
       "reference": "https://www.wowhead.com/classic/npc=6501?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6502": {
       "reference": "https://www.wowhead.com/classic/npc=6502?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6503": {
       "reference": "https://www.wowhead.com/classic/npc=6503?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6504": {
       "reference": "https://www.wowhead.com/classic/npc=6504?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6523": {
       "reference": "https://www.wowhead.com/classic/npc=6523?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6549": {
       "reference": "https://www.wowhead.com/classic/npc=6549?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6560": {
       "reference": "https://www.wowhead.com/classic/npc=6560?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6581": {
       "reference": "https://www.wowhead.com/classic/npc=6581?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6582": {
       "reference": "https://www.wowhead.com/classic/npc=6582?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6583": {
       "reference": "https://www.wowhead.com/classic/npc=6583?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6584": {
       "reference": "https://www.wowhead.com/classic/npc=6584?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6585": {
       "reference": "https://www.wowhead.com/classic/npc=6585?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6646": {
       "reference": "https://www.wowhead.com/classic/npc=6646?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6647": {
       "reference": "https://www.wowhead.com/classic/npc=6647?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6648": {
       "reference": "https://www.wowhead.com/classic/npc=6648?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6649": {
       "reference": "https://www.wowhead.com/classic/npc=6649?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6650": {
       "reference": "https://www.wowhead.com/classic/npc=6650?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6651": {
       "reference": "https://www.wowhead.com/classic/npc=6651?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6652": {
       "reference": "https://www.wowhead.com/classic/npc=6652?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6706": {
       "reference": "https://www.wowhead.com/classic/npc=6706?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6726": {
       "reference": "https://www.wowhead.com/classic/npc=6726?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "6733": {
       "reference": "https://www.wowhead.com/classic/npc=6733?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7009": {
       "reference": "https://www.wowhead.com/classic/npc=7009?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7015": {
       "reference": "https://www.wowhead.com/classic/npc=7015?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7016": {
       "reference": "https://www.wowhead.com/classic/npc=7016?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7017": {
       "reference": "https://www.wowhead.com/classic/npc=7017?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7040": {
       "reference": "https://www.wowhead.com/classic/npc=7040?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7041": {
       "reference": "https://www.wowhead.com/classic/npc=7041?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7042": {
       "reference": "https://www.wowhead.com/classic/npc=7042?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7043": {
       "reference": "https://www.wowhead.com/classic/npc=7043?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7044": {
       "reference": "https://www.wowhead.com/classic/npc=7044?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7045": {
       "reference": "https://www.wowhead.com/classic/npc=7045?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7046": {
       "reference": "https://www.wowhead.com/classic/npc=7046?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7053": {
       "reference": "https://www.wowhead.com/classic/npc=7053?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7057": {
       "reference": "https://www.wowhead.com/classic/npc=7057?classic",
@@ -2984,68 +2978,68 @@
     },
     "7068": {
       "reference": "https://www.wowhead.com/classic/npc=7068?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7069": {
       "reference": "https://www.wowhead.com/classic/npc=7069?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7070": {
       "reference": "https://www.wowhead.com/classic/npc=7070?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7071": {
       "reference": "https://www.wowhead.com/classic/npc=7071?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7072": {
       "reference": "https://www.wowhead.com/classic/npc=7072?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7075": {
       "reference": "https://www.wowhead.com/classic/npc=7075?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7104": {
       "reference": "https://www.wowhead.com/classic/npc=7104?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7135": {
       "reference": "https://www.wowhead.com/classic/npc=7135?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7136": {
       "reference": "https://www.wowhead.com/classic/npc=7136?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7137": {
       "reference": "https://www.wowhead.com/classic/npc=7137?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7170": {
       "reference": "https://www.wowhead.com/classic/npc=7170?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7233": {
       "reference": "https://www.wowhead.com/classic/npc=7233?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7288": {
       "reference": "https://www.wowhead.com/classic/npc=7288?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7327": {
       "reference": "https://www.wowhead.com/classic/npc=7327?classic",
@@ -3064,238 +3058,238 @@
     },
     "7372": {
       "reference": "https://www.wowhead.com/classic/npc=7372?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7379": {
       "reference": "https://www.wowhead.com/classic/npc=7379?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7410": {
       "reference": "https://www.wowhead.com/classic/npc=7410?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7427": {
       "reference": "https://www.wowhead.com/classic/npc=7427?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7428": {
       "reference": "https://www.wowhead.com/classic/npc=7428?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7429": {
       "reference": "https://www.wowhead.com/classic/npc=7429?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7435": {
       "reference": "https://www.wowhead.com/classic/npc=7435?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7436": {
       "reference": "https://www.wowhead.com/classic/npc=7436?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7437": {
       "reference": "https://www.wowhead.com/classic/npc=7437?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7461": {
       "reference": "https://www.wowhead.com/classic/npc=7461?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7462": {
       "reference": "https://www.wowhead.com/classic/npc=7462?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7463": {
       "reference": "https://www.wowhead.com/classic/npc=7463?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7664": {
       "reference": "https://www.wowhead.com/classic/npc=7664?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7665": {
       "reference": "https://www.wowhead.com/classic/npc=7665?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7666": {
       "reference": "https://www.wowhead.com/classic/npc=7666?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7667": {
       "reference": "https://www.wowhead.com/classic/npc=7667?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7728": {
       "reference": "https://www.wowhead.com/classic/npc=7728?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7734": {
       "reference": "https://www.wowhead.com/classic/npc=7734?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7735": {
       "reference": "https://www.wowhead.com/classic/npc=7735?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7823": {
       "reference": "https://www.wowhead.com/classic/npc=7823?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7824": {
       "reference": "https://www.wowhead.com/classic/npc=7824?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7846": {
       "reference": "https://www.wowhead.com/classic/npc=7846?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7851": {
       "reference": "https://www.wowhead.com/classic/npc=7851?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7872": {
       "reference": "https://www.wowhead.com/classic/npc=7872?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7873": {
       "reference": "https://www.wowhead.com/classic/npc=7873?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7874": {
       "reference": "https://www.wowhead.com/classic/npc=7874?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7875": {
       "reference": "https://www.wowhead.com/classic/npc=7875?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7895": {
       "reference": "https://www.wowhead.com/classic/npc=7895?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7937": {
       "reference": "https://www.wowhead.com/classic/npc=7937?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7977": {
       "reference": "https://www.wowhead.com/classic/npc=7977?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7995": {
       "reference": "https://www.wowhead.com/classic/npc=7995?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7996": {
       "reference": "https://www.wowhead.com/classic/npc=7996?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "7999": {
       "reference": "https://www.wowhead.com/classic/npc=7999?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8018": {
       "reference": "https://www.wowhead.com/classic/npc=8018?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8019": {
       "reference": "https://www.wowhead.com/classic/npc=8019?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8020": {
       "reference": "https://www.wowhead.com/classic/npc=8020?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8075": {
       "reference": "https://www.wowhead.com/classic/npc=8075?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8196": {
       "reference": "https://www.wowhead.com/classic/npc=8196?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8197": {
       "reference": "https://www.wowhead.com/classic/npc=8197?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8198": {
       "reference": "https://www.wowhead.com/classic/npc=8198?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8199": {
       "reference": "https://www.wowhead.com/classic/npc=8199?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8200": {
       "reference": "https://www.wowhead.com/classic/npc=8200?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8201": {
       "reference": "https://www.wowhead.com/classic/npc=8201?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8202": {
       "reference": "https://www.wowhead.com/classic/npc=8202?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8203": {
       "reference": "https://www.wowhead.com/classic/npc=8203?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8204": {
       "reference": "https://www.wowhead.com/classic/npc=8204?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8205": {
       "reference": "https://www.wowhead.com/classic/npc=8205?classic",
-      "pageCached": false,
-      "coordinates": "Questie Classic"
+      "pageCached": true,
+      "coordinates": "Wowhead + Questie Classic"
     },
     "8207": {
       "reference": "https://www.wowhead.com/classic/npc=8207?classic",
