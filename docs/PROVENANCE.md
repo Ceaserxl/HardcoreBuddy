@@ -245,3 +245,10 @@ geometry, exclusions and known coverage gaps. All runtime data ships locally.
 See [spell training data](class-spells.md). Classic Era training tables for all
 nine classes are bundled from the MIT-licensed What's Training? Vanilla dataset.
 The source license ships with the addon; no runtime dependency is added.
+
+## Mage Rotation Advisor
+
+See [Mage rotation behavior and sources](rotation-advisor.md). Numerical Classic
+spell-rank facts are bundled from a pinned WoWSims Classic revision and verified
+Classic Cone of Cold tooltips. The decision engine is local addon code; no
+simulator or external addon is used at runtime.

@@ -1,16 +1,10 @@
--- Classic Era proof of concept. Recommendations never execute combat actions.
+-- Classic Era Mage assistant. Recommendations never execute combat actions.
 local _,A=...
 local R={spells={},highlights={},dirty=true,elapsed=0}; A.RotationAdvisor=R
-R.supported={MAGE="Mage",ROGUE="Rogue"}
+R.supported={MAGE="Mage"}
 R.modes={disabled="Disabled",assistant="Assistant Mode"}
-R.definitions={
-    MAGE={frostbolt=116,fireball=133,fireblast=2136,nova=122,explosion=1449,
-        counterspell=2139,barrier=11426,shield=1463,evocation=12051,shoot=5019},
-    ROGUE={strike=1752,eviscerate=2098,slice=5171,kick=1766,evasion=5277,
-        riposte=14251,hemorrhage=16511,flurry=13877,cheapshot=1833,throw=2764},
-}
+R.definitions={MAGE=A.MageRotation.definitions}
 local ccIDs={118,6770,2094,1776,2637,9484,5782,6358}
-local meleeSpells={strike=true,hemorrhage=true,eviscerate=true,kick=true,riposte=true,cheapshot=true}
 local function clock() return GetTime and GetTime() or 0 end
 local function combat() return InCombatLockdown and InCombatLockdown() or false end
 local function info(id)
@@ -29,6 +23,8 @@ local function known(id)
     return IsSpellKnown and IsSpellKnown(id,false) or false
 end
 function R:Mode()
+    local _,class=UnitClass("player")
+    if not self.supported[class] then return "disabled" end
     local mode=A.characterDB and A.characterDB.rotationMode
     return mode=="assistant" and mode or "disabled"
 end
@@ -59,15 +55,34 @@ function R:RefreshSpells()
             end
         end
     end
+    -- Includes the level-60 spell books absent from trainer-only listings.
+    if class=="MAGE" then
+        for id,data in pairs(A.Data.MageRotationSpells) do
+            local current=self.spells[data.key]
+            local currentData=current and A.Data.MageRotationSpells[current.id]
+            if known(id) and (not currentData or data.rank>currentData.rank) then
+                local value=info(id)
+                if value then self.spells[data.key]={id=id,name=value.name,icon=value.iconID,level=data.level,rank=value.rank} end
+            end
+        end
+    end
+    if class=="MAGE" and known(116) and self.spells.frostbolt and self.spells.frostbolt.id~=116 then
+        local value=info(116)
+        if value then self.spells.slowbolt={id=116,name=value.name,icon=value.iconID,rank=value.rank} end
+    end
     if C_Spell and C_Spell.GetSpellSubtext then
         for _,spell in pairs(self.spells) do spell.rank=C_Spell.GetSpellSubtext(spell.id) end
     end
     for key,spell in pairs(self.spells) do
         local value=info(spell.id)
         spell.minRange=value and value.minRange or 0
-        spell.maxRange=value and value.maxRange or (meleeSpells[key] and 5 or nil)
+        spell.maxRange=value and value.maxRange or nil
+        spell.castTime=value and type(value.castTime)=="number" and value.castTime/1000 or nil
     end
     for _,id in ipairs(ccIDs) do local value=info(id); if value then self.ccNames[value.name]=true end end
+    local live=class=="MAGE" and A.TalentAdvisor:ReadCurrent("MAGE",UnitLevel("player"))
+    self.talents=live and live.ranks or {}
+    self.talentsReady=not not live; self.talentRetryAt=clock()+2
     self.dirty=false
 end
 local function percent(unit,power)
@@ -82,8 +97,8 @@ end
 local function aura(unit,index,filter)
     if C_UnitAuras and C_UnitAuras.GetAuraDataByIndex then return C_UnitAuras.GetAuraDataByIndex(unit,index,filter) end
     if UnitAura then
-        local name,_,_,_,duration,expiration,source,_,_,id=UnitAura(unit,index,filter)
-        if name then return {name=name,duration=duration,expirationTime=expiration,sourceUnit=source,spellId=id} end
+        local name,_,count,dispel,duration,expiration,source,_,_,id=UnitAura(unit,index,filter)
+        if name then return {name=name,applications=count,dispelName=dispel,duration=duration,expirationTime=expiration,sourceUnit=source,spellId=id} end
     end
 end
 function R:Auras(unit,filter)
@@ -143,10 +158,6 @@ local function spellRange(spell,unit)
 end
 local function close(unit,radius)
     radius=radius or 10
-    if radius==5 and R.spells.strike then
-        local value=spellRange(R.spells.strike,unit)
-        if value~=nil then return value end
-    end
     if UnitPosition then
         local px,py,pz,pm=UnitPosition("player"); local x,y,z,m=UnitPosition(unit)
         if px and py and pz and x and y and z and pm and pm==m then
@@ -173,9 +184,9 @@ function R:Enemies()
         if guid and not seen[guid] and hostile(unit) then
             seen[guid]=true
             local threat=UnitThreatSituation and UnitThreatSituation("player",unit)
-            local engaged=threat~=nil or UnitIsUnit and (UnitIsUnit(unit.."target","player") or UnitIsUnit(unit.."target","pet"))
+            local engaged=(threat~=nil and UnitAffectingCombat and UnitAffectingCombat(unit)) or UnitIsUnit and (UnitIsUnit(unit.."target","player") or UnitIsUnit(unit.."target","pet"))
             if engaged then count=count+1 end
-            local near=close(unit,self.class=="ROGUE" and 5 or 10)
+            local near=close(unit,10)
             if near then
                 if engaged then nearby=nearby+1 end
                 if not engaged or self:Controlled(unit) then unsafe=true end
@@ -197,13 +208,12 @@ local function powerCosts(id)
     if C_Spell and C_Spell.GetSpellPowerCost then return C_Spell.GetSpellPowerCost(id) end
     if GetSpellPowerCost then return GetSpellPowerCost(id) end
 end
--- Forecast natural regeneration only. Rage, procs, potions and future combo
--- points are not guaranteed resources. Keep this independent of class priorities.
+-- Forecast natural mana regeneration only, not unobserved procs or potions.
 function R:PowerForecast(s)
     local previous=self.powerSample
     local sample={time=s.time,power=s.power,kind=s.powerType}
     if previous and previous.kind==s.powerType and s.time>=previous.time and s.time-previous.time<3 then
-        sample.spent=previous.spent; sample.tick=previous.tick
+        sample.spent=previous.spent
         if s.power and previous.power and s.power<previous.power then sample.spent=s.time end
     end
     local normal,casting
@@ -211,9 +221,6 @@ function R:PowerForecast(s)
     if s.powerType==0 and GetManaRegen then normal,casting=GetManaRegen() end
     normal=type(normal)=="number" and math.max(0,normal) or 0
     casting=type(casting)=="number" and math.max(0,casting) or 0
-    if s.powerType==3 and previous and sample.tick==previous.tick and previous.kind==3
-        and s.time>previous.time and s.time-previous.time<.5 and s.power and previous.power
-        and normal>0 and math.abs(s.power-previous.power-normal*2)<1 then sample.tick=s.time end
     self.powerSample=sample
     local horizon=1 -- Give the player reaction time even when no GCD is running.
     local start,duration,enabled=cooldown(61304)
@@ -231,15 +238,7 @@ function R:PowerForecast(s)
     end
     if (cast or channel) and type(finish)=="number" then horizon=math.max(horizon,math.min(10,finish/1000-s.time)) end
     local projected=s.power or 0
-    if s.powerType==3 then
-        if sample.tick then
-            local nextTick=2-((s.time-sample.tick)%2)
-            projected=projected+math.max(0,math.floor((horizon-nextTick)/2)+1)*normal*2
-        else
-            -- Until a tick has been observed, use the live average regen rate.
-            projected=projected+normal*horizon
-        end
-    elseif s.powerType==0 then
+    if s.powerType==0 then
         -- Unknown five-second-rule state uses the conservative casting rate.
         local suppressed=cast or channel or not sample.spent and s.combat
         local delay=suppressed and horizon or math.min(horizon,math.max(0,5-(s.time-(sample.spent or -math.huge))))
@@ -259,7 +258,7 @@ function R:PowerForecast(s)
     s.powerHorizon=horizon
 end
 local function affordableSoon(spell,s)
-    if not s or (s.powerType~=0 and s.powerType~=3) or not s.power then return false end
+    if not s or s.powerType~=0 or not s.power then return false end
     local costs=powerCosts(spell.id)
     if not costs then return false end
     local found=false
@@ -277,6 +276,8 @@ local function affordableSoon(spell,s)
     return found
 end
 function R:SpellState(spell,unit,s)
+    local liveInfo=info(spell.id)
+    local castTime=liveInfo and type(liveInfo.castTime)=="number" and liveInfo.castTime/1000 or spell.castTime
     local usable,lowPower
     if C_Spell and C_Spell.IsSpellUsable then usable,lowPower=C_Spell.IsSpellUsable(spell.id)
     elseif IsUsableSpell then usable,lowPower=IsUsableSpell(spell.name) end
@@ -288,14 +289,14 @@ function R:SpellState(spell,unit,s)
             and gcdDuration>0 and gcdDuration<=1.55 and gcdStart+gcdDuration>now
     end
     if not activeGCD() then
-        -- These learned builders have no intrinsic cooldown in Classic Era.
+        -- These learned damage spells have no intrinsic cooldown in Classic Era.
         -- Do not interpret a longer school lockout as a global cooldown.
-        local reference=self.spells.strike or self.spells.frostbolt or self.spells.fireball
+        local reference=self.spells.frostbolt or self.spells.fireball
         if reference then gcdStart,gcdDuration,gcdEnabled=cooldown(reference.id) end
     end
     local onGCD=activeGCD() and type(start)=="number" and type(duration)=="number"
         and math.abs(start-gcdStart)<.05 and duration<=gcdDuration+.05
-    local gcdLength=activeGCD() and gcdDuration or (self.class=="ROGUE" and 1 or 1.5)
+    local gcdLength=activeGCD() and gcdDuration or 1.5
     -- Plan for the end of the current cast/GCD, with at least one second of
     -- reaction time. GCD-only spells remain eligible throughout the GCD.
     local ready=enabled~=false and type(start)=="number" and type(duration)=="number"
@@ -303,37 +304,49 @@ function R:SpellState(spell,unit,s)
     local range
     if unit then
         range=spellRange(spell,unit)
+        -- Ground-targeted spells do not necessarily expose unit range queries.
+        if range==nil and s and s.targetDistance and spell.maxRange and spell.maxRange>0
+            and (spell.id==(self.spells.blizzard and self.spells.blizzard.id) or spell.id==(self.spells.flamestrike and self.spells.flamestrike.id)) then
+            range=s.targetDistance<=spell.maxRange and s.targetDistance>=(spell.minRange or 0)
+        end
     end
     local plannedPower=affordableSoon(spell,s)
-    local powerPreview=(lowPower==true or lowPower==1) and plannedPower
-    return {id=spell.id,name=spell.name,icon=spell.icon,rank=spell.rank,ready=not not ready,usable=usable==true or usable==1 or powerPreview,
-        powerPreview=not not powerPreview,plannedPower=plannedPower,
-        lowPower=not not lowPower,range=range,requiresRange=unit~=nil,minRange=spell.minRange,maxRange=spell.maxRange}
+    local missingPower=lowPower==true or lowPower==1
+    local powerPreview=missingPower and plannedPower
+    local costs=powerCosts(spell.id); local cost
+    for _,entry in ipairs(costs or {}) do if entry.type==0 then cost=entry.minCost or entry.cost end end
+    -- Mounting is not a combat-rule failure: show what to cast after dismounting.
+    local mountedPreview=s and s.mounted and not s.taxi and not missingPower and costs~=nil
+    local usableNow=usable==true or usable==1 or mountedPreview
+    local available=usableNow or powerPreview
+    -- Reserve mana charged when the current cast finishes before planning another.
+    if unit and s and cost and s.projectedPower and s.projectedPower<cost and s.casting then available=false end
+    return {id=spell.id,name=spell.name,icon=spell.icon,rank=spell.rank,ready=not not ready,
+        powerPreview=not not powerPreview,plannedPower=plannedPower,usable=not not available,usableNow=not not usableNow,cost=cost,castTime=castTime,
+        cooldownRemaining=type(start)=="number" and type(duration)=="number" and not onGCD and math.max(0,start+duration-now) or 0,
+        lowPower=missingPower,range=range,requiresRange=unit~=nil,minRange=spell.minRange,maxRange=spell.maxRange}
 end
 local function applyRangePreview(s,sample)
     for key,spell in pairs(s.spells) do
         spell.approaching=false
-        local limit=spell.maxRange or (meleeSpells[key] and 5 or nil)
+        local limit=spell.maxRange or nil
         if spell.range==false and type(limit)=="number" and limit>0 then
             if sample.closing then
                 spell.approaching=sample.distance>limit and sample.distance<=limit+2
                     and sample.projected<=limit and sample.projected>=(spell.minRange or 0)
-            elseif sample.preview and meleeSpells[key] then
-                spell.approaching=true
             end
         end
     end
-    return sample.preview
 end
 function R:UpdateRangePreview(s)
     for _,spell in pairs(s.spells) do spell.approaching=false end
     local guid=UnitGUID and UnitGUID("target")
-    if not self.supported[s.class] or not s.validTarget or s.targetPlayer or s.controlled or s.dead or s.mounted
+    if not self.supported[s.class] or not s.validTarget or s.targetPlayer or s.controlled or s.dead
         or not guid then self.approach=nil; return false end
     local now=s.time
     local previous=self.approach
     if previous and previous.guid==guid and previous.class==s.class and now>=previous.time and now-previous.time<.05 then return applyRangePreview(s,previous) end
-    local sample={guid=guid,class=s.class,time=now,preview=false,throwRange=s.spells.throw and s.spells.throw.range}
+    local sample={guid=guid,class=s.class,time=now}
     if UnitPosition then
         sample.px,sample.py,sample.pz,sample.map=UnitPosition("player")
         sample.x,sample.y,sample.z,sample.targetMap=UnitPosition("target")
@@ -357,41 +370,171 @@ function R:UpdateRangePreview(s)
         local enemyClosing=distance>0 and -((sample.x-previous.x)*dx+(sample.y-previous.y)*dy+(sample.z-previous.z)*dz)/(distance*dt) or 0
         sample.distance=distance; sample.projected=distance-closing*.5
         sample.closing=closing>.5 and closing<=20 and enemyClosing>.5 and enemyClosing<=20
-        sample.preview=s.targetClose==false and distance<=7 and math.abs(dz)<=3 and sample.closing and sample.projected<=5
-    else
-        -- Classic may withhold enemy coordinates. A recent Throw-range exit
-        -- inside duel distance establishes the inner edge, not the far edge.
-        local towardPlayer=UnitIsUnit and UnitIsUnit("targettarget","player")
-        local moving=GetUnitSpeed and (GetUnitSpeed("target") or 0)>.5
-        local near=CheckInteractDistance and CheckInteractDistance("target",3)
-        if s.targetClose==false and towardPlayer and moving and not s.moving and near and sample.throwRange==false then
-            sample.innerEdge=previous.throwRange==true and now or previous.innerEdge
-            sample.preview=sample.innerEdge~=nil and now-sample.innerEdge<=.5
-        end
     end
     return applyRangePreview(s,sample)
+end
+local function auraRemaining(a,now)
+    return a.expirationTime and a.expirationTime>0 and math.max(0,a.expirationTime-now) or math.huge
+end
+local function position(unit)
+    if not UnitPosition then return end
+    local x,y,z,map=UnitPosition(unit)
+    if type(x)=="number" and type(y)=="number" and type(z)=="number" and map~=nil then return {x=x,y=y,z=z,map=map} end
+end
+local function distance(a,b)
+    if a and b and a.map==b.map then return math.sqrt((a.x-b.x)^2+(a.y-b.y)^2+(a.z-b.z)^2) end
+end
+function R:MageSnapshot(s)
+    local M=A.MageRotation
+    if not self.talentsReady and s.time>=(self.talentRetryAt or 0) then
+        local live=A.TalentAdvisor:ReadCurrent("MAGE",UnitLevel("player"))
+        self.talents=live and live.ranks or {}; self.talentsReady=not not live; self.talentRetryAt=s.time+2
+    end
+    s.level=UnitLevel("player"); s.targetLevel=UnitLevel("target")
+    s.talents=self.talents or {}; s.spellPower={}; s.spellCrit={}
+    s.spellHit=GetCombatRatingBonus and CR_HIT_SPELL and GetCombatRatingBonus(CR_HIT_SPELL) or 0
+    s.haste=UnitSpellHaste and math.max(0,UnitSpellHaste("player") or 0)/100 or 0
+    for _,school in ipairs({3,5,7}) do
+        s.spellPower[school]=GetSpellBonusDamage and GetSpellBonusDamage(school) or 0
+        s.spellCrit[school]=GetSpellCritChance and GetSpellCritChance(school) or 0
+    end
+    s.grouped=IsInGroup and IsInGroup() or false
+    local classification=UnitClassification and UnitClassification("target")
+    s.targetBoss=classification=="worldboss" or (UnitLevel and UnitLevel("target")==-1)
+    local creature,creatureID
+    if UnitCreatureType then creature,creatureID=UnitCreatureType("target") end
+    s.polyEligible=creatureID==1 or creatureID==7 or creatureID==8
+        or creature~=nil and (creature==HUMANOID or creature==BEAST or creature==CRITTER)
+    s.recentDamage=self.lastDamage and s.time-self.lastDamage<3 or false
+    s.damageSchool=s.recentDamage and self.damageSchool or nil
+    if IsFalling and IsFalling() and not s.taxi then self.fallingSince=self.fallingSince or s.time
+    else self.fallingSince=nil end
+    s.fallingFor=self.fallingSince and s.time-self.fallingSince or 0
+    for i=1,40 do
+        local a=aura("player",i,"HELPFUL"); if not a then break end
+        for key,id in pairs(M.buffIDs) do if a.spellId==id then s.buffs[key]=auraRemaining(a,s.time) end end
+        -- Brilliance shares the Intellect benefit; never overwrite group buffs.
+        if a.spellId==23028 then s.buffs.intellect=auraRemaining(a,s.time) end
+    end
+    s.hasArmor=s.buffs.frostarmor or s.buffs.icearmor or s.buffs.magearmor
+    for i=1,40 do
+        local a=aura("player",i,"HARMFUL"); if not a then break end
+        if a.dispelName=="Curse" or a.debuffType=="Curse" then s.curse=true end
+        if a.spellId==M.buffIDs.hypothermia then s.buffs.hypothermia=auraRemaining(a,s.time) end
+    end
+    for i=1,40 do
+        local a=aura("target",i,"HARMFUL"); if not a then break end
+        local left=auraRemaining(a,s.time)
+        if a.spellId==M.debuffIDs.scorch then s.scorchStacks=a.applications or 1; s.scorchRemaining=left end
+        if a.spellId==M.debuffIDs.winterschill then s.winterChillStacks=a.applications or 1 end
+        if a.name==self.names.nova or a.spellId==M.debuffIDs.frostbite then s.frozen=true; s.frozenRemaining=left end
+        if a.name==self.names.frostbolt or a.name==self.names.cone then s.slowRemaining=left end
+        if a.name==self.names.fireball or a.name==self.names.pyroblast or a.name==self.names.flamestrike then s.targetDotted=true end
+        -- Unknown harmful effects could be periodic damage from another player.
+        -- Only known harmless control/vulnerability effects permit Polymorph.
+        if a.name~=self.names.nova and a.name~=self.names.frostbolt and a.name~=self.names.cone
+            and a.spellId~=M.debuffIDs.scorch and a.spellId~=M.debuffIDs.winterschill and a.spellId~=M.debuffIDs.frostbite then s.targetDotted=true end
+    end
+    if C_LossOfControl and C_LossOfControl.GetActiveLossOfControlDataCount and C_LossOfControl.GetActiveLossOfControlData then
+        for i=1,math.min(20,C_LossOfControl.GetActiveLossOfControlDataCount()) do
+            local effect=C_LossOfControl.GetActiveLossOfControlData(i)
+            if effect and (not effect.timeRemaining or effect.timeRemaining>0) then
+                s.rooted=s.rooted or effect.locType=="ROOT"
+                s.stunned=s.stunned or effect.locType=="STUN" or effect.locType=="STUN_MECHANIC"
+            end
+        end
+    end
+    local guid=UnitGUID and UnitGUID("target")
+    if not guid or not self.healthSample or self.healthSample.guid~=guid or not s.validTarget then
+        self.healthSample={guid=guid,time=s.time,hp=s.targetHP}; self.immune={}; self.flamestrike=nil
+    else
+        local previous=self.healthSample
+        if s.time-previous.time>=1 then
+            local loss=previous.hp and s.targetHP and previous.hp-s.targetHP or 0
+            if loss>0 and s.time-previous.time<4 then
+                local rate=loss/(s.time-previous.time)
+                previous.rate=previous.rate and previous.rate*.5+rate*.5 or rate
+            else previous.rate=nil end
+            previous.time=s.time; previous.hp=s.targetHP
+        end
+        if previous.rate and previous.rate>0 then s.timeToDie=math.min(120,s.targetHP/previous.rate) end
+    end
+    s.flamestrikeActive=self.flamestrike and self.flamestrike>s.time or false
+    if UnitChannelInfo then
+        local name,_,_,_,ending=UnitChannelInfo("player")
+        for key,spell in pairs(self.spells) do if name==spell.name then s.channelKey=key end end
+        s.channelRemaining=type(ending)=="number" and math.max(0,ending/1000-s.time) or 0
+    end
+    local player,target=position("player"),position("target")
+    s.targetDistance=distance(player,target)
+    if player and target and player.map==target.map and GetPlayerFacing then
+        local facing=GetPlayerFacing()
+        if facing then
+            local dx,dy=target.x-player.x,target.y-player.y
+            local length=math.sqrt(dx*dx+dy*dy)
+            s.facingTarget=length>0 and (math.cos(facing)*dx+math.sin(facing)*dy)/length>.707 and math.abs(target.z-player.z)<4
+        end
+    end
+    s.cluster=0; s.safeCluster=target~=nil and s.targetCombat and not s.controlled
+    if s.safeCluster then
+        local seen={}; local units={"target"}
+        if C_NamePlate and C_NamePlate.GetNamePlates then
+            for i,plate in ipairs(C_NamePlate.GetNamePlates()) do
+                if i>40 then break end
+                local unit=plate.namePlateUnitToken or plate.UnitFrame and plate.UnitFrame.unit
+                if unit then units[#units+1]=unit end
+            end
+        end
+        for _,unit in ipairs(units) do
+            local id=UnitGUID(unit)
+            if id and not seen[id] and hostile(unit) then
+                seen[id]=true
+                local d=distance(target,position(unit))
+                if not d then s.safeCluster=false
+                elseif d<=8 then
+                    local engaged=UnitAffectingCombat and UnitAffectingCombat(unit)
+                    local threat=UnitThreatSituation and UnitThreatSituation("player",unit)
+                    if not engaged or threat==nil or self:Controlled(unit) then s.safeCluster=false
+                    else s.cluster=s.cluster+1 end
+                end
+            end
+        end
+    end
+end
+function R:ObserveCombat()
+    if not CombatLogGetCurrentEventInfo then return end
+    local _,event,_,source,_,_,_,dest,_,_,_,id,_,school,amount=CombatLogGetCurrentEventInfo()
+    local now=clock(); local player=UnitGUID("player"); local target=UnitGUID("target")
+    if dest==player and (event=="SPELL_DAMAGE" or event=="RANGE_DAMAGE" or event=="SPELL_PERIODIC_DAMAGE" or event=="SWING_DAMAGE") then
+        self.lastDamage=now; self.damageSchool=event=="SWING_DAMAGE" and 1 or school
+    end
+    if source==player then
+        local key
+        for k,spell in pairs(self.spells) do if spell.id==id then key=k; break end end
+        if key and event=="SPELL_MISSED" and amount=="IMMUNE" and dest==target then
+            self.immune=self.immune or {}; self.immune[key]=now+15
+            if key=="frostbolt" or key=="slowbolt" then self.immune.frostbolt=now+15; self.immune.slowbolt=now+15 end
+        elseif event=="SPELL_CAST_SUCCESS" and key=="flamestrike" then self.flamestrike=now+8 end
+    end
 end
 function R:Snapshot()
     if self.dirty then self:RefreshSpells() end
     local s={class=self.class,spells={},buffs={},combat=combat(),validTarget=hostile("target"),time=clock()}
     s.dead=UnitIsDeadOrGhost and UnitIsDeadOrGhost("player")
-    s.mounted=IsMounted and IsMounted() or UnitOnTaxi and UnitOnTaxi("player")
-    s.playerHealth=percent("player"); s.targetHealth=percent("target"); s.petHealth=percent("pet")
-    s.hasPet=UnitExists and UnitExists("pet") or false
-    s.powerType=UnitPowerType and UnitPowerType("player") or (self.class=="ROGUE" and 3 or 0)
+    s.mounted=IsMounted and IsMounted() or false
+    s.taxi=UnitOnTaxi and UnitOnTaxi("player") or false
+    s.playerHealth=percent("player"); s.targetHealth,s.targetHP=percent("target")
+    s.powerType=UnitPowerType and UnitPowerType("player") or 0
     s.powerPercent,s.power,s.maxPower=percent("player",s.powerType)
     self:PowerForecast(s)
     s.targetPowerType=UnitPowerType and UnitPowerType("target")
     if s.targetPowerType==0 then s.targetMana=percent("target",0) end
-    s.combo=GetComboPoints and GetComboPoints("player","target") or 0
     s.moving=GetUnitSpeed and GetUnitSpeed("player")>0 or false
-    s.stealthed=IsStealthed and IsStealthed() or false
     s.casting=(UnitCastingInfo and UnitCastingInfo("player")) or (UnitChannelInfo and UnitChannelInfo("player"))
     s.attackingPlayer=UnitIsUnit and UnitIsUnit("targettarget","player") or false
     s.targetPlayer=UnitIsPlayer and UnitIsPlayer("target") or false
     s.targetCombat=UnitAffectingCombat and not not UnitAffectingCombat("target")
-    s.thrownEquipped=self.class=="ROGUE" and A.Ammunition.Kind()=="thrown"
-    s.targetClose=close("target",self.class=="ROGUE" and 5 or 10); s.controlled=s.validTarget and self:Controlled("target")
+    s.targetClose=close("target",10); s.controlled=s.validTarget and self:Controlled("target")
     local currentSpell=C_Spell and C_Spell.IsCurrentSpell or IsCurrentSpell
     local active=self.spells.shoot and currentSpell and currentSpell(self.spells.shoot.id)
     s.wanding=self.class=="MAGE" and (self.autoRepeat or active==true or active==1) or false
@@ -408,69 +551,16 @@ function R:Snapshot()
     s.interrupt=cast~=nil and uninterruptible~=true and type(finish)=="number" and finish/1000>clock()
     local buffs=self:Auras("player","HELPFUL")
     for key,name in pairs(self.names) do s.buffs[key]=buffs[name] end
+    self:MageSnapshot(s)
     for key,spell in pairs(self.spells) do
-        local selfSpell=key=="barrier" or key=="shield" or key=="evocation" or key=="evasion" or key=="flurry" or key=="slice" or key=="nova" or key=="explosion"
+        local selfSpell=A.MageRotation.selfSpells[key]
         s.spells[key]=self:SpellState(spell,not selfSpell and "target" or nil,s)
+        s.spells[key].immune=self.immune and self.immune[key] and self.immune[key]>s.time or false
     end
-    s.approachingMelee=self:UpdateRangePreview(s)
+    self:UpdateRangePreview(s)
     return s
 end
--- Pure priorities make the prototype replayable without protected API calls.
-function R.Decide(s)
-    if not R.supported[s.class] then return nil,"This proof of concept supports Rogue and Mage." end
-    if s.dead or s.mounted then return nil,s.dead and "You are dead." or "Dismount to use the advisor." end
-    local function can(key)
-        local a=s.spells[key]
-        return a and a.ready and a.usable and (a.range==true or not a.requiresRange and a.range~=false
-            or a.approaching and a.range==false)
-    end
-    local function choose(key,reason) return key,(s.spells[key].approaching or s.approachingMelee) and "" or reason end
-    if s.class=="MAGE" and not s.combat and s.powerPercent and s.powerPercent<25 and can("evocation") then return choose("evocation","Recover mana between pulls.") end
-    if not s.validTarget then return nil,"Select a living enemy." end
-    if s.targetPlayer then return nil,"PvE prototype: player targets are not supported." end
-    if s.controlled then return nil,"Target is crowd controlled. Avoid breaking it." end
-    local hp,thp,mp=s.playerHealth,s.targetHealth,s.powerPercent
-    if s.class=="ROGUE" then
-        if not s.approachingMelee and (s.combat or s.targetCombat==false) and not s.stealthed and not s.casting
-            and s.targetClose==false and s.thrownEquipped and can("throw")
-            and (s.spells.throw.range==true or s.spells.throw.approaching) then
-            return "throw","",true
-        end
-        -- Range alone covers approaching and fleeing enemies. Leave the gap
-        -- between throwing and melee range quiet, without movement prompts.
-        if s.targetClose==false and not s.approachingMelee then return nil,"" end
-        if s.combat and hp and hp<=35 and s.attackingPlayer and s.targetClose and not s.buffs.evasion and can("evasion") then return choose("evasion","Low health while taking melee attacks.") end
-        if s.interrupt and can("kick") then return choose("kick","Interrupt the target's cast.") end
-        if s.stealthed and can("cheapshot") then return choose("cheapshot","Open from stealth with a stun.") end
-        if can("riposte") then return choose("riposte","Riposte is available after a parry.") end
-        if (s.combo or 0)>=5 or (s.combo or 0)>=3 and thp and thp<=20 then
-            if can("eviscerate") then return choose("eviscerate","Spend combo points before the target dies.") end
-        end
-        if (s.combo or 0)>=1 and thp and thp>40 and (s.buffs.slice or 0)<3 and can("slice") then return choose("slice","Maintain Slice and Dice while the target has health remaining.") end
-        if s.combat and s.nearby>=2 and s.safeAOE and thp and thp>30 and not s.buffs.flurry and can("flurry") then return choose("flurry","Multiple engaged enemies verified nearby.") end
-        if can("hemorrhage") then return choose("hemorrhage","Build combo points with your learned Hemorrhage talent.") end
-        if can("strike") then return choose("strike","Build combo points.") end
-        return nil,s.approachingMelee and "" or "Wait for energy, cooldowns, or move into melee range."
-    end
-    if s.interrupt and can("counterspell") then return choose("counterspell","Interrupt the target's cast.") end
-    if s.combat and hp and hp<=60 and not s.buffs.barrier and can("barrier") then return choose("barrier","Protect yourself at low health.") end
-    if s.combat and hp and hp<=40 and s.targetClose and s.safeAOE and can("nova") then return choose("nova","Root nearby attackers to create distance.") end
-    if s.combat and hp and hp<=35 and mp and mp>35 and not s.buffs.barrier and not s.buffs.shield and can("shield") then return choose("shield","Low health with enough mana for Mana Shield.") end
-    local fillerPreview=can("frostbolt") and s.spells.frostbolt.plannedPower or can("fireball") and s.spells.fireball.plannedPower
-    if mp and mp<=15 and not fillerPreview and can("shoot") then
-        if s.wanding then return nil,"Wand attack active. Let it continue to conserve mana." end
-        return choose("shoot","Conserve mana with your wand.")
-    end
-    if s.combat and s.nearby>=3 and s.safeAOE and s.targetClose and mp and mp>=40 and hp and hp>55 and can("explosion") then return choose("explosion","At least three engaged enemies verified close; adequate mana and health.") end
-    if (s.moving or thp and thp<=18) and can("fireblast") then return choose("fireblast",s.moving and "Use an instant spell while moving." or "Finish a low-health target.") end
-    if can("frostbolt") then return choose("frostbolt","Frost leveling filler: damage and a slowing effect.") end
-    if can("fireball") then return choose("fireball","Use Fireball until Frostbolt is learned.") end
-    if can("shoot") then
-        if s.wanding then return nil,"Wand attack active. Let it continue." end
-        return choose("shoot","Use your wand while mana or spells are unavailable.")
-    end
-    return nil,"No usable spell: check mana, range and learned spells."
-end
+R.Decide=A.MageRotation.Decide
 local function sizeHighlight(glow)
     local button=glow:GetParent()
     local width,height=button:GetWidth(),button:GetHeight()
@@ -536,7 +626,7 @@ end
 function R:Update()
     if not A.characterDB then return end
     if self.suspended or self:Mode()=="disabled" then
-        self.approach=nil; self.powerSample=nil
+        self.approach=nil; self.powerSample=nil; self.healthSample=nil; self.immune=nil; self.lastDamage=nil
         self.current=nil; self.optional=nil; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
     else
         self.snapshot=self:Snapshot()
@@ -550,9 +640,14 @@ local events=CreateFrame("Frame"); R.events=events
 for _,event in ipairs({"PLAYER_LOGIN","PLAYER_ENTERING_WORLD","PLAYER_LEAVING_WORLD","SPELLS_CHANGED","SPELL_DATA_LOAD_RESULT","PLAYER_TALENT_UPDATE","PLAYER_REGEN_ENABLED","ACTIONBAR_SLOT_CHANGED","ACTIONBAR_PAGE_CHANGED","PLAYER_TARGET_CHANGED","START_AUTOREPEAT_SPELL","STOP_AUTOREPEAT_SPELL"}) do events:RegisterEvent(event) end
 for _,event in ipairs({"UNIT_POWER_UPDATE","UNIT_POWER_FREQUENT","UNIT_MAXPOWER","UNIT_SPELLCAST_START","UNIT_SPELLCAST_STOP","UNIT_SPELLCAST_CHANNEL_START","UNIT_SPELLCAST_CHANNEL_STOP"}) do events:RegisterEvent(event) end
 for _,event in ipairs({"MODIFIER_STATE_CHANGED","UPDATE_MACROS","ACTIONBAR_UPDATE_STATE"}) do events:RegisterEvent(event) end
+for _,event in ipairs({"COMBAT_LOG_EVENT_UNFILTERED","PLAYER_EQUIPMENT_CHANGED","PLAYER_LEVEL_UP","CHARACTER_POINTS_CHANGED","UNIT_AURA","LOSS_OF_CONTROL_ADDED","LOSS_OF_CONTROL_UPDATE"}) do events:RegisterEvent(event) end
 events:SetScript("OnEvent",function(_,event,unit)
+    if event=="COMBAT_LOG_EVENT_UNFILTERED" then
+        if R:Mode()=="assistant" and R.class=="MAGE" and not R.suspended then R:ObserveCombat() end
+        return
+    end
     if event:sub(1,5)=="UNIT_" then
-        if unit=="player" and not R.suspended and R:Mode()~="disabled" then R:Update() end
+        if (unit=="player" or event=="UNIT_AURA" and unit=="target") and not R.suspended and R:Mode()~="disabled" then R:Update() end
         return
     end
     if event=="PLAYER_TARGET_CHANGED" or event=="PLAYER_LEAVING_WORLD" or event=="PLAYER_ENTERING_WORLD" then R.approach=nil end
@@ -561,7 +656,8 @@ events:SetScript("OnEvent",function(_,event,unit)
     if R.suspended then return end
     if event=="START_AUTOREPEAT_SPELL" then R.autoRepeat=true
     elseif event=="STOP_AUTOREPEAT_SPELL" then R.autoRepeat=nil end
-    if event=="SPELLS_CHANGED" or event=="SPELL_DATA_LOAD_RESULT" or event=="PLAYER_TALENT_UPDATE" or event=="PLAYER_ENTERING_WORLD" then R.dirty=true end
+    if event=="SPELLS_CHANGED" or event=="SPELL_DATA_LOAD_RESULT" or event=="PLAYER_TALENT_UPDATE" or event=="PLAYER_ENTERING_WORLD"
+        or event=="PLAYER_EQUIPMENT_CHANGED" or event=="PLAYER_LEVEL_UP" or event=="CHARACTER_POINTS_CHANGED" then R.dirty=true end
     R:PrepareHighlights(); R:Update()
 end)
 events:SetScript("OnUpdate",function(_,elapsed)

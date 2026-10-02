@@ -29,7 +29,7 @@ def manifest():
         'scripts/import_raid_warning_sound.py',
         'docs/PROVENANCE.md', 'docs/advisors.md', 'docs/ADVISOR_DATA_LICENSE.txt',
         'docs/map-data.md', 'docs/map-data-audit.json', 'docs/leveling-zones.md',
-        'docs/vendor-services.md',
+        'docs/vendor-services.md', 'docs/rotation-advisor.md',
         'docs/enchants.md',
         'docs/class-spells.md', 'docs/WHATS_TRAINING_LICENSE.txt',
     })

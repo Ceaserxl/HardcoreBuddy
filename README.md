@@ -121,32 +121,30 @@ comparisons. Genuine empty slots still show upgrade advice. Snapshots older than
 not produce recommendations. To refresh an older character's cache, log into
 that character with HardcoreBuddy enabled and log out normally.
 
-## Rotation Advisor proof of concept
+## Mage Rotation Advisor
 
-Open **Companion > Rotation Advisor** or `/hcb rotation`. In **Settings > Rotation
-Advisor**, enable **Assistant Mode** for a live Rogue or Mage. It recommends a
-learned spell, explains the reason and highlights its exact rank on Blizzard
-action bars, even with the HCB window closed. **Disabled** is the default and is
-saved per character.
+Open **Companion > Rotation Advisor** or `/hcb rotation`. Enable **Assistant Mode**
+in its Settings. This is a Mage-only Classic Era 1?60 assistant; the old Rogue
+and Mage prototype priorities have been replaced. Disabled remains the default,
+saved per character. You cast every spell yourself.
 
-The prototype covers Rogue builders, finishers, interrupts, reactive Riposte
-and Evasion; Mage uses a Frost leveling priority with interrupts, defensive
-spells, movement and mana conservation. It checks learned ranks, usability,
-cooldowns, spell range, player/target health, resources, combo points and buffs.
-Area damage requires observed nearby engaged enemies without observed crowd
-control or unengaged enemies in range. Nameplates and distance APIs cannot
-guarantee a complete count. Pet health and target mana appear as context; these
-two class priorities do not contain pet-management actions. Low-mana wand advice
-recognizes active wand attacks and stops highlighting Shoot while it is running.
+The helper compares learned ranks using actual talents, cast times, school spell
+power and critical chance. It adapts to mana, movement, enemy health trends,
+control effects and incoming damage. Survival, interrupts and curse removal take
+priority over damage. It handles Fire/Frost/Arcane damage choices, cooldowns,
+preparation buffs, safe observed AoE, wand fallback and Evocation.
 
-This is an Assistant-only proof of concept: you press the recommended spell.
-It supports direct spell buttons on Blizzard action bars. Third-party bars,
-macros, PvP and full specialization-specific rotations are outside this version.
+Gold highlights show the main recommendation; blue highlights show optional
+preparation. Exact spell ranks and Blizzard-resolved spell macros are supported
+on Blizzard action bars, even with HCB closed. Mounted characters retain cast
+previews. The next spell can appear before the GCD/cast or mana recovery finishes;
+ordinary damage channels show the next action during their last second.
 
-Offline validation: `tests/run_rotation_advisor.py`. In-game verification still
-needs Rogue/Mage combat, learned-rank changes, bar paging, highlighting with the
-window closed, disabling, and reload persistence. The prototype is guidance,
-not an optimized damage simulation.
+[Behavior, data sources, limitations and live checks](docs/rotation-advisor.md).
+Offline validation: `tests/run_rotation_advisor.py`. Damage comparisons are
+estimates, not a guarantee of optimal DPS. Unseen enemies and unknown positions
+cannot establish safe AoE. This does not automate casting, targeting or ground
+placement. PvP, other classes and third-party action bars are outside this helper.
 
 ## Custom talent builds and stat weights
 

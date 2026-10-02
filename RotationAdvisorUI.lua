@@ -14,7 +14,7 @@ end
 local function pct(value) return value and math.floor(value+.5).."%" or "Unknown" end
 function R:CreateSettings(page)
     self.settingsPage=page
-    page.subtitle=text(page,"Rogue and Mage | Per character | Disabled by default",0,30,720)
+    page.subtitle=text(page,"Mage | Levels 1–60 | Per character | Disabled by default",0,30,720)
     page.mode=S.Section(page,"Mode",60,114)
     page.buttons={}
     for i,key in ipairs({"assistant","disabled"}) do
@@ -22,10 +22,10 @@ function R:CreateSettings(page)
         b:SetPoint("TOPLEFT",16+(i-1)*238,-38); page.buttons[key]=b
     end
     page.help=text(page.mode,modeHelp,16,78,704)
-    page.rogue=S.Section(page,"Rogue",182,100,1)
-    page.rogue.note=text(page.rogue,"Builders, finishers, Slice and Dice, interrupts and Evasion. Optional blue Throw glow for approaching or fleeing enemies in throwing range, outside stealth.",16,38,320)
-    page.mage=S.Section(page,"Mage",182,100,2)
-    page.mage.note=text(page.mage,"Frost leveling, interrupts, shields and wand use. Reacts to movement, mana, health and observed nearby enemies.",16,38,320)
+    page.damage=S.Section(page,"Damage",182,100,1)
+    page.damage.note=text(page.damage,"Uses learned ranks, actual talents, school spell power, critical strike chance, mana and target health. Previews the next cast during the GCD or current cast. Supports spell macros.",16,38,320)
+    page.survival=S.Section(page,"Survival",182,100,2)
+    page.survival.note=text(page.survival,"Interrupts, shields, control, curse removal and emergency cooldowns take priority. Blue highlights suggest preparation. Area spells require observed engaged enemies and no nearby crowd control.",16,38,320)
 end
 function R:LayoutSettings(width)
     local page=self.settingsPage; if not page then return end
@@ -39,19 +39,19 @@ function R:LayoutSettings(width)
         b.selected=self:Mode()==key; S.ControlEnabled(b,key=="disabled" or key=="assistant" and supported); S.ButtonState(b,b.selected,nil,false)
     end
     page.help:SetText(supported and modeHelp
-        or "This proof of concept supports Rogue and Mage. Assistant Mode is unavailable for this character.")
+        or "Assistant Mode currently supports Mage characters, levels 1–60.")
     page.help:SetWidth(available); page.help:SetHeight(0)
     page.help:SetHeight(page.help:GetStringHeight())
     page.mode:SetHeight(78+page.help:GetHeight()+16)
     local height=0
-    for _,panel in ipairs({page.rogue,page.mage}) do
+    for _,panel in ipairs({page.damage,page.survival}) do
         panel.note:SetWidth(panel:GetWidth()-32); panel.note:SetHeight(0)
         panel.note:SetHeight(panel.note:GetStringHeight())
         panel.sectionTop=first+page.mode:GetHeight()+S.layout.sectionGap
         height=math.max(height,38+panel.note:GetHeight()+16)
     end
-    page.rogue:SetHeight(height); page.mage:SetHeight(height); S.LayoutSections(page,width)
-    page.contentHeight=page.rogue.sectionTop+height+S.layout.sectionGap
+    page.damage:SetHeight(height); page.survival:SetHeight(height); S.LayoutSections(page,width)
+    page.contentHeight=page.damage.sectionTop+height+S.layout.sectionGap
     return page.contentHeight
 end
 function R:CreateView(parent)
@@ -98,18 +98,18 @@ end
 function R:RefreshView()
     local view=self.view; if not view or not view:IsVisible() then return end
     local _,class=UnitClass("player"); local mode=self:Mode(); local s=self.snapshot or {}
-    view.subtitle:SetText("Live "..(self.supported[class] or class or "character").." | "..self.modes[mode].." | Proof of concept")
+    view.subtitle:SetText("Live "..(self.supported[class] or class or "character").." | "..self.modes[mode].." | Levels 1–60")
     local spell=self.current
     view.next.title:SetText(self.optional and "Optional Action" or "Next Spell")
     view.next.icon:SetTexture(spell and spell.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
     view.next.icon:SetAlpha(spell and 1 or .35)
     view.next.name:SetText(spell and (spell.name..(spell.rank and spell.rank~="" and (" | "..spell.rank) or "")) or mode=="disabled" and "Disabled" or "Waiting")
-    view.next.reason:SetText(not self.supported[class] and "Available for Rogue and Mage in this proof of concept." or self.reason or "Select a living enemy.")
+    view.next.reason:SetText(not self.supported[class] and "Currently available for Mage." or self.reason or "")
     view.next.bar:SetText(mode=="assistant" and (spell and ((self.highlightCount or 0)>0 and (self.optional and "Blue highlight: optional action." or "Gold highlight: main recommendation.") or "Place this spell on a Blizzard action bar to see the highlight.") or "No spell highlighted.")
         or "Enable Assistant Mode in Settings to begin.")
     view.character.values:SetText(mode=="disabled" and "Live monitoring is off." or
-        "Health: "..pct(s.playerHealth).."\n"..(class=="ROGUE" and ("Energy: "..tostring(s.power or "Unknown").." | Combo points: "..(s.combo or 0)) or "Mana: "..pct(s.powerPercent))
-        .."\nMoving: "..(s.moving and "Yes" or "No").."\nPet health: "..(s.hasPet and pct(s.petHealth) or "No active pet"))
+        "Health: "..pct(s.playerHealth).."\nMana: "..pct(s.powerPercent)
+        .."\nMoving: "..(s.moving and "Yes" or "No").."\nPlanning ahead: "..string.format("%.1fs",s.powerHorizon or 1))
     view.target.values:SetText(mode=="disabled" and "Live monitoring is off." or
         not s.validTarget and "Select a living enemy." or
         "Health: "..pct(s.targetHealth).." | Mana: "..(s.targetPowerType==0 and pct(s.targetMana) or "Not a mana user")

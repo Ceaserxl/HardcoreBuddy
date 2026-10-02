@@ -62,6 +62,8 @@ TalentAdvisor.lua
 CustomBuilds.lua
 CustomBuildsUI.lua
 CustomBuildsSharing.lua
+Data/MageRotationSpells.lua
+MageRotation.lua
 RotationAdvisor.lua
 RotationAdvisorUI.lua
 TalentRanks.lua
