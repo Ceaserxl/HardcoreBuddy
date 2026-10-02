@@ -32,13 +32,19 @@ the runtime catalog from that cache. Neither script runs inside the addon.
 
 ## Leveling policy
 
-Enchanting skill is a requirement for the enchanter, not the wearer. The old
-skill-based character-level budget gates have been removed. All 132 catalog
-recipes are considered at every character level, subject to class relevance
-and the equipped item's actual restrictions. For example,
-[Fiery Weapon](https://www.wowhead.com/classic/spell=13898/enchant-weapon-fiery-weapon)
-is available for low-level melee weapons despite requiring Enchanting 265.
-Armor kits retain their actual required use level and minimum item level.
+Gear Advisor settings > Enchants offers two per-character recommendation modes:
+
+- **Show Level Appropriate Enchants** (default): use leveling budget tiers.
+  Enchanting skill caps are 50 for levels 1-9, 100 for 10-19, 150 for 20-29,
+  200 for 30-39, 250 for 40-49, 290 for 50-59, and 300 at level 60.
+- **Show Max Enchants**: consider all applicable ranks regardless of those
+  budget tiers, including high-skill enchants on low-level equipment.
+
+The mode updates slot recommendations, alternatives and required materials.
+These are recommendation tiers, not wearer restrictions. Enchanting skill is
+required of the enchanter; actual gear restrictions still apply in both modes.
+Armor kits retain their required use level and minimum item level. Applied
+higher-rank enchants remain recognized when using level-appropriate mode.
 
 The slot menu initially shows the highest applicable rank of each effect.
 Show Lesser Ranks, opposite Back, expands the list to include lower compatible

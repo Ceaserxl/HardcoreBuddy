@@ -19,6 +19,23 @@ local function family(r)
 end
 for _,r in ipairs(D.recipes) do r.family=family(r); byId[r.spellId]=r; byEnchant[r.enchantId]=r end
 E.byId=byId
+function E.Mode()
+    return A.characterDB and A.characterDB.enchantMode=="max" and "max" or "level"
+end
+function E.SetMode(mode)
+    if not A.characterDB or (mode~="max" and mode~="level") then return end
+    A.characterDB.enchantMode=mode
+    if A.Readiness then A.Readiness:SuppliesChanged() end
+    A:Refresh(true)
+end
+local function withinRecommendationTier(r,context)
+    if E.Mode()=="max" then return true end
+    -- Budget tiers guide recommendations, not whether a wearer can use an enchant.
+    local level=context.level or 1
+    local skill=level>=60 and 300 or level>=50 and 290 or level>=40 and 250
+        or level>=30 and 200 or level>=20 and 150 or level>=10 and 100 or 50
+    return r.skill<=skill
+end
 local kits={}
 local kitSlots={[5]=true,[7]=true,[8]=true,[10]=true}
 for _,item in ipairs(A.Data.ArmorKits.items) do
@@ -103,7 +120,7 @@ function E.Options(context,g,showLesser)
         if not old or amount>previous or amount==previous and r.skill>old.skill then best[key]=r end
     end
     for _,r in ipairs(D.recipes) do
-        if relevant(r,context.characterClass) then add(r) end
+        if relevant(r,context.characterClass) and withinRecommendationTier(r,context) then add(r) end
     end
     for _,r in ipairs(kits) do
         if r.level<=context.level then add(r) end

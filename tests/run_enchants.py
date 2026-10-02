@@ -21,6 +21,23 @@ end
 local ctx={mode="live",level=60,characterClass="Mage",inventory={available=true,counts={}},enchantChoices={}}
 local function slot(id) for _,g in ipairs(E.Scan(ctx)) do if g.slotId==id then return g end end end
 
+check(E.Mode()=="level","Level appropriate is the default")
+ctx.level=1; gear[9]={loc="INVTYPE_WRIST",level=1}
+local budget=slot(9).recommendation
+check(budget.skill<=50,"Low-level recommendation uses leveling tier")
+A.characterDB.enchantMode="max"
+check(slot(9).recommendation.skill>budget.skill,"Max mode recalculates recommendation")
+A.characterDB.enchantMode="level"
+check(slot(9).recommendation==budget,"Returning to level mode restores the recommendation")
+A:OpenSettings("Gear Advisor")
+local settings=A.Settings.pages["Gear Advisor"]
+MOCK.Click(settings.enchantMode)
+check(settings.enchantMenu:IsShown(),"Enchant dropdown opens")
+MOCK.Click(settings.enchantOptions.max)
+check(E.Mode()=="max" and not settings.enchantMenu:IsShown(),"Dropdown saves max mode and closes")
+MOCK.Click(settings.enchantMode); MOCK.Click(settings.enchantOptions.level)
+check(E.Mode()=="level","Dropdown saves level mode")
+A.characterDB.enchantMode="max"
 -- Skill requirements belong to the enchanter, never the wearer.
 ctx.level=1; ctx.characterClass="Rogue"
 gear[16]={loc="INVTYPE_WEAPON",level=1,class=2}
@@ -38,7 +55,7 @@ gear[7].level=14
 for _,r in ipairs(E.Options(ctx,slot(7),true)) do check(r.gearLevel<=14,"Lesser ranks preserve item restrictions") end
 ctx.level=1
 for _,r in ipairs(E.Options(ctx,slot(7),true)) do check(r.level<=1,"Armor kits retain actual use level requirements") end
-ctx.level=60; gear={}
+ctx.level=60; gear={}; A.characterDB.enchantMode="level"
 
 check(#A.Data.Enchants.recipes==132,"Complete Era profession catalog")
 for _,r in ipairs(A.Data.Enchants.recipes) do

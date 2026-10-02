@@ -236,7 +236,26 @@ function S:Create(parent)
     label(equip,"Waits until you are out of combat. Equipped quest items, including off-hand items, stay under your control.",12,16,90,300)
     gear.openWeights=button(scoring,"Stat Weights",42,function() self:OpenGearPage("Stat Weights") end)
     label(scoring,"Adjust individual stats or restore your build's defaults.",12,320,46,370)
-    gear.contentHeight=350
+    local enchants=Skin.Section(gear,"Enchants",350,94)
+    gear.enchantMode=button(enchants,"",42,function()
+        gear.enchantMenu:SetShown(not gear.enchantMenu:IsShown())
+    end,300)
+    gear.enchantHint=label(enchants,"Level appropriate uses leveling budget tiers. Max uses the strongest applicable ranks.",12,332,42,360)
+    local menu=CreateFrame("Frame",nil,gear.enchantMode,"BackdropTemplate"); gear.enchantMenu=menu
+    Skin.Paint(menu,"card"); menu:SetSize(300,64)
+    menu:SetPoint("BOTTOMLEFT",gear.enchantMode,"TOPLEFT",0,2)
+    menu:SetFrameStrata("DIALOG"); menu:SetFrameLevel(gear.enchantMode:GetFrameLevel()+20); menu:Hide()
+    gear.enchantMode:SetScript("OnHide",function() menu:Hide() end)
+    gear.enchantOptions={}
+    for i,entry in ipairs({{"level","Show Level Appropriate Enchants"},{"max","Show Max Enchants"}}) do
+        local mode=entry[1]
+        local choice=button(menu,entry[2],4+(i-1)*28,function()
+            menu:Hide(); A.Enchants.SetMode(mode)
+        end,292)
+        choice:ClearAllPoints(); choice:SetPoint("TOPLEFT",4,-4-(i-1)*28)
+        gear.enchantOptions[mode]=choice
+    end
+    gear.contentHeight=452
     A.DebugDump:Create(self.pages.Debug)
     local weightsPage=self.pages["Stat Weights"]
     weightsPage.profile=label(weightsPage,"",12,0,34,700)
@@ -388,6 +407,11 @@ function S:Layout(parent,left,top,width,height,section,visible)
     A.DebugDump:Layout(contentWidth)
     local general=self.pages.General; general.minimap:Sync(); general.kit:Sync(); general.autoBuy:Sync(); general.autoRepair:Sync()
     local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync(); gear.notify:Sync(); gear.autoEquip:Sync()
+    gear.enchantMode.label:SetText((A.Enchants.Mode()=="max" and "Show Max Enchants" or "Show Level Appropriate Enchants").."  v")
+    for mode,b in pairs(gear.enchantOptions) do
+        b.selected=A.Enchants.Mode()==mode; Skin.ButtonState(b,b.selected,nil,false)
+    end
+    gear.enchantHint:SetWidth(math.max(100,contentWidth-360))
     gear.toggle.label:SetText(A.GearAdvisor:IsEnabled() and "Disable Gear Advisor" or "Enable Gear Advisor")
     local profile=A.GearAdvisor:CurrentProfile()
     gear.profile:SetText(profile and ("Scoring: "..profile.name) or "Character data loading")
@@ -447,7 +471,8 @@ function S:Layout(parent,left,top,width,height,section,visible)
         if name=="Gear Advisor" then
             page.sectionCards[1].sectionTop=firstTop; page.sectionCards[2].sectionTop=firstTop
             page.sectionCards[3].sectionTop=firstTop+page.sectionCards[1]:GetHeight()+Skin.layout.sectionGap
-            page.contentHeight=page.sectionCards[3].sectionTop+page.sectionCards[3]:GetHeight()+Skin.layout.sectionGap
+            page.sectionCards[4].sectionTop=page.sectionCards[3].sectionTop+page.sectionCards[3]:GetHeight()+Skin.layout.sectionGap
+            page.contentHeight=page.sectionCards[4].sectionTop+page.sectionCards[4]:GetHeight()+Skin.layout.sectionGap
         else
             page.paths.sectionTop=firstTop
             page.spending.sectionTop=firstTop+page.paths:GetHeight()+Skin.layout.sectionGap
