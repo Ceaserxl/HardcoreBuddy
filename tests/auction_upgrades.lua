@@ -252,7 +252,7 @@ check(U.panel:IsShown() and not AuctionFrameBrowse:IsShown(),"Buyout remains in 
 AuctionFrameTab_OnClick(U.tab); U:Start(); MOCK.FireAll("AUCTION_HOUSE_CLOSED")
 check(not U.scan and not U.open,"Auction close cancels pending work")
 local px,py,pw,ph=U.panel:GetRect(); local ax,ay,aw,ah=AuctionFrame:GetRect()
-check(px>=ax and px+pw<=ax+aw and py>=ay and py+ph<ay+ah-12,"Panel fits native auction frame above the tab row")
+check(px>=ax and px+pw<=ax+aw and py>=ay and py+ph<=ay+ah-10,"Panel fits native auction frame with 10px bottom inset")
 F.reset("DRUID",40,{0,31,0})
 F.equip(18,F.item("INVTYPE_RELIC",{},4,8))
 MOCK.FireAll("AUCTION_HOUSE_SHOW"); tick(); AuctionFrameTab_OnClick(U.tab); U:Start()
