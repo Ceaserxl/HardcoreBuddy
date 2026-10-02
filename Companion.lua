@@ -391,7 +391,7 @@ function C.Detail(context, action)
             for _,quest in ipairs({{1016,"Elemental Bracers"},{1017,"Mage Summoner"}}) do
                 local done=completed and completed(quest[1])
                 local status=done==true and "|cff66ee99Completed|r" or done==false and "|cffff6666Not completed|r" or "Status unknown"
-                out.blocks[#out.blocks+1]={title=quest[2]..(quest[1]==1017 and " - Recommended Level (28-30+)" or ""),body=status,rightColumn=true,
+                out.blocks[#out.blocks+1]={title=quest[2]..(quest[1]==1017 and " - Suggested Level (28-30+)" or ""),body=status,rightColumn=true,
                     action={kind="questLink",questId=quest[1],name=quest[2]}}
             end
             local macro,correct=C.EluneMacroState()
