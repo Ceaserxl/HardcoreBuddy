@@ -135,6 +135,9 @@ function U:Layout(width)
     end
     self.list:SetShown(self.mode=="library" or not self.mode); self.editor:SetShown(self.mode=="edit"); self.transfer:SetShown(self.mode=="transfer")
     self.list:SetWidth(width); self.editor:SetWidth(width); self.transfer:SetWidth(width)
+    -- Each mode is a child frame inside the Settings scroll child. Size the
+    -- active container as well as the outer content; zero-height containers
+    -- can be culled by the client even when their children have valid anchors.
     if self.mode=="edit" then
         local d,e=self.draft,self.editor
         e.profile.label:SetText("Scoring: "..A.Data.AdvisorGear[d.class][d.profile].name.."  >")
@@ -175,7 +178,8 @@ function U:Layout(width)
             b.label:SetText((i+9).."  |  "..A.Data.AdvisorTalents[d.class][key].name.." "..counted[key]); b.label:SetJustifyH("LEFT"); b:Show()
         end
         for i=#d.steps+1,#e.pathRows do e.pathRows[i]:Hide() end
-        return start+550+math.max(#A.GearAdvisor.WeightFields*32,#d.steps*30)
+        e:SetHeight(550+math.max(#A.GearAdvisor.WeightFields*32,#d.steps*30))
+        return start+e:GetHeight()
     elseif self.mode=="transfer" then
         self.transfer.import:SetEnabled(self.preview~=nil)
         local p=self.preview; local text="Review the build code before importing. Import creates a separate copy and does not select or apply it. Selecting or editing custom builds disables automatic talent spending until you enable it again."
@@ -186,7 +190,9 @@ function U:Layout(width)
             for _,f in ipairs(A.GearAdvisor.WeightFields) do rows[#rows+1]=f[2]..": "..p.weights[f[1]] end
             text=table.concat(rows,"\n")
         end
-        self.transfer.details:SetText(text); return start+278+(p and (#p.steps+#A.GearAdvisor.WeightFields+7)*16 or 40)
+        self.transfer.details:SetText(text)
+        self.transfer:SetHeight(278+(p and (#p.steps+#A.GearAdvisor.WeightFields+7)*16 or 40))
+        return start+self.transfer:GetHeight()
     end
     local builds=B:List(class)
     self.list.hint:SetText(class.." | "..#builds.." custom builds. Create copies or import talent paths with their stat weights.")
@@ -209,5 +215,6 @@ function U:Layout(width)
         r.delete.label:SetText(self.deleteID==build.id and "Confirm Delete" or "Delete")
     end
     for i=#builds+1,#self.list.rows do self.list.rows[i]:Hide() end
-    return start+68+#builds*80
+    self.list:SetHeight(68+#builds*80)
+    return start+self.list:GetHeight()
 end
