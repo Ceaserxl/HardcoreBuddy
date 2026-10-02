@@ -42,9 +42,9 @@ local context=A:GetContext(); local original=A.GetContext
 context.inventory={available=true,counts={}}
 A.GetContext=function() return context end
 A:Refresh()
-assert(find(id).stock:GetText()=="Missing")
+assert(find(id).stock:GetText()=="(0/19)")
 context.targets[id]=0; A:Refresh()
-assert(find(id).stock:GetText()=="Missing","Zero owned stays missing with zero target")
+assert(find(id).stock:GetText()=="(0/0)","Zero owned shows quantity with zero target")
 context.inventory.counts[id]=23; context.targets[id]=20; A:Refresh()
 assert(find(id).stock:GetText()=="(23/20)" and find(id).stockFill:GetWidth()==60,"Surplus is shown, bar capped")
 context.inventory.available=false; A:Refresh()

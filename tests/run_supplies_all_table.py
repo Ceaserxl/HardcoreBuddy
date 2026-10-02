@@ -31,7 +31,7 @@ for _,class in ipairs({"DRUID","HUNTER","MAGE","PALADIN","PRIEST","ROGUE","SHAMA
         assert(not row.quantity:IsShown() and not row.stockTrack:IsShown(),"Quantity editing stays in details")
         for _,edge in ipairs(row.statusBorder) do assert(not edge:IsShown(),"Table rows have no tile outlines") end
         local wanted=block.count==nil and (block.status=="choose" and "Choose rank" or "Unknown")
-            or block.count==0 and "Missing" or "("..block.count.."/"..(block.target or "?")..")"
+            or "("..block.count.."/"..(block.target or "?")..")"
         assert(row.stock:GetText()==wanted,"Table preserves supply stock states")
         if block.action and block.action.kind=="item" then clickable=clickable or row end
       end

@@ -360,7 +360,7 @@ local function renderBlock(frame, block, width)
         frame.body:SetFont(STANDARD_TEXT_FONT,12,""); frame.priority:SetFont(STANDARD_TEXT_FONT,12,"")
         frame.priority:SetJustifyH("LEFT"); frame.stock:SetJustifyH("LEFT")
         local stock=block.count==nil and (block.status=="choose" and "Choose rank" or "Unknown")
-            or block.count==0 and not block.materialCount and "Missing" or ("("..block.count.."/"..(block.target or "?")..")")
+            or ("("..block.count.."/"..(block.target or "?")..")")
         frame.stock:SetTextColor(unpack(STOCK_COLORS[block.count==0 and "missing" or block.status] or MUTED))
         for i,cell in ipairs({frame.title,frame.body,frame.category,frame.priority,frame.stock}) do
             placeSupplyCell(cell,({block.title,block.body or "",block.category or "",block.priority or "",stock})[i],i,width,9)
@@ -417,7 +417,7 @@ local function renderBlock(frame, block, width)
         frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",width-142,-8); frame.quantity:SetSize(42,28)
         frame.quantity.targetKey=block.targetKey
         if not frame.quantity:HasFocus() then frame.quantity:SetText(tostring(block.target or "")) end
-        local label=block.count==nil and "Unknown" or block.count==0 and not block.materialCount and "Missing"
+        local label=block.count==nil and "Unknown"
             or ("("..block.count.."/"..(block.target or "?")..")")
         frame.stock:SetTextColor(unpack(color)); measure(frame.stock,label,84,width-88,9)
         for _,edge in ipairs(frame.statusBorder) do edge:SetVertexColor(color[1],color[2],color[3],0.7) end
