@@ -491,7 +491,7 @@ local function renderCard(frame, data, width)
     Skin.Paint(frame,"note")
     frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and not data.supplyTable and 22 or 15,"")
     frame.title:Show(); frame.note:Show()
-    local y=frame.firstCard and 0 or 14
+    local y=(frame.firstCard or data.spellTable) and 0 or 14
     local headerTextWidth=0
     if data.headerText and not frame.headerText then frame.headerText=font(frame,14,GOLD) end
     if frame.headerText then
@@ -519,7 +519,7 @@ local function renderCard(frame, data, width)
     else
         local extraHeaderWidth=data.zoneRangeToggle and addon.window.atLevel:GetWidth()+8 or 0
         y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 140 or headerTextWidth>0 and headerTextWidth+30 or 12)-extraHeaderWidth, 0, y))+5
-        y=y+measure(frame.note, data.note, width-12, 0, y)+12
+        y=y+measure(frame.note, data.note, width-12, 0, y)+(data.spellTable and 3 or 12)
     end
     for _,control in ipairs(frame.npcFilters or {}) do control:Hide() end
     for _,label in ipairs(frame.npcHeaders or {}) do label:Hide() end
@@ -532,7 +532,7 @@ local function renderCard(frame, data, width)
             if not label then label=font(frame,10,MUTED); frame.spellHeaders[i]=label end
             label:Show(); placeSpellCell(label,text,i,width-12,y,true)
         end
-        y=y+26
+        y=y+22
     end
     if data.talentTable then
         frame.talentHeaders=frame.talentHeaders or {}
@@ -618,7 +618,7 @@ local function renderCard(frame, data, width)
         return y
     end
     local height=renderBlocks(frame.content, data.blocks, width-12)
-    frame.content:SetHeight(height); y=y+height+8; frame:SetHeight(y)
+    frame.content:SetHeight(height); y=y+height+(data.spellTable and 4 or 8); frame:SetHeight(y)
     return y
 end
 
@@ -1203,7 +1203,7 @@ function addon:Layout()
             or doc.view=="training" and self.state.filter=="Zone Advisor" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)
             or doc.advisor and not self.state.talentPath and 1
             or doc.professionPage and index>1 and #data.blocks>1 and 1) or nil
-        top=top+renderCard(c,data,contentWidth)+10
+        top=top+renderCard(c,data,contentWidth)+(data.spellTable and 8 or 10)
         if data.zoneRangeToggle then
             f.atLevel:SetParent(c); f.atLevel:SetFrameLevel(c.headerButton:GetFrameLevel())
             f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("RIGHT",c.headerButton,"LEFT",-8,0)
