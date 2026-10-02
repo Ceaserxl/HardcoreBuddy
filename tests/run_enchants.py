@@ -55,6 +55,42 @@ gear[7].level=14
 for _,r in ipairs(E.Options(ctx,slot(7),true)) do check(r.gearLevel<=14,"Lesser ranks preserve item restrictions") end
 ctx.level=1
 for _,r in ipairs(E.Options(ctx,slot(7),true)) do check(r.level<=1,"Armor kits retain actual use level requirements") end
+
+ctx.level=60
+local gloves={status="checked",kind="Gloves",slotId=10,itemLevel=60,equipLoc="INVTYPE_HAND"}
+local weapon={status="checked",kind="Weapon",slotId=16,itemLevel=60,equipLoc="INVTYPE_WEAPON"}
+local professionFamilies={Mining="mining",Herbalism="herbalism",Skinning="skinning",Fishing="fishing"}
+local tanks={Warrior=true,Paladin=true,Druid=true,Shaman=true}
+local meleeClasses={Warrior=true,Rogue=true,Paladin=true,Shaman=true}
+for _,mode in ipairs({"level","max"}) do
+ A.characterDB.enchantMode=mode
+ for _,class in ipairs({"Mage","Priest","Warlock","Hunter","Rogue","Warrior","Paladin","Shaman","Druid"}) do
+  ctx.characterClass=class; ctx.professions={skills={}}
+  for _,lesser in ipairs({false,true}) do
+   for _,r in ipairs(E.Options(ctx,gloves,lesser)) do
+    check(not professionFamilies[r.family],"Unknown professions hide every skill bonus")
+    check(r.family~="Threat" or tanks[class],"Threat enchant limited to tank-capable classes")
+   end
+   for _,r in ipairs(E.Options(ctx,weapon,lesser)) do
+    check(r.family~="Fiery Weapon" or meleeClasses[class],"Weapon proc class filtering")
+    check(r.family~="Strength" or meleeClasses[class] or class=="Druid","No strength enchant for hunter/caster")
+   end
+  end
+ end
+end
+ctx.characterClass="Mage"
+for family,profession in pairs(professionFamilies) do
+ ctx.professions={baseSkills={[profession]=1},skills={[profession]=6}}
+ local seen=false
+ for _,r in ipairs(E.Options(ctx,gloves,true)) do
+  if r.family==family then seen=true end
+  check(not professionFamilies[r.family] or professionFamilies[r.family]==profession,"Only matching learned profession bonuses")
+ end
+ check(seen,"Learned profession enables its enchant ranks")
+ ctx.professions.baseSkills[profession]=0
+ for _,r in ipairs(E.Options(ctx,gloves,true)) do check(r.family~=family,"Unlearning profession hides bonus despite modifiers") end
+end
+ctx.professions=nil
 ctx.level=60; gear={}; A.characterDB.enchantMode="level"
 
 check(#A.Data.Enchants.recipes==132,"Complete Era profession catalog")

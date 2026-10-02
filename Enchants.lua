@@ -64,8 +64,22 @@ local function points(r,class)
     local w=weights[f]
     return type(w)=="number" and amount*w or 0
 end
-local function relevant(r,class)
+local professionBonuses={Mining="mining",Herbalism="herbalism",Skinning="skinning",Fishing="fishing"}
+local tankClasses={Warrior=true,Paladin=true,Druid=true,Shaman=true}
+local meleeEffects={Striking=true,Impact=true,Crusader=true,["Fiery Weapon"]=true,
+    ["Icy Chill"]=true,Lifestealing=true,["Unholy Weapon"]=true,Demonslaying=true,
+    Beastslayer=true,["Elemental Slayer"]=true,Haste=true}
+local function relevant(r,context)
+    local class=context.characterClass
     local f=r.family
+    local profession=professionBonuses[f]
+    if profession then
+        local skills=context.professions and (context.professions.baseSkills or context.professions.skills)
+        return context.mode~="preview" and skills and (skills[profession] or 0)>0
+    end
+    if f=="Threat" then return tankClasses[class]==true end
+    if f=="Stealth" then return class=="Rogue" or class=="Druid" end
+    if meleeEffects[f] then return melee[class]==true end
     if f=="Intellect" or f=="Spirit" or f=="Mana" or f=="Mana Regeneration" then return mana[class] end
     if f=="Winter's Might" or f=="Frost Power" then return class=="Mage" or class=="Shaman" end
     if f=="Fire Power" then return class=="Mage" or class=="Warlock" or class=="Shaman" end
@@ -74,8 +88,9 @@ local function relevant(r,class)
         return caster[class] or class=="Druid" or class=="Shaman" or class=="Paladin"
     end
     if f=="Healing Power" then return class=="Priest" or class=="Druid" or class=="Shaman" or class=="Paladin" end
-    if f=="Agility" or f=="Strength" or f=="Striking" or f=="Impact" or f=="Crusader" then return not caster[class] end
-    return true -- Situational resistance, profession and proc enchants remain browsable.
+    if f=="Agility" then return not caster[class] end
+    if f=="Strength" then return melee[class] or class=="Druid" end
+    return true -- General survival, resistance and movement bonuses.
 end
 function E.Compatible(r,gear)
     if gear.status=="unknown" or gear.status=="empty" or gear.status=="incompatible" then return false end
@@ -120,7 +135,7 @@ function E.Options(context,g,showLesser)
         if not old or amount>previous or amount==previous and r.skill>old.skill then best[key]=r end
     end
     for _,r in ipairs(D.recipes) do
-        if relevant(r,context.characterClass) and withinRecommendationTier(r,context) then add(r) end
+        if relevant(r,context) and withinRecommendationTier(r,context) then add(r) end
     end
     for _,r in ipairs(kits) do
         if r.level<=context.level then add(r) end
@@ -259,7 +274,7 @@ function E.Detail(context,action)
         blocks[#blocks+1]=b
     end
     alternative(recommended)
-    alternative(g.current)
+    if g.current and (g.current.armorKit or relevant(g.current,context)) then alternative(g.current) end
     for _,option in ipairs(A.state and A.state.showLesserEnchants and options or g.options) do alternative(option) end
     heading("Materials",true,not selected and "No compatible enchant selected" or nil)
     if selected then

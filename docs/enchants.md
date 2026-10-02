@@ -55,6 +55,14 @@ gains or live auction price estimates.
 Defaults favor stamina/health, useful primary stats, and movement speed on boots.
 Mana enchants are excluded for classes without mana. Spell/healing enchants are
 restricted to relevant classes; melee damage enchants are not Hunter defaults.
+Threat-increasing enchants are limited to tank-capable classes (Warrior,
+Paladin, Druid and Shaman). Melee-hit proc/damage enchants are limited to
+Warrior, Rogue, Paladin and Shaman; Hunters and pure casters do not receive
+strength enchants. Stealth enchants are shown for Rogues and Druids.
+Mining, Herbalism, Skinning and Fishing bonuses require that profession to be
+learned. Unknown profession data and character previews hide these bonuses.
+This does not require Enchanting to receive ordinary enchants from an enchanter.
+Both recommendation modes and the lesser-ranks list use these filters.
 There is no dependency on another addon's scoring or data at runtime.
 
 ## Gear and material checks

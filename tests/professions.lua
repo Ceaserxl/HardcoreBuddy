@@ -94,9 +94,18 @@ local function run()
     check(P.Best(read,"antivenom").itemId==anti[2].itemId and read.skills.antivenom==nil,"Localized First Aid drives anti-venom with no extra skill line")
     check(not sections[1].open and not sections[2].open and sections[3].open and reentries==4 and not P.reading,
         "Restore each header and guard synchronous recursive events")
+    local localizedGathering={[186]="Bergbau",[182]="Kraeuterkunde",[393]="Kuerschnerei",[356]="Angeln",
+        [129]="Erste Hilfe",[202]="Ingenieurskunst"}
+    C_TradeSkillUI.GetTradeSkillDisplayName=function(id) return localizedGathering[id] end
+    sections[1].children={{name="Bergbau",rank=1,modifier=5},{name="Kraeuterkunde",rank=75},
+        {name="Kuerschnerei",rank=150},{name="Angeln",rank=225}}
+    read=P.Read()
+    check(read.baseSkills.mining==1 and read.skills.mining==6,"Mining ownership uses base skill without enchant bonuses")
+    check(read.baseSkills.herbalism==75 and read.baseSkills.skinning==150 and read.baseSkills.fishing==225,"Localized gathering professions detected")
     sections[1].children={}
     read=P.Read()
     check(read.skills.dummy==0 and P.Best(read,"dummy").status=="unlearned","A complete skill scan detects an unlearned profession")
+    check(read.baseSkills.mining==0 and read.baseSkills.herbalism==0 and read.baseSkills.skinning==0 and read.baseSkills.fishing==0,"Unlearned gathering professions cleared")
     C_SpellBook=nil
     IsPlayerSpell=function(id) return id==3275 or id==anti[1].spellId end
     read=P.Read()

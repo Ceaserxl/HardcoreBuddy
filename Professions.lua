@@ -30,9 +30,11 @@ P.recipes = {
         {itemId=19440, spellId=23787, craftSkill=300, useSkill=300},
     },
 }
-local familyOrder = {"bandage", "dummy", "cooking"}
-local skillIDs, spellIDs = {bandage=129,dummy=202,antivenom=129,cooking=185}, {bandage=3273,dummy=4036,cooking=2550}
-local names = {bandage="First Aid",dummy="Engineering",antivenom="First Aid",cooking="Cooking"}
+local familyOrder = {"bandage", "dummy", "cooking", "mining", "herbalism", "skinning", "fishing"}
+local skillIDs, spellIDs = {bandage=129,dummy=202,antivenom=129,cooking=185,mining=186,herbalism=182,skinning=393,fishing=356},
+    {bandage=3273,dummy=4036,cooking=2550,mining=2575,herbalism=2366,skinning=8613,fishing=7620}
+local names = {bandage="First Aid",dummy="Engineering",antivenom="First Aid",cooking="Cooking",
+    mining="Mining",herbalism="Herbalism",skinning="Skinning",fishing="Fishing"}
 local missingRecipe = {bandage="No bandage recipe learned",dummy="No target dummy recipe learned",antivenom="No anti-venom recipe learned"}
 local byItem = {}
 for family, recipes in pairs(P.recipes) do
