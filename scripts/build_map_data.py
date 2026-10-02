@@ -81,16 +81,66 @@ def lua(value):
     if isinstance(value,dict): return '{'+','.join('['+lua(k)+']='+lua(v) for k,v in value.items())+'}'
     raise TypeError(value)
 
+QUESTIE_FIXES='https://raw.githubusercontent.com/Questie/Questie/v10.0.0/Database/Corrections/classicNPCFixes.lua'
+QUESTIE_ZONES='https://raw.githubusercontent.com/Questie/Questie/v10.0.0/Database/Zones/zoneTables.lua'
+
+def corrected_classic(runtime, source):
+    """Apply coordinate corrections offline, never load another addon in WoW."""
+    classic=runtime.execute(source.split('QuestieDB.npcData = [[',1)[1].rsplit(']]',1)[0])
+    zone_source=fetch('source','questie-zoneTables',QUESTIE_ZONES)
+    zones=zone_source.split('ZoneDB.private.zoneIDs = {',1)[1].split('\n}',1)[0]
+    zone_ids=runtime.table_from({key:int(value) for key,value in re.findall(r'(\w+)\s*=\s*(\d+)',zones)})
+    keys=runtime.table_from({key:int(value) for key,value in re.findall(r"\['(\w+)'\] = (\d+)",source)})
+    fix_source=fetch('source','questie-npc-fixes',QUESTIE_FIXES)
+    # Evaluate only the literal Load() correction table, not event/faction code.
+    body=fix_source.split('    return {',1)[1].split('\n-- some quest items',1)[0].rsplit('\nend',1)[0]
+    fixes=runtime.execute('local npcKeys,zoneIDs,npcFlags,waypointPresets=...\nreturn {'+body,
+        keys,zone_ids,runtime.table_from({'NONE':0,'REPAIR':4096}),runtime.table())
+    for ident,patch in fixes.items():
+        if classic[ident]:
+            for field in (7,8,9):
+                if patch[field] is not None: classic[ident][field]=patch[field]
+    return classic
+
+def coordinate_pairs(value):
+    """Questie patrols may contain nested paths; include all recorded waypoints."""
+    if value is None: return []
+    if isinstance(value[1],(int,float)) and isinstance(value[2],(int,float)):
+        x,y=value[1],value[2]
+        return [[x,y]] if 0<=x<=100 and 0<=y<=100 else []
+    return [point for _,child in value.items() for point in coordinate_pairs(child)]
+
+def spawn_coordinates(record):
+    result={}
+    for map_id,area in MAPS.items():
+        points=[]
+        for field in (7,8):
+            if record[field]: points.extend(coordinate_pairs(record[field][area]))
+        if points: result[map_id]=sorted(set(tuple(p) for p in points))
+    return result
+
+def observed_coordinates(page):
+    match=re.search(r'var g_mapperData\s*=\s*',page)
+    locations=DECODER.raw_decode(page[match.end():])[0] if match else {}
+    result={}
+    if isinstance(locations,dict):
+        for map_id,area in MAPS.items():
+            for group in locations.get(str(area),[]):
+                for xy in group.get('coords',[]):
+                    if len(xy)>=2 and all(isinstance(v,(int,float)) and 0<=v<=100 for v in xy[:2]):
+                        result.setdefault(map_id,[]).append(xy[:2])
+    return result
+
 def main():
     from lupa.lua51 import LuaRuntime
     source=fetch('source','questie','https://raw.githubusercontent.com/Questie/Questie/v10.0.0/Database/Classic/classicNpcDB.lua')
-    classic=LuaRuntime().execute(source.split('QuestieDB.npcData = [[',1)[1].rsplit(']]',1)[0])
+    classic=corrected_classic(LuaRuntime(),source)
     dangers={ident:DANGER_NAMES[row[1]] for ident,row in classic.items() if row[1] in DANGER_NAMES}
     zones={}
     for continent in ('eastern-kingdoms','kalimdor'):
         page=fetch('zones',continent,'https://www.wowhead.com/classic/zones/'+continent+'?classic')
         zones.update({z['id']:z for z in listview(page,'zone')})
-    candidates={}; selected={}; audit={'zones':{},'missingLocations':[], 'npcSources':{}}
+    candidates={}; selected={}; audit={'zones':{},'missingLocations':[], 'npcSources':{},'markerReview':{}}
     def zone_job(pair):
         map_id,area=pair
         page=fetch('zone',area,f'https://www.wowhead.com/classic/zone={area}?classic')
@@ -114,8 +164,7 @@ def main():
     for ident,r in classic.items():
         if r[13]=='AH' or int(r[15] or 0)&(16|128|8192): continue
         if r[6] not in (1,2,3,4) and ident not in dangers: continue
-        spawns=r[7]
-        maps=[m for m,area in MAPS.items() if spawns and spawns[area]]
+        maps=list(spawn_coordinates(r))
         if ident in (14887,14888,14889,14890): maps=list(DRAGON_PORTALS)
         if not maps and ident not in candidates: continue
         n=candidates.setdefault(ident,{'id':ident,'react':[1 if r[13]=='A' else -1,1 if r[13]=='H' else -1]})
@@ -128,23 +177,20 @@ def main():
         # NPC-page cache; supplement missing map coordinates with Classic data.
         cached=CACHE/f'npc-{ident}.html'
         page=cached.read_text(encoding='utf-8') if cached.exists() else ''
-        match=re.search(r'var g_mapperData\s*=\s*',page)
-        locations=DECODER.raw_decode(page[match.end():])[0] if match else {}
-        coords={}
-        for map_id,area in MAPS.items():
-            if isinstance(locations,dict):
-                for group in locations.get(str(area),[]):
-                    for xy in group.get('coords',[]):
-                        if len(xy)>=2 and all(0<=v<=100 for v in xy[:2]): coords.setdefault(map_id,[]).append(xy[:2])
-            if map_id not in coords:
-                spawns=classic[ident][7]
-                if spawns and spawns[area]:
-                    coords[map_id]=[[point[1],point[2]] for _,point in spawns[area].items()
-                        if 0<=point[1]<=100 and 0<=point[2]<=100]
-        n['coordinateSource']='Wowhead + Questie Classic' if cached.exists() else 'Questie Classic'
+        observed=observed_coordinates(page)
+        coords=spawn_coordinates(classic[ident])
+        n['coordinateSource']='Questie Classic spawns + patrols + corrections'
+        # Historical encounter positions are not spawn evidence. Unknown event
+        # creatures stay in the catalogue, without potentially kited map pins.
+        review={'observationCounts':{m:len(points) for m,points in observed.items()},'spawnMaps':sorted(coords),
+            'unverifiedMaps':sorted(set(observed)-set(coords)),
+            'status':'documented-spawns' if coords else 'coordinates-unverified'}
         if ident in (14887,14888,14889,14890):
             coords=DRAGON_PORTALS
             n['coordinateSource']='Wowhead Dragons of Nightmare guide'
+            review['status']='reviewed-portal-rotation'; review['spawnMaps']=sorted(coords)
+        if not coords: n['coordinateSource']='Unverified coordinates; map pins withheld'
+        n['markerReview']=review
         return ident,n,coords
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
         for count,(ident,n,coords) in enumerate(pool.map(npc_job,sorted(candidates.items())),1):
@@ -161,7 +207,16 @@ def main():
                 if len(values)>12: values=[values[round(i*(len(values)-1)/11)] for i in range(12)]
                 entry['locations'][map_id]=values
                 if ident not in selected[map_id]['npcs']: selected[map_id]['npcs'].append(ident)
+            if coords:
+                for map_id,zone in selected.items():
+                    if map_id not in coords: zone['npcs']=[i for i in zone['npcs'] if i!=ident]
+            # Omen's reviewed event zone is Moonglade, not historical kite destinations.
+            if ident==15467:
+                for map_id,zone in selected.items():
+                    zone['npcs']=[i for i in zone['npcs'] if i!=ident]
+                selected[1450]['npcs'].append(ident)
             if not coords: audit['missingLocations'].append(ident)
+            audit['markerReview'][str(ident)]=n['markerReview']
             results[ident]=entry
             audit['npcSources'][str(ident)]={'reference':f'https://www.wowhead.com/classic/npc={ident}?classic',
                 'pageCached':(CACHE/f'npc-{ident}.html').exists(),'coordinates':n['coordinateSource']}
@@ -175,6 +230,15 @@ def main():
     out+=['}','']
     (ROOT/'Data/MapNPCs.lua').write_text('\n'.join(out),encoding='utf-8')
     audit['supplementalDatabase']='https://github.com/Questie/Questie/blob/v10.0.0/Database/Classic/classicNpcDB.lua'
+    audit['markerSummary']={
+        'npcRecords':len(results),'mapsReviewed':len(selected),
+        'publishedPoints':sum(len(points) for n in results.values() for points in n['locations'].values()),
+        'withoutVerifiedCoordinates':len(audit['missingLocations']),
+        'wowheadObservedPoints':sum(sum(r['observationCounts'].values()) for r in audit['markerReview'].values()),
+        'unsupportedSightingZones':sum(len(r['unverifiedMaps']) for r in audit['markerReview'].values()
+            if r['status']!='reviewed-portal-rotation')}
+    audit['coordinateCorrections']=QUESTIE_FIXES
+    audit['markerPolicy']='Documented Classic spawns and patrols; reviewed dragon portals; unverified sightings do not create pins.'
     audit['worldBossPortals']=DRAGON_GUIDE
     (ROOT/'docs/map-data-audit.json').write_text(json.dumps(audit,indent=2)+'\n',encoding='utf-8')
     print('DONE',len(selected),'zones',len(results),'NPCs;',len(audit['missingLocations']),'without mapped coordinates',flush=True)

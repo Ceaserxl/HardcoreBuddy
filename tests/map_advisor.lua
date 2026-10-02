@@ -8,6 +8,22 @@ end
 assert(count==46)
 assert(A.Data.MapNPCs[2529].locations[1421],"Original Son of Arugal in Silverpine")
 assert(A.Data.MapNPCs[589].kind=="danger")
+-- Historical kite/transport sightings cannot create foreign-zone spawn pins.
+assert(A.Data.MapNPCs[448].locations[1429],"Hogger retains Elwynn spawn")
+for map in pairs(A.Data.MapNPCs[448].locations) do assert(map==1429,"Hogger has no foreign spawn pins") end
+assert(not A.Data.MapNPCs[12476].locations[1454],"No Emeraldon Oracle spawn in Orgrimmar")
+assert(A.Data.MapNPCs[12476].locations[1440],"Oracle retains Ashenvale spawns")
+assert(A.Data.MapNPCs[412].locations[1431],"Corrections preserve Stitches event path")
+assert(A.Data.MapNPCs[12397].locations[1419],"Kazzak retains Blasted Lands spawn and patrol")
+assert(not A.Data.MapNPCs[12397].locations[1453],"No Kazzak spawn in Stormwind")
+for _,id in ipairs({448,12476,412,12397}) do
+    for map,zone in pairs(A.Data.MapZones) do
+        for _,npc in ipairs(zone.npcs) do
+            if npc==id then assert(A.Data.MapNPCs[id].locations[map],"Supported NPC zone lists follow actual spawns") end
+        end
+    end
+end
+
 assert(not A.Data.MapNPCs[203139],"No SoD replacement data")
 for _,id in ipairs({14887,14888,14889,14890}) do
     local npc=A.Data.MapNPCs[id]; assert(npc.kind=="boss")

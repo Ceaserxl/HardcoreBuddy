@@ -76,15 +76,15 @@ area naturally removes its extra tint. It never changes exploration flags,
 achievements, XP or the native texture pool. Texture manifests are checked
 against the client's map-art ID and tile dimensions before drawing.
 
-## Sources and scope (reviewed October 1, 2026)
+## Sources and scope (reviewed October 2, 2026)
 
 The build reviewed NPC lists for every zone in Wowhead's
 [Classic Eastern Kingdoms](https://www.wowhead.com/classic/zones/eastern-kingdoms)
 and [Classic Kalimdor](https://www.wowhead.com/classic/zones/kalimdor) catalogues,
-including the six capital cities. There are 1,080 selected NPC entries.
+including the six capital cities. There are 1,085 selected NPC entries.
 
 Wowhead rejected further NPC-page requests after a subset of pages had been
-cached. Missing coordinates and Classic identity/rank checks therefore use
+cached. Classic identity/rank checks and all ordinary spawn/patrol coordinates use
 [Questie's Classic NPC database, v10.0.0](https://github.com/Questie/Questie/blob/v10.0.0/Database/Classic/classicNpcDB.lua).
 Classic records supplement omissions caused by Season of Discovery replacements
 on Wowhead's lists (including Son of Arugal). No Questie addon code is embedded.
@@ -99,9 +99,18 @@ Friendly NPCs for your faction are hidden; trainer, vendor and flight-master
 records are excluded. Neutral enemies can appear. Some ranked bosses are city
 leaders or event creatures rather than ordinary roaming world bosses.
 
-There are **121 records without mapped outdoor coordinates**. They appear in
+There are **70 records without verified outdoor coordinates**. They appear in
 their zone lists with an explicit unavailable message, never an invented pin.
-Coordinates are representative spawn areas, not complete paths or live sightings.
+Coordinates now come from documented Classic spawns and patrols, including
+[Questie coordinate corrections](https://github.com/Questie/Questie/blob/v10.0.0/Database/Corrections/classicNPCFixes.lua).
+Historical Wowhead sightings are retained in the research cache for comparison,
+but cannot create pins or additional spawn zones. This removes kited/transported
+encounters such as Hogger outside Elwynn and Emeraldon Oracle in Orgrimmar.
+NPCs without supported coordinates remain in the lists without map pins.
+Omen retains only its documented Moonglade event-zone association.
+See [the complete marker review](map-marker-review.md) for removed zone sets and
+records awaiting coordinate verification.
+Coordinates are representative spawn/patrol areas, not complete paths or live sightings.
 Dense spawns are sampled into at most 12 actual recorded points per NPC/zone;
 nearby points are grouped into hoverable pins to reduce clutter. Records may
 include conditional quest/event spawns. The catalogue is not a guarantee of
@@ -123,8 +132,9 @@ fog overlay. Drawing follows the native Classic map API contract documented by
 
 Run `scripts/build_map_data.py` with Python and Lupa (Lua 5.1), and
 `scripts/build_map_tiles.py`. Downloads/cache are under `.release/map-research`.
-The NPC builder requests zone pages and uses already cached individual NPC
-pages; it does not retry blocked NPC pages. These scripts never run in WoW.
+The NPC builder reuses cached zone and individual NPC pages and compares sightings
+with the corrected Classic spawn/patrol database. Individual pages do not supply
+map pins. It does not retry blocked NPC pages. These scripts never run in WoW.
 
 To resume individual pages, run `scripts/resume_map_research.py` first. It stops
 at the first access/network error, caches successful pages and records its queue
@@ -134,6 +144,8 @@ the chosen delay. This pacing reduces request frequency but cannot guarantee
 that access will remain available. Then rebuild with `scripts/build_map_data.py`.
 See `docs/map-research-resume.md` for the latest pass and continuation instructions.
 
+`tests/run_map_coordinates.py` validates every published point and NPC/zone
+association against corrected spawn/patrol data and reviewed portals.
 `tests/run_map_advisor.py` verifies data relationships, core danger records,
 portal rotation, tile geometry, independent texture ownership, exploration/map
 changes, faction/category filters, silent notices and navigation with API mocks.

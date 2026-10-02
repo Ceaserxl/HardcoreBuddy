@@ -210,7 +210,7 @@ function S:Create(parent)
     general.autoRepair=check(repairs,"Automatically repair at vendors",46,function() return A.VendorServices.settings.autoRepair end,function(value)
         A.VendorServices.settings.autoRepair=value
     end)
-    label(buying,"Set Auto-buy amount and Refill below in each supply's details. Alerts start below the threshold; purchases refill toward the target.",12,16,86,300)
+    label(buying,"Set Auto-buy amount and Refill amount in each supply's details. Alerts start at or below the refill amount; purchases refill toward the target.",12,16,86,300)
     label(repairs,"Uses your own money when the vendor can repair and you can afford the full repair cost.",12,16,86,300)
     general.contentHeight=582
     local npc=self.pages["NPC Alerts"]

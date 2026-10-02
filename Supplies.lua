@@ -135,7 +135,7 @@ function S.Record(context, item, groupFamily)
         count=count, target=target, targetKey=id, status=status, missing=missing,
         owned=count ~= nil and count > 0 or false, available=count ~= nil,
         quantityNote=note, defaultTarget=suggested,
-        refillThreshold=oneTime and 0 or threshold,refillNeeded=not oneTime and count~=nil and count<threshold,
+        refillThreshold=oneTime and 0 or threshold,refillNeeded=not oneTime and threshold>0 and count~=nil and count<target and count<=threshold,
         optional=S.Category(item) == "Optional", tracking=target > 0,
     }
 end

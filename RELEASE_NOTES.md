@@ -1,4 +1,4 @@
-# Unreleased
+# HardcoreBuddy v0.7.0
 
 - Removed the Rotation Advisor prototype, its highlights and automatic diagnostic
   logging. Old per-character rotation traces are cleared when that character loads.
@@ -12,6 +12,13 @@
   export/import codes and in-game whisper links.
 - Custom weights feed gear, enchant and auction advice. Selecting or editing a
   custom path pauses automatic talent spending until explicitly enabled again.
+- Zone-entry notices use a framed five-NPC table with a link to the full zone list.
+- Map markers use documented Classic spawns, patrols and corrections; unsupported
+  historical sightings no longer create map pins.
+- Refill amount triggers at or below the configured quantity, including user items
+  and ammunition. Zero disables restocking; full stock does not trigger a refill.
+- Companion Spells prioritizes untrained spells available now, excludes learned
+  spells, and shows future training by default with the correct toggle state.
 
 # HardcoreBuddy v0.6.5
 

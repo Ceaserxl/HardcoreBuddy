@@ -54,9 +54,9 @@ as ordinary vendor water.
 
 Every supply's details, including user-added items and other profession ranks,
 has **Auto-buy amount** (the total to carry, not the number
-to buy each visit) and **Refill below**. Notifications and purchase prompts only
-start below the refill threshold. Food at 19/20 stays quiet with a threshold of
-5; food at 4/20 triggers restocking. Defaults are below 5 for ordinary supplies,
+to buy each visit) and **Refill amount**. Notifications and purchase prompts only
+start at or below the refill amount. Food at 19/20 stays quiet with a threshold of
+5; food at 5/20 or less triggers restocking. Defaults are 5 for ordinary supplies,
 200 for arrows/bullets, and 20 for thrown weapons, capped at the carry target.
 Zero disables that item's refill notifications/purchases. Once a refill starts,
 it continues toward the target even after crossing the threshold. Merchant pack

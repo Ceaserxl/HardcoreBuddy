@@ -308,8 +308,8 @@ local function renderBlock(frame, block, width)
             end)
             edit:SetScript("OnHide",function(e) e:ClearFocus() end)
             edit:SetScript("OnEnter",function(e)
-                GameTooltip:SetOwner(e,"ANCHOR_RIGHT"); GameTooltip:SetText("Refill below")
-                GameTooltip:AddLine("Notify and offer restocking only below this quantity. Refill to Auto-buy amount. Automatic purchasing must be enabled separately. Use 0 to disable reminders and restocking for this item.",.94,.92,.87,true)
+                GameTooltip:SetOwner(e,"ANCHOR_RIGHT"); GameTooltip:SetText("Refill amount")
+                GameTooltip:AddLine("Notify and offer restocking at or below this quantity. Refill to Auto-buy amount. Automatic purchasing must be enabled separately. Use 0 to disable reminders and restocking for this item.",.94,.92,.87,true)
                 GameTooltip:Show()
             end)
             edit:SetScript("OnLeave",function() GameTooltip:Hide() end)
@@ -317,7 +317,7 @@ local function renderBlock(frame, block, width)
         if frame.refill:HasFocus() and frame.refill.targetKey~=block.targetKey then frame.refill:ClearFocus() end
         frame.refill.targetKey=block.targetKey
         if not frame.refill:HasFocus() then frame.refill:SetText(tostring(block.refillThreshold or 0)) end
-        measure(frame.refillLabel,"Refill below",88,180,8)
+        measure(frame.refillLabel,"Refill amount",88,180,8)
         frame:SetHeight(28); return 28
     end
     if block.npcColumns then
