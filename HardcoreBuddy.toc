@@ -62,6 +62,8 @@ TalentAdvisor.lua
 CustomBuilds.lua
 CustomBuildsUI.lua
 CustomBuildsSharing.lua
+RotationAdvisor.lua
+RotationAdvisorUI.lua
 TalentRanks.lua
 MapAdvisor.lua
 MapSettings.lua

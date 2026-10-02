@@ -111,6 +111,37 @@ Open **Companion > Gear Advisor** or **Talent Advisor** in HardcoreBuddy, `/hcb 
 The gear percentage measures weighted item stats, not simulated damage or survival.
 Procs, active item effects and set bonuses are excluded. See [advisor details](docs/advisors.md).
 
+## Rotation Advisor proof of concept
+
+Open **Companion > Rotation Advisor** or `/hcb rotation`. In **Settings > Rotation
+Advisor**, enable **Assistant Mode** for a live Rogue or Mage. It recommends a
+learned spell, explains the reason and highlights matching spells on Blizzard
+action bars, even with the HCB window closed. **Disabled** is the default and is
+saved per character.
+
+The prototype covers Rogue builders, finishers, interrupts, reactive Riposte
+and Evasion; Mage uses a Frost leveling priority with interrupts, defensive
+spells, movement and mana conservation. It checks learned ranks, usability,
+cooldowns, spell range, player/target health, resources, combo points and buffs.
+Area damage requires observed nearby engaged enemies without observed crowd
+control or unengaged enemies in range. Nameplates and distance APIs cannot
+guarantee a complete count. Pet health and target mana appear as context; these
+two class priorities do not contain pet-management actions.
+
+**One Button Mode is unavailable.** A macro invoking an HCB slash command cannot
+authorize addon Lua to choose and cast a protected spell. The client handles
+secure commands separately from addon slash commands; a key press does not
+change that distinction. The prototype creates no rotation macros or bindings.
+It supports direct spell buttons on Blizzard action bars; third-party bars,
+PvP and full specialization-specific rotations are outside this first version.
+See [Classic Era command dispatch](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_ChatFrameBase/Shared/ChatFrameEditBox.lua#L218-L245)
+and the [restricted environment](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_RestrictedAddOnEnvironment/RestrictedEnvironment.lua).
+
+Offline validation: `tests/run_rotation_advisor.py`. In-game verification still
+needs Rogue/Mage combat, learned-rank changes, bar paging, highlighting with the
+window closed, disabling, and reload persistence. The prototype is guidance,
+not an optimized damage simulation.
+
 ## Custom talent builds and stat weights
 
 Open **Settings > Talent Advisor > Custom Builds & Stat Weights**. Create a copy

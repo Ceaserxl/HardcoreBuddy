@@ -1,0 +1,277 @@
+-- Classic Era proof of concept. Recommendations never execute combat actions.
+local _,A=...
+local R={spells={},highlights={},dirty=true,elapsed=0}; A.RotationAdvisor=R
+R.supported={MAGE="Mage",ROGUE="Rogue"}
+R.modes={disabled="Disabled",assistant="Assistant Mode",onebutton="One Button Mode"}
+R.oneButtonReason="Unavailable on Classic Era: a macro command cannot let addon code choose and cast a combat spell. Use Assistant Mode to highlight HCB's recommendation, then press that spell yourself."
+R.definitions={
+    MAGE={frostbolt=116,fireball=133,fireblast=2136,nova=122,explosion=1449,
+        counterspell=2139,barrier=11426,shield=1463,evocation=12051,shoot=5019},
+    ROGUE={strike=1752,eviscerate=2098,slice=5171,kick=1766,evasion=5277,
+        riposte=14251,hemorrhage=16511,flurry=13877,cheapshot=1833},
+}
+local ccIDs={118,6770,2094,1776,2637,9484,5782,6358}
+local function clock() return GetTime and GetTime() or 0 end
+local function combat() return InCombatLockdown and InCombatLockdown() or false end
+local function info(id)
+    if C_Spell and C_Spell.GetSpellInfo then return C_Spell.GetSpellInfo(id) end
+    if GetSpellInfo then
+        local name,rank,icon,castTime=GetSpellInfo(id)
+        if name then return {name=name,rank=rank,iconID=icon,castTime=castTime} end
+    end
+end
+local function known(id)
+    if IsPlayerSpell and IsPlayerSpell(id) then return true end
+    if C_SpellBook and C_SpellBook.IsSpellKnown then return C_SpellBook.IsSpellKnown(id) end
+    return IsSpellKnown and IsSpellKnown(id,false) or false
+end
+function R:Mode()
+    local mode=A.characterDB and A.characterDB.rotationMode
+    return mode=="assistant" and mode or "disabled"
+end
+function R:SetMode(mode)
+    if not A.characterDB or not self.modes[mode] then return end
+    if mode=="onebutton" then A:Print(self.oneButtonReason); return end
+    A.characterDB.rotationMode=mode; self.dirty=true; self:Update()
+    if A.window and A.window:IsShown() then A:Refresh() end
+end
+function R:RefreshSpells()
+    local _,class=UnitClass("player"); self.class=class; self.spells={}; self.names={}; self.ccNames={}
+    local byName={}
+    for key,id in pairs(self.definitions[class] or {}) do
+        local value=info(id)
+        if value then
+            self.names[key]=value.name; byName[value.name]=key
+            if known(id) then self.spells[key]={id=id,name=value.name,icon=value.iconID,level=0} end
+        end
+    end
+    for level,entries in pairs(A.Data.ClassSpells[self.supported[class]] or {}) do
+        for _,entry in ipairs(entries) do
+            if known(entry.id) then
+                local value=info(entry.id); local key=value and byName[value.name]
+                if key and (not self.spells[key] or level>self.spells[key].level) then
+                    self.spells[key]={id=entry.id,name=value.name,icon=value.iconID,level=level}
+                end
+            end
+        end
+    end
+    for _,id in ipairs(ccIDs) do local value=info(id); if value then self.ccNames[value.name]=true end end
+    self.dirty=false
+end
+local function percent(unit,power)
+    local value,maximum
+    if power~=nil then
+        if UnitPower and UnitPowerMax then value,maximum=UnitPower(unit,power),UnitPowerMax(unit,power) end
+    elseif UnitHealth and UnitHealthMax then value,maximum=UnitHealth(unit),UnitHealthMax(unit) end
+    if type(value)=="number" and type(maximum)=="number" and maximum>0 then
+        return math.max(0,math.min(100,value/maximum*100)),value,maximum
+    end
+end
+local function aura(unit,index,filter)
+    if C_UnitAuras and C_UnitAuras.GetAuraDataByIndex then return C_UnitAuras.GetAuraDataByIndex(unit,index,filter) end
+    if UnitAura then
+        local name,_,_,_,duration,expiration,source,_,_,id=UnitAura(unit,index,filter)
+        if name then return {name=name,duration=duration,expirationTime=expiration,sourceUnit=source,spellId=id} end
+    end
+end
+function R:Auras(unit,filter)
+    local out={}
+    for i=1,40 do
+        local a=aura(unit,i,filter); if not a then break end
+        if a.name then out[a.name]=a.expirationTime and a.expirationTime>0 and math.max(0,a.expirationTime-clock()) or math.huge end
+    end
+    return out
+end
+function R:Controlled(unit)
+    for name in pairs(self:Auras(unit,"HARMFUL")) do if self.ccNames[name] then return true end end
+    return false
+end
+local function hostile(unit)
+    return UnitExists and UnitExists(unit) and UnitCanAttack and UnitCanAttack("player",unit)
+        and not (UnitIsDeadOrGhost and UnitIsDeadOrGhost(unit))
+end
+local function close(unit)
+    -- A positive interact-distance result gives a conservative nearby range band.
+    if CheckInteractDistance and CheckInteractDistance(unit,3) then return true end
+    if UnitPosition then
+        local px,py,_,pm=UnitPosition("player"); local x,y,_,m=UnitPosition(unit)
+        if px and py and x and y and pm==m then return (px-x)^2+(py-y)^2<=64 end
+    end
+    return nil
+end
+function R:Enemies()
+    local units={"target"}
+    if C_NamePlate and C_NamePlate.GetNamePlates then
+        for i,plate in ipairs(C_NamePlate.GetNamePlates()) do
+            if i>40 then break end
+            local unit=plate.namePlateUnitToken or plate.UnitFrame and plate.UnitFrame.unit
+            if unit then units[#units+1]=unit end
+        end
+    end
+    local seen,count,nearby,unsafe={},0,0,false
+    for _,unit in ipairs(units) do
+        local guid=UnitGUID and UnitGUID(unit)
+        if guid and not seen[guid] and hostile(unit) then
+            seen[guid]=true
+            local threat=UnitThreatSituation and UnitThreatSituation("player",unit)
+            local engaged=threat~=nil or UnitIsUnit and (UnitIsUnit(unit.."target","player") or UnitIsUnit(unit.."target","pet"))
+            if engaged then count=count+1 end
+            local near=close(unit)
+            if near then
+                if engaged then nearby=nearby+1 end
+                if not engaged or self:Controlled(unit) then unsafe=true end
+            elseif near==nil then unsafe=true end -- Unknown proximity cannot establish safe AoE.
+        end
+    end
+    return count,nearby,not unsafe
+end
+local function cooldown(id)
+    if C_Spell and C_Spell.GetSpellCooldown then
+        local c=C_Spell.GetSpellCooldown(id)
+        if c then return c.startTime,c.duration,c.isEnabled~=false end
+    elseif GetSpellCooldown then
+        local start,duration,enabled=GetSpellCooldown(id); return start,duration,enabled~=0
+    end
+end
+function R:SpellState(spell,unit)
+    local usable,lowPower
+    if C_Spell and C_Spell.IsSpellUsable then usable,lowPower=C_Spell.IsSpellUsable(spell.id)
+    elseif IsUsableSpell then usable,lowPower=IsUsableSpell(spell.name) end
+    local start,duration,enabled=cooldown(spell.id)
+    local gcdStart,gcdDuration=cooldown(61304)
+    local onGCD=start and gcdStart and duration and gcdDuration and math.abs(start-gcdStart)<.05 and math.abs(duration-gcdDuration)<.05
+    local ready=enabled~=false and type(start)=="number" and type(duration)=="number"
+        and (start+duration<=clock()+.05 or onGCD)
+    local range
+    if unit then
+        if C_Spell and C_Spell.IsSpellInRange then range=C_Spell.IsSpellInRange(spell.id,unit)
+        elseif IsSpellInRange then range=IsSpellInRange(spell.name,unit) end
+        if range==1 then range=true elseif range==0 then range=false end
+    end
+    return {id=spell.id,name=spell.name,icon=spell.icon,ready=not not ready,usable=usable==true or usable==1,
+        lowPower=not not lowPower,range=range}
+end
+function R:Snapshot()
+    if self.dirty then self:RefreshSpells() end
+    local s={class=self.class,spells={},buffs={},combat=combat(),validTarget=hostile("target"),time=clock()}
+    s.dead=UnitIsDeadOrGhost and UnitIsDeadOrGhost("player")
+    s.mounted=IsMounted and IsMounted() or UnitOnTaxi and UnitOnTaxi("player")
+    s.playerHealth=percent("player"); s.targetHealth=percent("target"); s.petHealth=percent("pet")
+    s.powerType=UnitPowerType and UnitPowerType("player") or (self.class=="ROGUE" and 3 or 0)
+    s.powerPercent,s.power=percent("player",s.powerType)
+    s.targetPowerType=UnitPowerType and UnitPowerType("target")
+    if s.targetPowerType==0 then s.targetMana=percent("target",0) end
+    s.combo=GetComboPoints and GetComboPoints("player","target") or 0
+    s.moving=GetUnitSpeed and GetUnitSpeed("player")>0 or false
+    s.stealthed=IsStealthed and IsStealthed() or false
+    s.casting=(UnitCastingInfo and UnitCastingInfo("player")) or (UnitChannelInfo and UnitChannelInfo("player"))
+    s.attackingPlayer=UnitIsUnit and UnitIsUnit("targettarget","player") or false
+    s.targetPlayer=UnitIsPlayer and UnitIsPlayer("target") or false
+    s.targetClose=close("target"); s.controlled=s.validTarget and self:Controlled("target")
+    s.targets,s.nearby,s.safeAOE=self:Enemies()
+    local cast,finish,uninterruptible
+    if UnitCastingInfo then
+        local name,_,_,_,ending,_,_,blocked=UnitCastingInfo("target")
+        cast,finish,uninterruptible=name,ending,blocked
+    end
+    if not cast and UnitChannelInfo then
+        local name,_,_,_,ending,_,blocked=UnitChannelInfo("target")
+        cast,finish,uninterruptible=name,ending,blocked
+    end
+    s.interrupt=cast~=nil and uninterruptible~=true and type(finish)=="number" and finish/1000>clock()
+    local buffs=self:Auras("player","HELPFUL")
+    for key,name in pairs(self.names) do s.buffs[key]=buffs[name] end
+    for key,spell in pairs(self.spells) do
+        local selfSpell=key=="barrier" or key=="shield" or key=="evocation" or key=="evasion" or key=="flurry" or key=="slice"
+        s.spells[key]=self:SpellState(spell,not selfSpell and "target" or nil)
+    end
+    return s
+end
+-- Pure priorities make the prototype replayable without protected API calls.
+function R.Decide(s)
+    if not R.supported[s.class] then return nil,"This proof of concept supports Rogue and Mage." end
+    if s.dead or s.mounted then return nil,s.dead and "You are dead." or "Dismount to use the advisor." end
+    if s.casting then return nil,"Finish your current cast or channel." end
+    local function can(key) local a=s.spells[key]; return a and a.ready and a.usable and a.range~=false end
+    local function choose(key,reason) return key,reason end
+    if s.class=="MAGE" and not s.combat and s.powerPercent and s.powerPercent<25 and can("evocation") then return choose("evocation","Recover mana between pulls.") end
+    if not s.validTarget then return nil,"Select a living enemy." end
+    if s.targetPlayer then return nil,"PvE prototype: player targets are not supported." end
+    if s.controlled then return nil,"Target is crowd controlled. Avoid breaking it." end
+    local hp,thp,mp=s.playerHealth or 100,s.targetHealth or 100,s.powerPercent or 100
+    if s.class=="ROGUE" then
+        if s.combat and hp<=35 and s.attackingPlayer and s.targetClose and not s.buffs.evasion and can("evasion") then return choose("evasion","Low health while taking melee attacks.") end
+        if s.interrupt and can("kick") then return choose("kick","Interrupt the target's cast.") end
+        if s.stealthed and can("cheapshot") then return choose("cheapshot","Open from stealth with a stun.") end
+        if can("riposte") then return choose("riposte","Riposte is available after a parry.") end
+        if (s.combo or 0)>=5 or (s.combo or 0)>=3 and thp<=20 then
+            if can("eviscerate") then return choose("eviscerate","Spend combo points before the target dies.") end
+        end
+        if (s.combo or 0)>=1 and thp>40 and (s.buffs.slice or 0)<3 and can("slice") then return choose("slice","Maintain Slice and Dice while the target has health remaining.") end
+        if s.combat and s.nearby>=2 and s.safeAOE and thp>30 and not s.buffs.flurry and can("flurry") then return choose("flurry","Multiple engaged enemies verified nearby.") end
+        if can("hemorrhage") then return choose("hemorrhage","Build combo points with your learned Hemorrhage talent.") end
+        if can("strike") then return choose("strike","Build combo points.") end
+        return nil,"Wait for energy, cooldowns, or move into melee range."
+    end
+    if s.interrupt and can("counterspell") then return choose("counterspell","Interrupt the target's cast.") end
+    if s.combat and hp<=60 and not s.buffs.barrier and can("barrier") then return choose("barrier","Protect yourself at low health.") end
+    if s.combat and hp<=40 and s.targetClose and s.safeAOE and can("nova") then return choose("nova","Root nearby attackers to create distance.") end
+    if s.combat and hp<=35 and mp>35 and not s.buffs.barrier and not s.buffs.shield and can("shield") then return choose("shield","Low health with enough mana for Mana Shield.") end
+    if mp<=15 and not s.moving and can("shoot") then return choose("shoot","Conserve mana with your wand.") end
+    if s.combat and s.nearby>=3 and s.safeAOE and s.targetClose and mp>=40 and hp>55 and can("explosion") then return choose("explosion","At least three engaged enemies verified close; adequate mana and health.") end
+    if (s.moving or thp<=18) and can("fireblast") then return choose("fireblast",s.moving and "Use an instant spell while moving." or "Finish a low-health target.") end
+    if s.moving then return nil,"Stop moving to cast, or wait for an instant spell." end
+    if can("frostbolt") then return choose("frostbolt","Frost leveling filler: damage and a slowing effect.") end
+    if can("fireball") then return choose("fireball","Use Fireball until Frostbolt is learned.") end
+    if can("shoot") then return choose("shoot","Use your wand while mana or spells are unavailable.") end
+    return nil,"No usable spell: check mana, range and learned spells."
+end
+function R:PrepareHighlights()
+    if combat() then return end
+    for _,prefix in ipairs({"ActionButton","MultiBarBottomLeftButton","MultiBarBottomRightButton","MultiBarRightButton","MultiBarLeftButton","MultiBar5Button","MultiBar6Button","MultiBar7Button"}) do
+        for i=1,12 do
+            local button=_G[prefix..i]
+            if button and not self.highlights[button] then
+                local glow=button:CreateTexture(nil,"OVERLAY",nil,7)
+                glow:SetTexture("Interface\\Buttons\\UI-ActionButton-Border"); glow:SetBlendMode("ADD")
+                glow:SetPoint("TOPLEFT",-8,8); glow:SetPoint("BOTTOMRIGHT",8,-8); glow:SetVertexColor(1,.8,.15,1); glow:Hide()
+                self.highlights[button]=glow
+            end
+        end
+    end
+end
+function R:Highlight(spell)
+    self.highlightCount=0
+    for button,glow in pairs(self.highlights) do
+        local slot=button.action or button.GetAttribute and button:GetAttribute("action")
+        local kind,id
+        if slot and GetActionInfo then kind,id=GetActionInfo(slot) end
+        local match=false
+        if spell and kind=="spell" and button:IsVisible() then
+            local value=info(id); match=id==spell.id or value and value.name==spell.name or false
+        end
+        glow:SetShown(match)
+        if match then self.highlightCount=self.highlightCount+1; glow:SetAlpha(.65+.3*math.sin(clock()*5)^2) end
+    end
+end
+function R:Update()
+    if not A.characterDB then return end
+    if self:Mode()=="disabled" then self.current=nil; self.reason="Enable a mode in Rotation Advisor settings."; self:Highlight(nil)
+    else
+        self.snapshot=self:Snapshot()
+        local key,reason=self.Decide(self.snapshot)
+        self.current=key and self.snapshot.spells[key]; self.reason=reason
+        self:Highlight(self:Mode()=="assistant" and self.current or nil)
+    end
+    if self.RefreshView then self:RefreshView() end
+end
+local events=CreateFrame("Frame"); R.events=events
+for _,event in ipairs({"PLAYER_LOGIN","PLAYER_ENTERING_WORLD","SPELLS_CHANGED","SPELL_DATA_LOAD_RESULT","PLAYER_TALENT_UPDATE","PLAYER_REGEN_ENABLED","ACTIONBAR_SLOT_CHANGED","UPDATE_MACROS"}) do events:RegisterEvent(event) end
+events:SetScript("OnEvent",function(_,event)
+    if event=="SPELLS_CHANGED" or event=="SPELL_DATA_LOAD_RESULT" or event=="PLAYER_TALENT_UPDATE" or event=="PLAYER_ENTERING_WORLD" then R.dirty=true end
+    R:PrepareHighlights(); R:Update()
+end)
+events:SetScript("OnUpdate",function(_,elapsed)
+    R.elapsed=R.elapsed+elapsed; if R.elapsed<.2 then return end; R.elapsed=0
+    if R:Mode()~="disabled" then R:Update() end
+end)

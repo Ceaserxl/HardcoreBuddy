@@ -1178,6 +1178,7 @@ local FILTER_ICONS={
     General="Trade_Engineering",["Gear Advisor"]="INV_Chest_Chain",["Auction House"]="INV_Misc_Coin_01",
     ["Death Journal"]="INV_Misc_Book_09",["NPC Alerts"]="Ability_Warrior_BattleShout",
     Gear="INV_Chest_Chain",Talents="Ability_Marksmanship",Map="INV_Misc_Map_01",["Talent Advisor"]="INV_Misc_Book_11",
+    ["Rotation Advisor"]="Ability_DualWield",
     Essentials="INV_Misc_Bag_08",Preparation="INV_Misc_Note_01",Appearance="INV_Misc_Book_09",
     ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
     ["Reports"]="INV_Misc_Book_09",Options="Trade_Engineering",["All"]="INV_Misc_Bag_08",["Food & Drink"]="INV_Misc_Food_11",Elixirs="INV_Potion_27",
@@ -1317,7 +1318,7 @@ local function layoutDocument(self)
                 end
                 if addon.state.view=="training" then
                     if self.filter=="Pet Guide" then addon:Navigate("petguide"); return end
-                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Pet Training" or self.filter=="Spells" or self.filter=="Gear" or self.filter=="Talents" or self.filter=="First Aid" or self.filter=="Cooking") and self.filter or nil
+                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Pet Training" or self.filter=="Spells" or self.filter=="Gear" or self.filter=="Talents" or self.filter=="Rotation Advisor" or self.filter=="First Aid" or self.filter=="Cooking") and self.filter or nil
                     addon.state.query=nil; addon.state.mapNPCs=nil; addon.state.mapZonePicker=nil; addon.state.mapZone=nil; addon.state.mapCurrent=nil
                     local family=({Engineering="dummy"})[self.filter]
                     if family then addon:Activate({kind="profession",family=family}); return end
@@ -1457,6 +1458,7 @@ local function layoutDocument(self)
     f.scroll:ClearAllPoints(); f.scroll:SetPoint("TOPLEFT",left,-y); f.scroll:SetPoint("BOTTOMRIGHT",-40,18)
     local contentWidth=math.max(250,bodyWidth); f.content:SetWidth(contentWidth)
     local top=self.MapAdvisor:LayoutViewer(f.content,contentWidth,doc.view=="training" and self.state.filter=="Zone Advisor",f.scroll:GetHeight())
+    top=top+self.RotationAdvisor:LayoutView(f.content,contentWidth,doc.view=="training" and self.state.filter=="Rotation Advisor")
     if f.activeTableScroll then
         local old=f.activeTableScroll
         local name=old.GetName and old:GetName()
