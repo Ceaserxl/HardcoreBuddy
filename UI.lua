@@ -68,6 +68,13 @@ local function tooltip(self)
     if not block then return end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:ClearLines()
+    if block.enchantTooltip then
+        local enchant=block.enchantTooltip
+        GameTooltip:SetText(enchant.name,0.83,0.69,0.43,1,true)
+        GameTooltip:AddLine(enchant.description,0.94,0.92,0.87,true)
+        if block.enchantStatus then GameTooltip:AddLine(block.enchantStatus,0.72,0.73,0.75,true) end
+        GameTooltip:Show(); return
+    end
     if block.talentTooltip and GameTooltip.SetTalent then
         local talent=block.talentTooltip
         local ok=pcall(GameTooltip.SetTalent,GameTooltip,talent.tree,talent.index,false,false)
@@ -316,8 +323,24 @@ local function renderBlock(frame, block, width)
         local native=type(block.icon)=="number" and block.icon or nil
         local getIcon=C_Item and C_Item.GetItemIconByID or GetItemIcon
         if getIcon and block.itemId then local ok,value=pcall(getIcon,block.itemId); if ok then native=value end end
-        native=native or (texture and ("Interface\\Icons\\" .. texture)) or "Interface\\Icons\\INV_Misc_QuestionMark"
+        local named=type(block.icon)=="string" and not texture and
+            (block.icon:find("\\",1,true) and block.icon or "Interface\\Icons\\"..block.icon)
+        native=native or (texture and ("Interface\\Icons\\" .. texture)) or named or "Interface\\Icons\\INV_Misc_QuestionMark"
         if not frame.icon:SetTexture(native) then frame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark") end
+    end
+    if block.enchantRow then
+        Skin.Paint(frame,"row"); frame.chevron:Hide(); frame.meta:Hide()
+        frame.stock:Show(); frame.stock:SetJustifyH("RIGHT")
+        local color=STOCK_COLORS[block.enchantTone] or MUTED
+        measure(frame.stock,block.enchantStatus,100,width-108,7)
+        frame.stock:SetTextColor(unpack(color))
+        for _,edge in ipairs(frame.statusBorder) do edge:Show(); edge:SetVertexColor(color[1],color[2],color[3],0.7) end
+        frame.title:SetFont(STANDARD_TEXT_FONT,14,""); frame.title:SetTextColor(unpack(WHITE))
+        local titleHeight=measure(frame.title,block.title,width-164,52,7)
+        local bodyHeight=measure(frame.body,block.body,width-64,52,9+titleHeight)
+        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-11)
+        local h=math.max(56,17+titleHeight+bodyHeight)
+        frame:SetHeight(h); Skin.RowArtwork(frame); return h
     end
     if block.supplyColumns then
         Skin.Paint(frame,"note")
@@ -638,7 +661,7 @@ local function renderCard(frame, data, width)
         for i,block in ipairs(data.blocks) do
             local row=frame.content.blocks[i]
             if not row then row=newBlock(frame.content); frame.content.blocks[i]=row end
-            local details=block.fields~=nil
+            local details=block.fields~=nil or block.rightColumn
             row.supplyTile=false; row:ClearAllPoints()
             row:SetPoint("TOPLEFT",details and leftWidth+SPACE.columnGap or 0,-(details and rightHeight or leftHeight))
             local height=renderBlock(row,block,details and rightWidth or leftWidth)

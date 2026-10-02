@@ -5,6 +5,12 @@ and an exact-item material shopping list. Open a slot to browse alternatives,
 then open a recipe to inspect its effect, requirements and bag counts. A manual
 choice is saved per character and slot. Automatic recommendation clears it.
 
+Rows display `Slot - Enchant`, the effect as the subtitle, and status at the
+upper right. Missing enchants have red borders; the recommended enchant shows
+Enchanted and another applied enhancement shows Alt Enchanted, both green.
+Hover shows the enchant effect rather than its crafting recipe. Details place
+the recommendation and alternatives on the left and tracked reagents on the right.
+
 The bundled catalog contains 132 Classic Era Enchanting profession recipes and
 58 consumed material types, plus the existing six armor kits. It excludes Season
 of Discovery recipes. Quest/reputation head, leg and shoulder augments and

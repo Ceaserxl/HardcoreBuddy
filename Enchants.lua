@@ -150,12 +150,22 @@ local labels={empty="No item equipped",unknown="Waiting for item data",incompati
     checked="Armor kit or situational enchant",missing="|cffff785eMissing enchant|r",upgrade="|cffffcd52Older enchant: upgrade available|r",
     ready="|cff62d79bAlready applied|r",replace="Selected replacement: overwrites current enhancement",
     enchanted="Existing enhancement kept",preview="Preview: gear eligibility not checked"}
+local function enchantBlock(g,r,action)
+    local status,tone
+    if not g.enchantId then status,tone=labels[g.status] or "Unknown","unknown"
+    elseif g.enchantId==0 then status,tone="Missing","missing"
+    elseif r and g.enchantId==r.enchantId then status,tone="Enchanted","ready"
+    else status,tone="Alt Enchanted","ready" end
+    local b=row(g.name.." - "..(r and r.name:match(" %- (.*)$") or "No recommendation"),
+        r and r.description or labels[g.status],action,r and r.icon or "Trade_Engraving")
+    b.enchantRow=true; b.enchantStatus=status; b.enchantTone=tone
+    b.enchantTooltip=r
+    return b
+end
 function E.Card(context)
     local blocks={}
     for _,g in ipairs(E.Scan(context)) do
-        local r=g.recommendation
-        blocks[#blocks+1]=row(g.name,r and r.name:match(" %- (.*)$").."\n"..labels[g.status] or labels[g.status],
-            {kind="enchantSlot",slotId=g.slotId},r and r.icon or "Trade_Engraving",r and r.spellId)
+        blocks[#blocks+1]=enchantBlock(g,g.recommendation,{kind="enchantSlot",slotId=g.slotId})
     end
     return {title="Enchants",note="Class and level recommendations. Choose a slot for alternatives and materials.",blocks=blocks,supplyTable=true}
 end
@@ -163,41 +173,46 @@ function E.Detail(context,action)
     local g
     for _,v in ipairs(E.Scan(context)) do if v.slotId==action.slotId then g=v; break end end
     if not g then return {title="Enchants",blocks={}} end
-    local r=byId[action.spellId]
+    local selected=g.recommendation
+    for _,option in ipairs(g.options) do if option.spellId==action.spellId then selected=option end end
     local blocks={}
-    if action.kind=="enchantRecipe" and r then
-        blocks[#blocks+1]=row(r.name,r.description,nil,r.icon,r.spellId)
-        blocks[#blocks+1]=row("Gear check",labels[g.status]..(g.link and "\n"..g.link or "")
-            ..(g.itemLevel and " | Item level "..g.itemLevel or "")
-            .."\n"..(E.Compatible(r,g) and "Compatible item type" or "Not verified for this equipped item")
-            ..(g.enchantId and g.enchantId>0 and "\nReplaces the existing permanent enchant or armor kit; bonuses do not stack." or ""))
-        blocks[#blocks+1]=row("Requirements","Enchanter: Enchanting "..r.skill.." | "..r.tool
-            .."\nItem: "..r.slot..(r.gearLevel>1 and " | Item level "..r.gearLevel.."+" or "")
-            .."\nSuggested from Level "..r.level.." (budget tier, not a use requirement).")
-        if E.Compatible(r,g) and context.mode~="preview" then
-            blocks[#blocks+1]=row(g.recommendation==r and "Selected enchant" or "Use this enchant",g.recommendation==r and "Materials tracked when needed" or "Set the recommendation for this slot",
-                g.recommendation~=r and {kind="enchantChoose",slotId=g.slotId,spellId=r.spellId} or nil)
-        end
-        blocks[#blocks+1]=row("Materials","For one application. Tools are reusable; reagent counts below are consumed.")
-        for _,pair in ipairs(r.reagents) do
-            local m=D.materials[pair[1]]; local inv=context.inventory or {}
-            local owned=inv.available and inv.counts and (inv.counts[m.itemId] or 0)
-            local b=row(m.name,(owned and (owned>=pair[2] and "|cff62d79b" or "|cffff785e")..owned.."/"..pair[2].."|r in bags" or "Bags unavailable | Need "..pair[2]),nil,m.icon)
-            b.itemId=m.itemId; blocks[#blocks+1]=b
-        end
-        return {title=g.name.." enchant",blocks=blocks,fullWidth=true}
+    local function heading(title,right,body)
+        local b=row(title,body); b.plain=true; b.textInset=0; b.rightColumn=right; blocks[#blocks+1]=b
     end
-    blocks[#blocks+1]=row("Equipped item",(g.link or labels[g.status]).."\n"..labels[g.status])
+    heading("Recommended")
+    blocks[#blocks+1]=enchantBlock(g,g.recommendation,g.recommendation and
+        {kind="enchantRecipe",slotId=g.slotId,spellId=g.recommendation.spellId} or nil)
     if context.mode~="preview" then
-        blocks[#blocks+1]=row("Automatic recommendation","Choose by class and leveling tier",{kind="enchantChoose",slotId=g.slotId})
+        if g.selected or not g.recommendation then
+            blocks[#blocks+1]=row("Automatic recommendation","Use the class and leveling recommendation",{kind="enchantChoose",slotId=g.slotId})
+        end
         if g.slotId==5 or g.slotId==7 or g.slotId==8 or g.slotId==10 then
-            blocks[#blocks+1]=row("Use armor kits","Track compatible armor kits instead of enchant materials",{kind="enchantChoose",slotId=g.slotId,spellId="kit"},"INV_Misc_ArmorKit_17")
+            blocks[#blocks+1]=row("Use armor kits","Track a compatible armor kit",{kind="enchantChoose",slotId=g.slotId,spellId="kit"},"INV_Misc_ArmorKit_17")
         end
     end
-    for _,option in ipairs(g.options) do
-        blocks[#blocks+1]=row(option.name,option.effect.." | Suggested Level "..option.level,
-            {kind="enchantRecipe",slotId=g.slotId,spellId=option.spellId},option.icon,option.spellId)
+    heading("Alternatives")
+    for _,option in ipairs(g.options) do if option~=g.recommendation then
+        blocks[#blocks+1]=enchantBlock(g,option,{kind="enchantRecipe",slotId=g.slotId,spellId=option.spellId})
+    end end
+    heading("Materials",true,selected and selected.name or "No compatible enchant selected")
+    if selected then
+        if selected~=g.recommendation and context.mode~="preview" then
+            local b=row("Use this enchant","Track materials for this alternative",{kind="enchantChoose",slotId=g.slotId,spellId=selected.spellId})
+            b.rightColumn=true; blocks[#blocks+1]=b
+        end
+        for _,pair in ipairs(selected.reagents) do
+            local m=D.materials[pair[1]]; local inv=context.inventory or {}
+            local count=inv.available and inv.counts and (inv.counts[m.itemId] or 0) or nil
+            local b=row(m.name,"Required: "..pair[2],nil,m.icon)
+            b.itemId=m.itemId; b.supply=true; b.rightColumn=true
+            b.count=count; b.target=pair[2]; b.readOnlyTarget=true
+            b.status=count==nil and "unknown" or count>=pair[2] and "ready" or count==0 and "missing" or "low"
+            blocks[#blocks+1]=b
+        end
+        local b=row("Requirements","Enchanting "..selected.skill.." | "..selected.tool..
+            "\nFor one application. Materials are consumed; the rod is reusable."..
+            (g.enchantId and g.enchantId>0 and "\nApplying a different enchant replaces the current enhancement." or ""))
+        b.rightColumn=true; blocks[#blocks+1]=b
     end
-    if #g.options==0 then blocks[#blocks+1]=row("No compatible enchant recipes","Equip a supported piece to check enchant options. Legs use armor kits in this catalog.") end
-    return {title=g.name.." enchants",note="Existing enhancements are preserved. Open a recipe to inspect its materials.",blocks=blocks,fullWidth=true}
+    return {title=g.name.." enchants",blocks=blocks,itemLayout=true,fullWidth=true}
 end

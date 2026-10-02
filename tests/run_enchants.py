@@ -87,7 +87,7 @@ local recipe
 for _,b in ipairs(A.document.cards[1].blocks) do if b.action and b.action.kind=="enchantRecipe" then recipe=b.action; break end end
 check(recipe~=nil,"Recipe alternatives available")
 A:Activate(recipe)
-check(A.document.cards[1].title=="Wrists enchant","Recipe detail")
+check(A.document.cards[1].title=="Wrists enchants","Recipe detail")
 local material=false
 for _,b in ipairs(A.document.cards[1].blocks) do if b.itemId then material=true end end
 check(material,"Recipe material rows have item tooltips")
@@ -104,6 +104,21 @@ local saved=mats[1]
 for _,s in ipairs(E.Scan(ctx)) do if s.recommendation and gear[s.slotId] then gear[s.slotId].enchant=s.recommendation.enchantId end end
 check(saved and E.DetailMaterial(ctx,saved).recommendedTarget==0,"Open material detail drops obsolete default quantity")
 A:Back();A:Back();check(A.state.filter=="Enchants" and not A.state.detail,"Back restores root")
+local tile=A.document.cards[1].blocks[3]
+check(tile.title:find("Wrists - ",1,true)==1 and tile.enchantStatus=="Enchanted" and tile.enchantTone=="ready","Applied recommendation green")
+gear[9].enchant=99999; A:Refresh()
+check(A.document.cards[1].blocks[3].enchantStatus=="Alt Enchanted" and A.document.cards[1].blocks[3].enchantTone=="ready","Other permanent enchant green")
+gear[9].enchant=0; A:Refresh()
+check(A.document.cards[1].blocks[3].enchantStatus=="Missing" and A.document.cards[1].blocks[3].enchantTone=="missing","Missing enchant red")
+local frame=A.window.cards[1].content.blocks[3]
+check(frame.icon.texture=="Interface\\\\Icons\\\\"..frame.block.icon,"Bare enchant icon resolves to native texture")
+frame.scripts.OnEnter(frame)
+check(GameTooltip.hyperlink==nil and GameTooltip.lines[2]==frame.block.enchantTooltip.description,"Effect tooltip instead of crafting spell tooltip")
+A:Activate(frame.block.action)
+check(A.document.cards[1].itemLayout and A.document.cards[1].blocks[1].title=="Recommended","Two-column enchant detail")
+local right=false
+for _,b in ipairs(A.document.cards[1].blocks) do if b.itemId and b.rightColumn then right=true; check(b.supply and b.target>0,"Tracked reagent rows") end end
+check(right,"Materials occupy right column")
 print("Enchant checks passed: "..checks)
 ''')
 composite(lua.globals().MOCK.frames,addon.window).save(ROOT/'.release/enchants-preview.png')
