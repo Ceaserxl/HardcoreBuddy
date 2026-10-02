@@ -201,10 +201,41 @@ units.player.max=0; check(R:Snapshot().playerHealth==nil,"Unknown maximum health
 units.player.max=1000; units.player.power=900; combat=true
 
 -- Overlay belongs to HCB. Native procs and secure action attributes stay untouched.
+-- Model the native template's animation lifecycle, not its rendered artwork.
+-- Contract: Blizzard_ActionBar/Shared/ActionButtonSpellAlerts.{xml,lua}, Era 1.15.9.
+local createFrame=CreateFrame
+local function animation()
+    local a={playing=false,plays=0}
+    function a:Play() self.playing=true; self.plays=self.plays+1 end
+    function a:Stop() self.playing=false end
+    function a:IsPlaying() return self.playing end
+    function a:Finish()
+        if not self.playing then return end
+        self.playing=false
+        if self.onFinished then self.onFinished() end
+    end
+    return a
+end
+CreateFrame=function(kind,name,parent,template)
+    local frame=createFrame(kind,name,parent,template)
+    if template=='ActionButtonSpellAlertTemplate' then
+        frame:Hide()
+        frame.ProcStartAnim=animation(); frame.ProcLoop=animation()
+        frame.ProcStartAnim.onFinished=function() frame.ProcLoop:Play() end
+        frame:SetScript('OnHide',function(self)
+            self.nativeHideCalls=(self.nativeHideCalls or 0)+1
+            self.ProcLoop:Stop()
+        end)
+    end
+    return frame
+end
 local action=CreateFrame("CheckButton","ActionButton1",UIParent); action:SetSize(36,36); action:Show(); action.action=1
 local other=CreateFrame("CheckButton","MultiBarBottomLeftButton1",UIParent); other:Show(); other.action=2
 local lower=CreateFrame('CheckButton','MultiBarBottomRightButton1',UIParent); lower:Show(); lower.action=3
-action.nativeProcVisible=true
+local nativeProc=CreateFrame('Frame',nil,action,'ActionButtonSpellAlertTemplate')
+action.SpellActivationAlert=nativeProc; nativeProc:Show(); nativeProc.ProcLoop:Play()
+local originalResizeCalls=0
+action:SetScript('OnSizeChanged',function() originalResizeCalls=originalResizeCalls+1 end)
 GetActionInfo=function(slot) return "spell",slot==1 and 837 or slot==3 and 205 or 2136 end
 R:PrepareHighlights(); check(R.highlights[action]==nil,"Never create action-button regions during combat")
 combat=false; R:PrepareHighlights(); check(R.highlights[action]~=nil,"Prepare overlay outside combat")
@@ -219,20 +250,28 @@ A.characterDB.rotationMode="assistant"; R.dirty=true; R:Update()
 check(R.current and R.current.id==837,"Live assistant chooses learned spell")
 check(R.highlights[action]:IsShown() and not R.highlights[other]:IsShown(),"Only matching spell glows")
 check(not R.highlights[lower]:IsShown(),'Older rank with the same spell name is not highlighted')
-check(action.nativeProcVisible,"Native proc state left alone")
 local glow=R.highlights[action]
-local firstCoord=glow.ants.texCoord[1]
-glow.scripts.OnUpdate(glow,.035)
-check(glow.ants.texCoord[1]~=firstCoord,"Proc artwork advances while the recommendation remains active")
-local animationTime=glow.elapsed
+check(glow.template=='ActionButtonSpellAlertTemplate','Uses the actual Blizzard proc-alert template')
+check(action.SpellActivationAlert==nativeProc and nativeProc~=glow and nativeProc.ProcLoop:IsPlaying(),'Native proc ownership and animation stay untouched')
+check(glow.ProcStartAnim:IsPlaying() and glow.ProcStartAnim.plays==1,'New recommendation starts the native burst once')
+check(math.abs(glow:GetWidth()-50.4)<.001 and math.abs(glow:GetHeight()-50.4)<.001,'Native glow uses Blizzard button-relative sizing')
+check(glow.mouse==false and glow:GetFrameLevel()>action:GetFrameLevel(),'Native glow stays above the button without intercepting clicks')
+check(not glow.scripts.OnUpdate,'Blizzard animation groups drive the effect without a custom sprite loop')
 R:Update()
-check(glow.elapsed==animationTime,"Repeated recommendations do not restart the spinning highlight")
-glow.scripts.OnUpdate(glow,5)
-local coords=glow.ants.texCoord
-check(coords[1]>=0 and coords[2]<=1 and coords[3]>=0 and coords[4]<=1,"Animation stays inside the artwork after a slow frame")
+check(glow.ProcStartAnim.plays==1,'Repeated recommendation does not restart the native burst')
+glow.ProcStartAnim:Finish()
+check(glow.ProcLoop:IsPlaying(),'Native startup completion begins the sustained proc loop')
+R:Update()
+check(glow.ProcStartAnim.plays==1 and glow.ProcLoop.plays==1,'Polling leaves the running native loop uninterrupted')
+action:SetSize(42,40)
+check(originalResizeCalls==1 and math.abs(glow:GetWidth()-58.8)<.001 and glow:GetHeight()==56,'Bar resizing preserves existing scripts and native glow proportions')
 action.action=2; R:Update(); check(not R.highlights[action]:IsShown(),"Action-bar paging clears stale highlight")
+check(not glow.ProcLoop:IsPlaying() and not glow.ProcStartAnim:IsPlaying() and glow.nativeHideCalls==1,'Clearing advice stops both native animations and preserves template OnHide')
 action.action=1; action:Hide(); R:Update(); check(not R.highlights[action]:IsShown(),"Hidden bars cannot retain visible highlight")
 action:Show(); R:Update(); check(R.highlights[action]:IsShown(),"Visible matching action regains highlight")
+R:Highlight(nil); glow.ProcStartAnim:Finish()
+check(not glow.ProcLoop:IsPlaying(),'Clearing during the startup burst cannot start a hidden loop later')
+R:Update()
 for i=1,100 do R.events.scripts.OnUpdate(R.events,.2) end
 check(#MOCK.frames==regions,"Repeated updates do not allocate frames")
 units.player.power=50
@@ -250,6 +289,7 @@ check(not R.highlights[action]:IsShown() and not R.current,'World transition cle
 R.Snapshot=snapshot; R.events.scripts.OnEvent(R.events,'PLAYER_ENTERING_WORLD')
 check(R.current.id==837 and R.highlights[action]:IsShown(),'Entering world resumes saved Assistant mode')
 R:SetMode("disabled"); check(not R.highlights[action]:IsShown() and R.current==nil,"Disabling clears only HCB highlights")
+check(action.SpellActivationAlert==nativeProc and nativeProc:IsShown() and nativeProc.ProcLoop:IsPlaying(),'Disabling guidance leaves a real Blizzard spell proc running')
 local snapshots=0; local original=R.Snapshot
 R.Snapshot=function(self) snapshots=snapshots+1; return original(self) end
 for i=1,10 do R.events.scripts.OnUpdate(R.events,.2) end
