@@ -76,9 +76,9 @@ function S.Section(parent,title,top,height,column)
     return panel
 end
 function S.LayoutSections(parent,width)
-    local full=width-24; local half=(full-12)/2
+    local full=width-12; local half=(full-12)/2
     for _,panel in ipairs(parent.sectionCards or {}) do
-        panel:ClearAllPoints(); panel:SetPoint("TOPLEFT",12+(panel.sectionColumn==2 and half+12 or 0),-panel.sectionTop)
+        panel:ClearAllPoints(); panel:SetPoint("TOPLEFT",panel.sectionColumn==2 and half+12 or 0,-panel.sectionTop)
         panel:SetWidth(panel.sectionColumn and half or full); panel.title:SetWidth(panel:GetWidth()-32)
     end
 end

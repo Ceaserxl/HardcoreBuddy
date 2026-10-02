@@ -286,8 +286,8 @@ function H:LayoutPage(parent,left,top,width,height,state)
     self.host:SetSize(width,height)
     addon.Skin.LayoutSections(self.window,width)
     for i,stat in ipairs(self.window.stats) do
-        local cell=(width-68)/4
-        stat:ClearAllPoints(); stat:SetPoint("TOPLEFT",16+(i-1)*(cell+12),-64); stat:SetWidth(cell)
+        local cell=(width-48)/4
+        stat:ClearAllPoints(); stat:SetPoint("TOPLEFT",(i-1)*(cell+12),-64); stat:SetWidth(cell)
         stat.label:SetWidth(cell-24); stat.value:SetWidth(cell-24)
     end
     self.window.clear:ClearAllPoints(); self.window.clear:SetPoint("TOPRIGHT",-16,-122)
@@ -335,9 +335,9 @@ function H:BuildUI()
     local f=Page(host)
     self.window=f
     addon.Skin.Paint(f,"note")
-    local title=Text(f,22,"TOPLEFT",12,-12,500)
+    local title=Text(f,22,"TOPLEFT",0,-12,500)
     title:SetText("Death Journal"); title:SetTextColor(unpack(GOLD))
-    f.realm=Text(f,12,"TOPLEFT",12,-42,650); f.realm:SetTextColor(unpack(MUTED))
+    f.realm=Text(f,12,"TOPLEFT",0,-42,650); f.realm:SetTextColor(unpack(MUTED))
     f.tableCard=addon.Skin.SectionBackdrop(f,154,274)
     f.stats={}
     for i,entry in ipairs({{"count","REPORTS"},{"average","AVERAGE LEVEL"},{"highest","HIGHEST LEVEL"},{"hotspot","MOST REPORTED"}}) do
@@ -350,7 +350,7 @@ function H:BuildUI()
         f[entry[1]]=value; value:SetTextColor(unpack(GOLD)); stat.label=label; stat.value=value
         if entry[1]=="hotspot" then value:SetWordWrap(true); value:SetHeight(24) end
     end
-    local search=Edit(f,340,16,-122)
+    local search=Edit(f,340,0,-122)
     f.search=search
     search:SetMaxLetters(80)
     search.placeholder = Text(search,12,"LEFT",10,0,310)
@@ -478,9 +478,9 @@ function H:BuildUI()
     addon.Skin.Paint(options,"note")
     addon.Skin.SectionBackdrop(options,82,344,1).title:SetText("Reports & sound")
     addon.Skin.SectionBackdrop(options,82,344,2).title:SetText("Display & volume")
-    local optionsTitle=Text(options,22,"TOPLEFT",12,-12,700)
+    local optionsTitle=Text(options,22,"TOPLEFT",0,-12,700)
     optionsTitle:SetText("Death Journal"); optionsTitle:SetTextColor(unpack(addon.Skin.colors.gold))
-    local intro=Text(options,12,"TOPLEFT",20,-46,720)
+    local intro=Text(options,12,"TOPLEFT",0,-46,720)
     intro:SetText("Using another death alert addon? Turn off HardcoreBuddy death alerts below.\nYour journal and compact feed will keep recording reports."); intro:SetTextColor(unpack(MUTED))
     options.checks={}
     local checks={

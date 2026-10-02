@@ -65,13 +65,13 @@ function M:LayoutSettings(parent,left,top,width,visible)
             b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE"); b.label:SetText(text)
             b:SetScript("OnClick",click); f.buttons[#f.buttons+1]=b; return b
         end
-        label(f,"Zone Advisor",12,12,480,22):SetTextColor(unpack(Skin.colors.gold))
-        label(f,"Choose how terrain, NPC markers and zone notices appear.",12,46,700)
+        label(f,"Zone Advisor",0,12,480,22):SetTextColor(unpack(Skin.colors.gold))
+        label(f,"Choose how terrain, NPC markers and zone notices appear.",0,46,700)
         f.resetAll=button(f,"Reset all",0,12,120,function() M:ResetSettings("all") end)
         f.resetAll:ClearAllPoints(); f.resetAll:SetPoint("TOPRIGHT",-12,-12)
         local function section(name,title,description,y,height)
             local panel=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(panel,"card")
-            panel:SetPoint("TOPLEFT",12,-y); panel:SetSize(720,height)
+            panel:SetPoint("TOPLEFT",0,-y); panel:SetSize(720,height)
             panel.title=label(panel,title,16,16,460,15); panel.title:SetTextColor(unpack(Skin.colors.gold))
             panel.description=label(panel,description,16,48,680)
             local reset=button(panel,"Reset",0,12,120,function() M:ResetSettings(name) end)
@@ -139,11 +139,11 @@ function M:LayoutSettings(parent,left,top,width,visible)
     local scale=math.min(1,width/744); local baseWidth=width/scale
     f:SetScale(scale); f:SetSize(baseWidth,self:SettingsHeight())
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
-    local panelWidth=baseWidth-24
+    local panelWidth=baseWidth-12
     local explorationWidth=math.floor((panelWidth-12)*0.60)
     local noticeWidth=panelWidth-12-explorationWidth
     f.exploration:SetWidth(explorationWidth); f.notices:SetWidth(noticeWidth); f.markers:SetWidth(panelWidth)
-    f.notices:ClearAllPoints(); f.notices:SetPoint("TOPLEFT",24+explorationWidth,-82)
+    f.notices:ClearAllPoints(); f.notices:SetPoint("TOPLEFT",12+explorationWidth,-82)
     for _,panel in ipairs({f.exploration,f.notices,f.markers}) do
         panel.title:SetWidth(panel:GetWidth()-(panel==f.markers and 168 or 120))
         panel.description:SetWidth(panel:GetWidth()-32)

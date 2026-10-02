@@ -75,7 +75,7 @@ function H:BuildAppearance(host)
     f:SetAllPoints(host); A.Skin.Paint(f,"note"); f:Hide()
     A.Skin.SectionBackdrop(f,82,150)
     A.Skin.SectionBackdrop(f,244,176)
-    label(f,22,12,-12,700,"Appearance"):SetTextColor(unpack(A.Skin.colors.gold))
+    label(f,22,0,-12,700,"Appearance"):SetTextColor(unpack(A.Skin.colors.gold))
     label(f,12,20,-56,700,"Choose how much space a death report takes. Background opacity leaves text readable.")
     f.styles={}
     for i,name in ipairs({"Compact","Banner","Text-only"}) do

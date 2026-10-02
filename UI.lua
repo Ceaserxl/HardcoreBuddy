@@ -433,15 +433,15 @@ local function renderCard(frame, data, width)
     if data.itemLayout then
         frame.title:Hide(); frame.note:Hide()
     else
-        y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 154 or 28), 14, y))+5
-        y=y+measure(frame.note, data.note, width-28, 14, y)+12
+        y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 140 or 12), 0, y))+5
+        y=y+measure(frame.note, data.note, width-12, 0, y)+12
     end
     for _,control in ipairs(frame.npcFilters or {}) do control:Hide() end
     for _,label in ipairs(frame.npcHeaders or {}) do label:Hide() end
     if data.npcTable then
         frame.npcFilters=frame.npcFilters or {}; frame.npcHeaders=frame.npcHeaders or {}
         local filters={{"All","all"},{"Rares","rare"},{"Elites","elite"},{"World bosses","boss"},{"Dangerous","danger"}}
-        local buttonWidth=(width-24-24)/5
+        local buttonWidth=(width-12-24)/5
         for i,filter in ipairs(filters) do
             local control=frame.npcFilters[i]
             if not control then
@@ -451,21 +451,18 @@ local function renderCard(frame, data, width)
                 Skin.Button(control,"category"); frame.npcFilters[i]=control
             end
             control.category=filter[2]; control:Show(); control:SetWidth(buttonWidth)
-            control:ClearAllPoints(); control:SetPoint("TOPLEFT",12+(i-1)*(buttonWidth+6),-y)
+            control:ClearAllPoints(); control:SetPoint("TOPLEFT",(i-1)*(buttonWidth+6),-y)
             active(control,(addon.state.zoneNPCFilter or "all")==filter[2])
         end
         y=y+42
         for i,text in ipairs({"LEVEL","NPC","TYPE","LOCATION"}) do
             local label=frame.npcHeaders[i]
             if not label then label=font(frame,10,MUTED); frame.npcHeaders[i]=label end
-            label:Show(); placeNPCCell(label,text,i,width-24,y)
-            -- Rows live inside the card's 12px content inset.
-            label:ClearAllPoints(); label:SetPoint("TOPLEFT",24+(width-64)*npcColumnStarts[i],-y)
+            label:Show(); placeNPCCell(label,text,i,width-12,y)
         end
         y=y+24
     end
-    local contentInset=data.itemLayout and 0 or 12
-    frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT",contentInset,-y); frame.content:SetWidth(width-contentInset-12)
+    frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT",0,-y); frame.content:SetWidth(width-12)
     frame.content.supplyGrid=data.supplyTable
     frame.content.gridStart=data.supplyTable and 1 or frame.gridStart
     if data.fullWidth then frame.content.gridStart=nil end
@@ -510,7 +507,7 @@ local function renderCard(frame, data, width)
         frame.content:SetHeight(height); y=y+height+8; frame:SetHeight(y)
         return y
     end
-    local height=renderBlocks(frame.content, data.blocks, width-24)
+    local height=renderBlocks(frame.content, data.blocks, width-12)
     frame.content:SetHeight(height); y=y+height+8; frame:SetHeight(y)
     return y
 end

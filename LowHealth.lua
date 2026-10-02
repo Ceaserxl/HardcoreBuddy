@@ -79,8 +79,8 @@ function H:LayoutSettings(parent,x,y,width,height,visible)
             f:SetWidth(width); f:SetJustifyH("LEFT"); f:SetText(text)
             return f
         end
-        label("Low Health",22,12,-12,600):SetTextColor(unpack(addon.Skin.colors.gold))
-        label("Flashing red text and an alarm when health falls below your threshold.",12,12,-46,700)
+        label("Low Health",22,0,-12,600):SetTextColor(unpack(addon.Skin.colors.gold))
+        label("Flashing red text and an alarm when health falls below your threshold.",12,0,-46,700)
         local warning=addon.Skin.Section(page,"Warning",82,316,1)
         local sound=addon.Skin.Section(page,"Sound",82,316,2)
         page.checks={}

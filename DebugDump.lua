@@ -175,7 +175,7 @@ function D:Create(page)
     self.page=page
     Skin.SectionBackdrop(page,82,162).title:SetText("Capture data")
     Skin.SectionBackdrop(page,256,316).title:SetText("Dump output")
-    label(page,"Capture all HardcoreBuddy data and available character details for offline review.",12,46,700)
+    label(page,"Capture all HardcoreBuddy data and available character details for offline review.",0,46,700)
     page.dump=button(page,"Dump Data",28,130,function() self:Start() end)
     page.copyHint=label(page,"Ctrl + C to copy",188,128,530)
     page.cached=label(page,"",188,148,530)
