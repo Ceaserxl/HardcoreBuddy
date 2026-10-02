@@ -1,6 +1,22 @@
 -- Local vendor guidance and purchases verified against the open merchant.
 local addonName,A=...
 local V={}; A.VendorServices=V
+-- Standard Classic thrown weapons sold by general goods / weapon vendors.
+-- Deliberately exclude limited-stock greens, recipes and reputation rewards.
+local unlimitedThrown={[2947]=true,[2946]=true,[3107]=true,[3108]=true,[15327]=true,
+    [3111]=true,[3131]=true,[3135]=true,[3137]=true,[15326]=true}
+function V:UnlimitedSource(link)
+    local id=type(link)=="string" and tonumber(link:match("item:(%d+)"))
+    if not id then return end
+    if unlimitedThrown[id] then return "General goods and thrown-weapon vendors" end
+    local faction=UnitFactionGroup and UnitFactionGroup("player")
+    local friendly=faction=="Alliance" and "A" or faction=="Horde" and "H"
+    for _,vendor in pairs(A.characterDB and A.characterDB.vendorVisits or {}) do
+        if (vendor.faction==friendly or vendor.faction=="AH") and vendor.unlimited and vendor.unlimited[id] then
+            return vendor.name
+        end
+    end
+end
 local function money(amount)
     return GetCoinTextureString and GetCoinTextureString(amount) or tostring(amount).." copper"
 end
@@ -55,7 +71,13 @@ function V:LearnVendor(stock)
     local faction=UnitFactionGroup and UnitFactionGroup("player")
     local record=visits[id] or {name=name,faction=faction=="Horde" and "H" or "A",items={},locations={}}
     record.name=name; record.locations[map]={{x,y}}
-    for _,item in ipairs(stock) do record.items[item.id]=true end
+    record.unlimited=record.unlimited or {}
+    for _,item in ipairs(stock) do
+        record.items[item.id]=true
+        -- -1 is unlimited; zero means sold out, never unlimited. Old boolean
+        -- visit records carry no stock evidence and are intentionally ignored.
+        record.unlimited[item.id]=item.available==-1 and item.purchasable or nil
+    end
     visits[id]=record
 end
 function V:Capacity(id,maxStack)

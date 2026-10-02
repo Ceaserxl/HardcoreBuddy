@@ -30,6 +30,26 @@ guild funds are never used. Vendor purchases also default off.
 Best Armor in the auction window defaults on for characters without a saved
 choice. Existing explicit choices remain unchanged.
 
+## Auction vendor protection
+
+HardcoreBuddy buyouts are blocked for standard unlimited-stock throwing knives
+and axes, including Heavy Throwing Dagger, and other items observed as purchasable
+with unlimited stock at a friendly merchant. The message names the vendor (or
+vendor type for bundled throwing weapons), both in the AH status and chat.
+Checks run before lookup, confirmation and acceptance. Blizzard's own Browse
+purchase flow is unchanged.
+
+The Classic throwing-weapon catalog uses the ordinary general-goods tiers; see
+[Heavy Throwing Dagger](https://www.wowhead.com/classic/item=3108/heavy-throwing-dagger)
+and [Mabel Solaj's Classic inventory](https://www.wowhead.com/classic/npc=227/mabel-solaj).
+Live merchant evidence requires stock `-1` and an available ordinary-money purchase.
+Finite stock, sold-out stock, extended-cost items and old visits with no stock
+metadata never establish eligibility. Later finite-stock observations clear the
+unlimited flag. Vendor sell price and the existing vendor-location catalog alone
+are not evidence of unlimited supply. Coverage beyond the bundled throwing
+weapons expands as the character visits merchants; it is not a complete catalog
+of every vendor item.
+
 ## Debug exports
 
 Settings > Debug > Capture data retains the full incremental dump and progress

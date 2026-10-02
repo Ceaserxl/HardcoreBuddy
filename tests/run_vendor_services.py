@@ -75,6 +75,14 @@ assert(A.characterDB.auctionHighestArmorOnly==false and A.characterDB.debugAutoR
 
 C_Map.GetBestMapForUnit=function() return 1429 end
 assert(not V:FindVendor(117),'No cross-zone vendors')
+UnitName=function() return 'Stock test vendor' end
+UnitGUID=function() return 'Creature-0-0-0-0-999003-0' end
+V:LearnVendor({{id=999100,available=-1,purchasable=true},{id=999101,available=1,purchasable=true},
+ {id=999102,available=0,purchasable=true},{id=999103,available=-1,purchasable=false}})
+assert(V:UnlimitedSource('item:999100')=='Stock test vendor')
+for _,id in ipairs({999101,999102,999103}) do assert(not V:UnlimitedSource('item:'..id),'Limited, sold-out and restricted stock must not block AH') end
+V:LearnVendor({{id=999100,available=2,purchasable=true}})
+assert(not V:UnlimitedSource('item:999100'),'New finite stock removes previous unlimited evidence')
 print('PASS: prompt consent, opt-in automation, receipts, stock/bundle/money/bag limits, repair, interruption and vendor faction/location.')
 ''')
 

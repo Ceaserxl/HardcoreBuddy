@@ -28,6 +28,20 @@ local function find()
 end
 find(); assert(dialog and bids==0 and U.panel:IsShown())
 StaticPopupDialogs[dialog.which].OnAccept(nil,dialog.data); assert(bids==1)
+local beforeQueries=queries
+P:Find({name='Heavy Throwing Dagger',link='item:3108',count=200,buyout=500})
+assert(not P.request and not dialog and queries==beforeQueries and U.message:find('unlimited stock',1,true),'Vendor item blocked before AH query')
+local faction=UnitFactionGroup('player')=='Horde' and 'H' or 'A'
+TestAddon.characterDB.vendorVisits={[1]={name='Known vendor',faction=faction,items={[123]=true}}}
+assert(not TestAddon.VendorServices:UnlimitedSource(row.link),'Old vendor data without stock cannot block')
+TestAddon.characterDB.vendorVisits[1].unlimited={[123]=true}
+P:Confirm(1,row); assert(not dialog and bids==1,'Direct confirmation cannot bypass vendor guard')
+TestAddon.characterDB.vendorVisits[1].unlimited[123]=nil
+find(); assert(dialog,'Limited or unknown stock still permits confirmation')
+TestAddon.characterDB.vendorVisits[1].unlimited[123]=true
+StaticPopupDialogs[dialog.which].OnAccept(nil,dialog.data)
+assert(bids==1 and not dialog,'Accept rechecks newly learned vendor stock')
+TestAddon.characterDB.vendorVisits={}
 find(); link='item:123:0:0:0:0:0:-16'
 StaticPopupDialogs[dialog.which].OnAccept(nil,dialog.data); assert(bids==1,'Suffix change never buys wrong item')
 link=row.link; price=600; find(); assert(not dialog and bids==1,'Never substitutes a higher price')

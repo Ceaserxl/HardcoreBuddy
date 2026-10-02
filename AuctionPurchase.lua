@@ -12,9 +12,19 @@ end
 function P:Message(text)
     A.AuctionUpgrades.message=text; A.AuctionUpgrades:Refresh()
 end
+function P:VendorBlocked(row)
+    local source=A.VendorServices and A.VendorServices:UnlimitedSource(row and row.link)
+    if not source then return false end
+    self:Cancel()
+    local message=(row.name or "This item").." is sold by a vendor with unlimited stock: "..source..". AH purchase blocked."
+    self:Message(message)
+    if DEFAULT_CHAT_FRAME then DEFAULT_CHAT_FRAME:AddMessage("|cffffcd52HardcoreBuddy:|r "..message) end
+    return true
+end
 function P:Find(row)
     local U=A.AuctionUpgrades
     if not row or row.owned then return end
+    if self:VendorBlocked(row) then return end
     if not A.GearAdvisor:IsEnabled() or not U.open or U.scan or U.stale then self:Message("Stop scanning or refresh stale results before buying."); return end
     if not row.buyout or row.buyout<=0 then self:Message("This listing has no buyout."); return end
     self:Cancel()
@@ -28,6 +38,7 @@ function P:Matches(index,row)
         and (not UnitName or owner~=UnitName("player"))
 end
 function P:Confirm(index,row)
+    if self:VendorBlocked(row) then return end
     if not StaticPopupDialogs or not StaticPopupDialogs.BUYOUT_AUCTION or not StaticPopup_Show then
         self:Message("Auction confirmation is unavailable. Try reopening the auction house."); return
     end
@@ -36,6 +47,7 @@ function P:Confirm(index,row)
         dialog.OnShow=function(frame,data) MoneyFrame_Update(frame.MoneyFrame,data.row.buyout) end
         dialog.OnCancel=function() P.confirmation=nil end
         dialog.OnAccept=function(_,data)
+            if P:VendorBlocked(data.row) then return end
             local U=A.AuctionUpgrades
             if P.confirmation~=data or not A.GearAdvisor:IsEnabled() or not U.open or not U.panel:IsShown() or U.scan or U.stale
                 or not P:Matches(data.index,data.row) then
