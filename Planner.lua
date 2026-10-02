@@ -9,6 +9,7 @@ local nameOrder = {}
 for index, name in ipairs(D.Presentation.nameOrder) do nameOrder[name] = index end
 local grouped = {bandage = true, dummy = true, antivenom = true}
 P.grouped = grouped
+local noMana = {Rogue=true, Warrior=true}
 
 local function copy(t)
     local result = {}
@@ -93,7 +94,10 @@ function P.BuildList(class, level, faction)
             if allowed then items[#items+1]=allowed end
         end
     end
-    local eligible = filter(items, function(item) return P.MatchesClass(item, class) and P.AvailableAt(item) <= level end)
+    local eligible = filter(items, function(item)
+        return P.MatchesClass(item, class) and P.AvailableAt(item) <= level
+            and not (noMana[class] and item.family=="drink")
+    end)
     local families, seen, rows = {}, {}, {}
     for _, item in ipairs(eligible) do
         if not item.alternative and not seen[item.family] then

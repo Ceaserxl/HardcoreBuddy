@@ -157,7 +157,8 @@ local function supplyRows(context,state,onlyFamily)
                     b.supply,b.groupSupply,b.status=true,true,"choose"
                     b.priority=S.Priority(context,r.item)
                     b.target=r.target
-                    if r.groupFamily=="dummy" then b.itemId,b.icon=r.itemId,r.item.icon end
+                    b.icon=r.item.icon
+                    if r.groupFamily=="dummy" then b.itemId=r.itemId end
                     b.category="Emergency"
                     if automatic then
                         b.autoRank=true

@@ -6,12 +6,16 @@ from render_layout import boot
 lua,A=boot()
 lua.execute('''
 local A=TestAddon; local P,V=A.Planner,A.VendorServices
+local noMana={Rogue=true,Warrior=true}
 for _,class in ipairs(P.classes) do
     local drink
     for _,row in ipairs(P.BuildList(class,60,'Alliance').rows) do if row.family=='drink' then drink=row end end
-    local ids={[drink.itemId]=true}
-    for _,item in ipairs(drink.options) do ids[item.itemId]=true end
-    for _,id in ipairs({159,1179,1205,1708,1645,8766,19300}) do assert(ids[id],'Vendor drink alternative '..id) end
+    if noMana[class] then assert(not drink,'No water recommendation for '..class)
+    else
+        local ids={[drink.itemId]=true}
+        for _,item in ipairs(drink.options) do ids[item.itemId]=true end
+        for _,id in ipairs({159,1179,1205,1708,1645,8766,19300}) do assert(ids[id],'Vendor drink alternative '..id) end
+    end
 end
 local elune
 for _,item in ipairs(A.Data.Items.items) do if item.itemId==5816 then elune=item end end
@@ -55,7 +59,12 @@ for _,class in ipairs(P.classes) do
   for _,row in ipairs(P.BuildList(class,level,'Alliance').rows) do
    if row.family=='recovery' then food=row elseif row.family=='drink' then drink=row end
   end
-  assert(food and drink,class..' has food and drink')
+  assert(food and (drink~=nil)==not noMana[class],class..' has food and only mana users get drink recommendations')
+  for _,filter in ipairs({'Food & Drink','All','Essentials'}) do
+   for _,record in ipairs(A.Supplies.Build({characterClass=class,level=level,faction='Alliance',supplyDefaults={drink=159}}, {filter=filter})) do
+    assert(not noMana[class] or record.family~='drink','Saved water defaults cannot restore an automatic drink recommendation')
+   end
+  end
   local count=food.vendorFood and 1 or 0
   for _,item in ipairs(food.options) do
    assert(item.level<=level,'No unusable food')

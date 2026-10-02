@@ -59,6 +59,30 @@ for _,card in ipairs(A.window.cards) do if card:IsShown() then
     end
 end end
 assert(dummy and dummy.block.groupSupply and dummy.priority:GetText()=="Optional","Unlearned target dummies have classification")
+-- Profession placeholders keep meaningful icons without pretending a recipe is learned.
+for _,filter in ipairs({"Emergency","All"}) do
+    for _,skills in ipairs({{bandage=0,dummy=0},{bandage=300,dummy=0},{}}) do
+        context.professions={skills=skills,known={}}
+        for _,family in ipairs({"bandage","antivenom"}) do
+            for _,recipe in ipairs(A.Professions.recipes[family]) do context.professions.known[recipe.spellId]=false end
+        end
+        A.state.filter=filter; A:Refresh(true)
+        local seen={}
+        for _,card in ipairs(A.window.cards) do if card:IsShown() then
+            for _,r in ipairs(card.content.blocks) do
+                local b=r.block
+                if r:IsShown() and b and b.groupSupply and b.action and (b.action.family=="bandage" or b.action.family=="antivenom") then
+                    seen[b.action.family]=true
+                    assert(b.icon and r.icon:IsShown() and r.icon.texture and not r.icon.texture:find("QuestionMark",1,true),"Unlearned profession family has a visible icon")
+                    assert(not b.itemId and not b.body:find("Best learned recipe",1,true),"Icon does not claim a selected recipe")
+                end
+            end
+        end end
+        assert(seen.bandage and seen.antivenom,"Both profession families remain visible")
+    end
+end
+context.professions={available=true,skills={dummy=0,bandage=0},known={}}
+A.state.filter="Emergency"; A:Refresh(true)
 local recipes=A.Professions.recipes.dummy
 for _,recipe in ipairs(recipes) do context.professions.known[recipe.spellId]=false end
 context.professions.skills.dummy=300; context.professions.known[recipes[1].spellId]=true
