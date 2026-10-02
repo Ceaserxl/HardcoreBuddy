@@ -259,10 +259,13 @@ function R.Decide(s)
     if s.controlled then return nil,"Target is crowd controlled. Avoid breaking it." end
     local hp,thp,mp=s.playerHealth,s.targetHealth,s.powerPercent
     if s.class=="ROGUE" then
-        if not s.combat and s.targetCombat==false and not s.stealthed and not s.casting
+        if (s.combat or s.targetCombat==false) and not s.stealthed and not s.casting
             and s.targetClose==false and s.thrownEquipped and can("throw") and s.spells.throw.range==true then
-            return "throw","Optional: pull with Throw, then let the enemy come to you.",true
+            return "throw","",true
         end
+        -- Range alone covers approaching and fleeing enemies. Leave the gap
+        -- between throwing and melee range quiet, without movement prompts.
+        if s.targetClose==false then return nil,"" end
         if s.combat and hp and hp<=35 and s.attackingPlayer and s.targetClose and not s.buffs.evasion and can("evasion") then return choose("evasion","Low health while taking melee attacks.") end
         if s.interrupt and can("kick") then return choose("kick","Interrupt the target's cast.") end
         if s.stealthed and can("cheapshot") then return choose("cheapshot","Open from stealth with a stun.") end

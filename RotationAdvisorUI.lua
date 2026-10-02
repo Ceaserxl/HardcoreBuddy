@@ -23,7 +23,7 @@ function R:CreateSettings(page)
     end
     page.help=text(page.mode,modeHelp,16,78,704)
     page.rogue=S.Section(page,"Rogue",182,100,1)
-    page.rogue.note=text(page.rogue,"Builders, finishers, Slice and Dice, interrupts and Evasion. Optional blue Throw glow for ranged pulls before combat, outside stealth.",16,38,320)
+    page.rogue.note=text(page.rogue,"Builders, finishers, Slice and Dice, interrupts and Evasion. Optional blue Throw glow for approaching or fleeing enemies in throwing range, outside stealth.",16,38,320)
     page.mage=S.Section(page,"Mage",182,100,2)
     page.mage.note=text(page.mage,"Frost leveling, interrupts, shields and wand use. Reacts to movement, mana, health and observed nearby enemies.",16,38,320)
 end
@@ -67,7 +67,11 @@ function R:CreateView(parent)
     view.next.bar=text(view.next,"",16,94,690)
     view.next:EnableMouse(true)
     view.next:SetScript("OnEnter",function(frame)
-        if self.current then GameTooltip:SetOwner(frame,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink("spell:"..self.current.id); GameTooltip:AddLine(self.reason,1,.8,.4,true); GameTooltip:Show() end
+        if self.current then
+            GameTooltip:SetOwner(frame,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink("spell:"..self.current.id)
+            if self.reason and self.reason~="" then GameTooltip:AddLine(self.reason,1,.8,.4,true) end
+            GameTooltip:Show()
+        end
     end)
     view.next:SetScript("OnLeave",function() GameTooltip:Hide() end)
     view.character=S.Section(view,"Character",182,118,1); view.target=S.Section(view,"Target",182,118,2)

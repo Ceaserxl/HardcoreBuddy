@@ -96,8 +96,8 @@ local function pullState()
 end
 local pull=pullState()
 local key,reason,optional=R.Decide(pull)
-check(key=='throw' and optional==true and reason:find('Optional',1,true),'Throw is explicitly optional pre-combat advice')
-for _,field in ipairs({'combat','targetCombat','stealthed','dead','mounted','casting','controlled','targetPlayer','targetClose'}) do
+check(key=='throw' and optional==true and reason=='','Throw is optional without an instruction prompt')
+for _,field in ipairs({'targetCombat','stealthed','dead','mounted','casting','controlled','targetPlayer','targetClose'}) do
     pull=pullState(); pull[field]=true
     local result,_,isOptional=R.Decide(pull)
     check(result~='throw' and not isOptional,'No optional pull while '..field)
@@ -117,7 +117,13 @@ end
 pull=pullState(); pull.spells.throw=nil; check(R.Decide(pull)~='throw','Unlearned Throw cannot be suggested')
 pull=pullState(); pull.targetCombat=nil; check(R.Decide(pull)~='throw','Unknown target combat state cannot suggest a pull')
 pull=pullState(); pull.class='MAGE'; check(R.Decide(pull)~='throw','Mage does not get Rogue pull advice')
-pull=pullState(); pull.combat=true; pull.spells.strike.range=true
+pull=pullState(); pull.combat=true; pull.targetCombat=true
+key,reason,optional=R.Decide(pull)
+check(key=='throw' and optional and reason=='','Engaged enemies can receive another optional Throw without text')
+pull.spells.throw.range=false
+key,reason=R.Decide(pull)
+check(key==nil and reason=='','No range-gap movement or waiting prompt')
+pull=pullState(); pull.combat=true; pull.spells.strike.range=true; pull.targetClose=true
 key,_,optional=R.Decide(pull)
 check(key=='strike' and not optional,'Combat builders remain primary recommendations')
 
@@ -452,6 +458,20 @@ check(glow:IsShown() and glow.style=='optional','Throw button displays the blue 
 check(R.view.next.title:GetText()=='Optional Action' and R.view.next.bar:GetText():find('Blue',1,true),'Advisor labels optional advice and explains blue')
 local throwStarts=glow.ProcStartAnim.plays
 R:Update(); check(glow.ProcStartAnim.plays==throwStarts,'Optional advice does not restart on each poll')
+combat=true; targetCombat=true; units.target.x=12; R:Update()
+check(R.current.id==2764 and glow.style=='optional' and glow.ProcStartAnim.plays==throwStarts,'After pulling, an approaching enemy keeps the same blue Throw glow')
+check(R.view.next.reason:GetText()=='','Throw advice adds no instruction text')
+range[2764]=false; units.target.x=6; R:Update()
+check(not R.current and not glow:IsShown() and R.view.next.reason:GetText()=='','Gap between throwing and melee range clears glow without movement text')
+range[1752]=true; units.target.x=3; action.action=5; R:Update()
+check(R.current.id==1752 and glow:IsShown() and glow.style=='primary','Approaching enemy enters melee and switches advice to gold')
+range[1752]=false; range[2764]=true; units.target.x=18; action.action=4; R:Update()
+check(R.current.id==2764 and R.optional and glow:IsShown() and glow.style=='optional','Fleeing enemy in throwing range restores blue Throw advice')
+ready[2764]={startTime=now,duration=3,isEnabled=true}; R:Update()
+check(not R.current and not glow:IsShown(),'Throw on an actual cooldown is not highlighted against a fleeing enemy')
+ready[2764]=nil; R:Update()
+check(R.current.id==2764 and glow:IsShown(),'Another Throw is suggested when its actual cooldown expires')
+combat=false; targetCombat=false
 equippedRanged=nil; R:Update(); check(not R.current and not glow:IsShown(),'Removing ranged weapon clears the optional highlight')
 equippedRanged=33333; R:Update(); check(not R.current,'A gun cannot produce a Throw suggestion')
 equippedRanged=2947; range[2764]=nil; R:Update(); check(not R.current,'Unknown Throw range cannot suggest a pull')
