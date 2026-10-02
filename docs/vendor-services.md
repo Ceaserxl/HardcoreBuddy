@@ -6,20 +6,41 @@ vendor name within WoW's targeting range. The panel stays open. Right-click
 either marker to clear it; selecting another item replaces the marker. The Review
 supplies button still opens Essentials. Target buttons hide during combat.
 
-The local catalogue contains 314 vendors for 59 of the 157 supply item IDs
+The local catalogue contains 335 vendors for 96 of the 194 supply item IDs
 examined. Relationships, names, factions and coordinates were extracted from
 [Questie v10.0.0 Classic item data](https://github.com/Questie/Questie/blob/v10.0.0/Database/Classic/classicItemDB.lua)
 and [NPC data](https://github.com/Questie/Questie/blob/v10.0.0/Database/Classic/classicNpcDB.lua).
 There is no in-game Questie dependency. Opening a merchant also remembers its
 observed items and location for that character. Friendly vendors on the current
-map qualify at any distance within a capital, or within ten map percentage
-points elsewhere. Vendors with a single recorded location and no patrol route
+map qualify at any distance, in cities and outdoor zones alike. Vendors with a
+single recorded location and no patrol route
 are preferred, followed by those with unknown movement, then known roaming
 vendors. Distance breaks ties. Stationary status is inferred from source data;
 it is not a live movement check. Markers for roaming vendors show a recorded
 location, not live tracking. This is a proximity estimate, not pathfinding or
 an assertion that an inn vendor sells everything. Unknown sources are labeled
 honestly; crafted items and limited stock may require another source.
+
+All classes can choose the ordinary vendor foods and drinks. Food alternatives
+include bread, cheese, fish, fruit, fungus, meat and regional night elf foods at
+the usable recommended tier. Without an explicit saved food default, the supply
+recommendation prefers an equivalent sold by a local vendor using the same
+stationary-first and nearest-distance rules. Saved defaults are preserved.
+
+If a selected plain food has no vendor in the zone, Missing Essentials can mark
+a vendor selling an equivalent of the same tier. The row labels it as equivalent
+food; the tooltip and marker name the actual item. Select that item as the default
+in Supplies to track/restock it: vendor guidance never silently substitutes an
+item during a purchase. Haunch of Meat has no Stormwind seller in the reviewed
+Classic data; bread and cheese provide local equivalents.
+
+Food effects and icons are cached from Wowhead Classic item tooltips by
+`scripts/import_vendor_food.py`; names, use levels and seller relationships use
+the Questie sources above. See [Classic vendor food families](https://www.wowhead.com/classic/guide/wow-classic-best-food)
+and [Haunch of Meat vendor locations](https://www.wowhead.com/classic/item=2287/haunch-of-meat).
+The six ordinary vendor drink tiers were already present; they now allow every
+class. Reputation rewards and unavailable later-expansion drinks are not treated
+as ordinary vendor water.
 
 Opening a merchant offers only missing Essentials that its live stock can sell.
 Buy confirms that visit. Auto Buy Next Time saves the opt-in; it can also be

@@ -86,12 +86,16 @@ function R:BuildFrames()
         row:SetScript("OnEnter",function()
             GameTooltip:SetOwner(row,"ANCHOR_LEFT"); GameTooltip:SetText(row.name:GetText(),1,0.82,0,1)
             GameTooltip:AddLine(row.vendorName and ("Click to mark "..row.vendorName.." on the map and minimap. Vendor stock may vary.")
-                or "No known vendor nearby for this item. Open Essentials for acquisition details.",0.8,0.8,0.7,true)
+                or "No known vendor in this zone for this item. Open Essentials for acquisition details.",0.8,0.8,0.7,true)
+            if row.vendorLocation and row.vendorLocation.alternativeName then
+                GameTooltip:AddLine("Equivalent food: "..row.vendorLocation.alternativeName,1,.82,.3,true)
+                GameTooltip:AddLine("Choose it as your default in Supplies to track and restock it.",.8,.8,.7,true)
+            end
             GameTooltip:Show()
         end)
         row:SetScript("OnLeave",function() GameTooltip:Hide() end)
         row:SetScript("PostClick",function(_,_,down)
-            if not down and row.vendorLocation then A.VendorMarker:Set(row.vendorLocation,row.name:GetText()) end
+            if not down and row.vendorLocation then A.VendorMarker:Set(row.vendorLocation,row.vendorLocation.alternativeName or row.name:GetText()) end
         end)
     end
     f.more=text(f,10,14,0,300); f.more:SetTextColor(unpack(A.Skin.colors.muted))
@@ -139,10 +143,10 @@ function R:ShowPanel(missing,preview)
             local getIcon=C_Item and C_Item.GetItemIconByID or GetItemIcon
             row.icon:SetTexture(getIcon and getIcon(item.itemId) or "Interface\\Icons\\INV_Misc_Bag_08")
             row.name:SetText(item.name)
-            local vendor=not preview and A.VendorServices and A.VendorServices:FindVendor(item.itemId)
+            local vendor=not preview and A.VendorServices and A.VendorServices:FindSupplyVendor(item.itemId)
             row.vendorName=vendor and vendor.name or nil
             row.vendorLocation=vendor or nil
-            row.vendor:SetText(vendor and ("Buy from: "..vendor.name) or "No known vendor nearby")
+            row.vendor:SetText(vendor and (vendor.name..(vendor.alternativeName and " (equivalent food)" or "")) or "No known vendor in this zone")
             row:SetAttribute("type",vendor and "macro" or nil)
             row:SetAttribute("macrotext",vendor and ("/targetexact "..vendor.name:gsub("[\r\n]","")) or nil)
             A.Skin.Hover(row,vendor~=nil)

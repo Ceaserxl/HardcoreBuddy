@@ -145,6 +145,19 @@ function S.PreferredItem(context, row)
     local selected=row
     local wanted=(context.supplyDefaults or {})[row.family]
     for _,item in ipairs(row.options or {}) do if item.itemId==wanted then selected=item; break end end
+    if not wanted and row.family=="recovery" and addon.VendorServices then
+        local bestVendor
+        local function localFood(item)
+            if not item.vendorFood or item.level~=row.level then return end
+            local vendor=addon.VendorServices:FindVendor(item.itemId)
+            if vendor and (not bestVendor or vendor.movementRank<bestVendor.movementRank
+                or vendor.movementRank==bestVendor.movementRank and vendor.distance<bestVendor.distance) then
+                selected,bestVendor=item,vendor
+            end
+        end
+        localFood(row)
+        for _,item in ipairs(row.options or {}) do localFood(item) end
+    end
     local out={}; for k,v in pairs(selected) do out[k]=v end
     out.options={}
     if selected~=row then out.options[1]=row end

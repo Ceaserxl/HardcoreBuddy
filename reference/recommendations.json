@@ -21,7 +21,8 @@
         "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=117"
+      "acquisitionSource": "https://classicdb.ch/?item=117",
+      "vendorFood": true
     },
     {
       "id": "classic-haunch-of-meat",
@@ -42,7 +43,8 @@
         "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=2287"
+      "acquisitionSource": "https://classicdb.ch/?item=2287",
+      "vendorFood": true
     },
     {
       "id": "classic-mutton-chop",
@@ -63,7 +65,8 @@
         "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=3770"
+      "acquisitionSource": "https://classicdb.ch/?item=3770",
+      "vendorFood": true
     },
     {
       "id": "classic-wild-hog-shank",
@@ -84,7 +87,8 @@
         "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=3771"
+      "acquisitionSource": "https://classicdb.ch/?item=3771",
+      "vendorFood": true
     },
     {
       "id": "classic-cured-ham-steak",
@@ -105,7 +109,8 @@
         "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=4599"
+      "acquisitionSource": "https://classicdb.ch/?item=4599",
+      "vendorFood": true
     },
     {
       "id": "classic-roasted-quail",
@@ -126,7 +131,8 @@
         "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=8952"
+      "acquisitionSource": "https://classicdb.ch/?item=8952",
+      "vendorFood": true
     },
     {
       "id": "classic-refreshing-spring-water",
@@ -144,16 +150,11 @@
       "short": "Mana between fights",
       "caution": "",
       "classes": [
-        "Druid",
-        "Hunter",
-        "Mage",
-        "Paladin",
-        "Priest",
-        "Shaman",
-        "Warlock"
+        "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=159"
+      "acquisitionSource": "https://classicdb.ch/?item=159",
+      "vendorFood": true
     },
     {
       "id": "classic-ice-cold-milk",
@@ -171,16 +172,11 @@
       "short": "Mana between fights",
       "caution": "",
       "classes": [
-        "Druid",
-        "Hunter",
-        "Mage",
-        "Paladin",
-        "Priest",
-        "Shaman",
-        "Warlock"
+        "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=1179"
+      "acquisitionSource": "https://classicdb.ch/?item=1179",
+      "vendorFood": true
     },
     {
       "id": "classic-melon-juice",
@@ -198,16 +194,11 @@
       "short": "Mana between fights",
       "caution": "",
       "classes": [
-        "Druid",
-        "Hunter",
-        "Mage",
-        "Paladin",
-        "Priest",
-        "Shaman",
-        "Warlock"
+        "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=1205"
+      "acquisitionSource": "https://classicdb.ch/?item=1205",
+      "vendorFood": true
     },
     {
       "id": "classic-sweet-nectar",
@@ -225,16 +216,11 @@
       "short": "Mana between fights",
       "caution": "",
       "classes": [
-        "Druid",
-        "Hunter",
-        "Mage",
-        "Paladin",
-        "Priest",
-        "Shaman",
-        "Warlock"
+        "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=1708"
+      "acquisitionSource": "https://classicdb.ch/?item=1708",
+      "vendorFood": true
     },
     {
       "id": "classic-moonberry-juice",
@@ -252,16 +238,11 @@
       "short": "Mana between fights",
       "caution": "",
       "classes": [
-        "Druid",
-        "Hunter",
-        "Mage",
-        "Paladin",
-        "Priest",
-        "Shaman",
-        "Warlock"
+        "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=1645"
+      "acquisitionSource": "https://classicdb.ch/?item=1645",
+      "vendorFood": true
     },
     {
       "id": "classic-morning-glory-dew",
@@ -279,16 +260,11 @@
       "short": "Mana between fights",
       "caution": "",
       "classes": [
-        "Druid",
-        "Hunter",
-        "Mage",
-        "Paladin",
-        "Priest",
-        "Shaman",
-        "Warlock"
+        "All"
       ],
       "binding": false,
-      "acquisitionSource": "https://classicdb.ch/?item=8766"
+      "acquisitionSource": "https://classicdb.ch/?item=8766",
+      "vendorFood": true
     },
     {
       "id": "classic-brilliant-smallfish",
@@ -324,16 +300,16 @@
       "name": "Longjaw Mud Snapper",
       "itemId": 4592,
       "level": 5,
-      "detail": "Use: Restores 243.6 health over 21 sec. Must remain seated while eating.",
+      "detail": "Use: Restores 243.6 health over 21 sec.  Must remain seated while eating.",
       "icon": "/images/hcclassic/inv_misc_fish_32.jpg",
       "reference": "https://www.wowhead.com/classic/item=4592",
-      "verifiedOn": "2026-09-26",
+      "verifiedOn": "2026-10-02",
       "family": "recovery",
       "group": "Food & drink",
-      "ease": 2,
-      "route": "Buy the cooking recipe, then fish and cook the matching raw fish. See recipe vendors in the source.",
-      "short": "Fishing alternative",
-      "caution": "Requires fishing time and Cooking; no Well Fed buff.",
+      "ease": 0,
+      "route": "Buy from a food vendor that stocks this item.",
+      "short": "Health between fights",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
       "classes": [
         "All"
       ],
@@ -346,23 +322,24 @@
       "recipeSource": "https://www.wowhead.com/classic/item=6328",
       "spellSource": "https://www.wowhead.com/classic/spell=7753",
       "acquisitionSource": "https://classicdb.ch/?item=4592",
-      "alternative": true
+      "alternative": true,
+      "vendorFood": true
     },
     {
       "id": "classic-bristle-whisker-catfish",
       "name": "Bristle Whisker Catfish",
       "itemId": 4593,
       "level": 15,
-      "detail": "Use: Restores 552 health over 24 sec. Must remain seated while eating.",
+      "detail": "Use: Restores 552 health over 24 sec.  Must remain seated while eating.",
       "icon": "/images/hcclassic/inv_misc_fish_30.jpg",
       "reference": "https://www.wowhead.com/classic/item=4593",
-      "verifiedOn": "2026-09-26",
+      "verifiedOn": "2026-10-02",
       "family": "recovery",
       "group": "Food & drink",
-      "ease": 2,
-      "route": "Buy the cooking recipe, then fish and cook the matching raw fish. See recipe vendors in the source.",
-      "short": "Fishing alternative",
-      "caution": "Requires fishing time and Cooking; no Well Fed buff.",
+      "ease": 0,
+      "route": "Buy from a food vendor that stocks this item.",
+      "short": "Health between fights",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
       "classes": [
         "All"
       ],
@@ -375,7 +352,8 @@
       "recipeSource": "https://www.wowhead.com/classic/item=6330",
       "spellSource": "https://www.wowhead.com/classic/spell=7755",
       "acquisitionSource": "https://classicdb.ch/?item=4593",
-      "alternative": true
+      "alternative": true,
+      "vendorFood": true
     },
     {
       "id": "classic-mithril-head-trout",
@@ -755,7 +733,7 @@
       "family": "wellfed",
       "group": "Food & drink",
       "ease": 3,
-      "route": "Horde recipe: Ogg\u2019marr at Brackenwall Village, Dustwallow Marsh. Gather Tender Crocolisk Meat.",
+      "route": "Horde recipe: Ogg’marr at Brackenwall Village, Dustwallow Marsh. Gather Tender Crocolisk Meat.",
       "short": "+8 Stamina & Spirit",
       "caution": "Choose one food buff; allow the eating time stated in its tooltip. Recipe access and farming are much harder than the item use level suggests.",
       "classes": [
@@ -1104,7 +1082,7 @@
       "group": "Food & drink",
       "ease": 4,
       "route": "Gikkix, Steamwheedle Port, sells the recipe. Winter Squid is seasonal; stored fish or trading may be needed outside its season.",
-      "short": "+10 Agility \u00b7 seasonal",
+      "short": "+10 Agility · seasonal",
       "caution": "A specialist food alternative, not a routine leveling requirement. Item use level does not mean you can safely acquire it at that level.",
       "classes": [
         "Hunter",
@@ -1136,7 +1114,7 @@
       "group": "Food & drink",
       "ease": 4,
       "route": "Recipe drops from Pusillin in Dire Maul East; Runn Tum Tubers also come from the dungeon.",
-      "short": "+10 Intellect \u00b7 dungeon ingredients",
+      "short": "+10 Intellect · dungeon ingredients",
       "caution": "A specialist food alternative, not a routine leveling requirement. Item use level does not mean you can safely acquire it at that level.",
       "classes": [
         "Druid",
@@ -1171,7 +1149,7 @@
       "group": "Food & drink",
       "ease": 4,
       "route": "Learn through the Desert Recipe / Sharing the Knowledge quests in Silithus. Requires Cooking 285 and late-level access; Sandworm Meat comes from high-level worms.",
-      "short": "+20 Strength \u00b7 melee builds",
+      "short": "+20 Strength · melee builds",
       "caution": "A specialist food alternative, not a routine leveling requirement. Item use level does not mean you can safely acquire it at that level.",
       "classes": [
         "Warrior",
@@ -1620,7 +1598,7 @@
       "group": "Potions & elixirs",
       "ease": 1,
       "route": "Train the Alchemy recipe, then craft from the listed herbs and vial.",
-      "short": "Health regeneration \u00b7 1 hour",
+      "short": "Health regeneration · 1 hour",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Sustained health regeneration; carry one suitable rank. Lower ranks remain alternatives when the stronger recipe is harder to obtain.",
       "classes": [
         "All"
@@ -1644,7 +1622,7 @@
       "group": "Potions & elixirs",
       "ease": 1,
       "route": "Train the Alchemy recipe, then craft from the listed herbs and vial.",
-      "short": "Health regeneration \u00b7 1 hour",
+      "short": "Health regeneration · 1 hour",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Sustained health regeneration; carry one suitable rank. Lower ranks remain alternatives when the stronger recipe is harder to obtain.",
       "classes": [
         "All"
@@ -1668,7 +1646,7 @@
       "group": "Potions & elixirs",
       "ease": 3,
       "route": "Obtain the world-drop Alchemy recipe, then craft with Liferoot, Bruiseweed and a Leaded Vial. Recipe access is separate from the item use level.",
-      "short": "Health regeneration \u00b7 1 hour",
+      "short": "Health regeneration · 1 hour",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Sustained health regeneration; carry one suitable rank. Lower ranks remain alternatives when the stronger recipe is harder to obtain.",
       "classes": [
         "All"
@@ -1697,7 +1675,7 @@
       "group": "Potions & elixirs",
       "ease": 4,
       "route": "Buy the recipe from Rin'wosho the Trader with Honored Zandalar Tribe reputation, then craft. This is a late-game reputation route.",
-      "short": "Health regeneration \u00b7 1 hour",
+      "short": "Health regeneration · 1 hour",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Sustained health regeneration; carry one suitable rank. Lower ranks remain alternatives when the stronger recipe is harder to obtain.",
       "classes": [
         "All"
@@ -1900,7 +1878,7 @@
       "group": "Potions & elixirs",
       "ease": 3,
       "route": "Obtain the Alchemy recipe through its listed drop or quest, then craft.",
-      "short": "Agility \u00b7 ranged / melee builds",
+      "short": "Agility · ranged / melee builds",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Useful for weapon critical strikes, dodge and armor, including Warriors, Paladins and Enhancement Shamans. Not a spell-damage buff.",
       "classes": [
         "Hunter",
@@ -1934,7 +1912,7 @@
       "group": "Potions & elixirs",
       "ease": 3,
       "route": "Obtain the Alchemy recipe through its listed drop or quest, then craft.",
-      "short": "Agility \u00b7 ranged / melee builds",
+      "short": "Agility · ranged / melee builds",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Useful for weapon critical strikes, dodge and armor, including Warriors, Paladins and Enhancement Shamans. Not a spell-damage buff.",
       "classes": [
         "Hunter",
@@ -1968,7 +1946,7 @@
       "group": "Potions & elixirs",
       "ease": 1,
       "route": "Train the Alchemy recipe, then craft from the listed herbs and vial.",
-      "short": "Agility \u00b7 ranged / melee builds",
+      "short": "Agility · ranged / melee builds",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Useful for weapon critical strikes, dodge and armor, including Warriors, Paladins and Enhancement Shamans. Not a spell-damage buff.",
       "classes": [
         "Hunter",
@@ -2002,7 +1980,7 @@
       "group": "Potions & elixirs",
       "ease": 1,
       "route": "Train the Alchemy recipe, then craft from the listed herbs and vial.",
-      "short": "Agility \u00b7 ranged / melee builds",
+      "short": "Agility · ranged / melee builds",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Useful for weapon critical strikes, dodge and armor, including Warriors, Paladins and Enhancement Shamans. Not a spell-damage buff.",
       "classes": [
         "Hunter",
@@ -2036,7 +2014,7 @@
       "group": "Potions & elixirs",
       "ease": 1,
       "route": "Train the Alchemy recipe, then craft from the listed herbs and vial.",
-      "short": "Strength \u00b7 melee builds",
+      "short": "Strength · melee builds",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Optional sustained buff; choose the stat that suits your build.",
       "classes": [
         "Warrior",
@@ -2068,7 +2046,7 @@
       "group": "Potions & elixirs",
       "ease": 3,
       "route": "Obtain the Alchemy recipe through its listed drop or quest, then craft.",
-      "short": "Strength \u00b7 melee builds",
+      "short": "Strength · melee builds",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Optional sustained buff; choose the stat that suits your build.",
       "classes": [
         "Warrior",
@@ -2100,7 +2078,7 @@
       "group": "Potions & elixirs",
       "ease": 3,
       "route": "Obtain the Alchemy recipe through its listed drop or quest, then craft.",
-      "short": "Strength \u00b7 melee builds",
+      "short": "Strength · melee builds",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Optional sustained buff; choose the stat that suits your build.",
       "classes": [
         "Warrior",
@@ -2132,7 +2110,7 @@
       "group": "Potions & elixirs",
       "ease": 1,
       "route": "Train the Alchemy recipe, then craft from the listed herbs and vial.",
-      "short": "Intellect \u00b7 mana builds",
+      "short": "Intellect · mana builds",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Optional sustained buff; choose the stat that suits your build.",
       "classes": [
         "Druid",
@@ -2167,7 +2145,7 @@
       "group": "Potions & elixirs",
       "ease": 1,
       "route": "Train the Alchemy recipe, then craft from the listed herbs and vial.",
-      "short": "Intellect \u00b7 mana builds",
+      "short": "Intellect · mana builds",
       "caution": "Craft yourself or buy/trade the finished item on a trading-enabled realm; availability and prices vary. Optional sustained buff; choose the stat that suits your build.",
       "classes": [
         "Druid",
@@ -2259,7 +2237,7 @@
       "family": "Free Action Potion",
       "group": "Emergency supplies",
       "ease": 2,
-      "route": "Recipe sold by alchemy suppliers, including Soolie Berryfizz in Ironforge and Kor\u2019geld in Orgrimmar.",
+      "route": "Recipe sold by alchemy suppliers, including Soolie Berryfizz in Ironforge and Kor’geld in Orgrimmar.",
       "short": "Prevent stuns & movement impairment",
       "caution": "Use before the effect lands: it does not remove effects already on you. Shares the potion cooldown.",
       "classes": [
@@ -2952,7 +2930,7 @@
       "group": "Emergency supplies",
       "ease": 1,
       "route": "Warlocks create these with a Soul Shard once the spell rank is trained. Other classes can receive one through trade.",
-      "short": "Instant healing \u00b7 Warlock-created",
+      "short": "Instant healing · Warlock-created",
       "caution": "Shown at the Warlock creation level, not the lower item use level. Self Found characters cannot receive one from another player. Shares a cooldown with target dummies and Felwood healing plants. Base untalented healing shown; Improved Healthstone can increase it.",
       "classes": [
         "Warlock"
@@ -2977,7 +2955,7 @@
       "group": "Emergency supplies",
       "ease": 1,
       "route": "Warlocks create these with a Soul Shard once the spell rank is trained. Other classes can receive one through trade.",
-      "short": "Instant healing \u00b7 Warlock-created",
+      "short": "Instant healing · Warlock-created",
       "caution": "Shown at the Warlock creation level, not the lower item use level. Self Found characters cannot receive one from another player. Shares a cooldown with target dummies and Felwood healing plants. Base untalented healing shown; Improved Healthstone can increase it.",
       "classes": [
         "Warlock"
@@ -3002,7 +2980,7 @@
       "group": "Emergency supplies",
       "ease": 1,
       "route": "Warlocks create these with a Soul Shard once the spell rank is trained. Other classes can receive one through trade.",
-      "short": "Instant healing \u00b7 Warlock-created",
+      "short": "Instant healing · Warlock-created",
       "caution": "Shown at the Warlock creation level, not the lower item use level. Self Found characters cannot receive one from another player. Shares a cooldown with target dummies and Felwood healing plants. Base untalented healing shown; Improved Healthstone can increase it.",
       "classes": [
         "Warlock"
@@ -3027,7 +3005,7 @@
       "group": "Emergency supplies",
       "ease": 1,
       "route": "Warlocks create these with a Soul Shard once the spell rank is trained. Other classes can receive one through trade.",
-      "short": "Instant healing \u00b7 Warlock-created",
+      "short": "Instant healing · Warlock-created",
       "caution": "Shown at the Warlock creation level, not the lower item use level. Self Found characters cannot receive one from another player. Shares a cooldown with target dummies and Felwood healing plants. Base untalented healing shown; Improved Healthstone can increase it.",
       "classes": [
         "Warlock"
@@ -3052,7 +3030,7 @@
       "group": "Emergency supplies",
       "ease": 1,
       "route": "Warlocks create these with a Soul Shard once the spell rank is trained. Other classes can receive one through trade.",
-      "short": "Instant healing \u00b7 Warlock-created",
+      "short": "Instant healing · Warlock-created",
       "caution": "Shown at the Warlock creation level, not the lower item use level. Self Found characters cannot receive one from another player. Shares a cooldown with target dummies and Felwood healing plants. Base untalented healing shown; Improved Healthstone can increase it.",
       "classes": [
         "Warlock"
@@ -3152,7 +3130,7 @@
       "group": "Route-specific backups",
       "ease": 3,
       "route": "Durotar: A Solvent Spirit rewards a finite supply. Usually a Horde leveling-route reward.",
-      "short": "Root \u00b7 limited quest supply",
+      "short": "Root · limited quest supply",
       "caution": "Binds on pickup; cannot be replenished from the same completed quest.",
       "classes": [
         "All"
@@ -3175,7 +3153,7 @@
       "group": "Route-specific backups",
       "ease": 3,
       "route": "Tirisfal Glades: A New Plague (quest 368) rewards a finite supply.",
-      "short": "Sleep \u00b7 Horde quest supply",
+      "short": "Sleep · Horde quest supply",
       "caution": "Horde quest; binds on pickup. Damage breaks the sleep.",
       "classes": [
         "All"
@@ -3198,7 +3176,7 @@
       "group": "Route-specific backups",
       "ease": 4,
       "route": "Ashenvale: Mage Summoner rewards this item. The quest minimum is 20; its target is higher level.",
-      "short": "Immunity \u00b7 Alliance one-time reward",
+      "short": "Immunity · Alliance one-time reward",
       "caution": "Alliance quest; binds on pickup, single use. Save deliberately; no repeatable supply.",
       "classes": [
         "All"
@@ -3220,8 +3198,8 @@
       "family": "Magic Dust",
       "group": "Route-specific backups",
       "ease": 4,
-      "route": "Drops from Dust Devils in Westfall. They are level 18\u201319, above the item use level.",
-      "short": "Sleep \u00b7 random drop",
+      "route": "Drops from Dust Devils in Westfall. They are level 18–19, above the item use level.",
+      "short": "Sleep · random drop",
       "caution": "An optional farm, not a dependable vendor supply. Damage breaks the sleep.",
       "classes": [
         "All"
@@ -3267,7 +3245,7 @@
       "group": "Route-specific backups",
       "ease": 3,
       "route": "Cleanse Whipper Roots in Felwood using Cenarion Plant Salves after the Cleansing Felwood quest.",
-      "short": "Extra healing \u00b7 Felwood",
+      "short": "Extra healing · Felwood",
       "caution": "Item use level 45 does not grant quest access. Shares a cooldown with Healthstones and target dummies.",
       "classes": [
         "All"
@@ -3291,7 +3269,7 @@
       "group": "Route-specific backups",
       "ease": 3,
       "route": "Cleanse Night Dragons in Felwood using Cenarion Plant Salves after the Cleansing Felwood quest.",
-      "short": "Health + mana \u00b7 Felwood",
+      "short": "Health + mana · Felwood",
       "caution": "Item use level 45 does not grant quest access. Shares a cooldown with Healthstones, Whipper Roots and target dummies.",
       "classes": [
         "All"
@@ -3315,7 +3293,7 @@
       "group": "Emergency supplies",
       "ease": 1,
       "route": "Conjure your own gem with the trained Mage spell before leaving safety. No farmed reagent is needed.",
-      "short": "Instant mana \u00b7 Mage-conjured",
+      "short": "Instant mana · Mage-conjured",
       "caution": "Uses the mana-gem cooldown, shared with target dummies and Healthstones. Conjured items disappear after an extended logout.",
       "classes": [
         "Mage"
@@ -3339,7 +3317,7 @@
       "group": "Emergency supplies",
       "ease": 1,
       "route": "Conjure your own gem with the trained Mage spell before leaving safety. No farmed reagent is needed.",
-      "short": "Instant mana \u00b7 Mage-conjured",
+      "short": "Instant mana · Mage-conjured",
       "caution": "Uses the mana-gem cooldown, shared with target dummies and Healthstones. Conjured items disappear after an extended logout.",
       "classes": [
         "Mage"
@@ -3363,7 +3341,7 @@
       "group": "Emergency supplies",
       "ease": 1,
       "route": "Conjure your own gem with the trained Mage spell before leaving safety. No farmed reagent is needed.",
-      "short": "Instant mana \u00b7 Mage-conjured",
+      "short": "Instant mana · Mage-conjured",
       "caution": "Uses the mana-gem cooldown, shared with target dummies and Healthstones. Conjured items disappear after an extended logout.",
       "classes": [
         "Mage"
@@ -3387,7 +3365,7 @@
       "group": "Emergency supplies",
       "ease": 1,
       "route": "Conjure your own gem with the trained Mage spell before leaving safety. No farmed reagent is needed.",
-      "short": "Instant mana \u00b7 Mage-conjured",
+      "short": "Instant mana · Mage-conjured",
       "caution": "Uses the mana-gem cooldown, shared with target dummies and Healthstones. Conjured items disappear after an extended logout.",
       "classes": [
         "Mage"
@@ -3443,6 +3421,820 @@
       "acquisitionSource": "https://classicdb.ch/?item=17056",
       "recommendLevel": 34,
       "spellSource": "https://www.wowhead.com/classic/spell=1706"
+    },
+    {
+      "id": "classic-tough-hunk-of-bread",
+      "itemId": 4540,
+      "name": "Tough Hunk of Bread",
+      "level": 1,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 61.2 health over 18 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_11.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4540",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-freshly-baked-bread",
+      "itemId": 4541,
+      "name": "Freshly Baked Bread",
+      "level": 5,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 243.6 health over 21 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_12.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4541",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-moist-cornbread",
+      "itemId": 4542,
+      "name": "Moist Cornbread",
+      "level": 15,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 552 health over 24 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_08.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4542",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-mulgore-spice-bread",
+      "itemId": 4544,
+      "name": "Mulgore Spice Bread",
+      "level": 25,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 874.8 health over 27 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_11.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4544",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-soft-banana-bread",
+      "itemId": 4601,
+      "name": "Soft Banana Bread",
+      "level": 35,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 1392 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_09.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4601",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-homemade-cherry-pie",
+      "itemId": 8950,
+      "name": "Homemade Cherry Pie",
+      "level": 45,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 2148 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_10.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=8950",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-darnassian-bleu",
+      "itemId": 2070,
+      "name": "Darnassian Bleu",
+      "level": 1,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 61.2 health over 18 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_06.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=2070",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-dalaran-sharp",
+      "itemId": 414,
+      "name": "Dalaran Sharp",
+      "level": 5,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 243.6 health over 21 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_39.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=414",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-dwarven-mild",
+      "itemId": 422,
+      "name": "Dwarven Mild",
+      "level": 15,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 552 health over 24 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_07.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=422",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-stormwind-brie",
+      "itemId": 1707,
+      "name": "Stormwind Brie",
+      "level": 25,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 874.8 health over 27 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_38.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=1707",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-fine-aged-cheddar",
+      "itemId": 3927,
+      "name": "Fine Aged Cheddar",
+      "level": 35,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 1392 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_03.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=3927",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-alterac-swiss",
+      "itemId": 8932,
+      "name": "Alterac Swiss",
+      "level": 45,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 2148 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_37.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=8932",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-slitherskin-mackerel",
+      "itemId": 787,
+      "name": "Slitherskin Mackerel",
+      "level": 1,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 61.2 health over 18 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_fish_24.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=787",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-rockscale-cod",
+      "itemId": 4594,
+      "name": "Rockscale Cod",
+      "level": 25,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 874.8 health over 27 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_fish_04.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4594",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-striped-yellowtail",
+      "itemId": 21552,
+      "name": "Striped Yellowtail",
+      "level": 35,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 1392 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_fish_01.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=21552",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-spinefin-halibut",
+      "itemId": 8957,
+      "name": "Spinefin Halibut",
+      "level": 45,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 2148 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_fish_22.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=8957",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-shiny-red-apple",
+      "itemId": 4536,
+      "name": "Shiny Red Apple",
+      "level": 1,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 61.2 health over 18 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_19.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4536",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-tel-abim-banana",
+      "itemId": 4537,
+      "name": "Tel'Abim Banana",
+      "level": 5,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 243.6 health over 21 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_24.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4537",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-snapvine-watermelon",
+      "itemId": 4538,
+      "name": "Snapvine Watermelon",
+      "level": 15,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 552 health over 24 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_22.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4538",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-goldenbark-apple",
+      "itemId": 4539,
+      "name": "Goldenbark Apple",
+      "level": 25,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 874.8 health over 27 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_20.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4539",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-moon-harvest-pumpkin",
+      "itemId": 4602,
+      "name": "Moon Harvest Pumpkin",
+      "level": 35,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 1392 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_25.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4602",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-deep-fried-plantains",
+      "itemId": 8953,
+      "name": "Deep Fried Plantains",
+      "level": 45,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 2148 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_23.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=8953",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-forest-mushroom-cap",
+      "itemId": 4604,
+      "name": "Forest Mushroom Cap",
+      "level": 1,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 61.2 health over 18 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_mushroom_13.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4604",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-red-speckled-mushroom",
+      "itemId": 4605,
+      "name": "Red-speckled Mushroom",
+      "level": 5,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 243.6 health over 21 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_mushroom_11.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4605",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-spongy-morel",
+      "itemId": 4606,
+      "name": "Spongy Morel",
+      "level": 15,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 552 health over 24 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_mushroom_08.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4606",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-delicious-cave-mold",
+      "itemId": 4607,
+      "name": "Delicious Cave Mold",
+      "level": 25,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 874.8 health over 27 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_herb_06.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4607",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-raw-black-truffle",
+      "itemId": 4608,
+      "name": "Raw Black Truffle",
+      "level": 35,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 1392 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_mushroom_03.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=4608",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-dried-king-bolete",
+      "itemId": 8948,
+      "name": "Dried King Bolete",
+      "level": 45,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 2148 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_mushroom_05.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=8948",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-bean-soup",
+      "itemId": 16166,
+      "name": "Bean Soup",
+      "level": 1,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 61.2 health over 18 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_drink_17.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=16166",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-versicolor-treat",
+      "itemId": 16167,
+      "name": "Versicolor Treat",
+      "level": 5,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 243.6 health over 21 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_28.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=16167",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-heaven-peach",
+      "itemId": 16168,
+      "name": "Heaven Peach",
+      "level": 35,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 1392 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_42.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=16168",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-wild-ricecake",
+      "itemId": 16169,
+      "name": "Wild Ricecake",
+      "level": 25,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 874.8 health over 27 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_35.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=16169",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-steamed-mandu",
+      "itemId": 16170,
+      "name": "Steamed Mandu",
+      "level": 15,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 552 health over 24 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_51.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=16170",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-shinsollo",
+      "itemId": 16171,
+      "name": "Shinsollo",
+      "level": 45,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 2148 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_63.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=16171",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-darnassus-kimchi-pie",
+      "itemId": 21030,
+      "name": "Darnassus Kimchi Pie",
+      "level": 35,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 1392 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_10.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=21030",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-cabbage-kimchi",
+      "itemId": 21031,
+      "name": "Cabbage Kimchi",
+      "level": 45,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 2148 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_63.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=21031",
+      "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-radish-kimchi",
+      "itemId": 21033,
+      "name": "Radish Kimchi",
+      "level": 45,
+      "family": "recovery",
+      "group": "Food & drink",
+      "alternative": true,
+      "binding": false,
+      "classes": [
+        "All"
+      ],
+      "vendorFood": true,
+      "ease": 0,
+      "detail": "Use: Restores 2148 health over 30 sec.  Must remain seated while eating.",
+      "icon": "/images/hcclassic/inv_misc_food_64.jpg",
+      "short": "Health between fights",
+      "route": "Buy from a food vendor that stocks this item.",
+      "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
+      "reference": "https://www.wowhead.com/classic/item=21033",
+      "verifiedOn": "2026-10-02"
     }
   ]
 }

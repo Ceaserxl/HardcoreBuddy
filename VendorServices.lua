@@ -42,15 +42,35 @@ function V:FindVendor(itemID)
         local locations=canonical and canonical.locations or v.locations
         for _,xy in ipairs(locations and locations[map] or {}) do
             local distance=x and y and ((x-xy[1])^2+(y-xy[2])^2) or math.huge
-            local city=map>=1453 and map<=1458
-            if (city or distance<=100) and (not best or rank<bestRank or rank==bestRank and distance<nearest) then
+            if not best or rank<bestRank or rank==bestRank and distance<nearest then
                 best={name=v.name,faction=v.faction,movement=movement,map=map,x=xy[1],y=xy[2],id=id,observed=observed}
                 nearest,bestRank=distance,rank
+                best.distance,best.movementRank=distance,rank
             end
         end
     end
     for _,id in ipairs(A.Data.SupplySoldBy[itemID] or {}) do consider(A.Data.SupplyVendors[id],id) end
     for id,v in pairs(A.characterDB.vendorVisits or {}) do if v.items and v.items[itemID] then consider(v,id,true) end end
+    return best
+end
+-- Exact-item sources first; plain vendor recovery food can use an explicitly
+-- named equivalent. Never substitute buff food, recipes or reputation rewards.
+function V:FindSupplyVendor(itemID)
+    local exact=self:FindVendor(itemID)
+    if exact then return exact end
+    local source
+    for _,item in ipairs(A.Data.Items.items) do if item.itemId==itemID then source=item; break end end
+    if not source or not source.vendorFood then return end
+    local best
+    for _,item in ipairs(A.Data.Items.items) do
+        if item.vendorFood and item.family==source.family and item.level==source.level and item.itemId~=itemID then
+            local vendor=self:FindVendor(item.itemId)
+            if vendor and (not best or vendor.movementRank<best.movementRank
+                or vendor.movementRank==best.movementRank and vendor.distance<best.distance) then
+                best=vendor; best.alternativeName=item.name; best.alternativeID=item.itemId
+            end
+        end
+    end
     return best
 end
 function V:Stock()
