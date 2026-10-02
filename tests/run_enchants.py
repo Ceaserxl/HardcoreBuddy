@@ -138,7 +138,7 @@ local feet
 for _,v in ipairs(E.Scan(A:GetContext())) do if v.slotId==8 then feet=v end end
 check(feet.recommendation.family=="Speed","Legacy saved kit choice cannot replace Minor Speed")
 local feetCard=E.Card(A:GetContext()).blocks[6]
-check(feetCard.title=="Feet - Minor Speed" and feetCard.enchantStatus=="Recommended","Overview shows automatic recommendation when missing")
+check(feetCard.title=="Feet - Minor Speed" and feetCard.enchantStatus=="Not Enchanted","Overview shows automatic recommendation when missing")
 gear[8].enchant=1843
 feetCard=E.Card(A:GetContext()).blocks[6]
 check(feetCard.title=="Feet - Rugged Armor Kit" and feetCard.enchantStatus=="Alternative","Overview shows actually applied alternative")
@@ -174,7 +174,7 @@ check(tile.title:find("Wrists - ",1,true)==1 and tile.enchantStatus=="Enchanted"
 gear[9].enchant=99999; A:Refresh()
 check(A.document.cards[1].blocks[3].enchantStatus=="Alternative" and A.document.cards[1].blocks[3].enchantTone=="ready","Other permanent enchant green")
 gear[9].enchant=0; A:Refresh()
-check(A.document.cards[1].blocks[3].enchantStatus=="Recommended" and A.document.cards[1].blocks[3].enchantTone=="missing","Missing enchant recommendation red")
+check(A.document.cards[1].blocks[3].enchantStatus=="Not Enchanted" and A.document.cards[1].blocks[3].enchantTone=="missing","Missing enchant stock label red")
 local frame=A.window.cards[1].content.blocks[3]
 check(frame.icon.texture=="Interface\\\\Icons\\\\"..frame.block.icon,"Bare enchant icon resolves to native texture")
 frame.scripts.OnEnter(frame)

@@ -193,7 +193,7 @@ function E.Card(context)
             shown={name="Enchant - Unidentified enhancement",description="An enhancement is applied; its effect is not in the catalog.",icon="Trade_Engraving"}
         end
         local b=enchantBlock(g,shown,{kind="enchantSlot",slotId=g.slotId})
-        if b.enchantStatus=="Missing" and g.recommendation then b.enchantStatus="Recommended"
+        if b.enchantStatus=="Missing" and g.recommendation then b.enchantStatus="Not Enchanted"
         elseif alternative then b.enchantStatus="Alternative" end
         if g.slotId~=17 then blocks[#blocks+1]=b end
     end
