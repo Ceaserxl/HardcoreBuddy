@@ -143,6 +143,7 @@ check(A.state.view=="training" and A.state.filter=="Rotation Advisor" and R.view
 check(not A:CanGoBack(),"Advisor root has no redundant Back")
 check(R.view.settings:IsVisible() and R.view.settingsHeader.action==R.view.settings,"Settings button uses shared header alignment")
 check(R.view.next.name:GetText()=='Frostbolt | Rank 3','Learned rank appears beside the recommendation')
+check(not R.view.character.values:GetText():find('Moving:',1,true),'Advisor omits movement status')
 local view=R.view; local card=view.character
 local _,cy,_,ch=card:GetRect(); local _,ty=view.target:GetRect(); local _,vy=view:GetRect()
 check(cy==ty,"Character and target cards are side by side")

@@ -73,8 +73,8 @@ Only one buff food is suggested, preferring the Essentials choice. Mana-free
 classes are not advised to drink or use intellect-only scrolls.
 
 Preparation is separate from damage priorities. Known gem conjuring is shown
-before pulling; using a carried gem remains independent during combat. Movement
-and mounting do not suppress advice or substitute instant spells. Players still
+before pulling; using a carried gem remains independent during combat. Movement is not sampled, stored or used for recommendations. Mounting does not
+suppress advice or substitute instant spells. Players still
 need to stop or dismount when a spell requires it.
 
 ## Timing and rendering
@@ -82,8 +82,8 @@ need to stop or dismount when a spell requires it.
 A normal damage cast commits its next action at cast start. That action remains
 through the cast and a short completion handoff. Current cast mana is reserved
 before forecasting the next action. Cooldowns and mana can be previewed through
-the remaining cast/GCD with at least a two-second reaction lead. Enemy approach
-previews require actual position/range evidence.
+the remaining cast/GCD with at least a two-second reaction lead. Range eligibility uses current spell range; movement-based approach prediction
+is removed.
 
 Invalid range, immunity, insufficient mana, crowd control or unsafe AoE can
 suppress a committed action without substituting a late damage spell. A new
@@ -135,7 +135,7 @@ players' future actions cannot be predicted reliably.
 
 `tests/run_rotation_advisor.py` covers levels 1-60, class boundaries, stable profiles,
 fixed fallbacks, independent utility, emergency overrides, forecast/cast timing,
-CC/range/immunity, movement and mounting, macro/native glow behavior, preparation
+CC/range/immunity, movement independence and mounting, macro/native glow behavior, preparation
 and automatic logging. Offline checks do not verify live visual timing or DPS.
 After reload, exercise actual combat, utility alongside casts, training/equipment
 changes, cooldowns, low mana, and AoE with nearby crowd control.

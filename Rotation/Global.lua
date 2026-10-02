@@ -25,7 +25,7 @@ function R.Ready(s,key,immediate)
     if immediate and a.usableNow~=nil then usable=a.usableNow end
     if not usable then return false end
     if immediate and ((a.cooldownRemaining or 0)>.15 or a.powerPreview) then return false end
-    return not a.requiresRange or a.range==true or a.approaching==true
+    return not a.requiresRange or a.range==true
 end
 local ccIDs={118,6770,2094,1776,2637,9484,5782,6358}
 local function clock() return GetTime and GetTime() or 0 end
@@ -360,53 +360,6 @@ function R:SpellState(spell,unit,s)
         cooldownRemaining=type(start)=="number" and type(duration)=="number" and not onGCD and math.max(0,start+duration-now) or 0,
         lowPower=missingPower,range=range,requiresRange=unit~=nil,minRange=spell.minRange,maxRange=spell.maxRange}
 end
-local function applyRangePreview(s,sample)
-    for key,spell in pairs(s.spells) do
-        spell.approaching=false
-        local limit=spell.maxRange or nil
-        if spell.range==false and type(limit)=="number" and limit>0 then
-            if sample.closing then
-                spell.approaching=sample.distance>limit and sample.distance<=limit+2
-                    and sample.projected<=limit and sample.projected>=(spell.minRange or 0)
-            end
-        end
-    end
-end
-function R:UpdateRangePreview(s)
-    for _,spell in pairs(s.spells) do spell.approaching=false end
-    local guid=UnitGUID and UnitGUID("target")
-    if not self.supported[s.class] or not s.validTarget or s.targetPlayer or s.controlled or s.dead
-        or not guid then self.approach=nil; return false end
-    local now=s.time
-    local previous=self.approach
-    if previous and previous.guid==guid and previous.class==s.class and now>=previous.time and now-previous.time<.05 then return applyRangePreview(s,previous) end
-    local sample={guid=guid,class=s.class,time=now}
-    if UnitPosition then
-        sample.px,sample.py,sample.pz,sample.map=UnitPosition("player")
-        sample.x,sample.y,sample.z,sample.targetMap=UnitPosition("target")
-    end
-    self.approach=sample
-    if not previous or previous.guid~=guid or previous.class~=s.class then return false end
-    local dt=now-previous.time
-    if dt<.05 or dt>.6 then return false end
-    local function positioned(v)
-        return type(v.x)=="number" and type(v.y)=="number" and type(v.z)=="number"
-            and type(v.px)=="number" and type(v.py)=="number" and type(v.pz)=="number"
-            and v.map~=nil and v.map==v.targetMap
-    end
-    if positioned(sample) and positioned(previous) then
-        if sample.map~=previous.map then return false end
-        local dx,dy,dz=sample.x-sample.px,sample.y-sample.py,sample.z-sample.pz
-        local distance=math.sqrt(dx*dx+dy*dy+dz*dz)
-        local ox,oy,oz=previous.x-previous.px,previous.y-previous.py,previous.z-previous.pz
-        local closing=(math.sqrt(ox*ox+oy*oy+oz*oz)-distance)/dt
-        -- Require the enemy itself to approach, not just the player running at it.
-        local enemyClosing=distance>0 and -((sample.x-previous.x)*dx+(sample.y-previous.y)*dy+(sample.z-previous.z)*dz)/(distance*dt) or 0
-        sample.distance=distance; sample.projected=distance-closing*.5
-        sample.closing=closing>.5 and closing<=20 and enemyClosing>.5 and enemyClosing<=20
-    end
-    return applyRangePreview(s,sample)
-end
 local function auraRemaining(a,now)
     return a.expirationTime and a.expirationTime>0 and math.max(0,a.expirationTime-now) or math.huge
 end
@@ -479,7 +432,6 @@ function R:Snapshot()
     self:PowerForecast(s)
     s.targetPowerType=UnitPowerType and UnitPowerType("target")
     if s.targetPowerType==0 then s.targetMana=percent("target",0) end
-    s.moving=GetUnitSpeed and GetUnitSpeed("player")>0 or false
     s.casting=(UnitCastingInfo and UnitCastingInfo("player")) or (UnitChannelInfo and UnitChannelInfo("player"))
     s.attackingPlayer=UnitIsUnit and UnitIsUnit("targettarget","player") or false
     s.targetPlayer=UnitIsPlayer and UnitIsPlayer("target") or false
@@ -512,7 +464,6 @@ function R:Snapshot()
         s.spells[key].immune=module and module.IsImmune and module.IsImmune(self,s,key,spell) or false
     end
     if module and module.Resources then module.Resources(self,s) end
-    self:UpdateRangePreview(s)
     if module and module.Profile then s.damageProfile=module.Profile(self,s) end
     return s
 end
@@ -703,7 +654,7 @@ function R:TraceRotation(event,force)
         damageProfile=diagnosticFields(s.damageProfile,"main school damage"),
         plan=diagnosticFields(self.castPlan,"key id token finish target"),
         castEvent=diagnosticFields(self.lastCastEvent,"event time id token target"),
-        state=diagnosticFields(s,"class level targetLevel targetBoss grouped targetCombat targetDotted scorchStacks scorchRemaining winterChillStacks spellHit haste time combat dead taxi moving mounted wanding drinking casting castToken castSpellID rotationCast castEnd channelKey channelRemaining gcdRemaining targetGUID validTarget targetPlayer targetHP targetHealth targetDistance targetClose controlled frozen frozenRemaining slowRemaining timeToDie healthTrendDuration healthTrendLosses healthTrendRate playerHealth power maxPower powerPercent projectedPower powerHorizon regenDelay normalRegen targets nearby cluster safeAOE safeCluster attackingPlayer recentDamage interrupt"),
+        state=diagnosticFields(s,"class level targetLevel targetBoss grouped targetCombat targetDotted scorchStacks scorchRemaining winterChillStacks spellHit haste time combat dead taxi mounted wanding drinking casting castToken castSpellID rotationCast castEnd channelKey channelRemaining gcdRemaining targetGUID validTarget targetPlayer targetHP targetHealth targetDistance targetClose controlled frozen frozenRemaining slowRemaining timeToDie healthTrendDuration healthTrendLosses healthTrendRate playerHealth power maxPower powerPercent projectedPower powerHorizon regenDelay normalRegen targets nearby cluster safeAOE safeCluster attackingPlayer recentDamage interrupt"),
         spells={},buffs={},buffDurations={},highlights={},optional={},ooc={},supplyChecks={},
         talents={},talentsReady=self.talentsReady,spellPower={},spellCrit={},
         intellectBlocker=diagnosticFields(s.intellectBlocker,"id power remaining")}
@@ -716,7 +667,7 @@ function R:TraceRotation(event,force)
     for key,value in pairs(s.buffs or {}) do row.buffs[key]=diagnosticValue(value) end
     for key,value in pairs(s.buffDurations or {}) do row.buffDurations[key]=diagnosticValue(value) end
     for key,spell in pairs(s.spells or {}) do
-        local entry=diagnosticFields(spell,"id name item ready usable usableNow immune range requiresRange approaching powerPreview plannedPower cost castTime cooldownRemaining lowPower category")
+        local entry=diagnosticFields(spell,"id name item ready usable usableNow immune range requiresRange powerPreview plannedPower cost castTime cooldownRemaining lowPower category")
         local module=self:Class(s.class)
         local estimate=module and module.Estimate and module.Estimate(s,key)
         if estimate then entry.estimate=diagnosticFields(estimate,"score damage cast cost school") end
@@ -756,7 +707,7 @@ function R:Update(event)
     self.supplyChecks=nil
     if self.suspended or self:Mode()=="disabled" then
         self.traceDecision=nil; self.lockStatus="disabled"
-        self.approach=nil; self.powerSample=nil; self.healthSample=nil; self.immune=nil; self.lastDamage=nil; self.castPlan=nil
+        self.powerSample=nil; self.healthSample=nil; self.immune=nil; self.lastDamage=nil; self.castPlan=nil
         self.current=nil; self.primary=nil; self.optional=nil; self.optionalActions={}; self.oocActions={}; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
     else
         self.snapshot=self:Snapshot()
@@ -828,7 +779,7 @@ events:SetScript("OnEvent",function(_,event,unit,message,castID,sentSpellID)
         if (unit=="player" or event=="UNIT_AURA" and unit=="target") and not R.suspended and R:Mode()~="disabled" then R:Update(event) end
         return
     end
-    if event=="PLAYER_TARGET_CHANGED" or event=="PLAYER_LEAVING_WORLD" or event=="PLAYER_ENTERING_WORLD" then R.approach=nil; R.castPlan=nil end
+    if event=="PLAYER_TARGET_CHANGED" or event=="PLAYER_LEAVING_WORLD" or event=="PLAYER_ENTERING_WORLD" then R.castPlan=nil end
     if event=="PLAYER_LEAVING_WORLD" then R.suspended=true; R.autoRepeat=nil; R.powerSample=nil; R:Highlight(nil); return end
     if event=="PLAYER_ENTERING_WORLD" then R.suspended=nil end
     if R.suspended then return end

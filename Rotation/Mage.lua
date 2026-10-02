@@ -138,7 +138,7 @@ function M.Situational(s,add)
 end
 
 -- Optional upkeep is independent of the single primary action. Expiring buffs
--- remain visible through movement/casts and can coexist with urgent advice.
+-- remain visible through casts and can coexist with urgent advice.
 function M.BuffRefresh(left)
     return A.ConsumableBuffs.RefreshDue(left)
 end
@@ -179,7 +179,7 @@ function M.Optional(s)
     refreshLeft=remaining(s,"barrier")
     if mp>40 and M.BuffRefresh(refreshLeft,durations.barrier) then add("barrier","Refresh Ice Barrier before it expires.") end
     refreshLeft=nil
-    -- A usable mana gem remains auxiliary through casts and movement. It must
+    -- A usable mana gem remains auxiliary through casts. It must
     -- not replace the next damage action whenever a cast finishes.
     if s.combat and ready(s,"managem",true)
         and (s.maxPower or 0)-(s.power or 0)>=(s.spells.managem.restore or math.huge) then

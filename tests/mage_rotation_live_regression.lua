@@ -5,6 +5,7 @@ do
     GetPowerRegen=function() return 20,5 end; GetManaRegen=GetPowerRegen
     units.player.power=45; R.powerSample=nil; usable[837]=false
     local s=R:Snapshot()
+    check(s.moving==nil and R.UpdateRangePreview==nil,'Snapshot has no movement tracking or approach predictor')
     check(s.spells.frostbolt.powerPreview,'Mana forecast highlights before spell is affordable')
     units.player.power=20; R.powerSample=nil; s=R:Snapshot()
     check(not s.spells.frostbolt.usable,'Large mana deficit is not forecast as ready')
@@ -101,11 +102,11 @@ do
     now=now+1; s=R:Snapshot()
     check(s.timeToDie==16,'Sustained target trend includes time between spell hits')
     now=now+.2; units.target.health=5000; s=R:Snapshot(); check(not s.timeToDie,'Healing immediately invalidates kill-time estimates')
-    units.target.x=32; range[837]=false; R.approach=nil; R:Snapshot()
+    units.target.x=32; range[837]=false; R:Snapshot()
     now=now+.2; units.target.x=31; s=R:Snapshot()
-    check(s.spells.frostbolt.approaching,'Mage highlights before an approaching enemy reaches range')
-    now=now+.2; units.target.x=32; s=R:Snapshot(); check(not s.spells.frostbolt.approaching,'Fleeing enemy does not create approach preview')
-    units.target.x=15; range[837]=true; R.approach=nil
+    check(not R.Ready(s,'frostbolt'),'An approaching target remains unavailable until currently in range')
+    now=now+.2; units.target.x=32; s=R:Snapshot(); check(not R.Ready(s,'frostbolt'),'Changing target position never overrides an out-of-range result')
+    units.target.x=15; range[837]=true
     units.add={health=100,max=100,x=17,y=0,z=0,map=1,guid='add'}
     units.add2={health=100,max=100,x=16,y=0,z=0,map=1,guid='add2'}
     C_NamePlate.GetNamePlates=function() return {{namePlateUnitToken='add'},{namePlateUnitToken='add2'},{namePlateUnitToken='target'}} end
@@ -412,6 +413,7 @@ do
         return patch.value
     end
     local restored=replay(nil,current.entries[1].delta)
+    check(restored.state.moving==nil,'New diagnostic samples omit movement state')
     check(restored.state.power==R.snapshot.power and restored.selected.id==R.current.id,'Full sample can be reconstructed from first delta')
     check(R.categories[restored.selected.category] and restored.selected.category==R.current.category,'Diagnostic replay retains the recommendation category')
     check(type(restored.state.drinking)=='boolean' and type(restored.state.gcdRemaining)=='number'

@@ -115,7 +115,7 @@ s.moving=true; s.casting='Fireball'; decide(s,'fireball','Movement/casting prese
 for _,gate in ipairs({'dead','taxi','targetPlayer','controlled'}) do s=state(); s[gate]=true; decide(s,nil,gate) end
 s=state(); s.class='ROGUE'; decide(s,nil,'No residual Rogue priorities')
 s=state({'frostbolt'}); s.spells.frostbolt.range=nil; decide(s,nil,'Unknown range is not in range')
-s.spells.frostbolt.range=false; s.spells.frostbolt.approaching=true; decide(s,'frostbolt','Approaching target preview')
+s.spells.frostbolt.range=false; check(not R.Ready(s,'frostbolt'),'Current range is required for a ranged spell')
 s.spells.frostbolt.immune=true; decide(s,nil,'Observed immunity blocks spell')
 s=state({'frostbolt'}); s.spells.frostbolt.ready=false; decide(s,nil,'Cooldown blocks unavailable spells')
 s=state({'frostbolt'}); s.spells.frostbolt.usable=false; decide(s,nil,'Other usability failures respected')
@@ -239,7 +239,7 @@ UnitIsUnit=function(a,b) return a==b end
 UnitAffectingCombat=function() return combat end
 UnitThreatSituation=function() return combat and 0 or nil end
 UnitPosition=function(u) local v=units[u]; if v then return v.x,v.y,v.z,v.map end end
-GetUnitSpeed=function() return 0 end; GetPlayerFacing=function() return 0 end
+GetUnitSpeed=function() error("Rotation must not read movement speed") end; GetPlayerFacing=function() return 0 end
 IsMounted=function() return false end; UnitOnTaxi=function() return false end
 UnitClassification=function() return 'normal' end
 local casts={}; UnitCastingInfo=function(u) if casts[u] then return 'Frostbolt',nil,nil,now*1000,(now+2)*1000,false,1,false,837 end end
