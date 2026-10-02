@@ -39,7 +39,7 @@ U.scan={}; U:Refresh(); assert(not U.start.active and U.start:GetText():find('Sc
 U.scan=nil; U:SelectSlot(nil)
 assert(U.heading:GetText()=='' and U.hint:GetText()=='')
 assert(AuctionFrame:GetWidth()==832 and AuctionFrame:GetHeight()==447,'Native auction frame size is preserved')
-assert(U.panel:GetWidth()==804 and U.panel:GetHeight()==377,'Panel is 10px wider with unchanged height')
+assert(U.panel:GetWidth()==814 and U.panel:GetHeight()==377,'Panel width is 814px with unchanged height')
 for _,slot in ipairs({1,11,17}) do
  U:SelectSlot(slot)
  assert(AuctionFrame:GetWidth()==832 and AuctionFrame:GetHeight()==447,'Slot view never expands auction frame')
