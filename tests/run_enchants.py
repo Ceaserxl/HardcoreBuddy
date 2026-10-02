@@ -113,6 +113,16 @@ for _,b in ipairs(A.document.cards[1].blocks) do if b.action and b.action.kind==
 check(recipe~=nil,"Recipe alternatives available")
 A:Activate(recipe)
 check(A.document.cards[1].title=="Wrists enchants","Recipe detail")
+local detail=A.document.cards[1]
+check(detail.blocks[1].title=="Selected Alternative" and detail.blocks[2].enchantTooltip.spellId==recipe.spellId,"Selected alternative replaces recommendation display")
+check(detail.blocks[3].title=="Requirements" and not detail.blocks[3].rightColumn,"Requirements below selected enchant on left")
+check(detail.blocks[5].title:find("|cff62d79b(Recommended)|r",1,true),"Recommended enchant first in alternatives with green suffix")
+local selectedReagents={}
+for _,pair in ipairs(E.byId[recipe.spellId].reagents) do selectedReagents[pair[1]]=pair[2] end
+for _,b in ipairs(detail.blocks) do
+    check(b.title~="Automatic recommendation" and b.title~="Use this enchant","Removed selection buttons")
+    if b.itemId and b.rightColumn then check(b.target==selectedReagents[b.itemId],"Materials match selected alternative") end
+end
 local material=false
 for _,b in ipairs(A.document.cards[1].blocks) do if b.itemId then material=true end end
 check(material,"Recipe material rows have item tooltips")

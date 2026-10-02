@@ -193,29 +193,27 @@ function E.Detail(context,action)
     for _,v in ipairs(E.Scan(context)) do if v.slotId==action.slotId then g=v; break end end
     if not g then return {title="Enchants",blocks={}} end
     local selected=g.recommendation
+    local recommended=g.options[1]
     for _,option in ipairs(g.options) do if option.spellId==action.spellId then selected=option end end
     local blocks={}
     local function heading(title,right,body)
         local b=row(title,body); b.plain=true; b.textInset=0; b.rightColumn=right; blocks[#blocks+1]=b
     end
-    heading("Recommended")
-    blocks[#blocks+1]=enchantBlock(g,g.recommendation,g.recommendation and
-        {kind="enchantRecipe",slotId=g.slotId,spellId=g.recommendation.spellId} or nil)
-    if context.mode~="preview" then
-        if g.selected or not g.recommendation then
-            blocks[#blocks+1]=row("Automatic recommendation","Use the class and leveling recommendation",{kind="enchantChoose",slotId=g.slotId})
-        end
+    heading(selected~=recommended and "Selected Alternative" or "Recommended")
+    blocks[#blocks+1]=enchantBlock(g,selected)
+    if selected then
+        blocks[#blocks+1]=row("Requirements",selected.armorKit and ("Crafting: Leatherworking "..selected.skill.."\nTarget item level "..selected.gearLevel.."+") or "Enchanting "..selected.skill)
     end
     heading("Alternatives")
-    for _,option in ipairs(g.options) do if option~=g.recommendation then
-        blocks[#blocks+1]=enchantBlock(g,option,{kind="enchantRecipe",slotId=g.slotId,spellId=option.spellId})
+    -- Options are sorted by recommendation strength, so the automatic choice
+    -- remains first when another enhancement is being inspected.
+    for _,option in ipairs(g.options) do if option~=selected then
+        local b=enchantBlock(g,option,{kind="enchantRecipe",slotId=g.slotId,spellId=option.spellId})
+        if option==recommended then b.title=b.title.." |cff62d79b(Recommended)|r" end
+        blocks[#blocks+1]=b
     end end
     heading("Materials",true,not selected and "No compatible enchant selected" or nil)
     if selected then
-        if selected~=g.recommendation and context.mode~="preview" then
-            local b=row("Use this enchant","Track materials for this alternative",{kind="enchantChoose",slotId=g.slotId,spellId=selected.spellId})
-            b.rightColumn=true; blocks[#blocks+1]=b
-        end
         for _,pair in ipairs(selected.reagents) do
             local m=D.materials[pair[1]]; local inv=context.inventory or {}
             local count=inv.available and inv.counts and (inv.counts[m.itemId] or 0) or nil
@@ -225,8 +223,6 @@ function E.Detail(context,action)
             b.status=count==nil and "unknown" or count>=pair[2] and "ready" or count==0 and "missing" or "low"
             blocks[#blocks+1]=b
         end
-        local b=row("Requirements",selected.armorKit and ("Crafting: Leatherworking "..selected.skill.."\nTarget item level "..selected.gearLevel.."+") or "Enchanting "..selected.skill)
-        b.rightColumn=true; blocks[#blocks+1]=b
     end
     return {title=g.name.." enchants",blocks=blocks,itemLayout=true,fullWidth=true}
 end
