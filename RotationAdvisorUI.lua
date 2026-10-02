@@ -1,6 +1,6 @@
 local _,A=...
 local R,S=A.RotationAdvisor,A.Skin
-local modeHelp="Gold: main recommendation. Blue: optional action. Press the highlighted spell on your Blizzard action bar. Disabled stops recommendations and removes HCB highlights."
+local modeHelp="Gold: main recommendation. Red: optional action. Press the highlighted spell on your Blizzard action bar. Disabled stops recommendations and removes HCB highlights."
 local function text(parent,value,x,y,width,style)
     local f=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
     S.TextStyle(f,style or "subtitle"); f:SetPoint("TOPLEFT",x,-y); f:SetWidth(width)
@@ -25,7 +25,7 @@ function R:CreateSettings(page)
     page.damage=S.Section(page,"Damage",182,100,1)
     page.damage.note=text(page.damage,"Uses learned ranks, actual talents, school spell power, critical strike chance, mana and target health. Previews the next cast during the GCD or current cast. Supports spell macros.",16,38,320)
     page.survival=S.Section(page,"Survival",182,100,2)
-    page.survival.note=text(page.survival,"Interrupts, shields, control, curse removal and emergency cooldowns take priority. Blue highlights suggest preparation. Area spells require observed engaged enemies and no nearby crowd control.",16,38,320)
+    page.survival.note=text(page.survival,"Interrupts, shields, control, curse removal and emergency cooldowns take priority. Red highlights suggest preparation. Area spells require observed engaged enemies and no nearby crowd control.",16,38,320)
 end
 function R:LayoutSettings(width)
     local page=self.settingsPage; if not page then return end
@@ -105,7 +105,7 @@ function R:RefreshView()
     view.next.icon:SetAlpha(spell and 1 or .35)
     view.next.name:SetText(spell and (spell.name..(spell.rank and spell.rank~="" and (" | "..spell.rank) or "")) or mode=="disabled" and "Disabled" or "Waiting")
     view.next.reason:SetText(not self.supported[class] and "Currently available for Mage." or self.reason or "")
-    view.next.bar:SetText(mode=="assistant" and (spell and ((self.highlightCount or 0)>0 and (self.optional and "Blue highlight: optional action." or "Gold highlight: main recommendation.") or "Place this spell on a Blizzard action bar to see the highlight.") or "No spell highlighted.")
+    view.next.bar:SetText(mode=="assistant" and (spell and ((self.highlightCount or 0)>0 and (self.optional and "Red highlight: optional action." or "Gold highlight: main recommendation.") or "Place this spell on a Blizzard action bar to see the highlight.") or "No spell highlighted.")
         or "Enable Assistant Mode in Settings to begin.")
     view.character.values:SetText(mode=="disabled" and "Live monitoring is off." or
         "Health: "..pct(s.playerHealth).."\nMana: "..pct(s.powerPercent)

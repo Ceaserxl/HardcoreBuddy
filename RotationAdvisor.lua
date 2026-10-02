@@ -608,10 +608,10 @@ local function colorHighlight(glow,optional)
     if glow.style==style then return end
     glow.style=style
     for _,texture in ipairs({glow.ProcStartFlipbook,glow.ProcLoopFlipbook}) do
-        -- Remove the gold baked into the artwork before tinting it blue.
+        -- Remove the gold baked into the artwork before tinting it bright red.
         -- Primary recommendations retain Blizzard's original artwork colors.
         texture:SetDesaturated(not not optional)
-        if optional then texture:SetVertexColor(.2,.6,1,1)
+        if optional then texture:SetVertexColor(1,.15,.15,1)
         else texture:SetVertexColor(1,1,1,1) end
     end
 end

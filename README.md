@@ -134,7 +134,7 @@ control effects and incoming damage. Survival, interrupts and curse removal take
 priority over damage. It handles Fire/Frost/Arcane damage choices, cooldowns,
 preparation buffs, safe observed AoE, wand fallback and Evocation.
 
-Gold highlights show the main recommendation; blue highlights show optional
+Gold highlights show the main recommendation; red highlights show optional
 preparation. Exact spell ranks and Blizzard-resolved spell macros are supported
 on Blizzard action bars, even with HCB closed. Mounted characters retain cast
 previews. The next spell can appear before the GCD/cast or mana recovery finishes;

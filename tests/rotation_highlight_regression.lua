@@ -73,7 +73,7 @@ R:Update()
 check(glow.ProcStartAnim.plays==1 and glow.ProcLoop.plays==1,'Polling leaves the running native loop uninterrupted')
 R:Highlight(R.current,true)
 for _,texture in ipairs({glow.ProcStartFlipbook,glow.ProcLoopFlipbook}) do
-    check(texture.desaturated and texture.vertexColor[1]==.2 and texture.vertexColor[2]==.6 and texture.vertexColor[3]==1,'Both native animation phases are blue for optional advice')
+    check(texture.desaturated and texture.vertexColor[1]==1 and texture.vertexColor[2]==.15 and texture.vertexColor[3]==.15,'Both native animation phases are red for optional advice')
 end
 check(glow.ProcStartAnim.plays==1 and glow.ProcLoop.plays==1,'Changing advice color preserves animation continuity')
 R:Update()

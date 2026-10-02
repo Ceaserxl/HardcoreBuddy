@@ -27,7 +27,7 @@ override damage. Polymorph is limited to eligible targeted enemies in dangerous
 multi-enemy fights without an observed Mage damage-over-time effect. The player
 still chooses targets and escape directions.
 
-Between fights, optional blue highlights suggest Intellect, an armor buff, Ice
+Between fights, optional red highlights suggest Intellect, an armor buff, Ice
 Barrier and safe Evocation. Existing armor buffs and Arcane Brilliance are
 respected. During combat, Evocation requires a healthy, undamaged Mage whose
 target is occupied in a group and has a sufficiently long estimated life.
@@ -51,7 +51,7 @@ Flamestrike is not immediately overwritten. Ground placement remains manual.
 
 ## Highlight timing
 
-Gold uses Blizzard's spell-alert animation; blue indicates optional preparation.
+Gold uses Blizzard's spell-alert animation; red indicates optional preparation.
 The addon owns separate cosmetic overlays and leaves native proc alerts intact.
 Macros are matched by Blizzard's resolved spell ID, including modifier changes
 and explicit ranks. The addon does not parse, create or rewrite casting macros.
