@@ -212,7 +212,7 @@ function E.Detail(context,action)
     end
     heading(selected~=recommended and "Selected Alternative" or "Recommended")
     local selectedBlock=enchantBlock(g,selected)
-    if selected==recommended and selectedBlock.enchantStatus=="Alt Enchanted" then
+    if selectedBlock.enchantStatus=="Alt Enchanted" then
         selectedBlock.enchantStatus="Missing"
         selectedBlock.enchantTone="missing"
     end

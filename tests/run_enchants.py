@@ -150,6 +150,18 @@ check(ordered.blocks[5].enchantStatus=="|cff62d79bRecommended|r" and ordered.blo
 local recommendedDetail=E.Detail(A:GetContext(),{slotId=8,spellId=feet.recommendation.spellId})
 check(recommendedDetail.blocks[1].title=="Recommended" and recommendedDetail.blocks[2].enchantStatus=="Missing" and recommendedDetail.blocks[2].enchantTone=="missing","Selected recommendation is red and missing when an alternative is applied")
 check(recommendedDetail.blocks[5].enchantStatus=="Enchanted" and recommendedDetail.blocks[5].enchantTooltip.enchantId==1843,"Applied alternative remains enchanted beneath selected missing recommendation")
+for _,slot in ipairs(E.Scan(A:GetContext())) do
+    if gear[slot.slotId] and #slot.options>0 then
+        local oldEnchant=gear[slot.slotId].enchant
+        gear[slot.slotId].enchant=slot.options[1].enchantId
+        for _,option in ipairs(slot.options) do
+            local selectedCard=E.Detail(A:GetContext(),{slotId=slot.slotId,spellId=option.spellId}).blocks[2]
+            local applied=option.enchantId==slot.options[1].enchantId
+            check(selectedCard.enchantStatus==(applied and "Enchanted" or "Missing") and selectedCard.enchantTone==(applied and "ready" or "missing"),"Every slot selection reflects whether that exact enchant is applied")
+        end
+        gear[slot.slotId].enchant=oldEnchant
+    end
+end
 gear[8].enchant=0
 local mats=E.MaterialItems(ctx)
 local saved=mats[1]
