@@ -10,6 +10,7 @@ from pathlib import Path
 import math
 import os
 import re
+import tempfile
 from PIL import Image, ImageChops, ImageDraw, ImageFont
 from lupa.lua51 import LuaRuntime
 
@@ -86,7 +87,7 @@ def resolve_texture(asset):
         return None
     name = asset.replace('\\', '/')
     custom = name.lower().startswith(CUSTOM_PREFIX)
-    roots = [ROOT] if custom else [ROOT / 'tests/native-textures', Path(os.environ['TEMP']) / 'hardcorebuddy-tools/native-textures']
+    roots = [ROOT] if custom else [ROOT / 'tests/native-textures', Path(tempfile.gettempdir()) / 'hardcorebuddy-tools/native-textures']
     for directory in roots:
         candidate = directory / (name[len(CUSTOM_PREFIX):] if custom else name)
         choices = [candidate] if candidate.suffix else [candidate.with_suffix(ext) for ext in ('.tga', '.png', '.blp')]
