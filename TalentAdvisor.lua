@@ -287,6 +287,10 @@ function T:Document(context,state)
             steps[#steps].talentColumns={tostring(atLevel),live and live.names[key] or node.name,
                 rank.." / "..node.maxRank,node.treeName,
                 "|cff"..color..(learned and "Learned" or nextStep and "Next Point" or "Upcoming").."|r"}
+            steps[#steps].spellId=node.spellID
+            if live and live.indices[key] then
+                steps[#steps].talentTooltip={tree=node.tree,index=live.indices[key]}
+            end
         end
     end
     if #steps==0 then steps[1]=row("All talents learned","Use Show Learned to review the complete path.") end

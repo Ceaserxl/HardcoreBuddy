@@ -60,6 +60,12 @@ local function tooltip(self)
     if not block then return end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:ClearLines()
+    if block.talentTooltip and GameTooltip.SetTalent then
+        local talent=block.talentTooltip
+        local ok=pcall(GameTooltip.SetTalent,GameTooltip,talent.tree,talent.index,false,false)
+        if ok and GameTooltip:NumLines()>0 then GameTooltip:Show(); return end
+        GameTooltip:ClearLines()
+    end
     if block.spellId then
         local ok=pcall(GameTooltip.SetHyperlink,GameTooltip,"spell:"..block.spellId)
         if ok and GameTooltip:NumLines()>0 then GameTooltip:Show(); return end

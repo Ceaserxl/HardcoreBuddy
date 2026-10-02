@@ -97,12 +97,33 @@ A:Activate(pathLink.action)
 check(A.state.talentPath and #A.document.cards==1 and #A.document.cards[1].blocks==51,"All 51 steps in the separate path page")
 check(A.window.content:GetHeight()>A.window.scroll:GetHeight() and A:CanGoBack(),"Scrollable path with shared Back")
 check(A.document.cards[1].talentTable and #A.window.cards[1].talentHeaders==5,"Talent path has five table columns")
+local oldSetTalent,oldSetHyperlink=GameTooltip.SetTalent,GameTooltip.SetHyperlink
+local nodes=D.AdvisorTalents.HUNTER
+local hoveredTalent,hoveredSpell
+GameTooltip.SetTalent=function(self,tree,index,inspect,pet)
+    hoveredTalent={tree,index,inspect,pet}
+    self:AddLine("Native talent description")
+end
+GameTooltip.SetHyperlink=function(self,link)
+    hoveredSpell=link
+    self:AddLine("Native spell description")
+end
 for i,step in ipairs(A.document.cards[1].blocks) do
     local rendered=A.window.cards[1].content.blocks[i]
     check(step.talentColumns[1]==tostring(i+9),"Table preserves level order")
     check(rendered.icon:IsShown() and rendered.icon:GetWidth()==24 and rendered:GetHeight()==32,"Compact table keeps each talent icon")
     check(#rendered.talentCells==5 and not rendered.meta:IsShown(),"Status is in its own column")
+    rendered.scripts.OnEnter(rendered)
+    local node=nodes[build.steps[i]]
+    check(hoveredTalent[1]==node.tree and hoveredTalent[2]==live.indices[build.steps[i]]
+        and hoveredTalent[3]==false and hoveredTalent[4]==false,"Path hover requests the player's matching talent")
+    check(#GameTooltip.lines==1 and GameTooltip.lines[1]=="Native talent description","Path displays native talent tooltip without generic row text")
 end
+GameTooltip.SetTalent=function() error("Talent data unavailable") end
+local firstTalentRow=A.window.cards[1].content.blocks[1]
+firstTalentRow.scripts.OnEnter(firstTalentRow)
+check(hoveredSpell=="spell:"..nodes[build.steps[1]].spellID,"Unavailable talent tooltip falls back to the talent spell")
+GameTooltip.SetTalent,GameTooltip.SetHyperlink=oldSetTalent,oldSetHyperlink
 MOCK.Click(A.window.cards[1].headerButton)
 check(A.state.hideLearnedTalents and A.window.cards[1].headerButton.label:GetText()=="Show Learned","Hide Learned toggles from the path heading")
 check(#A.document.cards[1].blocks<51 and A.document.cards[1].blocks[1].meta=="Next Point","Filtered path starts at the next point")
@@ -148,6 +169,9 @@ for class,name in pairs(names) do
     for _,b in ipairs(A.document.cards[1].blocks) do check(not b.action or b.action.command~="learn","Preview cannot spend points") end
     A:Activate({kind="advisor",command="path"})
     check(#A.document.cards[1].blocks>0 and A.state.talentPath,"Every preview class has a separate path")
+    for _,step in ipairs(A.document.cards[1].blocks) do
+        check(step.spellId and not step.talentTooltip,"Preview talents use spell tooltips without accessing the player's talent tree")
+    end
     A:Back()
 end
 check(calls==1,"Previewing all classes never spends")
