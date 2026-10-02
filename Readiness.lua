@@ -28,11 +28,11 @@ function R:LiveContext()
     context.inventory=A.Inventory.Read()
     return context
 end
-function R:Missing(context)
+function R:Missing(context,allBelowTarget)
     local rows={}
     if not context then return rows end
     for _,record in ipairs(A.Supplies.Build(context,{filter="Essentials"})) do
-        if record.tracking and record.missing and record.missing>0 then rows[#rows+1]=record end
+        if record.tracking and record.missing and record.missing>0 and (allBelowTarget or record.refillNeeded) then rows[#rows+1]=record end
     end
     return rows
 end

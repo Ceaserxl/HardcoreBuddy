@@ -49,11 +49,22 @@ C_Item.GetItemInfo=function(id)
     local item=M.items[id]
     if item then return item.name,nil,1,1,item.level,nil,nil,nil,nil,1234 end
 end
-c.mode="live"; c.inventory={available=true,counts={[3030]=650,[3033]=90,[3108]=20}}
+c.mode="live"; c.level=25; c.inventory={available=true,counts={[3030]=650,[3033]=90,[3108]=20}}
 local ammo=M.Recommend(c); assert(ammo.itemId==3030 and ammo.ammoKind=="arrows")
 assert(S.Record(c,ammo).count==650,"Equipped arrow selection is not a second stack")
+local previousLevel=c.level
+selected=2512
+for _,tier in ipairs({{9,2512},{10,2515},{24,2515},{25,3030},{39,3030},{40,11285}}) do
+ c.level=tier[1]; assert(M.Recommend(c).itemId==tier[2],'Equipped old arrows do not block level upgrades')
+end
+c.level=previousLevel; selected=3030
 ranged=10003; assert(M.Recommend(c).ammoKind=="arrows")
 ranged=10002; selected=3033; assert(M.Recommend(c).ammoKind=="bullets")
+selected=2516
+for _,tier in ipairs({{9,2516},{10,2519},{24,2519},{25,3033},{39,3033},{40,11284}}) do
+ c.level=tier[1]; assert(M.Recommend(c).itemId==tier[2],'Equipped old bullets do not block level upgrades')
+end
+c.level=previousLevel; selected=3033
 local cached=C_Item.GetItemInfo
 C_Item.GetItemInfo=function() return nil end
 assert(M.Recommend(c)==nil,"Uncached selected ammo must not become a guessed shortage")

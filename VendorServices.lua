@@ -128,8 +128,10 @@ function V:Plan()
     local context=A.Readiness:LiveContext()
     if not context or not context.inventory.available then return plan,total end
     local needed={}
-    for _,item in ipairs(A.Readiness:Missing(context)) do
-        needed[item.itemId]=math.max(needed[item.itemId] or 0,item.missing)
+    for _,item in ipairs(A.Readiness:Missing(context,true)) do
+        if item.refillNeeded~=false or self.refilling and self.refilling[item.itemId] then
+            needed[item.itemId]=math.max(needed[item.itemId] or 0,item.missing)
+        end
     end
     local budget=GetMoney and GetMoney() or 0
     local stock=self:Stock(); self:LearnVendor(stock)
@@ -151,12 +153,12 @@ function V:Plan()
     return plan,total
 end
 function V:Stop()
-    self.running=nil; self.pending=nil
+    self.running=nil; self.pending=nil; self.refilling=nil
     if self.prompt then self.prompt:Hide() end
 end
 function V:Buy(automatic)
     if not self.open or InCombatLockdown() then return end
-    self.decided=true; self.automatic=automatic==true; self.running=true
+    self.decided=true; self.automatic=automatic==true; self.running=true; self.refilling={}
     if self.prompt then self.prompt:Hide() end
     self.nextAt=GetTime()
 end
@@ -184,6 +186,7 @@ function V:Tick()
         local qty=math.floor(math.min(item.quantity,item.maxStack)/item.bundle)*item.bundle
         if qty<1 or not BuyMerchantItem then self:Stop(); return end
         local inv=A.Inventory.Read(); if not inv.available then self:Stop(); return end
+        self.refilling[item.id]=true
         self.pending={id=item.id,name=item.name,quantity=qty,before=inv.counts[item.id] or 0,
             bundle=item.bundle,price=item.price,deadline=now+3}
         local ok=pcall(BuyMerchantItem,item.index,qty)

@@ -163,7 +163,7 @@ local function newBlock(parent)
         self.cancelCommit=true; self:ClearFocus(); self.cancelCommit=nil; addon:Refresh()
     end)
     edit:SetScript("OnEnter",function(self)
-        GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetText("Carry target",0.83,0.69,0.43,1,true)
+        GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetText("Auto-buy amount",0.83,0.69,0.43,1,true)
         GameTooltip:AddLine("Type a quantity and press Enter. Use 0 to skip restocking; clear the box to restore the suggested amount.",0.94,0.92,0.87,true); GameTooltip:Show()
     end)
     edit:SetScript("OnLeave",function() GameTooltip:Hide() end)
@@ -273,10 +273,36 @@ local function renderBlock(frame, block, width)
         frame.title:Show(); frame.body:Hide(); frame.meta:Hide()
         frame.icon:Hide(); frame.iconHit:Hide(); frame.iconBorder:Hide()
         frame.title:SetFont(STANDARD_TEXT_FONT,12,"")
-        measure(frame.title,"Keep on hand",110,0,8)
+        measure(frame.title,"Auto-buy amount",110,0,8)
         frame.quantity.targetKey=block.targetKey
         if not frame.quantity:HasFocus() then frame.quantity:SetText(tostring(block.target or "")) end
         frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",120,0); frame.quantity:SetSize(48,28)
+        if not frame.refill then
+            frame.refillLabel=font(frame,12,WHITE)
+            frame.refill=CreateFrame("EditBox",nil,frame,"BackdropTemplate")
+            local edit=frame.refill
+            Skin.Paint(edit,"edit"); edit:SetFont(STANDARD_TEXT_FONT,14,""); edit:SetTextColor(unpack(WHITE))
+            edit:SetAutoFocus(false); edit:SetNumeric(true); edit:SetMaxLetters(5); edit:SetJustifyH("CENTER")
+            edit:SetSize(48,28); edit:SetPoint("TOPLEFT",270,0)
+            edit:SetScript("OnEditFocusLost",function(e)
+                if not e.cancelCommit then addon:SetRefillThreshold(e.targetKey,e:GetText()) end
+            end)
+            edit:SetScript("OnEnterPressed",function(e) e:ClearFocus(); addon:Refresh() end)
+            edit:SetScript("OnEscapePressed",function(e)
+                e.cancelCommit=true; e:ClearFocus(); e.cancelCommit=nil; addon:Refresh()
+            end)
+            edit:SetScript("OnHide",function(e) e:ClearFocus() end)
+            edit:SetScript("OnEnter",function(e)
+                GameTooltip:SetOwner(e,"ANCHOR_RIGHT"); GameTooltip:SetText("Refill below")
+                GameTooltip:AddLine("Notify and offer restocking only below this quantity. Refill to Auto-buy amount. Automatic purchasing must be enabled separately. Use 0 to disable reminders and restocking for this item.",.94,.92,.87,true)
+                GameTooltip:Show()
+            end)
+            edit:SetScript("OnLeave",function() GameTooltip:Hide() end)
+        end
+        if frame.refill:HasFocus() and frame.refill.targetKey~=block.targetKey then frame.refill:ClearFocus() end
+        frame.refill.targetKey=block.targetKey
+        if not frame.refill:HasFocus() then frame.refill:SetText(tostring(block.refillThreshold or 0)) end
+        measure(frame.refillLabel,"Refill below",88,180,8)
         frame:SetHeight(28); return 28
     end
     if block.npcColumns then
@@ -681,7 +707,7 @@ local function renderCard(frame, data, width)
             if i==1 and data.quantityRecord then
                 if not frame.detailQuantity then frame.detailQuantity=newBlock(addon.window) end
                 local editor=frame.detailQuantity
-                renderBlock(editor,data.quantityRecord,168)
+                renderBlock(editor,data.quantityRecord,318)
             end
             if i==1 and data.defaultItem then
                 if not frame.defaultChoice then
@@ -953,7 +979,10 @@ function addon:CommitInputs()
     f.level:ClearFocus()
     for _,c in ipairs(f.cards or {}) do
         for _,block in ipairs(c.content.blocks or {}) do if block.quantity then block.quantity:ClearFocus() end end
-        if c.detailQuantity then c.detailQuantity.quantity:ClearFocus() end
+        if c.detailQuantity then
+            c.detailQuantity.quantity:ClearFocus()
+            if c.detailQuantity.refill then c.detailQuantity.refill:ClearFocus() end
+        end
     end
 end
 function addon:OpenDeaths(section, record)
@@ -1292,7 +1321,7 @@ local function layoutDocument(self)
         f.priorityChoice.label:SetText("Priority: "..self.Supplies.Priority(context,priorityItem))
         local inset=doc.cards[1] and doc.cards[1].itemLayout and 12 or 0
         local data=doc.cards[1]
-        local controlsWidth=190+(data and data.quantityRecord and 176 or 0)
+        local controlsWidth=190+(data and data.quantityRecord and 326 or 0)
         local leftControls=customDetail and 230 or backRow and f.back:GetWidth()+8 or 0
         if data and data.defaultItem and not data.isDefault then leftControls=leftControls+138 end
         toolbarWrap=bodyWidth-inset<controlsWidth+leftControls

@@ -116,6 +116,10 @@ function S.Record(context, item, groupFamily)
     if count ~= nil and (type(count) ~= "number" or count ~= count or count < 0
         or count == math.huge or count ~= math.floor(count)) then count = nil end
     local missing = count ~= nil and math.max(0, target - count) or nil
+    local thresholds=context.refillThresholds or {}
+    local threshold=S.NormalizeTarget(thresholds[id] or thresholds[tostring(id)],item.ammoKind and 10000 or 200)
+    if threshold==nil then threshold=item.ammoKind and (item.ammoKind=="thrown" and 20 or 200) or 5 end
+    threshold=math.min(target,threshold)
     local status = count == nil and "unknown" or missing == 0 and "ready" or count == 0 and "missing" or "low"
     local note = item.useSkill and ("Requires " .. item.useSkill.name .. " " .. item.useSkill.value)
         or groupFamily == "antivenom" and ("Poisons up to level "..item.power) or nil
@@ -125,6 +129,7 @@ function S.Record(context, item, groupFamily)
         count=count, target=target, targetKey=id, status=status, missing=missing,
         owned=count ~= nil and count > 0 or false, available=count ~= nil,
         quantityNote=note, defaultTarget=S.DefaultTarget(item),
+        refillThreshold=threshold,refillNeeded=count~=nil and count<threshold,
         optional=S.Category(item) == "Optional", tracking=target > 0,
     }
 end

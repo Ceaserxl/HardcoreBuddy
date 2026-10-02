@@ -303,7 +303,7 @@ function C.Detail(context, action)
             out.isDefault=S.Selection(context,"bandage")==item.itemId
         end
         if not out.blocks[1].readOnlyTarget and not out.blocks[1].pickRank then
-            out.quantityRecord={title="Keep on hand",quantityEditor=true,targetKey=r.targetKey,target=r.target}
+            out.quantityRecord={title="Auto-buy amount",quantityEditor=true,targetKey=r.targetKey,target=r.target,refillThreshold=r.refillThreshold}
         end
         local alternatives=false
         for _,block in ipairs(out.blocks) do

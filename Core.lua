@@ -170,6 +170,7 @@ function addon:GetContext()
     context.inventory = self.inventory or {available=false, counts={}}
     context.professions = self.professions
     context.targets = self.characterDB and self.characterDB.targets or {}
+    context.refillThresholds = self.characterDB and self.characterDB.refillThresholds or {}
     context.ranks = self.characterDB and self.characterDB.ranks or {}
     context.userItems = self.characterDB and self.characterDB.userItems or {}
     context.priorities = self.characterDB and self.characterDB.priorities or {}
@@ -206,6 +207,17 @@ function addon:SetCarryTarget(itemId,value)
             self.characterDB.ranks[item.family]=itemId; break
         end
     end
+    self.needsRefresh=true
+    if self.Readiness then self.Readiness:SuppliesChanged() end
+end
+
+function addon:SetRefillThreshold(itemId,value)
+    if not self.characterDB or type(itemId)~="number" then return end
+    local limit=self.Ammunition and self.Ammunition.items[itemId] and 10000 or 200
+    local number=value~="" and value~=nil and self.Supplies.NormalizeTarget(value,limit) or nil
+    if value~="" and value~=nil and number==nil then return end
+    self.characterDB.refillThresholds[itemId]=number
+    self.characterDB.refillThresholds[tostring(itemId)]=nil
     self.needsRefresh=true
     if self.Readiness then self.Readiness:SuppliesChanged() end
 end
@@ -273,6 +285,7 @@ function addon:Initialize()
     if self.characterDB.auctionLevelRange==nil then self.characterDB.auctionLevelRange=10 end
     if self.characterDB.debugAutoReload==nil then self.characterDB.debugAutoReload=false end
     if type(self.characterDB.targets)~="table" then self.characterDB.targets={} end
+    if type(self.characterDB.refillThresholds)~="table" then self.characterDB.refillThresholds={} end
     if type(self.characterDB.ranks)~="table" then self.characterDB.ranks={} end
     if type(self.characterDB.userItems)~="table" then self.characterDB.userItems={} end
     if type(self.characterDB.priorities)~="table" then self.characterDB.priorities={} end

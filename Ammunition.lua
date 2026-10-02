@@ -49,7 +49,8 @@ function M.Recommend(context)
             local name,level,icon
             if info then name,_,_,_,level,_,_,_,_,icon=info(equipped) end
             if compatible and not name then return nil end -- Wait for item cache, not a guessed shortage.
-            if compatible and name and type(level)=="number" and level<=context.level then
+            -- Equipped low-rank ammo must not suppress a newly usable vendor tier.
+            if compatible and name and type(level)=="number" and level<=context.level and level>=pick.level then
                 local copy={}; for key,value in pairs(pick) do copy[key]=value end
                 copy.itemId,copy.id,copy.name,copy.level,copy.icon=equipped,"ammo-"..equipped,name,math.max(1,level),icon
                 copy.route="Currently equipped. Check the item's tooltip or a weapons/ammunition vendor for replacements."

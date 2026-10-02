@@ -52,7 +52,20 @@ The six ordinary vendor drink tiers were already present; they now allow every
 class. Reputation rewards and unavailable later-expansion drinks are not treated
 as ordinary vendor water.
 
-Opening a merchant offers only missing Essentials that its live stock can sell.
+Each supply's details has **Auto-buy amount** (the total to carry, not the number
+to buy each visit) and **Refill below**. Notifications and purchase prompts only
+start below the refill threshold. Food at 19/20 stays quiet with a threshold of
+5; food at 4/20 triggers restocking. Defaults are below 5 for ordinary supplies,
+200 for arrows/bullets, and 20 for thrown weapons, capped at the carry target.
+Zero disables that item's refill notifications/purchases. Once a refill starts,
+it continues toward the target even after crossing the threshold. Merchant pack
+sizes are still respected without buying over the target.
+
+Hunter ammo recommendations advance at levels 10, 25 and 40 even when older
+arrows or bullets are equipped. Compatible higher-level equipped ammunition
+remains eligible; weapon type determines arrows versus bullets.
+
+Opening a merchant offers only low-stock Essentials that its live stock can sell.
 Buy confirms that visit. Auto Buy Next Time saves the opt-in; it can also be
 changed under Settings > General > Vendor purchases. Automatic purchases print
 chat receipts after bag contents confirm delivery. Purchases recheck stock,
