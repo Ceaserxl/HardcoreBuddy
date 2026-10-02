@@ -207,9 +207,9 @@ do
     check(R.primary==s.spells.frostbolt and glow:IsShown(),'Moving keeps primary highlighted')
     local starts=glow.ProcStartAnim.plays
     s.moving=false; R:Update()
-    check(R.primary==s.spells.frostbolt and glow:IsShown(),'Stopping cannot replace primary with off-bar gem preparation')
-    check(glow.ProcStartAnim.plays==starts,'Stopping preserves primary animation')
-    check(#R.optionalActions==1 and R.optionalActions[1]==s.spells.ruby,'Stationary gem preparation remains independently optional')
+    check(R.current==s.spells.ruby and R.optional and not glow:IsShown(),'Stopping restores stationary gem preparation even when off-bar')
+    check(not R.primary,'Stationary gem preparation does not leave damage highlighted')
+    s.prepareGem=nil; R:Update(); check(glow:IsShown(),'Finishing preparation restores damage advice')
     s.buffs.intellect=nil; s.buffs.barrier=nil; R:Update()
     check(glow.style=='primary' and R.highlights[other].style=='optional' and R.highlights[lower].style=='optional',
         'One gold damage action coexists with red Barrier and Intellect')

@@ -744,17 +744,18 @@ function R:Update()
         self.snapshot=self:Snapshot()
         local key,reason,optional,urgent=self.Decide(self.snapshot)
         key,reason,optional=self:StabilizeRecommendation(self.snapshot,key,reason,optional,urgent)
-        self.primary=key and self.snapshot.spells[key]
+        local selected=key and self.snapshot.spells[key]
+        self.primary=not optional and selected or nil
         self.optionalActions={}
         local choices=A.MageRotation.Optional(self.snapshot)
         for _,choice in ipairs(choices) do
             local spell=self.snapshot.spells[choice.key]
             if spell and spell~=self.primary then self.optionalActions[#self.optionalActions+1]=spell end
         end
-        self.current=self.primary or self.optionalActions[1]
-        self.reason=self.primary and reason or choices[1] and choices[1].reason or reason
+        self.current=selected or self.optionalActions[1]
+        self.reason=selected and reason or choices[1] and choices[1].reason or reason
         self.optional=not not (self.current and not self.primary)
-        self:Highlight(self.primary,false,self.optionalActions)
+        self:Highlight(selected,optional,self.optionalActions)
     end
     if self.RefreshView then self:RefreshView() end
 end

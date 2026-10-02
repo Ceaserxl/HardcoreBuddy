@@ -80,9 +80,9 @@ Flamestrike is not immediately overwritten. Ground placement remains manual.
 
 Gold uses Blizzard's spell-alert animation; red indicates optional upkeep.
 The general highlighting contract is one primary action plus any number of
-eligible optional actions. Optional actions never replace the primary. Stopping
-movement can add a preparation highlight without removing the damage highlight,
-including when that preparation action has no button on the bar.
+eligible optional actions. Optional buffs do not replace the primary. Stationary out-of-combat mana-gem
+preparation takes precedence over pulling and uses a red highlight; moving resumes
+damage advice. Place the conjure spell on the bar to see its highlight.
 The companion page displays the primary first, or an optional action when there
 is no primary. Disabling the assistant clears both groups.
 The addon owns separate cosmetic overlays and leaves native proc alerts intact.

@@ -71,8 +71,8 @@ do
     s.casting=false; s.spells.counterspell={ready=true,usable=true}; s.interrupt=true
     decide(s,'counterspell','Enemy interrupt takes priority over mana gem')
     s=state({'frostbolt','ruby'}); s.combat=false; s.prepareGem='ruby'; s.spells.ruby.cost=1200
-    decide(s,'frostbolt','Gem preparation never displaces primary')
-    check(optional(s,'ruby'),'Gem preparation uses optional glow')
+    decide(s,'ruby','Stationary preparation takes priority before pulling')
+    local _,_,isOptional=R.Decide(s); check(isOptional,'Gem preparation retains optional glow')
     s.prepareGem=nil; decide(s,'frostbolt','Owned gem does not prompt reconjuring')
     s.prepareGem='ruby'; s.moving=true; decide(s,'frostbolt','No conjuring while moving')
     s.moving=false; s.spells.ruby.cost=4900; decide(s,'frostbolt','Preparation preserves combat mana reserve')
