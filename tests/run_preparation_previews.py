@@ -58,5 +58,18 @@ assert(R.panel.rows[5]:IsShown() and R.panel.more:GetText()=="+ 1 more in Essent
 assert(not R.panel.hint:IsShown(),'Overflow shares the footer instead of adding empty height')
 R:ShowPanel({rows[1]})
 assert(not R.panel.rows[2]:IsShown() and not R.panel.more:IsShown(),"Rows and overflow hide on refresh")
+local find=A.VendorServices.FindSupplyVendor
+A.VendorServices.FindSupplyVendor=function(_,id,count)
+ if id==6 or id==3 then return {name='Vendor '..id,map=1453,x=50,y=50} end
+end
+for i=1,6 do rows[i].itemId=i end
+R:ShowPanel(rows)
+assert(R.panel.rows[1].name:GetText()=='Example 3' and R.panel.rows[2].name:GetText()=='Example 6',
+ 'Vendor items beyond the first five become visible, preserving their relative order')
+assert(R.panel.rows[3].name:GetText()=='Example 1' and rows[1].itemId==1,'Stable non-vendor order without mutating the source')
+assert(R.panel.rows[2].vendorName=='Vendor 6','Sorted row keeps its own vendor destination')
+R:ShowPanel({rows[1],rows[2],rows[3],rows[4],rows[5]})
+assert(R.panel.rows[1].name:GetText()=='Example 1','Five or fewer keeps existing order')
+A.VendorServices.FindSupplyVendor=find
 print("PASS: Preview controls, layout rows, sample labeling, layering, expiry, cooldown isolation, combat and Review navigation.")
 ''')
