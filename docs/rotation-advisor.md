@@ -43,7 +43,7 @@ Damage choices compare Fireball, Frostbolt, Scorch, Arcane Missiles and appropri
 Pyroblast opportunities. Estimates include rank damage, coefficients, actual cast
 times, school bonuses, relevant talents, crit, Shatter, vulnerability and mana
 pressure. Solo approaching attackers can take precedence with a Frostbolt slow.
-Fire Blast finishes enemies or supplies instant damage while moving; it does not
+Fire Blast finishes enemies or supplies damage when other casts are unavailable; it does not
 displace a normal filler just because its damage per GCD is higher. Presence of
 Mind, Arcane Power and Combustion are used when their observed context supports
 them. Scorch upkeep is reserved for longer Fire fights.
@@ -150,3 +150,7 @@ modifier macros, actual talents and rank training, low mana, interrupts, roots,
 AoE and nearby CC. Check the first and last seconds of normal casts/channels,
 reload persistence, disabling and loading screens. Offline mocks cannot verify
 actual client API timing, visual quality or unseen enemy geometry.
+
+Movement alone does not promote Fire Blast or Cone of Cold over a valid filler.
+Mounted characters retain preparation and recovery previews, including mana gems
+and Evocation; the player must dismount to perform actions that require it.

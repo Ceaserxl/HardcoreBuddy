@@ -75,6 +75,7 @@ do
     local _,_,isOptional=R.Decide(s); check(isOptional,'Gem preparation retains optional glow')
     s.prepareGem=nil; decide(s,'frostbolt','Owned gem does not prompt reconjuring')
     s.prepareGem='ruby'; s.moving=true; decide(s,'ruby','Movement preserves optional preparation preview')
+    s.mounted=true; decide(s,'ruby','Mounted gem preparation remains visible'); s.mounted=false
     s.moving=false; s.spells.ruby.cost=4900; decide(s,'frostbolt','Preparation preserves combat mana reserve')
 end
 -- Every level and all three talent emphases can choose only a learned rank.
@@ -145,14 +146,14 @@ check(not optional(s,'intellect') and optional(s,'frostarmor'),'Only missing buf
 s.hasArmor=true; decide(s,'fireball','No repeat armor buff')
 s=state({'frostbolt','evocation'}); s.combat=false; s.powerPercent=10
 check(optional(s,'evocation'),'Safe optional mana recovery'); s.mounted=true
-check(not optional(s,'evocation'),'Do not channel on mount'); decide(s,'frostbolt','Mounted preview remains')
+check(optional(s,'evocation'),'Mounted recovery remains visible as a preview'); decide(s,'frostbolt','Mounted preview remains')
 s=state({'frostbolt','evocation'}); s.powerPercent=5; s.timeToDie=30; s.targetCombat=true
 decide(s,'evocation','Safe grouped recovery'); s.recentDamage=true; decide(s,'frostbolt','Do not channel under damage')
 s=state({'frostbolt','shoot'}); s.spells.frostbolt.usable=false; decide(s,'shoot','Wand fallback')
 s.wanding=true; decide(s,nil,'Never toggle active wand off')
 s=state({'fireball','frostbolt'}); s.grouped=false; s.attackingPlayer=true; s.slowRemaining=0; s.targetDistance=25
 decide(s,'frostbolt','Solo approach gets slow regardless of spec')
-s=state({'frostbolt','fireblast'}); s.moving=true; decide(s,'fireblast','Instant while moving')
+s=state({'frostbolt','fireblast'}); s.moving=true; decide(s,'frostbolt','Movement alone does not replace Frostbolt with Fire Blast')
 s.moving=false; s.targetHP=10; decide(s,'fireblast','Fast finisher')
 s=state({'frostbolt','fireblast'},6); s.spells.frostbolt.id=116; s.targetHP=1000
 check(M.Estimate(s,'fireblast').score>M.Estimate(s,'frostbolt').score,'Fixture reproduces Fire Blast raw throughput advantage')

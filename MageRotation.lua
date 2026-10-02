@@ -116,7 +116,7 @@ function M.Optional(s)
         end
     end
     if mp>40 and remaining(s,"barrier")<=5 then add("barrier","Refresh Ice Barrier before it expires.") end
-    if not s.combat and not s.casting and not s.targetCombat and not s.moving and not s.mounted then
+    if not s.combat and not s.casting and not s.targetCombat and not s.moving then
         if mp<25 and ready(s,"evocation",true) then add("evocation","Recover mana before pulling.") end
     end
     return actions
@@ -157,7 +157,7 @@ function M.Decide(s)
         and (s.maxPower or 0)-(s.power or 0)>=(s.spells.managem.restore or math.huge) then
         return "managem","Restore mana without wasting the gem's recovery.",false,true
     end
-    if not s.combat and not s.casting and not s.targetCombat and not s.mounted
+    if not s.combat and not s.casting and not s.targetCombat
         and mp>80 and s.prepareGem and can(s.prepareGem,true)
         and (s.power or 0)-(s.spells[s.prepareGem].cost or math.huge)>=(s.maxPower or 0)*.3 then
         return choose(s.prepareGem,"Conjure a mana gem before the next pull.",true)
@@ -240,12 +240,12 @@ function M.Decide(s)
     end
     if can("fireblast") then
         local e=M.Estimate(s,"fireblast")
-        if s.moving or (e and s.targetHP and s.targetHP<=e.damage) or (s.frozen and (s.frozenRemaining or 0)<1.5) then
-            return choose("fireblast","Instant damage while moving or finishing the target.")
+        if (e and s.targetHP and s.targetHP<=e.damage) or (s.frozen and (s.frozenRemaining or 0)<1.5) then
+            return choose("fireblast","Instant damage to finish the target or use the remaining freeze.")
         end
         if not best then return choose("fireblast","Instant damage while other damage casts are unavailable.") end
     end
-    if s.moving and s.safeAOE and s.targetClose and s.facingTarget and can("cone") then return choose("cone","Instant damage and a slow while moving.") end
+    if not best and s.moving and s.safeAOE and s.targetClose and s.facingTarget and can("cone") then return choose("cone","Instant damage and a slow while moving.") end
     if best then return choose(best,"Best available damage cast for your learned ranks and talents.") end
     if can("shoot") and not s.wanding then return choose("shoot","Use your wand while mana or spells recover.") end
     return nil,""
