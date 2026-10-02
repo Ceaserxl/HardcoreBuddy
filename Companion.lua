@@ -165,8 +165,7 @@ local function bandageCards(context,state)
     end
     local note=context.maxHealth and "Lowest rank that covers your full health."
         or "Maximum health unavailable. Showing your highest craftable rank."
-    local health=context.maxHealth and tostring(math.floor(context.maxHealth)) or "Unavailable"
-    local cards={card("Recommended","Maximum Health: "..health..". "..note,{})}
+    local cards={card("Recommended",note,{})}
     cards[1].headerAction={label=state.showAllBandages and "Show fewer" or "Show all",action={kind="bandageRanks"}}
     local recommended=plan.recommended
     if recommended and plan.canMake then
@@ -217,18 +216,18 @@ local function bandageCards(context,state)
             if block.itemId~=selected then remaining[#remaining+1]=block
             elseif block.supply then
                 out.itemSectionTitle=section.title
-                out.itemHeadingAction=section.headerAction
                 if recommended and selected==recommended.itemId and not plan.canMake then out.blocks[1].body=block.body end
             end
         end
         if #remaining>0 then
             local heading=row(section.title,section.note)
-            heading.headerAction=section.headerAction
             heading.plain=true; heading.textInset=0; heading.rightColumn=true
             blocks[#blocks+1]=heading
             for _,block in ipairs(remaining) do block.rightColumn=true; blocks[#blocks+1]=block end
         end
     end
+    local toggle=row(state.showAllBandages and "Show fewer" or "Show all",nil,{kind="bandageRanks"})
+    toggle.rightColumn=true; blocks[#blocks+1]=toggle
     out.blocks=blocks
     return {out}
 end
