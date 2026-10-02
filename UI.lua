@@ -950,6 +950,7 @@ function addon:Back()
 end
 function addon:CanGoBack()
     local s=self.state or {}
+    if s.view=="training" and s.detail and s.detail.kind=="profession" and s.detail.family=="dummy" then return false end
     return (self.history and #self.history>0) or s.view=="petguide"
         or (s.view=="settings" and s.gearPage~=nil)
         or (s.view=="settings" and s.mapIconKind~=nil)
