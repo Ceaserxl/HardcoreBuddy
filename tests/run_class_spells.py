@@ -63,7 +63,8 @@ assert(alliance[3561] and not alliance[3567] and horde[3567] and not horde[3561]
 local human=ids(build("Priest",1,true)); race=4
 local nightElf=ids(build("Priest",1,true))
 assert(human[19236] and not human[19296] and nightElf[19296] and not nightElf[19236],"Racial spells")
-assert(ids(build("Mage",23))[12505].body:find("Requires talent: Spell 11366",1,true))
+assert(ids(build("Mage",23))[12505].body:find("Requires Talent: Spell 11366",1,true))
+assert(ids(build("Mage",23))[12505].spellColumns[4]=="Requires Talent: Spell 11366")
 assert(build("Mage",40,false,nil,"no matching text").total==0)
 assert(build("Mage",40,false,nil,nil,"preview").cards[1].note==nil)
 local hunterPets=A.ClassSpells.PetEntries({characterClass="Hunter"})

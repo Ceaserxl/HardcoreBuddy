@@ -88,12 +88,12 @@ function S.Build(context,state)
                     local body="Listed cost: "..costText(entry.cost)
                     if entry.requiredTalentId then
                         local talent=spellInfo(entry.requiredTalentId)
-                        body=body.." | Requires talent: "..talent
+                        body=body.." | Requires Talent: "..talent
                     end
                     local title=name..(rank and rank~="" and (" | "..rank) or "")
                     if (title.." "..body):lower():find(query,1,true) then
                         blocks[#blocks+1]={title=title,body=body,icon=icon,spellId=entry.id,level=level,
-                            spellColumns={name,rank or "—",costText(entry.cost),entry.requiredTalentId and ("Requires "..spellInfo(entry.requiredTalentId)) or "Class trainer"}}
+                            spellColumns={name,rank or "—",costText(entry.cost),entry.requiredTalentId and ("Requires Talent: "..spellInfo(entry.requiredTalentId)) or "Class trainer"}}
                         total=total+1
                     end
                 end
