@@ -33,12 +33,18 @@ WorldMapFrame.GetMapID=function() return mapID end
 WorldMapFrame.GetCanvasScale=function() return 1 end
 Minimap=CreateFrame('Frame',nil,UIParent); Minimap:SetSize(200,200)
 Minimap.GetZoom=function() return 0 end
-C_Minimap={GetViewRadius=function() return 200 end}
+local flagCalls=0
+C_Minimap={GetViewRadius=function() return 200 end,
+ GetPOITextureCoords=function(index)
+  assert(index==6,'Use the guard red flag, not the tombstone')
+  flagCalls=flagCalls+1; return 0,1,0,1
+ end}
 local rotate=false
 GetCVar=function(key) return key=='rotateMinimap' and (rotate and '1' or '0') or '0' end
 GetPlayerFacing=function() return math.pi/2 end
 M:Set(chosen,'Food')
 assert(M.mapPin:IsShown() and M.miniPin:IsShown())
+assert(flagCalls==2,'Both map and minimap use the red flag')
 local _,_,_,x,y=M.mapPin:GetPoint(); assert(x==600 and y==-350,'World map coordinates')
 local _,_,_,x,y=M.miniPin:GetPoint(); assert(math.abs(x-50)<.01 and y==0,'East is right on minimap')
 rotate=true; M:Update()
@@ -57,5 +63,11 @@ A.Readiness:ShowPanel({{itemId=999,name='Food',count=0,target=5}})
 local row=A.Readiness.panel.rows[1]
 row.scripts.PostClick(row,'LeftButton',false)
 assert(M.target.name=='Fixed shop' and A.Readiness.panel:IsShown(),'Missing item click marks vendor without closing panel')
+chosen.x=50.6; M:Set(chosen,'Food')
+assert(M.target and M.miniPin:IsShown(),'Six yards keeps marker')
+chosen.x=50.5; M:Set(chosen,'Food')
+assert(not M.target and not M.mapPin:IsShown() and not M.miniPin:IsShown() and not M.driver:IsShown(),
+ 'Five yards clears both pins and stops updates')
+chosen.x=50.3; M:Set(chosen,'Food'); assert(not M.target,'Already within five yards clears immediately')
 print('PASS: stationary-first vendors, roaming fallback, map/minimap geometry, rotation, edge clamp, clear and essentials click.')
 ''')

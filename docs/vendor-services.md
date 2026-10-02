@@ -5,6 +5,9 @@ item to mark its vendor on the world map and minimap, and target that exact
 vendor name within WoW's targeting range. The panel stays open. Right-click
 either marker to clear it; selecting another item replaces the marker. The Review
 supplies button still opens Essentials. Target buttons hide during combat.
+Both markers use Blizzard's red guard-destination flag. They clear automatically
+within five yards of the marked coordinates. Arrival uses the recorded location;
+roaming vendors are not tracked live.
 
 The local catalogue contains 335 vendors for 96 of the 194 supply item IDs
 examined. Relationships, names, factions and coordinates were extracted from

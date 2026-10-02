@@ -18,7 +18,8 @@ function M:Pin(parent)
     local icon=pin:CreateTexture(nil,"OVERLAY"); icon:SetAllPoints()
     local coords=C_Minimap and C_Minimap.GetPOITextureCoords or GetPOITextureCoords
     if coords then
-        icon:SetTexture("Interface\\Minimap\\POIIcons"); icon:SetTexCoord(coords(7))
+        -- Blizzard's guard destination: red flag with a yellow exclamation mark.
+        icon:SetTexture("Interface\\Minimap\\POIIcons"); icon:SetTexCoord(coords(6))
     else icon:SetTexture("Interface\\Minimap\\Tracking\\POI") end
     pin:SetScript("OnClick",function() M:Clear() end)
     pin:SetScript("OnEnter",function(p)
@@ -62,6 +63,8 @@ function M:Update()
     if not target or not player or instance~=playerInstance then pin:Hide(); return end
     local north,west=target:GetXY(); local playerNorth,playerWest=player:GetXY()
     local dx,dy=playerWest-west,north-playerNorth
+    -- World-map projection is in yards. Check before zoom/rotation/clamping.
+    if dx*dx+dy*dy<=25 then self:Clear(); return end
     if GetCVar and GetCVar("rotateMinimap")=="1" then
         local facing=GetPlayerFacing and GetPlayerFacing() or 0
         dx,dy=dx*math.cos(facing)+dy*math.sin(facing),dy*math.cos(facing)-dx*math.sin(facing)
