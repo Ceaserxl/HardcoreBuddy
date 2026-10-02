@@ -926,7 +926,8 @@ function addon:Activate(action)
     if action.kind=="mapAdvisor" then self.MapAdvisor:Activate(action); return end
     if action.kind=="advisor" and self.TalentAdvisor then self.TalentAdvisor:Activate(action); return end
     self:CommitInputs(); self.window.classMenu:Hide()
-    self.history=self.history or {}; self.history[#self.history+1]=self.state
+    if action.companionTab then self.history={}
+    else self.history=self.history or {}; self.history[#self.history+1]=self.state end
     if action.kind=="instance" then
         local g=self.Instances.byId[action.id]
         if not g then table.remove(self.history); return end
@@ -951,7 +952,7 @@ end
 function addon:CanGoBack()
     local s=self.state or {}
     if s.view=="training" and s.detail and s.detail.kind=="profession" and s.detail.family=="dummy" then return false end
-    return (self.history and #self.history>0) or s.view=="petguide"
+    return (self.history and #self.history>0) or (s.view=="petguide" and s.detail~=nil)
         or (s.view=="settings" and s.gearPage~=nil)
         or (s.view=="settings" and s.mapIconKind~=nil)
         or (s.view=="deaths" and s.deathRecord~=nil)

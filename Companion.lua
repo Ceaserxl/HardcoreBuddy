@@ -20,9 +20,9 @@ local tabDescriptions={["Zone Advisor"]="Recommended leveling zones, dangerous N
     Cooking="Food recommendations and profession training."}
 function C.TabAction(tab)
     local family=({Engineering="dummy"})[tab]
-    if family then return {kind="profession",family=family} end
-    if tab=="Pet Guide" then return {view="petguide",filter="Families"} end
-    return {view="training",filter=tab~="Overview" and tab or nil}
+    if family then return {kind="profession",family=family,companionTab=true} end
+    if tab=="Pet Guide" then return {view="petguide",filter="Families",companionTab=true} end
+    return {view="training",filter=tab~="Overview" and tab or nil,companionTab=true}
 end
 local function match(text,query)
     for word in (query or ""):lower():gmatch("%S+") do
