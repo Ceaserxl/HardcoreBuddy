@@ -278,14 +278,14 @@ function S:Create(parent)
     talent.builds={}
     local maxBuilds=0
     for _,builds in pairs(A.Data.AdvisorBuilds) do maxBuilds=math.max(maxBuilds,#builds) end
-    talent.spending=Skin.Section(talent,"Apply talent points",100,124)
+    talent.spending=Skin.Section(talent,"Apply talent points",160+maxBuilds*46,124)
     talent.apply=button(talent.spending,"Apply unused points",42,function() A.TalentAdvisor:ApplyUnused(false) end,280)
     talent.auto=check(talent.spending,"Automatically apply unused points",46,function() return A.characterDB.autoApplyTalents==true end,function(value)
         A.characterDB.autoApplyTalents=value
         if value then A.TalentAdvisor:ApplyUnused(true) else A.TalentAdvisor.applying=nil end
     end)
     label(talent.spending,"Uses your selected path. Stops if your learned talents do not match. Points cannot be undone without a respec.",12,16,86,700)
-    talent.paths=Skin.Section(talent,"Talent paths",236,48+maxBuilds*46)
+    talent.paths=Skin.Section(talent,"Talent paths",100,48+maxBuilds*46)
     for i=1,maxBuilds do
         local b=button(talent.paths,"",42+(i-1)*46,function(self)
             A.TalentAdvisor:Activate({command=self.automatic and "defaultBuild" or "build",id=self.buildID,class=self.class})
@@ -400,6 +400,8 @@ function S:Layout(parent,left,top,width,height,section,visible)
         Skin.ButtonState(b,b.selected,nil,false)
     end
     talent.paths:SetHeight(48+#builds*46)
+    talent.spending.sectionTop=talent.paths.sectionTop+talent.paths:GetHeight()+12
+    Skin.LayoutSections(talent,contentWidth)
     talent.contentHeight=296+#builds*46
     if pageName=="Talent Advisor" then self.content:SetHeight(math.max(talent.contentHeight,height/scale)) end
     local auction=self.pages["Auction House"]; auction.armor:Sync()
