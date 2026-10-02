@@ -51,6 +51,9 @@ for _,screen in ipairs({{1920,1080},{1024,768},{640,480}}) do
     UIParent.width,UIParent.height=screen[1],screen[2]; A:RestoreWindow()
     for _,name in ipairs(A.Settings.sections) do
         A:OpenSettings(name)
+        local sx,sy,sw,sh=A.Settings.scroll:GetRect()
+        local px,py,pw,ph=A.window.scroll:GetRect()
+        check(near(sx,px) and near(sy,py) and near(sw,pw) and near(sh,ph),"Settings shares the full content viewport and right scrollbar edge")
         local page=A.Settings.pages[name] or (name=="Death Journal" and A.Deaths.options) or
             (name=="Low Health" and A.LowHealth.page) or A.MapAdvisor.controls
         header(page); sections(page)

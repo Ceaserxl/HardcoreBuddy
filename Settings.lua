@@ -320,8 +320,8 @@ function S:Layout(parent,left,top,width,height,section,visible)
         return
     end
     section=self:Section(section)
-    local scale=math.min(1,(width-22)/760)
-    local contentWidth=(width-22)/scale
+    local scale=math.min(1,width/760)
+    local contentWidth=width/scale
     local pageName=section
     if section=="Gear Advisor" and A.state.gearPage=="Stat Weights" then pageName=A.state.gearPage end
     local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 282
@@ -329,7 +329,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     if section=="Zone Advisor" then contentHeight=A.state.mapIconKind and A.MapAdvisor:IconPickerHeight() or A.MapAdvisor:SettingsHeight() end
     if pageName=="Debug" then A.DebugDump:Refresh() end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
-    self.scroll:SetSize(width-22,height)
+    self.scroll:SetSize(width,height)
     self.content:SetScale(scale); self.content:SetSize(contentWidth,math.max(contentHeight,height/scale))
     Skin.Paint(self.content,"note")
     for _,page in pairs(self.pages) do Skin.LayoutSections(page,contentWidth) end
