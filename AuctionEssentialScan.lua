@@ -2,15 +2,16 @@
 local _,A=...
 local E=A.AuctionEssentials
 local popup="HARDCOREBUDDY_ESSENTIAL_BUYOUT"
-function E:Stop(message)
+function E:Stop(message,keepBatch)
     self.scan=nil; self.confirmation=nil
+    if not keepBatch then self.batch=nil; self.awaitingBuy=nil end
     if StaticPopup_Hide then StaticPopup_Hide(popup) end
     if message then self.message=message end
     self:Refresh()
 end
-function E:Start(record)
+function E:Start(record,keepBatch)
     if not self.open or not self.panel:IsShown() then return end
-    self:Stop()
+    self:Stop(nil,keepBatch)
     self.complete=false
     local queue=record and {record} or self:Items(A:GetContext())
     if not record then self.results={} end
@@ -38,7 +39,7 @@ function E:Confirm(listing)
     if not StaticPopupDialogs[popup] then
         local dialog={}; for k,v in pairs(StaticPopupDialogs.BUYOUT_AUCTION) do dialog[k]=v end
         dialog.text="Buy %s?"; dialog.OnShow=function(frame,data) MoneyFrame_Update(frame.MoneyFrame,data.buyout) end
-        dialog.OnCancel=function() E.confirmation=nil end
+        dialog.OnCancel=function() E:Stop("Purchase cancelled.") end
         dialog.OnAccept=function(_,data)
             if E.confirmation~=data or not E.open or not E.panel:IsShown() or E.scan then return end
             local current,loaded=E:Listing(data.index,data.itemId)
@@ -48,9 +49,10 @@ function E:Confirm(listing)
             end
             if GetMoney()<data.buyout then E:Stop("Not enough money for this stack."); return end
             E.confirmation=nil
+            E.awaitingBuy={listing=data,since=GetTime()}
             PlaceAuctionBid("list",data.index,data.buyout)
             E.results[data.itemId]=nil; E.complete=false
-            E:Stop("Buyout submitted. Click an item to check the next cheapest stack.")
+            E.message="Waiting for the auction house to confirm the purchase."; E:Refresh()
         end
         StaticPopupDialogs[popup]=dialog
     end
@@ -60,6 +62,10 @@ function E:Confirm(listing)
     self:Refresh()
 end
 function E:Tick()
+    if self.awaitingBuy then
+        if GetTime()-self.awaitingBuy.since>20 then self:Stop("Purchase confirmation timed out. Check your mail before retrying.") end
+        return
+    end
     local s=self.scan; if not s then return end
     if not self.open or not self.panel:IsShown() then self:Stop(); return end
     if GetTime()-s.since>20 then self:Stop("Scan timed out. Rescan before buying."); return end
@@ -72,12 +78,13 @@ function E:Tick()
     elseif s.phase=="reading" then
         local count,total=GetNumAuctionItems("list")
         if count==0 and total>0 then return end
-        local pageBest,verified
+        local pageBest,verified,pageOffers=nil,nil,{}
         for i=1,count do
             local listing,loaded=self:Listing(i,record.itemId)
             if not loaded then return end
             if listing then
                 listing.page=s.page
+                pageOffers[#pageOffers+1]=listing
                 if s.verify and listing.link==s.best.link and listing.buyout==s.best.buyout and listing.count==s.best.count then
                     verified=listing
                 end
@@ -89,15 +96,23 @@ function E:Tick()
             else self:Stop("Cheapest listing changed. Click the item to check again.") end
             return
         end
+        s.offers=s.offers or {}
+        for _,listing in ipairs(pageOffers) do s.offers[#s.offers+1]=listing end
         if pageBest and cheaper(pageBest,s.best) then s.best=pageBest end
         if (s.page+1)*50<total then s.page=s.page+1; s.phase="query"; s.since=GetTime(); return end
-        self.results=self.results or {}; self.results[record.itemId]=s.best or false
+        local result=false
+        if s.best then
+            table.sort(s.offers,cheaper)
+            result={}; for k,v in pairs(s.best) do result[k]=v end
+            result.offers=s.offers
+        end
+        self.results=self.results or {}; self.results[record.itemId]=result
         if s.purchase then
             if not s.best then self:Stop("No buyout available for this item."); return end
             -- Return to its page and resolve a fresh index before showing the popup.
             s.page=s.best.page; s.verify=true; s.phase="query"; s.since=GetTime(); return
         end
-        s.item=s.item+1; s.page=0; s.best=nil; s.phase="query"; s.since=GetTime()
+        s.item=s.item+1; s.page=0; s.best=nil; s.offers=nil; s.phase="query"; s.since=GetTime()
         if s.item>#s.queue then self.scan=nil; self.complete=true; self.message="Scan complete. Prices are for whole stacks; cheapest per item first."
         else self.message="Scanning "..s.item.." / "..#s.queue..": "..s.queue[s.item].name end
         self:Refresh()

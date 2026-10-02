@@ -73,6 +73,7 @@ AuctionUpgrades.lua
 AuctionPurchase.lua
 AuctionEssentials.lua
 AuctionEssentialScan.lua
+AuctionEssentialBasket.lua
 
 Deaths\Model.lua
 Deaths\Core.lua
