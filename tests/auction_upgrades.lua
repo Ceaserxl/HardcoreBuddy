@@ -6,6 +6,18 @@ local checks=0
 local function check(ok,why) checks=checks+1; assert(ok,why) end
 function GameTooltip:GetOwner() return self.owner end
 check(not U.panel,"Native Auction UI is optional at addon load")
+for _,material in ipairs({false,1,2,3,4}) do
+    local found=false
+    for _,search in ipairs(U:SearchQueue(material)) do
+        if search.name=="Back" then
+            found=true
+            check(#search.filters==1 and search.filters[1].classID==4
+                and search.filters[1].subClassID==1 and search.filters[1].inventoryType==16,
+                "Back always searches Cloth, independent of the Best Armor selection")
+        end
+    end
+    check(found,"Back search remains in every armor-mode queue")
+end
 local create=CreateFrame
 CreateFrame=function(...)
     local f=create(...)
@@ -410,6 +422,10 @@ check(U.results[15] and U.results[2] and U.results[11] and U.results[12] and U.r
 check(#U.results.paired>0 and #U.results.paired[1].components==2,"Weapons and held off-hands survive the material filter")
 check(queries[queryStart+1].filters[1].subClassID==3 and queries[queryStart+2].filters[1].subClassID==0,
     "Body armor uses the selected material; jewelry uses the native miscellaneous subclass")
+local cloakQuery=queries[queryStart+10]
+check(#cloakQuery.filters==1 and cloakQuery.filters[1].classID==4
+    and cloakQuery.filters[1].subClassID==1 and cloakQuery.filters[1].inventoryType==16,
+    "Actual Mail-character auction query sends Cloth for Back")
 armorToggle:SetChecked(false); A:Refresh()
 check(armorToggle:GetChecked(),"Refreshing settings restores the saved checkbox preference")
 armorToggle:SetChecked(false); MOCK.Click(armorToggle); U:Start(); finish()

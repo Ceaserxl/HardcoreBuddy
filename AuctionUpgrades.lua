@@ -24,6 +24,8 @@ local armorNames={"Cloth","Leather","Mail","Plate"}
 -- Supply the full class/subclass/slot hierarchy, as Blizzard's auction
 -- categories do. Omitting subClassID can discard the inventory-type filter
 -- and repeatedly retrieve the entire armor/weapon category for each slot.
+-- Back is inventory type 16 and always Cloth (subclass 1), even when Best
+-- Armor selects Leather, Mail or Plate for the character's body armor.
 local armorSubclasses={[2]={0},[11]={0},[12]={0},[16]={1},[14]={6},[23]={0}}
 local bodySubclasses={0,1,2,3,4}
 local oneHandSubclasses={0,4,7,13,15}
