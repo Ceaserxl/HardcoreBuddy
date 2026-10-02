@@ -186,7 +186,7 @@ end
 
 function T:Activate(a)
     if a.command=="hideLearned" then
-        A.state.hideLearnedTalents=not A.state.hideLearnedTalents
+        A.state.hideLearnedTalents=A.state.hideLearnedTalents==false
         A:Refresh(true); return
     end
     if a.command=="path" then
@@ -229,13 +229,14 @@ function T:Document(context,state)
         local description=profile and (profile.name.." | "..(profile.buildName or "Leveling default")) or "Character data loading"
         local blocks={
             row("|cff73d696Green: upgrade|r   |cfff56e61Red: downgrade|r","Enchants, armor kits, procs, use effects and set bonuses are excluded. Check the stat losses before replacing an item."),
-            row("Two slots and weapons","Each ring or trinket is compared separately. Two-handed weapons replace both hands; zero-score baselines are labeled without an invented percentage."),
-            row("Gear advisor settings", "Configure scoring, tooltips, upgrade markers and automatic equipping in Settings.",action("settings"))}
+            row("Two slots and weapons","Each ring or trinket is compared separately. Two-handed weapons replace both hands; zero-score baselines are labeled without an invented percentage.")}
         doc.cards[1]=card("Gear Advisor",description.."\nPercentage change in weighted item stats, not a damage or survival simulation.",blocks)
+        doc.cards[1].headerAction={label="Settings",action=action("settings")}
         return doc
     end
     if not self:IsEnabled() then
-        doc.cards[1]=card("Talent Advisor","Disabled",{row("Talent Advisor settings","Enable talent recommendations in Settings.",action("talentSettings"))})
+        doc.cards[1]=card("Talent Advisor","Disabled",{})
+        doc.cards[1].headerAction={label="Settings",action=action("talentSettings")}
         return doc
     end
     local build,manual=self:Build(class,level)
@@ -268,13 +269,12 @@ function T:Document(context,state)
         end
         if learn then nextRow.action=learn; nextRow.meta=nil end
     end
-    top[#top+1]=row("Point-by-point path","View the complete talent path.",action("path"))
-    top[#top+1]=row("Talent Advisor settings","Choose your talent build and configure auto talents.",action("talentSettings"))
     local subtitle=context.characterClass.." | Level "..level
     if live then subtitle=subtitle.." | "..live.points.." spent | "..live.unspent.." unspent" end
     doc.cards[1]=card("Talent Advisor",subtitle,top)
     doc.cards[1].headerText=build.name
-    if not state.talentPath then return doc end
+    doc.cards[1].headerAction={label="Settings",action=action("talentSettings")}
+    doc.cards[1].fullWidth=true
     local steps,occurrences={},{}
     for index,key in ipairs(build.steps) do
         occurrences[key]=(occurrences[key] or 0)+1
@@ -285,7 +285,7 @@ function T:Document(context,state)
         local color=learned and "73d696" or nextStep and "efc26e" or "abb0b8"
         local atLevel=math.max(build.minLevel,index+9)
         local title="|cff"..color..""..(live and live.names[key] or node.name).."  "..rank.."/"..node.maxRank.."|r"
-        if not state.hideLearnedTalents or not learned then
+        if state.hideLearnedTalents==false or not learned then
             steps[#steps+1]=row(title,"Level "..atLevel.."  |  "..node.treeName,nil,
                 learned and "Learned" or nextStep and "Next Point" or nil,live and live.icons[key] or spellIcon(node.spellID))
             steps[#steps].talentColumns={tostring(atLevel),live and live.names[key] or node.name,
@@ -298,9 +298,9 @@ function T:Document(context,state)
         end
     end
     if #steps==0 then steps[1]=row("All talents learned","Use Show Learned to review the complete path.") end
-    doc.cards={card("Your point-by-point path",context.characterClass.." | "..build.name.." | Scroll to see the complete path.",steps)}
-    doc.cards[1].talentTable=true; doc.cards[1].fullWidth=true
-    doc.cards[1].headerAction={label=state.hideLearnedTalents and "Show Learned" or "Hide Learned",action=action("hideLearned")}
+    doc.cards[2]=card("Point-by-point path",nil,steps)
+    doc.cards[2].talentTable=true; doc.cards[2].fullWidth=true; doc.cards[2].scrollableTalents=true
+    doc.cards[2].headerAction={label=state.hideLearnedTalents~=false and "Show Learned" or "Hide Learned",action=action("hideLearned")}
     return doc
 end
 

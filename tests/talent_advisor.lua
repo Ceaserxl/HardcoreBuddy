@@ -88,15 +88,20 @@ GetTalentInfo=saved
 
 A.db.profile.mode="live"; A:HandleSlashCommand("talents")
 check(A.state.view=="training" and A.state.filter=="Talents","Slash entry point opens Companion Talents")
-check(A.document.cards[1].title=="Talent Advisor" and #A.document.cards==1,"Path is collapsed into a button")
-local pathLink=A.document.cards[1].blocks[#A.document.cards[1].blocks-1]
-check(pathLink.action.command=="path","Dedicated path button")
-check(A.document.cards[1].headerText==build.name and not pathLink.body:find(build.name,1,true),"Build name moved from the path button to the advisor heading")
-local overview=A.state
-A:Activate(pathLink.action)
-check(A.state.talentPath and #A.document.cards==1 and #A.document.cards[1].blocks==51,"All 51 steps in the separate path page")
-check(A.window.content:GetHeight()>A.window.scroll:GetHeight() and A:CanGoBack(),"Scrollable path with shared Back")
-check(A.document.cards[1].talentTable and #A.window.cards[1].talentHeaders==5,"Talent path has five table columns")
+check(A.document.cards[1].title=="Talent Advisor" and #A.document.cards==2,"Path is on main talent page")
+check(A.document.cards[1].headerAction.label=="Settings","Settings in header")
+check(A.document.cards[1].headerText==build.name,"Build name stays in heading")
+check(A.window.cards[2].headerButton.label:GetText()=="Show Learned","Learned hidden by default")
+check(#A.document.cards[2].blocks<51,"Default filters learned points")
+check(A.window.cards[1].content.blocks[1]:GetWidth()==A.window.cards[1].content:GetWidth(),"Next Talent full width")
+MOCK.Click(A.window.cards[2].headerButton)
+check(#A.document.cards[2].blocks==51,"Show Learned restores all steps")
+check(A.window.cards[2].content:GetHeight()>A.window.cards[2].tableScroll:GetHeight(),"Talent table scrolls independently")
+local tableScroll=A.window.cards[2].tableScroll
+tableScroll.scripts.OnMouseWheel(tableScroll,-1)
+check(tableScroll:GetVerticalScroll()>0 and A.window.scroll:GetVerticalScroll()==0,"Mouse wheel scrolls table without moving Next Talent")
+tableScroll:SetVerticalScroll(0)
+check(A.document.cards[2].talentTable and #A.window.cards[2].talentHeaders==5,"Talent path has five columns")
 local oldSetTalent,oldSetHyperlink=GameTooltip.SetTalent,GameTooltip.SetHyperlink
 local nodes=D.AdvisorTalents.HUNTER
 local hoveredTalent,hoveredSpell
@@ -108,8 +113,8 @@ GameTooltip.SetHyperlink=function(self,link)
     hoveredSpell=link
     self:AddLine("Native spell description")
 end
-for i,step in ipairs(A.document.cards[1].blocks) do
-    local rendered=A.window.cards[1].content.blocks[i]
+for i,step in ipairs(A.document.cards[2].blocks) do
+    local rendered=A.window.cards[2].content.blocks[i]
     check(step.talentColumns[1]==tostring(i+9),"Table preserves level order")
     check(rendered.icon:IsShown() and rendered.icon:GetWidth()==24 and rendered:GetHeight()==32,"Compact table keeps each talent icon")
     check(#rendered.talentCells==5 and not rendered.meta:IsShown(),"Status is in its own column")
@@ -120,19 +125,16 @@ for i,step in ipairs(A.document.cards[1].blocks) do
     check(#GameTooltip.lines==1 and GameTooltip.lines[1]=="Native talent description","Path displays native talent tooltip without generic row text")
 end
 GameTooltip.SetTalent=function() error("Talent data unavailable") end
-local firstTalentRow=A.window.cards[1].content.blocks[1]
+local firstTalentRow=A.window.cards[2].content.blocks[1]
 firstTalentRow.scripts.OnEnter(firstTalentRow)
 check(hoveredSpell=="spell:"..nodes[build.steps[1]].spellID,"Unavailable talent tooltip falls back to the talent spell")
 GameTooltip.SetTalent,GameTooltip.SetHyperlink=oldSetTalent,oldSetHyperlink
-MOCK.Click(A.window.cards[1].headerButton)
-check(A.state.hideLearnedTalents and A.window.cards[1].headerButton.label:GetText()=="Show Learned","Hide Learned toggles from the path heading")
-check(#A.document.cards[1].blocks<51 and A.document.cards[1].blocks[1].meta=="Next Point","Filtered path starts at the next point")
-for _,step in ipairs(A.document.cards[1].blocks) do check(step.meta~="Learned","Learned steps are hidden") end
-MOCK.Click(A.window.cards[1].headerButton)
-check(not A.state.hideLearnedTalents and #A.document.cards[1].blocks==51,"Show Learned restores every rank")
-MOCK.Click(A.window.back)
-check(A.state==overview and not A.state.talentPath,"Back restores the talent overview")
-check(A.window.cards[1].content.blocks[1].icon:GetWidth()==34 and not A.window.cards[1].talentHeaders[1]:IsShown(),"Back restores overview icon size and hides table headings")
+MOCK.Click(A.window.cards[2].headerButton)
+check(A.state.hideLearnedTalents and A.window.cards[2].headerButton.label:GetText()=="Show Learned","Hide Learned toggles from the path heading")
+check(#A.document.cards[2].blocks<51 and A.document.cards[2].blocks[1].meta=="Next Point","Filtered path starts at the next point")
+for _,step in ipairs(A.document.cards[2].blocks) do check(step.meta~="Learned","Learned steps are hidden") end
+MOCK.Click(A.window.cards[2].headerButton)
+check(not A.state.hideLearnedTalents and #A.document.cards[2].blocks==51,"Show Learned restores every rank")
 check(A.window.sidebarTitle:GetText()=="COMPANION","Advisor belongs to Companion")
 local lesson=A.document.cards[1].blocks[1]
 check(lesson.title=="Next Talent" and lesson.recommendation.summary=="Click to Apply Talent","Stable next talent label and apply hint")
@@ -162,13 +164,13 @@ check(#GameTooltip.lines==2 and GameTooltip.lines[2]=="Click to Apply Talent","S
 GameTooltip.SetTalent,GameTooltip.SetHyperlink=oldSetTalent,oldSetHyperlink
 check(A.document.cards[1].note:find("spent | ",1,true) and A.document.cards[1].note:find(" unspent",1,true),"Point counts follow the advisor level subtitle")
 check(lesson.action and lesson.action.command=="learn" and lesson.icon==132127,"Visible single-point button and native icon")
-check(#A.document.cards[1].blocks==3 and lesson.body:find("Localized Bestial Wrath",1,true)
+check(#A.document.cards[1].blocks==1 and lesson.body:find("Localized Bestial Wrath",1,true)
     and lesson.body:find("Rank 1 / 1",1,true),"Next recommendation is inside the status item")
 check(calls==1,"Opening advisor never spends a point")
 for _,block in ipairs(A.document.cards[1].blocks) do
     check(block.title~="Choose a talent path","Talent page no longer has an inline path selector")
 end
-local settingsLink=A.document.cards[1].blocks[#A.document.cards[1].blocks]
+local settingsLink=A.document.cards[1].headerAction
 check(settingsLink.action.command=="talentSettings","Talent settings link belongs to Talents")
 A:Activate(settingsLink.action)
 check(A.state.view=="settings" and A.state.filter=="Talent Advisor","Talent settings row opens the correct section")
@@ -182,12 +184,10 @@ for class,name in pairs(names) do
     A.state={view="training",filter="Talents"}; A:Refresh(true)
     check(A.document.view=="training" and A.document.cards[1].note:find(name,1,true),"Preview class stays on Companion Talents")
     for _,b in ipairs(A.document.cards[1].blocks) do check(not b.action or b.action.command~="learn","Preview cannot spend points") end
-    A:Activate({kind="advisor",command="path"})
-    check(#A.document.cards[1].blocks>0 and A.state.talentPath,"Every preview class has a separate path")
-    for _,step in ipairs(A.document.cards[1].blocks) do
+    check(#A.document.cards[2].blocks>0,"Every preview class has an inline path")
+    for _,step in ipairs(A.document.cards[2].blocks) do
         check(step.spellId and not step.talentTooltip,"Preview talents use spell tooltips without accessing the player's talent tree")
     end
-    A:Back()
 end
 check(calls==1,"Previewing all classes never spends")
 A.db.profile.mode="live"; A:HandleSlashCommand("gear")

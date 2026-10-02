@@ -222,7 +222,7 @@ local function renderBlock(frame, block, width)
     frame.count:Hide(); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.quantityEditor==true)
     frame.choose:SetShown(block.supply and block.pickRank)
     local paintedRow=block.supply or (block.action and not block.columns)
-    Skin.Paint(frame,(block.plain or block.quantityEditor) and "note" or block.supply and "row" or not block.columns and "card" or "note")
+    Skin.Paint(frame,(block.plain or block.quantityEditor) and "note" or (block.supply or block.supplyColumns) and "row" or not block.columns and "card" or "note")
     frame.rule:Hide()
     for _,edge in ipairs(frame.statusBorder) do edge:SetShown(block.supply) end
     frame.chevron:SetShown(block.action and not block.supply and not block.columns)
@@ -529,7 +529,7 @@ renderBlocks = function(parent, blocks, width)
             y=y+height+SPACE.sectionGap; pending=nil
         elseif paired and index<#blocks then pending=frame
         else y=y+height+((block.talentColumns or block.spellColumns or block.supplyColumns) and 1 or (block.supply and not paired or block.npcColumns) and 4 or SPACE.sectionGap) end
-        if block.supply then
+        if block.supply or block.supplyColumns then
             local shade=index%2==0 and 0.075 or 0.045
             frame:SetBackdropColor(shade,shade+0.009,shade+0.014,1)
         elseif block.npcColumns or block.talentColumns or block.spellColumns then
@@ -542,6 +542,9 @@ renderBlocks = function(parent, blocks, width)
 end
 local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
+    if frame.tableScroll then frame.tableScroll:Hide() end
+    frame.content:SetParent(frame)
+    if data.scrollableTalents then width=width-22 end
     if frame.detailQuantity and not data.quantityRecord then
         frame.detailQuantity.quantity:ClearFocus(); frame.detailQuantity:Hide()
     end
@@ -560,7 +563,7 @@ local function renderCard(frame, data, width)
         if data.headerText then
             frame.headerText:SetText(data.headerText)
             headerTextWidth=math.min(math.ceil(frame.headerText:GetStringWidth())+4,width*0.55)
-            frame.headerText:ClearAllPoints(); frame.headerText:SetPoint("TOPRIGHT",-14,-y-5)
+            frame.headerText:ClearAllPoints(); frame.headerText:SetPoint("TOPRIGHT",data.headerAction and -134 or -14,-y-5)
             frame.headerText:SetSize(headerTextWidth,20); frame.headerText:SetJustifyH("RIGHT"); frame.headerText:SetWordWrap(false)
         end
     end
@@ -579,7 +582,7 @@ local function renderCard(frame, data, width)
         frame.title:Hide(); frame.note:Hide()
     else
         local extraHeaderWidth=data.zoneRangeToggle and addon.window.atLevel:GetWidth()+8 or 0
-        local titleHeight=measure(frame.title,data.title,width-(data.headerAction and 140 or headerTextWidth>0 and headerTextWidth+30 or 12)-extraHeaderWidth,0,y)
+        local titleHeight=measure(frame.title,data.title,width-(data.headerAction and 140+headerTextWidth or headerTextWidth>0 and headerTextWidth+30 or 12)-extraHeaderWidth,0,y)
         y=y+math.max(data.headerAction and 28 or 0,titleHeight)
         if data.note and data.note~="" then
             if pageTitle then y=math.max(y,SPACE.subtitleTop-SPACE.pageTitleGap) end
@@ -700,6 +703,24 @@ local function renderCard(frame, data, width)
         return y
     end
     local height=renderBlocks(frame.content, data.blocks, width-12)
+    if data.scrollableTalents then
+        if not frame.tableScroll then
+            frame.tableScroll=CreateFrame("ScrollFrame",nil,frame,"UIPanelScrollFrameTemplate")
+            frame.tableScroll:EnableMouseWheel(true)
+            frame.tableScroll:SetScript("OnMouseWheel",function(scroll,delta)
+                scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*65)))
+            end)
+        end
+        local scroll=frame.tableScroll
+        scroll:Show(); scroll:ClearAllPoints(); scroll:SetPoint("TOPLEFT",0,-y)
+        local viewport=math.max(100,(frame.availableHeight or 300)-y-SPACE.sectionGap)
+        scroll:SetSize(width-12,viewport)
+        frame.content:SetParent(scroll); frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT")
+        frame.content:SetHeight(height); scroll:SetScrollChild(frame.content)
+        scroll:UpdateScrollChildRect()
+        scroll:SetVerticalScroll(math.min(scroll:GetVerticalScroll(),math.max(0,height-viewport)))
+        frame:SetHeight(y+viewport); return y+viewport
+    end
     frame.content:SetHeight(height); y=y+height; frame:SetHeight(y)
     return y
 end
@@ -1289,6 +1310,7 @@ function addon:Layout()
         end
         c:ClearAllPoints(); c:SetPoint("TOPLEFT",0,-top)
         c.firstCard=index==1
+        c.availableHeight=f.scroll:GetHeight()-top
         c.gridStart=not doc.isDetail and (doc.view=="training" and (self.state.filter=="Spells" or self.document.zoneRecommendations) and 1
             or doc.view=="training" and (not self.state.filter or self.state.filter=="Overview") and index==1 and 3
             or doc.view=="training" and self.state.filter=="Zone Advisor" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)

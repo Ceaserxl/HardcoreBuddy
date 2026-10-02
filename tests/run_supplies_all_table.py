@@ -39,6 +39,8 @@ for _,class in ipairs({"DRUID","HUNTER","MAGE","PALADIN","PRIEST","ROGUE","SHAMA
         local row=card.content.blocks[i]
         local x,y,w,h=row:GetRect()
         assert(h==36 and w==card.content:GetWidth(),"All rows use the full table width")
+        local shade=i%2==0 and 0.075 or 0.045
+        assert(row.background[1]==shade and row.background[2]==shade+0.009 and row.background[3]==shade+0.014,"Every supply table including Enchants shares alternating row colors")
         if previous then assert(y==previous+1,"Continuous table rows have a one-pixel gap") end
         previous=y+h
         assert(row.category:GetText()==block.category and row.priority:GetText()==(block.priority or ""))
