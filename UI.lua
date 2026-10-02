@@ -726,8 +726,11 @@ local function renderCard(frame, data, width)
             bar:SetParent(addon.window.scroll); bar:Show()
             bar:SetScript("OnValueChanged",function(_,value) scroll:SetVerticalScroll(value) end)
             bar:ClearAllPoints()
-            bar:SetPoint("TOPLEFT",addon.window.scroll,"TOPRIGHT",4,-16)
-            bar:SetPoint("BOTTOMLEFT",addon.window.scroll,"BOTTOMRIGHT",4,16)
+            local mainBar=addon.window.scroll.ScrollBar or _G["HardcoreBuddyScrollFrameScrollBar"]
+            if mainBar then
+                bar:SetPoint("TOPLEFT",mainBar,"TOPLEFT",0,0)
+                bar:SetPoint("BOTTOMRIGHT",mainBar,"BOTTOMRIGHT",0,0)
+            end
         end
         frame:SetHeight(y+viewport); return y+viewport
     end
