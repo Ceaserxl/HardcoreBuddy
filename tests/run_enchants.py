@@ -142,9 +142,9 @@ A:Back();A:Back();check(A.state.filter=="Enchants" and not A.state.detail,"Back 
 local tile=A.document.cards[1].blocks[3]
 check(tile.title:find("Wrists - ",1,true)==1 and tile.enchantStatus=="Enchanted" and tile.enchantTone=="ready","Applied recommendation green")
 gear[9].enchant=99999; A:Refresh()
-check(A.document.cards[1].blocks[3].enchantStatus=="Alt Enchanted" and A.document.cards[1].blocks[3].enchantTone=="ready","Other permanent enchant green")
+check(A.document.cards[1].blocks[3].enchantStatus=="Alternative" and A.document.cards[1].blocks[3].enchantTone=="ready","Other permanent enchant green")
 gear[9].enchant=0; A:Refresh()
-check(A.document.cards[1].blocks[3].enchantStatus=="Missing" and A.document.cards[1].blocks[3].enchantTone=="missing","Missing enchant red")
+check(A.document.cards[1].blocks[3].enchantStatus=="Recommended" and A.document.cards[1].blocks[3].enchantTone=="missing","Missing enchant recommendation red")
 local frame=A.window.cards[1].content.blocks[3]
 check(frame.icon.texture=="Interface\\\\Icons\\\\"..frame.block.icon,"Bare enchant icon resolves to native texture")
 frame.scripts.OnEnter(frame)

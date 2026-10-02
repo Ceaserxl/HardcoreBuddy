@@ -184,7 +184,10 @@ end
 function E.Card(context)
     local blocks={}
     for _,g in ipairs(E.Scan(context)) do
-        blocks[#blocks+1]=enchantBlock(g,g.recommendation,{kind="enchantSlot",slotId=g.slotId})
+        local b=enchantBlock(g,g.recommendation,{kind="enchantSlot",slotId=g.slotId})
+        if b.enchantStatus=="Missing" and g.recommendation then b.enchantStatus="Recommended"
+        elseif b.enchantStatus=="Alt Enchanted" then b.enchantStatus="Alternative" end
+        blocks[#blocks+1]=b
     end
     return {title="Enchants",note="Class and level recommendations. Choose a slot for alternatives and materials.",blocks=blocks,supplyTable=true}
 end
