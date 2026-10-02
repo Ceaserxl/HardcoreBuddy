@@ -436,7 +436,7 @@ check(R.view:IsVisible() and A.state.filter=="Rotation Advisor","Companion sideb
 local modern,modernAuras=C_Spell,C_UnitAuras
 local oldInfo,oldCooldown,oldUsable,oldRange,oldAura=GetSpellInfo,GetSpellCooldown,IsUsableSpell,IsSpellInRange,UnitAura
 C_Spell=nil; C_UnitAuras=nil
-GetSpellInfo=function(id) local v=spellData[id]; if v then return v.name,id==837 and 'Rank 3' or nil,v.iconID end end
+GetSpellInfo=function(id) local v=spellData[id]; if v then return v.name,id==837 and 'Rank 3' or nil,v.iconID,nil,0,id==837 and 36 or nil end end
 GetSpellCooldown=function() return 0,0,1 end
 IsUsableSpell=function() return true,false end
 IsSpellInRange=function(name) return name=='Frostbolt' and 1 or 0 end
@@ -447,6 +447,7 @@ R.dirty=true; R:Update()
 check(R.snapshot.controlled and not R.current,'Legacy aura fields protect crowd-controlled targets')
 UnitAura=function() end; R:Update()
 check(R.current.id==837 and R.current.rank=='Rank 3' and R.current.range==true,'Legacy learned rank, cooldown, usability and numeric range adapters work')
+check(R.spells.frostbolt.maxRange==36 and R.spells.frostbolt.minRange==0,'Legacy spell info preserves range metadata for prediction')
 C_Spell,C_UnitAuras=modern,modernAuras
 GetSpellInfo,GetSpellCooldown,IsUsableSpell,IsSpellInRange,UnitAura=oldInfo,oldCooldown,oldUsable,oldRange,oldAura
 R.dirty=true
@@ -577,27 +578,73 @@ do
     -- Coordinate-free Classic fallback: observed outer-to-inner Throw boundary.
     UnitPosition=function() end; R.approach=nil
     local band={class='ROGUE',validTarget=true,targetClose=false,spells={throw={range=true}},time=now}
-    check(not R:ApproachingMelee(band),'First range band cannot predict an approach')
+    check(not R:UpdateRangePreview(band),'First range band cannot predict an approach')
     band.time=band.time+.2; band.spells.throw.range=false
-    check(R:ApproachingMelee(band),'Moving target attacking player crossing the inner Throw boundary permits a short preview')
+    check(R:UpdateRangePreview(band),'Moving target attacking player crossing the inner Throw boundary permits a short preview')
     band.time=band.time+.2; targetSpeed=0
-    check(not R:ApproachingMelee(band),'Stopped target cancels coordinate-free prediction')
-    targetSpeed=7; R.approach=nil; band.spells.throw.range=true; band.time=band.time+.2; R:ApproachingMelee(band)
+    check(not R:UpdateRangePreview(band),'Stopped target cancels coordinate-free prediction')
+    targetSpeed=7; R.approach=nil; band.spells.throw.range=true; band.time=band.time+.2; R:UpdateRangePreview(band)
     band.spells.throw.range=false; near=false; band.time=band.time+.2
-    check(not R:ApproachingMelee(band),'Exiting the far edge of Throw range cannot trigger melee prediction')
-    near=true; R.approach=nil; band.spells.throw.range=true; band.time=band.time+.2; R:ApproachingMelee(band)
+    check(not R:UpdateRangePreview(band),'Exiting the far edge of Throw range cannot trigger melee prediction')
+    near=true; R.approach=nil; band.spells.throw.range=true; band.time=band.time+.2; R:UpdateRangePreview(band)
     band.spells.throw.range=false; toward=false; band.time=band.time+.2
-    check(not R:ApproachingMelee(band),'Unknown approach direction cannot trigger band prediction')
-    toward=true; R.approach=nil; band.spells.throw.range=true; band.time=band.time+.2; R:ApproachingMelee(band)
-    band.spells.throw.range=false; band.time=band.time+.2; R:ApproachingMelee(band)
-    band.time=band.time+.3; R:ApproachingMelee(band); band.time=band.time+.3
-    check(not R:ApproachingMelee(band),'Range-band prediction expires rather than staying lit indefinitely')
+    check(not R:UpdateRangePreview(band),'Unknown approach direction cannot trigger band prediction')
+    toward=true; R.approach=nil; band.spells.throw.range=true; band.time=band.time+.2; R:UpdateRangePreview(band)
+    band.spells.throw.range=false; band.time=band.time+.2; R:UpdateRangePreview(band)
+    band.time=band.time+.3; R:UpdateRangePreview(band); band.time=band.time+.3
+    check(not R:UpdateRangePreview(band),'Range-band prediction expires rather than staying lit indefinitely')
     R.approach={guid='enemy1',time=now,preview=true}
     R.events.scripts.OnEvent(R.events,'PLAYER_TARGET_CHANGED')
     check(not R.snapshot.approachingMelee,'Target-change event discards previous prediction')
     UnitPosition,GetUnitSpeed,UnitIsUnit,CheckInteractDistance=savedPosition,savedSpeed,savedSame,savedInteract
     now,units.target.x,MOCK.class,action.action=savedNow,savedX,savedClass,savedSlot
     GetActionInfo=oldActionInfo; combat=false; R.approach=nil; R.dirty=true; R:Update()
+end
+do
+    local savedNow,savedX=now,units.target.x
+    local oldMax,oldMin=spellData[837].maxRange,spellData[837].minRange
+    local oldBlastMax=spellData[2136].maxRange
+    spellData[837].maxRange=36; spellData[837].minRange=0; spellData[2136].maxRange=20
+    MOCK.class='MAGE'; R.dirty=true; R.approach=nil
+    range[837]=false; range[2136]=false; range[5019]=false
+    units.target.x=38; now=now+1; R:Update()
+    check(R.spells.frostbolt.maxRange==36 and R.snapshot.spells.frostbolt.maxRange==36,'Highest learned spell range reaches the shared predictor')
+    check(not glow:IsShown(),'Mage prediction also requires movement history')
+    units.target.x=37; now=now+.2; R:Update()
+    check(R.current.id==837 and R.current.approaching and glow:IsShown() and glow.style=='primary','Mage previews Frostbolt before crossing its own range boundary')
+    check(not R.snapshot.spells.fireblast.approaching,'Shorter-range Fire Blast cannot inherit Frostbolt range prediction')
+    check(R.current.range==false and R.view.next.reason:GetText()=='','Mage preview preserves actual range and adds no movement text')
+    local animationStarts=glow.ProcStartAnim.plays
+    R:Update(); check(R.current.approaching and glow.ProcStartAnim.plays==animationStarts,'Shared preview survives repeated reads for Mage')
+    units.target.x=35.8; now=now+.2; range[837]=true; R:Update()
+    check(R.current.id==837 and not R.current.approaching and glow.ProcStartAnim.plays==animationStarts,'Mage preview becomes in-range guidance without restarting glow')
+    range[837]=false; units.target.x=37; now=now+.2; R:Update()
+    check(not R.current and not glow:IsShown(),'Moving away does not generate a ranged spell preview')
+    units.target.x=36.5; now=now+.2; R:Update()
+    now=now+.2; R:Update()
+    check(not R.current and not glow:IsShown(),'Stationary target outside Mage range cancels the prediction')
+    units.target.x=36.2; now=now+.2; ready[837]={startTime=now,duration=8,isEnabled=true}; R:Update()
+    check(R.snapshot.spells.frostbolt.approaching and not R.current,'Mage approach cannot bypass an unready cooldown')
+    ready={}; units.target.x=36.1; now=now+.2; usable[837]=false; R:Update()
+    check(not R.current,'Mage approach cannot bypass insufficient mana')
+    usable[837]=nil
+    local spell={range=false,maxRange=30,minRange=8,requiresRange=true,ready=true,usable=true}
+    local state={class='MAGE',validTarget=true,targetClose=false,time=now,spells={test=spell}}
+    -- No class/spell-key allowlist: the predictor uses the spell's metadata.
+    units.target.x=32; state.time=state.time+1; R.approach=nil; R:UpdateRangePreview(state)
+    units.target.x=31; state.time=state.time+.2; R:UpdateRangePreview(state)
+    check(spell.approaching,'Shared prediction handles any targeted spell with range metadata')
+    units.target.x=7; state.time=state.time+1; R.approach=nil; R:UpdateRangePreview(state)
+    units.target.x=6; state.time=state.time+.2; R:UpdateRangePreview(state)
+    check(not spell.approaching,'Approaching inside a minimum range never previews a ranged attack')
+    spell.maxRange=nil; units.target.x=31; state.time=state.time+1; R.approach=nil; R:UpdateRangePreview(state)
+    units.target.x=30.5; state.time=state.time+.2; R:UpdateRangePreview(state)
+    check(not spell.approaching,'Missing ranged-spell metadata does not invent a range')
+    spell.approaching=true; state.controlled=true; R:UpdateRangePreview(state)
+    check(not spell.approaching and not R.approach,'Invalid target clears all spell previews and movement history')
+    spellData[837].maxRange,spellData[837].minRange=oldMax,oldMin; spellData[2136].maxRange=oldBlastMax
+    now,units.target.x=savedNow,savedX; range[837]=true; range[2136]=nil; range[5019]=1
+    R.approach=nil; R.dirty=true; R:Update()
 end
 MOCK.RotationChecks=count
 print("PASS: "..count.." rotation checks: priorities, live reads, rank changes, conservative AoE, mode state, UI and highlight lifecycle.")

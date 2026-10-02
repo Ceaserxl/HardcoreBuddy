@@ -10,6 +10,7 @@ R.definitions={
         riposte=14251,hemorrhage=16511,flurry=13877,cheapshot=1833,throw=2764},
 }
 local ccIDs={118,6770,2094,1776,2637,9484,5782,6358}
+local meleeSpells={strike=true,hemorrhage=true,eviscerate=true,kick=true,riposte=true,cheapshot=true}
 local function clock() return GetTime and GetTime() or 0 end
 local function combat() return InCombatLockdown and InCombatLockdown() or false end
 local function info(id)
@@ -18,8 +19,8 @@ local function info(id)
         if value then return value end
     end
     if GetSpellInfo then
-        local name,rank,icon,castTime=GetSpellInfo(id)
-        if name then return {name=name,rank=rank,iconID=icon,castTime=castTime} end
+        local name,rank,icon,castTime,minRange,maxRange=GetSpellInfo(id)
+        if name then return {name=name,rank=rank,iconID=icon,castTime=castTime,minRange=minRange,maxRange=maxRange} end
     end
 end
 local function known(id)
@@ -60,6 +61,11 @@ function R:RefreshSpells()
     end
     if C_Spell and C_Spell.GetSpellSubtext then
         for _,spell in pairs(self.spells) do spell.rank=C_Spell.GetSpellSubtext(spell.id) end
+    end
+    for key,spell in pairs(self.spells) do
+        local value=info(spell.id)
+        spell.minRange=value and value.minRange or 0
+        spell.maxRange=value and value.maxRange or (meleeSpells[key] and 5 or nil)
     end
     for _,id in ipairs(ccIDs) do local value=info(id); if value then self.ccNames[value.name]=true end end
     self.dirty=false
@@ -206,22 +212,38 @@ function R:SpellState(spell,unit)
         range=spellRange(spell,unit)
     end
     return {id=spell.id,name=spell.name,icon=spell.icon,rank=spell.rank,ready=not not ready,usable=usable==true or usable==1,
-        lowPower=not not lowPower,range=range,requiresRange=unit~=nil}
+        lowPower=not not lowPower,range=range,requiresRange=unit~=nil,minRange=spell.minRange,maxRange=spell.maxRange}
 end
-function R:ApproachingMelee(s)
+local function applyRangePreview(s,sample)
+    for key,spell in pairs(s.spells) do
+        spell.approaching=false
+        local limit=spell.maxRange or (meleeSpells[key] and 5 or nil)
+        if spell.range==false and type(limit)=="number" and limit>0 then
+            if sample.closing then
+                spell.approaching=sample.distance>limit and sample.distance<=limit+2
+                    and sample.projected<=limit and sample.projected>=(spell.minRange or 0)
+            elseif sample.preview and meleeSpells[key] then
+                spell.approaching=true
+            end
+        end
+    end
+    return sample.preview
+end
+function R:UpdateRangePreview(s)
+    for _,spell in pairs(s.spells) do spell.approaching=false end
     local guid=UnitGUID and UnitGUID("target")
-    if s.class~="ROGUE" or not s.validTarget or s.targetPlayer or s.controlled or s.dead or s.mounted
-        or s.targetClose~=false or not guid then self.approach=nil; return false end
+    if not self.supported[s.class] or not s.validTarget or s.targetPlayer or s.controlled or s.dead or s.mounted
+        or not guid then self.approach=nil; return false end
     local now=s.time
     local previous=self.approach
-    if previous and previous.guid==guid and now>=previous.time and now-previous.time<.05 then return previous.preview end
-    local sample={guid=guid,time=now,preview=false,throwRange=s.spells.throw and s.spells.throw.range}
+    if previous and previous.guid==guid and previous.class==s.class and now>=previous.time and now-previous.time<.05 then return applyRangePreview(s,previous) end
+    local sample={guid=guid,class=s.class,time=now,preview=false,throwRange=s.spells.throw and s.spells.throw.range}
     if UnitPosition then
         sample.px,sample.py,sample.pz,sample.map=UnitPosition("player")
         sample.x,sample.y,sample.z,sample.targetMap=UnitPosition("target")
     end
     self.approach=sample
-    if not previous or previous.guid~=guid then return false end
+    if not previous or previous.guid~=guid or previous.class~=s.class then return false end
     local dt=now-previous.time
     if dt<.05 or dt>.6 then return false end
     local function positioned(v)
@@ -237,20 +259,21 @@ function R:ApproachingMelee(s)
         local closing=(math.sqrt(ox*ox+oy*oy+oz*oz)-distance)/dt
         -- Require the enemy itself to approach, not just the player running at it.
         local enemyClosing=distance>0 and -((sample.x-previous.x)*dx+(sample.y-previous.y)*dy+(sample.z-previous.z)*dz)/(distance*dt) or 0
-        sample.preview=distance<=7 and math.abs(dz)<=3 and closing>.5 and closing<=20
-            and enemyClosing>.5 and enemyClosing<=20 and distance-closing*.5<=5
+        sample.distance=distance; sample.projected=distance-closing*.5
+        sample.closing=closing>.5 and closing<=20 and enemyClosing>.5 and enemyClosing<=20
+        sample.preview=s.targetClose==false and distance<=7 and math.abs(dz)<=3 and sample.closing and sample.projected<=5
     else
         -- Classic may withhold enemy coordinates. A recent Throw-range exit
         -- inside duel distance establishes the inner edge, not the far edge.
         local towardPlayer=UnitIsUnit and UnitIsUnit("targettarget","player")
         local moving=GetUnitSpeed and (GetUnitSpeed("target") or 0)>.5
         local near=CheckInteractDistance and CheckInteractDistance("target",3)
-        if towardPlayer and moving and not s.moving and near and sample.throwRange==false then
+        if s.targetClose==false and towardPlayer and moving and not s.moving and near and sample.throwRange==false then
             sample.innerEdge=previous.throwRange==true and now or previous.innerEdge
             sample.preview=sample.innerEdge~=nil and now-sample.innerEdge<=.5
         end
     end
-    return sample.preview
+    return applyRangePreview(s,sample)
 end
 function R:Snapshot()
     if self.dirty then self:RefreshSpells() end
@@ -292,20 +315,19 @@ function R:Snapshot()
         local selfSpell=key=="barrier" or key=="shield" or key=="evocation" or key=="evasion" or key=="flurry" or key=="slice" or key=="nova" or key=="explosion"
         s.spells[key]=self:SpellState(spell,not selfSpell and "target" or nil)
     end
-    s.approachingMelee=self:ApproachingMelee(s)
+    s.approachingMelee=self:UpdateRangePreview(s)
     return s
 end
 -- Pure priorities make the prototype replayable without protected API calls.
 function R.Decide(s)
     if not R.supported[s.class] then return nil,"This proof of concept supports Rogue and Mage." end
     if s.dead or s.mounted then return nil,s.dead and "You are dead." or "Dismount to use the advisor." end
-    local melee={strike=true,hemorrhage=true,eviscerate=true,kick=true,riposte=true,cheapshot=true}
     local function can(key)
         local a=s.spells[key]
         return a and a.ready and a.usable and (a.range==true or not a.requiresRange and a.range~=false
-            or s.approachingMelee and melee[key] and a.range==false)
+            or a.approaching and a.range==false)
     end
-    local function choose(key,reason) return key,s.approachingMelee and "" or reason end
+    local function choose(key,reason) return key,(s.spells[key].approaching or s.approachingMelee) and "" or reason end
     if s.class=="MAGE" and not s.combat and s.powerPercent and s.powerPercent<25 and can("evocation") then return choose("evocation","Recover mana between pulls.") end
     if not s.validTarget then return nil,"Select a living enemy." end
     if s.targetPlayer then return nil,"PvE prototype: player targets are not supported." end
@@ -313,7 +335,8 @@ function R.Decide(s)
     local hp,thp,mp=s.playerHealth,s.targetHealth,s.powerPercent
     if s.class=="ROGUE" then
         if not s.approachingMelee and (s.combat or s.targetCombat==false) and not s.stealthed and not s.casting
-            and s.targetClose==false and s.thrownEquipped and can("throw") and s.spells.throw.range==true then
+            and s.targetClose==false and s.thrownEquipped and can("throw")
+            and (s.spells.throw.range==true or s.spells.throw.approaching) then
             return "throw","",true
         end
         -- Range alone covers approaching and fleeing enemies. Leave the gap
