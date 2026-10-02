@@ -1,8 +1,8 @@
 # Companion spell training
 
 Companion > Spells shows untrained class spells available at the live character's
-level. When none are untrained, Available at Trainer shows the highest eligible
-rank of each trainer spell at the current level. Learned higher ranks suppress
+level. Learned spells are never listed in the current trainer section. When
+none are untrained, Available at Trainer shows an empty state. Learned higher ranks suppress
 obsolete untrained ranks. Race, faction and allocated talent restrictions apply.
 Training and level/talent changes refresh the visible page.
 

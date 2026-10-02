@@ -154,7 +154,7 @@ function S.Build(context,state)
     if not live then return S.FutureBuild(context,state) end
     local race
     if UnitRace then local _,_,id=UnitRace("player"); race=id end
-    local entries,learned,highest={},{},{}
+    local entries,learned={},{}
     local data=A.Data.ClassSpells[context.characterClass] or {}
     for level=1,context.level do
         for _,entry in ipairs(data[level] or {}) do
@@ -164,7 +164,6 @@ function S.Build(context,state)
                 entries[#entries+1]=row
                 -- Classic reports only the current rank as known for some spells.
                 if known(entry.id) then learned[name]=math.max(learned[name] or 0,level) end
-                if not highest[name] or highest[name].level<level then highest[name]=row end
             end
         end
     end
@@ -172,8 +171,7 @@ function S.Build(context,state)
     for _,row in ipairs(entries) do
         if not known(row.entry.id) and (learned[row.name] or 0)<row.level then untrained[#untrained+1]=row end
     end
-    local current=#untrained>0 and untrained or {}
-    if #untrained==0 then for _,row in pairs(highest) do current[#current+1]=row end end
+    local current=untrained
     table.sort(current,function(a,b)
         if a.level~=b.level then return a.level<b.level end
         if a.name~=b.name then return a.name<b.name end

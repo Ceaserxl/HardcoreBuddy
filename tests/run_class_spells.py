@@ -147,7 +147,9 @@ do
     local expanded=build('Mage',10,true)
     assert(expanded.cards[1].title==doc.cards[1].title and expanded.cards[1].blocks[1].spellId==100002 and ids(expanded)[100004],'Future spells append without replacing current untrained rows')
     learned={[100002]=true}; doc=build('Mage',10); rows=ids(doc)
-    assert(doc.cards[1].title=='Available at Trainer' and doc.total==1 and rows[100002] and not rows[100001],'Known higher rank suppresses obsolete untrained lower ranks and fallback uses highest rank')
+    assert(doc.cards[1].title=='Available at Trainer' and doc.total==0 and not rows[100002] and not rows[100001],'Known higher rank suppresses obsolete untrained lower ranks without re-listing learned spells')
+    expanded=build('Mage',10,true)
+    assert(expanded.cards[1].title=='Available at Trainer' and not ids(expanded)[100002] and ids(expanded)[100004],'Empty current section still appends only future unlearned levels')
     learned[100099]=true; doc=build('Mage',10)
     assert(doc.cards[1].title=='Untrained Spells' and ids(doc)[100003],'Allocated talent enables its untrained trainer rank')
     assert(build('Mage',10,false,nil,nil,'preview').cards[1].title=='Next training: Level 12','Preview never uses the live spellbook to hide planned spells')
@@ -162,7 +164,8 @@ do
         IsSpellKnown=function() return false end
         assert(build(class,60).cards[1].title=='Untrained Spells','Untrained view covers '..class)
         IsSpellKnown=function() return true end
-        assert(build(class,60).cards[1].title=='Available at Trainer','Current trainer fallback covers '..class)
+        local trained=build(class,60)
+        assert(trained.cards[1].title=='Available at Trainer' and trained.total==0 and next(ids(trained))==nil,'Learned trainer spells never appear for '..class)
     end
     IsSpellKnown=oldKnown; IsPlayerSpell=oldPlayer; C_SpellBook=oldBook
     MOCK.class='MAGE'; MOCK.level=40; A.lastClass=nil; A:Navigate('training'); A.state.filter='Spells'; A.window:Show()
