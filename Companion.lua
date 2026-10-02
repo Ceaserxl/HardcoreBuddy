@@ -10,10 +10,11 @@ local function row(title,body,action,meta)
     return {title=title,body=body,action=action,meta=meta}
 end
 function C.Tabs(context)
-    return context.characterClass=="Hunter" and {"Overview","Zone Advisor","Spells","Pet Training","Pet Guide","First Aid","Engineering","Cooking"}
-        or {"Overview","Zone Advisor","Spells","First Aid","Engineering","Cooking"}
+    return context.characterClass=="Hunter" and {"Overview","Zone Advisor","Gear","Talents","Spells","Pet Training","Pet Guide","First Aid","Engineering","Cooking"}
+        or {"Overview","Zone Advisor","Gear","Talents","Spells","First Aid","Engineering","Cooking"}
 end
 local tabDescriptions={["Zone Advisor"]="Recommended leveling zones, dangerous NPCs and maps.",Spells="Your next training level and future class and pet spells.",
+    Gear="Equipment scoring and upgrade advice.",Talents="Your next talent and point-by-point build path.",
     ["Pet Training"]="Learn and teach pet abilities.",["Pet Guide"]="Pet families, abilities, taming sources and care.",
     ["First Aid"]="Your next bandage recipe and skill training.",Engineering="Target dummy recipes and profession training.",
     Cooking="Recipes and training for your next skill tier."}
@@ -322,6 +323,7 @@ function C.Detail(context, action)
 end
 
 function C.Build(context,state)
+    if state.view=="training" and (state.filter=="Gear" or state.filter=="Talents") then return A.TalentAdvisor:Document(context,state) end
     if state.view=="training" and state.filter=="Zone Advisor" then return A.MapAdvisor:Document(context,state) end
     if state.view=="training" and state.filter=="Spells" and not state.detail then return A.ClassSpells.Build(context,state) end
     if (state.view=="instances" or state.view=="dungeons" or state.view=="raids") and not state.detail then

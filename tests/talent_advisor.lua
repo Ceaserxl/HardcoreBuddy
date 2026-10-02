@@ -87,7 +87,7 @@ check(T:ReadCurrent("HUNTER",40)==nil,"Loading talents remain unknown")
 GetTalentInfo=saved
 
 A.db.profile.mode="live"; A:HandleSlashCommand("talents")
-check(A.state.view=="advisors" and A.state.filter=="Talents","Slash entry point")
+check(A.state.view=="training" and A.state.filter=="Talents","Slash entry point opens Companion Talents")
 check(A.document.cards[1].title=="Talent Advisor" and #A.document.cards==1,"Path is collapsed into a button")
 local pathLink=A.document.cards[1].blocks[#A.document.cards[1].blocks-1]
 check(pathLink.action.command=="path","Dedicated path button")
@@ -133,7 +133,7 @@ check(not A.state.hideLearnedTalents and #A.document.cards[1].blocks==51,"Show L
 MOCK.Click(A.window.back)
 check(A.state==overview and not A.state.talentPath,"Back restores the talent overview")
 check(A.window.cards[1].content.blocks[1].icon:GetWidth()==34 and not A.window.cards[1].talentHeaders[1]:IsShown(),"Back restores overview icon size and hides table headings")
-check(A.window.sidebarTitle:GetText()=="ADVISORS","Sidebar identity")
+check(A.window.sidebarTitle:GetText()=="COMPANION","Advisor belongs to Companion")
 local lesson=A.document.cards[1].blocks[1]
 check(lesson.title=="Next Talent" and lesson.recommendation.summary=="Click to Apply Talent","Stable next talent label and apply hint")
 local talentRow=A.window.cards[1].content.blocks[1]
@@ -179,8 +179,8 @@ check(A.state.filter=="Talent Advisor" and T:Build("HUNTER",40).id==1,"Persisten
 local names={DRUID="Druid",HUNTER="Hunter",MAGE="Mage",PALADIN="Paladin",PRIEST="Priest",ROGUE="Rogue",SHAMAN="Shaman",WARLOCK="Warlock",WARRIOR="Warrior"}
 for class,name in pairs(names) do
     A.db.profile.mode="preview"; A.db.profile.characterClass=name; A.db.profile.level=60
-    A.state={view="advisors",filter="Talents"}; A:Refresh(true)
-    check(A.document.view=="advisors" and A.document.cards[1].note:find(name,1,true),"Preview class stays on advisor page")
+    A.state={view="training",filter="Talents"}; A:Refresh(true)
+    check(A.document.view=="training" and A.document.cards[1].note:find(name,1,true),"Preview class stays on Companion Talents")
     for _,b in ipairs(A.document.cards[1].blocks) do check(not b.action or b.action.command~="learn","Preview cannot spend points") end
     A:Activate({kind="advisor",command="path"})
     check(#A.document.cards[1].blocks>0 and A.state.talentPath,"Every preview class has a separate path")

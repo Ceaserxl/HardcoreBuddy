@@ -88,7 +88,7 @@ function addon:HandleSlashCommand(message)
     elseif command == "deaths" or command:match("^deaths%s") then
         if self.Deaths and self.Deaths.db then self.Deaths:Slash(text:match("^%S+%s*(.*)$")) end
     elseif command == "talents" or command == "advisor" or command == "gear" then
-        self:CreateWindow(); self.window:Show(); self:Navigate("advisors")
+        self:CreateWindow(); self.window:Show(); self:Navigate("training")
         self.state.filter=command=="talents" and "Talents" or "Gear"; self:Refresh(true)
     elseif command == "gear on" or command == "gear off" then
         self.db.gearAdvisorEnabled=command=="gear on"

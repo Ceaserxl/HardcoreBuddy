@@ -102,6 +102,11 @@ enabled(map.sliders.iconSize,false); enabled(map.sliders.iconAlpha,false)
 toggle(map.checks.rare,true); enabled(map.icons.rare,true); enabled(map.sliders.iconSize,true)
 check(not A.window.footer and not A.window.skinChrome.footer,"Footer and its decoration are removed")
 check(A.window.title:GetText():find("v"..A.version,1,true),"Version follows addon title")
+check(A.window.author:GetText()=="Author: CeaserXL (CXL)","Author appears beneath the addon title")
+local _,ty,_,th=A.window.title:GetRect(); local _,ay,_,ah=A.window.author:GetRect(); local _,sy=A.window.subtitle:GetRect()
+check(ay>=ty+th and sy>=ay+ah,"Author and character details fit beneath title without overlap")
+check(#A.window.tabs==5,"Five top tabs after moving advisors into Companion")
+for _,tab in ipairs(A.window.tabs) do check(tab.view~="advisors" and tab:GetWidth()>114,"Top tabs are wider with no Advisors tab") end
 for _,view in ipairs({"supplies","training","advisors","instances","petguide"}) do
     A:Navigate(view)
     local _,y,_,height=A.window:GetRect(); local _,sy,_,sh=A.window.scroll:GetRect()

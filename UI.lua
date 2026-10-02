@@ -609,6 +609,7 @@ function addon:CreateWindow()
     f:Hide(); f:SetFrameStrata("DIALOG"); f:SetFrameLevel(20); f:SetClampedToScreen(true); f:SetMovable(true); f:SetResizable(false); f:EnableMouse(true)
     Skin.Paint(f,"window"); f.chrome=Skin.DecorateWindow(f)
     f.title=font(f, 26, GOLD); f.title:SetText("HardcoreBuddy |cffa6a68fv"..addon.version.."|r")
+    f.author=font(f,11,MUTED); f.author:SetText("Author: CeaserXL (CXL)")
     f.subtitle=font(f, 12, WHITE)
     f.motto=font(f,10,MUTED); f.motto:SetText("ONE LIFE. STAY PREPARED.")
     local drag=CreateFrame("Frame",nil,f); f.drag=drag; drag:SetPoint("TOPLEFT"); drag:SetSize(1,57)
@@ -639,7 +640,7 @@ function addon:CreateWindow()
         if self.db.profile.mode == "preview" and (key=="UP" or key=="DOWN") then commit(f.level); self:SetLevel(self.db.profile.level+(key=="UP" and 1 or -1)) end
     end)
     f.tabs={}
-    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"advisors","Advisors",100},{"deaths","Death Journal",122},{"instances","Dungeons & Raids",154},{"settings","Settings",100}}) do
+    for _,tab in ipairs({{"supplies","Supplies",100},{"training","Companion",100},{"deaths","Death Journal",122},{"instances","Dungeons & Raids",154},{"settings","Settings",100}}) do
         local id=tab[1]
         local b=button(f,tab[2],tab[3],function() self:Navigate(id) end); b.view=id; Skin.Button(b,"tab"); f.tabs[#f.tabs+1]=b
     end
@@ -799,6 +800,7 @@ function addon:Navigate(view)
     if view=="alerts" then self:OpenSettings("Low Health"); return end
     self:CommitInputs()
     self.state={view=view=="now" and "supplies" or view,filter=(view=="supplies" or view=="now") and "All" or nil,page=1}; self.history={}
+    if view=="advisors" then self.state.view="training"; self.state.filter="Gear" end
     if view=="dungeons" or view=="raids" then
         self.state.view="instances"; self.state.filter=view=="raids" and "Raids" or "Dungeons"
     end
@@ -868,8 +870,10 @@ end
 function addon:Refresh(resetScroll)
     if not self.window then return end
     local context=self:GetContext()
+    if self.state and self.state.view=="advisors" then self.state.view="training"; self.state.filter=self.state.filter or "Gear" end
     if self.lastClass and self.lastClass~=context.characterClass and not (self.state and
-        (self.state.view=="deaths" or self.state.view=="settings" or self.state.view=="instances" or self.state.view=="advisors")) then self.state=nil; self.history={} end
+        (self.state.view=="deaths" or self.state.view=="settings" or self.state.view=="instances"
+            or self.state.view=="training" and (self.state.filter=="Gear" or self.state.filter=="Talents"))) then self.state=nil; self.history={} end
     self.lastClass=context.characterClass
     self.state=self.state or {view="supplies",filter="All",page=1}; self.history=self.history or {}
     if self.state.view=="training" and self.state.filter=="Zones" then self.state.filter="Zone Advisor" end
@@ -877,8 +881,7 @@ function addon:Refresh(resetScroll)
     -- Supplies has no hidden search or shortage filter after its controls were
     -- removed. Back navigation and old in-memory state must show the full kit.
     if self.state.view=="supplies" or self.state.view=="now" then self.state.query=nil; self.state.stock=nil end
-    self.document=self.state.view=="advisors" and self.TalentAdvisor:Document(context,self.state)
-        or (self.state.view=="deaths" or self.state.view=="settings") and {context=context,view=self.state.view,cards={}} or C.Build(context,self.state)
+    self.document=(self.state.view=="deaths" or self.state.view=="settings") and {context=context,view=self.state.view,cards={}} or C.Build(context,self.state)
     self:Layout()
     if resetScroll then self.window.scroll:SetVerticalScroll(0) end
 end
@@ -910,20 +913,21 @@ function addon:Layout()
     local context,width,height=doc.context,f:GetWidth(),f:GetHeight()
     local compact=width<740 or height<500
     local short=height<500
-    f.headerHeight=short and 64 or compact and 78 or 106
+    f.headerHeight=compact and 96 or 106
     if context.mode=="preview" then f.headerHeight=math.max(96,f.headerHeight) end
     Skin.LayoutWindow(f,width,height,compact)
     local titleX=compact and 94 or 122
-    f.title:ClearAllPoints(); f.title:SetPoint("TOPLEFT",titleX,short and -16 or compact and -20 or -25)
+    f.title:ClearAllPoints(); f.title:SetPoint("TOPLEFT",titleX,compact and -16 or -20)
     f.title:SetFont(STANDARD_TEXT_FONT,compact and 21 or 27,"")
     f.title:SetWordWrap(false); f.title:SetSize(math.max(140,width-titleX-60),short and 27 or 32)
-    f.subtitle:ClearAllPoints(); f.subtitle:SetPoint("TOPLEFT",titleX,short and -43 or compact and -48 or -59)
+    f.author:ClearAllPoints(); f.author:SetPoint("TOPLEFT",titleX,compact and -46 or -54); f.author:SetSize(260,14)
+    f.subtitle:ClearAllPoints(); f.subtitle:SetPoint("TOPLEFT",titleX,compact and -65 or -72)
     f.subtitle:SetWordWrap(false); f.subtitle:SetSize(width-titleX-24,18)
     f.subtitle:SetText(context.characterClass.."  |  Level "..context.level
         ..(context.faction and ("  |  "..context.faction) or "  |  Faction unknown")
         ..(context.mode=="preview" and "  |  Planning" or "")
         ..(context.characterClass=="Hunter" and (context.petLevel and ((context.mode=="preview" and "  |  Planned pet " or "  |  Pet ")..context.petLevel) or "  |  No pet") or ""))
-    f.motto:SetShown(not compact); f.motto:ClearAllPoints(); f.motto:SetPoint("TOPLEFT",titleX+2,-82); f.motto:SetSize(240,14)
+    f.motto:SetShown(not compact); f.motto:ClearAllPoints(); f.motto:SetPoint("TOPLEFT",titleX+2,-92); f.motto:SetSize(240,12)
     f.drag:SetHeight(f.headerHeight-6)
     local preview=context.mode=="preview"
     f.mode.label:SetText(preview and "Return" or "Edit Character")
@@ -935,11 +939,11 @@ function addon:Layout()
     f.title:SetWidth(math.max(140,width-titleX-modeWidth-67))
     local x,y=22,f.headerHeight+4
     local right=width-22
+    local tabWidth=(right-x-6*(#f.tabs-1))/#f.tabs
     for _,b in ipairs(f.tabs) do
         b:Show()
         if b:IsShown() then
-            if x+(compact and 94 or 114)>right then x=22; y=y+36 end
-            b:SetSize(compact and 94 or 114,30); b:ClearAllPoints(); b:SetPoint("TOPLEFT",x,-y)
+            b:SetSize(tabWidth,30); b:ClearAllPoints(); b:SetPoint("TOPLEFT",x,-y)
             x=x+b:GetWidth()+6; active(b,doc.view==b.view or (b.view=="training" and doc.view=="petguide"))
         end
     end
@@ -992,7 +996,7 @@ function addon:Layout()
         y=y+56
     end
     local instancePage=doc.view=="instances"
-    local navigation=doc.view=="advisors" and {"Gear","Talents"} or instancePage and self.Instances.Navigation(self.state)
+    local navigation=instancePage and self.Instances.Navigation(self.state)
         or doc.view=="settings" and self.Settings.sections or doc.view=="deaths" and {}
         or doc.view=="training" and C.Tabs(context)
         or doc.view=="petguide" and {"Families","Abilities","Pets","Care"}
@@ -1003,7 +1007,7 @@ function addon:Layout()
     f.sidebar:SetShown(sidebar)
     if sidebar then
         f.sidebar:ClearAllPoints(); f.sidebar:SetPoint("TOPLEFT",20,-y); f.sidebar:SetPoint("BOTTOMLEFT",20,18); f.sidebar:SetWidth(148)
-        f.sidebarTitle:SetText(doc.view=="settings" and "SETTINGS" or doc.view=="advisors" and "ADVISORS" or instancePage and "INSTANCES" or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or doc.view=="training" and "COMPANION" or "FIELD KIT")
+        f.sidebarTitle:SetText(doc.view=="settings" and "SETTINGS" or instancePage and "INSTANCES" or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or doc.view=="training" and "COMPANION" or "FIELD KIT")
         f.sidebarNote:SetText(doc.view=="settings" and "Your preferences.\nOne place." or instancePage and "Levels and\nitems to bring." or doc.view=="deaths" and "Every journey\nleaves a story." or doc.view=="petguide" and "Find a companion.\nLearn its strengths." or "Pack with purpose.\nEvery slot matters.")
         f.sidebarNote:SetShown(height-y-18>35+#navigation*41+70)
     end
@@ -1024,7 +1028,7 @@ function addon:Layout()
                 end
                 if addon.state.view=="training" then
                     if self.filter=="Pet Guide" then addon:Navigate("petguide"); return end
-                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Pet Training" or self.filter=="Spells") and self.filter or nil
+                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Pet Training" or self.filter=="Spells" or self.filter=="Gear" or self.filter=="Talents") and self.filter or nil
                     addon.state.query=nil; addon.state.mapNPCs=nil; addon.state.mapZonePicker=nil; addon.state.mapZone=nil; addon.state.mapCurrent=nil
                     local family=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[self.filter]
                     if family then addon:Activate({kind="profession",family=family}); return end
@@ -1057,7 +1061,7 @@ function addon:Layout()
         if doc.view=="training" then
             local family=self.state.detail and self.state.detail.family
             selected=family=="bandage" and "First Aid" or family=="antivenom" and "First Aid"
-                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or self.state.filter=="Pet Training" and "Pet Training" or self.state.filter=="Zone Advisor" and "Zone Advisor" or self.state.filter=="Spells" and "Spells" or "Overview"
+                or family=="dummy" and "Engineering" or family=="cooking" and "Cooking" or self.state.filter or "Overview"
         end
         active(b,selected==label)
     end
@@ -1160,7 +1164,7 @@ function addon:Layout()
         c.gridStart=not doc.isDetail and (doc.view=="training" and (self.state.filter=="Spells" or self.document.zoneRecommendations) and 1
             or doc.view=="training" and (not self.state.filter or self.state.filter=="Overview") and index==1 and 3
             or doc.view=="training" and self.state.filter=="Zone Advisor" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)
-            or doc.view=="advisors" and not self.state.talentPath and 1) or nil
+            or doc.advisor and not self.state.talentPath and 1) or nil
         top=top+renderCard(c,data,contentWidth)+10
         if data.zoneRangeToggle then
             f.atLevel:SetParent(c); f.atLevel:SetFrameLevel(c.headerButton:GetFrameLevel())

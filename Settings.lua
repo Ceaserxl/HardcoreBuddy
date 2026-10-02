@@ -189,8 +189,7 @@ function S:Create(parent)
         A.db.kitNotifications=value; if not value and A.kitAlert then A.kitAlert:Hide() end
     end)
     general.reset=button(access,"Recenter main window",82,function() A:HandleSlashCommand("reset") end)
-    label(access,"Author: CeaserXL (CXL)",12,16,122,300)
-    label(kit,"Manage Carry quantities and item priorities in Supplies. Find talent recommendations in Advisors.",12,16,86,300)
+    label(kit,"Manage Carry quantities and item priorities in Supplies. Find gear and talent advice in Companion.",12,16,86,300)
     general.contentHeight=486
     local npc=self.pages["NPC Alerts"]
     npc.subtitle=label(npc,"Configure rare and elite warnings independently.",12,0,34,700)

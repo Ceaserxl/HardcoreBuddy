@@ -192,7 +192,7 @@ function T:Activate(a)
     if a.command=="path" then
         A:CommitInputs()
         A.history=A.history or {}; A.history[#A.history+1]=A.state
-        A.state={view="advisors",filter="Talents",talentPath=true}
+        A.state={view="training",filter="Talents",talentPath=true}
         A:Refresh(true); return
     end
     if a.command=="settings" then A:OpenSettings("Gear Advisor"); return end
@@ -219,7 +219,7 @@ end
 function T:Document(context,state)
     local class=tokens[context.characterClass]
     local level=context.level
-    local doc={context=context,view="advisors",cards={}}
+    local doc={context=context,view="training",advisor=true,cards={}}
     if not D.AdvisorBuilds[class] then return doc end
     local filter=state.filter or "Gear"
     local _,actual=UnitClass("player")
@@ -309,7 +309,8 @@ for _,event in ipairs({"CHARACTER_POINTS_CHANGED","PLAYER_TALENT_UPDATE","PLAYER
 events:SetScript("OnEvent",function(_,event,name)
     if event=="ADDON_LOADED" and name~="Blizzard_TalentUI" then return end
     T.checkAutomatic=true
-    if A.window and A.window:IsShown() and A.state and A.state.view=="advisors" then A:Refresh() end
+    if A.window and A.window:IsShown() and A.state and A.state.view=="training"
+        and (A.state.filter=="Talents" or A.state.filter=="Gear") then A:Refresh() end
 end)
 events:SetScript("OnUpdate",function(_,elapsed)
     if T.applying then

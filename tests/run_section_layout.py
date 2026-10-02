@@ -58,6 +58,19 @@ for _,class in ipairs({"HUNTER","WARLOCK","WARRIOR","PALADIN","ROGUE","MAGE","PR
     local hit=MOCK.ClickAt(x+w/2,y+h/2)
     assert(hit==left and A.state.filter=="Zone Advisor","Section card backdrop must not intercept navigation")
     A:Back(); assert(A.state==state)
+    for _,filter in ipairs({"Gear","Talents"}) do
+        local entry
+        for _,block in ipairs(A.document.cards[1].blocks) do if block.title==filter then entry=block end end
+        assert(entry and entry.action,"Overview includes both advisors")
+        A:Activate(entry.action)
+        assert(A.state.view=="training" and A.document.advisor and A.state.filter==filter,"Overview opens advisor inside Companion")
+        A:Back(); assert(A.state==state,"Back returns from advisor to overview")
+        local tab
+        for _,button in ipairs(A.window.filters) do if button.filter==filter then tab=button end end
+        MOCK.Click(tab)
+        assert(A.state.view=="training" and A.state.filter==filter and tab.active,"Sidebar opens and selects advisor")
+        A:Navigate("training"); state=A.state
+    end
 end
 print("PASS: "..checked.." section/control bounds at three screen sizes; nine-class paired navigation and inline slider values.")
 ''')
