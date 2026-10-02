@@ -14,7 +14,7 @@ provides `GetPoiForUiMapID` and `GetPoiInfo`, but no setter for custom guard
 destinations. HCB therefore keeps its own map/minimap pins; it does not replace
 Blizzard's gossip provider or alter actual guard directions.
 
-The local catalogue contains 335 vendors for 96 of the 194 supply item IDs
+The local catalogue contains 335 vendors for 96 of the 201 supply item IDs
 examined. Relationships, names, factions and coordinates were extracted from
 [Questie v10.0.0 Classic item data](https://github.com/Questie/Questie/blob/v10.0.0/Database/Classic/classicItemDB.lua)
 and [NPC data](https://github.com/Questie/Questie/blob/v10.0.0/Database/Classic/classicNpcDB.lua).
@@ -52,7 +52,8 @@ The six ordinary vendor drink tiers were already present; they now allow every
 class. Reputation rewards and unavailable later-expansion drinks are not treated
 as ordinary vendor water.
 
-Each supply's details has **Auto-buy amount** (the total to carry, not the number
+Every supply's details, including user-added items and other profession ranks,
+has **Auto-buy amount** (the total to carry, not the number
 to buy each visit) and **Refill below**. Notifications and purchase prompts only
 start below the refill threshold. Food at 19/20 stays quiet with a threshold of
 5; food at 4/20 triggers restocking. Defaults are below 5 for ordinary supplies,
@@ -61,9 +62,21 @@ Zero disables that item's refill notifications/purchases. Once a refill starts,
 it continues toward the target even after crossing the threshold. Merchant pack
 sizes are still respected without buying over the target.
 
-Hunter ammo recommendations advance at levels 10, 25 and 40 even when older
-arrows or bullets are equipped. Compatible higher-level equipped ammunition
-remains eligible; weapon type determines arrows versus bullets.
+Only items marked **Essentials** trigger notifications and purchases. Other
+priorities retain their editable quantities without triggering restocking.
+Hunter ammo is Essentials by default, with existing priority overrides preserved.
+
+Ammo recommendations include ordinary vendor tiers and stronger crafted bullets
+at levels 5, 15, 30, 37, 44 and 52. At level 52, Thorium Headed Arrows replace
+Jagged Arrows: exchange 200 crafted Thorium Shells for 200 arrows in Ironforge
+or Orgrimmar. Ordinary vendor ranks remain available as alternatives. Crafting
+is an acquisition route, not a profession requirement to use the ammunition.
+Compatible higher-level equipped ammunition remains eligible; weapon type
+determines arrows versus bullets. Source: Classic item tooltips for
+[Thorium Headed Arrow](https://www.wowhead.com/classic/item=18042/thorium-headed-arrow),
+[Thorium Shells](https://www.wowhead.com/classic/item=15997/thorium-shells),
+[Mithril Gyro-Shot](https://www.wowhead.com/classic/item=10513/mithril-gyro-shot)
+and the other item IDs embedded in `Ammunition.lua`.
 
 Opening a merchant offers only low-stock Essentials that its live stock can sell.
 Buy confirms that visit. Auto Buy Next Time saves the opt-in; it can also be

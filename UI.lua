@@ -695,7 +695,8 @@ local function renderCard(frame, data, width)
             frame.itemHeading:Show()
             leftHeight=measure(frame.itemHeading,data.itemSectionTitle,leftWidth,0,0)+SPACE.contentGap
         end
-        rightHeight=leftHeight
+        -- The right section title aligns with the left section title, not its item.
+        rightHeight=0
         for i,block in ipairs(data.blocks) do
             local row=frame.content.blocks[i]
             if not row then row=newBlock(frame.content); frame.content.blocks[i]=row end

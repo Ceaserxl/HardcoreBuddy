@@ -302,9 +302,7 @@ function C.Detail(context, action)
             out.defaultItem=item
             out.isDefault=S.Selection(context,"bandage")==item.itemId
         end
-        if not out.blocks[1].readOnlyTarget and not out.blocks[1].pickRank then
-            out.quantityRecord={title="Auto-buy amount",quantityEditor=true,targetKey=r.targetKey,target=r.target,refillThreshold=r.refillThreshold}
-        end
+        out.quantityRecord={title="Auto-buy amount",quantityEditor=true,targetKey=r.targetKey,target=r.target,refillThreshold=r.refillThreshold}
         local alternatives=false
         for _,block in ipairs(out.blocks) do
             if block.fields then

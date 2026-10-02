@@ -61,7 +61,7 @@ c.level=previousLevel; selected=3030
 ranged=10003; assert(M.Recommend(c).ammoKind=="arrows")
 ranged=10002; selected=3033; assert(M.Recommend(c).ammoKind=="bullets")
 selected=2516
-for _,tier in ipairs({{9,2516},{10,2519},{24,2519},{25,3033},{39,3033},{40,11284}}) do
+for _,tier in ipairs({{4,2516},{5,8067},{10,2519},{15,8068},{25,3033},{30,8069},{37,10512},{40,11284},{44,10513},{52,15997}}) do
  c.level=tier[1]; assert(M.Recommend(c).itemId==tier[2],'Equipped old bullets do not block level upgrades')
 end
 c.level=previousLevel; selected=3033
@@ -78,7 +78,7 @@ c.inventory.available=true
 c.characterClass="Mage"; assert(M.Recommend(c)==nil)
 c.characterClass="Rogue"; assert(S.Record(c,ammo).target==100)
 c.mode="preview"; c.previewAmmo="bullets"; c.level=24
-assert(M.Recommend(c).itemId==2519); c.level=25; assert(M.Recommend(c).itemId==3033)
+assert(M.Recommend(c).itemId==8068); c.level=25; assert(M.Recommend(c).itemId==3033)
 c.previewAmmo="thrown"; c.level=34; assert(M.Recommend(c).itemId==3108)
 c.level=35; assert(M.Recommend(c).itemId==15327)
 c.previewAmmo="none"; assert(M.Recommend(c)==nil)

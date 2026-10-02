@@ -30,6 +30,22 @@ local editor=A.window.cards[1].detailQuantity
 assert(editor and editor.refill and editor.refill:GetText()=='5','Both controls are exposed in item details')
 editor.refill:SetText('3'); editor.refill.scripts.OnEditFocusLost(editor.refill)
 assert(A.characterDB.refillThresholds[117]==3,'Threshold editor saves separately')
+local custom={itemId=999999,id='user-999999',name='Custom supply',family='user-999999',group='User',classes={'All'},userItem=true,level=1,ease=0}
+A.characterDB.userItems[#A.characterDB.userItems+1]=custom
+A:Activate({kind='item',item=custom})
+editor=A.window.cards[1].detailQuantity
+assert(editor:IsShown() and editor.refill:IsShown(),'User-added items expose both controls')
+A:SetCarryTarget(custom.itemId,20); A:SetRefillThreshold(custom.itemId,5)
+local userContext=A:GetContext(); userContext.inventory={available=true,counts={[custom.itemId]=4}}
+local userRecord=S.Record(userContext,custom)
+assert(userRecord.refillNeeded and userRecord.target==20,'User items use the same threshold and target')
+userContext.priorities={}
+local function missingCustom()
+ for _,record in ipairs(R:Missing(userContext)) do if record.itemId==custom.itemId then return true end end
+end
+assert(not missingCustom(),'Optional custom items do not trigger reminders')
+userContext.priorities[custom.family]='Essentials'
+assert(missingCustom(),'Custom items marked Essentials do trigger reminders')
 
 -- A refill must keep buying after its first stack passes the trigger threshold.
 local count,now=0,100
