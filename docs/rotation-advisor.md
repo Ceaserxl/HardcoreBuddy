@@ -8,7 +8,8 @@ the per-character default is Disabled. No action is executed by the advisor.
 ## Character and combat inputs
 
 - Highest **learned** ranks, including the level-60 spell books. Level alone does
-  not grant a spell. Rank-one Frostbolt is additionally kept for quick slows.
+  not grant a spell. Rank-one Frostbolt is additionally kept for quick slows,
+  and defensive Frost Nova uses learned Rank 1 to conserve mana.
 - Actual allocated talents from the live Classic talent tree, not the selected
   Talent Advisor build. Missing talent data is retried every two seconds.
 - School spell power and critical chance from the equipped character, live cast
@@ -36,7 +37,8 @@ Damage choices compare Fireball, Frostbolt, Scorch, Arcane Missiles and appropri
 Pyroblast opportunities. Estimates include rank damage, coefficients, actual cast
 times, school bonuses, relevant talents, crit, Shatter, vulnerability and mana
 pressure. Solo approaching attackers can take precedence with a Frostbolt slow.
-Fire Blast finishes enemies or supplies instant damage while moving. Presence of
+Fire Blast finishes enemies or supplies instant damage while moving; it does not
+displace a normal filler just because its damage per GCD is higher. Presence of
 Mind, Arcane Power and Combustion are used when their observed context supports
 them. Scorch upkeep is reserved for longer Fire fights. Wand fallback does not
 tell the player to toggle an already active Shoot off.
@@ -76,6 +78,9 @@ damage targets, observed breakable crowd control and genuinely unavailable spell
 remain appropriate gates. Disabled mode stops polling and clears only HCB glows.
 
 ## Data and boundaries
+
+See the [Classic Mage rotation research audit](mage-rotation-research.md) for
+guide comparisons, corrections and remaining modeling gaps.
 
 `scripts/build_mage_rotation_data.py` produces `Data/MageRotationSpells.lua` from
 numerical rank facts in [WoWSims Classic Mage implementations](https://github.com/wowsims/classic/tree/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/sim/mage).

@@ -70,6 +70,12 @@ function R:RefreshSpells()
         local value=info(116)
         if value then self.spells.slowbolt={id=116,name=value.name,icon=value.iconID,rank=value.rank} end
     end
+    -- Nova is selected for control, not damage. Rank 1 has the same root duration
+    -- at a lower mana cost; keep exact rank matching on the action bar.
+    if class=="MAGE" and known(122) then
+        local value=info(122)
+        if value then self.spells.nova={id=122,name=value.name,icon=value.iconID,level=10,rank=value.rank} end
+    end
     if C_Spell and C_Spell.GetSpellSubtext then
         for _,spell in pairs(self.spells) do spell.rank=C_Spell.GetSpellSubtext(spell.id) end
     end

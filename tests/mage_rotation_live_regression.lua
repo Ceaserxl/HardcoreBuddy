@@ -79,6 +79,10 @@ do
     learned[25304]=true; R:RefreshSpells()
     check(R.spells.frostbolt.id==25304,'Learned book-only Frostbolt rank is available without a trainer entry')
     learned[25304]=nil; R:RefreshSpells(); check(R.spells.frostbolt.id==837,'Unlearned higher spell rank is never selected')
+    spellData[10230]={name='Frost Nova',iconID=135848,castTime=0,minRange=0,maxRange=0}; learned[10230]=true
+    R:RefreshSpells(); check(R.spells.nova.id==122,'Defensive Nova uses Rank 1 even when a higher damage rank is learned')
+    learned[122]=nil; R:RefreshSpells(); check(R.spells.nova.id==10230,'Do not invent Rank 1 if the client does not report it learned')
+    learned[122]=true; learned[10230]=nil; R:RefreshSpells()
     UnitCreatureType=function() return 'Localized Humanoid',7 end
     s=R:Snapshot(); check(s.polyEligible,'Polymorph eligibility uses locale-independent creature ID')
     UnitCreatureType=function() return 'Localized Undead',6 end

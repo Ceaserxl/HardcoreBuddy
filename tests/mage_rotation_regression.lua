@@ -95,6 +95,10 @@ s=state({'fireball','frostbolt'}); s.grouped=false; s.attackingPlayer=true; s.sl
 decide(s,'frostbolt','Solo approach gets slow regardless of spec')
 s=state({'frostbolt','fireblast'}); s.moving=true; decide(s,'fireblast','Instant while moving')
 s.moving=false; s.targetHP=10; decide(s,'fireblast','Fast finisher')
+s=state({'frostbolt','fireblast'},6); s.spells.frostbolt.id=116; s.targetHP=1000
+check(M.Estimate(s,'fireblast').score>M.Estimate(s,'frostbolt').score,'Fixture reproduces Fire Blast raw throughput advantage')
+decide(s,'frostbolt','Do not spend Fire Blast as routine filler just for higher instant throughput')
+s.spells.frostbolt.usable=false; decide(s,'fireblast','Fire Blast remains a fallback when other casts cannot be used')
 s=state({'fireball','scorch'}); s.talents.improvedScorch=3; s.timeToDie=30
 decide(s,'scorch','Fire vulnerability on long fight'); s.scorchStacks=5; s.scorchRemaining=20
 decide(s,'fireball','Do not rebuild full Scorch stacks')

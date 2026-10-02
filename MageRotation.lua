@@ -119,7 +119,7 @@ function M.Decide(s)
     if threatened and hp<40 and s.targets>=2 and s.validTarget and not s.targetPlayer and s.polyEligible and not s.controlled and not s.targetDotted and can("polymorph",true) then
         return choose("polymorph","Control this attacker while dealing with the others.")
     end
-    -- Pre-pull upkeep is optional (blue). Mounting does not remove combat advice.
+    -- Pre-pull upkeep is optional (red). Mounting does not remove combat advice.
     urgentPhase=false
     if not s.combat and not s.casting then
         if mp<25 and not s.moving and not s.mounted and not s.targetCombat and can("evocation",true) then return choose("evocation","Recover mana before pulling.",true) end
@@ -192,7 +192,7 @@ function M.Decide(s)
         if s.moving or (e and s.targetHP and s.targetHP<=e.damage) or (s.frozen and (s.frozenRemaining or 0)<1.5) then
             return choose("fireblast","Instant damage while moving or finishing the target.")
         end
-        if e and bestEstimate and e.score>bestEstimate.score and mp>35 then return choose("fireblast","Higher immediate damage than the available cast.") end
+        if not best then return choose("fireblast","Instant damage while other damage casts are unavailable.") end
     end
     if s.moving and s.safeAOE and s.targetClose and s.facingTarget and can("cone") then return choose("cone","Instant damage and a slow while moving.") end
     if best then return choose(best,"Best available damage cast for your learned ranks and talents.") end
