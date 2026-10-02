@@ -426,7 +426,7 @@ function R:MageSnapshot(s)
         local a=aura("player",i,"HELPFUL"); if not a then break end
         for key,id in pairs(M.buffIDs) do if a.spellId==id then s.buffs[key]=auraRemaining(a,s.time) end end
         -- Brilliance shares the Intellect benefit; never overwrite group buffs.
-        if a.spellId==23028 then s.buffs.intellect=auraRemaining(a,s.time) end
+        if a.spellId==23028 then s.buffs.intellect=math.max(s.buffs.intellect or 0,auraRemaining(a,s.time)) end
     end
     s.hasArmor=s.buffs.frostarmor or s.buffs.icearmor or s.buffs.magearmor
     for i=1,40 do

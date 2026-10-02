@@ -94,7 +94,7 @@ function M.Estimate(s,key)
     return {score=score,damage=direct,cast=cast,cost=cost,school=d.school}
 end
 
--- Optional upkeep is independent of the single primary action. Missing buffs
+-- Optional upkeep is independent of the single primary action. Expiring buffs
 -- remain visible through movement/casts and can coexist with urgent advice.
 function M.Optional(s)
     local actions={}
@@ -103,8 +103,11 @@ function M.Optional(s)
     local function add(key,reason)
         if ready(s,key) then actions[#actions+1]={key=key,reason=reason}; return true end
     end
-    if mp>40 and remaining(s,"intellect")==0 then add("intellect","Maintain Arcane Intellect.") end
-    if mp>40 and not s.hasArmor then
+    local armorRemaining=math.max(remaining(s,"frostarmor"),remaining(s,"icearmor"),remaining(s,"magearmor"))
+    -- A presence-only snapshot cannot establish an expiration time.
+    if armorRemaining==0 and s.hasArmor==true then armorRemaining=math.huge end
+    if mp>40 and remaining(s,"intellect")<=60 then add("intellect","Refresh Arcane Intellect before it expires.") end
+    if mp>40 and armorRemaining<=60 then
         local preferred=(rank(s,"arcaneMeditation")>0 or s.grouped) and "magearmor" or "icearmor"
         if not add(preferred,"Maintain your armor buff.") then
             for _,key in ipairs({"icearmor","frostarmor","magearmor"}) do
@@ -112,7 +115,7 @@ function M.Optional(s)
             end
         end
     end
-    if mp>40 and remaining(s,"barrier")==0 then add("barrier","Maintain Ice Barrier.") end
+    if mp>40 and remaining(s,"barrier")<=5 then add("barrier","Refresh Ice Barrier before it expires.") end
     if not s.combat and not s.casting and not s.targetCombat and not s.moving and not s.mounted then
         if mp<25 and ready(s,"evocation",true) then add("evocation","Recover mana before pulling.") end
         if mp>80 and s.prepareGem and ready(s,s.prepareGem,true)

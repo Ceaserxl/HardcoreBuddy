@@ -29,6 +29,16 @@ do
     local s=R:Snapshot()
     check(s.buffs.clearcasting==10 and s.buffs.intellect==60,'Proc and group Intellect buffs detected by ID')
     check(s.curse and s.frozen and s.scorchStacks==3,'Curse, freeze and vulnerability stacks detected')
+    local oldNames=R.names
+    R.names={intellect='Intellect',icearmor='Ice Armor'}
+    auras.playerHELPFUL={{name='Intellect',expirationTime=now+300},
+        {name='Brilliance',spellId=23028,expirationTime=now+30},
+        {name='Ice Armor',expirationTime=now+45}}
+    s=R:Snapshot()
+    check(s.buffs.intellect==300 and s.buffs.icearmor==45,'Live snapshot retains armor time and longest Intellect coverage')
+    auras.playerHELPFUL={{name='Brilliance',spellId=23028,expirationTime=now+30}}
+    s=R:Snapshot(); check(s.buffs.intellect==30,'Expiring Brilliance feeds early Intellect refresh')
+    R.names=oldNames
     auras={}
     local event={0,'SPELL_DAMAGE',false,'enemy','Enemy',0,0,'player','Player',0,0,123,'Fire',4,20}
     CombatLogGetCurrentEventInfo=function() return unpack(event) end

@@ -26,6 +26,21 @@ local function optional(s,key)
 end
 check(not R.supported.ROGUE and not R.definitions.ROGUE,'Rogue prototype removed')
 do
+    local s=state({'frostbolt','intellect','icearmor','magearmor','barrier'})
+    s.buffs={intellect=61,icearmor=61,barrier=6}; s.hasArmor=true
+    check(#M.Optional(s)==0,'Healthy buff durations do not prompt refresh')
+    s.buffs={intellect=60,icearmor=60,barrier=5}
+    check(optional(s,'intellect') and optional(s,'magearmor') and optional(s,'barrier'),'Buff refresh windows begin before expiration')
+    check(#M.Optional(s)==3,'Only one armor choice accompanies other expiring buffs')
+    decide(s,'frostbolt','Early refresh leaves damage primary intact')
+    s.buffs.intellect=1800; s.buffs.icearmor=1800; s.buffs.barrier=60
+    check(#M.Optional(s)==0,'Fresh durations clear all early refresh prompts')
+    s.buffs={intellect=math.huge,magearmor=math.huge,barrier=math.huge}
+    check(#M.Optional(s)==0,'Unknown or unlimited durations do not prompt refresh')
+    s.buffs={intellect=30,icearmor=30,barrier=3}; s.powerPercent=10
+    check(#M.Optional(s)==0,'Early refresh respects mana reserve')
+end
+do
     local s=state({'fireball','pyroblast'}); s.combat=false; s.grouped=false; s.targetDistance=30
     decide(s,'pyroblast','Dedicated distant Pyroblast opener beats sustained throughput')
     for _,field in ipairs({'combat','targetCombat','casting','moving','targetDotted'}) do

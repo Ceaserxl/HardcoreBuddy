@@ -31,8 +31,10 @@ still chooses targets and escape directions.
 Optional red highlights are evaluated separately from the single gold primary
 action. Multiple missing buffs (Intellect, one appropriate armor buff and Ice
 Barrier) can remain highlighted together through movement, casts and combat,
-provided mana and readiness permit them. Existing buffs and Arcane Brilliance are
-respected. An urgent shield recommendation becomes the primary gold action;
+provided mana and readiness permit them. Intellect (including Arcane Brilliance)
+and armor become optional at 60 seconds remaining; Ice Barrier at five seconds.
+Refreshing clears that optional highlight. Unknown-duration buffs are not treated
+as expiring. An urgent shield recommendation becomes the primary gold action;
 it is not also drawn red. Safe out-of-combat Evocation is optional. During combat,
 Evocation requires a healthy, undamaged Mage whose
 target is occupied in a group and has a sufficiently long estimated life.
