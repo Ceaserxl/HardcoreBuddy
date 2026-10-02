@@ -70,7 +70,25 @@ function E:Tick()
     if not self.open or not self.panel:IsShown() then self:Stop(); return end
     if GetTime()-s.since>20 then self:Stop("Scan timed out. Rescan before buying."); return end
     local record=s.queue[s.item]
-    if s.phase=="query" then
+    if s.phase=="planning" then
+        local ok,plan=coroutine.resume(s.planner)
+        if not ok then self:Stop("Unable to calculate refill. Scan again."); return end
+        if coroutine.status(s.planner)~="dead" then return end
+        local result=self.results[record.itemId]
+        result.plan=plan
+        if plan.offers[1] then
+            result.count=plan.offers[1].count; result.buyout=plan.offers[1].buyout
+        else result.count=nil; result.buyout=nil end
+        if s.purchase then
+            s.best=plan.offers[1]
+            if not s.best then self:Stop("No reasonably priced refill is available."); return end
+            s.page=s.best.page; s.verify=true; s.phase="query"; s.since=GetTime(); self:Refresh(); return
+        end
+        s.item=s.item+1; s.page=0; s.best=nil; s.offers=nil; s.phase="query"; s.since=GetTime()
+        if s.item>#s.queue then self.scan=nil; self.complete=true; self.message="Scan complete. Refills use the lowest total cost; extreme price outliers excluded."
+        else self.message="Scanning "..s.item.." / "..#s.queue..": "..s.queue[s.item].name end
+        self:Refresh()
+    elseif s.phase=="query" then
         if not CanSendAuctionQuery() then return end
         s.phase="waiting"; s.since=GetTime(); self.sending=true
         QueryAuctionItems(record.name,nil,nil,s.page,false,nil,false,true,nil)
@@ -92,7 +110,7 @@ function E:Tick()
             end
         end
         if s.verify then
-            if verified and not cheaper(pageBest,s.best) then self:Confirm(verified)
+            if verified then self:Confirm(verified)
             else self:Stop("Cheapest listing changed. Click the item to check again.") end
             return
         end
@@ -107,14 +125,10 @@ function E:Tick()
             result.offers=s.offers
         end
         self.results=self.results or {}; self.results[record.itemId]=result
-        if s.purchase then
-            if not s.best then self:Stop("No buyout available for this item."); return end
-            -- Return to its page and resolve a fresh index before showing the popup.
-            s.page=s.best.page; s.verify=true; s.phase="query"; s.since=GetTime(); return
-        end
-        s.item=s.item+1; s.page=0; s.best=nil; s.offers=nil; s.phase="query"; s.since=GetTime()
-        if s.item>#s.queue then self.scan=nil; self.complete=true; self.message="Scan complete. Prices are for whole stacks; cheapest per item first."
-        else self.message="Scanning "..s.item.." / "..#s.queue..": "..s.queue[s.item].name end
-        self:Refresh()
+        if not result then result={offers={}}; self.results[record.itemId]=result end
+        local batch=s.purchase and self.batch and self.batch[1]
+        local need=batch and batch.remaining or record.missing or 0
+        s.planner=coroutine.create(function() return self:RefillPlan(result.offers,need,batch and batch.ceiling,true) end)
+        s.phase="planning"; s.since=GetTime()
     end
 end

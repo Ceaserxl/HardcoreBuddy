@@ -15,12 +15,12 @@ function E:Estimate()
             need=need+record.missing
             if result==nil then unknown=true
             elseif result then
-                local supplied=0
-                for _,offer in ipairs(result.offers or {result}) do
-                    if supplied>=record.missing then break end
-                    supplied=supplied+offer.count; cost=cost+offer.buyout; units=units+offer.count
+                local plan=result.plan
+                if not plan or plan.need~=record.missing then unknown=true
+                else
+                    cost=cost+plan.cost; units=units+plan.units
+                    if plan.units>0 then queue[#queue+1]={record=record,remaining=math.min(record.missing,plan.units),ceiling=plan.ceiling} end
                 end
-                if supplied>0 then queue[#queue+1]={record=record,remaining=math.min(record.missing,supplied)} end
             end
         end
     end

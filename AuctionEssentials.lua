@@ -58,6 +58,7 @@ function E:Refresh()
             row.buy:SetEnabled(not self.scan and not self.batch and not self.confirmation and not self.awaitingBuy)
             row.buy:ClearAllPoints(); row.buy:SetPoint("LEFT",row,"LEFT",positions[7],0)
             local result=self.results[record.itemId]
+            if result and not result.buyout then result=false end
             local price=result and (GetCoinTextureString and GetCoinTextureString(result.buyout) or tostring(result.buyout).."c")
                 or result==false and "None listed" or "Not scanned"
             local values={record.name,record.count==nil and "?" or tostring(record.count),tostring(record.target),
