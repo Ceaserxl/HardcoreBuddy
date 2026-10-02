@@ -1,5 +1,5 @@
 local _,A=...
-local S={sections={"General","Zone Advisor","Gear Advisor","Talent Advisor","Rotation Advisor","Auction House","Death Journal","Low Health","NPC Alerts","Debug"}}
+local S={sections={"General","Zone Advisor","Gear Advisor","Talent Advisor","Auction House","Death Journal","Low Health","NPC Alerts","Debug"}}
 A.Settings=S
 local Skin=A.Skin
 local aliases={Map="Zone Advisor",["Death Banner"]="Death Journal",["Death Alerts"]="Death Journal",Rares="NPC Alerts",Elites="NPC Alerts",Preparation="General"}
@@ -182,12 +182,11 @@ function S:Create(parent)
     end)
     scroll:SetScript("OnHide",function() self:CommitInputs() end)
     self.pages={}
-    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Rotation Advisor","Auction House","Stat Weights","Custom Builds","NPC Alerts","Debug"}) do
+    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","Custom Builds","NPC Alerts","Debug"}) do
         local page=CreateFrame("Frame",nil,content); page:SetAllPoints(content); page:Hide(); self.pages[name]=page
         page.title=label(page,name,22,0,0,700); page.title:SetTextColor(unpack(Skin.colors.gold))
     end
     A.CustomBuildsUI:Create(self.pages["Custom Builds"])
-    A.RotationAdvisor:CreateSettings(self.pages["Rotation Advisor"])
     local general=self.pages.General
     general.resetAll=button(general,"Reset AddOn",0,function() A:ConfirmReset() end,140)
     general.resetAll:ClearAllPoints(); general.resetAll:SetPoint("TOPRIGHT",-12,0)
@@ -541,7 +540,6 @@ function S:Layout(parent,left,top,width,height,section,visible)
     if pageName=="Custom Builds" then
         self.content:SetHeight(math.max(A.CustomBuildsUI:Layout(contentWidth),height/scale))
     end
-    if pageName=="Rotation Advisor" then self.content:SetHeight(math.max(A.RotationAdvisor:LayoutSettings(contentWidth),height/scale)) end
     self:SyncDependencies()
     self.range=math.max(0,self.content:GetHeight()*scale-height)
     self.scroll:UpdateScrollChildRect()

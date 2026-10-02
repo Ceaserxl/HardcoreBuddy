@@ -81,17 +81,15 @@ function addon:HandleSlashCommand(message)
         self:ToggleWindow()
     elseif command == "auction debug" then
         self.AuctionDiagnostics:Show()
-    elseif command:match("^rotation log") then
-        self.RotationAdvisor:Diagnostics(command:match("^rotation log%s*(.*)$"))
     elseif command == "settings" then
         self:OpenSettings()
     elseif command == "health" then
         self:OpenSettings("Low Health")
     elseif command == "deaths" or command:match("^deaths%s") then
         if self.Deaths and self.Deaths.db then self.Deaths:Slash(text:match("^%S+%s*(.*)$")) end
-    elseif command == "talents" or command == "advisor" or command == "gear" or command == "rotation" then
+    elseif command == "talents" or command == "advisor" or command == "gear" then
         self:CreateWindow(); self.window:Show(); self:Navigate("training")
-        self.state.filter=command=="rotation" and "Rotation Advisor" or command=="talents" and "Talents" or "Gear"; self:Refresh(true)
+        self.state.filter=command=="talents" and "Talents" or "Gear"; self:Refresh(true)
     elseif command == "gear on" or command == "gear off" then
         self.db.gearAdvisorEnabled=command=="gear on"
         self.GearAdvisor:SetEnabled(command=="gear on")
@@ -99,7 +97,6 @@ function addon:HandleSlashCommand(message)
     elseif command == "help" then
         self:Print("/hcb: open guide | /hcb settings: all settings | /hcb reset: center window | /hcb health: low health settings | /hcb deaths: death journal | /hcb deaths settings: death settings | /hcb gear: gear advisor | /hcb talents: talent advisor")
         self:Print("/hcb auction debug: view and copy the latest skipped-listing report")
-        self:Print("/hcb rotation: Rogue / Mage rotation advisor")
     elseif command == "reset" then
         self.db.window = {visible=true}
         self:CreateWindow()
@@ -283,6 +280,11 @@ function addon:Initialize()
     if self.db.talentAdvisorEnabled==nil then self.db.talentAdvisorEnabled=true end
     if type(HardcoreBuddyCharacterDB)~="table" then HardcoreBuddyCharacterDB={} end
     self.characterDB=HardcoreBuddyCharacterDB
+    -- Retired rotation prototype: discard its settings and retained traces.
+    self.characterDB.rotationMode=nil
+    self.characterDB.rotationDiagnostics=nil
+    self.characterDB.rotationDiagnosticsPrevious=nil
+    self.characterDB.rotationDiagnosticsPrevious2=nil
     if self.characterDB.enchantMode~="max" then self.characterDB.enchantMode="level" end
     if self.characterDB.auctionHighestArmorOnly==nil then self.characterDB.auctionHighestArmorOnly=true end
     if self.characterDB.auctionLevelRange==nil then self.characterDB.auctionLevelRange=10 end

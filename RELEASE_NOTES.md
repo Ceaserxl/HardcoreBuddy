@@ -1,7 +1,7 @@
 # Unreleased
 
-- Rogue/Mage Rotation Advisor provides Assistant and Disabled modes, learned-rank
-  action-bar highlights, conservative nearby-enemy checks and active-wand handling.
+- Removed the Rotation Advisor prototype, its highlights and automatic diagnostic
+  logging. Old per-character rotation traces are cleared when that character loads.
 - Alt Advisor keeps genuine empty-slot upgrades and excludes gear snapshots older
   than 7 days by default. The cutoff is configurable in Gear Advisor settings.
 - Essentials auction purchases are cached as In Mail after server confirmation.

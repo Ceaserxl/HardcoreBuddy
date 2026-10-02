@@ -46,8 +46,8 @@ jobs:
         run: python tests/run_alt_advisor.py
       - name: Test all Classic talent paths and advisor navigation
         run: python tests/run_talent_advisor.py
-      - name: Test Rogue and Mage rotation advisor prototype
-        run: python tests/run_rotation_advisor.py
+      - name: Verify retired rotation cleanup
+        run: python tests/run_rotation_removed.py
       - name: Test essential purchasing, crafting and supply changes
         run: |
           python tests/run_auction_essentials.py
