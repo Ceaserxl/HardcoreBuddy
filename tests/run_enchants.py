@@ -143,6 +143,10 @@ feetCard=E.Card(A:GetContext()).blocks[6]
 check(feetCard.title=="Feet - Rugged Armor Kit" and feetCard.enchantStatus=="Alternative","Overview shows actually applied alternative")
 local feetDetail=E.Detail(A:GetContext(),{slotId=8,kind="enchantSlot"})
 check(feetDetail.blocks[1].title=="Selected Alternative" and feetDetail.blocks[2].enchantTooltip.itemId==15564,"Applied alternative detail matches overview")
+local other
+for _,option in ipairs(feet.options) do if option~=feet.recommendation and option.enchantId~=1843 then other=option; break end end
+local ordered=E.Detail(A:GetContext(),{slotId=8,spellId=other.spellId})
+check(ordered.blocks[5].enchantStatus=="|cff62d79b(Recommended)|r" and ordered.blocks[6].enchantTooltip.enchantId==1843 and ordered.blocks[6].enchantStatus=="Enchanted","Applied enchant follows recommendation in alternatives")
 gear[8].enchant=0
 local mats=E.MaterialItems(ctx)
 local saved=mats[1]

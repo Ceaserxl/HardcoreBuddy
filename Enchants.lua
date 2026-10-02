@@ -217,15 +217,19 @@ function E.Detail(context,action)
         requirement.compactRow=true; blocks[#blocks+1]=requirement
     end
     heading("Alternatives")
-    -- Options are sorted by recommendation strength, so the automatic choice
-    -- remains first when another enhancement is being inspected.
-    for _,option in ipairs(g.options) do if option~=selected then
+    local listed={}
+    local function alternative(option)
+        if not option or option==selected or listed[option.spellId] then return end
+        listed[option.spellId]=true
         local b=enchantBlock(g,option,{kind="enchantRecipe",slotId=g.slotId,spellId=option.spellId})
         b.enchantAlternative=true
         if b.enchantStatus=="Alt Enchanted" then b.enchantStatus="" end
         if option==recommended then b.enchantStatus="|cff62d79b(Recommended)|r" end
         blocks[#blocks+1]=b
-    end end
+    end
+    alternative(recommended)
+    alternative(g.current)
+    for _,option in ipairs(g.options) do alternative(option) end
     heading("Materials",true,not selected and "No compatible enchant selected" or nil)
     if selected then
         for _,pair in ipairs(selected.reagents) do
