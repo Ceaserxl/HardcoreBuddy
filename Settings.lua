@@ -35,6 +35,28 @@ function A:OpenSettings(section)
     self.window.classMenu:Hide(); self.window:Show(); self:Refresh(true)
 end
 
+function S:RegisterBlizzardOptions()
+    if self.blizzardPanel then return end
+    local modern=Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory
+    if not modern and not InterfaceOptions_AddCategory then return end
+    local panel=CreateFrame("Frame",nil,UIParent); panel.name="HardcoreBuddy"; panel:Hide()
+    label(panel,"HardcoreBuddy",22,16,16,600):SetTextColor(unpack(Skin.colors.gold))
+    label(panel,"Configure supplies, advisors, alerts and appearance in HardcoreBuddy.",13,16,52,600)
+    panel.open=button(panel,"Open HardcoreBuddy Settings",92,function()
+        for _,frame in ipairs({SettingsPanel or false,InterfaceOptionsFrame or false,GameMenuFrame or false}) do
+            if frame and frame:IsShown() then
+                if HideUIPanel then HideUIPanel(frame) else frame:Hide() end
+            end
+        end
+        A:OpenSettings("General")
+    end,280)
+    self.blizzardPanel=panel
+    if modern then
+        self.blizzardCategory=Settings.RegisterCanvasLayoutCategory(panel,"HardcoreBuddy")
+        Settings.RegisterAddOnCategory(self.blizzardCategory)
+    else InterfaceOptions_AddCategory(panel) end
+end
+
 function S:OpenGearPage(page)
     A:CommitInputs()
     if page=="Gear Snapshot" then A:OpenSettings("Debug"); return end

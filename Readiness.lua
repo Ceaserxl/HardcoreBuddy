@@ -67,13 +67,13 @@ function R:BuildFrames()
     f.rows={}
     for i=1,4 do
         local row=CreateFrame("Frame",nil,f,"BackdropTemplate"); f.rows[i]=row
+        row:EnableMouse(false) -- Row text and icons pass clicks and drags to the panel.
         row:SetPoint("TOPLEFT",12,-58-(i-1)*42); row:SetSize(306,38)
         A.Skin.Paint(row,"edit"); row:SetBackdropBorderColor(0,0,0,0)
         row.icon=row:CreateTexture(nil,"ARTWORK"); row.icon:SetSize(28,28); row.icon:SetPoint("TOPLEFT",5,-5)
         row.icon:SetTexCoord(0.08,0.92,0.08,0.92)
-        row.name=text(row,12,42,-4,192); row.name:SetWordWrap(false); row.name:SetHeight(16)
-        row.stock=text(row,10,42,-22,192); row.stock:SetTextColor(unpack(A.Skin.colors.muted))
-        row.need=text(row,12,234,-10,64); row.need:SetJustifyH("RIGHT")
+        row.name=text(row,12,42,-11,164); row.name:SetWordWrap(false); row.name:SetHeight(16)
+        row.need=text(row,12,214,-10,84); row.need:SetJustifyH("RIGHT"); row.need:SetWordWrap(false); row.need:SetHeight(18)
     end
     f.more=text(f,10,14,0,300); f.more:SetTextColor(unpack(A.Skin.colors.muted))
     f.hint=text(f,10,14,0,136,"Drag to move"); f.hint:SetTextColor(unpack(A.Skin.colors.muted))
@@ -121,8 +121,7 @@ function R:ShowPanel(missing,preview)
             local getIcon=C_Item and C_Item.GetItemIconByID or GetItemIcon
             row.icon:SetTexture(getIcon and getIcon(item.itemId) or "Interface\\Icons\\INV_Misc_Bag_08")
             row.name:SetText(item.name)
-            row.stock:SetText("Have "..(item.count or 0).." / "..item.target)
-            row.need:SetText("Need "..item.missing)
+            row.need:SetText("("..(item.count or 0).."/"..item.target..")")
             row.need:SetTextColor(unpack(item.count==0 and A.Skin.colors.red or A.Skin.colors.amber))
         end
     end

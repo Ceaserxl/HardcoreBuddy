@@ -21,8 +21,10 @@ assert(R.panel:GetFrameStrata()=="DIALOG" and R.panel:GetFrameLevel()>A.window:G
 assert(R.panel.summary:GetText()=="Preview | Example supplies")
 for i=1,3 do
  local row=R.panel.rows[i]
- assert(row:IsVisible() and row.name:GetText()~="" and row.stock:GetText():find("Have "))
- assert(row.need:GetText():find("Need "))
+ assert(row:IsVisible() and row.name:GetText()~="" and not row.stock)
+ assert(row.need:GetText():match("^%(%d+/%d+%)$"))
+ local x,y,w,h=row:GetRect()
+ assert(MOCK.HitTest(x+w/2,y+h/2)==R.panel,"Item rows pass clicks to Essentials")
 end
 assert(not R.panel.rows[4]:IsShown())
 R:Refresh(); assert(R.panel:IsShown(),"Bag/rest refresh preserves preview")

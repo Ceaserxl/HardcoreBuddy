@@ -275,6 +275,7 @@ function addon:Initialize()
     self.professions=self.Professions.Read()
     self.kitLevel=UnitLevel("player")
     self:CreateMinimapButton()
+    self.Settings:RegisterBlizzardOptions()
 
     SLASH_HARDCOREBUDDY1 = "/hcb"
     SLASH_HARDCOREBUDDY2 = "/hardcorebuddy"
