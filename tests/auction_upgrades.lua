@@ -518,6 +518,28 @@ U:SetLevelRange(60); U:Start(); tick()
 check(queries[#queries].min==0,"Minimum required level clamps to zero")
 U:Stop(); U:SetLevelRange(10)
 U.open=false
+-- Unique jewelry is assigned once, independent of comparison order and prices.
+for _,pair in ipairs({{11,12,"INVTYPE_FINGER"},{13,14,"INVTYPE_TRINKET"}}) do
+    local item=F.item(pair[3],{ITEM_MOD_AGILITY_SHORT=10},4,0)
+    item.unique=true
+    local rows={{slot=pair[1],status="up",percent=10},{slot=pair[2],status="up",percent=30}}
+    U.results={}; U:Add(item,rows,item.link,123,200,100,1)
+    check(not U.results[pair[1]] and #U.results[pair[2]]==1,"Unique jewelry uses highest percentage slot only")
+    U:Add(item,rows,item.link,123,150,100,1)
+    check(#U.results[pair[2]]==1 and U.results[pair[2]][1].buyout==150 and U.results[pair[2]][1].auctions==2,"Repeated unique listings retain cheapest price and count")
+    rows[1].percent=nil
+    U.results={}; U:Add(item,rows,item.link,123,200,100,1)
+    check(U.results[pair[1]] and not U.results[pair[2]],"Empty baseline preferred for unique jewelry")
+    rows[1].percent=30
+    U.results={}; U:Add(item,{rows[2],rows[1]},item.link,123,200,100,1)
+    check(U.results[pair[1]] and not U.results[pair[2]],"Equal unique upgrades choose first slot deterministically")
+    rows[1].status="unknown"
+    U.results={}; U:Add(item,rows,item.link,123,200,100,1)
+    check(not U.results[pair[1]] and U.results[pair[2]],"Unique exclusions from equipped gear remain respected")
+    item.unique=false; rows[1].status="up"
+    U.results={}; U:Add(item,rows,item.link,123,200,100,1)
+    check(U.results[pair[1]] and U.results[pair[2]],"Nonunique jewelry remains available for both slots")
+end
 -- Keep the completed item/weapon fixture for the fresh-runtime persistence test.
 A.characterDB.auctionLastScan=completedScan
 print("PASS: "..checks.." auction upgrade assertions")

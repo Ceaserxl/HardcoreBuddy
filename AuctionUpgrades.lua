@@ -173,12 +173,25 @@ function U:Start()
 end
 
 function U:Add(item,rows,link,icon,buyout,bid,count)
+    -- A unique ring/trinket can fill only one of the paired slots. Keep its
+    -- strongest eligible comparison; an empty/zero-score baseline takes
+    -- precedence over a finite percentage, with lower slot ID breaking ties.
+    local uniqueBest
+    if item.unique and (item.equip=="INVTYPE_FINGER" or item.equip=="INVTYPE_TRINKET") then
+        for _,comparison in ipairs(rows) do
+            if comparison.status=="up" and (not uniqueBest
+                or (comparison.percent or math.huge)>(uniqueBest.percent or math.huge)
+                or comparison.percent==uniqueBest.percent and comparison.slot<uniqueBest.slot) then
+                uniqueBest=comparison
+            end
+        end
+    end
     -- Keep random-suffix variants distinct, but collapse repeated auctions of
     -- the same variant. Enchants and instance IDs do not affect base scoring.
     local fields={}; for field in ((link:match("item:([%d:%-]+)") or "")..":"):gmatch("(.-):") do fields[#fields+1]=field end
     local key=tostring(item.id)..":"..(fields[7] or "0")
     for _,comparison in ipairs(rows) do
-        if comparison.status=="up" then
+        if comparison.status=="up" and (not uniqueBest or comparison==uniqueBest) then
             local list=self.results[comparison.slot] or {}; self.results[comparison.slot]=list
             local record={key=key,link=link,name=item.name,icon=icon,percent=comparison.percent,
                 score=G.Score(item,self.profile,comparison.slot) or 0,label=comparison.label,
