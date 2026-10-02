@@ -55,6 +55,12 @@ local function measure(label, text, width, x, y)
     label:SetHeight(height)
     return height
 end
+local function showNativeTooltip(block)
+    if block.recommendation and block.action then
+        GameTooltip:AddLine("Click to Apply Talent",0.83,0.69,0.43,true)
+    end
+    GameTooltip:Show()
+end
 local function tooltip(self)
     local block = self.block
     if not block then return end
@@ -63,12 +69,12 @@ local function tooltip(self)
     if block.talentTooltip and GameTooltip.SetTalent then
         local talent=block.talentTooltip
         local ok=pcall(GameTooltip.SetTalent,GameTooltip,talent.tree,talent.index,false,false)
-        if ok and GameTooltip:NumLines()>0 then GameTooltip:Show(); return end
+        if ok and GameTooltip:NumLines()>0 then showNativeTooltip(block); return end
         GameTooltip:ClearLines()
     end
     if block.spellId then
         local ok=pcall(GameTooltip.SetHyperlink,GameTooltip,"spell:"..block.spellId)
-        if ok and GameTooltip:NumLines()>0 then GameTooltip:Show(); return end
+        if ok and GameTooltip:NumLines()>0 then showNativeTooltip(block); return end
         GameTooltip:ClearLines()
     end
     if block.itemId then

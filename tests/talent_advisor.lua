@@ -137,7 +137,14 @@ check(A.window.sidebarTitle:GetText()=="ADVISORS","Sidebar identity")
 local lesson=A.document.cards[1].blocks[1]
 check(lesson.title=="Next Talent" and lesson.recommendation.summary=="Click to Apply Talent","Stable next talent label and apply hint")
 local talentRow=A.window.cards[1].content.blocks[1]
+GameTooltip.SetTalent=function(self,tree,index,inspect,pet)
+    check(tree==lesson.talentTooltip.tree and index==live.indices.bestialWrath
+        and inspect==false and pet==false,"Next Talent requests the recommended native talent")
+    self:AddLine("Native next talent description")
+end
 talentRow.scripts.OnEnter(talentRow)
+check(GameTooltip.lines[1]=="Native next talent description"
+    and GameTooltip.lines[#GameTooltip.lines]=="Click to Apply Talent","Apply prompt follows the native talent tooltip")
 local promptCount=0
 for _,line in ipairs(GameTooltip.lines) do
     local text=type(line)=="table" and line[1] or line
@@ -145,6 +152,14 @@ for _,line in ipairs(GameTooltip.lines) do
     check(not tostring(text):find("1pt",1,true),"Tooltip omits the old one-point prompt")
 end
 check(promptCount==1,"Talent tooltip has exactly one apply prompt")
+GameTooltip.SetTalent=function() error("Talent unavailable") end
+GameTooltip.SetHyperlink=function(self,link)
+    check(link=="spell:"..lesson.spellId,"Next Talent fallback uses its spell")
+    self:AddLine("Native next spell description")
+end
+talentRow.scripts.OnEnter(talentRow)
+check(#GameTooltip.lines==2 and GameTooltip.lines[2]=="Click to Apply Talent","Spell fallback retains one apply footer")
+GameTooltip.SetTalent,GameTooltip.SetHyperlink=oldSetTalent,oldSetHyperlink
 check(A.document.cards[1].note:find("spent | ",1,true) and A.document.cards[1].note:find(" unspent",1,true),"Point counts follow the advisor level subtitle")
 check(lesson.action and lesson.action.command=="learn" and lesson.icon==132127,"Visible single-point button and native icon")
 check(#A.document.cards[1].blocks==3 and lesson.body:find("Localized Bestial Wrath",1,true)

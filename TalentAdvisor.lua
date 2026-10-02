@@ -262,6 +262,10 @@ function T:Document(context,state)
         nextRow.body=nextRow.body.."\n"..(live and live.names[nextPoint.key] or node.name)..
             "\n"..node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank
         nextRow.icon=live and live.icons[nextPoint.key] or spellIcon(node.spellID)
+        nextRow.spellId=node.spellID
+        if live and live.indices[nextPoint.key] then
+            nextRow.talentTooltip={tree=node.tree,index=live.indices[nextPoint.key]}
+        end
         if learn then nextRow.action=learn; nextRow.meta=nil end
     end
     top[#top+1]=row("Point-by-point path","View the complete talent path.",action("path"))
