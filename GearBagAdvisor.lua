@@ -22,49 +22,92 @@ local function questLink(link)
     return class==12 or binding==4
 end
 
--- Insert gear context into Blizzard's own popup layout, above its buttons.
+local bindKinds={EQUIP_BIND=true,EQUIP_BIND_REFUNDABLE=true,EQUIP_BIND_TRADEABLE=true}
+local bindEvents={EQUIP_BIND_CONFIRM="EQUIP_BIND",EQUIP_BIND_REFUNDABLE_CONFIRM="EQUIP_BIND_REFUNDABLE",
+    EQUIP_BIND_TRADEABLE_CONFIRM="EQUIP_BIND_TRADEABLE"}
+local function bindDialog(which)
+    local dialog=StaticPopup_FindVisible and StaticPopup_FindVisible(which)
+    if not dialog and StaticPopup_Visible then
+        local name,frame=StaticPopup_Visible(which); dialog=frame or name and _G[name]
+    end
+    if not dialog then
+        for i=1,STATICPOPUP_NUMDIALOGS or 4 do
+            local frame=_G["StaticPopup"..i]
+            if frame and frame:IsShown() and frame.which==which then dialog=frame; break end
+        end
+    end
+    return dialog and dialog:IsShown() and dialog or nil
+end
+
+function B:ClearBindDetails()
+    self.pendingBind=nil; self.bindDialog=nil
+    if self.bindDetails then self.bindDetails:Hide() end
+    if self.bindWatcher then self.bindWatcher:Hide() end
+end
+
+function B:CheckBindDetails()
+    local pending=self.pendingBind
+    if not pending then return end
+    if self.bindDialog then
+        if not self.bindDialog:IsShown() or self.bindDialog.which~=pending.which then self:ClearBindDetails() end
+        return
+    end
+    if GetTime()>pending.expires then self:ClearBindDetails(); return end
+    for which in pairs(bindKinds) do
+        if not pending.which or which==pending.which then
+            local dialog=bindDialog(which)
+            if dialog then
+                pending.which=which; self.bindDialog=dialog
+                self:ShowBindDetails(dialog,pending); return
+            end
+        end
+    end
+end
+
+-- Keep the candidate through asynchronous confirmation events and popup creation.
 function B:PrepareBindDetails(candidate,row)
+    self:ClearBindDetails()
     local G=A.GearAdvisor; local replaced={}
     local old=G:Equipped(row.slot); if old then replaced[#replaced+1]=old end
     if candidate.item.equip=="INVTYPE_2HWEAPON" then
         local off=G:Equipped(17); if off then replaced[#replaced+1]=off end
     end
     local profile=G:CurrentProfile()
-    self.pendingBind={link=candidate.link,item=candidate.item,row=row,expires=GetTime()+3,
+    self.pendingBind={link=candidate.link,item=candidate.item,row=row,expires=GetTime()+30,
         gains=G.GainSummary(candidate.item,profile,replaced,false,false),
         losses=G.LossSummary(candidate.item,profile,replaced,false,false)}
-    if self.bindHook or not hooksecurefunc or not StaticPopup_Show then return end
-    self.bindHook=true
-    hooksecurefunc("StaticPopup_Show",function(which,_,_,slot)
-        local pending=B.pendingBind
-        if not pending or GetTime()>pending.expires or slot~=pending.row.slot
-            or (which~="EQUIP_BIND" and which~="EQUIP_BIND_REFUNDABLE" and which~="EQUIP_BIND_TRADEABLE") then return end
-        local dialog=StaticPopup_FindVisible and StaticPopup_FindVisible(which,slot)
-        if not dialog and StaticPopup_Visible then
-            local name,frame=StaticPopup_Visible(which); dialog=frame or name and _G[name]
-        end
-        if not dialog then return end
-        B.pendingBind=nil; B:ShowBindDetails(dialog,pending)
-    end)
+    if not self.bindWatcher then
+        self.bindWatcher=CreateFrame("Frame")
+        self.bindWatcher:SetScript("OnUpdate",function() B:CheckBindDetails() end)
+        for event in pairs(bindEvents) do self.bindWatcher:RegisterEvent(event) end
+        self.bindWatcher:SetScript("OnEvent",function(_,event)
+            if not B.pendingBind then return end
+            B.pendingBind.which=bindEvents[event]; B.pendingBind.expires=GetTime()+30
+            B.bindWatcher:Show(); B:CheckBindDetails()
+        end)
+    end
+    self.bindWatcher:Show()
+    if not self.bindHook and hooksecurefunc and StaticPopup_Show then
+        self.bindHook=true
+        hooksecurefunc("StaticPopup_Show",function(which)
+            if B.pendingBind and bindKinds[which] then B.pendingBind.which=which; B:CheckBindDetails() end
+        end)
+    end
 end
 
 function B:ShowBindDetails(dialog,pending)
-    if dialog.insertedFrame and dialog.insertedFrame~=self.bindDetails then return end
-    local modern=dialog.Resize and dialog.SetupInsertedFrame and dialog.SetupElementAnchoring
-    local nativeText=dialog.Text or dialog.text or dialog:GetName() and _G[dialog:GetName().."Text"]
-    if not modern and (not StaticPopup_Resize or not nativeText) then return end
     local f=self.bindDetails
     if not f then
-        f=CreateFrame("Frame",nil,dialog); self.bindDetails=f
-        f:SetSize(290,110)
+        f=CreateFrame("Frame",nil,dialog,"BackdropTemplate"); self.bindDetails=f
+        A.Skin.Paint(f,"card"); f:SetSize(380,110); f:SetClampedToScreen(true)
         local function text(y,color)
             local t=f:CreateFontString(nil,"OVERLAY","GameFontHighlight")
-            t:SetFont(STANDARD_TEXT_FONT,12,""); t:SetPoint("TOPLEFT",44,-y); t:SetWidth(246)
+            t:SetFont(STANDARD_TEXT_FONT,12,""); t:SetPoint("TOPLEFT",54,-y); t:SetWidth(312)
             t:SetJustifyH("LEFT"); t:SetTextColor(unpack(color)); return t
         end
         f.name=text(12,A.Skin.colors.gold); f.score=text(32,A.Skin.colors.green)
         f.gains=text(54,A.Skin.colors.green); f.losses=text(80,A.Skin.colors.red)
-        f.iconButton=CreateFrame("Button",nil,f); f.iconButton:SetSize(34,34); f.iconButton:SetPoint("TOPLEFT",0,-12)
+        f.iconButton=CreateFrame("Button",nil,f); f.iconButton:SetSize(34,34); f.iconButton:SetPoint("TOPLEFT",12,-12)
         f.icon=f.iconButton:CreateTexture(nil,"ARTWORK"); f.icon:SetAllPoints()
         A.Skin.Hover(f.iconButton)
         f.iconButton:SetScript("OnEnter",function(button)
@@ -73,12 +116,12 @@ function B:ShowBindDetails(dialog,pending)
         f.iconButton:SetScript("OnLeave",function() GameTooltip:Hide() end)
         f:SetScript("OnHide",function() GameTooltip:Hide() end)
     end
-    dialog.insertedFrame=f
-    if modern then dialog:SetupInsertedFrame(f)
-    else
-        f:SetParent(dialog); f:ClearAllPoints()
-        local anchor=dialog.SubText and dialog.SubText:IsShown() and dialog.SubText or nativeText
-        f:SetPoint("TOP",anchor,"BOTTOM",0,0)
+    f:SetParent(dialog); f:ClearAllPoints(); f:SetPoint("TOP",dialog,"BOTTOM",0,-6)
+    if not dialog.hardcoreBuddyBindHideHook then
+        dialog.hardcoreBuddyBindHideHook=true
+        dialog:HookScript("OnHide",function()
+            if B.bindDialog==dialog then B:ClearBindDetails() end
+        end)
     end
     f:SetFrameStrata(dialog:GetFrameStrata()); f:SetFrameLevel(dialog:GetFrameLevel()+2)
     f.link=pending.link
@@ -90,17 +133,12 @@ function B:ShowBindDetails(dialog,pending)
     f.losses:SetText(pending.losses and "Stats lost: "..pending.losses or "")
     local y=12+f.name:GetStringHeight()+6
     for _,line in ipairs({f.score,f.gains,f.losses}) do
-        line:ClearAllPoints(); line:SetPoint("TOPLEFT",44,-y)
+        line:ClearAllPoints(); line:SetPoint("TOPLEFT",54,-y)
         if line:GetText()~="" then y=y+line:GetStringHeight()+6 end
     end
     f:SetHeight(math.max(54,y+4))
     f:Show()
-    -- Re-anchor the native elements after insertion, then expand its border.
-    if modern then
-        dialog:SetupElementAnchoring(); dialog:Resize()
-    else
-        StaticPopup_Resize(dialog,dialog.which)
-    end
+
 end
 
 function B:Enabled()
@@ -108,7 +146,8 @@ function B:Enabled()
 end
 
 function B:Safe()
-    return not (self.bindDetails and self.bindDetails:IsVisible())
+    for which in pairs(bindKinds) do if bindDialog(which) then return false end end
+    return not (self.pendingBind and self.pendingBind.which) and not (self.bindDetails and self.bindDetails:IsVisible())
         and not InCombatLockdown() and not (UnitIsDeadOrGhost and UnitIsDeadOrGhost("player"))
         and not (UnitOnTaxi and UnitOnTaxi("player")) and not (GetCursorInfo and GetCursorInfo())
 end
@@ -235,5 +274,9 @@ for _,event in ipairs({"PLAYER_ENTERING_WORLD","BAG_UPDATE_DELAYED","PLAYER_EQUI
     "UNIT_LEVEL","SPELLS_CHANGED","SKILL_LINES_CHANGED"}) do worker:RegisterEvent(event) end
 worker:SetScript("OnEvent",function(_,event,unit)
     if event=="UNIT_LEVEL" and unit~="player" then return end
+    if event=="PLAYER_EQUIPMENT_CHANGED" and B.pendingBind and not B.bindDialog
+        and GetInventoryItemLink and GetInventoryItemLink("player",B.pendingBind.row.slot)==B.pendingBind.link then
+        B:ClearBindDetails()
+    end
     B:Queue()
 end)
