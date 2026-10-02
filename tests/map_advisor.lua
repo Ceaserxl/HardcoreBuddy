@@ -45,6 +45,7 @@ map.EnumeratePinsByTemplate=function(_,template)
     local done=false; return function() if not done then done=true; return pin end end
 end
 hooksecurefunc=function(object,key,callback)
+    if type(object)=="string" then object,key,callback=_G,object,key end
     local original=assert(object[key]); object[key]=function(...) original(...); callback(...) end
 end
 C_Map={GetBestMapForUnit=function() return current end,
@@ -118,17 +119,87 @@ local messages={}; local printOriginal=A.Print
 A.Print=function(_,message) messages[#messages+1]=message end
 local soundCalls=0; PlaySound=function() soundCalls=soundCalls+1 end
 PlaySoundFile=function() soundCalls=soundCalls+1 end
+-- Native zone labels and fading-frame lifecycle, including combat-deferred display.
+ZoneTextFrame=CreateFrame("Frame",nil,UIParent); ZoneTextFrame:Hide(); ZoneTextFrame.holdTime=1
+SubZoneTextFrame=CreateFrame("Frame",nil,UIParent); SubZoneTextFrame:Hide(); SubZoneTextFrame.holdTime=1
+ZoneTextString=ZoneTextFrame:CreateFontString()
+PVPInfoTextString=ZoneTextFrame:CreateFontString()
+SubZoneTextString=SubZoneTextFrame:CreateFontString()
+PVPArenaTextString=SubZoneTextFrame:CreateFontString()
+local nativeEvents,nativeHides,nativeClears=0,0,0
+ZoneTextFrame:SetScript("OnHide",function() nativeHides=nativeHides+1 end)
+FadingFrame_Show=function(frame) frame.startTime=now; frame:Show() end
+SetZoneText=function()
+    ZoneTextString:SetText(A.Data.MapZones[current].name)
+    PVPInfoTextString:SetText("Alliance Territory")
+    SubZoneTextString:SetText("Local subzone"); PVPArenaTextString:SetText("")
+end
+ZoneText_OnEvent=function(frame)
+    nativeEvents=nativeEvents+1; SetZoneText()
+    FadingFrame_Show(frame); FadingFrame_Show(SubZoneTextFrame)
+end
+ZoneText_Clear=function()
+    nativeClears=nativeClears+1; ZoneTextString:SetText(""); SubZoneTextString:SetText(""); PVPInfoTextString:SetText("")
+end
 M:NotifyZone(); assert(#messages==0)
-s.notify=true; M.lastZone=nil; M:NotifyZone(); assert(#messages==1)
-M:NotifyZone(); assert(#messages==1)
-current=1421; combat=true; M:NotifyZone(); assert(#messages==1)
+s.notify=true; M.lastZone=nil; M:NotifyZone()
+local notice=M.zoneNotice
+assert(notice and notice:GetParent()==ZoneTextFrame and notice:IsVisible(),"NPC list belongs to native zone frame")
+assert(ZoneTextString:GetText()=="Westfall" and PVPInfoTextString:GetText()=="Alliance Territory" and SubZoneTextString:GetText()=="Local subzone","Native zone, subzone and territory are preserved")
+assert(select(2,notice:GetPoint())==SubZoneTextString,"List follows the last native label")
+local records=M:Records(1436)
+for i=1,math.min(4,#records) do assert(notice:GetText():find(records[i].npc.name,1,true)) end
+assert(notice:GetText():find("Lvl ",1,true) and notice:GetText():find("not live sightings",1,true))
+if #records>4 then assert(notice:GetText():find("+"..(#records-4).." more",1,true) and not notice:GetText():find(records[5].npc.name,1,true)) end
+assert(ZoneTextFrame.holdTime==6 and SubZoneTextFrame.holdTime==6,"Both native labels remain readable with the list")
+assert(nativeEvents==1 and #messages==0 and M.notified[1436]==now)
+M:NotifyZone(); assert(nativeEvents==1,"No repeat notice while staying in a zone")
+current=1421; combat=true; M:NotifyZone()
+assert(not notice:IsShown() and ZoneTextFrame.holdTime==1 and SubZoneTextFrame.holdTime==1,"Old-zone list and timing clear even while deferring in combat")
+ZoneTextFrame:Hide(); SubZoneTextFrame:Hide()
 combat=false; M.events.scripts.OnEvent(M.events,"PLAYER_REGEN_ENABLED"); now=now+1
-M.events.scripts.OnUpdate(M.events); assert(#messages==2)
-current=1436; M:NotifyZone(); assert(#messages==2,"Zone oscillation cooldown")
-current=1429; instance="party"; M:NotifyZone(); assert(#messages==2)
-instance="raid"; M:NotifyZone(); assert(#messages==2)
-instance="none"; M:NotifyZone(); assert(#messages==3 and soundCalls==0)
-assert(messages[1]:find("recorded areas",1,true))
+M.events.scripts.OnUpdate(M.events)
+assert(notice:IsVisible() and M.zoneNoticeMap==1421 and ZoneTextString:GetText()=="Silverpine Forest","Deferred notice revives the native zone announcement")
+current=1436; M:NotifyZone(); assert(not notice:IsShown() and nativeEvents==2,"Zone oscillation cooldown")
+current=1429; instance="party"; M:NotifyZone(); assert(not notice:IsShown())
+instance="raid"; M:NotifyZone(); assert(not notice:IsShown())
+instance="none"; ZoneTextFrame:Hide(); M:NotifyZone()
+assert(notice:IsVisible() and nativeEvents==3 and soundCalls==0 and #messages==0)
+-- Follow native territory/subzone relayout without hiding or replacing their text.
+SubZoneTextString:SetText(""); PVPArenaTextString:SetText(""); M:LayoutZoneNotice()
+assert(select(2,notice:GetPoint())==PVPInfoTextString)
+PVPInfoTextString:SetText(""); M:LayoutZoneNotice()
+assert(select(2,notice:GetPoint())==ZoneTextString)
+PVPArenaTextString:SetText("Arena"); M:LayoutZoneNotice()
+assert(select(2,notice:GetPoint())==PVPArenaTextString)
+SetZoneText(); assert(select(2,notice:GetPoint())==SubZoneTextString,"Native updates reposition attached list")
+ZoneTextFrame:Hide()
+assert(not notice:IsShown() and notice:GetText()=="" and not M.zoneNoticeMap and nativeHides>0,"Native fade hides and clears the list; original OnHide remains")
+assert(ZoneTextFrame.holdTime==1 and SubZoneTextFrame.holdTime==1)
+ZoneTextFrame:Show(); assert(not notice:IsShown(),"Old NPCs do not return with a later native announcement")
+now=now+301; M.lastZone=nil; M:NotifyZone(); assert(notice:IsShown(),"Return after cooldown shows another list")
+s.notify=false; M:Changed()
+assert(not notice:IsShown() and ZoneTextFrame.holdTime==1,"Disabling notices immediately clears attached text")
+s.notify=true; now=now+301; M.lastZone=nil; M:NotifyZone()
+ZoneText_Clear()
+assert(not notice:IsShown() and nativeClears==1 and ZoneTextString:GetText()=="","Native UI clear also clears the NPC list")
+now=now+301; M.lastZone=nil; ZoneTextFrame:Hide(); M:NotifyZone()
+ZoneTextFrame.holdTime=12; ZoneTextFrame:Hide()
+assert(ZoneTextFrame.holdTime==12,"Cleanup preserves a later timing edit from another addon")
+ZoneTextFrame.holdTime=1
+local savedRecords=M.Records
+M.Records=function() return {} end
+now=now+301; M.lastZone=nil; M:NotifyZone(); assert(not notice:IsShown(),"Empty filtered list stays hidden")
+M.Records=savedRecords
+local savedFrame=ZoneTextFrame; ZoneTextFrame=nil; M.lastZone=nil
+M:NotifyZone(); assert(not M.lastZone and #messages==0,"Unavailable native UI neither throws nor falls back to chat")
+ZoneTextFrame=savedFrame
+M:NotifyZone(); assert(notice:IsShown())
+M.events.scripts.OnEvent(M.events,"ZONE_CHANGED_NEW_AREA")
+assert(not notice:IsShown(),"A zone transition removes the old list before the delayed refresh")
+now=now+301; M.lastZone=nil; ZoneText_Clear(); M:NotifyZone()
+assert(not notice:IsShown(),"Delayed refresh respects a native announcement cleared for another central UI")
+assert(#messages==0 and soundCalls==0,"Zone notices never print or play sounds")
 A.Print=printOriginal
 
 A:Navigate("training"); A.state.filter="Zone Advisor"; A.state.mapCurrent=true; A:Refresh(true)

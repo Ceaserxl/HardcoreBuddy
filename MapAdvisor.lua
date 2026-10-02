@@ -364,23 +364,92 @@ function M:Attach()
 end
 
 function M:Changed()
+    if not self:Settings().notify then self:HideZoneNotice() end
     self:Attach(); self:RefreshPins(); A:Refresh(true)
+end
+
+function M:HideZoneNotice()
+    if self.zoneNotice then self.zoneNotice:SetText(""); self.zoneNotice:Hide() end
+    self.zoneNoticeMap=nil
+    for _,saved in ipairs(self.zoneNoticeTimes or {}) do
+        if saved.frame.holdTime==saved.extended then saved.frame.holdTime=saved.hold end
+    end
+    self.zoneNoticeTimes=nil
+end
+
+function M:LayoutZoneNotice()
+    if not self.zoneNoticeMap or not self.zoneNotice then return end
+    local anchor=ZoneTextString
+    -- Blizzard moves the subzone below territory text. Follow the final native
+    -- line, including arena text, instead of covering any part of the title.
+    for _,name in ipairs({"PVPInfoTextString","SubZoneTextString","PVPArenaTextString"}) do
+        local region=_G[name]
+        if region and region:GetText() and region:GetText()~="" then anchor=region end
+    end
+    self.zoneNotice:ClearAllPoints()
+    self.zoneNotice:SetPoint("TOP",anchor,"BOTTOM",0,-8)
+end
+
+function M:ShowZoneNotice(id,list)
+    if not ZoneTextFrame or not ZoneTextString or not FadingFrame_Show then return false end
+    self:HideZoneNotice()
+    if not ZoneTextFrame:IsShown() then
+        -- Deferred combat notices and login still use Blizzard's current zone,
+        -- subzone and territory labels, rather than an independent banner.
+        if not ZoneText_OnEvent then return false end
+        ZoneText_OnEvent(ZoneTextFrame,"ZONE_CHANGED_NEW_AREA")
+    end
+    -- ZoneText_Clear may have suppressed the announcement for another central
+    -- UI panel while our delayed map refresh was pending.
+    if not ZoneTextString:GetText() or ZoneTextString:GetText()=="" then return false end
+    if not self.zoneNotice then
+        local text=ZoneTextFrame:CreateFontString(nil,"OVERLAY","GameFontHighlight")
+        self.zoneNotice=text
+        text:SetFont(STANDARD_TEXT_FONT,14,""); text:SetTextColor(1,.93,.76)
+        text:SetShadowColor(0,0,0,1); text:SetShadowOffset(1,-1)
+        text:SetJustifyH("CENTER"); text:SetWordWrap(true)
+        ZoneTextFrame:HookScript("OnHide",function() M:HideZoneNotice() end)
+        if hooksecurefunc then
+            if SetZoneText then hooksecurefunc("SetZoneText",function() M:LayoutZoneNotice() end) end
+            if ZoneText_Clear then hooksecurefunc("ZoneText_Clear",function() M:HideZoneNotice() end) end
+        end
+    end
+    local lines={"|cffffd36aKnown NPCs|r"}
+    local shown=math.min(4,#list)
+    for i=1,shown do
+        local npc=list[i].npc
+        lines[#lines+1]=npc.name.." |cffa6a695"..level(npc):gsub("^Level ","Lvl ").." "..names[npc.kind].."|r"
+    end
+    if #list>shown then lines[#lines+1]="|cffa6a695+"..(#list-shown).." more in Companion > Zone Advisor|r" end
+    lines[#lines+1]="|cffa6a695Recorded locations, not live sightings.|r"
+    self.zoneNoticeMap=id
+    self.zoneNotice:SetWidth(math.min(512,UIParent:GetWidth()*.8))
+    self.zoneNotice:SetText(table.concat(lines,"\n")); self:LayoutZoneNotice()
+    -- Allow time to read the list, then use the native fade. Restore each
+    -- frame's previous duration when the list clears; leave other addons' edits.
+    self.zoneNoticeTimes={}
+    for _,frame in ipairs({ZoneTextFrame,SubZoneTextFrame}) do
+        local hold=frame.holdTime; local extended=math.max(hold or 1,6)
+        self.zoneNoticeTimes[#self.zoneNoticeTimes+1]={frame=frame,hold=hold,extended=extended}
+        frame.holdTime=extended
+    end
+    self.zoneNotice:Show()
+    return true
 end
 
 function M:NotifyZone()
     local id=self:CurrentMap(); local _,instance=IsInInstance()
-    if not id or instance=="party" or instance=="raid" then self.lastZone=nil; return end
+    if id~=self.zoneNoticeMap then self:HideZoneNotice() end
+    if not id or instance=="party" or instance=="raid" then self.lastZone=nil; self:HideZoneNotice(); return end
     if InCombatLockdown and InCombatLockdown() then return end
     if id==self.lastZone then return end
     self.lastZone=id
     local s=self:Settings()
     if not s or not s.notify or (self.notified[id] and GetTime()-self.notified[id]<300) then return end
-    local list=self:Records(id); local labels={}
-    for _,r in ipairs(list) do if #labels<4 then labels[#labels+1]=r.npc.name end end
-    if #labels==0 then return end
-    self.notified[id]=GetTime()
-    A:Print(A.Data.MapZones[id].name..": known dangers include "..table.concat(labels,", ")..
-        (#list>#labels and (" (+"..(#list-#labels).." more)") or "")..". See Companion > Zone Advisor. These are recorded areas, not live sightings.")
+    local list=self:Records(id)
+    if #list==0 then return end
+    if self:ShowZoneNotice(id,list) then self.notified[id]=GetTime()
+    else self.lastZone=nil end
 end
 
 function M:Activate(a)
@@ -462,9 +531,11 @@ function M:LayoutControls()
 end
 
 local events=CreateFrame("Frame"); M.events=events
-for _,e in ipairs({"ADDON_LOADED","PLAYER_ENTERING_WORLD","ZONE_CHANGED_NEW_AREA","ZONE_CHANGED","PLAYER_REGEN_ENABLED","MAP_EXPLORATION_UPDATED"}) do events:RegisterEvent(e) end
+for _,e in ipairs({"ADDON_LOADED","PLAYER_ENTERING_WORLD","ZONE_CHANGED_NEW_AREA","ZONE_CHANGED","ZONE_CHANGED_INDOORS","PLAYER_REGEN_ENABLED","MAP_EXPLORATION_UPDATED"}) do events:RegisterEvent(e) end
 events:SetScript("OnEvent",function(_,event)
     if not A.db then return end
+    if event=="ZONE_CHANGED_NEW_AREA" or event=="PLAYER_ENTERING_WORLD"
+        or M.zoneNoticeMap and M:CurrentMap()~=M.zoneNoticeMap then M:HideZoneNotice() end
     if event=="ADDON_LOADED" or event=="PLAYER_ENTERING_WORLD" or event=="MAP_EXPLORATION_UPDATED" then M:Attach() end
     M.refreshAt=GetTime()+0.5
 end)

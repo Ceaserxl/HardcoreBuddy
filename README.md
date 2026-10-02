@@ -216,8 +216,9 @@ at the default 18-pixel size), and changing size recalculates the groups. Every
 point must be close to every other point; nearby chains cannot collapse an entire camp. Zooming
 in separates locations that are far enough apart on screen.
 Use **Browse all zones** under **Companion > Zone Advisor** to choose a zone, or **Use my current zone** to follow your location. Zone recommendations open a detail page titled with the zone name, with **Open Map** beside it. Its clickable NPC table shows level, name, type and location. Filter by All, Rares, Elites, World bosses or Dangerous without changing map-marker preferences. Settings and zone browsing stay on the overview.
-**Silent zone-entry notice** lists known dangers in chat without playing a sound
-and is enabled by default; existing opt-outs are preserved. Click a marker to
+**Zone NPC list** adds up to four NPCs beneath Blizzard's zone announcement,
+with levels, types and an overflow count. It fades with the title, without chat
+messages or sound, and is enabled by default; existing opt-outs are preserved. Click a marker to
 open its NPC's 3D preview inside **Companion > Zone Advisor**. Clustered markers provide
 Previous/Next NPC controls. Drag to rotate, scroll to zoom, and use Back to return.
 The bordered viewer uses a native ModelScene, fits the full creature bounds and centers the model while rotating. Models depend on client availability; loading is animated, retries are automatic, and a failed load offers Retry.

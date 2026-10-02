@@ -80,7 +80,7 @@ function M:LayoutSettings(parent,left,top,width,visible)
         end
         f.exploration,f.resetExploration=section("exploration","Exploration","Choose how undiscovered areas look on the map.",Skin.layout.headerBottom,160)
         f.markers,f.resetMarkers=section("markers","NPC markers","Choose visible categories and click an icon to change it.",222,264)
-        f.notices,f.resetNotices=section("notices","Zone notices","Show known dangers in chat when you enter a zone.",Skin.layout.headerBottom,160)
+        f.notices,f.resetNotices=section("notices","Zone notices","List known NPCs beneath the zone announcement.",Skin.layout.headerBottom,160)
         f.resetExploration:SetWidth(72); f.resetNotices:SetWidth(72)
         for i,mode in ipairs({{"off","Unchanged"},{"full","Reveal all"},{"tint","Tint unexplored"}}) do
             local key=mode[1]
@@ -132,8 +132,8 @@ function M:LayoutSettings(parent,left,top,width,visible)
         end
         slider(f.markers,"iconSize","Icon size",16,210,328,12,40,18,1," px")
         slider(f.markers,"iconAlpha","Icon opacity",376,210,328,10,100,1,100,"%")
-        check(f.notices,"notify","Silent zone notices",16,86,220)
-        f.noticeHint=label(f.notices,"Chat only. No sound or banner.",16,124,220)
+        check(f.notices,"notify","Zone NPC list",16,86,220)
+        f.noticeHint=label(f.notices,"Fades with the zone title. No sound.",16,124,220)
     end
     local f=self.controls; f:SetShown(visible); if not visible then return 0 end
     local scale=math.min(1,width/744); local baseWidth=width/scale

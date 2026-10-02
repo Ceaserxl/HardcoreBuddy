@@ -17,8 +17,11 @@ the selected zone's advisor, with **Open Map** beside the zone name.
   Native icons default to 18 pixels and keep their apparent size as the map zooms.
   Matching icons appear beside each filter and in marker tooltips.
 
-- **Silent zone-entry notice** is on by default. When enabled it prints a short
-  chat message, with no sound or banner, upon entering a catalogued zone.
+- **Zone NPC list** is on by default. Up to four known NPCs appear beneath
+  Blizzard's zone/subzone and territory text, with levels, types and an overflow
+  count. The list belongs to `ZoneTextFrame`, uses its native fade, and extends
+  the hold to six seconds while shown. Previous timings are restored on cleanup.
+  It produces no chat message or sound. Disabling notices clears the list.
   Notices defer during combat, suppress dungeon/raid zones and throttle repeat
   visits for five minutes. They describe known dangers, not detected creatures.
 - Browse zones uses one scrollable list; Follow current zone resumes tracking
