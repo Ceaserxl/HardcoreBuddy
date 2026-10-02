@@ -85,6 +85,13 @@ function M.Estimate(s,key)
     -- This forecast includes our own damage: a cast that can finish the target
     -- must not lose to a faster nonlethal cast just because its duration exceeds it.
     local lethal=s.targetHP and s.targetHP>0 and direct>=s.targetHP
+    if lethal and s.timeToDie and (key=="missiles" or key=="blizzard") then
+        -- Channel damage arrives in ticks, not as a lethal hit on completion.
+        -- Only keep the lethal exemption if enough ticks fit the living window.
+        local ticks=key=="missiles" and 5 or 8
+        local killTime=math.ceil(s.targetHP/(direct/ticks))*cast/ticks
+        lethal=killTime<=s.timeToDie
+    end
     if s.timeToDie and cast>s.timeToDie and not lethal then score=score*.15 end
     if s.powerPercent and s.powerPercent<30 and cost>0 then
         score=score/(1+cost/math.max(1,s.maxPower or 1000))

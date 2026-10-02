@@ -697,4 +697,23 @@ do
     R.Update=update; R.castPlan=nil; R.interruptedCastToken=nil
 end
 
+-- Latest log: 438 HP and 2.478 seconds left cannot receive five seconds of Missiles.
+do
+    local s=state({'frostbolt','scorch','missiles'},41)
+    s.targetHP=438; s.timeToDie=2.478; s.spellPower={[5]=153,[7]=72}; s.spellCrit={[5]=5.033,[7]=5.033,[3]=5.033}
+    s.spells.frostbolt.castTime=2.5; s.talents.piercingIce=3; s.talents.iceShards=5
+    local short=M.Estimate(s,'missiles').score
+    s.timeToDie=nil; local full=M.Estimate(s,'missiles').score
+    check(short<full,'Full-channel lethal damage cannot bypass a shorter target lifetime')
+    s.timeToDie=2.478
+    check(M.Estimate(s,'scorch').score>short,'Available short cast beats undeliverable channel damage')
+    decide(s,'scorch','Recorded short-life target does not prefer a five-second channel')
+    s.targetHP=50
+    check(M.Estimate(s,'missiles').score==full,'A lethal first missile tick retains its finishing exemption')
+    s.spells.blizzard={id=8427,ready=true,usable=true,castTime=0}
+    s.targetHP=400; local brief=M.Estimate(s,'blizzard').score
+    s.timeToDie=nil
+    check(brief<M.Estimate(s,'blizzard').score,'Blizzard also cannot credit lethal full-channel damage outside the lifetime')
+end
+
 print('PASS: '..count..' Mage rotation, live adapter, UI and highlight regression checks.')
