@@ -207,6 +207,7 @@ local function placeSupplyCell(label,text,index,width,y,header)
     label:SetWordWrap(false); label:SetHeight(18)
 end
 local function renderBlock(frame, block, width)
+    if frame.headingButton then frame.headingButton:Hide() end
     frame.block = block; frame:SetWidth(width); frame:Show()
     frame.priority:SetShown(block.supply and block.priority~=nil)
     frame.title:SetFont(STANDARD_TEXT_FONT,block.supply and 14 or 15,"")
@@ -401,6 +402,16 @@ local function renderBlock(frame, block, width)
         frame.icon:SetSize(28,28); frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",12,-4)
         frame:SetHeight(36); return 36
     end
+    if block.headerAction then
+        if not frame.headingButton then frame.headingButton=button(frame,"",100,function(self) addon:Activate(self.action) end) end
+        local control=frame.headingButton
+        control.action=block.headerAction.action; control.label:SetText(block.headerAction.label)
+        control:ClearAllPoints(); control:SetPoint("TOPRIGHT",0,0); control:Show()
+        frame.title:SetTextColor(unpack(GOLD)); frame.meta:Hide()
+        local h=math.max(24,measure(frame.title,block.title,width-108,0,0))
+        if block.body then h=h+SPACE.titleGap+measure(frame.body,block.body,width,0,h+SPACE.titleGap) else frame.body:Hide() end
+        frame:SetHeight(h); return h
+    end
     local x = block.textInset or (icon and 52 or 12) + (block.child and 8 or 0)
     local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), block.plain and 0 or block.supply and 8 or 12
     frame.title:SetTextColor(unpack(block.titleColor or (block.supply and WHITE or GOLD)))
@@ -583,6 +594,7 @@ local function renderCard(frame, data, width)
     end
     if frame.defaultChoice then frame.defaultChoice:Hide() end
     if frame.itemHeading then frame.itemHeading:Hide() end
+    if frame.itemHeadingButton then frame.itemHeadingButton:Hide() end
     Skin.Paint(frame,"note")
     local pageTitle=frame.firstCard and not data.supplyTable
     Skin.TextStyle(frame.title,pageTitle and "page" or "section")
@@ -697,7 +709,14 @@ local function renderCard(frame, data, width)
             if not frame.itemHeading then frame.itemHeading=font(frame.content,15,GOLD) end
             Skin.TextStyle(frame.itemHeading,"section")
             frame.itemHeading:Show()
-            leftHeight=measure(frame.itemHeading,data.itemSectionTitle,leftWidth,0,0)+SPACE.contentGap
+            leftHeight=measure(frame.itemHeading,data.itemSectionTitle,leftWidth-(data.itemHeadingAction and 108 or 0),0,0)+SPACE.contentGap
+            if data.itemHeadingAction then
+                if not frame.itemHeadingButton then frame.itemHeadingButton=button(frame.content,"",100,function(self) addon:Activate(self.action) end) end
+                local control=frame.itemHeadingButton
+                control.action=data.itemHeadingAction.action; control.label:SetText(data.itemHeadingAction.label)
+                control:ClearAllPoints(); control:SetPoint("TOPLEFT",leftWidth-100,0); control:Show()
+                leftHeight=math.max(leftHeight,24+SPACE.contentGap)
+            end
         end
         -- The right section title aligns with the left section title, not its item.
         rightHeight=0
