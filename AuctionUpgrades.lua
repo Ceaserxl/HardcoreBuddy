@@ -533,7 +533,7 @@ function U:Attach()
     while _G["AuctionFrameTab"..index] do index=index+1 end
     local tab=CreateFrame("Button","AuctionFrameTab"..index,AuctionFrame,"AuctionTabTemplate")
     self.tab=tab; tab:SetID(index); tab:SetText("Upgrades")
-    Skin.Hover(tab)
+    -- Keep AuctionTabTemplate's native Blizzard highlight and selection art.
     tab:SetPoint("LEFT",_G["AuctionFrameTab"..(index-1)],"RIGHT",-15,0)
     PanelTemplates_SetNumTabs(AuctionFrame,index); PanelTemplates_EnableTab(AuctionFrame,index)
     PanelTemplates_TabResize(tab,0,nil,36)
