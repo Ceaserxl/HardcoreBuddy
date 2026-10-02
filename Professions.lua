@@ -284,6 +284,28 @@ end
 
 -- Plain presentation blocks for profession details. These always describe the
 -- actual character's skill/faction/level, even while planning another level.
+function P.NextTraining(context,family)
+    local snapshot=context.professions or {}
+    local skill=(snapshot.skills or {})[family]
+    local maximum=(snapshot.maxSkills or {})[family]
+    if not integer(skill,0,2000) then
+        return {title="Profession data unavailable",body="Open your character's Skills panel, then return here. Your skill and training requirements have not been confirmed."}
+    end
+    if skill==0 then return {title="Learn "..names[family],body="Visit a "..names[family].." trainer to begin. Recommendations below are reference information until you learn the profession."} end
+    if not integer(maximum,1,1000) then
+        return {title="Skill cap unavailable",body="Your skill is "..skill..", but its current cap could not be read. Open your Skills panel before planning the next training rank."}
+    end
+    for _,stage in ipairs(addon.Data.ProfessionProgression.training[family] or {}) do
+        if stage.cap>maximum then
+            local rank=stage.kind=="trainer" and ((snapshot.trainingSkills or {})[family] or (snapshot.baseSkills or {})[family] or skill) or skill
+            return trainingBlock(stage,family,context,rank,maximum)
+        end
+    end
+    return {title=skill>=maximum and "Maximum skill reached" or "Artisan training complete",
+        body=skill>=maximum and "No further Classic Era skill-cap training is needed. Keep your supplies stocked and review recipes below."
+            or ("Your skill cap is "..maximum..". Continue with your learned recipes; no further skill-cap training is needed.")}
+end
+
 function P.Guidance(context,family)
     context=context or {}
     local D=addon.Data and addon.Data.ProfessionProgression

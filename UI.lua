@@ -1028,9 +1028,9 @@ function addon:Layout()
                 end
                 if addon.state.view=="training" then
                     if self.filter=="Pet Guide" then addon:Navigate("petguide"); return end
-                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Pet Training" or self.filter=="Spells" or self.filter=="Gear" or self.filter=="Talents") and self.filter or nil
+                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Pet Training" or self.filter=="Spells" or self.filter=="Gear" or self.filter=="Talents" or self.filter=="First Aid" or self.filter=="Cooking") and self.filter or nil
                     addon.state.query=nil; addon.state.mapNPCs=nil; addon.state.mapZonePicker=nil; addon.state.mapZone=nil; addon.state.mapCurrent=nil
-                    local family=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[self.filter]
+                    local family=({Engineering="dummy"})[self.filter]
                     if family then addon:Activate({kind="profession",family=family}); return end
                 else
                     addon.state.filter=self.filter
@@ -1164,7 +1164,8 @@ function addon:Layout()
         c.gridStart=not doc.isDetail and (doc.view=="training" and (self.state.filter=="Spells" or self.document.zoneRecommendations) and 1
             or doc.view=="training" and (not self.state.filter or self.state.filter=="Overview") and index==1 and 3
             or doc.view=="training" and self.state.filter=="Zone Advisor" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)
-            or doc.advisor and not self.state.talentPath and 1) or nil
+            or doc.advisor and not self.state.talentPath and 1
+            or doc.professionPage and index>1 and #data.blocks>1 and 1) or nil
         top=top+renderCard(c,data,contentWidth)+10
         if data.zoneRangeToggle then
             f.atLevel:SetParent(c); f.atLevel:SetFrameLevel(c.headerButton:GetFrameLevel())

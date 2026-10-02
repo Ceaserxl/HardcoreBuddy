@@ -16,10 +16,10 @@ end
 local tabDescriptions={["Zone Advisor"]="Recommended leveling zones, dangerous NPCs and maps.",Spells="Your next training level and future class and pet spells.",
     Gear="Equipment scoring and upgrade advice.",Talents="Your next talent and point-by-point build path.",
     ["Pet Training"]="Learn and teach pet abilities.",["Pet Guide"]="Pet families, abilities, taming sources and care.",
-    ["First Aid"]="Your next bandage recipe and skill training.",Engineering="Target dummy recipes and profession training.",
-    Cooking="Recipes and training for your next skill tier."}
+    ["First Aid"]="Bandages, anti-venom and profession training.",Engineering="Target dummy recipes and profession training.",
+    Cooking="Food recommendations and profession training."}
 function C.TabAction(tab)
-    local family=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[tab]
+    local family=({Engineering="dummy"})[tab]
     if family then return {kind="profession",family=family} end
     if tab=="Pet Guide" then return {view="petguide",filter="Families"} end
     return {view="training",filter=tab~="Overview" and tab or nil}
@@ -201,6 +201,55 @@ local function bandageCards(context,state)
     end
     return cards
 end
+local function professionCards(context,family)
+    local profession=family=="bandage" and "First Aid" or "Cooking"
+    local snapshot=context.professions or {}
+    local skill=(snapshot.skills or {})[family]
+    local cap=(snapshot.maxSkills or {})[family]
+    local status=skill==nil and "Skill unavailable" or skill==0 and "Not learned"
+        or ("Skill "..skill.." / "..(cap or "unknown cap"))
+    local note=status.." | Your character's profession"
+    if context.mode=="preview" then note=note..(family=="cooking" and "; food uses your planned level." or "; health and recipes use your live character.") end
+    local training=A.Professions.NextTraining(context,family)
+    local nextStep=row(training.title,training.body,nil,training.meta)
+    -- Keep the overview compact; books, quests and prerequisites open as details.
+    if training.kind=="professionTraining" then
+        nextStep=row(training.title,training.requirementsMet and "Training requirements met. View the trainer, book or quest route."
+            or "Upcoming skill-cap training. View requirements and where to learn it.",
+            {kind="card",card=card(training.title,nil,{training})})
+    end
+    local cards={card(profession,note,{nextStep})}
+    if family=="bandage" then
+        local best=A.Professions.Best(snapshot,"bandage")
+        local bestName
+        for _,recipe in ipairs(A.Professions.recipes.bandage) do
+            if recipe.itemId==best.itemId then bestName=D.ProfessionProgression.recipes[recipe.spellId].name end
+        end
+        cards[#cards+1]=card("Supplies",nil,{
+            row("Bandages for your health",(bestName and ("Best learned: "..bestName..". ") or (best.note..". "))..
+                "Compare ranks against your maximum health.",{kind="supplyFamily",family="bandage"}),
+            row("Anti-venom","Compare poison cures, skill requirements and recipe sources.",{kind="supplyFamily",family="antivenom"})})
+        local recipes={}
+        for _,block in ipairs(professionBlocks(context,"bandage")) do
+            if block.kind=="professionRecipe" or block.title=="Recipe knowledge unavailable" then recipes[#recipes+1]=block end
+        end
+        if #recipes>0 then cards[#cards+1]=card("Next bandage recipe",nil,recipes) end
+    else
+        local foods={}
+        for _,record in ipairs(S.Build(context,{filter="Food & Drink"})) do
+            local item=record.item
+            local info=A.Crafting.GetInfo(item,context)
+            if info.craftable and info.profession=="Cooking" then
+                local block=itemRow(item)
+                block.body=(item.short or "").." | Cooking "..info.skill
+                foods[#foods+1]=block
+            end
+        end
+        if #foods==0 then foods[1]=row("Browse food & drink","Review recovery food and buffs for your class and level.",{view="supplies",filter="Food & Drink"}) end
+        cards[#cards+1]=card("Food to prepare","For your class and level. Open an item for ingredients and recipe sources; recipe knowledge is not checked.",foods)
+    end
+    return cards
+end
 local function petRow(pet,index)
     return row(pet.name,pet.level.."  |  "..families[pet.family].name.."  |  "..pet.zone,
         {kind="pet",index=index},not pet.tameable and "Cannot be tamed" or pet.classification~="Normal" and (pet.classification.." - reference only")
@@ -332,7 +381,11 @@ function C.Build(context,state)
     local result={context=context,cards={},view=state.view or "supplies",continuous=true,page=1,pages=1}
     if result.view=="now" then result.view="supplies" end
     local view=result.view
-    if state.detail then
+    local profession=state.view=="training" and not state.detail and ({["First Aid"]="bandage",Cooking="cooking"})[state.filter]
+        or state.detail and state.detail.kind=="profession" and (state.detail.family=="bandage" or state.detail.family=="cooking") and state.detail.family
+    if profession then
+        result.cards=professionCards(context,profession); result.professionPage=true
+    elseif state.detail then
         if state.detail.kind=="supplyFamily" and state.detail.family=="bandage" then result.cards=bandageCards(context,state)
         else result.cards[1]=C.Detail(context,state.detail) end
         result.isDetail=true
