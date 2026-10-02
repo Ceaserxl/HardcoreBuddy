@@ -44,3 +44,30 @@ U.results[1][1].buyout=999999999
 assert(SavedAuctionData.scan.results[1][1].buyout~=999999999)
 ''')
 print('PASS: Saved scan and weapon setups round-trip through a fresh Lua runtime; unknown equipment stays stale.')
+
+lua.execute('''
+local A,F=TestAddon,GEAR_FIXTURES
+local U,G=A.AuctionUpgrades,A.GearAdvisor
+F.reset("MAGE",40,{0,0,31}); A.db.gearAdvisorActive=true; A.db.gearAdvisorEnabled=true
+local candidate=F.item("INVTYPE_2HWEAPON",{ITEM_MOD_INTELLECT_SHORT=11},2,10)
+local item={link=candidate.link,weaponSet=true,percent=36.26,buyout=100000,bid=0,priceLabel="Buyout",count=1,
+ components={{label="Main hand",name="Staff fixture"}}}
+U.slot=nil; local row=U.rows[1]; row.entry={best=item}; U.panel:Show()
+GameTooltip:HookScript("OnTooltipSetItem",function(tip) tip:AddLine("Other addon section",1,1,1) end)
+row:GetScript("OnEnter")(row)
+local function locate(text)
+ for i=1,GameTooltip:NumLines() do
+  local line=_G[GameTooltip:GetName().."TextLeft"..i]:GetText()
+  if line and line:find(text,1,true) then return i end
+ end
+end
+local header,summary,total,foreign=locate("HardcoreBuddy"),locate("Complete setup vs equipped"),locate("Total:"),locate("Other addon section")
+assert(header and summary and total and foreign and header<summary and summary<total and total<foreign,
+ "Advisor, setup and total stay together before later addon hooks")
+local count=GameTooltip:NumLines(); item.buyout=120000; G:Add(GameTooltip)
+assert(GameTooltip:NumLines()==count and locate("Other addon section")==foreign,"Refresh preserves other addon lines")
+assert(_G[GameTooltip:GetName().."TextLeft"..total]:GetText():find("12g",1,true),"Auction total updates in the same block")
+local other=CreateFrame("Frame"); GameTooltip:SetOwner(other,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink(candidate.link)
+assert(not locate("Complete setup vs equipped"),"Auction summary cannot leak into another owner's tooltip")
+print("PASS: Auction and Gear Advisor tooltip grouping, refresh and owner isolation.")
+''')

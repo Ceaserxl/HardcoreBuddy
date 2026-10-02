@@ -82,6 +82,30 @@ local function changeColor(row)
         or row.percent==0 and Skin.colors.muted or Skin.colors.green
 end
 
+-- Supply auction details to the advisor's single tooltip block while the
+-- native item tooltip is being built, before later addon hooks append text.
+function U:TooltipLines(tip,link)
+    local owner=tip.GetOwner and tip:GetOwner()
+    if not owner or not owner.hardcoreBuddyAuctionRow then return end
+    local entry=owner.entry
+    local item=entry and (self.slot and entry or entry.best)
+    if not item or item.link~=link then return end
+    local lines={}
+    if item.weaponSet then
+        lines[#lines+1]={"Complete setup vs equipped: "..change(item),"",changeColor(item)}
+        for _,part in ipairs(item.components) do
+            lines[#lines+1]={part.label..": "..part.name..(part.owned and " (equipped)" or ""),"",Skin.colors.gold}
+        end
+        if item.emptyOff then lines[#lines+1]={"Off hand: empty","",Skin.colors.gold} end
+        lines[#lines+1]={"Total: "..(item.owned and "No purchase" or money(price(item)).." ("..item.priceLabel..")"),"",Skin.colors.gold}
+    elseif item.count>1 then
+        lines[#lines+1]={"Listed stack: "..item.count,"",Skin.colors.gold}
+    end
+    -- Reserve stable line positions for refreshes without moving other text.
+    while #lines<5 do lines[#lines+1]={"","",Skin.colors.muted} end
+    return lines
+end
+
 local function hideComparisons()
     if GameTooltip_HideShoppingTooltips then GameTooltip_HideShoppingTooltips(GameTooltip)
     else for _,tip in ipairs(GameTooltip.shoppingTooltips or {}) do tip:Hide() end end
@@ -586,17 +610,6 @@ function U:Attach()
             U:HideTooltip()
             local entry=self.entry; local item=entry and (U.slot and entry or entry.best)
             if item then GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink(item.link)
-                if item.weaponSet then
-                    GameTooltip:AddLine(" ")
-                    GameTooltip:AddLine("Complete setup vs equipped: "..change(item),unpack(changeColor(item)))
-                    for _,part in ipairs(item.components) do
-                        GameTooltip:AddLine(part.label..": "..part.name..(part.owned and " (equipped)" or ""),0.9,0.75,0.45,true)
-                    end
-                    if item.emptyOff then GameTooltip:AddLine("Off hand: empty",0.9,0.75,0.45) end
-                    GameTooltip:AddLine("Total: "..(item.owned and "No purchase" or money(price(item)).." ("..item.priceLabel..")"),0.9,0.75,0.45)
-                else
-                    if item.count>1 then GameTooltip:AddLine("Listed stack: "..item.count,1,0.8,0.4) end
-                end
                 self.tooltipItem=item; self.tooltipAuctions=item.auctions
                 GameTooltip:Show()
                 self:UpdateTooltip()

@@ -609,6 +609,8 @@ function G:Add(tip)
             lines[#lines+1]={row and row.losses and "Stats lost" or "",row and row.losses or "",colors.down}
             lines[#lines+1]={row and row.losses and " " or "","",colors.equal}
         end
+        local auctionLines=A.AuctionUpgrades and A.AuctionUpgrades:TooltipLines(tip,link)
+        for _,line in ipairs(auctionLines or {}) do lines[#lines+1]=line end
         local state=tip.hardcoreBuddyGear
         local name=tip.GetName and tip:GetName()
         local header=state and name and _G[name.."TextLeft"..(state.start+1)]
