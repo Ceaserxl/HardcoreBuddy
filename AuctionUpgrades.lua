@@ -630,6 +630,10 @@ function U:Attach()
     self.status=label(panel,"",14,-345,762,Skin.colors.muted,10)
     self.diagnosticsButton=button(panel,"Scan details",128,function() A.AuctionDiagnostics:Show() end)
     self.diagnosticsButton:SetPoint("TOPRIGHT",-14,-345)
+    -- The native PLAYER money template updates on show and PLAYER_MONEY,
+    -- including auction purchases, without touching the other auction tabs.
+    self.moneyFrame=CreateFrame("Frame","HardcoreBuddyAuctionMoneyFrame",panel,"SmallMoneyFrameTemplate")
+    self.moneyFrame:SetPoint("BOTTOMLEFT",14,8)
     panel:Hide()
     panel:SetScript("OnHide",function()
         self:HideTooltip(); A.AuctionPurchase:Cancel()
