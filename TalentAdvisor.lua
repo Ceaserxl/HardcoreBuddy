@@ -179,6 +179,10 @@ function T:OpenTalents()
 end
 
 function T:Activate(a)
+    if a.command=="hideLearned" then
+        A.state.hideLearnedTalents=not A.state.hideLearnedTalents
+        A:Refresh(true); return
+    end
     if a.command=="path" then
         A:CommitInputs()
         A.history=A.history or {}; A.history[#A.history+1]=A.state
@@ -254,11 +258,12 @@ function T:Document(context,state)
         nextRow.icon=live and live.icons[nextPoint.key] or spellIcon(node.spellID)
         if learn then nextRow.action=learn; nextRow.meta="Click to apply 1pt" end
     end
-    top[#top+1]=row("Point-by-point path",build.name.." | View the complete talent path.",action("path"))
+    top[#top+1]=row("Point-by-point path","View the complete talent path.",action("path"))
     top[#top+1]=row("Talent Advisor settings","Choose your talent build and configure auto talents.",action("talentSettings"))
     local subtitle=context.characterClass.." | Level "..level
     if live then subtitle=subtitle.." | "..live.points.." spent | "..live.unspent.." unspent" end
     doc.cards[1]=card("Talent Advisor",subtitle,top)
+    doc.cards[1].headerText=build.name
     if not state.talentPath then return doc end
     local steps,occurrences={},{}
     for index,key in ipairs(build.steps) do
@@ -270,14 +275,18 @@ function T:Document(context,state)
         local color=learned and "73d696" or nextStep and "efc26e" or "abb0b8"
         local atLevel=math.max(build.minLevel,index+9)
         local title="|cff"..color..""..(live and live.names[key] or node.name).."  "..rank.."/"..node.maxRank.."|r"
-        steps[#steps+1]=row(title,"Level "..atLevel.."  |  "..node.treeName,nil,
-            learned and "Learned" or nextStep and "Next Point" or nil,live and live.icons[key] or spellIcon(node.spellID))
-        steps[#steps].talentColumns={tostring(atLevel),live and live.names[key] or node.name,
-            rank.." / "..node.maxRank,node.treeName,
-            "|cff"..color..(learned and "Learned" or nextStep and "Next Point" or "Upcoming").."|r"}
+        if not state.hideLearnedTalents or not learned then
+            steps[#steps+1]=row(title,"Level "..atLevel.."  |  "..node.treeName,nil,
+                learned and "Learned" or nextStep and "Next Point" or nil,live and live.icons[key] or spellIcon(node.spellID))
+            steps[#steps].talentColumns={tostring(atLevel),live and live.names[key] or node.name,
+                rank.." / "..node.maxRank,node.treeName,
+                "|cff"..color..(learned and "Learned" or nextStep and "Next Point" or "Upcoming").."|r"}
+        end
     end
+    if #steps==0 then steps[1]=row("All talents learned","Use Show Learned to review the complete path.") end
     doc.cards={card("Your point-by-point path",context.characterClass.." | "..build.name.." | Scroll to see the complete path.",steps)}
     doc.cards[1].talentTable=true; doc.cards[1].fullWidth=true
+    doc.cards[1].headerAction={label=state.hideLearnedTalents and "Show Learned" or "Hide Learned",action=action("hideLearned")}
     return doc
 end
 

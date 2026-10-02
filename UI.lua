@@ -450,6 +450,17 @@ local function renderCard(frame, data, width)
     frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and not data.supplyTable and 22 or 15,"")
     frame.title:Show(); frame.note:Show()
     local y=frame.firstCard and 0 or 14
+    local headerTextWidth=0
+    if data.headerText and not frame.headerText then frame.headerText=font(frame,14,GOLD) end
+    if frame.headerText then
+        frame.headerText:SetShown(data.headerText~=nil)
+        if data.headerText then
+            frame.headerText:SetText(data.headerText)
+            headerTextWidth=math.min(math.ceil(frame.headerText:GetStringWidth())+4,width*0.55)
+            frame.headerText:ClearAllPoints(); frame.headerText:SetPoint("TOPRIGHT",-14,-y-5)
+            frame.headerText:SetSize(headerTextWidth,20); frame.headerText:SetJustifyH("RIGHT"); frame.headerText:SetWordWrap(false)
+        end
+    end
     if data.headerAction and not frame.headerButton then
         frame.headerButton=button(frame,"",112,function(self) addon:Activate(self.action) end)
     end
@@ -464,7 +475,7 @@ local function renderCard(frame, data, width)
     if data.itemLayout then
         frame.title:Hide(); frame.note:Hide()
     else
-        y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 140 or 12), 0, y))+5
+        y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 140 or headerTextWidth>0 and headerTextWidth+30 or 12), 0, y))+5
         y=y+measure(frame.note, data.note, width-12, 0, y)+12
     end
     for _,control in ipairs(frame.npcFilters or {}) do control:Hide() end

@@ -91,6 +91,7 @@ check(A.state.view=="advisors" and A.state.filter=="Talents","Slash entry point"
 check(A.document.cards[1].title=="Talent Advisor" and #A.document.cards==1,"Path is collapsed into a button")
 local pathLink=A.document.cards[1].blocks[#A.document.cards[1].blocks-1]
 check(pathLink.action.command=="path","Dedicated path button")
+check(A.document.cards[1].headerText==build.name and not pathLink.body:find(build.name,1,true),"Build name moved from the path button to the advisor heading")
 local overview=A.state
 A:Activate(pathLink.action)
 check(A.state.talentPath and #A.document.cards==1 and #A.document.cards[1].blocks==51,"All 51 steps in the separate path page")
@@ -102,6 +103,12 @@ for i,step in ipairs(A.document.cards[1].blocks) do
     check(rendered.icon:IsShown() and rendered.icon:GetWidth()==24 and rendered:GetHeight()==32,"Compact table keeps each talent icon")
     check(#rendered.talentCells==5 and not rendered.meta:IsShown(),"Status is in its own column")
 end
+MOCK.Click(A.window.cards[1].headerButton)
+check(A.state.hideLearnedTalents and A.window.cards[1].headerButton.label:GetText()=="Show Learned","Hide Learned toggles from the path heading")
+check(#A.document.cards[1].blocks<51 and A.document.cards[1].blocks[1].meta=="Next Point","Filtered path starts at the next point")
+for _,step in ipairs(A.document.cards[1].blocks) do check(step.meta~="Learned","Learned steps are hidden") end
+MOCK.Click(A.window.cards[1].headerButton)
+check(not A.state.hideLearnedTalents and #A.document.cards[1].blocks==51,"Show Learned restores every rank")
 MOCK.Click(A.window.back)
 check(A.state==overview and not A.state.talentPath,"Back restores the talent overview")
 check(A.window.cards[1].content.blocks[1].icon:GetWidth()==34 and not A.window.cards[1].talentHeaders[1]:IsShown(),"Back restores overview icon size and hides table headings")
