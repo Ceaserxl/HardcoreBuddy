@@ -183,7 +183,90 @@ local function cooldown(id)
         local start,duration,enabled=GetSpellCooldown(id); return start,duration,enabled~=0
     end
 end
-function R:SpellState(spell,unit)
+local function powerCosts(id)
+    if C_Spell and C_Spell.GetSpellPowerCost then return C_Spell.GetSpellPowerCost(id) end
+    if GetSpellPowerCost then return GetSpellPowerCost(id) end
+end
+-- Forecast natural regeneration only. Rage, procs, potions and future combo
+-- points are not guaranteed resources. Keep this independent of class priorities.
+function R:PowerForecast(s)
+    local previous=self.powerSample
+    local sample={time=s.time,power=s.power,kind=s.powerType}
+    if previous and previous.kind==s.powerType and s.time>=previous.time and s.time-previous.time<3 then
+        sample.spent=previous.spent; sample.tick=previous.tick
+        if s.power and previous.power and s.power<previous.power then sample.spent=s.time end
+    end
+    local normal,casting
+    if GetPowerRegen then normal,casting=GetPowerRegen() end
+    if s.powerType==0 and GetManaRegen then normal,casting=GetManaRegen() end
+    normal=type(normal)=="number" and math.max(0,normal) or 0
+    casting=type(casting)=="number" and math.max(0,casting) or 0
+    if s.powerType==3 and previous and sample.tick==previous.tick and previous.kind==3
+        and s.time>previous.time and s.time-previous.time<.5 and s.power and previous.power
+        and normal>0 and math.abs(s.power-previous.power-normal*2)<1 then sample.tick=s.time end
+    self.powerSample=sample
+    local horizon=1 -- Give the player reaction time even when no GCD is running.
+    local start,duration,enabled=cooldown(61304)
+    if enabled~=false and type(start)=="number" and type(duration)=="number" and duration<=1.55 then
+        horizon=math.max(horizon,start+duration-s.time)
+    end
+    local cast,finish,castID
+    if UnitCastingInfo then
+        local name,_,_,_,ending,_,_,_,id=UnitCastingInfo("player")
+        cast,finish,castID=name,ending,id
+    end
+    local channel
+    if not cast and UnitChannelInfo then
+        local name,_,_,_,ending=UnitChannelInfo("player"); channel,finish=name,ending
+    end
+    if (cast or channel) and type(finish)=="number" then horizon=math.max(horizon,math.min(10,finish/1000-s.time)) end
+    local projected=s.power or 0
+    if s.powerType==3 then
+        if sample.tick then
+            local nextTick=2-((s.time-sample.tick)%2)
+            projected=projected+math.max(0,math.floor((horizon-nextTick)/2)+1)*normal*2
+        else
+            -- Until a tick has been observed, use the live average regen rate.
+            projected=projected+normal*horizon
+        end
+    elseif s.powerType==0 then
+        -- Unknown five-second-rule state uses the conservative casting rate.
+        local suppressed=cast or channel or not sample.spent and s.combat
+        local delay=suppressed and horizon or math.min(horizon,math.max(0,5-(s.time-(sample.spent or -math.huge))))
+        projected=projected+casting*delay+normal*(horizon-delay)
+        -- Mana for an ordinary cast can be charged at completion. Reserve it
+        -- before predicting the following spell; unknown cast cost is conservative.
+        if cast then
+            local costs=powerCosts(castID or cast)
+            if not costs then projected=0 else
+                for _,cost in ipairs(costs) do
+                    if cost.type==0 then projected=projected-(cost.cost or 0) end
+                end
+            end
+        elseif channel then projected=s.power or 0 end
+    end
+    s.projectedPower=math.max(0,math.min(s.maxPower or projected,projected))
+    s.powerHorizon=horizon
+end
+local function affordableSoon(spell,s)
+    if not s or (s.powerType~=0 and s.powerType~=3) or not s.power then return false end
+    local costs=powerCosts(spell.id)
+    if not costs then return false end
+    local found=false
+    for _,cost in ipairs(costs) do
+        if not cost.requiredAuraID or cost.requiredAuraID==0 or cost.hasRequiredAura then
+            local amount=cost.minCost or cost.cost
+            if type(amount)~="number" or type(cost.type)~="number" then return false end
+            if amount>0 then
+                local available=cost.type==s.powerType and s.projectedPower or UnitPower and UnitPower("player",cost.type)
+                if not available or available<amount then return false end
+                if cost.type==s.powerType then found=true end
+            end
+        end
+    end
+    return found
+end
+function R:SpellState(spell,unit,s)
     local usable,lowPower
     if C_Spell and C_Spell.IsSpellUsable then usable,lowPower=C_Spell.IsSpellUsable(spell.id)
     elseif IsUsableSpell then usable,lowPower=IsUsableSpell(spell.name) end
@@ -203,15 +286,18 @@ function R:SpellState(spell,unit)
     local onGCD=activeGCD() and type(start)=="number" and type(duration)=="number"
         and math.abs(start-gcdStart)<.05 and duration<=gcdDuration+.05
     local gcdLength=activeGCD() and gcdDuration or (self.class=="ROGUE" and 1 or 1.5)
-    -- Preview the next action during the final second of a longer cooldown.
-    -- GCD-only spells remain eligible throughout the global cooldown.
+    -- Plan for the end of the current cast/GCD, with at least one second of
+    -- reaction time. GCD-only spells remain eligible throughout the GCD.
     local ready=enabled~=false and type(start)=="number" and type(duration)=="number"
-        and (start+duration<=now or onGCD or duration>gcdLength and start+duration-now<=1)
+        and (start+duration<=now or onGCD or duration>gcdLength and start+duration-now<=math.max(1,s and s.powerHorizon or 0))
     local range
     if unit then
         range=spellRange(spell,unit)
     end
-    return {id=spell.id,name=spell.name,icon=spell.icon,rank=spell.rank,ready=not not ready,usable=usable==true or usable==1,
+    local plannedPower=affordableSoon(spell,s)
+    local powerPreview=(lowPower==true or lowPower==1) and plannedPower
+    return {id=spell.id,name=spell.name,icon=spell.icon,rank=spell.rank,ready=not not ready,usable=usable==true or usable==1 or powerPreview,
+        powerPreview=not not powerPreview,plannedPower=plannedPower,
         lowPower=not not lowPower,range=range,requiresRange=unit~=nil,minRange=spell.minRange,maxRange=spell.maxRange}
 end
 local function applyRangePreview(s,sample)
@@ -283,7 +369,8 @@ function R:Snapshot()
     s.playerHealth=percent("player"); s.targetHealth=percent("target"); s.petHealth=percent("pet")
     s.hasPet=UnitExists and UnitExists("pet") or false
     s.powerType=UnitPowerType and UnitPowerType("player") or (self.class=="ROGUE" and 3 or 0)
-    s.powerPercent,s.power=percent("player",s.powerType)
+    s.powerPercent,s.power,s.maxPower=percent("player",s.powerType)
+    self:PowerForecast(s)
     s.targetPowerType=UnitPowerType and UnitPowerType("target")
     if s.targetPowerType==0 then s.targetMana=percent("target",0) end
     s.combo=GetComboPoints and GetComboPoints("player","target") or 0
@@ -313,7 +400,7 @@ function R:Snapshot()
     for key,name in pairs(self.names) do s.buffs[key]=buffs[name] end
     for key,spell in pairs(self.spells) do
         local selfSpell=key=="barrier" or key=="shield" or key=="evocation" or key=="evasion" or key=="flurry" or key=="slice" or key=="nova" or key=="explosion"
-        s.spells[key]=self:SpellState(spell,not selfSpell and "target" or nil)
+        s.spells[key]=self:SpellState(spell,not selfSpell and "target" or nil,s)
     end
     s.approachingMelee=self:UpdateRangePreview(s)
     return s
@@ -359,7 +446,8 @@ function R.Decide(s)
     if s.combat and hp and hp<=60 and not s.buffs.barrier and can("barrier") then return choose("barrier","Protect yourself at low health.") end
     if s.combat and hp and hp<=40 and s.targetClose and s.safeAOE and can("nova") then return choose("nova","Root nearby attackers to create distance.") end
     if s.combat and hp and hp<=35 and mp and mp>35 and not s.buffs.barrier and not s.buffs.shield and can("shield") then return choose("shield","Low health with enough mana for Mana Shield.") end
-    if mp and mp<=15 and can("shoot") then
+    local fillerPreview=can("frostbolt") and s.spells.frostbolt.plannedPower or can("fireball") and s.spells.fireball.plannedPower
+    if mp and mp<=15 and not fillerPreview and can("shoot") then
         if s.wanding then return nil,"Wand attack active. Let it continue to conserve mana." end
         return choose("shoot","Conserve mana with your wand.")
     end
@@ -440,7 +528,7 @@ end
 function R:Update()
     if not A.characterDB then return end
     if self.suspended or self:Mode()=="disabled" then
-        self.approach=nil
+        self.approach=nil; self.powerSample=nil
         self.current=nil; self.optional=nil; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
     else
         self.snapshot=self:Snapshot()
@@ -452,9 +540,14 @@ function R:Update()
 end
 local events=CreateFrame("Frame"); R.events=events
 for _,event in ipairs({"PLAYER_LOGIN","PLAYER_ENTERING_WORLD","PLAYER_LEAVING_WORLD","SPELLS_CHANGED","SPELL_DATA_LOAD_RESULT","PLAYER_TALENT_UPDATE","PLAYER_REGEN_ENABLED","ACTIONBAR_SLOT_CHANGED","ACTIONBAR_PAGE_CHANGED","PLAYER_TARGET_CHANGED","START_AUTOREPEAT_SPELL","STOP_AUTOREPEAT_SPELL"}) do events:RegisterEvent(event) end
-events:SetScript("OnEvent",function(_,event)
+for _,event in ipairs({"UNIT_POWER_UPDATE","UNIT_POWER_FREQUENT","UNIT_MAXPOWER","UNIT_SPELLCAST_START","UNIT_SPELLCAST_STOP","UNIT_SPELLCAST_CHANNEL_START","UNIT_SPELLCAST_CHANNEL_STOP"}) do events:RegisterEvent(event) end
+events:SetScript("OnEvent",function(_,event,unit)
+    if event:sub(1,5)=="UNIT_" then
+        if unit=="player" and not R.suspended and R:Mode()~="disabled" then R:Update() end
+        return
+    end
     if event=="PLAYER_TARGET_CHANGED" or event=="PLAYER_LEAVING_WORLD" or event=="PLAYER_ENTERING_WORLD" then R.approach=nil end
-    if event=="PLAYER_LEAVING_WORLD" then R.suspended=true; R.autoRepeat=nil; R:Highlight(nil); return end
+    if event=="PLAYER_LEAVING_WORLD" then R.suspended=true; R.autoRepeat=nil; R.powerSample=nil; R:Highlight(nil); return end
     if event=="PLAYER_ENTERING_WORLD" then R.suspended=nil end
     if R.suspended then return end
     if event=="START_AUTOREPEAT_SPELL" then R.autoRepeat=true

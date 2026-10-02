@@ -646,6 +646,86 @@ do
     now,units.target.x=savedNow,savedX; range[837]=true; range[2136]=nil; range[5019]=1
     R.approach=nil; R.dirty=true; R:Update()
 end
+do
+    local oldRegen,oldMana,oldCosts=GetPowerRegen,GetManaRegen,C_Spell.GetSpellPowerCost
+    local oldCast=UnitCastingInfo
+    local savedNow=now
+    local costs={{type=3,cost=40,minCost=40}}
+    GetPowerRegen=function() return 10,10 end
+    C_Spell.GetSpellPowerCost=function() return costs end
+    UnitCastingInfo=function() end
+    ready={}; R.powerSample=nil
+    local s={powerType=3,power=30,maxPower=100,time=now,combat=true}
+    R:PowerForecast(s)
+    check(s.projectedPower==40 and s.powerHorizon==1,'Energy leads by one second using live regeneration before observing a tick')
+    usable[837]=false; range[837]=true
+    local a=R:SpellState(R.spells.frostbolt,'target',s)
+    check(a.usable and a.powerPreview,'Low power becomes eligible before sufficient energy is available')
+    s.power=20; R.powerSample=nil; R:PowerForecast(s)
+    check(not R:SpellState(R.spells.frostbolt,'target',s).usable,'Resource deficit beyond the lead window stays unavailable')
+    s.power=35; s.time=now+.2; R:PowerForecast(s)
+    s.power=55; s.time=now+.4; R:PowerForecast(s)
+    check(R.powerSample.tick==s.time,'Natural energy tick records its phase')
+    s.power=30; s.time=now+.6; R:PowerForecast(s)
+    check(s.projectedPower==30,'Known energy tick is not predicted before its lead window')
+    s.time=now+1.5; R:PowerForecast(s)
+    check(s.projectedPower==50,'Upcoming energy tick is previewed before it arrives')
+    s.power=95; s.time=now+1.6; R:PowerForecast(s)
+    check(s.projectedPower==100,'Forecast respects maximum power')
+    R.powerSample=nil; s.power=25; s.time=now
+    ready[61304]={startTime=now,duration=1.5,isEnabled=true}; R:PowerForecast(s)
+    check(s.projectedPower==40 and s.powerHorizon==1.5,'Remaining GCD extends the resource planning window')
+    ready[837]={startTime=now-6.6,duration=8,isEnabled=true}
+    check(R:SpellState(R.spells.frostbolt,'target',s).ready,'Long cooldown expiring before the GCD ends is planned now')
+    ready[837]={startTime=now-6,duration=8,isEnabled=true}
+    check(not R:SpellState(R.spells.frostbolt,'target',s).ready,'Cooldown beyond the next action window remains blocked')
+    ready={}
+    costs={{type=3,cost=40,minCost=40},{type=4,cost=10000,minCost=10000}}
+    check(not R:SpellState(R.spells.frostbolt,'target',s).usable,'Missing secondary resource cannot be forecast')
+    costs=nil
+    check(not R:SpellState(R.spells.frostbolt,'target',s).usable,'Unknown costs cannot override low power')
+    costs={{type=3,cost=40,minCost=40}}
+    local oldUsable=C_Spell.IsSpellUsable
+    C_Spell.IsSpellUsable=function() return false,false end
+    check(not R:SpellState(R.spells.frostbolt,'target',s).usable,'Non-resource usability failure is never overridden')
+    C_Spell.IsSpellUsable=oldUsable
+    costs={{type=0,cost=50,minCost=50}}
+    GetManaRegen=function() return 20,5 end
+    s={powerType=0,power=45,maxPower=1000,time=now,combat=true}
+    R.powerSample=nil; R:PowerForecast(s)
+    check(s.projectedPower==50,'Unknown mana suppression uses casting regeneration')
+    check(R:SpellState(R.spells.frostbolt,'target',s).powerPreview,'Mana forecast shares the energy preview path')
+    s.power=20; s.time=now+.2; R:PowerForecast(s)
+    check(s.projectedPower==25,'Mana spending enters the five-second rule')
+    s.time=now+2; R:PowerForecast(s); s.time=now+4; R:PowerForecast(s)
+    s.time=now+5.2; R:PowerForecast(s)
+    check(math.abs(s.projectedPower-40)<.001,'Mana regeneration returns to the normal rate after suppression')
+    UnitCastingInfo=function() return 'Frostbolt',nil,nil,now*1000,(now+3)*1000,false,1,false,837 end
+    s.power=80; s.time=now; R.powerSample=nil; R:PowerForecast(s)
+    check(s.powerHorizon==3 and s.projectedPower==45,'Cast window reserves the mana cost of the spell being cast')
+    costs=nil; R:PowerForecast(s)
+    check(s.projectedPower==0,'Unknown current cast cost cannot invent future mana')
+    UnitCastingInfo=function() end
+    s={powerType=1,power=30,maxPower=100,time=now,combat=true}; R:PowerForecast(s)
+    check(s.projectedPower==30,'Rage gains from future attacks are not assumed')
+    costs={{type=1,cost=40,minCost=40}}
+    check(not R:SpellState(R.spells.frostbolt,'target',s).usable,'Unpredictable rage cannot override usability')
+    costs={{type=0,cost=50,minCost=50}}
+    s={powerType=0,power=45,maxPower=1000,time=now,combat=true}; R.powerSample=nil; R:PowerForecast(s)
+    local decision=state('MAGE',{'frostbolt','shoot'})
+    decision.powerPercent=4.5; decision.spells.frostbolt=R:SpellState(R.spells.frostbolt,'target',s)
+    check(R.Decide(decision)=='frostbolt','Forthcoming affordable filler takes priority over low-mana wand fallback')
+    s.power=50; s.time=now+.2; R:PowerForecast(s); usable[837]=nil
+    decision.spells.frostbolt=R:SpellState(R.spells.frostbolt,'target',s)
+    check(R.Decide(decision)=='frostbolt','Reaching sufficient mana does not switch the preview back to wand')
+    local legacy=GetSpellPowerCost
+    GetSpellPowerCost=C_Spell.GetSpellPowerCost; C_Spell.GetSpellPowerCost=nil; usable[837]=false
+    s.power=45; R:PowerForecast(s)
+    check(R:SpellState(R.spells.frostbolt,'target',s).powerPreview,'Legacy spell cost API supports the same resource forecast')
+    GetSpellPowerCost=legacy
+    GetPowerRegen,GetManaRegen,C_Spell.GetSpellPowerCost=oldRegen,oldMana,oldCosts
+    UnitCastingInfo=oldCast; usable[837]=nil; now=savedNow; ready={}; R.powerSample=nil; R:Update()
+end
 MOCK.RotationChecks=count
 print("PASS: "..count.." rotation checks: priorities, live reads, rank changes, conservative AoE, mode state, UI and highlight lifecycle.")
 ''')
