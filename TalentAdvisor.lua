@@ -271,7 +271,8 @@ function T:Document(context,state)
         local atLevel=math.max(build.minLevel,index+9)
         local title="|cff"..color..""..(live and live.names[key] or node.name).."  "..rank.."/"..node.maxRank.."|r"
         steps[#steps+1]=row(title,"Level "..atLevel.."  |  "..node.treeName,nil,
-            learned and "Learned" or nextStep and "Next point" or nil,live and live.icons[key] or spellIcon(node.spellID))
+            learned and "Learned" or nextStep and "Next Point" or nil,live and live.icons[key] or spellIcon(node.spellID))
+        steps[#steps].metaAtTitle=true
     end
     doc.cards={card("Your point-by-point path",context.characterClass.." | "..build.name.." | Scroll to see the complete path.",steps)}
     return doc

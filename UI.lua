@@ -153,6 +153,7 @@ local function renderBlock(frame, block, width)
     frame.block = block; frame:SetWidth(width); frame:Show()
     frame.priority:SetShown(block.supply and block.priority~=nil)
     frame.title:SetFont(STANDARD_TEXT_FONT,block.supply and 14 or 15,"")
+    frame.meta:SetFont(STANDARD_TEXT_FONT,block.metaAtTitle and 15 or 11,"")
     frame.body:SetFont(STANDARD_TEXT_FONT,block.supply and 11 or 12,"")
     frame.title:SetWordWrap(true); frame.body:SetWordWrap(true)
     frame.count:SetFont(STANDARD_TEXT_FONT,14,"")
@@ -242,6 +243,11 @@ local function renderBlock(frame, block, width)
     end
     local x = block.textInset or (icon and 52 or 12) + (block.child and 8 or 0)
     local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), block.supply and 8 or 12
+    local titleMetaWidth=0
+    if block.metaAtTitle and block.meta then
+        frame.meta:SetText(block.meta)
+        titleMetaWidth=math.ceil(frame.meta:GetStringWidth())+2
+    end
     frame.title:SetTextColor(unpack(block.titleColor or (block.supply and WHITE or GOLD)))
     local height
     if block.supply then
@@ -250,10 +256,14 @@ local function renderBlock(frame, block, width)
         local bodyHeight=measure(frame.body,block.body,available-nameWidth-16,x+nameWidth+16,y)
         y=y+math.max(titleHeight,bodyHeight)+3
     else
-        height=measure(frame.title, block.title, available, x, y); if height>0 then y=y+height+3 end
+        height=measure(frame.title, block.title, available-(titleMetaWidth>0 and titleMetaWidth+16 or 0), x, y); if height>0 then y=y+height+3 end
         height=measure(frame.body, block.body, available, x, y); if height>0 then y=y+height+3 end
     end
-    height=measure(frame.meta, block.meta, available, x, y); if height>0 then y=y+height+2 end
+    if block.metaAtTitle then
+        measure(frame.meta,block.meta,titleMetaWidth,width-titleMetaWidth-14,12)
+    else
+        height=measure(frame.meta, block.meta, available, x, y); if height>0 then y=y+height+2 end
+    end
     if block.fields then
         local gap, fieldWidth, column, rowHeight = 20, (width-44)/2, 0, 0
         y=y+4
