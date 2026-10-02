@@ -55,6 +55,30 @@ gear[16].loc="INVTYPE_WEAPON"
 for _,r in ipairs(slot(16).options) do check(r.slot~="2H Weapon","No two-hand enchant on dagger") end
 gear[16].loc="INVTYPE_RANGEDRIGHT"; check(#slot(16).options==0,"Wands excluded")
 gear={ [9]={loc="INVTYPE_WRIST"}, [5]={loc="INVTYPE_ROBE"}, [7]={loc="INVTYPE_LEGS"}, [8]={loc="INVTYPE_FEET"} }
+local legs=slot(7)
+check(legs.recommendation.armorKit and legs.recommendation.itemId==15564,"Legs recommend the highest compatible armor kit")
+check(slot(5).recommendation.armorKit~=true,"Useful chest enchant competes with kits")
+gear[10]={loc="INVTYPE_HAND"}
+check(slot(10).recommendation.armorKit,"Mage gloves can prefer armor kit over situational enchant")
+gear[10]=nil
+gear[7].level=14
+check(slot(7).recommendation.itemId==2313,"Armor kit item-level restriction")
+gear[7].level=50; gear[7].enchant=1843
+check(slot(7).status=="ready" and not slot(7).needed,"Applied recommended armor kit recognized")
+gear[7].enchant=15
+check(slot(7).status=="upgrade" and slot(7).needed,"Outdated armor kit upgrade recognized")
+gear[7].enchant=0
+local kitDetail=E.Detail(ctx,{kind="enchantSlot",slotId=7})
+local kitMaterials=false
+for _,b in ipairs(kitDetail.blocks) do
+    if b.itemId==8170 and b.rightColumn then kitMaterials=true end
+    if b.title=="Requirements" then check(b.body:find("Leatherworking",1,true),"Kit requirements use correct profession") end
+end
+check(kitMaterials,"Kit crafting materials in comparison details")
+ctx.enchantChoices[7]=22727
+local coreKit=A.ArmorKits.Recommendations(ctx)
+check(#coreKit==1 and coreKit[1].itemId==18251 and coreKit[1].short:find("defense",1,true),"Selected Core kit tracks defense, not armor")
+ctx.enchantChoices[7]=nil
 local expected={}
 for _,s in ipairs(E.Scan(ctx)) do if s.needed then for _,p in ipairs(s.recommendation.reagents) do expected[p[1]]=(expected[p[1]] or 0)+p[2] end end end
 for _,m in ipairs(E.MaterialItems(ctx)) do
@@ -81,6 +105,7 @@ ctx.mode="live";ctx.level=60;ctx.characterClass="Mage"
 check(not E.Compatible({slot="Bracer",gearLevel=35},{status="checked",kind="Bracer",itemLevel=34}),"Minimum item level gate")
 MOCK.class="MAGE";MOCK.level=60;A.db.profile.mode="live";A:Navigate("supplies"); A.state.filter="Enchants"; A:Refresh()
 check(A.document.cards[1].title=="Enchants","Enchants root")
+check(#A.document.cards==1,"Kits integrated in comparison rows, no duplicate kit section")
 local action=A.document.cards[1].blocks[3].action; A:Activate(action)
 check(A:CanGoBack() and A.document.cards[1].title=="Wrists enchants","Slot detail and Back")
 local recipe

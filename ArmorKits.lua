@@ -63,9 +63,15 @@ function K.Recommendations(context)
     end
     local scan=K.Read(context.level)
     local planned=A.Enchants and A.Enchants.PlannedSlots(context) or {}
+    local comparisons={}
+    if A.Enchants then for _,g in ipairs(A.Enchants.Scan(context)) do comparisons[g.slotId]=g end end
     local items,groups={},{}
     for _,slot in ipairs(scan.slots) do
         local kit=slot.recommendation
+        local compared=comparisons[slot.slotId]
+        if compared and compared.status~="unknown" then
+            kit=compared.needed and compared.recommendation and compared.recommendation.armorKit and compared.recommendation or nil
+        end
         if kit and not planned[slot.slotId] then
             if not groups[kit.itemId] then
                 local item=copy(kit); item.targetSlots={}; item.targetDetails={}; item.recommendedTarget=0
@@ -75,12 +81,12 @@ function K.Recommendations(context)
             item.recommendedTarget=item.recommendedTarget+1
             item.targetSlots[#item.targetSlots+1]=slot.name
             item.targetDetails[#item.targetDetails+1]=slot.name.." (item level "..slot.itemLevel.."): "
-                ..(slot.current and (slot.current.name.." (+"..slot.current.power.." armor)") or "No permanent enhancement")
-                .." -> "..kit.name.." (+"..kit.power.." armor)."
+                ..(slot.current and (slot.current.name.." (+"..slot.current.power..(slot.current.defenseKit and " defense)" or " armor)")) or "No permanent enhancement")
+                .." -> "..kit.name.." (+"..kit.power..(kit.defenseKit and " defense)." or " armor).")
         end
     end
     for _,item in ipairs(items) do
-        item.short="+"..item.power.." armor: "..table.concat(item.targetSlots,", ")
+        item.short="+"..item.power..(item.defenseKit and " defense: " or " armor: ")..table.concat(item.targetSlots,", ")
         item.kitTargets=table.concat(item.targetDetails,"\n")
     end
     return items,scan

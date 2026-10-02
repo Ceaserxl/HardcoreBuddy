@@ -92,13 +92,13 @@ check(K.Best(0/0,40)==nil,"Invalid input does not select a kit")
 
 -- Applying an armor kit or enchant updates both the list and an open detail.
 MOCK.level=40; A.db.profile.mode="live"
-A:Navigate("supplies"); A.state.filter="Enchants"; A:Refresh()
+A:Navigate("supplies"); A.state.filter="All"; A:Refresh()
 local function listed()
     for _,card in ipairs(A.document.cards) do for _,block in ipairs(card.blocks) do
         if block.action and block.action.item and block.action.item.armorKit then return block end
     end end
 end
-local block=listed(); check(block~=nil,"Enchants lists kit recommendations")
+local block=listed(); check(block~=nil,"All lists finished kit supplies; Enchants integrates slot comparisons")
 A:Activate(block.action)
 check(A.document.cards[1].blocks[1].target==4,"Detail shows automatic quantity")
 for _,slot in ipairs(slots) do equip(slot,40,1843) end

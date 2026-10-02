@@ -10,6 +10,10 @@ upper right. Missing enchants have red borders; the recommended enchant shows
 Enchanted and another applied enhancement shows Alt Enchanted, both green.
 Hover shows the enchant effect rather than its crafting recipe. Details place
 the recommendation and alternatives on the left and tracked reagents on the right.
+Armor kits participate in these same comparisons for chest, gloves, legs and boots,
+respecting both the character's recommendation tier and the target item's level.
+They can be the recommendation (including legs and caster gloves) or an alternative.
+Kit details show Leatherworking requirements and their crafting materials.
 
 The bundled catalog contains 132 Classic Era Enchanting profession recipes and
 58 consumed material types, plus the existing six armor kits. It excludes Season
@@ -49,9 +53,9 @@ plans materials for the live character's equipment.
 
 An existing identical enchant needs no materials. Lower ranks of the same
 recommended stat can trigger an upgrade; unrelated enchants/armor kits are kept.
-Explicitly choosing a replacement tracks its reagents and warns that it replaces
-the existing enhancement. The addon never casts an enchant or confirms an
-overwrite. Choosing armor kits returns eligible pieces to the kit list.
+Explicitly choosing a replacement tracks its reagents. The addon never casts an
+enchant or confirms an overwrite. Choosing an armor kit tracks that finished kit;
+its crafting materials are shown in the detail's material column.
 
 Materials are summed across all verified slots needing enchants so shared bag
 stock is not counted twice. Armor kits are excluded for those same pieces to

@@ -19,7 +19,19 @@ local function family(r)
 end
 for _,r in ipairs(D.recipes) do r.family=family(r); byId[r.spellId]=r; byEnchant[r.enchantId]=r end
 E.byId=byId
+local kits={}
+local kitSlots={[5]=true,[7]=true,[8]=true,[10]=true}
+for _,item in ipairs(A.Data.ArmorKits.items) do
+    local r={}; for k,v in pairs(item) do r[k]=v end
+    r.spellId=item.crafting.spellId; r.skill=item.crafting.skill
+    r.description=item.detail; r.effect=item.short
+    kits[#kits+1]=r; byId[r.spellId]=r; byEnchant[r.enchantId]=r
+    for _,pair in ipairs(r.reagents) do
+        D.materials[pair[1]]=D.materials[pair[1]] or {itemId=pair[1],name=pair[3]}
+    end
+end
 local function points(r,class)
+    if r.armorKit then return r.defenseKit and 0 or r.power*.05 end
     local f=r.family
     local amount=tonumber(r.effect:match("(%d+)%s*$")) or 1
     local weights={Health=.35,Stamina=4,Defense=.05,Deflection=1,Stats=10,
@@ -51,6 +63,7 @@ end
 function E.Compatible(r,gear)
     if gear.status=="unknown" or gear.status=="empty" or gear.status=="incompatible" then return false end
     if gear.itemLevel and gear.itemLevel<r.gearLevel then return false end
+    if r.armorKit then return kitSlots[gear.slotId]==true end
     if r.slot=="2H Weapon" then return gear.equipLoc=="INVTYPE_2HWEAPON" end
     if r.slot=="Shield" then return gear.equipLoc=="INVTYPE_SHIELD" end
     if r.slot=="Weapon" then return gear.kind=="Weapon" and gear.equipLoc~="INVTYPE_SHIELD" end
@@ -78,6 +91,9 @@ function E.Options(context,g)
     for _,r in ipairs(D.recipes) do
         if r.level<=context.level and relevant(r,context.characterClass) and E.Compatible(r,g) then out[#out+1]=r end
     end
+    for _,r in ipairs(kits) do
+        if r.level<=context.level and E.Compatible(r,g) then out[#out+1]=r end
+    end
     table.sort(out,function(a,b)
         local av,bv=points(a,context.characterClass),points(b,context.characterClass)
         if av~=bv then return av>bv end
@@ -98,9 +114,10 @@ function E.Scan(context)
         g.options=E.Options(context,g)
         local choice=choices[g.slotId] or choices[tostring(g.slotId)]
         for _,r in ipairs(g.options) do if choice==r.spellId then g.recommendation=r; g.selected=true; break end end
-        if not g.recommendation and choice~="kit" then
-            for _,r in ipairs(g.options) do if points(r,context.characterClass)>0 then g.recommendation=r; break end end
+        if choice=="kit" then
+            for _,r in ipairs(g.options) do if r.armorKit and not r.defenseKit then g.recommendation=r; g.selected=true; break end end
         end
+        if not g.recommendation then g.recommendation=g.options[1] end
         local r=g.recommendation
         if r and g.status=="checked" then
             if g.enchantId==0 then g.status="missing"; g.needed=true
@@ -115,11 +132,11 @@ function E.Scan(context)
     return result
 end
 function E.PlannedSlots(context)
-    local out={}; for _,g in ipairs(E.Scan(context)) do if g.needed then out[g.slotId]=true end end; return out
+    local out={}; for _,g in ipairs(E.Scan(context)) do if g.needed and not g.recommendation.armorKit then out[g.slotId]=true end end; return out
 end
 function E.MaterialItems(context)
     local totals,uses={},{}
-    for _,g in ipairs(E.Scan(context)) do if g.needed then
+    for _,g in ipairs(E.Scan(context)) do if g.needed and not g.recommendation.armorKit then
         for _,pair in ipairs(g.recommendation.reagents) do
             local id,n=pair[1],pair[2]; totals[id]=(totals[id] or 0)+n
             uses[id]=uses[id] or {}; uses[id][#uses[id]+1]=g.name..": "..g.recommendation.name
@@ -156,7 +173,9 @@ local function enchantBlock(g,r,action)
     elseif g.enchantId==0 then status,tone="Missing","missing"
     elseif r and g.enchantId==r.enchantId then status,tone="Enchanted","ready"
     else status,tone="Alt Enchanted","ready" end
-    local b=row(g.name.." - "..(r and r.name:match(" %- (.*)$") or "No recommendation"),
+    local name=r and (r.armorKit and r.name or r.name:match(" %- (.*)$"))
+        or (g.status=="unknown" or g.status=="empty" or g.status=="incompatible") and labels[g.status] or "No recommendation"
+    local b=row(g.name.." - "..name,
         r and r.description or labels[g.status],action,r and r.icon or "Trade_Engraving")
     b.enchantRow=true; b.enchantStatus=status; b.enchantTone=tone
     b.enchantTooltip=r
@@ -186,9 +205,6 @@ function E.Detail(context,action)
         if g.selected or not g.recommendation then
             blocks[#blocks+1]=row("Automatic recommendation","Use the class and leveling recommendation",{kind="enchantChoose",slotId=g.slotId})
         end
-        if g.slotId==5 or g.slotId==7 or g.slotId==8 or g.slotId==10 then
-            blocks[#blocks+1]=row("Use armor kits","Track a compatible armor kit",{kind="enchantChoose",slotId=g.slotId,spellId="kit"},"INV_Misc_ArmorKit_17")
-        end
     end
     heading("Alternatives")
     for _,option in ipairs(g.options) do if option~=g.recommendation then
@@ -209,7 +225,7 @@ function E.Detail(context,action)
             b.status=count==nil and "unknown" or count>=pair[2] and "ready" or count==0 and "missing" or "low"
             blocks[#blocks+1]=b
         end
-        local b=row("Requirements","Enchanting "..selected.skill)
+        local b=row("Requirements",selected.armorKit and ("Crafting: Leatherworking "..selected.skill.."\nTarget item level "..selected.gearLevel.."+") or "Enchanting "..selected.skill)
         b.rightColumn=true; blocks[#blocks+1]=b
     end
     return {title=g.name.." enchants",blocks=blocks,itemLayout=true,fullWidth=true}

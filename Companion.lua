@@ -426,13 +426,7 @@ function C.Build(context,state)
                 state.filter=="User" and "Drag an item from your bags anywhere onto this page to add it." or nil,rows)
             result.cards[1].supplyTable=true
             if state.filter=="Enchants" then
-                local kits={}
-                for _,b in ipairs(rows) do
-                    local item=b.action and b.action.item
-                    if item and item.armorKit then kits[#kits+1]=b end
-                end
                 result.cards={A.Enchants.Card(context)}
-                if #kits>0 then local c=card("Armor kits",nil,kits); c.supplyTable=true; result.cards[#result.cards+1]=c end
             end
             if state.filter=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
                 result.cards[#result.cards+1]=A.HunterTraining.Card(context)
