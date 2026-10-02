@@ -253,6 +253,8 @@ function addon:Initialize()
     if self.db.talentAdvisorEnabled==nil then self.db.talentAdvisorEnabled=true end
     if type(HardcoreBuddyCharacterDB)~="table" then HardcoreBuddyCharacterDB={} end
     self.characterDB=HardcoreBuddyCharacterDB
+    if self.characterDB.auctionHighestArmorOnly==nil then self.characterDB.auctionHighestArmorOnly=true end
+    if self.characterDB.debugAutoReload==nil then self.characterDB.debugAutoReload=false end
     if type(self.characterDB.targets)~="table" then self.characterDB.targets={} end
     if type(self.characterDB.ranks)~="table" then self.characterDB.ranks={} end
     if type(self.characterDB.userItems)~="table" then self.characterDB.userItems={} end

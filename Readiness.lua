@@ -49,7 +49,7 @@ function R:Open()
     A.window:Show(); A:Refresh(true)
 end
 function R:BuildFrames()
-    local f=CreateFrame("Frame",nil,UIParent,"BackdropTemplate"); self.panel=f
+    local f=CreateFrame("Frame",nil,UIParent,"SecureHandlerStateTemplate,BackdropTemplate"); self.panel=f
     f:EnableMouse(true)
     f:SetSize(330,240); f:SetPoint("RIGHT",UIParent,"RIGHT",-36,35)
     f:SetFrameStrata("MEDIUM"); f:SetClampedToScreen(true); A.Skin.Paint(f,"card")
@@ -73,14 +73,23 @@ function R:BuildFrames()
     f.summary=text(f,11,14,-34,300); f.summary:SetTextColor(unpack(A.Skin.colors.muted))
     f.rows={}
     for i=1,4 do
-        local row=CreateFrame("Frame",nil,f,"BackdropTemplate"); f.rows[i]=row
-        row:EnableMouse(false) -- Row text and icons pass clicks and drags to the panel.
-        row:SetPoint("TOPLEFT",12,-58-(i-1)*42); row:SetSize(306,38)
+        local row=CreateFrame("Button",nil,f,"SecureActionButtonTemplate,BackdropTemplate"); f.rows[i]=row
+        row:RegisterForClicks("AnyUp","AnyDown")
+        row:SetPoint("TOPLEFT",12,-58-(i-1)*50); row:SetSize(306,46)
         A.Skin.Paint(row,"edit"); row:SetBackdropBorderColor(0,0,0,0)
         row.icon=row:CreateTexture(nil,"ARTWORK"); row.icon:SetSize(28,28); row.icon:SetPoint("TOPLEFT",5,-5)
         row.icon:SetTexCoord(0.08,0.92,0.08,0.92)
-        row.name=text(row,12,42,-11,164); row.name:SetWordWrap(false); row.name:SetHeight(16)
+        row.name=text(row,12,42,-5,164); row.name:SetWordWrap(false); row.name:SetHeight(16)
+        row.vendor=text(row,10,42,-25,256); row.vendor:SetWordWrap(false); row.vendor:SetHeight(14)
+        row.vendor:SetTextColor(unpack(A.Skin.colors.muted))
         row.need=text(row,12,214,-10,84); row.need:SetJustifyH("RIGHT"); row.need:SetWordWrap(false); row.need:SetHeight(18)
+        row:SetScript("OnEnter",function()
+            GameTooltip:SetOwner(row,"ANCHOR_LEFT"); GameTooltip:SetText(row.name:GetText(),1,0.82,0,1)
+            GameTooltip:AddLine(row.vendorName and ("Click to target "..row.vendorName..". Must be within targeting range. Vendor stock may vary.")
+                or "No known vendor nearby for this item. Open Essentials for acquisition details.",0.8,0.8,0.7,true)
+            GameTooltip:Show()
+        end)
+        row:SetScript("OnLeave",function() GameTooltip:Hide() end)
     end
     f.more=text(f,10,14,0,300); f.more:SetTextColor(unpack(A.Skin.colors.muted))
     f.hint=text(f,10,14,0,136,"Drag to move"); f.hint:SetTextColor(unpack(A.Skin.colors.muted))
@@ -97,8 +106,9 @@ function R:BuildFrames()
     close.label=text(close,12,5,-3,16,"x")
     close:SetScript("OnClick",function()
         if self.previewUntil then self.previewUntil=nil; self.previewRows=nil; f:Hide(); self:Refresh()
-        else self.dismissed=true; f:Hide() end
+        else self.dismissed=true; if RegisterStateDriver then RegisterStateDriver(f,"visibility","hide") end; f:Hide() end
     end)
+    if RegisterStateDriver then RegisterStateDriver(f,"visibility","hide") end
     f:Hide()
     local toast=CreateFrame("Button",nil,UIParent); self.toast=toast
     A.Skin.Hover(toast)
@@ -115,6 +125,7 @@ function R:BuildFrames()
     toast:Hide()
 end
 function R:ShowPanel(missing,preview)
+    if InCombatLockdown() then return end
     local f=self.panel; local count=math.min(4,#missing)
     f:SetFrameStrata(preview and "DIALOG" or "MEDIUM")
     A.Skin.Rebase(f,preview and ((A.window and A.window:GetFrameLevel() or 20)+20) or 10)
@@ -125,17 +136,25 @@ function R:ShowPanel(missing,preview)
             local getIcon=C_Item and C_Item.GetItemIconByID or GetItemIcon
             row.icon:SetTexture(getIcon and getIcon(item.itemId) or "Interface\\Icons\\INV_Misc_Bag_08")
             row.name:SetText(item.name)
+            local vendor=not preview and A.VendorServices and A.VendorServices:FindVendor(item.itemId)
+            row.vendorName=vendor and vendor.name or nil
+            row.vendor:SetText(vendor and ("Buy from: "..vendor.name) or "No known vendor nearby")
+            row:SetAttribute("type",vendor and "macro" or nil)
+            row:SetAttribute("macrotext",vendor and ("/targetexact "..vendor.name:gsub("[\r\n]","")) or nil)
+            A.Skin.Hover(row,vendor~=nil)
             row.need:SetText("("..(item.count or 0).."/"..item.target..")")
             row.need:SetTextColor(unpack(item.count==0 and A.Skin.colors.red or A.Skin.colors.amber))
         end
     end
-    local bottom=58+count*42
+    local bottom=58+count*50
     f.more:SetShown(#missing>count)
     if #missing>count then
         f.more:ClearAllPoints(); f.more:SetPoint("TOPLEFT",14,-bottom)
         f.more:SetText("+ "..(#missing-count).." more in Essentials"); bottom=bottom+20
     end
-    f:SetHeight(bottom+48); f:Show()
+    f:SetHeight(bottom+48)
+    if RegisterStateDriver then RegisterStateDriver(f,"visibility","[combat] hide; show") end
+    f:Show()
 end
 function R:ShowReminder(count,preview)
     self.toast:SetFrameStrata(preview and "DIALOG" or "HIGH")
@@ -161,6 +180,13 @@ function R:Preview(kind)
 end
 function R:Refresh()
     if not self.settings then return end
+    -- Secure vendor-target buttons hide through their state driver in combat.
+    if InCombatLockdown() then
+        if self.dragging then self.panel:StopMovingOrSizing(); self.dragging=nil end
+        if not RegisterStateDriver then self.panel:Hide() end
+        self.resting=IsResting and IsResting() and true or false; self.departure=nil
+        self.toast:Hide(); self.previewUntil=nil; self.previewRows=nil; return
+    end
     local resting=IsResting and IsResting() and true or false
     local now=GetTime()
     if self.resting~=resting then
@@ -172,6 +198,7 @@ function R:Refresh()
         or (UnitOnTaxi and UnitOnTaxi("player")) or instance=="party" or instance=="raid"
     if resting or not self.settings.departure or (self.departure and now-self.departure>20) then self.departure=nil end
     if self.dragging and not unsafe then return end
+    if RegisterStateDriver then RegisterStateDriver(self.panel,"visibility","hide") end
     self.panel:Hide()
     if unsafe then self.previewUntil=nil; self.previewRows=nil; self.toast:Hide(); return end
     if self.previewUntil and now>=self.previewUntil then self.previewUntil=nil; self.previewRows=nil end
@@ -249,7 +276,10 @@ events:SetScript("OnEvent",function(_,event,name)
     elseif event=="PLAYER_ENTERING_WORLD" then
         -- Loading screens and logging into an inn are never departures.
         R.resting=IsResting and IsResting() and true or false; R.departure=nil
-    elseif event=="PLAYER_REGEN_DISABLED" then R.panel:Hide(); R.toast:Hide() end
+    elseif event=="PLAYER_REGEN_DISABLED" then
+        if not RegisterStateDriver then R.panel:Hide() end
+        R.toast:Hide()
+    end
     R.refreshAt=GetTime()+0.5
 end)
 events:SetScript("OnUpdate",function()

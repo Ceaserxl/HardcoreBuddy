@@ -190,7 +190,18 @@ function S:Create(parent)
     end)
     general.reset=button(access,"Recenter main window",82,function() A:HandleSlashCommand("reset") end)
     label(kit,"Manage Carry quantities and item priorities in Supplies. Find gear and talent advice in Companion.",12,16,86,300)
-    general.contentHeight=434
+    local buying=Skin.Section(general,"Vendor purchases",434,140,1)
+    local repairs=Skin.Section(general,"Repairs",434,140,2)
+    general.autoBuy=check(buying,"Automatically buy missing essentials",46,function() return A.VendorServices.settings.autoBuy end,function(value)
+        A.VendorServices.settings.autoBuy=value
+        if not value then A.VendorServices:Stop(); A.VendorServices.decided=true end
+    end)
+    general.autoRepair=check(repairs,"Automatically repair at vendors",46,function() return A.VendorServices.settings.autoRepair end,function(value)
+        A.VendorServices.settings.autoRepair=value
+    end)
+    label(buying,"Buys up to Keep on hand from the open vendor using your money. Special currency items are excluded.",12,16,86,300)
+    label(repairs,"Uses your own money when the vendor can repair and you can afford the full repair cost.",12,16,86,300)
+    general.contentHeight=582
     local npc=self.pages["NPC Alerts"]
     npc.subtitle=label(npc,"Configure rare and elite warnings independently.",12,0,34,700)
     npc.contentHeight=418
@@ -358,7 +369,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local apply=self.pages["Talent Advisor"].apply
     apply:SetWidth((spending:GetWidth()-12)/2-32); apply.label:SetWidth(apply:GetWidth()-20)
     A.DebugDump:Layout(contentWidth)
-    local general=self.pages.General; general.minimap:Sync(); general.kit:Sync()
+    local general=self.pages.General; general.minimap:Sync(); general.kit:Sync(); general.autoBuy:Sync(); general.autoRepair:Sync()
     local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync(); gear.notify:Sync(); gear.autoEquip:Sync()
     gear.toggle.label:SetText(A.GearAdvisor:IsEnabled() and "Disable Gear Advisor" or "Enable Gear Advisor")
     local profile=A.GearAdvisor:CurrentProfile()

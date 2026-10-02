@@ -1,4 +1,4 @@
-"""Full-TOC debug export, incremental generation, copy selection and cache."""
+"""Full-TOC debug export, incremental generation, saved-file export and cache."""
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -27,7 +27,7 @@ assert(D.job and not p.dump:IsEnabled(),"Dump runs asynchronously")
 D:Step(.016)
 assert(D.job and p.sheen:IsShown() and D.displayProgress>0,"Animated progress during work")
 A:OpenSettings("General")
-assert(not p.edit:HasFocus())
+assert(not p.edit and not p.scroll,"No dump textbox")
 assert(finish()>1,"Large export is spread across frames")
 local saved=A.characterDB.debugDump
 assert(saved and #saved.text>100000 and loadstring(saved.text),"Full dump is valid serializable Lua text")
@@ -38,15 +38,20 @@ assert(data.capture.equipment and data.capture.bags and data.capture.quests and 
 assert(data.referenceData.MapZones and data.referenceData.PetGuide and data.runtime)
 assert(not data.character.debugDump,"Previous dump is excluded")
 A:OpenSettings("Debug")
-assert(p.edit:GetText()==saved.text and not p.sheen:IsShown(),"Entire dump is displayed")
-assert(not p.edit:HasFocus(),"Loading a dump does not focus or select its text")
-assert(p.copyHint:GetText()=="Ctrl + C to copy")
-local cached=saved.text
-p.edit:SetText("Editable diagnostic note")
-p.edit.scripts.OnTextChanged(p.edit,true)
-A:OpenSettings("General"); A:OpenSettings("Debug")
-assert(p.edit:GetText()=="Editable diagnostic note","Edits survive page navigation")
-assert(saved.text==cached,"Editing preserves the original cache")
+assert(not p.edit and not p.copy and not p.scroll)
+assert(p.savedPath:GetText():find("SavedVariables/HardcoreBuddy.lua",1,true))
+assert(not A.characterDB.debugAutoReload and not D.reloadAt)
+local reloads=0; ReloadUI=function() reloads=reloads+1 end
+A.characterDB.debugAutoReload=true
+D:Start(); finish(); assert(D.reloadAt and reloads==0)
+MOCK.time=MOCK.time+1
+InCombatLockdown=function() return true end
+D:Step(.016); assert(reloads==0 and D.reloadAt)
+InCombatLockdown=function() return false end
+D:Step(.016); assert(reloads==1 and not D.reloadAt)
+D:Step(.016); assert(reloads==1)
+saved=A.characterDB.debugDump
+A.characterDB.debugAutoReload=false
 local job=D.Collect
 D.Collect=function() error("capture failure fixture") end
 D:Start(); D:Step(.016)
@@ -56,7 +61,7 @@ D:Start(); finish()
 assert(#A.characterDB.debugDump.text<#saved.text*1.1,"Repeated dumps do not recursively include the cache")
 DEBUG_SAVED_TEXT=A.characterDB.debugDump.text
 DEBUG_SAVED_AT=A.characterDB.debugDump.capturedAt
-print("PASS: incremental comprehensive dump, animation, cycles, addon isolation, full editable text and failure recovery.")
+print("PASS: incremental comprehensive dump, animation, cycles, addon isolation, saved-file export and deferred reload and failure recovery.")
 ''')
 offline = LuaRuntime(unpack_returned_tuples=True)
 offline.execute(lua.globals().DEBUG_SAVED_TEXT)
@@ -65,16 +70,8 @@ fresh.globals().RESTORED_TEXT = lua.globals().DEBUG_SAVED_TEXT
 fresh.execute('''
 TestAddon.characterDB.debugDump={schema=1,text=RESTORED_TEXT,capturedAt=123}
 TestAddon:OpenSettings("Debug")
-assert(TestAddon.DebugDump.page.edit:GetText()==RESTORED_TEXT)
-assert(not TestAddon.DebugDump.job,"Opening Debug must not recapture")
-local D=TestAddon.DebugDump
-local fixture=string.rep("x",8191)..string.char(226,152,131)..string.rep("y",9000)
-TestAddon.characterDB.debugDump={schema=1,text=fixture,capturedAt=123}
-D:Refresh()
-assert(D.page.edit:GetText()==fixture,"Full text survives former part boundaries")
-D.page.edit:SetText("Edited text")
-D.page.edit.scripts.OnTextChanged(D.page.edit,true)
-assert(D.page.edit:GetText()=="Edited text" and TestAddon.characterDB.debugDump.text==fixture)
-assert(not D.Copy and not D.ShowPart,"No programmatic selection or part controls remain")
+assert(TestAddon.characterDB.debugDump.text==RESTORED_TEXT)
+assert(not TestAddon.DebugDump.job and not TestAddon.DebugDump.page.edit)
+assert(not TestAddon.DebugDump.Copy and not TestAddon.DebugDump.ShowPart)
 ''')
 print("PASS: dump parses offline and cached text restores in a fresh addon runtime.")

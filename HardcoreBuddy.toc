@@ -21,6 +21,7 @@ Data\ArmorKits.lua
 Data\AdvisorGear.lua
 Data\AdvisorTalents.lua
 Data\MapNPCs.lua
+Data\SupplyVendors.lua
 Data\MapTiles.lua
 Data\LevelingZones.lua
 Data\ClassSpells.lua
@@ -44,6 +45,7 @@ Core.lua
 UI.lua
 Settings.lua
 Readiness.lua
+VendorServices.lua
 Minimap.lua
 LowHealth.lua
 Data\CreatureAlertExclusions.lua

@@ -121,6 +121,11 @@ Run `scripts/build_map_data.py` with Python and Lupa (Lua 5.1), and
 The NPC builder requests zone pages and uses already cached individual NPC
 pages; it does not retry blocked NPC pages. These scripts never run in WoW.
 
+To resume individual pages, run `scripts/resume_map_research.py` first. It stops
+at the first access/network error, caches successful pages and records its queue
+in `docs/map-research-progress.json`. Then rebuild with `scripts/build_map_data.py`.
+See `docs/map-research-resume.md` for the latest pass and continuation instructions.
+
 `tests/run_map_advisor.py` verifies data relationships, core danger records,
 portal rotation, tile geometry, independent texture ownership, exploration/map
 changes, faction/category filters, silent notices and navigation with API mocks.

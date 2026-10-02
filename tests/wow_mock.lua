@@ -11,6 +11,8 @@ function CreateColor(r,g,b,a)
     return color
 end
 local methods={}
+function methods:SetAttribute(key,value) self.attributes=self.attributes or {}; self.attributes[key]=value end
+function methods:GetAttribute(key) return self.attributes and self.attributes[key] end
 function methods:SetMinMaxValues(low,high) self.minimum,self.maximum=low,high end
 function methods:SetValueStep(step) self.step=step end
 function methods:GetValue() return self.value or 0 end

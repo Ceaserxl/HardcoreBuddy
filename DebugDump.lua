@@ -125,14 +125,19 @@ function D:Collect()
 end
 
 function D:Start()
-    if self.job or not A.characterDB then return end
+    if self.job or self.reloadAt or not A.characterDB then return end
     self.nodes=0; self.omitted=0; self.progress=0; self.displayProgress=0; self.phase="Starting dump"; self.error=nil
+    self.reloadAfter=A.characterDB.debugAutoReload==true
     self.job=coroutine.create(function() return self:Collect() end)
     if not self.worker then self.worker=CreateFrame("Frame"); self.worker:SetScript("OnUpdate",function(_,elapsed) self:Step(elapsed) end) end
     self.worker:Show(); self:Refresh()
 end
 
 function D:Step(elapsed)
+    if self.reloadAt then
+        if GetTime()>=self.reloadAt and not InCombatLockdown() then self.reloadAt=nil; ReloadUI() end
+        return
+    end
     if not self.job then self.worker:Hide(); return end
     local started=debugprofilestop and debugprofilestop()
     for _=1,8 do
@@ -140,7 +145,11 @@ function D:Step(elapsed)
         if not ok then
             self.error=tostring(result); self.job=nil; self.phase="Dump failed; previous cached dump retained."; break
         elseif coroutine.status(self.job)=="dead" then
-            A.characterDB.debugDump=result; self.job=nil; self.progress=1; self.phase="Dump complete and cached. /reload saves it to disk."; break
+            A.characterDB.debugDump=result; self.job=nil; self.progress=1
+            self.phase="Dump complete and cached. Reload or log out to save it to disk."
+            A:Print(self.phase.." Find debugDump in "..self:SavedPath())
+            if self.reloadAfter then self.reloadAt=GetTime()+0.3; self.phase="Dump complete. Reloading when out of combat..." end
+            break
         end
         if started and debugprofilestop()-started>=3 then break end
     end
@@ -153,87 +162,52 @@ end
 function D:Refresh()
     local p=self.page; if not p then return end
     local saved=A.characterDB and A.characterDB.debugDump
-    p.dump:SetEnabled(not self.job)
+    p.dump:SetEnabled(not self.job and not self.reloadAt)
     p.dump.label:SetText(self.job and "Dumping..." or "Dump Data")
     p.cached:SetText(saved and ((date and date("%b %d %H:%M",saved.capturedAt) or tostring(saved.capturedAt)).." | "..math.ceil(#saved.text/1024).." KB cached") or "")
-    p.status:SetText(self.error and (self.phase.." "..self.error) or self.phase or (saved and "Cached full dump restored. Select text in the box to copy." or "No dump cached yet."))
+    p.status:SetText(self.error and (self.phase.." "..self.error) or self.phase or (saved and "Full dump cached. Reload or log out to save it to disk." or "No dump cached yet."))
     p.fill:SetWidth(math.max(1,p.track:GetWidth()*(self.displayProgress or (saved and 1 or 0))))
     p.percent:SetText(math.floor((self.displayProgress or (saved and 1 or 0))*100).."%")
     p.sheen:SetShown(self.job~=nil)
     p.sheen:ClearAllPoints(); p.sheen:SetPoint("TOPLEFT",p.track,"TOPLEFT",((self.animationTime or 0)*220)%math.max(1,p.track:GetWidth()-40),0)
-    if saved and p.shownDump~=saved then
-        p.shownDump=saved
-        local _,lines=saved.text:gsub("\n","\n")
-        p.edit:SetHeight(math.max(250,(lines+1)*14))
-        p.edit:SetText(saved.text); p.edit:SetCursorPosition(0); p.scroll:SetVerticalScroll(0)
-        p.scroll:UpdateScrollChildRect()
-    end
+    p.autoReload:SetChecked(A.characterDB and A.characterDB.debugAutoReload==true)
+    p.autoReload.mark:SetText(p.autoReload:GetChecked() and "X" or "")
+end
+
+function D:SavedPath()
+    return "_classic_era_/WTF/Account/<ACCOUNT>/"..(GetRealmName and GetRealmName() or "<Realm>").."/"
+        ..(UnitName and UnitName("player") or "<Character>").."/SavedVariables/HardcoreBuddy.lua"
 end
 
 function D:Create(page)
     if self.page then return end
     self.page=page
-    Skin.SectionBackdrop(page,Skin.layout.headerBottom,148).title:SetText("Capture data")
-    Skin.SectionBackdrop(page,210,298).title:SetText("Dump output")
-    page.subtitle=label(page,"Capture all HardcoreBuddy data and available character details for offline review.",0,34,700)
+    Skin.SectionBackdrop(page,Skin.layout.headerBottom,174).title:SetText("Capture data")
+    Skin.SectionBackdrop(page,236,150).title:SetText("Saved dump location")
+    page.subtitle=label(page,"Capture all HardcoreBuddy data and available character details for offline review.",0,30,700)
     page.dump=button(page,"Dump Data",16,96,function() self:Start() end)
-    page.copyHint=label(page,"Ctrl + C to copy",176,96,530)
-    page.cached=label(page,"",176,118,530)
-    page.status=label(page,"",16,138,700); page.status:SetHeight(30)
+    page.cached=label(page,"",176,126,530)
+    local check=CreateFrame("CheckButton",nil,page,"BackdropTemplate"); page.autoReload=check
+    check:SetSize(24,24); check:SetPoint("TOPLEFT",176,-96); Skin.Paint(check,"edit")
+    check.mark=label(check,"",0,0,24); check.mark:SetAllPoints(); check.mark:SetJustifyH("CENTER")
+    check.caption=label(check,"Reload after dump completes",32,4,480)
+    check:SetScript("OnClick",function() A.characterDB.debugAutoReload=not not check:GetChecked(); self:Refresh() end)
+    page.status=label(page,"",16,150,700); page.status:SetHeight(36)
     local track=CreateFrame("Frame",nil,page,"BackdropTemplate"); page.track=track
-    track:SetPoint("TOPLEFT",16,-174); track:SetSize(700,18); Skin.Paint(track,"edit")
+    track:SetPoint("TOPLEFT",16,-194); track:SetSize(700,18); Skin.Paint(track,"edit")
     page.fill=track:CreateTexture(nil,"ARTWORK"); page.fill:SetTexture("Interface\\Buttons\\WHITE8x8"); page.fill:SetVertexColor(0.25,0.7,0.42,1)
     page.fill:SetPoint("TOPLEFT"); page.fill:SetHeight(18)
     page.sheen=track:CreateTexture(nil,"OVERLAY"); page.sheen:SetTexture("Interface\\Buttons\\WHITE8x8")
     page.sheen:SetSize(40,18); page.sheen:SetVertexColor(1,1,1,0.22)
     page.percent=label(track,"",0,0,700); page.percent:SetHeight(18); page.percent:SetJustifyH("CENTER")
-    local border=CreateFrame("Frame",nil,page,"BackdropTemplate"); page.outputBorder=border; Skin.Paint(border,"edit")
-    border:SetPoint("TOPLEFT",14,-248); border:SetSize(704,254)
-    local scroll=CreateFrame("ScrollFrame","HardcoreBuddyDebugTextScroll",page,"UIPanelScrollFrameTemplate"); page.scroll=scroll
-    scroll:SetFrameLevel(border:GetFrameLevel()+1)
-    scroll:SetPoint("TOPLEFT",16,-250); scroll:SetSize(680,250)
-    local edit=CreateFrame("EditBox",nil,scroll); page.edit=edit
-    edit:SetMultiLine(true); edit:SetAutoFocus(false); edit:SetFontObject(ChatFontNormal); edit:SetWidth(670); edit:SetHeight(250); edit:SetMaxLetters(0)
-    if edit.SetMaxBytes then edit:SetMaxBytes(0) end
-    if edit.SetCountInvisibleLetters then edit:SetCountInvisibleLetters(true) end
-    scroll:SetScrollChild(edit)
-    scroll:EnableMouseWheel(true)
-    scroll:SetScript("OnMouseWheel",function(_,delta)
-        scroll:SetVerticalScroll(math.max(0,math.min(edit:GetHeight()-250,scroll:GetVerticalScroll()-delta*42)))
-    end)
-    edit:SetScript("OnEscapePressed",function(e) e:ClearFocus() end)
-    edit:SetScript("OnTextChanged",function(_,user)
-        if user then page.textDirtyAt=GetTime()+0.2 end
-    end)
-    edit:SetScript("OnUpdate",function(e)
-        if page.textDirtyAt and GetTime()>=page.textDirtyAt then
-            page.textDirtyAt=nil
-            local _,lines=e:GetText():gsub("\n","\n")
-            e:SetHeight(math.max(250,(lines+1)*14)); scroll:UpdateScrollChildRect()
-        end
-    end)
-    edit:SetScript("OnCursorChanged",function(_,_,y,_,height)
-        if not y or page.scrolling then return end
-        page.scrolling=true
-        local top=-y; local current=scroll:GetVerticalScroll()
-        local wanted=current
-        if top<current then wanted=top
-        elseif top+height>current+scroll:GetHeight() then wanted=top+height-scroll:GetHeight() end
-        wanted=math.max(0,math.min(math.max(0,edit:GetHeight()-scroll:GetHeight()),wanted))
-        if math.abs(wanted-current)>0.5 then scroll:SetVerticalScroll(wanted) end
-        page.scrolling=nil
-    end)
-    label(page,"Full editable dump. Select text manually (Ctrl + A for all), then Ctrl + C. The original dump stays cached.",16,516,700)
-    page:SetScript("OnHide",function() edit:ClearFocus() end)
-    page.contentHeight=550; self:Refresh()
+    page.savedPath=label(page,self:SavedPath(),16,278,700)
+    page.fileHelp=label(page,"After reloading or logging out, open this file in a text editor and search for debugDump. The text field contains the full dump. <ACCOUNT> is your account folder under WTF/Account.",16,326,700)
+    page.contentHeight=394; self:Refresh()
 end
 
 function D:Layout(width)
     local page=self.page
     if not page then return end
-    local changed=page.track:GetWidth()~=width-44
     page.track:SetWidth(width-44); page.percent:SetWidth(width-44)
-    page.outputBorder:SetWidth(width-40)
-    page.scroll:SetWidth(width-64); page.edit:SetWidth(width-74)
-    if changed then self:Refresh() end
+    page.status:SetWidth(width-44); page.savedPath:SetWidth(width-44); page.fileHelp:SetWidth(width-44)
 end

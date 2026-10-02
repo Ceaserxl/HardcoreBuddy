@@ -1,3 +1,5 @@
+-- Cross-armor fixtures explicitly opt out of the new default.
+TestAddon.characterDB.auctionHighestArmorOnly=false
 local A,F=TestAddon,GEAR_FIXTURES
 local U,G=A.AuctionUpgrades,A.GearAdvisor
 local checks=0
@@ -360,7 +362,7 @@ check(not GameTooltip:IsShown() and not ShoppingTooltip1:IsShown(),"Leaving the 
 
 shift=false; always=false
 AuctionFrameTab_OnClick(U.tab); F.reset("HUNTER",40,{31,0,0}); F.equip(1,old)
-check(not A.characterDB.auctionHighestArmorOnly,"Highest-only filter defaults off")
+check(not A.characterDB.auctionHighestArmorOnly,"Explicit cross-armor preference remains off")
 local mail=F.item("INVTYPE_HEAD",{ITEM_MOD_AGILITY_SHORT=25},4,3)
 local robe=F.item("INVTYPE_ROBE",{ITEM_MOD_AGILITY_SHORT=5},4,1)
 local chest=F.item("INVTYPE_CHEST",{ITEM_MOD_AGILITY_SHORT=5},4,3)
