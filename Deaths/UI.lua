@@ -97,10 +97,14 @@ function H:ShowDetails(record)
     addon:OpenDeaths(filter~="Options" and filter or "Reports",record)
 end
 function H:JournalColumns(width)
-    local extra=math.max(0,(width-816)/3)
-    return {{"LEVEL",6,36,"level"},{"ADVENTURER",52,140+extra,"name"},
-        {"LOCATION",202+extra,170+extra,"zone"},{"CAUSE",382+extra*2,208+extra,"cause"},
-        {"SOURCE",600+extra*3,96,"source"},{"WHEN",width-108,70,"age"}}
+    -- Width is the actual row width, including its inner text padding.
+    local flexible=math.max(0,width-264)
+    local columns={{"LEVEL",0,36,"level","CENTER"},{"ADVENTURER",0,flexible*0.28,"name","LEFT"},
+        {"LOCATION",0,flexible*0.32,"zone","LEFT"},{"CAUSE",0,flexible*0.40,"cause","LEFT"},
+        {"SOURCE",0,96,"source","LEFT"},{"WHEN",0,70,"age","RIGHT"}}
+    local x=6
+    for _,column in ipairs(columns) do column[2]=x; x=x+column[3]+10 end
+    return columns
 end
 function H:MakeRow(parent, index, y, mini)
     local row = CreateFrame("Button", nil, parent,"BackdropTemplate")
@@ -178,11 +182,11 @@ function H:RefreshJournalRows()
         if not row then row=self:MakeRow(f.listContent,i,0,false); f.rows[i]=row end
         row:ClearAllPoints()
         row:SetPoint("TOPLEFT",12,-(index-1)*32)
-        row:SetPoint("TOPRIGHT",-12,-(index-1)*32)
+        row:SetPoint("TOPRIGHT",-24,-(index-1)*32)
         row.bg:SetColorTexture(1,1,1,index%2==0 and 0.04 or 0)
-        for _,column in ipairs(self:JournalColumns(f.listContent:GetWidth())) do
+        for _,column in ipairs(self:JournalColumns(f.listContent:GetWidth()-36)) do
             local label=row[column[4]]
-            label:ClearAllPoints(); label:SetPoint("LEFT",column[2],0); label:SetWidth(column[3])
+            label:ClearAllPoints(); label:SetPoint("LEFT",column[2],0); label:SetWidth(column[3]); label:SetJustifyH(column[5])
         end
         self:PaintRow(row,records[index],false)
     end
@@ -315,9 +319,9 @@ function H:LayoutPage(parent,left,top,width,height,state)
     journal.minimumLabel:SetWidth(94)
     journal.search:ClearAllPoints(); journal.search:SetPoint("TOPLEFT",0,34)
     journal.search:SetWidth(width-12-130-44-94-24)
-    local columns=self:JournalColumns(width)
+    local columns=self:JournalColumns(width-36)
     for i,label in ipairs(self.window.columnLabels) do
-        label:ClearAllPoints(); label:SetPoint("TOPLEFT",columns[i][2]+12,-118); label:SetWidth(columns[i][3])
+        label:ClearAllPoints(); label:SetPoint("TOPLEFT",columns[i][2]+12,-118); label:SetWidth(columns[i][3]); label:SetJustifyH(columns[i][5])
     end
     self.window.tableCard:SetHeight(math.max(40,height-118))
     addon.Skin.LayoutSections(self.details,width)

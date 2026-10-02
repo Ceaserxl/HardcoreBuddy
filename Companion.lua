@@ -402,12 +402,18 @@ function C.Build(context,state)
         if not state.filter or state.filter=="All" then
             result.continuous=true
             result.total,result.pages,result.page=#rows,1,1
-            for _,b in ipairs(rows) do b.supplyColumns=true end
-            local section=card("All",#rows==0 and "No matching supplies." or nil,rows)
-            section.supplyTable=true; section.allSupplyTable=true; section.fullWidth=true
-            result.cards[1]=section
-            if context.characterClass=="Hunter" and A.HunterTraining then
-                result.cards[#result.cards+1]=A.HunterTraining.Card(context)
+            for index=2,#S.categories do
+                local category=S.categories[index]
+                local group={}
+                for _,b in ipairs(rows) do
+                    if b.category==category then b.supplyColumns=true; group[#group+1]=b end
+                end
+                local section=card(category,#group==0 and "No matching items in this category." or nil,group)
+                section.supplyTable=true; section.allSupplyTable=true; section.fullWidth=true
+                result.cards[#result.cards+1]=section
+                if category=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
+                    result.cards[#result.cards+1]=A.HunterTraining.Card(context)
+                end
             end
         else
             result.cards[1]=card(state.filter,

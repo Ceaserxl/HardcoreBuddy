@@ -11,10 +11,17 @@ for _,class in ipairs({"DRUID","HUNTER","MAGE","PALADIN","PRIEST","ROGUE","SHAMA
     MOCK.class=class; A.lastClass=nil; A:Navigate("supplies")
     local doc=A.document; local card=A.window.cards[1]
     assert(doc.cards[1].allSupplyTable and doc.cards[1].fullWidth)
-    assert(#doc.cards[1].blocks==doc.total,"Every supply appears in the table")
-    assert(#card.supplyHeaders==5)
-    local previous,clickable
-    for i,block in ipairs(doc.cards[1].blocks) do
+    local total,categoryIndex,clickable=0,2
+    for sectionIndex,section in ipairs(doc.cards) do if section.allSupplyTable then
+      card=A.window.cards[sectionIndex]
+      assert(section.title==A.Supplies.categories[categoryIndex],"All preserves category sections and order")
+      categoryIndex=categoryIndex+1
+      local _,size=card.title:GetFont(); assert(size==15,"All category headings have the same size")
+      assert(#card.supplyHeaders==5)
+      local previous
+      for i,block in ipairs(section.blocks) do
+        total=total+1
+        assert(block.category==section.title,"Supply stays within its category section")
         local row=card.content.blocks[i]
         local x,y,w,h=row:GetRect()
         assert(h==36 and w==card.content:GetWidth(),"All rows use the full table width")
@@ -27,7 +34,9 @@ for _,class in ipairs({"DRUID","HUNTER","MAGE","PALADIN","PRIEST","ROGUE","SHAMA
             or block.count==0 and "Missing" or "("..block.count.."/"..(block.target or "?")..")"
         assert(row.stock:GetText()==wanted,"Table preserves supply stock states")
         if block.action and block.action.kind=="item" then clickable=clickable or row end
-    end
+      end
+    end end
+    assert(total==doc.total,"Every supply appears in its category table")
     assert(clickable); local id=clickable.block.itemId
     MOCK.Click(clickable)
     assert(A.document.isDetail and A.state.detail.item.itemId==id,"Item rows open the selected item")

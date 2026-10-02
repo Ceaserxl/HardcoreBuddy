@@ -21,7 +21,7 @@ local function cards()
             if not data.itemLayout then
                 local tx,ty=c.title:GetRect(); local _,size=c.title:GetFont()
                 check(near(x,tx) and near(y,ty),"No extra inset before section titles")
-                check(size==(i==1 and (not data.supplyTable or data.allSupplyTable) and 22 or 15),"Shared heading hierarchy")
+                check(size==(i==1 and not data.supplyTable and 22 or 15),"Shared heading hierarchy")
                 if data.note and data.note~="" then
                     local _,ny=c.note:GetRect(); local _,_,_,th=c.title:GetRect()
                     local _,ns=c.note:GetFont()
@@ -57,6 +57,24 @@ for _,screen in ipairs({{1920,1080},{1024,768},{640,480}}) do
     end
     A:OpenDeaths()
     local j=A.Deaths.window
+    A.Deaths.db.records={}
+    for i=1,50 do A.Deaths.db.records[i]={name="Report"..i,realm=A.Deaths.realm,date=time()-i*3600,
+        level=40,class=8,source="Official",zone="Westfall"} end
+    A.Deaths:Refresh()
+    for _,offset in ipairs({0,17,320}) do
+        j.listScroll:SetVerticalScroll(offset); A.Deaths:RefreshJournalRows()
+        local bx,by,bw=j.tableCard:GetRect()
+        for _,row in ipairs(j.rows) do if row:IsShown() then
+            local rx,ry,rw=row:GetRect()
+            check(near(rx-bx,12) and near(bx+bw-rx-rw,12),"Journal rows stay inside both section borders")
+            for i,column in ipairs(A.Deaths:JournalColumns(rw)) do
+                local cell=row[column[4]]; local header=j.columnLabels[i]
+                local cx,cy,cw=cell:GetRect(); local hx,hy,hw=header:GetRect()
+                check(near(cx,hx) and near(cw,hw) and cell.justifyH==header.justifyH,"Journal headers and cells share column edges and alignment")
+                check(cx>=rx and cx+cw<=rx+rw,"Journal text stays inside the row")
+            end
+        end end
+    end
     local _,toolbarY=A.window.back:GetRect()
     local sx,sy,sw=j.search:GetRect(); local mx,my,mw=j.minimum:GetRect()
     local cx,cy,cw=j.clear:GetRect(); local lx,ly,lw,lh=j.minimumLabel:GetRect()

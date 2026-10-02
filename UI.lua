@@ -518,7 +518,7 @@ local function renderCard(frame, data, width)
     if frame.defaultChoice then frame.defaultChoice:Hide() end
     if frame.itemHeading then frame.itemHeading:Hide() end
     Skin.Paint(frame,"note")
-    local pageTitle=frame.firstCard and (not data.supplyTable or data.allSupplyTable)
+    local pageTitle=frame.firstCard and not data.supplyTable
     Skin.TextStyle(frame.title,pageTitle and "page" or "section")
     Skin.TextStyle(frame.note,"subtitle")
     frame.title:Show(); frame.note:Show()
