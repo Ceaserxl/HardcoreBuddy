@@ -7,12 +7,14 @@ Browsing alternatives is temporary; old saved enchant choices are ignored.
 Missing slots always display the automatic recommendation. Applied alternatives
 display their actual enhancement rather than replacing the recommendation.
 
-Rows display `Slot - Enchant`, the effect as the subtitle, and status at the
+Rows display `Slot - Enchant`, a compact bonus and profession requirement
+(for example, `+9 Stamina - Enchanting 300`) as the subtitle, and status at the
 upper right. Missing enchants show Not Enchanted with red borders; the recommended
 enchant applied shows Enchanted and another applied enhancement shows Alternative,
 both green on the overview.
 Hover shows the enchant effect rather than its crafting recipe. Details place
-the recommendation and alternatives on the left and tracked reagents on the right.
+the selected enhancement and tracked reagents on the left and alternatives on the right.
+Armor-kit subtitles also retain the use-level and target-item restrictions.
 Armor kits participate in these same comparisons for chest, gloves, legs and boots,
 respecting the kit's required use level and the target item's level.
 They can be the recommendation (including legs and caster gloves) or an alternative.

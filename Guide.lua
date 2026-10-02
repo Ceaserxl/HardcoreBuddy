@@ -61,6 +61,54 @@ function G.ItemFields(item,context)
     field("Notes",#notes>0 and table.concat(notes,"\n") or nil,nil,true)
     return fields
 end
+-- Compact presentation for the Supplies detail page; full reference fields
+-- remain available to the other guides and exports.
+function G.CompactItemFields(item,context)
+    local fields=G.ItemFields(item,context)
+    local out={}
+    local function compact(value)
+        return value:gsub("Must remain seated while eating%.","Seated.")
+            :gsub("Must remain seated while drinking%.","Seated.")
+            :gsub("Restores (%d+) health over (%d+) sec%.","+%1 health over %2 sec.")
+            :gsub("Restores (%d+) mana over (%d+) sec%.","+%1 mana over %2 sec.")
+            :gsub(" %(recipe must be learned%)","")
+            :gsub("Learn this recipe from ",""):gsub("Learn from ","")
+            :gsub("Buy from a food vendor or innkeeper that stocks this tier%. Equivalent bread and fish work too%.","Food vendors and innkeepers.")
+            :gsub("Buy from a food vendor or innkeeper that stocks this tier%. Equivalent bread, cheese and fish work too%.","Food vendors and innkeepers.")
+            :gsub("Buy from a drink vendor or innkeeper that stocks this tier%.","Drink vendors and innkeepers.")
+            :gsub("AH listings are not checked%. Self Found cannot use the Auction House or player trading%.","Self Found: no AH or trading.")
+            :gsub("Binds on pickup; obtain it yourself%.","Binds on pickup.")
+            :gsub("Recovery food has no Well Fed buff%. Eat only after reaching safety%.","No Well Fed buff. Eat in safety.")
+            :gsub("Target armor must be item level (%d+) or higher%.","Item level %1+")
+            :gsub(" %(per kit%)","")
+    end
+    local requirement="Level "..item.level
+    if item.useSkill then requirement=requirement.." | "..item.useSkill.name.." "..item.useSkill.value end
+    for _,f in ipairs(fields) do
+        local label,value=f.label,compact(f.value)
+        if label=="Use level" then label,value="Requires",requirement
+        elseif label=="Use requirement" then value=nil
+        elseif label=="Crafting" and value=="Not profession-crafted." then value=nil
+        elseif label=="Profession rank" then
+            label="Training"
+            value=value:gsub(" %- train at skill "," | Skill "):gsub(", character level "," | Level ")
+                :gsub(" %- initial training",""):gsub("; no additional character%-level requirement","")
+                :gsub("Learn the Expert skill book%.","Expert skill book."):gsub("Complete ","")
+        elseif label=="Acquisition" or label=="Recipe source" then label="Source"
+        elseif label=="Recipe AH" then
+            if value:find("No recipe item",1,true) or value:find("quest teaches",1,true) then value=nil
+            elseif value:find("Tradable recipe",1,true) then value="Tradable recipe"
+            elseif value:find("binds when picked up",1,true) then value="Recipe binds on pickup" end
+        elseif label=="Finished item AH" then
+            label="Trading"
+            value=value:find("Tradable",1,true) and "Trade / AH; stock not checked"
+                or value:find("conjured",1,true) and "Conjured; no AH"
+                or value:find("bound",1,true) and "Bound; no trading" or "Tradability unknown"
+        elseif label=="Materials" and item.armorKit and item.reagents then value=nil end
+        if value and value~="" then out[#out+1]={label=label,value=value,itemId=f.itemId,wide=f.wide} end
+    end
+    return out
+end
 local function itemBlock(target, item, detailed, child, context)
     local grouped = P.grouped[item.family] and item.progression
     local lines = {item.short or ""}

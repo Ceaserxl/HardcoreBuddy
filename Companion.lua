@@ -305,9 +305,17 @@ function C.Detail(context, action)
         if not out.blocks[1].readOnlyTarget and not out.blocks[1].pickRank then
             out.quantityRecord={title="Keep on hand",quantityEditor=true,targetKey=r.targetKey,target=r.target}
         end
+        local alternatives=false
         for _,block in ipairs(out.blocks) do
-            if block.fields then block.title="Item details"; block.singleFieldColumn=true end
-            if block.title=="Alternatives" or block.title=="Next" then block.plain=true; block.textInset=0 end
+            if block.fields then
+                block.title="Item details"; block.singleFieldColumn=true; block.rightColumn=false
+                block.fields=G.CompactItemFields(item,context)
+            end
+            if block.title=="Alternatives" or block.title=="Next" then
+                alternatives=true; block.plain=true; block.textInset=0
+                if block.title=="Alternatives" then block.body=nil end
+            end
+            if alternatives then block.rightColumn=true end
             if block.child and block.itemId then block.child=nil end
         end
         return out

@@ -31,16 +31,16 @@ assert(header and option)
 local hx=header.title:GetRect(); local ox=option.title:GetRect()
 local ix=card.content.blocks[1].title:GetRect()
 local backX=A.window.back:GetRect()
-assert(hx==backX and ox==ix,"Heading aligns with Back; item text retains consistent padding")
-assert(card.content.blocks[1]:GetRect()==backX and option:GetRect()==backX)
+assert(hx>backX and ox-ix==hx-backX,"Alternatives occupy the right column with consistent item padding")
+assert(card.content.blocks[1]:GetRect()==backX and option:GetRect()==hx)
 local qx,qy,qw=card.detailQuantity:GetRect()
 local px,py=A.window.priorityChoice:GetRect()
 assert(qy==py and qx+qw+8==px,"Keep on hand sits directly left of Priority")
 for _,r in ipairs(card.content.blocks) do if r:IsShown() then
-    if r.block.title=="Next" then assert(r.title:GetRect()==backX) end
+    if r.block.title=="Next" then assert(r.title:GetRect()==hx) end
     if r.block.fields then
         local dx,dy,dw=r:GetRect(); local px,py,pw=A.window.priorityChoice:GetRect()
-        assert(dx+dw==px+pw,"Priority remains aligned with details right edge")
+        assert(dx==backX and dx+dw<hx,"Item details remain under the selected item on the left")
     end
 end end
 MOCK.Click(option)

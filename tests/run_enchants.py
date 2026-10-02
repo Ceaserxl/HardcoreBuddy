@@ -155,8 +155,8 @@ gear[7].enchant=0
 local kitDetail=E.Detail(ctx,{kind="enchantSlot",slotId=7})
 local kitMaterials=false
 for _,b in ipairs(kitDetail.blocks) do
-    if b.itemId==8170 and b.rightColumn then kitMaterials=true end
-    if b.title=="Requirements" then check(b.body:find("Leatherworking",1,true),"Kit requirements use correct profession") end
+    if b.itemId==8170 and not b.rightColumn then kitMaterials=true end
+    if b.enchantTooltip and b.enchantTooltip.armorKit then check(b.body:find("Leatherworking",1,true),"Kit subtitle includes crafting requirement") end
 end
 check(kitMaterials,"Kit crafting materials in comparison details")
 ctx.enchantChoices[7]=22727
@@ -200,13 +200,14 @@ A:Activate(recipe)
 check(A.document.cards[1].title=="Wrists enchants","Recipe detail")
 local detail=A.document.cards[1]
 check(detail.blocks[1].title=="Selected Alternative" and detail.blocks[2].enchantTooltip.spellId==recipe.spellId,"Selected alternative replaces recommendation display")
-check(detail.blocks[3].title=="Requirements" and not detail.blocks[3].rightColumn,"Requirements below selected enchant on left")
-check(detail.blocks[5].enchantStatus=="|cff62d79bRecommended|r" and not detail.blocks[5].title:find("(Recommended)",1,true),"Recommended enchant first in alternatives with green top-right label")
+check(detail.blocks[3].title=="Alternatives" and detail.blocks[3].rightColumn,"Alternatives in right column")
+check(detail.blocks[2].body:find("Enchanting",1,true),"Requirements integrated into enchant subtitle")
+check(detail.blocks[4].enchantStatus=="|cff62d79bRecommended|r" and not detail.blocks[4].title:find("(Recommended)",1,true),"Recommended enchant first in alternatives with green top-right label")
 local selectedReagents={}
 for _,pair in ipairs(E.byId[recipe.spellId].reagents) do selectedReagents[pair[1]]=pair[2] end
 for _,b in ipairs(detail.blocks) do
     check(b.title~="Automatic recommendation" and b.title~="Use this enchant","Removed selection buttons")
-    if b.itemId and b.rightColumn then check(b.target==selectedReagents[b.itemId],"Materials match selected alternative") end
+    if b.itemId and not b.rightColumn then check(b.target==selectedReagents[b.itemId],"Materials match selected alternative") end
 end
 local material=false
 for _,b in ipairs(A.document.cards[1].blocks) do if b.itemId then material=true end end
@@ -225,10 +226,10 @@ check(feetDetail.blocks[1].title=="Selected Alternative" and feetDetail.blocks[2
 local other
 for _,option in ipairs(feet.options) do if option~=feet.recommendation and option.enchantId~=1843 then other=option; break end end
 local ordered=E.Detail(A:GetContext(),{slotId=8,spellId=other.spellId})
-check(ordered.blocks[5].enchantStatus=="|cff62d79bRecommended|r" and ordered.blocks[6].enchantTooltip.enchantId==1843 and ordered.blocks[6].enchantStatus=="Enchanted","Applied enchant follows recommendation in alternatives")
+check(ordered.blocks[4].enchantStatus=="|cff62d79bRecommended|r" and ordered.blocks[5].enchantTooltip.enchantId==1843 and ordered.blocks[5].enchantStatus=="Enchanted","Applied enchant follows recommendation in alternatives")
 local recommendedDetail=E.Detail(A:GetContext(),{slotId=8,spellId=feet.recommendation.spellId})
 check(recommendedDetail.blocks[1].title=="Recommended" and recommendedDetail.blocks[2].enchantStatus=="Missing" and recommendedDetail.blocks[2].enchantTone=="missing","Selected recommendation is red and missing when an alternative is applied")
-check(recommendedDetail.blocks[5].enchantStatus=="Enchanted" and recommendedDetail.blocks[5].enchantTooltip.enchantId==1843,"Applied alternative remains enchanted beneath selected missing recommendation")
+check(recommendedDetail.blocks[4].enchantStatus=="Enchanted" and recommendedDetail.blocks[4].enchantTooltip.enchantId==1843,"Applied alternative remains enchanted beneath selected missing recommendation")
 for _,slot in ipairs(E.Scan(A:GetContext())) do
     if gear[slot.slotId] and #slot.options>0 then
         local oldEnchant=gear[slot.slotId].enchant
@@ -260,8 +261,8 @@ check(GameTooltip.hyperlink==nil and GameTooltip.lines[2]==frame.block.enchantTo
 A:Activate(frame.block.action)
 check(A.document.cards[1].itemLayout and A.document.cards[1].blocks[1].title=="Recommended","Two-column enchant detail")
 local right=false
-for _,b in ipairs(A.document.cards[1].blocks) do if b.itemId and b.rightColumn then right=true; check(b.supply and b.target>0,"Tracked reagent rows") end end
-check(right,"Materials occupy right column")
+for _,b in ipairs(A.document.cards[1].blocks) do if b.itemId and not b.rightColumn then right=true; check(b.supply and b.target>0,"Tracked reagent rows") end end
+check(right,"Materials occupy left column")
 local before=#A.document.cards[1].blocks
 MOCK.Click(A.window.enchantRanks)
 check(A.state.showLesserEnchants and #A.document.cards[1].blocks>before,"Show Lesser Ranks expands the displayed alternatives")

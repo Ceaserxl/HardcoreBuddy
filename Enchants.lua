@@ -251,6 +251,19 @@ local labels={empty="No item equipped",unknown="Waiting for item data",incompati
     checked="Armor kit or situational enchant",missing="|cffff785eMissing enchant|r",upgrade="|cffffcd52Older enchant: upgrade available|r",
     ready="|cff62d79bAlready applied|r",replace="Selected replacement: overwrites current enhancement",
     enchanted="Existing enhancement kept",preview="Preview: gear eligibility not checked"}
+function E.Subtitle(r)
+    local effect=r.effect or r.description or ""
+    if r.armorKit then effect="+"..r.power..(r.defenseKit and " Defense" or " Armor")
+    else
+        local stat,amount=effect:match("^(.-) %+(%d+%%?)$")
+        if stat then effect="+"..amount.." "..stat end
+        effect=effect:gsub("Mana Regen (%d+) per 5 sec%.","+%1 Mana / 5 sec")
+    end
+    if r.skill then effect=effect.." - "..(r.armorKit and "Leatherworking " or "Enchanting ")..r.skill end
+    if r.armorKit then effect=effect.." - Level "..r.level end
+    if r.gearLevel and r.gearLevel>1 then effect=effect.." - Item level "..r.gearLevel.."+" end
+    return effect
+end
 local function enchantBlock(g,r,action)
     local status,tone
     if not g.enchantId or g.status=="incompatible" then status,tone=labels[g.status] or "Unknown","unknown"
@@ -260,7 +273,7 @@ local function enchantBlock(g,r,action)
     local name=r and (r.armorKit and r.name or r.name:match(" %- (.*)$"))
         or (g.status=="unknown" or g.status=="empty" or g.status=="incompatible") and labels[g.status] or "No recommendation"
     local b=row(g.name.." - "..name,
-        r and r.description or labels[g.status],action,r and r.icon or "Trade_Engraving")
+        r and E.Subtitle(r) or labels[g.status],action,r and r.icon or "Trade_Engraving")
     b.enchantRow=true; b.enchantStatus=status; b.enchantTone=tone
     b.enchantTooltip=r
     b.enchantScore=r and E.Score(r,g.profile)
@@ -302,17 +315,14 @@ function E.Detail(context,action)
         selectedBlock.enchantTone="missing"
     end
     blocks[#blocks+1]=selectedBlock
-    if selected then
-        local requirement=row("Requirements",selected.armorKit and ("Leatherworking "..selected.skill.." | Item level "..selected.gearLevel.."+") or "Enchanting "..selected.skill)
-        requirement.compactRow=true; blocks[#blocks+1]=requirement
-    end
-    heading("Alternatives")
+    heading("Alternatives",true)
     local listed={}
     local function alternative(option)
         if not option or option==selected or listed[option.spellId] then return end
         listed[option.spellId]=true
         local b=enchantBlock(g,option,{kind="enchantRecipe",slotId=g.slotId,spellId=option.spellId})
         b.enchantAlternative=true
+        b.rightColumn=true
         if b.enchantStatus=="Alt Enchanted" then b.enchantStatus="" end
         if option==recommended then b.enchantStatus="|cff62d79bRecommended|r" end
         blocks[#blocks+1]=b
@@ -320,13 +330,13 @@ function E.Detail(context,action)
     alternative(recommended)
     if g.current and (g.current.armorKit or relevant(g.current,context)) then alternative(g.current) end
     for _,option in ipairs(A.state and A.state.showLesserEnchants and options or g.options) do alternative(option) end
-    heading("Materials",true,not selected and "No compatible enchant selected" or nil)
+    heading("Materials",false,not selected and "No compatible enchant selected" or nil)
     if selected then
         for _,pair in ipairs(selected.reagents) do
             local m=D.materials[pair[1]]; local inv=context.inventory or {}
             local count=inv.available and inv.counts and (inv.counts[m.itemId] or 0) or nil
             local b=row(m.name,nil,nil,m.icon)
-            b.itemId=m.itemId; b.supply=true; b.rightColumn=true
+            b.itemId=m.itemId; b.supply=true
             b.count=count; b.target=pair[2]; b.readOnlyTarget=true; b.materialCount=true
             b.status=count==nil and "unknown" or count>=pair[2] and "ready" or count==0 and "missing" or "low"
             blocks[#blocks+1]=b

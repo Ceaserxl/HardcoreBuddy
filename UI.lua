@@ -658,8 +658,7 @@ local function renderCard(frame, data, width)
     frame.content.gridStart=data.supplyTable and 1 or frame.gridStart
     if data.fullWidth then frame.content.gridStart=nil end
     if data.itemLayout then
-        -- Keep the item, its quantity and alternatives together on the left;
-        -- the labeled reference details get their own column on the right.
+        -- Each detail model chooses its columns explicitly.
         local contentWidth=width-12
         local leftWidth=math.floor((contentWidth-SPACE.columnGap)/2)
         local rightWidth=contentWidth-leftWidth-SPACE.columnGap
@@ -674,7 +673,7 @@ local function renderCard(frame, data, width)
         for i,block in ipairs(data.blocks) do
             local row=frame.content.blocks[i]
             if not row then row=newBlock(frame.content); frame.content.blocks[i]=row end
-            local details=block.fields~=nil or block.rightColumn
+            local details=block.rightColumn==true or block.rightColumn==nil and block.fields~=nil
             row.supplyTile=false; row:ClearAllPoints()
             row:SetPoint("TOPLEFT",details and leftWidth+SPACE.columnGap or 0,-(details and rightHeight or leftHeight))
             local height=renderBlock(row,block,details and rightWidth or leftWidth)
