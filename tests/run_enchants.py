@@ -142,7 +142,7 @@ local mats=E.MaterialItems(ctx)
 local saved=mats[1]
 for _,s in ipairs(E.Scan(ctx)) do if s.recommendation and gear[s.slotId] then gear[s.slotId].enchant=s.recommendation.enchantId end end
 check(saved and E.DetailMaterial(ctx,saved).recommendedTarget==0,"Open material detail drops obsolete default quantity")
-A:Back();A:Back();check(A.state.filter=="Enchants" and not A.state.detail,"Back restores root")
+A:Back();check(A.state.filter=="Enchants" and not A.state.detail and #A.history==0 and not A:CanGoBack(),"One Back clears alternative history and restores Enchants root")
 local tile=A.document.cards[1].blocks[3]
 check(tile.title:find("Wrists - ",1,true)==1 and tile.enchantStatus=="Enchanted" and tile.enchantTone=="ready","Applied recommendation green")
 gear[9].enchant=99999; A:Refresh()

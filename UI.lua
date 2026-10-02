@@ -968,7 +968,11 @@ function addon:Activate(action)
 end
 function addon:Back()
     self:CommitInputs(); self.window.classMenu:Hide()
-    if self.state.view=="settings" and self.state.gearPage then self.Settings:OpenGearPage(nil)
+    local detail=self.state.detail
+    if self.state.view=="supplies" and (self.state.filter=="Enchants"
+        or detail and (detail.kind=="enchantSlot" or detail.kind=="enchantRecipe")) then
+        self.history={}; self.state={view="supplies",filter="Enchants",page=1}; self:Refresh(true)
+    elseif self.state.view=="settings" and self.state.gearPage then self.Settings:OpenGearPage(nil)
     elseif self.state.view=="settings" and self.state.mapIconKind then
         self.state.mapIconKind=nil; self.Settings.scroll:SetVerticalScroll(0); self:Refresh(true)
     elseif self.state.view=="deaths" and self.state.deathRecord then self:OpenDeaths("Reports")
@@ -981,6 +985,8 @@ function addon:Back()
 end
 function addon:CanGoBack()
     local s=self.state or {}
+    if s.view=="supplies" and s.detail and (s.filter=="Enchants"
+        or s.detail.kind=="enchantSlot" or s.detail.kind=="enchantRecipe") then return true end
     if s.view=="training" and s.detail and s.detail.kind=="profession" and s.detail.family=="dummy" then return false end
     return (self.history and #self.history>0) or (s.view=="petguide" and s.detail~=nil)
         or (s.view=="settings" and s.gearPage~=nil)
