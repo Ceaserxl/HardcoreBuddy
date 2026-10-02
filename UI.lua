@@ -1444,7 +1444,11 @@ local function layoutDocument(self)
         f.clear:ClearAllPoints(); f.clear:SetPoint("TOPRIGHT",-rightInset-extraWidth,-toolbarY)
         f.clear:SetHeight(rowHeight)
         f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("TOPRIGHT",-rightInset,-toolbarY-(wrapExtra and rowHeight+SPACE.sectionGap or 0))
-        active(f.atLevel,(rangePage or spellPage) and not not showAll or not (rangePage or spellPage) and self.state.atLevel)
+        local filterActive
+        if spellPage then filterActive=not showAll
+        elseif rangePage then filterActive=not not showAll
+        else filterActive=self.state.atLevel end
+        active(f.atLevel,filterActive)
     end
     y=y+self.MapAdvisor:LayoutControls(f,left,y,bodyWidth,doc.view=="training" and self.state.filter=="Zone Advisor")
     local deathPage=doc.view=="deaths"

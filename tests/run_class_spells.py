@@ -116,6 +116,8 @@ for _,class in ipairs({"MAGE","HUNTER","WARRIOR"}) do
     assert(tab and tab:IsVisible()); MOCK.Click(tab)
     assert(A.state.filter=="Spells" and A.document.cards[1].title:find("Next training"))
     assert(A.state.showAllFutureSpells and A.window.atLevel:IsShown() and A.window.atLevel.label:GetText()=="Hide future spells","Future spells start enabled")
+    A.window.atLevel.scripts.OnLeave(A.window.atLevel)
+    assert(not A.window.atLevel.active and not A.window.atLevel.skinButton.active,"Default future view has no selected highlight")
     MOCK.Click(A.window.atLevel)
     assert(A.state.showAllFutureSpells==false and A.window.atLevel.label:GetText()=="Show all future spells","Default future view can be hidden")
     A:Refresh(true)
@@ -136,7 +138,7 @@ for _,class in ipairs({"MAGE","HUNTER","WARRIOR"}) do
     assert(A.document.cards[1].title==firstTitle and afterX==beforeX and afterY==beforeY,"Expanding keeps the heading and first row in place")
     MOCK.Click(A.window.atLevel); assert(not A.state.showAllFutureSpells and A.document.total==total)
     A.window.atLevel.scripts.OnLeave(A.window.atLevel)
-    assert(A.window.atLevel.active==false and A.window.atLevel.skinButton.active==false,"Collapsed future spells clear selected styling")
+    assert(A.window.atLevel.active==true and A.window.atLevel.skinButton.active==true,"Hidden future spells indicate the active filter")
 end
 -- Live spellbook chooses untrained current spells before future training.
 do
