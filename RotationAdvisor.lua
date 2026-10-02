@@ -256,11 +256,19 @@ function R.Decide(s)
     end
     return nil,"No usable spell: check mana, range and learned spells."
 end
-local function pulseHighlight(glow,elapsed)
-    glow.elapsed=(glow.elapsed or 0)+elapsed
-    local pulse=.5+.5*math.cos(glow.elapsed*math.pi*2)
-    glow.halo:SetAlpha(.65+.35*pulse)
-    glow:SetBackdropBorderColor(1,.75+.2*pulse,.15+.3*pulse,1)
+local function animateHighlight(glow,elapsed)
+    -- Classic's gold proc border: 22 cells, each 48x48, on a 256x256 sheet.
+    glow.elapsed=((glow.elapsed or 0)+elapsed)%.22
+    local cell=math.floor(glow.elapsed/.01)
+    if glow.cell==cell then return end
+    glow.cell=cell
+    local x,y=(cell%5)*48,math.floor(cell/5)*48
+    glow.ants:SetTexCoord(x/256,(x+48)/256,y/256,(y+48)/256)
+end
+local function sizeHighlight(glow)
+    local width,height=glow:GetWidth(),glow:GetHeight()
+    glow.halo:SetSize(width*1.4,height*1.4)
+    glow.ants:SetSize(width*1.19,height*1.19)
 end
 function R:PrepareHighlights()
     if combat() then return end
@@ -270,17 +278,22 @@ function R:PrepareHighlights()
             if button and not self.highlights[button] then
                 -- Separate from the button's cooldown and native proc artwork.
                 -- Created out of combat; only our own visual overlay changes later.
-                local glow=CreateFrame("Frame",nil,button,"BackdropTemplate")
-                glow:SetPoint("TOPLEFT",-1,1); glow:SetPoint("BOTTOMRIGHT",1,-1)
+                local glow=CreateFrame("Frame",nil,button)
+                glow:SetAllPoints(button)
                 glow:SetFrameLevel(button:GetFrameLevel()+8); glow:EnableMouse(false)
-                glow:SetBackdrop({edgeFile="Interface\\Buttons\\WHITE8x8",edgeSize=3})
-                glow.halo=glow:CreateTexture(nil,"OVERLAY",nil,7)
-                glow.halo:SetTexture("Interface\\Buttons\\UI-ActionButton-Border"); glow.halo:SetBlendMode("ADD")
-                glow.halo:SetPoint("TOPLEFT",-14,14); glow.halo:SetPoint("BOTTOMRIGHT",14,-14)
-                glow.halo:SetVertexColor(1,.9,.35,1)
-                glow:SetScript("OnShow",function(self) self.elapsed=0; pulseHighlight(self,0) end)
-                glow:SetScript("OnUpdate",pulseHighlight)
-                pulseHighlight(glow,0); glow:Hide()
+                glow.halo=glow:CreateTexture(nil,"ARTWORK")
+                glow.halo:SetTexture("Interface\\SpellActivationOverlay\\IconAlert")
+                glow.halo:SetTexCoord(2/256,130/256,71/256,135/256)
+                glow.halo:SetPoint("CENTER"); glow.halo:SetBlendMode("ADD"); glow.halo:SetAlpha(.8)
+                glow.ants=glow:CreateTexture(nil,"OVERLAY",nil,7)
+                glow.ants:SetTexture("Interface\\SpellActivationOverlay\\IconAlertAnts")
+                glow.ants:SetPoint("CENTER")
+                glow:SetScript("OnSizeChanged",sizeHighlight)
+                glow:SetScript("OnShow",function(self)
+                    self.elapsed=0; self.cell=nil; sizeHighlight(self); animateHighlight(self,0)
+                end)
+                glow:SetScript("OnUpdate",animateHighlight)
+                sizeHighlight(glow); animateHighlight(glow,0); glow:Hide()
                 self.highlights[button]=glow
             end
         end

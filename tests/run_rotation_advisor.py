@@ -220,6 +220,16 @@ check(R.current and R.current.id==837,"Live assistant chooses learned spell")
 check(R.highlights[action]:IsShown() and not R.highlights[other]:IsShown(),"Only matching spell glows")
 check(not R.highlights[lower]:IsShown(),'Older rank with the same spell name is not highlighted')
 check(action.nativeProcVisible,"Native proc state left alone")
+local glow=R.highlights[action]
+local firstCoord=glow.ants.texCoord[1]
+glow.scripts.OnUpdate(glow,.035)
+check(glow.ants.texCoord[1]~=firstCoord,"Proc artwork advances while the recommendation remains active")
+local animationTime=glow.elapsed
+R:Update()
+check(glow.elapsed==animationTime,"Repeated recommendations do not restart the spinning highlight")
+glow.scripts.OnUpdate(glow,5)
+local coords=glow.ants.texCoord
+check(coords[1]>=0 and coords[2]<=1 and coords[3]>=0 and coords[4]<=1,"Animation stays inside the artwork after a slow frame")
 action.action=2; R:Update(); check(not R.highlights[action]:IsShown(),"Action-bar paging clears stale highlight")
 action.action=1; action:Hide(); R:Update(); check(not R.highlights[action]:IsShown(),"Hidden bars cannot retain visible highlight")
 action:Show(); R:Update(); check(R.highlights[action]:IsShown(),"Visible matching action regains highlight")
