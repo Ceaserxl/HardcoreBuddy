@@ -95,7 +95,13 @@ function E:Refresh()
     local money=GetCoinTextureString and GetCoinTextureString(cost) or tostring(cost).."c"
     self.total:SetWidth(width-310)
     self.total:SetText("Refill: "..units.." / "..need.."  |  Est. cost: "..(unknown and "Scan needed" or money))
-    self.buy:SetEnabled(#queue>0 and not unknown and not self.scan and not self.batch and not self.confirmation and not self.awaitingBuy)
+    local ready=self.inlineBuy and self.confirmation and not self.scan and not self.awaitingBuy
+    self.buy.label:SetText(ready and "Buy Stack" or "Buy")
+    if ready then
+        local price=GetCoinTextureString and GetCoinTextureString(self.confirmation.buyout) or tostring(self.confirmation.buyout).."c"
+        self.total:SetText("Stack: "..self.confirmation.count.."  |  Cost: "..price)
+    end
+    self.buy:SetEnabled(ready or (#queue>0 and not unknown and not self.scan and not self.batch and not self.confirmation and not self.awaitingBuy))
     if MoneyFrame_Update then MoneyFrame_Update("HardcoreBuddyEssentialsMoneyFrame",GetMoney()) end
 end
 function E:Attach()

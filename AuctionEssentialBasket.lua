@@ -27,6 +27,8 @@ function E:Estimate()
     return cost,units,need,unknown,queue
 end
 function E:BuySelected()
+    -- Protected buyouts must remain on this direct user-click call stack.
+    if self.inlineBuy and self.confirmation then self:AcceptPurchase(self.confirmation); return end
     if self.scan or self.batch or self.awaitingBuy or self.confirmation or not self.open then return end
     local _,_,_,unknown,queue=self:Estimate()
     if unknown or #queue==0 then return end

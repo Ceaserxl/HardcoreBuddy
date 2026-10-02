@@ -88,10 +88,14 @@ assert(not E.skipConfirmation:GetChecked(),"Skip confirmation defaults unchecked
 E.skipConfirmation:SetChecked(true); E.skipConfirmation.scripts.OnClick(E.skipConfirmation)
 assert(A.characterDB.essentialSkipConfirmation==true,"Checkbox saves preference")
 empty=false; bought=nil; E:Search(rows[1]); finish()
-assert(bought and bought[2]==500 and E.awaitingBuy and not E.confirmation and not E.testPopup,"Enabled skip buys verified stack without popup")
+assert(not bought and E.inlineBuy and E.confirmation and not E.testPopup,"Background completion never places protected buyout")
+assert(E.buy:IsEnabled() and E.buy.label:GetText()=="Buy Stack","Ready stack enables direct purchase button")
+MOCK.Click(E.buy)
+assert(bought and bought[2]==500 and E.awaitingBuy and not E.confirmation,"Click buys verified stack without popup")
 E:Stop(); bought=nil
 local listing=E:Listing(1,10513); listing.buyout=1
 E:Confirm(listing)
+MOCK.Click(E.buy)
 assert(not bought and not E.awaitingBuy,"Skip still rejects changed listings")
 E.skipConfirmation:SetChecked(false); E.skipConfirmation.scripts.OnClick(E.skipConfirmation)
 E:Search(rows[1]); finish()
