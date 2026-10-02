@@ -26,7 +26,7 @@ for i=1,3 do
  assert(row:IsVisible() and row.name:GetText()~="" and not row.stock)
  assert(row.need:GetText():match("^%(%d+/%d+%)$"))
  local x,y,w,h=row:GetRect()
- assert(MOCK.HitTest(x+w/2,y+h/2)==R.panel,"Item rows pass dragging to the panel")
+ assert(MOCK.HitTest(x+w/2,y+h/2)==row,"Vendor target rows receive their own clicks")
  local state=A.state
  MOCK.ClickAt(x+w/2,y+h/2)
  assert(A.state==state and not R.panel.scripts.OnClick,"Row clicks do not navigate")

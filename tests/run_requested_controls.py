@@ -140,7 +140,7 @@ for _,tab in ipairs({"Spells","Zone Advisor"}) do
         if card:IsVisible() and card.content.blocks[2] and card.content.blocks[2]:IsShown() then
             local a,b=card.content.blocks[1],card.content.blocks[2]
             local x,y,w=a:GetRect(); local xx,yy=b:GetRect()
-            assert(xx>=x+w and y==yy,"Paired "..tab.." rows"); checked=checked+1
+            assert(tab=="Spells" and xx==x and yy>y or tab~="Spells" and xx>=x+w and y==yy,"Current "..tab.." row layout"); checked=checked+1
         end
     end
     assert(checked>0)
@@ -148,7 +148,7 @@ end
 A:Navigate("supplies")
 local blocks=A.window.cards[1].content.blocks
 local a,b=blocks[1],blocks[2]; local x,y,w=a:GetRect(); local xx,yy=b:GetRect()
-assert(a.supplyTile and b.supplyTile and xx>=x+w and y==yy)
+assert(a.block.supplyColumns and b.block.supplyColumns and xx==x and yy>y)
 assert(not a.quantity:IsShown() and not a.count:IsShown(),"List hides bag and quantity controls")
 MOCK.Click(a)
 a=A.window.cards[1].content.blocks[1]

@@ -8,9 +8,7 @@ lua, addon = boot()
 lua.execute('''
 local A=TestAddon
 A:Navigate("advisors")
-for _,b in ipairs(A.window.filters) do
-    assert(not b:IsShown() or (b.filter~="Map" and b.filter~="Zone Advisor"),"Zone Advisor removed from Advisors")
-end
+assert(A.state.view=="training" and A.state.filter=="Gear","Legacy Advisors route opens Companion Gear")
 local function build(faction,level,all,query)
     return A.LevelingZones.Build({faction=faction,level=level,mode="live"},
         {view="training",filter="Zone Advisor",showAllZones=all,query=query})
@@ -52,7 +50,7 @@ for _,class in ipairs({"HUNTER","WARRIOR"}) do
     local cx,cy,cw,ch=A.window.clear:GetRect()
     local sx,sy,sw,sh=A.window.search:GetRect()
     assert(ax+aw+8==hx and ay==hy,"Show All sits immediately left of Settings")
-    assert(cx+cw==hx+hw and sx+sw+6==cx,"Expanded search row ends at the Settings edge")
+    assert(cx+cw==hx+hw and sx+sw+A.Skin.layout.columnGap==cx,"Expanded search row ends at the Settings edge")
     assert(A.window.atLevel:GetParent()==A.window.cards[1],"Show All scrolls with its title")
     local filtered=A.document.total
     MOCK.Click(A.window.atLevel)

@@ -78,9 +78,9 @@ gear.enabled:SetChecked(true); MOCK.Click(gear.enabled)
 A:Navigate("advisors")
 local blocks=A.document.cards[1].blocks
 check(#A.document.cards==1 and A.document.cards[1].note:find("\nPercentage change",1,true),"Score explanation follows profile subtext")
-check(blocks[#blocks].action.command=="settings","Gear settings link is last after supporting text")
+check(A.document.cards[1].headerAction.action.command=="settings","Gear settings button is in the header")
 for _,b in ipairs(blocks) do check(not b.action or b.action.command~="talentSettings","Talent settings link removed from Gear") end
-A:Activate(blocks[#blocks].action)
+A:Activate(A.document.cards[1].headerAction.action)
 check(A.state.view=="settings" and A.state.filter=="Gear Advisor","Advisor settings link works")
 check(gear.openWeights:IsVisible() and not gear.openSnapshot and not gear.weights[1]:IsVisible(),"Gear settings show navigation buttons instead of inline editors")
 MOCK.Click(gear.openWeights)

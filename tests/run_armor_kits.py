@@ -94,19 +94,17 @@ check(K.Best(0/0,40)==nil,"Invalid input does not select a kit")
 MOCK.level=40; A.db.profile.mode="live"
 A:Navigate("supplies"); A.state.filter="All"; A:Refresh()
 local function listed()
-    for _,card in ipairs(A.document.cards) do for _,block in ipairs(card.blocks) do
-        if block.action and block.action.item and block.action.item.armorKit then return block end
-    end end
+    return K.Recommendations(A:GetContext())[1]
 end
-local block=listed(); check(block~=nil,"All lists finished kit supplies; Enchants integrates slot comparisons")
-A:Activate(block.action)
+local block=listed(); check(block~=nil,"Finished kits remain tracked internally")
+A:Activate({kind="item",item=block})
 check(A.document.cards[1].blocks[1].target==4,"Detail shows automatic quantity")
 for _,slot in ipairs(slots) do equip(slot,40,1843) end
 MOCK.Fire("UNIT_INVENTORY_CHANGED","player")
 check(A.document.cards[1].blocks[1].target==0,"Applied kits clear stale detail target")
 A:Back(); check(listed()==nil,"Applied kits disappear from recommendations")
 equip(5,40,15); MOCK.Fire("PLAYER_EQUIPMENT_CHANGED",5)
-check(listed() and listed().target==1,"Newly equipped older kit is detected")
+check(listed() and listed().recommendedTarget==1,"Newly equipped older kit is detected")
 equip(5,40,911); MOCK.Fire("UNIT_INVENTORY_CHANGED","player")
 check(listed()==nil,"Unrelated enchant removes recommendation")
 for _,slot in ipairs(slots) do equip(slot,40,2503) end

@@ -28,9 +28,8 @@ for _,page in ipairs({"Stat Weights"}) do
     A.Settings.scroll:SetVerticalScroll(100)
     back(); assert(not A.state.gearPage and A.state.filter=="Gear Advisor")
 end
-A:Navigate("petguide"); back(); assert(A.state.view=="training")
-A:HandleSlashCommand("talents"); A:Activate({kind="advisor",command="path"})
-back(); assert(A.state.filter=="Talents" and not A.state.talentPath)
+A:Navigate("petguide"); assert(not A:CanGoBack(),"Companion root has no redundant Back"); A:Navigate("training")
+A:HandleSlashCommand("talents"); assert(A.document.cards[2].talentTable and not A:CanGoBack(),"Talent path is inline")
 A:OpenSettings("Map"); MOCK.Click(A.MapAdvisor.controls.icons.rare)
 back(); assert(A.state.filter=="Zone Advisor" and not A.state.mapIconKind)
 A:Navigate("training"); A.state.filter="Zone Advisor"; A:Refresh(true)

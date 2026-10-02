@@ -28,7 +28,10 @@ for _,b in ipairs(MOCK.frames) do
         -- Pooled informational rows and their icon hit areas intentionally have
         -- no hover when they do not lead anywhere. Blizzard fixture tabs are not ours.
         local block=b.block or (b.parent and b.parent.block)
-        if not block or block.action then
+        if b==A.AuctionUpgrades.tab then
+            assert(b.template=="AuctionTabTemplate","Auction tab retains Blizzard native highlight template")
+        end
+        if (not block or block.action) and b~=A.AuctionUpgrades.tab then
             assert(b.skinButton or b.highlight,"Interactive button has no hover: "..tostring(b.name or b.label and b.label:GetText()))
             if b.skinButton and b:IsEnabled() then
                 assert(b.scripts.OnEnter and b.scripts.OnLeave,"Styled button is missing mouse handlers")

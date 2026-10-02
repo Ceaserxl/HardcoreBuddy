@@ -190,9 +190,9 @@ F.equip(1,stamina); links[1]=shadow.link
 I:Invalidate(); ContainerFrame_Update(bag); drain()
 check(not marked(button) and G:CurrentProfile().name=="Demonology","Default build sets the initial marker decision")
 A:OpenSettings("Talent Advisor")
-MOCK.Click(A.Settings.pages["Talent Advisor"].builds[3]); drain()
+MOCK.Click(A.Settings.pages["Talent Advisor"].builds[2]); drain()
 check(G:CurrentProfile().name=="Affliction" and marked(button),"Selecting a different build invalidates cached scores and repaints bags")
-check(A.state.filter=="Talent Advisor" and A.Settings.pages["Talent Advisor"].builds[3].selected,
+check(A.state.filter=="Talent Advisor" and A.Settings.pages["Talent Advisor"].builds[2].selected,
     "Selected build remains highlighted in Talent Advisor settings")
 MOCK.Click(A.Settings.pages["Talent Advisor"].builds[1]); drain()
 check(G:CurrentProfile().name=="Demonology" and not marked(button),"Automatic build restores the original score and removes the marker")

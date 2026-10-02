@@ -96,7 +96,7 @@ check(#A.document.cards[2].blocks<51,"Default filters learned points")
 check(A.window.cards[1].content.blocks[1]:GetWidth()==A.window.cards[1].content:GetWidth(),"Next Talent full width")
 MOCK.Click(A.window.cards[2].headerButton)
 check(#A.document.cards[2].blocks==51,"Show Learned restores all steps")
-check(A.window.cards[2].content:GetHeight()>A.window.cards[2].tableScroll:GetHeight(),"Talent table scrolls independently")
+check(A.window.cards[2].tableContent:GetHeight()>A.window.cards[2].tableScroll:GetHeight(),"Talent table scrolls independently")
 local tableScroll=A.window.cards[2].tableScroll
 tableScroll.scripts.OnMouseWheel(tableScroll,-1)
 check(tableScroll:GetVerticalScroll()>0 and A.window.scroll:GetVerticalScroll()==0,"Mouse wheel scrolls table without moving Next Talent")
@@ -126,7 +126,7 @@ GameTooltip.SetHyperlink=function(self,link)
     self:AddLine("Native spell description")
 end
 for i,step in ipairs(A.document.cards[2].blocks) do
-    local rendered=A.window.cards[2].content.blocks[i]
+    local rendered=A.window.cards[2].tableContent.blocks[i]
     check(step.talentColumns[1]==tostring(i+9),"Table preserves level order")
     check(rendered.icon:IsShown() and rendered.icon:GetWidth()==24 and rendered:GetHeight()==32,"Compact table keeps each talent icon")
     check(#rendered.talentCells==5 and not rendered.meta:IsShown(),"Status is in its own column")
@@ -137,7 +137,7 @@ for i,step in ipairs(A.document.cards[2].blocks) do
     check(#GameTooltip.lines==1 and GameTooltip.lines[1]=="Native talent description","Path displays native talent tooltip without generic row text")
 end
 GameTooltip.SetTalent=function() error("Talent data unavailable") end
-local firstTalentRow=A.window.cards[2].content.blocks[1]
+local firstTalentRow=A.window.cards[2].tableContent.blocks[1]
 firstTalentRow.scripts.OnEnter(firstTalentRow)
 check(hoveredSpell=="spell:"..nodes[build.steps[1]].spellID,"Unavailable talent tooltip falls back to the talent spell")
 GameTooltip.SetTalent,GameTooltip.SetHyperlink=oldSetTalent,oldSetHyperlink

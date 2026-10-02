@@ -24,7 +24,7 @@ for _,class in ipairs({"DRUID","HUNTER","MAGE","PALADIN","PRIEST","ROGUE","SHAMA
             A:Activate(row.action)
             if row.action.kind=="profession" then assert(A.state.detail.family==row.action.family)
             else assert(A.state.view==row.action.view and A.state.filter==row.action.filter) end
-            assert(A:CanGoBack()); A:Back(); assert(A.state==overview)
+            assert(not A:CanGoBack(),"Overview links open root tabs without redundant Back"); A:Navigate("training")
         end
     end
 end

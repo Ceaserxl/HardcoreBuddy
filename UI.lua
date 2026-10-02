@@ -542,8 +542,8 @@ renderBlocks = function(parent, blocks, width)
 end
 local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
-    if frame.tableScroll then frame.tableScroll:Hide() end
-    frame.content:SetParent(frame)
+    if frame.tableScroll then frame.tableScroll:SetShown(data.scrollableTalents==true) end
+    frame.content:SetShown(not data.scrollableTalents)
     if frame.detailQuantity and not data.quantityRecord then
         frame.detailQuantity.quantity:ClearFocus(); frame.detailQuantity:Hide()
     end
@@ -701,10 +701,13 @@ local function renderCard(frame, data, width)
         frame.content:SetHeight(height); y=y+height; frame:SetHeight(y)
         return y
     end
-    local height=renderBlocks(frame.content, data.blocks, width-12)
     if data.scrollableTalents then
         if not frame.tableScroll then
             frame.tableScroll=CreateFrame("ScrollFrame",nil,frame,"UIPanelScrollFrameTemplate")
+            frame.tableContent=CreateFrame("Frame",nil,frame.tableScroll)
+            frame.tableContent.blocks={}
+            frame.tableContent:SetPoint("TOPLEFT"); frame.tableContent:SetSize(1,1)
+            frame.tableScroll:SetScrollChild(frame.tableContent)
             frame.tableScroll:EnableMouseWheel(true)
             frame.tableScroll:SetScript("OnMouseWheel",function(scroll,delta)
                 scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*65)))
@@ -714,8 +717,9 @@ local function renderCard(frame, data, width)
         scroll:Show(); scroll:ClearAllPoints(); scroll:SetPoint("TOPLEFT",0,-y)
         local viewport=math.max(100,(frame.availableHeight or 300)-y-SPACE.sectionGap)
         scroll:SetSize(width-12,viewport)
-        frame.content:SetParent(scroll); frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT")
-        frame.content:SetHeight(height); scroll:SetScrollChild(frame.content)
+        frame.tableContent:SetWidth(width-12)
+        local height=renderBlocks(frame.tableContent,data.blocks,width-12)
+        frame.tableContent:SetHeight(height)
         scroll:UpdateScrollChildRect()
         scroll:SetVerticalScroll(math.min(scroll:GetVerticalScroll(),math.max(0,height-viewport)))
         addon.window.activeTableScroll=scroll
@@ -723,8 +727,14 @@ local function renderCard(frame, data, width)
         local bar=scroll.ScrollBar or (name and _G[name.."ScrollBar"])
         if bar then
             -- Keep the page-edge bar outside the clipped table/outer scroll child.
-            bar:SetParent(addon.window.scroll); bar:Show()
-            bar:SetScript("OnValueChanged",function(_,value) scroll:SetVerticalScroll(value) end)
+            if not bar.hcbTableOwner then
+                bar.hcbTableOwner=scroll
+                bar:SetParent(addon.window.scroll)
+                bar:SetScript("OnValueChanged",function(_,value)
+                    if scroll:GetVerticalScroll()~=value then scroll:SetVerticalScroll(value) end
+                end)
+            end
+            bar:Show()
             bar:ClearAllPoints()
             local mainBar=addon.window.scroll.ScrollBar or _G["HardcoreBuddyScrollFrameScrollBar"]
             if mainBar then
@@ -734,6 +744,7 @@ local function renderCard(frame, data, width)
         end
         frame:SetHeight(y+viewport); return y+viewport
     end
+    local height=renderBlocks(frame.content, data.blocks, width-12)
     frame.content:SetHeight(height); y=y+height; frame:SetHeight(y)
     return y
 end
@@ -1029,7 +1040,7 @@ function addon:CanGoBack()
         or (s.view=="deaths" and s.deathRecord~=nil)
         or (s.view=="training" and s.filter=="Zone Advisor" and (s.mapZonePicker or s.mapNPCs)) or false
 end
-function addon:Refresh(resetScroll)
+local function refreshDocument(self,resetScroll)
     if not self.window then return end
     local context=self:GetContext()
     if self.state and self.state.view=="advisors" then self.state.view="training"; self.state.filter=self.state.filter or "Gear" end
@@ -1045,7 +1056,23 @@ function addon:Refresh(resetScroll)
     if self.state.view=="supplies" or self.state.view=="now" then self.state.query=nil; self.state.stock=nil end
     self.document=(self.state.view=="deaths" or self.state.view=="settings") and {context=context,view=self.state.view,cards={}} or C.Build(context,self.state)
     self:Layout()
-    if resetScroll then self.window.scroll:SetVerticalScroll(0) end
+    if resetScroll then
+        self.window.scroll:SetVerticalScroll(0)
+        if self.window.activeTableScroll then self.window.activeTableScroll:SetVerticalScroll(0) end
+    end
+end
+function addon:Refresh(resetScroll)
+    if self.refreshing or self.layoutInProgress then
+        self.needsRefresh=true
+        self.pendingResetScroll=self.pendingResetScroll or resetScroll
+        return
+    end
+    resetScroll=resetScroll or self.pendingResetScroll
+    self.pendingResetScroll=nil
+    self.refreshing=true
+    local ok,err=pcall(refreshDocument,self,resetScroll)
+    self.refreshing=nil
+    if not ok then error(err,0) end
 end
 local FILTER_ICONS={
     General="Trade_Engineering",["Gear Advisor"]="INV_Chest_Chain",["Auction House"]="INV_Misc_Coin_01",
@@ -1059,7 +1086,7 @@ local FILTER_ICONS={
     ["Pet Guide"]="Ability_Hunter_Pet_Bear",
     Overview="INV_Misc_Book_09",["Zone Advisor"]="INV_Misc_Map_01",Spells="INV_Misc_Book_07",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",
 }
-function addon:Layout()
+local function layoutDocument(self)
     local f,doc=self.window,self.document
     if not f or not doc then return end
     -- Zone recommendations place this control alongside their scrolling title.
@@ -1358,4 +1385,11 @@ function addon:Layout()
     -- WoW resolves nested texture/frame anchors after this layout pass. Refresh
     -- the scroll child's cached geometry next frame, as scrolling would do.
     f.refreshScrollGeometry=true
+end
+function addon:Layout()
+    if self.layoutInProgress then self.needsLayout=true; return end
+    self.layoutInProgress=true
+    local ok,err=pcall(layoutDocument,self)
+    self.layoutInProgress=nil
+    if not ok then error(err,0) end
 end
