@@ -13,7 +13,9 @@ function E:Start(record,keepBatch)
     if not self.open or not self.panel:IsShown() then return end
     self:Stop(nil,keepBatch)
     self.complete=false
-    local queue=record and {record} or self:Items(A:GetContext())
+    local queue,message
+    if record then queue={record} else queue,message=self:ScanItems() end
+    if not queue then self.message=message; self:Refresh(); return end
     if not record then self.results={} end
     if #queue==0 then self.message="No Essentials to scan."; self:Refresh(); return end
     self.scan={queue=queue,item=1,page=0,phase="query",since=GetTime(),purchase=record~=nil}
@@ -71,11 +73,12 @@ function E:Tick()
     if GetTime()-s.since>20 then self:Stop("Scan timed out. Rescan before buying."); return end
     local record=s.queue[s.item]
     if s.phase=="planning" then
-        local ok,plan=coroutine.resume(s.planner)
+        local ok,calculated=coroutine.resume(s.planner)
         if not ok then self:Stop("Unable to calculate refill. Scan again."); return end
         if coroutine.status(s.planner)~="dead" then return end
+        local plan=calculated.plan
         local result=self.results[record.itemId]
-        result.plan=plan
+        result.plan=plan; result.plans=calculated.plans
         if plan.offers[1] then
             result.count=plan.offers[1].count; result.buyout=plan.offers[1].buyout
         else result.count=nil; result.buyout=nil end
@@ -85,7 +88,7 @@ function E:Tick()
             s.page=s.best.page; s.verify=true; s.phase="query"; s.since=GetTime(); self:Refresh(); return
         end
         s.item=s.item+1; s.page=0; s.best=nil; s.offers=nil; s.phase="query"; s.since=GetTime()
-        if s.item>#s.queue then self.scan=nil; self.complete=true; self.message="Scan complete. Refills use the lowest total cost; extreme price outliers excluded."
+        if s.item>#s.queue then self.scan=nil; self.complete=true; self.message="Scan complete. Refills use the lowest total cost."..self:CraftNotice()
         else self.message="Scanning "..s.item.." / "..#s.queue..": "..s.queue[s.item].name end
         self:Refresh()
     elseif s.phase=="query" then
@@ -128,7 +131,14 @@ function E:Tick()
         if not result then result={offers={}}; self.results[record.itemId]=result end
         local batch=s.purchase and self.batch and self.batch[1]
         local need=batch and batch.remaining or record.missing or 0
-        s.planner=coroutine.create(function() return self:RefillPlan(result.offers,need,batch and batch.ceiling,true) end)
+        local needs=s.purchase and {need} or self:PlanNeeds(record.itemId)
+        s.planner=coroutine.create(function()
+            local plans={}
+            for _,quantity in ipairs(needs) do plans[quantity]=self:RefillPlan(result.offers,quantity,batch and batch.ceiling,true) end
+            local plan=plans[need] or self:RefillPlan(result.offers,need,batch and batch.ceiling,true)
+            plans[need]=plan
+            return {plan=plan,plans=plans}
+        end)
         s.phase="planning"; s.since=GetTime()
     end
 end

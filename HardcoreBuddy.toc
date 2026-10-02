@@ -17,6 +17,7 @@ Data\Beasts.lua
 Data\FactionRules.lua
 Data\ProfessionProgression.lua
 Data\Crafting.lua
+Data\AuctionRecipes.lua
 Data\ArmorKits.lua
 Data\Enchants.lua
 Data\Scopes.lua
@@ -75,6 +76,7 @@ AuctionEssentials.lua
 AuctionEssentialScan.lua
 AuctionEssentialBasket.lua
 AuctionRefillPlan.lua
+AuctionEssentialCrafting.lua
 
 Deaths\Model.lua
 Deaths\Core.lua

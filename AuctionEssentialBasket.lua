@@ -9,13 +9,13 @@ function E:Toggle(record)
 end
 function E:Estimate()
     local cost,units,need,unknown,queue=0,0,0,false,{}
-    for _,record in ipairs(self.items or {}) do
+    for _,record in ipairs(self:PurchaseRecords()) do
         if self.selected[record.itemId] and (record.missing or 0)>0 then
             local result=self.results[record.itemId]
             need=need+record.missing
             if result==nil then unknown=true
             elseif result then
-                local plan=result.plan
+                local plan=result.plans and result.plans[record.missing] or result.plan
                 if not plan or plan.need~=record.missing then unknown=true
                 else
                     cost=cost+plan.cost; units=units+plan.units
@@ -41,6 +41,7 @@ function E:PurchaseSucceeded()
     current.remaining=current.remaining-waiting.listing.count
     if current.remaining<=0 then
         self.selected[current.record.itemId]=nil
+        if current.record.material then self.materialOverrides[current.record.itemId]=false end
         table.remove(self.batch,1)
     end
     if #self.batch>0 then self:Start(self.batch[1].record,true)

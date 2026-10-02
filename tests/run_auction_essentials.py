@@ -60,7 +60,7 @@ E:Search(rows[1]); step(); assert(calls==0 and E.panel:IsShown(),"Throttle respe
 ready=true; finish()
 assert(E.confirmation.count==10 and E.confirmation.buyout==500 and page==1,"Cheapest unit price across all pages, excluding own auctions")
 assert(E.popupText=="10 x Crafted ammo" and E.panel:IsShown(),"Confirm whole stack in Essentials tab")
-assert(E.rows[1].cells[5]:GetText()=="10","Separate stack column")
+assert(E.rows[1].cells[6]:GetText()=="10","Separate stack column")
 StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnAccept(nil,E.confirmation)
 assert(bought[2]==500 and not E.results[10513],"Confirmed stack buyout invalidates cached result")
 E:Start(); finish(); assert(E.complete and E.results[10513].buyout==500,"Scan all finishes")
