@@ -494,7 +494,7 @@ function U:Layout()
     local height=AuctionFrame:GetHeight()-47
     self.panel:SetSize(width,height)
     self.title:SetWidth(width-380); self.subtitle:SetWidth(390)
-    local top=(self.slot or self.weaponsOnly) and 109 or 75
+    local top=(self.slot or self.weaponsOnly) and 111 or 77
     local rowWidth=width-213
     visibleRows=math.min(16,math.floor((height-top-16)/38))
     for i,row in ipairs(self.rows) do
