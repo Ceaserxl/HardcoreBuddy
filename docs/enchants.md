@@ -8,13 +8,13 @@ Missing slots always display the automatic recommendation. Applied alternatives
 display their actual enhancement rather than replacing the recommendation.
 
 Rows display `Slot - Enchant`, the effect as the subtitle, and status at the
-upper right. Missing enchants show Recommended with red borders; the recommended
+upper right. Missing enchants show Not Enchanted with red borders; the recommended
 enchant applied shows Enchanted and another applied enhancement shows Alternative,
 both green on the overview.
 Hover shows the enchant effect rather than its crafting recipe. Details place
 the recommendation and alternatives on the left and tracked reagents on the right.
 Armor kits participate in these same comparisons for chest, gloves, legs and boots,
-respecting both the character's recommendation tier and the target item's level.
+respecting the kit's required use level and the target item's level.
 They can be the recommendation (including legs and caster gloves) or an alternative.
 Kit details show Leatherworking requirements and their crafting materials.
 
@@ -32,13 +32,19 @@ the runtime catalog from that cache. Neither script runs inside the addon.
 
 ## Leveling policy
 
-Recommended character levels are budget tiers, **not enchant use requirements**:
-Enchanting skill 1–50: Level 1; 51–100: 10; 101–150: 20; 151–200: 30;
-201–250: 40; 251–290: 50; 291–300: 60. These intentionally avoid recommending
-endgame material costs on a low-level character. Alternative recipes within
-the current tier remain available, including situational resistance/profession
-enchants. Recommendations are class-based preparation suggestions, not simulated
-damage gains or live auction price estimates.
+Enchanting skill is a requirement for the enchanter, not the wearer. The old
+skill-based character-level budget gates have been removed. All 132 catalog
+recipes are considered at every character level, subject to class relevance
+and the equipped item's actual restrictions. For example,
+[Fiery Weapon](https://www.wowhead.com/classic/spell=13898/enchant-weapon-fiery-weapon)
+is available for low-level melee weapons despite requiring Enchanting 265.
+Armor kits retain their actual required use level and minimum item level.
+
+The slot menu initially shows the highest applicable rank of each effect.
+Show Lesser Ranks, opposite Back, expands the list to include lower compatible
+enchants and armor kits. The applied enchant remains available for comparison.
+Recommendations are class-based preparation suggestions, not simulated damage
+gains or live auction price estimates.
 
 Defaults favor stamina/health, useful primary stats, and movement speed on boots.
 Mana enchants are excluded for classes without mana. Spell/healing enchants are

@@ -137,7 +137,7 @@ function M:Settings()
     for _,key in ipairs({"danger","rare","elite","boss"}) do if s[key]==nil then s[key]=true end end
     if s.notify==nil then s.notify=true end
     s.tintR=bounded(s.tintR,0.35,0,1); s.tintG=bounded(s.tintG,0.65,0,1); s.tintB=bounded(s.tintB,1,0,1)
-    s.tintAlpha=bounded(s.tintAlpha,0.55,0,1)
+    s.tintAlpha=bounded(s.tintAlpha,1,0,1)
     s.iconSize=bounded(s.iconSize,18,12,40); s.iconAlpha=bounded(s.iconAlpha,1,0.1,1)
     if type(s.icons)~="table" then s.icons={} end
     for _,kind in ipairs({"danger","rare","elite","boss"}) do if not icons[s.icons[kind]] then s.icons[kind]=kind end end
@@ -314,9 +314,34 @@ function M:Reveal(pin)
     end
 end
 
+function M:MapMarkerControls(map)
+    if not self.markerBar then
+        local bar=CreateFrame("Frame",nil,map); self.markerBar=bar
+        bar:SetSize(520,24); bar:SetPoint("BOTTOM",map,"BOTTOM",0,4)
+        bar:SetFrameLevel(map:GetFrameLevel()+30)
+        bar.checks={}
+        local title=bar:CreateFontString(nil,"OVERLAY","GameFontNormalSmall")
+        title:SetPoint("LEFT",4,0); title:SetText("NPC markers:")
+        for i,entry in ipairs({{"rare","Rares"},{"elite","Elites"},{"boss","Bosses"},{"danger","Dangerous"}}) do
+            local key=entry[1]
+            local b=CreateFrame("CheckButton",nil,bar,"UICheckButtonTemplate")
+            b:SetSize(24,24); b:SetPoint("LEFT",100+(i-1)*100,0)
+            local text=b:CreateFontString(nil,"OVERLAY","GameFontNormalSmall")
+            text:SetPoint("LEFT",b,"RIGHT",0,0); text:SetText(entry[2])
+            b:SetScript("OnClick",function(self)
+                M:Settings()[key]=not not self:GetChecked(); M:Changed()
+            end)
+            bar.checks[key]=b
+        end
+    end
+    local s=self:Settings()
+    for key,b in pairs(self.markerBar.checks) do b:SetChecked(s[key]) end
+end
+
 function M:Attach()
     local map=WorldMapFrame
     if not map or not hooksecurefunc then return end
+    self:MapMarkerControls(map)
     if not self.hooks.map then
         map:HookScript("OnShow",function() M:Attach(); M:RefreshPins() end)
         if map.SetMapID then hooksecurefunc(map,"SetMapID",function() M:RefreshPins() end) end

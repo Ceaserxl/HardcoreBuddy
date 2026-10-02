@@ -121,7 +121,7 @@ function M:LayoutSettings(parent,left,top,width,visible)
         f.tintColor=button(f.exploration,"Choose tint color",16,116,216,function() M:OpenTintPicker() end)
         f.swatch=f.tintColor:CreateTexture(nil,"ARTWORK"); f.swatch:SetTexture("Interface\\Buttons\\WHITE8x8")
         f.swatch:SetPoint("RIGHT",-10,0); f.swatch:SetSize(18,18)
-        slider(f.exploration,"tintAlpha","Tint opacity",244,103,184,0,100,0.55,100,"%",true)
+        slider(f.exploration,"tintAlpha","Tint opacity",244,103,184,0,100,1,100,"%",true)
         for i,kind in ipairs({"rare","elite","boss","danger"}) do
             local key=kind
             local caption=({rare="Rares",elite="Elites",boss="World bosses",danger="Dangerous NPCs"})[kind]

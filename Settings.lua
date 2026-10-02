@@ -182,6 +182,8 @@ function S:Create(parent)
         page.title=label(page,name,22,0,0,700); page.title:SetTextColor(unpack(Skin.colors.gold))
     end
     local general=self.pages.General
+    general.resetAll=button(general,"Reset AddOn",0,function() A:ConfirmReset() end,140)
+    general.resetAll:ClearAllPoints(); general.resetAll:SetPoint("TOPRIGHT",-12,0)
     general.subtitle=label(general,"Window, access and field kit notifications.",12,0,34,700)
     local access=Skin.Section(general,"Access & window",Skin.layout.headerBottom,138,1)
     local kit=Skin.Section(general,"Field kit",Skin.layout.headerBottom,138,2)

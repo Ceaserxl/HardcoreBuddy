@@ -111,3 +111,18 @@ S.scroll.scripts.OnMouseWheel(S.scroll,-5)
 check(S.scroll:GetVerticalScroll()>0 and S.range>0,"Long settings pages scroll")
 A:OpenSettings("General"); check(S.scroll:GetVerticalScroll()==0,"Changing sections resets scrolling")
 print("PASS: "..count.." centralized settings assertions; routing, saved preferences, controls, focus and viewport bounds.")
+
+-- The destructive reset requires confirmation; cancellation preserves roots.
+StaticPopupDialogs={}
+local shown,reloaded
+StaticPopup_Show=function(id) shown=id end
+ReloadUI=function() reloaded=true end
+local account,character=HardcoreBuddyDB,HardcoreBuddyCharacterDB
+MOCK.Click(S.pages.General.resetAll)
+check(shown=="HARDCOREBUDDY_RESET" and not reloaded,"Reset waits for confirmation")
+check(HardcoreBuddyDB==account and HardcoreBuddyCharacterDB==character,"No data cleared before confirmation")
+StaticPopupDialogs[shown].OnAccept()
+check(reloaded and HardcoreBuddyDB==nil and HardcoreBuddyCharacterDB==nil,"Reset clears both saved roots and reloads")
+A.db.lateCache={}; A.characterDB.lateCache={}
+check(HardcoreBuddyDB==nil and HardcoreBuddyCharacterDB==nil,"Old references cannot repopulate reset saved roots")
+print("PASS: confirmed full saved-data reset and late-write isolation.")

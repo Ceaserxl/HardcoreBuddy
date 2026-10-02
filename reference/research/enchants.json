@@ -155,7 +155,7 @@
       "description": "Permanently enchant a Two-Handed Melee Weapon to do 2 additional points of damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 100,
-      "level": 10,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -178,7 +178,7 @@
       "description": "Permanently enchant a piece of chest armor so that it increases the health of the wearer by 15.",
       "icon": "spell_holy_greaterheal",
       "skill": 60,
-      "level": 10,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -201,7 +201,7 @@
       "description": "Permanently enchant bracers so they increase the wearer's Spirit by 1.",
       "icon": "spell_holy_greaterheal",
       "skill": 60,
-      "level": 10,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -220,7 +220,7 @@
       "description": "Enchant a cloak to provide 10 additional points of armor.",
       "icon": "spell_holy_greaterheal",
       "skill": 70,
-      "level": 10,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -243,7 +243,7 @@
       "description": "Permanently enchant a piece of chest armor so that it increases the mana of the wearer by 20.",
       "icon": "spell_holy_greaterheal",
       "skill": 80,
-      "level": 10,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -266,7 +266,7 @@
       "description": "Permanently enchant bracers so they increase the wearer's Agility by 1.",
       "icon": "spell_holy_greaterheal",
       "skill": 80,
-      "level": 10,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -289,7 +289,7 @@
       "description": "Permanently enchant bracers so they increase the wearer's Strength by 1.",
       "icon": "spell_holy_greaterheal",
       "skill": 80,
-      "level": 10,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -308,7 +308,7 @@
       "description": "Permanently enchant a Melee Weapon to do 2 additional points of damage to Beasts.",
       "icon": "spell_holy_greaterheal",
       "skill": 90,
-      "level": 10,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -331,7 +331,7 @@
       "description": "Permanently enchant a Melee Weapon to do 1 additional point of damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 90,
-      "level": 10,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -358,7 +358,7 @@
       "description": "Permanently enchant a Two-Handed Melee Weapon to add 3 to intellect.",
       "icon": "spell_holy_greaterheal",
       "skill": 100,
-      "level": 10,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -377,7 +377,7 @@
       "description": "Permanently enchant a piece of chest armor to increase the health of the wearer by 25.",
       "icon": "spell_holy_greaterheal",
       "skill": 120,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -400,7 +400,7 @@
       "description": "Permanently enchant a bracer so it increases the wearer's Spirit by 3.",
       "icon": "spell_holy_greaterheal",
       "skill": 120,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -419,7 +419,7 @@
       "description": "Permanently enchant a cloak so that it increases resistance to fire by 5.",
       "icon": "spell_holy_greaterheal",
       "skill": 125,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -442,7 +442,7 @@
       "description": "Permanently enchant a pair of boots so they increase the wearer's Stamina by 1.",
       "icon": "spell_holy_greaterheal",
       "skill": 125,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -461,7 +461,7 @@
       "description": "Permanently enchant a pair of boots so they increase the wearer's Agility by 1.",
       "icon": "spell_holy_greaterheal",
       "skill": 125,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -484,7 +484,7 @@
       "description": "Permanently enchant a shield so that it increases the Stamina of the bearer by 1.",
       "icon": "spell_holy_greaterheal",
       "skill": 105,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -507,7 +507,7 @@
       "description": "Permanently enchant a Two-Handed Melee Weapon to add 3 to Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 110,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -530,7 +530,7 @@
       "description": "Permanently enchant a cloak to grant +1 Agility.",
       "icon": "spell_holy_greaterheal",
       "skill": 110,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -549,7 +549,7 @@
       "description": "Permanently enchant a cloak to increase armor by 20.",
       "icon": "spell_holy_greaterheal",
       "skill": 115,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -572,7 +572,7 @@
       "description": "Permanently enchant a shield to increase its armor by 30.",
       "icon": "spell_holy_greaterheal",
       "skill": 115,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -599,7 +599,7 @@
       "description": "Permanently enchant a shield to give 3 spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 130,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -622,7 +622,7 @@
       "description": "Permanently enchant a bracer so it increases the wearer's Stamina by 3.",
       "icon": "spell_holy_greaterheal",
       "skill": 130,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -641,7 +641,7 @@
       "description": "Permanently enchant a Melee Weapon to do 2 additional points of damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 140,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -664,7 +664,7 @@
       "description": "Permanently enchant a cloak so that it increases resistance to shadow by 10.",
       "icon": "spell_holy_greaterheal",
       "skill": 135,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -687,7 +687,7 @@
       "description": "Permanently enchant a Two-handed Melee Weapon to do 3 additional points of damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 145,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -710,7 +710,7 @@
       "description": "Permanently enchant a bracer so it increases the wearer's Strength by 3.",
       "icon": "spell_holy_greaterheal",
       "skill": 140,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -729,7 +729,7 @@
       "description": "Enchant a piece of chest armor so it has a 5% chance per hit of giving you 25 points of damage absorption.",
       "icon": "spell_holy_greaterheal",
       "skill": 140,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -756,7 +756,7 @@
       "description": "Permanently enchant a piece of chest armor to increase the mana of the wearer by 30.",
       "icon": "spell_holy_greaterheal",
       "skill": 145,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -779,7 +779,7 @@
       "description": "Permanently enchant gloves to grant +2 mining skill.",
       "icon": "spell_holy_greaterheal",
       "skill": 145,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -802,7 +802,7 @@
       "description": "Permanently enchant gloves to grant +2 herbalism skill.",
       "icon": "spell_holy_greaterheal",
       "skill": 145,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -825,7 +825,7 @@
       "description": "Permanently enchant gloves to grant +2 fishing skill.",
       "icon": "spell_holy_greaterheal",
       "skill": 145,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -848,7 +848,7 @@
       "description": "Permanently enchant a bracer so it increases the wearer's Intellect by 3.",
       "icon": "spell_holy_greaterheal",
       "skill": 150,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -867,7 +867,7 @@
       "description": "Permanently enchant a piece of chest armor to grant +1 to all stats.",
       "icon": "spell_holy_greaterheal",
       "skill": 150,
-      "level": 20,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -894,7 +894,7 @@
       "description": "Permanently enchant a shield to give 3 Stamina.",
       "icon": "spell_holy_greaterheal",
       "skill": 155,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -917,7 +917,7 @@
       "description": "Permanently enchant a cloak to give 30 additional armor.",
       "icon": "spell_holy_greaterheal",
       "skill": 155,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -940,7 +940,7 @@
       "description": "Permanently enchant boots to give +3 Agility.",
       "icon": "spell_holy_greaterheal",
       "skill": 160,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -963,7 +963,7 @@
       "description": "Permanently enchant a piece of chest armor to give +35 health.",
       "icon": "spell_holy_greaterheal",
       "skill": 160,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -982,7 +982,7 @@
       "description": "Permanently enchants bracers to give +5 Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 165,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1001,7 +1001,7 @@
       "description": "Permanently enchant boots to give +3 Stamina.",
       "icon": "spell_holy_greaterheal",
       "skill": 170,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1020,7 +1020,7 @@
       "description": "Permanently enchants bracers to give +2 Defense.",
       "icon": "spell_holy_greaterheal",
       "skill": 170,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1043,7 +1043,7 @@
       "description": "Permanently enchants bracers to give +5 Stamina.",
       "icon": "spell_holy_greaterheal",
       "skill": 170,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1062,7 +1062,7 @@
       "description": "Permanently enchant a Melee Weapon to do 6 additional points of damage to Beasts.",
       "icon": "spell_holy_greaterheal",
       "skill": 175,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1089,7 +1089,7 @@
       "description": "Permanently enchant a Melee Weapon to do 6 additional damage against Elementals.",
       "icon": "spell_holy_greaterheal",
       "skill": 175,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1116,7 +1116,7 @@
       "description": "Permanently enchant a cloak to give 7 Fire Resistance.",
       "icon": "spell_holy_greaterheal",
       "skill": 175,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1139,7 +1139,7 @@
       "description": "Permanently enchant a shield to give 5 Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 180,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1162,7 +1162,7 @@
       "description": "Permanently enchants bracers to give +5 Strength.",
       "icon": "spell_holy_greaterheal",
       "skill": 180,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1181,7 +1181,7 @@
       "description": "Permanently enchant a piece of chest armor to give +50 mana.",
       "icon": "spell_holy_greaterheal",
       "skill": 185,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1200,7 +1200,7 @@
       "description": "Permanently enchant boots to give +3 Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 190,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1223,7 +1223,7 @@
       "description": "Permanently enchant a shield to give +2% chance to block.",
       "icon": "spell_holy_greaterheal",
       "skill": 195,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1250,7 +1250,7 @@
       "description": "Permanently enchant a Melee Weapon to do 3 additional points of damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 195,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1273,7 +1273,7 @@
       "description": "Permanently enchant a Two-handed Melee Weapon to do 5 additional points of damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 200,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1296,7 +1296,7 @@
       "description": "Permanently enchant gloves to grant +5 skinning skill.",
       "icon": "spell_holy_greaterheal",
       "skill": 200,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1319,7 +1319,7 @@
       "description": "Permanently enchant a piece of chest armor to grant +2 to all stats.",
       "icon": "spell_holy_greaterheal",
       "skill": 200,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1346,7 +1346,7 @@
       "description": "Permanently enchant a cloak to give 50 additional armor.",
       "icon": "spell_holy_greaterheal",
       "skill": 205,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1365,7 +1365,7 @@
       "description": "Permanently enchant a cloak to give 3 to all resistances.",
       "icon": "spell_holy_greaterheal",
       "skill": 205,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1384,7 +1384,7 @@
       "description": "Permanently enchant gloves to grant +5 Agility.",
       "icon": "spell_holy_greaterheal",
       "skill": 210,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1407,7 +1407,7 @@
       "description": "Permanently enchant a shield to give +5 Stamina.",
       "icon": "spell_holy_greaterheal",
       "skill": 210,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1426,7 +1426,7 @@
       "description": "Permanently enchants bracers to give +5 Intellect.",
       "icon": "spell_holy_greaterheal",
       "skill": 210,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1445,7 +1445,7 @@
       "description": "Permanently enchant boots to give +5 Stamina.",
       "icon": "spell_holy_greaterheal",
       "skill": 215,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1464,7 +1464,7 @@
       "description": "Permanently enchant gloves to grant +5 mining skill.",
       "icon": "spell_holy_greaterheal",
       "skill": 215,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1487,7 +1487,7 @@
       "description": "Permanently enchants bracers to give +7 Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 220,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1510,7 +1510,7 @@
       "description": "Permanently enchant a piece of chest armor to grant +50 health.",
       "icon": "spell_holy_greaterheal",
       "skill": 220,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1529,7 +1529,7 @@
       "description": "Permanently enchant gloves to grant +5 herbalism skill.",
       "icon": "spell_holy_greaterheal",
       "skill": 225,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1552,7 +1552,7 @@
       "description": "Permanently enchant a cloak to give 3 Agility.",
       "icon": "spell_holy_greaterheal",
       "skill": 225,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1571,7 +1571,7 @@
       "description": "Permanently enchant gloves to grant +5 Strength.",
       "icon": "spell_holy_greaterheal",
       "skill": 225,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1594,7 +1594,7 @@
       "description": "Permanently enchant boots to give a slight movement speed increase.",
       "icon": "spell_holy_greaterheal",
       "skill": 225,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1621,7 +1621,7 @@
       "description": "Permanently enchant a melee weapon to often strike for 40 additional fire damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 265,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1644,7 +1644,7 @@
       "description": "Permanently enchant a shield to give +7 Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 230,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1667,7 +1667,7 @@
       "description": "Permanently enchant a melee weapon to have a chance of stunning and doing heavy damage to demons.",
       "icon": "spell_holy_greaterheal",
       "skill": 230,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1694,7 +1694,7 @@
       "description": "Permanently enchant a piece of chest armor to give +65 mana.",
       "icon": "spell_holy_greaterheal",
       "skill": 230,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1717,7 +1717,7 @@
       "description": "Permanently enchants bracers to give +3 Defense.",
       "icon": "spell_holy_greaterheal",
       "skill": 235,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1740,7 +1740,7 @@
       "description": "Permanently enchant a shield to give +8 Frost Resistance.",
       "icon": "spell_holy_greaterheal",
       "skill": 235,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1763,7 +1763,7 @@
       "description": "Permanently enchant boots to give +5 Agility.",
       "icon": "spell_holy_greaterheal",
       "skill": 235,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1782,7 +1782,7 @@
       "description": "Permanently enchant a two-handed melee weapon to do +7 damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 240,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1805,7 +1805,7 @@
       "description": "Permanently enchants bracers to give +7 Strength.",
       "icon": "spell_holy_greaterheal",
       "skill": 240,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1828,7 +1828,7 @@
       "description": "Permanently enchant a piece of chest armor to grant +3 to all stats.",
       "icon": "spell_holy_greaterheal",
       "skill": 245,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1855,7 +1855,7 @@
       "description": "Permanently enchant a Melee Weapon to do 4 additional points of damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 245,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1878,7 +1878,7 @@
       "description": "Permanently enchants bracers to give +7 Stamina.",
       "icon": "spell_holy_greaterheal",
       "skill": 245,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1897,7 +1897,7 @@
       "description": "Permanently enchant gloves to grant a minor movement bonus while mounted.",
       "icon": "spell_holy_greaterheal",
       "skill": 250,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1920,7 +1920,7 @@
       "description": "Permanently enchant gloves to grant a +1% attack speed bonus.",
       "icon": "spell_holy_greaterheal",
       "skill": 250,
-      "level": 40,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1943,7 +1943,7 @@
       "description": "Permanently enchants bracers to give +7 Intellect.",
       "icon": "spell_holy_greaterheal",
       "skill": 255,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1962,7 +1962,7 @@
       "description": "Permanently enchants bracers to give +9 Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 270,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -1985,7 +1985,7 @@
       "description": "Permanently enchants bracers to give +9 Strength.",
       "icon": "spell_holy_greaterheal",
       "skill": 295,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2008,7 +2008,7 @@
       "description": "Permanently enchants bracers to give +9 Stamina.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2027,7 +2027,7 @@
       "description": "Permanently enchant gloves to grant +7 Agility.",
       "icon": "spell_holy_greaterheal",
       "skill": 270,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2050,7 +2050,7 @@
       "description": "Permanently enchant gloves to grant +7 Strength.",
       "icon": "spell_holy_greaterheal",
       "skill": 295,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2073,7 +2073,7 @@
       "description": "Permanently enchant a cloak to give 5 to all resistances.",
       "icon": "spell_holy_greaterheal",
       "skill": 265,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2112,7 +2112,7 @@
       "description": "Permanently enchant a cloak to give 70 additional armor.",
       "icon": "spell_holy_greaterheal",
       "skill": 285,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2131,7 +2131,7 @@
       "description": "Permanently enchant a shield to give +9 Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 280,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2154,7 +2154,7 @@
       "description": "Permanently enchant a shield to give +7 Stamina.",
       "icon": "spell_holy_greaterheal",
       "skill": 265,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2173,7 +2173,7 @@
       "description": "Permanently enchant boots to give +7 Stamina.",
       "icon": "spell_holy_greaterheal",
       "skill": 260,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2192,7 +2192,7 @@
       "description": "Permanently enchant boots to give +7 Agility.",
       "icon": "spell_holy_greaterheal",
       "skill": 295,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2211,7 +2211,7 @@
       "description": "Permanently enchant boots to give +5 Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 275,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2234,7 +2234,7 @@
       "description": "Permanently enchant a piece of chest armor to grant +4 to all stats.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2261,7 +2261,7 @@
       "description": "Permanently enchant a piece of chest armor to grant +100 health.",
       "icon": "spell_holy_greaterheal",
       "skill": 275,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2284,7 +2284,7 @@
       "description": "Permanently enchant a piece of chest armor to give +100 mana.",
       "icon": "spell_holy_greaterheal",
       "skill": 290,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2307,7 +2307,7 @@
       "description": "Permanently enchant a melee weapon to often chill the target reducing their movement and attack speed.",
       "icon": "spell_holy_greaterheal",
       "skill": 285,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2338,7 +2338,7 @@
       "description": "Permanently enchant a two-handed melee weapon to do +9 damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 295,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2361,7 +2361,7 @@
       "description": "Permanently enchant a Melee Weapon to do 5 additional points of damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2384,7 +2384,7 @@
       "description": "Permanently enchant a melee weapon to often steal life from the enemy and give it to the wielder.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2411,7 +2411,7 @@
       "description": "Permanently enchant a melee weapon to often inflict a curse on the target reducing their melee damage.",
       "icon": "spell_holy_greaterheal",
       "skill": 295,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2434,7 +2434,7 @@
       "description": "Permanently enchant a melee weapon so that often when attacking in melee it heals for 75 to 125 and increases Strength by 100 for 15 sec.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2457,7 +2457,7 @@
       "description": "Permanently enchant a Two-Handed Melee Weapon to add 9 to Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2480,7 +2480,7 @@
       "description": "Permanently enchant a Two-Handed Melee Weapon to add 9 to intellect.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2503,7 +2503,7 @@
       "description": "Permanently enchant a weapon to grant up to 7 additional frost damage when casting frost spells.",
       "icon": "spell_holy_greaterheal",
       "skill": 190,
-      "level": 30,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2534,7 +2534,7 @@
       "description": "Permanently enchant a Melee Weapon to add up to 30 damage to spells.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2573,7 +2573,7 @@
       "description": "Permanently enchant a Melee Weapon to add up to 55 points of healing to healing spells.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2608,7 +2608,7 @@
       "description": "Permanently enchant a melee weapon to grant +15 strength.",
       "icon": "spell_holy_greaterheal",
       "skill": 290,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2639,7 +2639,7 @@
       "description": "Permanently enchant a melee weapon to grant +15 Agility.",
       "icon": "spell_holy_greaterheal",
       "skill": 290,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2670,7 +2670,7 @@
       "description": "Permanently enchants bracers to restore 4 mana every 5 seconds.",
       "icon": "spell_holy_greaterheal",
       "skill": 290,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2697,7 +2697,7 @@
       "description": "Permanently enchants bracers to increase the effects of your healing spells by 24.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2728,7 +2728,7 @@
       "description": "Permanently enchant a melee weapon to grant +20 Spirit.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2755,7 +2755,7 @@
       "description": "Permanently enchant a melee weapon to grant +22 Intellect.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2782,7 +2782,7 @@
       "description": "Permanently enchant gloves to increase threat from all attacks and spells by 2%.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2809,7 +2809,7 @@
       "description": "Permanently enchant gloves to increase shadow damage by up to 20.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2836,7 +2836,7 @@
       "description": "Permanently enchant gloves to increase frost damage by up to 20.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2863,7 +2863,7 @@
       "description": "Permanently enchant gloves to increase fire damage by up to 20.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2890,7 +2890,7 @@
       "description": "Permanently enchant gloves to increase the caster's healing spells by up to 30.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2917,7 +2917,7 @@
       "description": "Permanently enchant gloves to increase agility by 15.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2944,7 +2944,7 @@
       "description": "Permanently enchant a cloak to give 15 fire resistance.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2971,7 +2971,7 @@
       "description": "Permanently enchant a cloak to give 15 nature resistance.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -2998,7 +2998,7 @@
       "description": "Permanently enchant a cloak to give a increase to stealth.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -3025,7 +3025,7 @@
       "description": "Permanently enchant a cloak to decrease threat caused by the wearer by 2%.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -3052,7 +3052,7 @@
       "description": "Permanently enchant a cloak to give a 1% chance to dodge.",
       "icon": "spell_holy_greaterheal",
       "skill": 300,
-      "level": 60,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [
@@ -3079,7 +3079,7 @@
       "description": "Permanently enchant a two-handed melee weapon to grant +25 Agility.",
       "icon": "spell_holy_greaterheal",
       "skill": 290,
-      "level": 50,
+      "level": 1,
       "gearLevel": 1,
       "reagents": [
         [

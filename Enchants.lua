@@ -1,5 +1,5 @@
--- Permanent Classic Era enchants. Recommendations are leveling budgets, not
--- character-level use requirements. Never infer eligibility from armor weight.
+-- Permanent Classic Era enchants. Eligibility follows actual item restrictions,
+-- not the skill or level of the enchanter. Never infer it from armor weight.
 local _, A = ...
 local E={}; A.Enchants=E
 local D=A.Data.Enchants
@@ -86,21 +86,29 @@ function E.Read(slot)
     g.status="checked"; g.current=byEnchant[enchant]
     return g
 end
-function E.Options(context,g)
-    local out={}
+-- Group equivalent effects, including Protection/Defense and Deflect/Deflection.
+local function rankKey(r)
+    if r.armorKit then return r.family end
+    return (r.effect:gsub("%d+", "#"))
+end
+function E.Options(context,g,showLesser)
+    local out,best={},{}
+    local function add(r)
+        if not E.Compatible(r,g) then return end
+        if showLesser then out[#out+1]=r; return end
+        local key=rankKey(r)
+        local old=best[key]
+        local amount=r.power or tonumber(r.effect:match("%d+")) or 0
+        local previous=old and (old.power or tonumber(old.effect:match("%d+")) or 0)
+        if not old or amount>previous or amount==previous and r.skill>old.skill then best[key]=r end
+    end
     for _,r in ipairs(D.recipes) do
-        if r.level<=context.level and relevant(r,context.characterClass) and E.Compatible(r,g) then out[#out+1]=r end
+        if relevant(r,context.characterClass) then add(r) end
     end
-    local bestKits={}
     for _,r in ipairs(kits) do
-        if r.level<=context.level and E.Compatible(r,g) then
-            local current=bestKits[r.family]
-            if not current or r.power>current.power then bestKits[r.family]=r end
-        end
+        if r.level<=context.level then add(r) end
     end
-    -- Core adds defense, not armor: keep it as a separate type, not a higher
-    -- rank of Rugged. Superseded armor ranks do not clutter alternatives.
-    for _,r in pairs(bestKits) do out[#out+1]=r end
+    if not showLesser then for _,r in pairs(best) do out[#out+1]=r end end
     table.sort(out,function(a,b)
         local av,bv=points(a,context.characterClass),points(b,context.characterClass)
         if av~=bv then return av>bv end
@@ -197,7 +205,7 @@ function E.Card(context)
         elseif alternative then b.enchantStatus="Alternative" end
         if g.slotId~=17 then blocks[#blocks+1]=b end
     end
-    return {title="Enchants",note="Class and level recommendations. Choose a slot for alternatives and materials.",blocks=blocks,supplyTable=true}
+    return {title="Enchants",note="Recommendations for your class and equipped gear. Choose a slot for alternatives and materials.",blocks=blocks,supplyTable=true}
 end
 function E.Detail(context,action)
     local g
@@ -205,7 +213,8 @@ function E.Detail(context,action)
     if not g then return {title="Enchants",blocks={}} end
     local selected=g.current or g.recommendation
     local recommended=g.options[1]
-    for _,option in ipairs(g.options) do if option.spellId==action.spellId then selected=option end end
+    local options=E.Options(context,g,true)
+    for _,option in ipairs(options) do if option.spellId==action.spellId then selected=option end end
     local blocks={}
     local function heading(title,right,body)
         local b=row(title,body); b.plain=true; b.textInset=0; b.rightColumn=right; blocks[#blocks+1]=b
@@ -234,7 +243,7 @@ function E.Detail(context,action)
     end
     alternative(recommended)
     alternative(g.current)
-    for _,option in ipairs(g.options) do alternative(option) end
+    for _,option in ipairs(A.state and A.state.showLesserEnchants and options or g.options) do alternative(option) end
     heading("Materials",true,not selected and "No compatible enchant selected" or nil)
     if selected then
         for _,pair in ipairs(selected.reagents) do

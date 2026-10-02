@@ -20,6 +20,26 @@ C_Item.GetItemInfo=function(link)
 end
 local ctx={mode="live",level=60,characterClass="Mage",inventory={available=true,counts={}},enchantChoices={}}
 local function slot(id) for _,g in ipairs(E.Scan(ctx)) do if g.slotId==id then return g end end end
+
+-- Skill requirements belong to the enchanter, never the wearer.
+ctx.level=1; ctx.characterClass="Rogue"
+gear[16]={loc="INVTYPE_WEAPON",level=1,class=2}
+local fiery=false
+for _,r in ipairs(slot(16).options) do if r.spellId==13898 then fiery=true end end
+check(fiery,"Fiery Weapon available on level-one melee gear")
+ctx.characterClass="Mage"; gear[9]={loc="INVTYPE_WRIST",level=1}
+check(slot(9).recommendation.skill>200,"High-skill enchants available to low-level wearers")
+local top=E.Options(ctx,slot(9)); local all=E.Options(ctx,slot(9),true)
+check(#all>#top,"Lesser-rank toggle expands compatible enchants")
+ctx.level=60; gear[7]={loc="INVTYPE_LEGS",level=50}
+local allKits=E.Options(ctx,slot(7),true)
+check(#allKits==6,"Lesser-rank toggle includes all applicable armor kits")
+gear[7].level=14
+for _,r in ipairs(E.Options(ctx,slot(7),true)) do check(r.gearLevel<=14,"Lesser ranks preserve item restrictions") end
+ctx.level=1
+for _,r in ipairs(E.Options(ctx,slot(7),true)) do check(r.level<=1,"Armor kits retain actual use level requirements") end
+ctx.level=60; gear={}
+
 check(#A.Data.Enchants.recipes==132,"Complete Era profession catalog")
 for _,r in ipairs(A.Data.Enchants.recipes) do
     check(r.spellId<30000 and r.enchantId>0 and r.gearLevel>=1 and #r.reagents>0,"Validated recipe")
@@ -49,7 +69,7 @@ gear[17]={loc="INVTYPE_SHIELD"}
 for _,r in ipairs(slot(17).options) do check(r.slot=="Shield","Only shield enchants") end
 gear[16]={loc="INVTYPE_2HWEAPON",class=2}
 local twoHand=false
-for _,r in ipairs(slot(16).options) do if r.slot=="2H Weapon" then twoHand=true end end
+for _,r in ipairs(E.Options(ctx,slot(16),true)) do if r.slot=="2H Weapon" then twoHand=true end end
 check(twoHand,"Two-hand enchants allowed on staff")
 gear[16].loc="INVTYPE_WEAPON"
 for _,r in ipairs(slot(16).options) do check(r.slot~="2H Weapon","No two-hand enchant on dagger") end
@@ -184,6 +204,15 @@ check(A.document.cards[1].itemLayout and A.document.cards[1].blocks[1].title=="R
 local right=false
 for _,b in ipairs(A.document.cards[1].blocks) do if b.itemId and b.rightColumn then right=true; check(b.supply and b.target>0,"Tracked reagent rows") end end
 check(right,"Materials occupy right column")
+local before=#A.document.cards[1].blocks
+MOCK.Click(A.window.enchantRanks)
+check(A.state.showLesserEnchants and #A.document.cards[1].blocks>before,"Show Lesser Ranks expands the displayed alternatives")
+for _,b in ipairs(A.document.cards[1].blocks) do if b.action then
+    A:Activate(b.action); break
+end end
+check(A.state.showLesserEnchants,"Selecting an alternative preserves rank toggle")
+MOCK.Click(A.window.enchantRanks)
+check(not A.state.showLesserEnchants,"Hide Lesser Ranks restores compact list")
 print("Enchant checks passed: "..checks)
 ''')
 composite(lua.globals().MOCK.frames,addon.window).save(ROOT/'.release/enchants-preview.png')

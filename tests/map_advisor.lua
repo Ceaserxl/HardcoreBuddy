@@ -55,9 +55,15 @@ C_MapExplorationInfo={GetExploredMapTextures=function() return known end}
 local s=M:Settings(); assert(s.reveal=="tint" and s.notify)
 s.notify=false; assert(not M:Settings().notify,"Explicit opt-out survives default change")
 M:Attach(); M:RefreshPins()
+assert(s.tintAlpha==1,"Exploration opacity defaults to 100 percent")
+local rareCheck=M.markerBar.checks.rare
+rareCheck:SetChecked(false); rareCheck:GetScript("OnClick")(rareCheck)
+assert(not s.rare and not rareCheck:GetChecked(),"Map checkbox updates saved category")
+s.rare=true; M:Attach()
+assert(rareCheck:GetChecked(),"Map checkboxes sync from settings")
 assert(#M.exploration[pin]>0 and #M.pins>0)
 local t=M.exploration[pin][1]
-assert(t:IsShown() and t.vertexColor[4]==0.55 and t.drawSubLevel==-1)
+assert(t:IsShown() and t.vertexColor[4]==1 and t.drawSubLevel==-1)
 assert(native:IsShown() and native.texture==999)
 for _,p in ipairs(M.pins) do if p:IsShown() then
     local _,relative,anchor,x,y=p:GetPoint()
@@ -204,7 +210,7 @@ MOCK.Click(controls.tintColor)
 ColorPickerFrame.r,ColorPickerFrame.g,ColorPickerFrame.b=0,1,0
 ColorPickerFrame.func(); assert(s.tintG==1)
 ColorPickerFrame.cancelFunc(); ColorPickerFrame:Hide()
-assert(s.tintR==1 and s.tintG==0 and s.tintB==128/255 and s.tintAlpha==0.55,"Color choice leaves opacity unchanged")
+assert(s.tintR==1 and s.tintG==0 and s.tintB==128/255 and s.tintAlpha==1,"Color choice leaves opacity unchanged")
 controls.sliders.tintAlpha:SetValue(25)
 controls.sliders.iconSize:SetValue(30); controls.sliders.iconAlpha:SetValue(40)
 now=now+1; M.events.scripts.OnUpdate(M.events)
@@ -270,7 +276,7 @@ MOCK.Click(controls.modes.tint)
 MOCK.Click(controls.tintColor)
 local cancel=ColorPickerFrame.cancelFunc
 MOCK.Click(controls.resetAll); cancel()
-assert(s.reveal=="tint" and s.tintR==0.35 and s.tintG==0.65 and s.tintB==1 and s.tintAlpha==0.55
+assert(s.reveal=="tint" and s.tintR==0.35 and s.tintG==0.65 and s.tintB==1 and s.tintAlpha==1
     and s.iconSize==18 and s.iconAlpha==1 and s.notify and s.rare and s.elite and s.boss and s.danger,"Reset all restores Map defaults; stale picker Cancel cannot undo it")
 assert(A.Settings.content.skinKind=="note" and controls:GetHeight()==M:SettingsHeight(),"Map has no nested background or unused trailing section")
 ColorPickerFrame:Hide()

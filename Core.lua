@@ -241,6 +241,20 @@ function addon:SetLevel(value)
     self:SetProfile("level", level)
 end
 
+function addon:ConfirmReset()
+    StaticPopupDialogs.HARDCOREBUDDY_RESET={
+        text="Reset HardcoreBuddy? This deletes all account-wide settings and cached data, plus this character's saved data, and reloads the UI. Other characters' character-specific data cannot be cleared from this character.",
+        button1="Reset AddOn",button2=CANCEL or "Cancel",timeout=0,whileDead=true,hideOnEscape=true,
+        OnAccept=function()
+            -- Detach the saved roots. Logout callbacks retain only the old,
+            -- unsaved tables, so they cannot restore caches during ReloadUI.
+            HardcoreBuddyDB=nil; HardcoreBuddyCharacterDB=nil
+            ReloadUI()
+        end,
+    }
+    StaticPopup_Show("HARDCOREBUDDY_RESET")
+end
+
 function addon:Initialize()
     if type(HardcoreBuddyDB) ~= "table" then
         HardcoreBuddyDB = {}

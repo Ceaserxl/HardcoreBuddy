@@ -26,7 +26,8 @@ def build():
         minimum=re.search(r'(?:level (\d+) or higher item|item.*?level (\d+) or higher)',clean(tooltip),re.I)
         tool=re.search(r'Tools:.*?item=(\d+)[^>]*>(.*?)</a>',tooltip)
         slot=row['name'].split(' - ')[0].replace('Enchant ','')
-        level=1 if skill<=50 else 10 if skill<=100 else 20 if skill<=150 else 30 if skill<=200 else 40 if skill<=250 else 50 if skill<=290 else 60
+        # Enchanter skill is not a character-level requirement for the wearer.
+        level=1
         rec=dict(spellId=sid,name=row['name'],slot=slot,enchantId=int(effect[2]),effect=clean(effect[1]),
                  description=clean(fact['description_enus']),icon=fact['icon'],skill=skill,level=level,
                  gearLevel=int(next(x for x in minimum.groups() if x)) if minimum else 1,
