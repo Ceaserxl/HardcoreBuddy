@@ -27,11 +27,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--limit', type=int, default=10000)
     parser.add_argument('--delay', type=float, default=2, help='Seconds between requests (default: 2).')
+    parser.add_argument('--retry-no-coordinates', action='store_true', help='Revisit pages previously lacking usable coordinates.')
     args = parser.parse_args()
     if not math.isfinite(args.delay) or args.delay < 0:
         parser.error('--delay must be a finite, non-negative number')
     audit = json.loads((ROOT/'docs/map-data-audit.json').read_text())
     state = json.loads(PROGRESS.read_text()) if PROGRESS.exists() else {}
+    catalog = ROOT/'Data/MapNPCs.lua'
+    names = dict(re.findall(r'^\[(\d+)\]=\{\["name"\]="([^"]+)"',
+                            catalog.read_text(encoding='utf-8') if catalog.exists() else '', re.M))
     no_map = set(state.get('pagesWithoutCoordinates', []))
     candidates = sorted(int(i) for i, n in audit['npcSources'].items()
                         if n['coordinates'] != 'Wowhead Dragons of Nightmare guide')
@@ -41,14 +45,15 @@ def main():
     state.update(updatedAt=datetime.now(timezone.utc).isoformat(), fetchedThisRun=[], stopReason='Completed queue', blockedNPC=None)
     state.pop('accessRetry', None)
     state['requestDelaySeconds'] = args.delay
-    queue = [i for i in pending() if i not in no_map]
+    queue = [i for i in pending() if args.retry_no_coordinates or i not in no_map]
     def save():
         state['pagesWithoutCoordinates'] = sorted(no_map)
         state['pendingNPCs'] = pending()
         state['remaining'] = len(state['pendingNPCs'])
+        state['pendingNames'] = {str(i): names[str(i)] for i in state['pendingNPCs'] if str(i) in names}
         state['verifiedNPCPages'] = len(candidates)-state['remaining']
         state['updatedAt'] = datetime.now(timezone.utc).isoformat()
-        state['resumeCommand'] = f'python scripts/resume_map_research.py --delay {args.delay:g}'
+        state['resumeCommand'] = f'python scripts/resume_map_research.py --delay {args.delay:g}' + (' --retry-no-coordinates' if args.retry_no_coordinates else '')
         PROGRESS.write_text(json.dumps(state, indent=2)+'\n', encoding='utf-8')
     for i, ident in enumerate(queue):
         if i >= args.limit:
@@ -57,14 +62,24 @@ def main():
         print(f'Requesting {ident}: {url}', flush=True)
         try:
             req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req, timeout=20) as response:
-                page = response.read().decode('utf-8')
+            for attempt in range(2):
+                try:
+                    with urllib.request.urlopen(req, timeout=20) as response:
+                        page = response.read().decode('utf-8')
+                    break
+                except (urllib.error.URLError, TimeoutError) as exc:
+                    if attempt: raise
+                    state['accessRetry'] = {'npc': ident, 'error': str(exc), 'waitSeconds': 30}
+                    save()
+                    print(f'Access error: {exc}. Waiting 30 seconds before one retry.', flush=True)
+                    time.sleep(30)
             title = re.search(r'<title>(.*?)</title>', page, re.I|re.S)
             if title and re.search(r'just a moment|access denied|captcha|attention required', title[1], re.I):
                 raise RuntimeError('Access challenge; stopped without bypassing it')
             if not coordinates(page):
                 no_map.add(ident)
             else:
+                no_map.discard(ident)
                 (CACHE/f'npc-{ident}.html').write_text(page, encoding='utf-8')
                 state['fetchedThisRun'].append(ident)
         except (urllib.error.URLError, TimeoutError, RuntimeError, ValueError) as exc:

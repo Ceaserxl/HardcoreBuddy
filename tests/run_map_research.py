@@ -38,13 +38,23 @@ with tempfile.TemporaryDirectory() as directory:
          patch.object(sys, 'argv', ['resume_map_research.py']), redirect_stdout(io.StringIO()):
         research.main()
         state = json.loads(progress.read_text())
-        assert sleeps == [2], 'Default delay is two seconds between requests'
-        assert len(calls) == 2 and 'npc=2?' in calls[0] and 'npc=3?' in calls[1]
+        assert sleeps == [2, 30], 'Default delay is two seconds between requests'
+        assert len(calls) == 3 and 'npc=2?' in calls[0] and 'npc=3?' in calls[1] and calls[1]==calls[2]
         assert state['blockedNPC'] == 3 and state['remaining'] == 2
         assert state['fetchedThisRun'] == [2] and state['requestDelaySeconds'] == 2
         assert state['resumeCommand'].endswith('--delay 2')
         assert (cache / 'npc-1.html').read_text() == page
         assert not (cache / 'npc-3.html').exists() and not (cache / 'npc-4.html').exists()
+        (cache / 'npc-2.html').unlink()
+        state['pagesWithoutCoordinates'] = [2]
+        progress.write_text(json.dumps(state))
+        calls.clear()
+        with patch.object(sys, 'argv', ['resume_map_research.py', '--retry-no-coordinates', '--limit', '1']):
+            research.main()
+        retried = json.loads(progress.read_text())
+        assert len(calls) == 1 and 'npc=2?' in calls[0]
+        assert retried['fetchedThisRun'] == [2] and 2 not in retried['pagesWithoutCoordinates']
+        assert '--retry-no-coordinates' in retried['resumeCommand']
         for invalid in ('-1', 'nan', 'inf'):
             with patch.object(sys, 'argv', ['resume_map_research.py', '--delay', invalid]), redirect_stderr(io.StringIO()):
                 try:
