@@ -95,8 +95,16 @@ local overview=A.state
 A:Activate(pathLink.action)
 check(A.state.talentPath and #A.document.cards==1 and #A.document.cards[1].blocks==51,"All 51 steps in the separate path page")
 check(A.window.content:GetHeight()>A.window.scroll:GetHeight() and A:CanGoBack(),"Scrollable path with shared Back")
+check(A.document.cards[1].talentTable and #A.window.cards[1].talentHeaders==5,"Talent path has five table columns")
+for i,step in ipairs(A.document.cards[1].blocks) do
+    local rendered=A.window.cards[1].content.blocks[i]
+    check(step.talentColumns[1]==tostring(i+9),"Table preserves level order")
+    check(rendered.icon:IsShown() and rendered.icon:GetWidth()==24 and rendered:GetHeight()==32,"Compact table keeps each talent icon")
+    check(#rendered.talentCells==5 and not rendered.meta:IsShown(),"Status is in its own column")
+end
 MOCK.Click(A.window.back)
 check(A.state==overview and not A.state.talentPath,"Back restores the talent overview")
+check(A.window.cards[1].content.blocks[1].icon:GetWidth()==34 and not A.window.cards[1].talentHeaders[1]:IsShown(),"Back restores overview icon size and hides table headings")
 check(A.window.sidebarTitle:GetText()=="ADVISORS","Sidebar identity")
 local lesson=A.document.cards[1].blocks[1]
 check(lesson.title=="Next Talent" and lesson.recommendation.summary=="Click to apply 1pt","Stable next talent label and compact apply hint")

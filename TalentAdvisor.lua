@@ -272,9 +272,12 @@ function T:Document(context,state)
         local title="|cff"..color..""..(live and live.names[key] or node.name).."  "..rank.."/"..node.maxRank.."|r"
         steps[#steps+1]=row(title,"Level "..atLevel.."  |  "..node.treeName,nil,
             learned and "Learned" or nextStep and "Next Point" or nil,live and live.icons[key] or spellIcon(node.spellID))
-        steps[#steps].metaAtTitle=true
+        steps[#steps].talentColumns={tostring(atLevel),live and live.names[key] or node.name,
+            rank.." / "..node.maxRank,node.treeName,
+            "|cff"..color..(learned and "Learned" or nextStep and "Next Point" or "Upcoming").."|r"}
     end
     doc.cards={card("Your point-by-point path",context.characterClass.." | "..build.name.." | Scroll to see the complete path.",steps)}
+    doc.cards[1].talentTable=true; doc.cards[1].fullWidth=true
     return doc
 end
 

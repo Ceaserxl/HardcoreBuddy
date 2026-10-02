@@ -144,6 +144,15 @@ end
 local renderBlocks
 local npcColumnStarts={0,0.10,0.55,0.80}
 local npcColumnEnds={0.09,0.54,0.79,1}
+local talentColumnStarts={0,0.08,0.53,0.64,0.83}
+local talentColumnEnds={0.07,0.52,0.63,0.82,1}
+local function placeTalentCell(label,text,index,width,y,header)
+    local usable=width-24
+    local inset=index==2 and not header and 32 or 0
+    measure(label,text,usable*(talentColumnEnds[index]-talentColumnStarts[index])-inset,
+        12+usable*talentColumnStarts[index]+inset,y)
+    label:SetWordWrap(false); label:SetHeight(18)
+end
 local function placeNPCCell(label,text,index,width,y)
     local usable=width-40
     measure(label,text,usable*(npcColumnEnds[index]-npcColumnStarts[index]),12+usable*npcColumnStarts[index],y)
@@ -153,7 +162,8 @@ local function renderBlock(frame, block, width)
     frame.block = block; frame:SetWidth(width); frame:Show()
     frame.priority:SetShown(block.supply and block.priority~=nil)
     frame.title:SetFont(STANDARD_TEXT_FONT,block.supply and 14 or 15,"")
-    frame.meta:SetFont(STANDARD_TEXT_FONT,block.metaAtTitle and 15 or 11,"")
+    frame.meta:SetFont(STANDARD_TEXT_FONT,11,"")
+    frame.icon:SetSize(34,34)
     frame.body:SetFont(STANDARD_TEXT_FONT,block.supply and 11 or 12,"")
     frame.title:SetWordWrap(true); frame.body:SetWordWrap(true)
     frame.count:SetFont(STANDARD_TEXT_FONT,14,"")
@@ -163,6 +173,7 @@ local function renderBlock(frame, block, width)
     if frame.recommendationName then frame.recommendationName:Hide(); frame.recommendationDetail:Hide() end
     if frame.carryLabel then frame.carryLabel:Hide() end
     for _,cell in ipairs(frame.npcCells or {}) do cell:Hide() end
+    for _,cell in ipairs(frame.talentCells or {}) do cell:Hide() end
     if frame.quantity:HasFocus() and (frame.quantity.targetKey~=block.targetKey
         or not block.quantityEditor) then frame.quantity:ClearFocus() end
     frame.count:Hide(); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.quantityEditor==true)
@@ -180,6 +191,22 @@ local function renderBlock(frame, block, width)
     if block.action then frame.iconHit:GetHighlightTexture():SetAllPoints(frame) end
     for _, col in ipairs(frame.columns) do col:Hide() end
     for _, field in ipairs(frame.fields) do field:Hide() end
+    if block.talentColumns then
+        frame.title:Hide(); frame.body:Hide(); frame.meta:Hide(); frame.chevron:Hide()
+        frame.talentCells=frame.talentCells or {}
+        Skin.Paint(frame,"note"); Skin.Hover(frame,true)
+        frame.icon:Show(); frame.iconHit:Show(); frame.iconBorder:Show()
+        frame.icon:SetTexture(block.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
+        frame.icon:SetSize(24,24); frame.icon:ClearAllPoints()
+        frame.icon:SetPoint("TOPLEFT",12+(width-24)*talentColumnStarts[2],-4)
+        for i,value in ipairs(block.talentColumns) do
+            local cell=frame.talentCells[i]
+            if not cell then cell=font(frame,12,i==2 and WHITE or MUTED); frame.talentCells[i]=cell end
+            cell:Show(); placeTalentCell(cell,value,i,width,7)
+        end
+        frame:SetHeight(32)
+        return 32
+    end
     if block.quantityEditor then
         frame.title:Show(); frame.body:Hide(); frame.meta:Hide()
         frame.icon:Hide(); frame.iconHit:Hide(); frame.iconBorder:Hide()
@@ -243,11 +270,6 @@ local function renderBlock(frame, block, width)
     end
     local x = block.textInset or (icon and 52 or 12) + (block.child and 8 or 0)
     local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), block.supply and 8 or 12
-    local titleMetaWidth=0
-    if block.metaAtTitle and block.meta then
-        frame.meta:SetText(block.meta)
-        titleMetaWidth=math.ceil(frame.meta:GetStringWidth())+2
-    end
     frame.title:SetTextColor(unpack(block.titleColor or (block.supply and WHITE or GOLD)))
     local height
     if block.supply then
@@ -256,14 +278,10 @@ local function renderBlock(frame, block, width)
         local bodyHeight=measure(frame.body,block.body,available-nameWidth-16,x+nameWidth+16,y)
         y=y+math.max(titleHeight,bodyHeight)+3
     else
-        height=measure(frame.title, block.title, available-(titleMetaWidth>0 and titleMetaWidth+16 or 0), x, y); if height>0 then y=y+height+3 end
+        height=measure(frame.title, block.title, available, x, y); if height>0 then y=y+height+3 end
         height=measure(frame.body, block.body, available, x, y); if height>0 then y=y+height+3 end
     end
-    if block.metaAtTitle then
-        measure(frame.meta,block.meta,titleMetaWidth,width-titleMetaWidth-14,12)
-    else
-        height=measure(frame.meta, block.meta, available, x, y); if height>0 then y=y+height+2 end
-    end
+    height=measure(frame.meta, block.meta, available, x, y); if height>0 then y=y+height+2 end
     if block.fields then
         local gap, fieldWidth, column, rowHeight = 20, (width-44)/2, 0, 0
         y=y+4
@@ -410,17 +428,17 @@ renderBlocks = function(parent, blocks, width)
             height=math.max(height,pending:GetHeight()); pending:SetHeight(height); frame:SetHeight(height)
             y=y+height+12; pending=nil
         elseif paired and index<#blocks then pending=frame
-        else y=y+height+((block.supply and not paired or block.npcColumns) and 4 or 12) end
+        else y=y+height+(block.talentColumns and 1 or (block.supply and not paired or block.npcColumns) and 4 or 12) end
         if block.supply then
             local shade=index%2==0 and 0.075 or 0.045
             frame:SetBackdropColor(shade,shade+0.009,shade+0.014,1)
-        elseif block.npcColumns then
+        elseif block.npcColumns or block.talentColumns then
             local shade=index%2==0 and 0.06 or 0.035
             frame:SetBackdropColor(shade,shade+0.008,shade+0.012,1)
         end
     end
     for index=#blocks+1,#parent.blocks do parent.blocks[index]:Hide() end
-    return math.max(1,y-(blocks[#blocks] and ((blocks[#blocks].supply and not parent.supplyGrid or blocks[#blocks].npcColumns) and 4 or 12) or 0))
+    return math.max(1,y-(blocks[#blocks] and (blocks[#blocks].talentColumns and 1 or (blocks[#blocks].supply and not parent.supplyGrid or blocks[#blocks].npcColumns) and 4 or 12) or 0))
 end
 local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
@@ -451,6 +469,16 @@ local function renderCard(frame, data, width)
     end
     for _,control in ipairs(frame.npcFilters or {}) do control:Hide() end
     for _,label in ipairs(frame.npcHeaders or {}) do label:Hide() end
+    for _,label in ipairs(frame.talentHeaders or {}) do label:Hide() end
+    if data.talentTable then
+        frame.talentHeaders=frame.talentHeaders or {}
+        for i,text in ipairs({"LEVEL","TALENT","RANK","TREE","STATUS"}) do
+            local label=frame.talentHeaders[i]
+            if not label then label=font(frame,10,MUTED); frame.talentHeaders[i]=label end
+            label:Show(); placeTalentCell(label,text,i,width-12,y,true)
+        end
+        y=y+26
+    end
     if data.npcTable then
         frame.npcFilters=frame.npcFilters or {}; frame.npcHeaders=frame.npcHeaders or {}
         local filters={{"All","all"},{"Rares","rare"},{"Elites","elite"},{"World bosses","boss"},{"Dangerous","danger"}}
