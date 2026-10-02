@@ -473,8 +473,6 @@ function U:Refresh()
         or self.slot and (#list.." upgrades | Best score first | Hover to compare equipped gear")
         or self.weaponsOnly and advice or "")
     self.status:SetText(self.message or "Start a scan to find upgrades. You can browse results as they arrive.")
-    local diagnostics=A.characterDB and A.characterDB.auctionDiagnostics
-    self.diagnosticsButton:SetShown(diagnostics~=nil)
     self.status:SetWidth(self.panel:GetWidth()-434)
     self.status:SetTextColor(unpack(self.stale and Skin.colors.red or self.scan and Skin.colors.gold
         or self.complete and Skin.colors.green or Skin.colors.muted))
@@ -601,7 +599,6 @@ function U:Layout()
     -- Status stays in the compact header; no footer steals table height.
     self.status:ClearAllPoints(); self.status:SetPoint("TOPLEFT",420,-31)
     self.status:SetWidth(width-434); self.status:SetJustifyH("RIGHT")
-    self.diagnosticsButton:ClearAllPoints(); self.diagnosticsButton:SetPoint("TOPLEFT",14,-316)
 end
 
 function U:Attach()
@@ -729,8 +726,6 @@ function U:Attach()
     self.progressFill=panel:CreateTexture(nil,"ARTWORK"); self.progressFill:SetTexture("Interface\\Buttons\\WHITE8x8")
     self.progressFill:SetPoint("TOPLEFT",14,-336); self.progressFill:SetSize(1,3)
     self.status=label(panel,"",14,-345,762,Skin.colors.muted,10)
-    self.diagnosticsButton=button(panel,"Scan details",128,function() A.AuctionDiagnostics:Show() end)
-    self.diagnosticsButton:SetPoint("TOPRIGHT",-14,-345)
     -- The native PLAYER money template updates on show and PLAYER_MONEY,
     -- including auction purchases, without touching the other auction tabs.
     self.moneyFrame=CreateFrame("Frame","HardcoreBuddyAuctionMoneyFrame",panel,"SmallMoneyFrameTemplate")

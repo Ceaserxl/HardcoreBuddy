@@ -215,9 +215,9 @@ check(diagnostics.skipped==1 and failure.stage=="auction data" and failure.reaso
 check(failure.name==good.name and failure.search=="Head" and failure.page==1 and failure.index==1
     and failure.attempts>1 and failure.waitSeconds>=10,"Diagnostic includes listing identity, query position and retry timing")
 check(diagnostics.checked==1 and diagnostics.outcome==U.message,"Completed report retains scan totals and outcome")
-MOCK.Click(U.diagnosticsButton)
+A:HandleSlashCommand("auction debug")
 local debugWindow=A.AuctionDiagnostics.window
-check(debugWindow:IsShown() and debugWindow.edit:GetText():find("Missing item link",1,true),"Scan details opens a copyable failure report")
+check(debugWindow:IsShown() and debugWindow.edit:GetText():find("Missing item link",1,true),"Debug command opens a copyable failure report")
 MOCK.Click(debugWindow.selectAll)
 check(debugWindow.edit:HasFocus() and debugWindow.edit.selection[2]==#debugWindow.edit:GetText(),"Select report selects all diagnostic text for copying")
 debugWindow.edit.scripts.OnEscapePressed(debugWindow.edit)
