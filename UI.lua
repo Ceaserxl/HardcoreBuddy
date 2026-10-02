@@ -544,7 +544,6 @@ local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
     if frame.tableScroll then frame.tableScroll:Hide() end
     frame.content:SetParent(frame)
-    if data.scrollableTalents then width=width-22 end
     if frame.detailQuantity and not data.quantityRecord then
         frame.detailQuantity.quantity:ClearFocus(); frame.detailQuantity:Hide()
     end
@@ -719,6 +718,17 @@ local function renderCard(frame, data, width)
         frame.content:SetHeight(height); scroll:SetScrollChild(frame.content)
         scroll:UpdateScrollChildRect()
         scroll:SetVerticalScroll(math.min(scroll:GetVerticalScroll(),math.max(0,height-viewport)))
+        addon.window.activeTableScroll=scroll
+        local name=scroll.GetName and scroll:GetName()
+        local bar=scroll.ScrollBar or (name and _G[name.."ScrollBar"])
+        if bar then
+            -- Keep the page-edge bar outside the clipped table/outer scroll child.
+            bar:SetParent(addon.window.scroll); bar:Show()
+            bar:SetScript("OnValueChanged",function(_,value) scroll:SetVerticalScroll(value) end)
+            bar:ClearAllPoints()
+            bar:SetPoint("TOPLEFT",addon.window.scroll,"TOPRIGHT",4,-16)
+            bar:SetPoint("BOTTOMLEFT",addon.window.scroll,"BOTTOMRIGHT",4,16)
+        end
         frame:SetHeight(y+viewport); return y+viewport
     end
     frame.content:SetHeight(height); y=y+height; frame:SetHeight(y)
@@ -826,6 +836,7 @@ function addon:CreateWindow()
     f.scroll=CreateFrame("ScrollFrame", "HardcoreBuddyScrollFrame", f,"UIPanelScrollFrameTemplate")
     f.scroll:EnableMouseWheel(true)
     f.scroll:SetScript("OnMouseWheel",function(scroll,delta)
+        scroll=f.activeTableScroll or scroll
         scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*65)))
     end)
     f.content=CreateFrame("Frame",nil,f.scroll); f.content:SetSize(1,1); f.scroll:SetScrollChild(f.content); f.cards={}
@@ -1301,6 +1312,13 @@ function addon:Layout()
     f.scroll:ClearAllPoints(); f.scroll:SetPoint("TOPLEFT",left,-y); f.scroll:SetPoint("BOTTOMRIGHT",-40,18)
     local contentWidth=math.max(250,bodyWidth); f.content:SetWidth(contentWidth)
     local top=self.MapAdvisor:LayoutViewer(f.content,contentWidth,doc.view=="training" and self.state.filter=="Zone Advisor",f.scroll:GetHeight())
+    if f.activeTableScroll then
+        local old=f.activeTableScroll
+        local name=old.GetName and old:GetName()
+        local bar=old.ScrollBar or (name and _G[name.."ScrollBar"])
+        if bar then bar:Hide() end
+    end
+    f.activeTableScroll=nil
     for index,data in ipairs(doc.cards) do
         local c=f.cards[index]
         if not c then
@@ -1331,6 +1349,9 @@ function addon:Layout()
     for i=#doc.cards+1,#f.cards do f.cards[i]:Hide() end
     f.content:SetHeight(math.max(1,top)); f.scroll:UpdateScrollChildRect()
     f.scroll:SetVerticalScroll(math.min(f.scroll:GetVerticalScroll(),math.max(0,top-f.scroll:GetHeight())))
+    local mainBar=f.scroll.ScrollBar or _G["HardcoreBuddyScrollFrameScrollBar"]
+    if mainBar then mainBar:SetShown(f.activeTableScroll==nil) end
+    if f.activeTableScroll then f.scroll:SetVerticalScroll(0) end
     -- WoW resolves nested texture/frame anchors after this layout pass. Refresh
     -- the scroll child's cached geometry next frame, as scrolling would do.
     f.refreshScrollGeometry=true

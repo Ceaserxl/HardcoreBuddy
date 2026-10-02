@@ -101,6 +101,16 @@ local tableScroll=A.window.cards[2].tableScroll
 tableScroll.scripts.OnMouseWheel(tableScroll,-1)
 check(tableScroll:GetVerticalScroll()>0 and A.window.scroll:GetVerticalScroll()==0,"Mouse wheel scrolls table without moving Next Talent")
 tableScroll:SetVerticalScroll(0)
+-- The offline frame mock does not instantiate template scrollbars.
+A.window.scroll.ScrollBar=A.window.scroll.ScrollBar or CreateFrame("Slider",nil,A.window.scroll)
+tableScroll.ScrollBar=tableScroll.ScrollBar or CreateFrame("Slider",nil,tableScroll)
+A:Refresh()
+check(not A.window.scroll.ScrollBar:IsShown() and tableScroll.ScrollBar:IsVisible(),"Only the talent table scrollbar is visible")
+local _,barAnchor=tableScroll.ScrollBar:GetPoint(1)
+check(barAnchor==A.window.scroll,"Talent scrollbar spans the main page edge")
+A.window.scroll.scripts.OnMouseWheel(A.window.scroll,-1)
+check(tableScroll:GetVerticalScroll()>0 and A.window.scroll:GetVerticalScroll()==0,"Main page wheel moves talent rows while headers stay fixed")
+tableScroll:SetVerticalScroll(0)
 check(A.document.cards[2].talentTable and #A.window.cards[2].talentHeaders==5,"Talent path has five columns")
 local oldSetTalent,oldSetHyperlink=GameTooltip.SetTalent,GameTooltip.SetHyperlink
 local nodes=D.AdvisorTalents.HUNTER
@@ -192,6 +202,7 @@ end
 check(calls==1,"Previewing all classes never spends")
 A.db.profile.mode="live"; A:HandleSlashCommand("gear")
 check(A.state.filter=="Gear","Gear slash opens settings")
+check(A.window.scroll.ScrollBar:IsShown() and not A.window.activeTableScroll,"Other pages restore the main scrollbar")
 for _,block in ipairs(A.document.cards[1].blocks) do
     check(not block.action or block.action.command~="snapshot","Snapshots are not listed in Advisors Gear")
 end
