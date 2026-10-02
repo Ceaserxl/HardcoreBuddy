@@ -128,7 +128,8 @@ check(#U.results[1]==3,"Only upgrades, with duplicates and unusable items remove
 check(U.results[1][1].link==best.link and U.results[1][1].buyout==5000,"Best percentage first; duplicate keeps cheapest buyout")
 check(U.results[1][1].auctions==2,"Duplicate listings counted once per item")
 check(U.results[1][1].percent==G:Comparisons(G:Read(best.link),G:CurrentProfile())[1].percent,"Exact advisor percentage reused")
-check(U.rows[1].priceKind:GetText()=="Buyout" and U.rows[1].action:GetText()=="See options >",
+check(U.rows[1].priceKind:GetText()=="Buyout" and U.rows[1].action:GetText()==""
+    and U.rows[1].options:GetText()=="3 options >",
     "Overview separates the price type from the navigation action")
 check(U.results[1][3].link==good.link,"Cloth upgrade compared against equipped mail")
 check(U.results[1][2].link==suffix.link,"Different random suffixes of the same item remain separate")
@@ -442,10 +443,10 @@ local _,panelY=U.panel:GetRect()
 for _,card in ipairs(U.rows) do
     local x,y,w,h=card:GetRect(); local sx=select(1,U.scroll:GetRect())
     if card:IsShown() then check(x+w<sx and y>=panelY+84 and y+h<=panelY+U.panel:GetHeight()-12,"Visible rows stay inside expanded table") end
-    local fields={card.item,card.percent,card.cost}
-    for i=1,2 do
+    local fields={card.item,card.slotName,card.cost,card.percent,card.options}
+    for i=1,#fields-1 do
         local left,_,width=fields[i]:GetRect(); local right=fields[i+1]:GetRect()
-        check(left+width<=right,"Item, score and price columns stay separate")
+        check(left+width<=right,"Item, slot, price, score and options columns stay separate and ordered")
     end
 end
 GameTooltip.SetHyperlink=setHyperlink

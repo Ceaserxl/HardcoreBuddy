@@ -448,7 +448,9 @@ function U:Refresh()
             frame.item:SetText(row and (pair and row.components[1].name or row.name) or names[entry.slot])
             frame.item:SetTextColor(unpack(row and Skin.colors.white or Skin.colors.muted))
             frame.slotName:SetText(self.setup and entry.label or names[self.slot or entry.slot] or "")
-            frame.options:SetText(row and (self.setup and "" or self.slot and tostring(self.offset+index) or tostring(entry.total)) or "0")
+            frame.options:SetText(row and (self.setup and "" or self.slot and tostring(self.offset+index)
+                or (entry.total..(entry.total==1 and " option >" or " options >"))) or "0")
+            frame.options:SetTextColor(unpack(not self.slot and Skin.colors.gold or Skin.colors.white))
             local detail=""
             if pair then detail="Off hand: "..row.components[2].name
             elseif not row then detail=checked and "No upgrade found" or self.scan and "Waiting for this slot" or "Slot not scanned"
@@ -461,7 +463,7 @@ function U:Refresh()
             frame.cost:SetText(row and (row.owned and "No purchase" or money(value)) or "")
             frame.priceKind:SetText(row and not row.owned and (row.weaponSet and (row.priceLabel.." total") or kind) or "")
             frame.action:SetText(row and (self.slot and (row.weaponSet and "View items >" or row.owned and "Equipped"
-                or self.scan and "Stop scan to buy" or row.buyout>0 and "Buyout >" or "No buyout") or "See options >") or "")
+                or self.scan and "Stop scan to buy" or row.buyout>0 and "Buyout >" or "No buyout") or "") or "")
             frame.accent:SetShown(row~=nil)
             frame.accent:SetVertexColor(unpack(row and changeColor(row) or Skin.colors.muted))
         end
@@ -496,19 +498,19 @@ function U:Layout()
     visibleRows=math.min(16,math.floor((height-top-16)/38))
     for i,row in ipairs(self.rows) do
         row:ClearAllPoints(); row:SetPoint("TOPLEFT",199,-top-(i-1)*38); row:SetWidth(rowWidth)
-        row.icon:ClearAllPoints(); row.icon:SetPoint("LEFT",86,0)
+        row.icon:ClearAllPoints(); row.icon:SetPoint("LEFT",9,0)
         row.item:SetWidth(rowWidth-426); row.slot:SetWidth(rowWidth-426)
         row.percent:SetWidth(84); row.action:SetWidth(84); row.options:SetWidth(84)
         row.cost:SetWidth(110); row.priceKind:SetWidth(110)
-        for _,entry in ipairs({{row.slotName,8,-8},{row.item,120,0},{row.slot,120,-17},
-            {row.percent,rowWidth-300,0},{row.options,rowWidth-90,0},{row.action,rowWidth-90,-17},
-            {row.cost,rowWidth-210,0},{row.priceKind,rowWidth-210,-17}}) do
+        for _,entry in ipairs({{row.item,48,0},{row.slot,48,-17},{row.slotName,rowWidth-372,-8},
+            {row.cost,rowWidth-294,0},{row.priceKind,rowWidth-294,-17},
+            {row.percent,rowWidth-178,0},{row.options,rowWidth-90,0},{row.action,rowWidth-90,-17}}) do
             entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],entry[3])
         end
     end
     self.itemHeader:SetWidth(rowWidth-426); self.priceHeader:SetWidth(110)
-    for _,entry in ipairs({{self.slotHeader,207},{self.itemHeader,319},{self.scoreHeader,199+rowWidth-300},
-        {self.priceHeader,199+rowWidth-210},{self.optionsHeader,199+rowWidth-90}}) do
+    for _,entry in ipairs({{self.itemHeader,247},{self.slotHeader,199+rowWidth-372},
+        {self.priceHeader,199+rowWidth-294},{self.scoreHeader,199+rowWidth-178},{self.optionsHeader,199+rowWidth-90}}) do
         entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],-top+21)
     end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPRIGHT",0,-top); self.scroll:SetHeight(visibleRows*38-2)
@@ -584,10 +586,10 @@ function U:Attach()
     end)
     Skin.PlaceBackButton(self.back,panel,60,204,24)
     self.slotHeader=label(panel,"SLOT",207,-117,72,Skin.colors.muted,9)
-    self.itemHeader=label(panel,"ITEM",319,-117,180,Skin.colors.muted,9)
+    self.itemHeader=label(panel,"ITEM NAME",247,-117,180,Skin.colors.muted,9)
     self.optionsHeader=label(panel,"OPTIONS",710,-117,84,Skin.colors.muted,9)
-    self.scoreHeader=label(panel,"SCORE CHANGE",526,-117,95,Skin.colors.muted,9)
-    local priceHeader=label(panel,"LISTING PRICE",640,-117,120,Skin.colors.muted,9); priceHeader:SetJustifyH("RIGHT"); self.priceHeader=priceHeader
+    self.scoreHeader=label(panel,"SCORE",526,-117,84,Skin.colors.muted,9)
+    local priceHeader=label(panel,"PRICE",640,-117,110,Skin.colors.muted,9); priceHeader:SetJustifyH("RIGHT"); self.priceHeader=priceHeader
     self.empty=CreateFrame("Frame",nil,panel); self.empty:SetPoint("TOPLEFT",204,-155); self.empty:SetSize(558,150)
     self.emptyTitle=label(self.empty,"",12,-24,534,Skin.colors.white,18); self.emptyTitle:SetJustifyH("CENTER")
     self.emptyText=label(self.empty,"",12,-60,534,Skin.colors.muted,11); self.emptyText:SetJustifyH("CENTER")
