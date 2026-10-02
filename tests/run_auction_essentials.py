@@ -27,21 +27,54 @@ AuctionFrameTab_OnClick(E.tab)
 assert(E.panel:IsShown() and not U.panel:IsShown(),"Tabs are exclusive")
 assert(E.panel:GetWidth()==U.panel:GetWidth() and E.panel:GetHeight()==U.panel:GetHeight(),"Same dimensions")
 assert(E.rows[1].record.itemId==10513)
-BrowseName=CreateFrame("EditBox"); BrowseMinLevel=CreateFrame("EditBox"); BrowseMaxLevel=CreateFrame("EditBox")
-local calls=0
-QueryAuctionItems=function(name,minimum,maximum,page,usable,quality,all,exact,filters)
-    calls=calls+1
-    assert(name=="Crafted ammo" and not minimum and not maximum and page==0 and not usable and exact and not filters)
+local calls=0; local page=0; local ready=false; local empty=false; local bought
+local originalQuery=QueryAuctionItems
+QueryAuctionItems=function(name,minimum,maximum,p,usable,quality,all,exact,filters)
+    calls=calls+1; page=p
+    assert(not minimum and not maximum and not usable and exact and not filters)
 end
-CanSendAuctionQuery=function() return false end
-E:Search(rows[1]); assert(calls==0 and E.panel:IsShown(),"Throttled searches stay in menu")
-CanSendAuctionQuery=function() return true end
-E:Search(rows[1]); assert(calls==1 and not E.panel:IsShown() and AuctionFrameBrowse:IsShown())
-assert(BrowseName:GetText()=="Crafted ammo")
-AuctionFrameTab_OnClick(E.tab); AuctionFrame:SetSize(900,500); U:Layout(); E:Refresh()
+CanSendAuctionQuery=function() return ready end
+GetNumAuctionItems=function() return empty and 0 or 2,empty and 0 or 51 end
+GetAuctionItemLink=function(_,index) return "item:10513:0:0:0" end
+UnitName=function() return "Player" end
+GetAuctionItemInfo=function(_,index)
+    -- Page 0: lower stack total but worse per item. Page 1: cheapest unit price.
+    local count=page==0 and 1 or 10
+    local price=page==0 and 100 or 500
+    return "Crafted ammo",nil,count,nil,nil,nil,nil,nil,nil,index==2 and 1 or price,nil,nil,nil,index==2 and "Player" or "Seller"
+end
+GetMoney=function() return 100000 end
+StaticPopupDialogs=StaticPopupDialogs or {}; StaticPopupDialogs.BUYOUT_AUCTION={}
+StaticPopup_Show=function(_,text,_,data) E.testPopup=data; E.popupText=text end
+StaticPopup_Hide=function() E.testPopup=nil end
+PlaceAuctionBid=function(_,index,price) bought={index,price} end
+local function step()
+    E:Tick()
+    if E.scan and E.scan.phase=="waiting" then E.scan.phase="reading" end
+end
+local function finish()
+    for i=1,100 do if not E.scan then return end; step() end
+    error("scan did not finish")
+end
+E:Search(rows[1]); step(); assert(calls==0 and E.panel:IsShown(),"Throttle respected")
+ready=true; finish()
+assert(E.confirmation.count==10 and E.confirmation.buyout==500 and page==1,"Cheapest unit price across all pages, excluding own auctions")
+assert(E.popupText=="10 x Crafted ammo" and E.panel:IsShown(),"Confirm whole stack in Essentials tab")
+assert(E.rows[1].cells[5]:GetText()=="10","Separate stack column")
+StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnAccept(nil,E.confirmation)
+assert(bought[2]==500 and not E.results[10513],"Confirmed stack buyout invalidates cached result")
+E:Start(); finish(); assert(E.complete and E.results[10513].buyout==500,"Scan all finishes")
+assert(E.results[999901]==false and E.results[999902]==false,"Only exact item IDs accepted")
+E:Search(rows[1]); finish(); assert(E.confirmation)
+E.events.scripts.OnEvent(nil,"AUCTION_ITEM_LIST_UPDATE")
+assert(not E.confirmation,"Changed listings cancel popup")
+empty=true; E:Search(rows[1]); finish(); assert(not E.confirmation and E.results[10513]==false,"No buyouts never prompts")
+AuctionFrame:SetSize(900,500); U:Layout(); E:Refresh()
 assert(E.panel:GetWidth()==U.panel:GetWidth() and E.panel:GetHeight()==U.panel:GetHeight())
-AuctionFrameTab_OnClick(U.tab); assert(not E.panel:IsShown() and U.panel:IsShown())
-E.open=false; E:Search(rows[1]); assert(calls==1,"Closed AH cannot query")
+E:Start(); AuctionFrameTab_OnClick(U.tab)
+assert(not E.panel:IsShown() and U.panel:IsShown() and not E.scan,"Switching tabs stops scan")
+E.open=false; local before=calls; E:Search(rows[1]); assert(calls==before,"Closed AH cannot query")
+QueryAuctionItems=originalQuery
 A.Supplies.Build=original
 print("PASS: Essentials vendor filtering, tradeable items, sorting, tab isolation, geometry, throttling and exact native searches")
 ''')
