@@ -47,7 +47,8 @@ for class,levels in pairs(A.Data.ClassSpells) do
     end
 end
 assert(classes==9 and count==1324)
-assert(build("Mage",40).cards[1].title=="Next training: level 42")
+assert(build("Mage",40).cards[1].title=="Next training: Level 42")
+assert(#build("Mage",40).cards==1 and #build("Mage",40).cards[1].blocks>0)
 local alliance,horde=ids(build("Mage",19,true)),ids(build("Mage",19,true,"Horde"))
 assert(alliance[3561] and not alliance[3567] and horde[3567] and not horde[3561],"Faction teleport spells")
 local human=ids(build("Priest",1,true)); race=4
@@ -55,7 +56,7 @@ local nightElf=ids(build("Priest",1,true))
 assert(human[19236] and not human[19296] and nightElf[19296] and not nightElf[19236],"Racial spells")
 assert(ids(build("Mage",23))[12505].body:find("Requires talent: Spell 11366",1,true))
 assert(build("Mage",40,false,nil,"no matching text").total==0)
-assert(build("Mage",40,false,nil,nil,"preview").cards[1].note:find("Planned level 40",1,true))
+assert(build("Mage",40,false,nil,nil,"preview").cards[1].note==nil)
 local hunterPets=A.ClassSpells.PetEntries({characterClass="Hunter"})
 local ranks,petRanks={},0
 for level,entries in pairs(hunterPets) do

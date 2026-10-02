@@ -68,11 +68,11 @@ local saved=A.Data.ClassSpells.Mage
 A.Data.ClassSpells.Mage={[2]={{id=100,cost=12345},{id=101,cost=0}}}
 GetSpellInfo=function(id) return "Spell "..id,nil,135846 end
 GetCoinTextureString=nil
-local costs=A.ClassSpells.Build({characterClass="Mage",level=1},{}).cards[2].blocks
+local costs=A.ClassSpells.Build({characterClass="Mage",level=1},{}).cards[1].blocks
 assert(costs[1].body:find("UI-GoldIcon",1,true) and costs[1].body:find("UI-SilverIcon",1,true) and costs[1].body:find("UI-CopperIcon",1,true))
 assert(costs[2].body=="Listed cost: Free")
 GetCoinTextureString=function(amount,size) assert(amount==12345 and size==12); return "native coins" end
-assert(A.ClassSpells.Build({characterClass="Mage",level=1},{}).cards[2].blocks[1].body=="Listed cost: native coins")
+assert(A.ClassSpells.Build({characterClass="Mage",level=1},{}).cards[1].blocks[1].body=="Listed cost: native coins")
 A.Data.ClassSpells.Mage=saved
 print("PASS: Full-health boundaries, craft/recipe gates, fallback, duplicate suppression, all ranks, editable recommendations and trainer coin formatting.")
 ''')

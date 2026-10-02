@@ -123,14 +123,15 @@ function S.Build(context,state)
         end
         if nextLevel and not state.showAllFutureSpells then break end
     end
-    local note=(context.mode=="preview" and "Planned level " or "Your level ")..context.level.." | "..context.characterClass
-        .."\nTrainer prices may vary. Talent ranks require the named talent. Earlier ranks and class quests may be required."
-    if context.mode=="preview" then note=note.." Uses your current faction and race." end
-    if context.characterClass=="Hunter" then note=note.."\nPet abilities include trainer ranks and taming sources. Pet level, family and training points still apply. Open a rank for all sources."
-    elseif context.characterClass=="Warlock" then note=note.."\nDemon grimoires are grouped separately. They require the matching summoned demon." end
     if #cards==0 then cards[1]={title=nextLevel and "No matching spells" or "No future training",
         blocks={{title=nextLevel and "Try clearing your search or showing all future spells." or "No later trainer spells in the Classic Era level 1-60 list."}}} end
-    table.insert(cards,1,{title=state.showAllFutureSpells and "All future spells" or (nextLevel and "Next training: level "..nextLevel or "Spells"),note=note,blocks={}})
+    local title=state.showAllFutureSpells and "All future spells" or (nextLevel and "Next training: Level "..nextLevel or "Spells")
+    if not state.showAllFutureSpells and cards[1].title=="Level "..tostring(nextLevel) then
+        -- The page heading already identifies this level; keep its spells directly below it.
+        cards[1].title=title
+    else
+        table.insert(cards,1,{title=title,blocks={}})
+    end
     return {view="training",context=context,cards=cards,continuous=true,page=1,pages=1,total=total,searchable=true,levelFilter=true}
 end
 

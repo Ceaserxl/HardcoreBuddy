@@ -354,18 +354,18 @@ local function renderBlock(frame, block, width)
             frame.recommendationName=font(frame,14,WHITE)
             frame.recommendationDetail=font(frame,12,MUTED)
         end
-        measure(frame.title,block.title,width-36,12,10)
+        local talentX=math.floor(width*0.40)
+        measure(frame.title,block.title,talentX-24,12,10)
         frame.body:SetFont(STANDARD_TEXT_FONT,11,"")
-        -- The point summary follows the heading; the actual talent has its own row.
         local headerBottom=10+frame.title:GetHeight()+3
-        local summaryHeight=measure(frame.body,rec.summary,width-36,12,headerBottom)
-        local talentY=headerBottom+summaryHeight+9
+        local summaryHeight=measure(frame.body,rec.summary,talentX-24,12,headerBottom)
+        local talentY=10
         frame.recommendationName:Show(); frame.recommendationDetail:Show()
-        local nameHeight=measure(frame.recommendationName,rec.name,width-84,52,talentY)
-        local detailHeight=measure(frame.recommendationDetail,rec.detail,width-84,52,talentY+nameHeight+4)
-        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-talentY)
+        local nameHeight=measure(frame.recommendationName,rec.name,width-talentX-72,talentX+42,talentY)
+        local detailHeight=measure(frame.recommendationDetail,rec.detail,width-talentX-72,talentX+42,talentY+nameHeight+4)
+        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",talentX,-talentY)
         frame.meta:Hide()
-        y=talentY+math.max(34,nameHeight+4+detailHeight)+10
+        y=math.max(headerBottom+summaryHeight,talentY+math.max(34,nameHeight+4+detailHeight))+10
         frame:SetHeight(y)
     end
     if block.guideTone then
