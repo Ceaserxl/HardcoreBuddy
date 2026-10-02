@@ -38,6 +38,9 @@ A changed utility condition clears that utility highlight without changing the
 committed damage spell. For solo Shatter Mages, Rank 1 Nova is suggested against
 a nearby attacker when another root is useful. An incidental Frostbite clears
 Nova without blanking the Frostbolt highlight.
+Offensive Nova requires target health above two estimated Frostbolt hits both
+between and during casts, preventing a completion/start flash. Defensive Nova
+can still appear at low health regardless of this damage threshold.
 
 Crowd-control, range, mana, cooldown, immunity and target eligibility checks apply
 to utility too. Counterspell and emergency actions require current readiness,

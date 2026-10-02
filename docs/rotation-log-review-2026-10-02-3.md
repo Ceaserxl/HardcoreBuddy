@@ -64,3 +64,21 @@ restore Evocation after drinking, cover localized modern/legacy spell lookup,
 ignore expired auras and verify GCD/drinking diagnostic fields survive replay.
 Offline validation does not establish live visual timing or optimal DPS. Reload
 the addon to exercise the recovery correction and collect the additional fields.
+
+## Follow-up: Nova flashing between Frostbolts
+
+The player's report identifies a separate utility transition in this same log.
+At 108.866 seconds (`UNIT_SPELLCAST_STOP`), Nova appears with 793 target health
+and 401.933 estimated Frostbolt damage. At 108.966 (`UNIT_SPELLCAST_START`),
+Nova disappears with identical health and damage. The offensive root threshold
+changed from one estimated hit between casts to two during a cast. Frostbolt's
+gold primary correctly remained steady, but the brief Nova invitation was confusing.
+
+Offensive Nova now uses two estimated hits at both times. This preserves the
+existing mid-cast rule against a wasteful finishing root while removing the
+between-cast flash. Low-health defensive rooting remains available. Real changes
+in range, root status, health, cooldown or safety can still clear utility advice.
+
+1,053 offline regression checks passed after this correction. New checks match
+the captured damage estimate, compare idle/casting advice on the recorded target,
+retain Nova on durable targets and preserve low-health defensive rooting.

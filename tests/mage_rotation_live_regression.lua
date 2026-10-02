@@ -558,6 +558,20 @@ do
     s.targetHP=1200; s.rotationCast=true; s.casting=true
     s.targetHP=M.Estimate(s,'frostbolt').damage*1.5
     check(not optional(s,'nova'),'Pending current damage prevents a wasteful finishing Nova')
+    s.casting=nil; s.rotationCast=nil
+    check(not optional(s,'nova'),'Finishing Nova does not flash between successive Frostbolts')
+    s.targetHP=793; s.spellPower[5]=153; s.spellCrit[5]=4.779; s.talents.elementalPrecision=2
+    check(math.abs(M.Estimate(s,'frostbolt').damage-401.933)<.001,'Fixture matches the recorded Frostbolt damage estimate')
+    check(not optional(s,'nova'),'Recorded 793 health target does not invite an offensive root between casts')
+    s.casting=true; s.rotationCast=true
+    check(not optional(s,'nova'),'Starting the next Frostbolt preserves the recorded no-root advice')
+    s.targetHP=M.Estimate(s,'frostbolt').damage*3
+    check(optional(s,'nova'),'Durable target retains offensive Nova during a Frostbolt')
+    s.casting=nil; s.rotationCast=nil
+    check(optional(s,'nova'),'Durable target retains offensive Nova between Frostbolts')
+    s.targetHP=100; s.playerHealth=50
+    check(optional(s,'nova'),'Low health still allows defensive Nova on a nearly dead target')
+    s.playerHealth=100; s.spellPower[5]=200
     s.casting=nil; s.rotationCast=nil; s.targetHP=1200; s.talents.shatter=0
     check(not optional(s,'nova'),'No Shatter means no extra offensive Nova priority')
     s.talents.shatter=5; s.targetBoss=true

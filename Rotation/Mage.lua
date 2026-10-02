@@ -117,8 +117,11 @@ function M.Situational(s,add)
     if not validEnemy(s) then return end
     if danger and s.targetClose and not s.frozen and s.safeAOE then
         local bolt=M.Estimate(s,"frostbolt")
+        -- Offensive rooting needs enough life for the setup and follow-up.
+        -- Keep the same threshold between and during casts so Nova does not
+        -- flash on cast completion and vanish as the next Frostbolt starts.
         local setup=not s.grouped and not s.targetBoss and rank(s,"shatter")>0 and ready(s,"frostbolt")
-            and bolt and s.targetHP and s.targetHP>bolt.damage*(s.rotationCast and s.casting and 2 or 1) and mp>15
+            and bolt and s.targetHP and s.targetHP>bolt.damage*2 and mp>15
         if hp<65 or setup then
             if not add("nova","Root the attacker and make room for your next cast.",true) and hp<65 and s.facingTarget then
                 add("cone","Slow the attacker in front of you.",true)
