@@ -256,7 +256,7 @@ function U:Tick()
         self.message=string.format("Scanning %s (%d/%d) | page %d | %d auctions checked",search.name,scan.search,#scan.queue,scan.page+1,scan.seen)
         self:Refresh()
         self.sending=true
-        QueryAuctionItems("",0,self.profile.level,scan.page,true,nil,false,false,search.filters)
+        QueryAuctionItems("",math.max(0,self.profile.level-self:LevelRange()),self.profile.level,scan.page,true,nil,false,false,search.filters)
         self.sending=false
     elseif scan.phase=="waiting" then
         if now()-scan.since>20 then self:Stop("Auction response timed out. Results are partial; scan again.") end
@@ -312,6 +312,20 @@ function U:Invalidate()
     local owner=GameTooltip:GetOwner()
     if owner and owner.hardcoreBuddyAuctionRow then owner.tooltipItem=nil end
     self:Stop("Gear, talents or scan settings changed. Scan again to refresh upgrades.")
+end
+
+function U:LevelRange()
+    return math.max(0,math.min(60,math.floor(tonumber(A.characterDB and A.characterDB.auctionLevelRange) or 10)))
+end
+
+function U:SetLevelRange(value)
+    if not A.characterDB then return end
+    value=tonumber(value)
+    if not value then return end
+    value=math.max(0,math.min(60,math.floor(value)))
+    if value==self:LevelRange() then return end
+    A.characterDB.auctionLevelRange=value
+    self:Invalidate(); self:Refresh()
 end
 
 function U:SetHighestArmorOnly(value)

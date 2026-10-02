@@ -116,7 +116,7 @@ ready=true; finish()
 check(U.complete and #queries==17,"Scans sixteen slot groups and every server page")
 check(queries[1].filters[1].inventoryType==1 and queries[2].page==1 and queries[3].filters[1].inventoryType==2,
     "Finishes every head page before starting neck, with no broad armor query")
-for _,q in ipairs(queries) do check(q.min==0 and q.max==40 and q.usable and not q.all,"Only level-appropriate usable listings, including no required level, no full-dump query") end
+for _,q in ipairs(queries) do check(q.min==30 and q.max==40 and q.usable and not q.all,"Usable listings within ten levels below the player, no full-dump query") end
 for _,q in ipairs(queries) do
     for _,filter in ipairs(q.filters) do
         check(type(filter.classID)=="number" and type(filter.subClassID)=="number" and type(filter.inventoryType)=="number",
@@ -507,6 +507,16 @@ local disabledQueries=#queries; U:Start(); tick()
 check(U.scan==nil and #queries==disabledQueries,"Disabled advisor cannot start auction queries")
 G:SetEnabled(true)
 check(U.start:IsEnabled(),"Reenabling restores auction scan control")
+local defaultSignature=A.AuctionCache:Signature(G:CurrentProfile())
+U:SetLevelRange(5)
+check(U:LevelRange()==5 and U.stale,"Level range persists and invalidates old results")
+check(A.AuctionCache:Signature(G:CurrentProfile())~=defaultSignature,"Saved scan signature includes level range")
+U:Start(); tick()
+check(queries[#queries].min==U.profile.level-5 and queries[#queries].usable,"Custom range reaches the server query")
+U:Stop()
+U:SetLevelRange(60); U:Start(); tick()
+check(queries[#queries].min==0,"Minimum required level clamps to zero")
+U:Stop(); U:SetLevelRange(10)
 U.open=false
 -- Keep the completed item/weapon fixture for the fresh-runtime persistence test.
 A.characterDB.auctionLastScan=completedScan

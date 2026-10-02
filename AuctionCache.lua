@@ -13,6 +13,7 @@ function C:Signature(profile)
     if not profile or not GetInventoryItemID or not GetInventoryItemLink then return end
     local parts={profile.class,profile.level,profile.id or profile.name,tostring(profile.manual),
         tostring(A.characterDB and A.characterDB.auctionHighestArmorOnly==true),tostring(A.GearAdvisor.CanDualWield(profile))}
+    parts[#parts+1]=tostring(A.AuctionUpgrades:LevelRange())
     local keys={}; for key in pairs(profile.weights) do keys[#keys+1]=key end; table.sort(keys)
     for _,key in ipairs(keys) do parts[#parts+1]=key.."="..profile.weights[key] end
     for _,slot in ipairs(slots) do

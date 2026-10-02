@@ -65,6 +65,8 @@ function S:OpenGearPage(page)
 end
 
 function S:CommitInputs()
+    local auction=self.pages and self.pages["Auction House"]
+    if auction and auction.levelRange then auction.levelRange:ClearFocus() end
     local gear=self.pages and self.pages["Gear Advisor"]
     if gear then for _,edit in ipairs(gear.weights) do edit:ClearFocus() end end
     if A.LowHealth.page then A.LowHealth.page.threshold:ClearFocus() end
@@ -95,6 +97,7 @@ function S:SyncDependencies()
     for _,edit in ipairs(gear.weights) do enable(edit,gearOn and edit.profile~=nil) end
     enable(gear.restore,gearOn and A.GearAdvisor:CurrentProfile()~=nil)
     enable(self.pages["Auction House"].armor,gearOn)
+    enable(self.pages["Auction House"].levelRange,gearOn,self.pages["Auction House"].levelRangeLabel)
     local talent=self.pages["Talent Advisor"]
     local talentOn=A.TalentAdvisor:IsEnabled()
     Skin.GroupEnabled(talent.paths,talentOn)
@@ -307,15 +310,27 @@ function S:Create(parent)
 
     local auction=self.pages["Auction House"]
     auction.subtitle=label(auction,"Filters and saved scans for the auction house Upgrades tab.",12,0,34,700)
-    local filters=Skin.Section(auction,"Armor filter",Skin.layout.headerBottom,176,1)
+    local filters=Skin.Section(auction,"Scan filters",Skin.layout.headerBottom,230,1)
     local scans=Skin.Section(auction,"Saved scans",Skin.layout.headerBottom,176,2)
     auction.armor=check(filters,"",56,function() return A.characterDB.auctionHighestArmorOnly==true end,function(value)
         A.AuctionUpgrades:SetHighestArmorOnly(value)
     end)
     label(filters,"Scan only your class's highest available armor type. Accessories and weapons are included. Turn this off to compare all usable armor types.",12,16,102,300)
+    auction.levelRangeLabel=label(filters,"Levels below you",12,16,158,200)
+    local range=CreateFrame("EditBox",nil,filters,"BackdropTemplate")
+    auction.levelRange=range
+    range:SetSize(60,28); range:SetPoint("TOPRIGHT",-16,-150)
+    range:SetFont(STANDARD_TEXT_FONT,13,""); range:SetAutoFocus(false); range:SetMaxLetters(2)
+    range:SetNumeric(true); range:SetJustifyH("CENTER"); Skin.Paint(range,"edit")
+    range:SetScript("OnEditFocusLost",function(e)
+        A.AuctionUpgrades:SetLevelRange(e:GetText()); e:SetText(tostring(A.AuctionUpgrades:LevelRange()))
+    end)
+    range:SetScript("OnEnterPressed",function(e) e:ClearFocus() end)
+    range:SetScript("OnEscapePressed",function(e) e:SetText(tostring(A.AuctionUpgrades:LevelRange())); e:ClearFocus() end)
+    label(filters,"Required level: your level minus this value, up to your current level. Default: 10 (range 0–60).",12,16,186,300)
     auction.cache=label(scans,"",12,16,56,300)
     auction.diagnostics=button(scans,"View scan diagnostics",132,function() A.AuctionDiagnostics:Show() end)
-    auction.contentHeight=238
+    auction.contentHeight=292
 end
 
 function S:Layout(parent,left,top,width,height,section,visible)
@@ -415,6 +430,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     talent.contentHeight=276+#builds*48
     if pageName=="Talent Advisor" then self.content:SetHeight(math.max(talent.contentHeight,height/scale)) end
     local auction=self.pages["Auction House"]; auction.armor:Sync()
+    if not auction.levelRange:HasFocus() then auction.levelRange:SetText(tostring(A.AuctionUpgrades:LevelRange())) end
     local armor=profile and ({"Cloth","Leather","Mail","Plate"})[A.GearAdvisor.HighestArmorSubclass(profile)] or "..."
     auction.armor.label:SetText("Best Armor: "..armor)
     local saved=A.characterDB.auctionLastScan
