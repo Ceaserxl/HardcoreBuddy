@@ -99,8 +99,38 @@ local function hostile(unit)
     return UnitExists and UnitExists(unit) and UnitCanAttack and UnitCanAttack("player",unit)
         and not (UnitIsDeadOrGhost and UnitIsDeadOrGhost(unit))
 end
+local function rangeValue(value)
+    if value==true or value==1 then return true end
+    if value==false or value==0 then return false end
+end
+local function spellRange(spell,unit)
+    local value
+    if C_Spell and C_Spell.IsSpellInRange then
+        value=rangeValue(C_Spell.IsSpellInRange(spell.id,unit))
+        if value==nil then value=rangeValue(C_Spell.IsSpellInRange(spell.name,unit)) end
+    end
+    if value==nil and IsSpellInRange then value=rangeValue(IsSpellInRange(spell.name,unit)) end
+    -- Some Classic spells report range only through their action-bar slot.
+    if value==nil and unit=="target" and GetActionInfo then
+        for button in pairs(R.highlights) do
+            local slot=button.action or button.GetAttribute and button:GetAttribute("action")
+            local kind,id
+            if slot then kind,id=GetActionInfo(slot) end
+            if kind=="spell" and id==spell.id then
+                if C_ActionBar and C_ActionBar.IsActionInRange then value=rangeValue(C_ActionBar.IsActionInRange(slot)) end
+                if value==nil and IsActionInRange then value=rangeValue(IsActionInRange(slot,unit)) end
+                if value~=nil then return value end
+            end
+        end
+    end
+    return value
+end
 local function close(unit,radius)
     radius=radius or 10
+    if radius==5 and R.spells.strike then
+        local value=spellRange(R.spells.strike,unit)
+        if value~=nil then return value end
+    end
     if UnitPosition then
         local px,py,pz,pm=UnitPosition("player"); local x,y,z,m=UnitPosition(unit)
         if px and py and pz and x and y and z and pm and pm==m then
@@ -110,13 +140,6 @@ local function close(unit,radius)
     -- A positive duel-distance check fits inside the Mage's 10-yard area.
     -- A negative check is not proof that an enemy is outside that area.
     if radius>=10 and CheckInteractDistance and CheckInteractDistance(unit,3) then return true end
-    if radius==5 and R.spells.strike then
-        local value
-        if C_Spell and C_Spell.IsSpellInRange then value=C_Spell.IsSpellInRange(R.spells.strike.id,unit)
-        elseif IsSpellInRange then value=IsSpellInRange(R.spells.strike.name,unit) end
-        if value==true or value==1 then return true end
-        if value==false or value==0 then return false end
-    end
     return nil
 end
 function R:Enemies()
@@ -148,8 +171,9 @@ end
 local function cooldown(id)
     if C_Spell and C_Spell.GetSpellCooldown then
         local c=C_Spell.GetSpellCooldown(id)
-        if c then return c.startTime,c.duration,c.isEnabled~=false end
-    elseif GetSpellCooldown then
+        if c then return c.startTime,c.duration,c.isEnabled~=false and c.isEnabled~=0 end
+    end
+    if GetSpellCooldown then
         local start,duration,enabled=GetSpellCooldown(id); return start,duration,enabled~=0
     end
 end
@@ -158,18 +182,28 @@ function R:SpellState(spell,unit)
     if C_Spell and C_Spell.IsSpellUsable then usable,lowPower=C_Spell.IsSpellUsable(spell.id)
     elseif IsUsableSpell then usable,lowPower=IsUsableSpell(spell.name) end
     local start,duration,enabled=cooldown(spell.id)
-    local gcdStart,gcdDuration=cooldown(61304)
-    local onGCD=start and gcdStart and duration and gcdDuration and math.abs(start-gcdStart)<.05 and math.abs(duration-gcdDuration)<.05
+    local now=clock()
+    local gcdStart,gcdDuration,gcdEnabled=cooldown(61304)
+    local function activeGCD()
+        return gcdEnabled~=false and type(gcdStart)=="number" and type(gcdDuration)=="number"
+            and gcdDuration>0 and gcdDuration<=1.55 and gcdStart+gcdDuration>now
+    end
+    if not activeGCD() then
+        -- These learned builders have no intrinsic cooldown in Classic Era.
+        -- Do not interpret a longer school lockout as a global cooldown.
+        local reference=self.spells.strike or self.spells.frostbolt or self.spells.fireball
+        if reference then gcdStart,gcdDuration,gcdEnabled=cooldown(reference.id) end
+    end
+    local onGCD=activeGCD() and type(start)=="number" and type(duration)=="number"
+        and math.abs(start-gcdStart)<.05 and duration<=gcdDuration+.05
     local ready=enabled~=false and type(start)=="number" and type(duration)=="number"
-        and (start+duration<=clock()+.05 or onGCD)
+        and (start+duration<=now or onGCD)
     local range
     if unit then
-        if C_Spell and C_Spell.IsSpellInRange then range=C_Spell.IsSpellInRange(spell.id,unit)
-        elseif IsSpellInRange then range=IsSpellInRange(spell.name,unit) end
-        if range==1 then range=true elseif range==0 then range=false end
+        range=spellRange(spell,unit)
     end
     return {id=spell.id,name=spell.name,icon=spell.icon,rank=spell.rank,ready=not not ready,usable=usable==true or usable==1,
-        lowPower=not not lowPower,range=range}
+        lowPower=not not lowPower,range=range,requiresRange=unit~=nil}
 end
 function R:Snapshot()
     if self.dirty then self:RefreshSpells() end
@@ -208,7 +242,7 @@ function R:Snapshot()
     local buffs=self:Auras("player","HELPFUL")
     for key,name in pairs(self.names) do s.buffs[key]=buffs[name] end
     for key,spell in pairs(self.spells) do
-        local selfSpell=key=="barrier" or key=="shield" or key=="evocation" or key=="evasion" or key=="flurry" or key=="slice"
+        local selfSpell=key=="barrier" or key=="shield" or key=="evocation" or key=="evasion" or key=="flurry" or key=="slice" or key=="nova" or key=="explosion"
         s.spells[key]=self:SpellState(spell,not selfSpell and "target" or nil)
     end
     return s
@@ -217,8 +251,7 @@ end
 function R.Decide(s)
     if not R.supported[s.class] then return nil,"This proof of concept supports Rogue and Mage." end
     if s.dead or s.mounted then return nil,s.dead and "You are dead." or "Dismount to use the advisor." end
-    if s.casting then return nil,"Finish your current cast or channel." end
-    local function can(key) local a=s.spells[key]; return a and a.ready and a.usable and a.range~=false end
+    local function can(key) local a=s.spells[key]; return a and a.ready and a.usable and (a.range==true or not a.requiresRange and a.range~=false) end
     local function choose(key,reason) return key,reason end
     if s.class=="MAGE" and not s.combat and s.powerPercent and s.powerPercent<25 and can("evocation") then return choose("evocation","Recover mana between pulls.") end
     if not s.validTarget then return nil,"Select a living enemy." end
@@ -226,7 +259,7 @@ function R.Decide(s)
     if s.controlled then return nil,"Target is crowd controlled. Avoid breaking it." end
     local hp,thp,mp=s.playerHealth,s.targetHealth,s.powerPercent
     if s.class=="ROGUE" then
-        if not s.combat and s.targetCombat==false and not s.stealthed and not s.moving
+        if not s.combat and s.targetCombat==false and not s.stealthed and not s.casting
             and s.targetClose==false and s.thrownEquipped and can("throw") and s.spells.throw.range==true then
             return "throw","Optional: pull with Throw, then let the enemy come to you.",true
         end
@@ -247,13 +280,12 @@ function R.Decide(s)
     if s.combat and hp and hp<=60 and not s.buffs.barrier and can("barrier") then return choose("barrier","Protect yourself at low health.") end
     if s.combat and hp and hp<=40 and s.targetClose and s.safeAOE and can("nova") then return choose("nova","Root nearby attackers to create distance.") end
     if s.combat and hp and hp<=35 and mp and mp>35 and not s.buffs.barrier and not s.buffs.shield and can("shield") then return choose("shield","Low health with enough mana for Mana Shield.") end
-    if mp and mp<=15 and not s.moving and can("shoot") then
+    if mp and mp<=15 and can("shoot") then
         if s.wanding then return nil,"Wand attack active. Let it continue to conserve mana." end
         return choose("shoot","Conserve mana with your wand.")
     end
     if s.combat and s.nearby>=3 and s.safeAOE and s.targetClose and mp and mp>=40 and hp and hp>55 and can("explosion") then return choose("explosion","At least three engaged enemies verified close; adequate mana and health.") end
     if (s.moving or thp and thp<=18) and can("fireblast") then return choose("fireblast",s.moving and "Use an instant spell while moving." or "Finish a low-health target.") end
-    if s.moving then return nil,"Stop moving to cast, or wait for an instant spell." end
     if can("frostbolt") then return choose("frostbolt","Frost leveling filler: damage and a slowing effect.") end
     if can("fireball") then return choose("fireball","Use Fireball until Frostbolt is learned.") end
     if can("shoot") then

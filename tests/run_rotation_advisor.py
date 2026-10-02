@@ -27,7 +27,7 @@ end
 for _,class in ipairs({"ROGUE","MAGE"}) do
     local base=class=="ROGUE" and "strike" or "frostbolt"
     decision(state(class),base)
-    for _,field in ipairs({"dead","mounted","casting","controlled","targetPlayer"}) do
+    for _,field in ipairs({"dead","mounted","controlled","targetPlayer"}) do
         local s=state(class); s[field]=true; decision(s,nil)
     end
     local s=state(class); s.validTarget=false; decision(s,nil)
@@ -35,6 +35,9 @@ for _,class in ipairs({"ROGUE","MAGE"}) do
     s=state(class,{base}); s.spells[base].usable=false; decision(s,nil)
     s=state(class,{base}); s.spells[base].ready=false; decision(s,nil)
     s=state(class,{base}); s.spells[base].range=nil; decision(s,base)
+    s.spells[base].requiresRange=true; decision(s,nil)
+    s=state(class,{base}); s.casting=true; decision(s,base)
+    s.moving=true; decision(s,base)
 end
 decision(state("WARRIOR",{}),nil)
 local s=state("ROGUE",{"strike","eviscerate","slice"})
@@ -69,7 +72,7 @@ s.combat=true; decision(s,"frostbolt")
 s=state("MAGE",{"frostbolt","shoot"}); s.powerPercent=10; decision(s,"shoot")
 s.spells.shoot.usable=false; decision(s,"frostbolt")
 s=state("MAGE"); s.moving=true; decision(s,"fireblast")
-s.spells.fireblast.ready=false; decision(s,nil)
+s.spells.fireblast.ready=false; decision(s,"frostbolt")
 s=state("MAGE"); s.targetHealth=15; decision(s,"fireblast")
 s=state("MAGE",{"fireball"}); decision(s,"fireball")
 s=state("MAGE",{"frostbolt","explosion"}); s.nearby=3; decision(s,"explosion")
@@ -94,11 +97,12 @@ end
 local pull=pullState()
 local key,reason,optional=R.Decide(pull)
 check(key=='throw' and optional==true and reason:find('Optional',1,true),'Throw is explicitly optional pre-combat advice')
-for _,field in ipairs({'combat','targetCombat','stealthed','moving','dead','mounted','casting','controlled','targetPlayer','targetClose'}) do
+for _,field in ipairs({'combat','targetCombat','stealthed','dead','mounted','casting','controlled','targetPlayer','targetClose'}) do
     pull=pullState(); pull[field]=true
     local result,_,isOptional=R.Decide(pull)
     check(result~='throw' and not isOptional,'No optional pull while '..field)
 end
+pull=pullState(); pull.moving=true; check(R.Decide(pull)=='throw','Movement keeps optional Throw advice visible')
 for _,field in ipairs({'validTarget','thrownEquipped'}) do
     pull=pullState(); pull[field]=false
     check(R.Decide(pull)~='throw','Pull requires '..field)
@@ -129,7 +133,7 @@ local spellData={
     [5019]={name="Shoot",iconID=135139},
 }
 local learned={[116]=true,[205]=true,[2136]=true,[122]=true,[5019]=true}
-local ready,range,usable={},{},{}
+local ready,range,usable={},{[5019]=1},{}
 C_Spell={
     GetSpellInfo=function(id) return spellData[id] end,
     GetSpellCooldown=function(id) return ready[id] or {startTime=0,duration=0,isEnabled=true} end,
@@ -153,8 +157,31 @@ ready[837]={startTime=99,duration=10,isEnabled=true}
 check(not R:SpellState(R.spells.frostbolt,"target").ready,"Real cooldown blocks recommendation")
 ready[837]={startTime=100,duration=1.5,isEnabled=true}; ready[61304]=ready[837]
 check(R:SpellState(R.spells.frostbolt,"target").ready,"GCD alone does not clear next-spell guidance")
+ready[61304]=nil
+check(R:SpellState(R.spells.frostbolt,"target").ready,'Learned filler supplies GCD timing when dedicated GCD reports zero')
+ready[837]={startTime=99,duration=8,isEnabled=true}; ready[61304]={startTime=100,duration=1.5,isEnabled=true}
+check(not R:SpellState(R.spells.frostbolt,'target').ready,'Long intrinsic cooldown remains blocked during GCD')
+ready[837]={startTime=92.5,duration=8,isEnabled=true}
+check(not R:SpellState(R.spells.frostbolt,'target').ready,'Real cooldown remains blocked even when it ends before the GCD')
+ready[837]={startTime=92.01,duration=8,isEnabled=true}
+check(not R:SpellState(R.spells.frostbolt,'target').ready,'Real cooldown is not highlighted early in its final milliseconds')
+ready[837]={startTime=99.9,duration=5,isEnabled=true}; ready[61304]=nil
+check(not R:SpellState(R.spells.frostbolt,'target').ready,'Long school lockout cannot be used as fallback GCD')
+ready[837]={startTime=100,duration=1,isEnabled=true}; ready[61304]={startTime=100,duration=1,isEnabled=true}
+check(R:SpellState(R.spells.frostbolt,'target').ready,'One-second GCD is ignored')
 ready[837]={startTime=0,duration=0,isEnabled=false}
 check(not R:SpellState(R.spells.frostbolt,"target").ready,"Disabled cooldown is not ready")
+ready[837].isEnabled=0
+check(not R:SpellState(R.spells.frostbolt,'target').ready,'Numeric disabled flag is respected by modern cooldown adapter')
+local modernRange,legacyRange=C_Spell.IsSpellInRange,IsSpellInRange
+C_Spell.IsSpellInRange=function(id,unit) if id=='Frostbolt' then return unit=='target' end end
+check(R:SpellState(R.spells.frostbolt,'target').range==true,'Unknown ID range retries the localized spell name')
+C_Spell.IsSpellInRange=function() end
+IsSpellInRange=function(name,unit) return name=='Frostbolt' and unit=='target' and 1 or nil end
+check(R:SpellState(R.spells.frostbolt,'target').range==true,'Unavailable modern range falls back to legacy API')
+C_Spell.IsSpellInRange=function() return false end
+check(R:SpellState(R.spells.frostbolt,'target').range==false,'Explicit out-of-range cannot be overwritten by a fallback')
+C_Spell.IsSpellInRange,IsSpellInRange=modernRange,legacyRange
 ready={}; usable[837]=false
 check(R:SpellState(R.spells.frostbolt,"target").lowPower,"Mana failure is preserved")
 usable={}
@@ -442,6 +469,32 @@ check(action.SpellActivationAlert==nativeProc and nativeProc.ProcLoopFlipbook.de
 GetInventoryItemID,C_Item,UnitAffectingCombat=oldInventory,oldItemAPI,oldTargetCombat
 GetActionInfo=oldActionInfo; units.target.x=oldX; action.action=oldAction
 MOCK.class='MAGE'; combat=false; R.dirty=true; R:Update()
+-- Keep an in-range next spell lit through a GCD, movement, and an active cast.
+local oldSpeed=GetUnitSpeed
+GetUnitSpeed=function() return 7 end
+range[837]=true; range[2136]=false; range[5019]=false
+ready[837]={startTime=now,duration=1.5,isEnabled=true}; ready[61304]=nil
+casts.player={blocked=false}; R:Update()
+check(R.current.id==837 and glow:IsShown(),'Moving and casting during a fallback GCD still highlights the next in-range spell')
+local starts=glow.ProcStartAnim.plays
+R.events.scripts.OnUpdate(R.events,.2)
+check(glow:IsShown() and glow.ProcStartAnim.plays==starts,'GCD polling keeps the existing glow animation running')
+ready[837]={startTime=now,duration=8,isEnabled=true}; ready[61304]={startTime=now,duration=1.5,isEnabled=true}
+R:Update(); check(not R.current and not glow:IsShown(),'Intrinsic cooldown longer than GCD hides the spell')
+ready={}; casts={}; range[837]=false; R:Update()
+check(not R.current and not glow:IsShown(),'Actual spell range hides the out-of-range spell while moving')
+range[837]=true; R.events.scripts.OnUpdate(R.events,.2)
+check(R.current.id==837 and glow:IsShown(),'Entering actual spell range restores the glow while still moving')
+local oldSpellRange,oldLegacyRange,oldActionRange,oldActionAPI=C_Spell.IsSpellInRange,IsSpellInRange,IsActionInRange,C_ActionBar
+C_Spell.IsSpellInRange=function() end; IsSpellInRange=function() end
+C_ActionBar={IsActionInRange=function(slot) return slot==1 end}
+R:Update(); check(R.current.id==837 and glow:IsShown(),'Action-slot range fills a missing spell range result')
+C_ActionBar=nil; IsActionInRange=function(slot,unit) return slot==1 and unit=='target' and 1 or 0 end
+R:Update(); check(R.current.id==837 and glow:IsShown(),'Classic numeric action-slot range fallback highlights correctly')
+IsActionInRange=function() end
+R:Update(); check(not R.current and not glow:IsShown(),'Unknown targeted-spell range is not treated as in range')
+C_Spell.IsSpellInRange,IsSpellInRange,IsActionInRange,C_ActionBar=oldSpellRange,oldLegacyRange,oldActionRange,oldActionAPI
+GetUnitSpeed=oldSpeed; range[2136]=nil; range[5019]=1; R:Update()
 MOCK.RotationChecks=count
 print("PASS: "..count.." rotation checks: priorities, live reads, rank changes, conservative AoE, mode state, UI and highlight lifecycle.")
 ''')
