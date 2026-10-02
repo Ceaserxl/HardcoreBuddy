@@ -68,7 +68,10 @@ function S:CommitInputs()
     local auction=self.pages and self.pages["Auction House"]
     if auction and auction.levelRange then auction.levelRange:ClearFocus() end
     local gear=self.pages and self.pages["Gear Advisor"]
-    if gear then for _,edit in ipairs(gear.weights) do edit:ClearFocus() end end
+    if gear then
+        for _,edit in ipairs(gear.weights) do edit:ClearFocus() end
+        if gear.altCacheDays then gear.altCacheDays:ClearFocus() end
+    end
     if A.LowHealth.page then A.LowHealth.page.threshold:ClearFocus() end
     for _,page in pairs(A.CreatureAlerts.pages or {}) do page.duration:ClearFocus() end
     if A.Deaths.options then
@@ -94,6 +97,8 @@ function S:SyncDependencies()
     local gear=self.pages["Gear Advisor"]
     local gearOn=A.GearAdvisor:IsEnabled()
     for _,panel in ipairs(gear.sectionCards) do Skin.GroupEnabled(panel,gearOn) end
+    enable(gear.altCacheDays,gearOn and A.db.altAdvisorEnabled~=false,gear.altCacheDaysLabel)
+    watch(gear.alts)
     for _,edit in ipairs(gear.weights) do enable(edit,gearOn and edit.profile~=nil) end
     enable(gear.restore,gearOn and A.GearAdvisor:CurrentProfile()~=nil)
     enable(self.pages["Auction House"].armor,gearOn)
@@ -219,8 +224,10 @@ function S:Create(parent)
     gear.toggle:SetHeight(28); gear.toggle.label:SetHeight(28); gear.toggle.label:SetJustifyH("CENTER")
     gear.profile=label(gear,"",12,0,34,700)
     gear.description=label(gear,"Choose how upgrades are shown and scored. Scoring follows your Talent Advisor build and compares all usable armor types by stats.",12,0,54,700)
-    local display=Skin.Section(gear,"Display & notifications",88,202,1)
-    local equip=Skin.Section(gear,"Automatic equipment",88,202,2)
+    local display=Skin.Section(gear,"Display & notifications",88,162,1)
+    local equip=Skin.Section(gear,"Automatic equipment",88,162,2)
+    local alts=Skin.Section(gear,"Alt Advisor",258,110)
+    gear.altSection=alts
     local scoring=Skin.Section(gear,"Scoring weights",258,84)
     gear.enabled=check(display,"Show gear advice in item tooltips",46,function() return A.db.gearAdvisorEnabled~=false end,function(value)
         A.db.gearAdvisorEnabled=value; A.GearAdvisor:RefreshTooltips()
@@ -232,9 +239,19 @@ function S:Create(parent)
     gear.notify=check(display,"Notify me of upgrades in my bags",126,function() return A.db.gearBagNotify==true end,function(value)
         A.db.gearBagNotify=value; A.GearBagAdvisor:Changed()
     end)
-    gear.alts=check(display,"Show Alt Advisor upgrades",166,function() return A.db.altAdvisorEnabled~=false end,function(value)
+    gear.alts=check(alts,"Show upgrades for other characters",42,function() return A.db.altAdvisorEnabled~=false end,function(value)
         A.AltAdvisor:SetEnabled(value)
     end)
+    gear.altCacheDaysLabel=label(alts,"Ignore gear older than (days)",12,370,44,250)
+    local age=CreateFrame("EditBox",nil,alts,"BackdropTemplate"); gear.altCacheDays=age
+    age:SetSize(60,28); age:SetPoint("TOPRIGHT",-16,-38); age:SetAutoFocus(false); age:SetNumeric(true); age:SetMaxLetters(3)
+    age:SetFont(STANDARD_TEXT_FONT,13,""); age:SetJustifyH("CENTER"); Skin.Paint(age,"edit")
+    age:SetScript("OnEditFocusLost",function(e)
+        A.AltAdvisor:SetCacheDays(e:GetText()); e:SetText(tostring(A.AltAdvisor:CacheDays()))
+    end)
+    age:SetScript("OnEnterPressed",function(e) e:ClearFocus() end)
+    age:SetScript("OnEscapePressed",function(e) e:SetText(tostring(A.AltAdvisor:CacheDays())); e:ClearFocus() end)
+    gear.altNote=label(alts,"Empty slots are included. Log into an alt to refresh its saved equipment. Range: 1-365 days.",12,16,78,700)
     gear.autoEquip=check(equip,"Automatically equip gear upgrades",46,function() return A.db.gearAutoEquip==true end,function(value)
         A.db.gearAutoEquip=value; A.GearBagAdvisor:Changed()
     end)
@@ -415,6 +432,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     A.DebugDump:Layout(contentWidth)
     local general=self.pages.General; general.minimap:Sync(); general.kit:Sync(); general.autoBuy:Sync(); general.autoRepair:Sync()
     local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync(); gear.notify:Sync(); gear.autoEquip:Sync(); gear.alts:Sync()
+    if not gear.altCacheDays:HasFocus() then gear.altCacheDays:SetText(tostring(A.AltAdvisor:CacheDays())) end
     gear.enchantMode.label:SetText((A.Enchants.Mode()=="max" and "Show Max Enchants" or "Show Level Appropriate Enchants").."  v")
     for mode,b in pairs(gear.enchantOptions) do
         b.selected=A.Enchants.Mode()==mode; Skin.ButtonState(b,b.selected,nil,false)
@@ -486,15 +504,24 @@ function S:Layout(parent,left,top,width,height,section,visible)
         local firstTop=Skin.SettingsHeader(page,contentWidth,page.title,page.profile or page.context,page.toggle,page.description)
         if name=="Gear Advisor" then
             page.sectionCards[1].sectionTop=firstTop; page.sectionCards[2].sectionTop=firstTop
-            page.sectionCards[3].sectionTop=firstTop+page.sectionCards[1]:GetHeight()+Skin.layout.sectionGap
-            page.sectionCards[4].sectionTop=page.sectionCards[3].sectionTop+page.sectionCards[3]:GetHeight()+Skin.layout.sectionGap
-            page.contentHeight=page.sectionCards[4].sectionTop+page.sectionCards[4]:GetHeight()+Skin.layout.sectionGap
+            local top=firstTop+page.sectionCards[1]:GetHeight()+Skin.layout.sectionGap
+            for index=3,#page.sectionCards do
+                local panel=page.sectionCards[index]; panel.sectionTop=top
+                top=top+panel:GetHeight()+Skin.layout.sectionGap
+            end
+            page.contentHeight=top
         else
             page.paths.sectionTop=firstTop
             page.spending.sectionTop=firstTop+page.paths:GetHeight()+Skin.layout.sectionGap
             page.contentHeight=page.spending.sectionTop+page.spending:GetHeight()+Skin.layout.sectionGap
         end
         Skin.LayoutSections(page,contentWidth)
+        if name=="Gear Advisor" then
+            local half=(page.altSection:GetWidth()-40)/2
+            page.alts.label:SetWidth(half-34)
+            page.altCacheDaysLabel:ClearAllPoints(); page.altCacheDaysLabel:SetPoint("TOPLEFT",half+24,-44)
+            page.altCacheDaysLabel:SetWidth(half-76); page.altNote:SetWidth(page.altSection:GetWidth()-32)
+        end
         if pageName==name then content:SetHeight(math.max(page.contentHeight,height/scale)) end
     end
     if section=="Low Health" then A.LowHealth:LayoutSettings(content,0,0,contentWidth,contentHeight,true)

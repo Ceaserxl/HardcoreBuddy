@@ -1,58 +1,68 @@
-# Rotation Advisor proof-of-concept audit
+# Rotation Advisor proof of concept
 
-Audited 2026-10-02. Implementation commit: `39dce2a`.
+Updated 2026-10-02. The approved scope is **Assistant-only for Rogue and Mage**,
+with Disabled as the per-character default. The user deferred adaptive One Button
+casting and later authorized continued work on the Assistant. One Button and a
+casting macro are outside this proof of concept.
 
-The full requested goal is **incomplete**. The Rogue/Mage Assistant is implemented
-and tested offline. Adaptive One Button casting and its draggable command macro
-have no supported implementation under the inspected Classic Era API. A fixed
-cast sequence was explicitly rejected by the user and is not a substitute.
+## Behavior
 
-## Requirements and evidence
+Open Companion > Rotation Advisor or `/hcb rotation`, then Settings to enable
+Assistant Mode. Recommendations and highlights continue with the HCB window
+closed. The user presses the suggested spell on their own action bar.
 
-| Requirement | Current evidence | Status |
-| --- | --- | --- |
-| Companion > Rotation Advisor | `Companion.lua`, `UI.lua`, `RotationAdvisorUI.lua`; sidebar, Overview and `/hcb rotation` navigation tests | Implemented; in-game verification pending |
-| Disabled mode | Per-character mode defaults to Disabled; tests cover no polling and highlight cleanup | Implemented; in-game reload verification pending |
-| Assistant mode | Pure priorities plus live adapters in `RotationAdvisor.lua`; direct spell highlights on Blizzard bars | Implemented; in-game combat/bar verification pending |
-| Rogue/Mage adaptive recommendations | Tests cover learned ranks, cooldowns, spell usability/range, player and target health, resources, movement, combo points, buffs, interrupts and observed enemies | Implemented as a PvE prototype, not a full specialization simulator |
-| Target mana and pet health | Read into the snapshot and displayed; these Rogue/Mage priorities have no pet-management action | Context only |
-| Enemy count and distance | Counts deduplicate observed target/nameplates; unknown proximity or observed unsafe neighbors suppress area-damage suggestions | Limited to observable units; not an exact world count |
-| One Button Mode | Visible but disabled; `SetMode("onebutton")` does not enable casting | Blocked by the protected-action boundary |
-| Draggable macro invoking HCB to choose and cast | No macro is created; no protected cast, macro mutation or binding is issued | Not implemented; same blocker |
-| Review, validation and commit | Decision/lifecycle tests, UI previews, navigation/settings checks and packaged Lua 5.1 boot; commit `39dce2a` | Completed for the Assistant implementation |
+- Rogue: builders, finishers, Slice and Dice, Kick, Evasion, and learned talent
+  abilities such as Riposte, Hemorrhage and Blade Flurry.
+- Mage: Frost leveling, Counterspell, defensive shields, Frost Nova, movement,
+  mana conservation, wand use and Evocation between pulls.
+- Uses learned ranks, cooldowns, usability, spell range, player/target health,
+  resources, movement, combo points, buffs and interruptible target casts.
+- Highlights only the recommended spell rank on Blizzard action bars. HCB owns
+  its glow texture and leaves native proc effects alone. It creates these textures
+  out of combat, then changes only its own highlight during combat.
+- Suppresses repeated Shoot prompts while wand attacks are active. Interrupts
+  and defensive priorities can still take precedence.
+- Counts deduplicated observed targets and nameplates. Unknown proximity,
+  nearby unengaged enemies or observed crowd control suppress area suggestions.
+  Position checks include vertical distance. This cannot establish an exact count
+  of all enemies in the world.
+- Pet health and target mana are displayed as context; these two class priorities
+  have no pet-management actions.
+- Disabled stops combat polling and removes HCB highlights. World transitions
+  suspend guidance until the character enters the world again.
 
-`tests/run_rotation_advisor.py` exercises the priorities and client adapters,
-including cooldowns, learned ranks, crowd control, bar paging, disabled mode and
-per-character state. Its protected-API sentinels prove that the tested Assistant
-paths do not invoke those mocked operations. They do not emulate WoW's security
-engine or establish that a casting macro works. The test explicitly expects the
-unsupported mode to stay disabled.
+This is a PvE prototype, not a damage simulator or a complete specialization
+rotation. Spell macros and third-party action bars are not supported.
 
-The existing `run_page_alignment.py` and `run_global_layout.py` failures were also
-reproduced using commit `1e98810` versions of the files modified for this feature.
-They concern supply-item layout and do not demonstrate a rotation regression.
+## Offline validation
 
-## Casting boundary checked against client source
+`tests/run_rotation_advisor.py` covers pure priorities, modern and legacy client
+adapters, learned ranks, unknown state, crowd control, observed enemy distance,
+active wand attacks, bar paging, world transitions, mode settings, navigation and
+UI geometry. Protected-operation sentinels reject casting, macro mutation,
+bindings and secure-attribute writes along the tested paths. Repeated combat
+updates are checked for frame allocation.
 
-- [Classic Era command dispatch](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_ChatFrameBase/Shared/ChatFrameEditBox.lua): built-in secure commands are dispatched separately from addon slash commands. Invoking an addon command from a macro does not make its Lua handler secure.
-- [Restricted environment](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_RestrictedAddOnEnvironment/RestrictedEnvironment.lua): the secure environment exposes macro-style state, not arbitrary health/resource reads or the ordinary addon recommendation table.
-- [Secure handlers](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_RestrictedAddOnEnvironment/SecureHandlers.lua): the external handler API rejects combat-time execution/updates. Predeclared secure spell actions do not provide an unrestricted callback for HCB to select the next spell.
-- [Assisted-combat API](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_APIDocumentationGenerated/AssistedCombatDocumentation.lua): the shared generated documentation exposes availability and Blizzard-selected spell queries. It provides no method to register HCB priorities or supply HCB's chosen spell. Its presence in a source branch does not establish availability on the user's character/client.
+The layout renderer provides simulated previews; it cannot establish actual
+in-game appearance, action-bar behavior or WoW security behavior. Settings layout
+and dependency checks also cover the Rotation Advisor settings page.
 
-These findings leave no supported route for the requested adaptive casting
-behavior. The current implementation does not try protected calls and then
-silence their errors. A change in scope from the user, or a supported API that
-allows the requested behavior, is needed to resolve the remaining requirement.
+Client adapter references:
+
+- [Classic Era action buttons](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_ActionBar/Shared/ActionButton.lua)
+- [Classic Era spell API documentation](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_APIDocumentationGenerated/SpellDocumentation.lua)
 
 ## Live verification still required
 
-1. On a Rogue or Mage, enable Assistant Mode in Settings > Rotation Advisor.
-2. Put learned spells directly on Blizzard action bars. Confirm recommendations
-   and highlights during movement, cooldowns, low resources and target changes.
-3. Check bar paging and gameplay with the HCB window closed. Disable the mode
-   and confirm HCB highlights disappear without removing Blizzard proc effects.
-4. Reload and confirm the character's mode persists. Check another character
-   still defaults to Disabled.
-5. Confirm the client reports no addon errors during those interactions.
+1. Enable Assistant Mode on a Rogue or Mage with learned spells placed directly
+   on Blizzard action bars. Confirm the indicated rank glows.
+2. Check movement, cooldowns, interrupts, low resources, target changes and nearby
+   crowd-controlled enemies. Confirm low-mana wand attacks do not prompt toggling
+   Shoot off.
+3. Check bar paging, world transitions and guidance with the HCB window closed.
+   Disable the mode and confirm only HCB highlights disappear.
+4. Reload and confirm the character's mode persists. Another character should
+   default to Disabled.
+5. Confirm there are no addon errors during these interactions.
 
-No live-client pass has been recorded by this audit.
+No live-client pass is claimed.

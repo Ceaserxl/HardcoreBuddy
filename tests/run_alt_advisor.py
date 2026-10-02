@@ -9,6 +9,8 @@ lua.execute(r'''
 local A,F=TestAddon,GEAR_FIXTURES
 local Alt,G=A.AltAdvisor,A.GearAdvisor
 local guid='Player-bank'
+local timestamp=1800000000
+time=function() return timestamp end
 UnitGUID=function() return guid end
 GetRealmName=function() return 'Realm' end
 UnitName=function() return guid end
@@ -294,6 +296,42 @@ guid='Player-damaged'; F.equip(3,shoulders); Alt.events.scripts.OnEvent(Alt.even
 Alt.events.scripts.OnUpdate(Alt.events,1)
 assert(A.db.altEquipment[guid].schema==2 and A.db.altEquipment[guid].equipment[3].id==shoulders.id)
 print('PASS: complete/partial inventory teardown, invalid legacy snapshots, real shoulders, genuine unequips and cache repair.')
+-- Age filtering preserves real empty-slot upgrades and does not delete snapshots.
+guid='Player-bank'
+local empty=A.db.altEquipment['Player-shoulders']
+local function contains(character)
+ for _,entry in ipairs(Alt:Upgrades(G:Read(upgrade.link))) do
+  if entry.character==character then return entry end
+ end
+end
+assert(Alt:CacheDays()==7 and contains(empty).row.text=='Upgrade: empty slot','Fresh empty slots are still advertised')
+empty.updated=timestamp-7*86400
+assert(contains(empty),'Snapshot at the exact age limit is still current')
+empty.updated=empty.updated-1
+assert(not contains(empty) and A.db.altEquipment['Player-shoulders']==empty,'Expired gear is hidden, not erased')
+assert(Alt:SetCacheDays(30) and contains(empty),'Increasing the age limit restores eligible cached advice')
+for _,value in ipairs({0,-1,366,1.5,'invalid'}) do assert(not Alt:SetCacheDays(value)) end
+assert(Alt:CacheDays()==30,'Invalid settings do not replace the saved cutoff')
+empty.updated=nil; assert(not contains(empty),'Undated snapshots are unavailable')
+empty.updated=timestamp+1; assert(not contains(empty),'Invalid future timestamps are unavailable')
+empty.updated=timestamp; assert(contains(empty),'Refreshing restores valid empty slots')
+assert(Alt:SetCacheDays(7))
+A.db.altAdvisorEnabled=true; A.db.gearAdvisorActive=true
+A:OpenSettings('Gear Advisor')
+local page=A.Settings.pages['Gear Advisor']; local edit=page.altCacheDays
+assert(edit:GetText()=='7' and edit:IsEnabled())
+edit:SetFocus(); edit:SetText('14'); edit.scripts.OnEnterPressed(edit)
+assert(Alt:CacheDays()==14,'Settings field persists the chosen age')
+edit:SetFocus(); edit:SetText('30'); edit.scripts.OnEscapePressed(edit)
+assert(Alt:CacheDays()==14 and edit:GetText()=='14','Escape cancels an age edit')
+edit:SetFocus(); edit:SetText('400'); edit.scripts.OnEnterPressed(edit)
+assert(Alt:CacheDays()==14 and edit:GetText()=='14','Invalid input restores the last valid age')
+page.alts:SetChecked(false); MOCK.Click(page.alts)
+assert(not edit:IsEnabled() and edit:GetAlpha()<1,'Disabled Alt Advisor dims and disables its dependent age control')
+page.alts:SetChecked(true); MOCK.Click(page.alts)
+assert(edit:IsEnabled())
+assert(Alt:SetCacheDays(7))
+print('PASS: fresh empty-slot upgrades, age boundaries, stale/invalid dates, cache retention and editable settings dependencies.')
 ''')
 
 def plain(value):
@@ -306,8 +344,10 @@ candidate = plain(lua.globals().ALT_RELOAD_CANDIDATE)
 fresh, _ = boot()
 fresh.globals().HardcoreBuddyDB = fresh.table_from(account, recursive=True)
 fresh.globals().AltReloadCandidate = fresh.table_from(candidate, recursive=True)
+fresh.execute('time=function() return 1800000000 end')
 fresh.execute('''
 TestAddon:Initialize()
+assert(TestAddon.AltAdvisor:CacheDays()==7 and TestAddon.db.altAdvisorCacheDays==7,'Configured cache cutoff survives SavedVariables reload')
 UnitGUID=function() return 'Player-bank' end
 GetRealmName=function() return 'Realm' end
 UnitFactionGroup=function() return 'Alliance' end

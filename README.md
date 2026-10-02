@@ -115,14 +115,17 @@ Procs, active item effects and set bonuses are excluded. See [advisor details](d
 your other characters. Equipment refreshes during play and is captured again
 immediately on logout, normal game exit or `/reload`. Loading item data cannot
 leave newly occupied slots marked empty; uncertain slots are excluded from
-comparisons. To refresh an older character's cache, log into that character with
-HardcoreBuddy enabled and log out normally.
+comparisons. Genuine empty slots still show upgrade advice. Snapshots older than
+**7 days** are excluded by default; change the cutoff (1-365 days) under
+**Settings > Gear Advisor > Alt Advisor**. Expired snapshots are retained but do
+not produce recommendations. To refresh an older character's cache, log into
+that character with HardcoreBuddy enabled and log out normally.
 
 ## Rotation Advisor proof of concept
 
 Open **Companion > Rotation Advisor** or `/hcb rotation`. In **Settings > Rotation
 Advisor**, enable **Assistant Mode** for a live Rogue or Mage. It recommends a
-learned spell, explains the reason and highlights matching spells on Blizzard
+learned spell, explains the reason and highlights its exact rank on Blizzard
 action bars, even with the HCB window closed. **Disabled** is the default and is
 saved per character.
 
@@ -133,16 +136,12 @@ cooldowns, spell range, player/target health, resources, combo points and buffs.
 Area damage requires observed nearby engaged enemies without observed crowd
 control or unengaged enemies in range. Nameplates and distance APIs cannot
 guarantee a complete count. Pet health and target mana appear as context; these
-two class priorities do not contain pet-management actions.
+two class priorities do not contain pet-management actions. Low-mana wand advice
+recognizes active wand attacks and stops highlighting Shoot while it is running.
 
-**One Button Mode is unavailable.** A macro invoking an HCB slash command cannot
-authorize addon Lua to choose and cast a protected spell. The client handles
-secure commands separately from addon slash commands; a key press does not
-change that distinction. The prototype creates no rotation macros or bindings.
-It supports direct spell buttons on Blizzard action bars; third-party bars,
-PvP and full specialization-specific rotations are outside this first version.
-See [Classic Era command dispatch](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_ChatFrameBase/Shared/ChatFrameEditBox.lua#L218-L245)
-and the [restricted environment](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_RestrictedAddOnEnvironment/RestrictedEnvironment.lua).
+This is an Assistant-only proof of concept: you press the recommended spell.
+It supports direct spell buttons on Blizzard action bars. Third-party bars,
+macros, PvP and full specialization-specific rotations are outside this version.
 
 Offline validation: `tests/run_rotation_advisor.py`. In-game verification still
 needs Rogue/Mage combat, learned-rank changes, bar paging, highlighting with the

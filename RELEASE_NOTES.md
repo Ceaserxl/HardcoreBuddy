@@ -1,5 +1,9 @@
 # Unreleased
 
+- Rogue/Mage Rotation Advisor provides Assistant and Disabled modes, learned-rank
+  action-bar highlights, conservative nearby-enemy checks and active-wand handling.
+- Alt Advisor keeps genuine empty-slot upgrades and excludes gear snapshots older
+  than 7 days by default. The cutoff is configurable in Gear Advisor settings.
 - Essentials auction purchases are cached as In Mail after server confirmation.
   Mailbox collection updates stock; fulfilled refill rows are hidden, including
   crafting materials already covered by bags, the saved bank or pending mail.

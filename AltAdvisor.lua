@@ -16,6 +16,24 @@ local function usableSnapshot(character)
     return character and type(character.equipment)=="table"
         and (character.schema==2 or character.schema==1 and hasEquipment(character.equipment))
 end
+function Alt:CacheDays()
+    local days=A.db and tonumber(A.db.altAdvisorCacheDays)
+    if not days or days~=math.floor(days) or days<1 or days>365 then return 7 end
+    return days
+end
+function Alt:SetCacheDays(value)
+    local days=tonumber(value)
+    if not A.db or not days or days~=math.floor(days) or days<1 or days>365 then return false end
+    A.db.altAdvisorCacheDays=days
+    G:RefreshTooltips()
+    return true
+end
+function Alt:IsFresh(character)
+    local updated=character and character.updated
+    local now=time and time()
+    return type(updated)=="number" and type(now)=="number" and updated>0
+        and updated<=now and now-updated<=self:CacheDays()*86400
+end
 function Alt:Capture(final)
     if not A.db or not UnitGUID or not GetRealmName or not GetInventoryItemID or not GetInventoryItemLink then return end
     local guid=UnitGUID("player"); local profile=G:CurrentProfile()
@@ -131,7 +149,7 @@ function Alt:Upgrades(item)
     local realm=GetRealmName and GetRealmName()
     local faction=UnitFactionGroup and UnitFactionGroup("player")
     for id,character in pairs(A.db.altEquipment or {}) do
-        if id~=guid and usableSnapshot(character) and character.realm==realm and character.faction==faction
+        if id~=guid and usableSnapshot(character) and self:IsFresh(character) and character.realm==realm and character.faction==faction
             and G.Allowed(item,character.profile) then
             local best
             for _,row in ipairs(G:Comparisons(item,character.profile,nil,character.equipment)) do
