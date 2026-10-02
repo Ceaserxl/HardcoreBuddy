@@ -1,6 +1,7 @@
 -- Optional preparation reminders. Unknown stock never becomes a shortage.
 local addonName,A=...
 local R={}; A.Readiness=R
+local PANEL_ITEMS,ROW_TOP,ROW_STEP=5,46,40
 local function text(parent,size,x,y,width,value)
     local f=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
     f:SetFont(STANDARD_TEXT_FONT,size,""); f:SetPoint("TOPLEFT",x,y); f:SetWidth(width)
@@ -69,20 +70,20 @@ function R:BuildFrames()
     end
     f:SetScript("OnDragStart",function() self.dragging=true; f:StartMoving() end)
     f:SetScript("OnDragStop",stopDrag); f:SetScript("OnHide",stopDrag)
-    f.title=text(f,15,14,-12,270,"Missing essentials"); f.title:SetTextColor(unpack(A.Skin.colors.gold))
-    f.summary=text(f,11,14,-34,300); f.summary:SetTextColor(unpack(A.Skin.colors.muted))
+    f.title=text(f,14,10,-9,270,"Missing essentials"); f.title:SetTextColor(unpack(A.Skin.colors.gold))
+    f.summary=text(f,10,10,-28,300); f.summary:SetTextColor(unpack(A.Skin.colors.muted))
     f.rows={}
-    for i=1,4 do
+    for i=1,PANEL_ITEMS do
         local row=CreateFrame("Button",nil,f,"SecureActionButtonTemplate,BackdropTemplate"); f.rows[i]=row
         row:RegisterForClicks("AnyUp","AnyDown")
-        row:SetPoint("TOPLEFT",12,-58-(i-1)*50); row:SetSize(306,46)
+        row:SetPoint("TOPLEFT",8,-ROW_TOP-(i-1)*ROW_STEP); row:SetSize(314,38)
         A.Skin.Paint(row,"edit"); row:SetBackdropBorderColor(0,0,0,0)
         row.icon=row:CreateTexture(nil,"ARTWORK"); row.icon:SetSize(28,28); row.icon:SetPoint("TOPLEFT",5,-5)
         row.icon:SetTexCoord(0.08,0.92,0.08,0.92)
-        row.name=text(row,12,42,-5,164); row.name:SetWordWrap(false); row.name:SetHeight(16)
-        row.vendor=text(row,10,42,-25,256); row.vendor:SetWordWrap(false); row.vendor:SetHeight(14)
+        row.name=text(row,12,40,-3,190); row.name:SetWordWrap(false); row.name:SetHeight(16)
+        row.vendor=text(row,10,40,-21,266); row.vendor:SetWordWrap(false); row.vendor:SetHeight(13)
         row.vendor:SetTextColor(unpack(A.Skin.colors.muted))
-        row.need=text(row,12,214,-10,84); row.need:SetJustifyH("RIGHT"); row.need:SetWordWrap(false); row.need:SetHeight(18)
+        row.need=text(row,11,236,-3,70); row.need:SetJustifyH("RIGHT"); row.need:SetWordWrap(false); row.need:SetHeight(16)
         row:SetScript("OnEnter",function()
             GameTooltip:SetOwner(row,"ANCHOR_LEFT"); GameTooltip:SetText(row.name:GetText(),1,0.82,0,1)
             GameTooltip:AddLine(row.vendorName and ("Click to mark "..row.vendorName.." on the map and minimap. Vendor stock may vary.")
@@ -98,11 +99,12 @@ function R:BuildFrames()
             if not down and row.vendorLocation then A.VendorMarker:Set(row.vendorLocation,row.vendorLocation.alternativeName or row.name:GetText()) end
         end)
     end
-    f.more=text(f,10,14,0,300); f.more:SetTextColor(unpack(A.Skin.colors.muted))
-    f.hint=text(f,10,14,0,136,"Drag to move"); f.hint:SetTextColor(unpack(A.Skin.colors.muted))
-    f.hint:ClearAllPoints(); f.hint:SetPoint("BOTTOMLEFT",14,18)
+    f.more=text(f,10,10,0,160); f.more:SetTextColor(unpack(A.Skin.colors.muted))
+    f.more:ClearAllPoints(); f.more:SetPoint("BOTTOMLEFT",10,14)
+    f.hint=text(f,10,10,0,136,"Drag to move"); f.hint:SetTextColor(unpack(A.Skin.colors.muted))
+    f.hint:ClearAllPoints(); f.hint:SetPoint("BOTTOMLEFT",10,14)
     f.review=button(f,"Review supplies",144,function() self:Open() end)
-    f.review:SetPoint("BOTTOMRIGHT",-12,12)
+    f.review:SetHeight(24); f.review:SetPoint("BOTTOMRIGHT",-8,8)
     f:SetScript("OnUpdate",function()
         if self.previewUntil and not self.dragging and GetTime()>=self.previewUntil then
             self.previewUntil=nil; self.previewRows=nil; self:Refresh()
@@ -133,7 +135,7 @@ function R:BuildFrames()
 end
 function R:ShowPanel(missing,preview)
     if InCombatLockdown() then return end
-    local f=self.panel; local count=math.min(4,#missing)
+    local f=self.panel; local count=math.min(PANEL_ITEMS,#missing)
     f:SetFrameStrata(preview and "DIALOG" or "MEDIUM")
     A.Skin.Rebase(f,preview and ((A.window and A.window:GetFrameLevel() or 20)+20) or 10)
     f.summary:SetText((preview and "Preview | " or "")..#missing.." supplies below target")
@@ -154,13 +156,13 @@ function R:ShowPanel(missing,preview)
             row.need:SetTextColor(unpack(item.count==0 and A.Skin.colors.red or A.Skin.colors.amber))
         end
     end
-    local bottom=58+count*50
+    local bottom=ROW_TOP+count*ROW_STEP
     f.more:SetShown(#missing>count)
+    f.hint:SetShown(#missing<=count)
     if #missing>count then
-        f.more:ClearAllPoints(); f.more:SetPoint("TOPLEFT",14,-bottom)
-        f.more:SetText("+ "..(#missing-count).." more in Essentials"); bottom=bottom+20
+        f.more:SetText("+ "..(#missing-count).." more in Essentials")
     end
-    f:SetHeight(bottom+48)
+    f:SetHeight(bottom+36)
     if RegisterStateDriver then RegisterStateDriver(f,"visibility","[combat] hide; show") end
     f:Show()
 end
@@ -180,6 +182,8 @@ function R:Preview(kind)
             {itemId=117,name="Tough Jerky",count=6,target=20,missing=14},
             {itemId=118,name="Minor Healing Potion",count=0,target=5,missing=5},
             {itemId=1251,name="Linen Bandage",count=8,target=20,missing=12},
+            {itemId=159,name="Refreshing Spring Water",count=0,target=20,missing=20},
+            {itemId=2459,name="Swiftness Potion",count=1,target=3,missing=2},
         }
         self.previewUntil=GetTime()+20
         self:ShowPanel(self.previewRows,true)

@@ -21,7 +21,7 @@ MOCK.Click(options.previewPanel)
 assert(R.panel:IsShown() and R.previewUntil==120)
 assert(R.panel:GetFrameStrata()=="DIALOG" and R.panel:GetFrameLevel()>A.window:GetFrameLevel())
 assert(R.panel.summary:GetText()=="Preview | Example supplies")
-for i=1,3 do
+for i=1,5 do
  local row=R.panel.rows[i]
  assert(row:IsVisible() and row.name:GetText()~="" and not row.stock)
  assert(row.need:GetText():match("^%(%d+/%d+%)$"))
@@ -31,7 +31,7 @@ for i=1,3 do
  MOCK.ClickAt(x+w/2,y+h/2)
  assert(A.state==state and not R.panel.scripts.OnClick,"Row clicks do not navigate")
 end
-assert(not R.panel.rows[4]:IsShown())
+assert(#R.panel.rows==5 and R.panel:GetHeight()==282,'Five compact rows fit in the panel')
 R:Refresh(); assert(R.panel:IsShown(),"Bag/rest refresh preserves preview")
 assert(R.settings.panel and R.settings.departure and R.dismissed and R.lastReminder==77)
 MOCK.Click(R.panel.close)
@@ -54,7 +54,8 @@ R:Refresh(); assert(R.panel:IsShown(),"Preview remains visible after reviewing s
 local rows={}
 for i=1,6 do rows[i]={itemId=117,name="Example "..i,count=i,target=20,missing=20-i} end
 R:ShowPanel(rows)
-assert(R.panel.rows[4]:IsShown() and R.panel.more:GetText()=="+ 2 more in Essentials")
+assert(R.panel.rows[5]:IsShown() and R.panel.more:GetText()=="+ 1 more in Essentials")
+assert(not R.panel.hint:IsShown(),'Overflow shares the footer instead of adding empty height')
 R:ShowPanel({rows[1]})
 assert(not R.panel.rows[2]:IsShown() and not R.panel.more:IsShown(),"Rows and overflow hide on refresh")
 print("PASS: Preview controls, layout rows, sample labeling, layering, expiry, cooldown isolation, combat and Review navigation.")
