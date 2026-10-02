@@ -223,6 +223,7 @@ local function powerCosts(id)
 end
 -- Forecast natural mana regeneration only, not unobserved procs or potions.
 function R:PowerForecast(s)
+    s.gcdRemaining=0
     local previous=self.powerSample
     local sample={time=s.time,power=s.power,kind=s.powerType}
     if previous and previous.kind==s.powerType and s.time>=previous.time and s.time-previous.time<3 then
@@ -318,6 +319,7 @@ function R:SpellState(spell,unit,s)
         local reference=module and module.GCDReference and module.GCDReference(self)
         if reference then gcdStart,gcdDuration,gcdEnabled=cooldown(reference.id) end
     end
+    if s and activeGCD() then s.gcdRemaining=math.max(s.gcdRemaining or 0,gcdStart+gcdDuration-now) end
     local onGCD=activeGCD() and type(start)=="number" and type(duration)=="number"
         and math.abs(start-gcdStart)<.05 and duration<=gcdDuration+.05
     local gcdLength=activeGCD() and gcdDuration or 1.5
@@ -490,6 +492,7 @@ function R:Snapshot()
     end
     s.interrupt=cast~=nil and uninterruptible~=true and type(finish)=="number" and finish/1000>clock()
     local buffs,durations=self:Auras("player","HELPFUL")
+    s.drinking=A.ConsumableBuffs.IsDrinking(buffs)
     s.buffDurations={}
     for key,name in pairs(self.names) do s.buffs[key]=buffs[name]; s.buffDurations[key]=(durations or {})[name] end
     local module=self:Class()
@@ -700,7 +703,7 @@ function R:TraceRotation(event,force)
         damageProfile=diagnosticFields(s.damageProfile,"main school damage"),
         plan=diagnosticFields(self.castPlan,"key id token finish target"),
         castEvent=diagnosticFields(self.lastCastEvent,"event time id token target"),
-        state=diagnosticFields(s,"class level targetLevel targetBoss grouped targetCombat targetDotted scorchStacks scorchRemaining winterChillStacks spellHit haste time combat dead taxi moving mounted wanding casting castToken castSpellID rotationCast castEnd channelKey channelRemaining targetGUID validTarget targetPlayer targetHP targetHealth targetDistance targetClose controlled frozen frozenRemaining slowRemaining timeToDie healthTrendDuration healthTrendLosses healthTrendRate playerHealth power maxPower powerPercent projectedPower powerHorizon regenDelay normalRegen targets nearby cluster safeAOE safeCluster attackingPlayer recentDamage interrupt"),
+        state=diagnosticFields(s,"class level targetLevel targetBoss grouped targetCombat targetDotted scorchStacks scorchRemaining winterChillStacks spellHit haste time combat dead taxi moving mounted wanding drinking casting castToken castSpellID rotationCast castEnd channelKey channelRemaining gcdRemaining targetGUID validTarget targetPlayer targetHP targetHealth targetDistance targetClose controlled frozen frozenRemaining slowRemaining timeToDie healthTrendDuration healthTrendLosses healthTrendRate playerHealth power maxPower powerPercent projectedPower powerHorizon regenDelay normalRegen targets nearby cluster safeAOE safeCluster attackingPlayer recentDamage interrupt"),
         spells={},buffs={},buffDurations={},highlights={},optional={},ooc={},supplyChecks={},
         talents={},talentsReady=self.talentsReady,spellPower={},spellCrit={},
         intellectBlocker=diagnosticFields(s.intellectBlocker,"id power remaining")}

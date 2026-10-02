@@ -10,6 +10,7 @@ do
     check(not s.spells.frostbolt.usable,'Large mana deficit is not forecast as ready')
     units.player.power=45; R.powerSample=nil; ready[61304]={startTime=now,duration=1.5,isEnabled=true}
     s=R:Snapshot(); check(s.powerHorizon==1.5 and s.projectedPower==52.5,'Forecast covers remaining GCD')
+    check(s.gcdRemaining==1.5,'Snapshot records remaining GCD independently of spell cooldown readiness')
     ready[837]={startTime=now-6.6,duration=8,isEnabled=true}
     s=R:Snapshot(); check(s.spells.frostbolt.ready,'Cooldown ending during current GCD can be previewed')
     ready={}; units.player.power=80; casts.player=true; R.powerSample=nil
@@ -21,6 +22,28 @@ do
     UnitOnTaxi=function() return true end; s=R:Snapshot(); check(not R.Decide(s),'Flight path is excluded')
     UnitOnTaxi=function() return false end; IsMounted=function() return false end; C_Spell.IsSpellUsable=oldUsable
     C_Spell.GetSpellPowerCost=oldCosts; GetManaRegen=nil; GetPowerRegen=nil; R.powerSample=nil
+end
+do
+    -- Level 42 capture: water already restores mana, so preserve Evocation.
+    local oldDrink=spellData[1135]; local oldAuras=auras
+    spellData[1135]={name='Localized Drink'}
+    auras={playerHELPFUL={{name='Localized Drink',spellId=1135,duration=30,expirationTime=now+30}}}
+    local snapshot=R:Snapshot()
+    check(snapshot.drinking,'Live shared snapshot identifies the localized drinking aura')
+    local s=state({'evocation','intellect','icearmor'}); s.combat=false; s.powerPercent=17.23; s.drinking=snapshot.drinking
+    check(not optional(s,'evocation'),'Recorded 17 percent mana while drinking does not suggest Evocation')
+    s.powerPercent=60
+    check(optional(s,'intellect') and optional(s,'icearmor'),'Drinking leaves unrelated preparation advice available')
+    auras.playerHELPFUL={}; s.drinking=R:Snapshot().drinking; s.powerPercent=17.23
+    check(not s.drinking and optional(s,'evocation'),'Low-mana Evocation returns if drinking stops')
+    auras.playerHELPFUL={{name='Localized Drink',spellId=1135,expirationTime=now-1}}
+    check(not R:Snapshot().drinking,'Expired water aura does not block recovery')
+    local modern=C_Spell; C_Spell=nil
+    local oldInfo=GetSpellInfo; GetSpellInfo=function(id) if id==1135 then return 'Localized Drink' end end
+    check(A.ConsumableBuffs.IsDrinking({['Localized Drink']=30}),'Legacy localized spell lookup recognizes drinking')
+    GetSpellInfo=function() end
+    check(not A.ConsumableBuffs.IsDrinking({Drink=30}),'Unknown localized aura does not invent drinking state')
+    C_Spell=modern; GetSpellInfo=oldInfo; spellData[1135]=oldDrink; auras=oldAuras
 end
 do
     auras.playerHELPFUL={{name='Clearcasting',spellId=12536,expirationTime=now+10},{name='Brilliance',spellId=23028,expirationTime=now+60}}
@@ -388,6 +411,9 @@ do
     end
     local restored=replay(nil,current.entries[1].delta)
     check(restored.state.power==R.snapshot.power and restored.selected.id==R.current.id,'Full sample can be reconstructed from first delta')
+    check(type(restored.state.drinking)=='boolean' and type(restored.state.gcdRemaining)=='number'
+        and restored.state.drinking==R.snapshot.drinking and restored.state.gcdRemaining==R.snapshot.gcdRemaining,
+        'Diagnostic replay retains drinking state and remaining GCD')
     local savedPower=R.snapshot.power
     R.snapshot.power=1; R:TraceRotation('delta-test',true)
     restored=replay(restored,current.entries[2].delta)

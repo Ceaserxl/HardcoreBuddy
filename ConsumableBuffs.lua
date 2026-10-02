@@ -9,6 +9,12 @@ local function info(id)
     if C_Spell and C_Spell.GetSpellInfo then local value=C_Spell.GetSpellInfo(id); if value then return value end end
     if GetSpellInfo then local name=GetSpellInfo(id); if name then return {name=name} end end
 end
+function B.IsDrinking(active)
+    -- Classic drink ranks share a localized aura name. This also recognizes
+    -- water that is not currently selected in the Supplies profile.
+    local drink=info(1135)
+    return not not (drink and drink.name and (active[drink.name] or 0)>0)
+end
 function B.Auras(unit,filter)
     local out,durations={},{}
     local now=GetTime and GetTime() or 0

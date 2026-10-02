@@ -184,7 +184,7 @@ function M.Optional(s)
         and (s.maxPower or 0)-(s.power or 0)>=(s.spells.managem.restore or math.huge) then
         add("managem","Restore mana without wasting the gem's recovery.")
     end
-    if not s.combat and not s.casting and not s.targetCombat then
+    if not s.combat and not s.casting and not s.targetCombat and not s.drinking then
         if mp<25 and ready(s,"evocation",true) then add("evocation","Recover mana before pulling.") end
     end
     M.Situational(s,add)

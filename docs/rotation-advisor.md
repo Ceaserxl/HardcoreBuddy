@@ -58,7 +58,8 @@ weaker Arcane Intellect recommendation.
 `ConsumableBuffs.lua` owns class-filtered carried-supply preparation. Food and
 water require recovery need; Well Fed food, elixirs and scrolls can be suggested
 at full health/mana for their lasting buffs. Eating/drinking suppress repeated
-recovery prompts. Bank-only stock and items with tracking disabled are excluded.
+recovery prompts. Active drinking also suppresses redundant Evocation advice.
+Bank-only stock and items with tracking disabled are excluded.
 Only one buff food is suggested, preferring the Essentials choice. Mana-free
 classes are not advised to drink or use intellect-only scrolls.
 
@@ -110,7 +111,9 @@ Version 2 entries store `time` and recursive `delta` fields. Logs include charac
 stats/talents, raw decisions, selected action, actual primary, profile main attack,
 cast locks/events, resources, spells, auras and highlighted slots/colors. Wanding
 is recorded explicitly so an already-active wand is distinguishable from a missing
-recommendation. Target health trends remain diagnostic observations only.
+recommendation. Drinking state and remaining global cooldown are recorded separately
+from spell readiness, which permits early previews. Target health trends remain
+diagnostic observations only.
 
 ## Data and validation
 
