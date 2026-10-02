@@ -20,6 +20,10 @@ local function decide(s,expected,label)
     local actual=R.Decide(s)
     check(actual==expected,(label or '')..': expected '..tostring(expected)..', got '..tostring(actual))
 end
+local function optional(s,key)
+    for _,choice in ipairs(M.Optional(s)) do if choice.key==key then return true end end
+    return false
+end
 check(not R.supported.ROGUE and not R.definitions.ROGUE,'Rogue prototype removed')
 do
     local s=state({'fireball','pyroblast'}); s.combat=false; s.grouped=false; s.targetDistance=30
@@ -52,8 +56,8 @@ do
     s.casting=false; s.spells.counterspell={ready=true,usable=true}; s.interrupt=true
     decide(s,'counterspell','Enemy interrupt takes priority over mana gem')
     s=state({'frostbolt','ruby'}); s.combat=false; s.prepareGem='ruby'; s.spells.ruby.cost=1200
-    decide(s,'ruby','Prepare learned missing gem before pull')
-    local _,_,optional=R.Decide(s); check(optional,'Gem preparation uses optional glow')
+    decide(s,'frostbolt','Gem preparation never displaces primary')
+    check(optional(s,'ruby'),'Gem preparation uses optional glow')
     s.prepareGem=nil; decide(s,'frostbolt','Owned gem does not prompt reconjuring')
     s.prepareGem='ruby'; s.moving=true; decide(s,'frostbolt','No conjuring while moving')
     s.moving=false; s.spells.ruby.cost=4900; decide(s,'frostbolt','Preparation preserves combat mana reserve')
@@ -120,10 +124,13 @@ decide(s,'coldsnap','Cold Snap restores defensive cooldown')
 s=state({'frostbolt','polymorph'}); s.attackingPlayer=true; s.targets=2; s.polyEligible=true; s.playerHealth=35
 decide(s,'polymorph','Control eligible extra attacker'); s.targetDotted=true; decide(s,'frostbolt','Do not sheep a dotted target')
 s=state({'fireball','intellect','frostarmor'}); s.combat=false
-decide(s,'intellect','Prepull Intellect'); s.buffs.intellect=100; decide(s,'frostarmor','Prepull armor')
+check(optional(s,'intellect') and optional(s,'frostarmor'),'Prepull buffs coexist')
+decide(s,'fireball','Prepull buffs do not replace primary'); s.buffs.intellect=100
+check(not optional(s,'intellect') and optional(s,'frostarmor'),'Only missing buff remains optional')
 s.hasArmor=true; decide(s,'fireball','No repeat armor buff')
 s=state({'frostbolt','evocation'}); s.combat=false; s.powerPercent=10
-decide(s,'evocation','Safe mana recovery'); s.mounted=true; decide(s,'frostbolt','Do not channel on mount')
+check(optional(s,'evocation'),'Safe optional mana recovery'); s.mounted=true
+check(not optional(s,'evocation'),'Do not channel on mount'); decide(s,'frostbolt','Mounted preview remains')
 s=state({'frostbolt','evocation'}); s.powerPercent=5; s.timeToDie=30; s.targetCombat=true
 decide(s,'evocation','Safe grouped recovery'); s.recentDamage=true; decide(s,'frostbolt','Do not channel under damage')
 s=state({'frostbolt','shoot'}); s.spells.frostbolt.usable=false; decide(s,'shoot','Wand fallback')

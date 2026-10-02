@@ -1,6 +1,6 @@
 local _,A=...
 local R,S=A.RotationAdvisor,A.Skin
-local modeHelp="Gold: main recommendation. Red: optional action. Press the highlighted spell on your Blizzard action bar. Disabled stops recommendations and removes HCB highlights."
+local modeHelp="Gold: one primary action. Red: optional actions, which can stay highlighted together alongside the primary. Disabled removes all HCB highlights."
 local function text(parent,value,x,y,width,style)
     local f=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
     S.TextStyle(f,style or "subtitle"); f:SetPoint("TOPLEFT",x,-y); f:SetWidth(width)
@@ -105,7 +105,8 @@ function R:RefreshView()
     view.next.icon:SetAlpha(spell and 1 or .35)
     view.next.name:SetText(spell and (spell.name..(spell.rank and spell.rank~="" and (" | "..spell.rank) or "")) or mode=="disabled" and "Disabled" or "Waiting")
     view.next.reason:SetText(not self.supported[class] and "Currently available for Mage." or self.reason or "")
-    view.next.bar:SetText(mode=="assistant" and (spell and ((self.highlightCount or 0)>0 and (self.optional and "Red highlight: optional action." or "Gold highlight: main recommendation.") or "Place this spell on a Blizzard action bar to see the highlight.") or "No spell highlighted.")
+    local currentCount=self.optional and self.optionalHighlightCount or self.primaryHighlightCount
+    view.next.bar:SetText(mode=="assistant" and (spell and ((currentCount or 0)>0 and (self.optional and "Red highlights: optional actions." or "Gold: primary action. Red: optional actions.") or "Place this action on a Blizzard action bar to see its highlight.") or "No spell highlighted.")
         or "Enable Assistant Mode in Settings to begin.")
     view.character.values:SetText(mode=="disabled" and "Live monitoring is off." or
         "Health: "..pct(s.playerHealth).."\nMana: "..pct(s.powerPercent)

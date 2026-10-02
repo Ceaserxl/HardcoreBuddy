@@ -661,27 +661,37 @@ local function colorHighlight(glow,optional)
         else texture:SetVertexColor(1,1,1,1) end
     end
 end
-function R:Highlight(spell,optional)
-    self.highlightCount=0
+local function matchesAction(spell,slot)
+    if not spell then return false end
+    if not spell.item then return actionSpell(slot)==spell.id end
+    local kind,id,subtype=GetActionInfo(slot)
+    if kind=="macro" and subtype=="item" then kind="item"
+    elseif kind=="macro" and GetMacroItem then
+        local _,link=GetMacroItem(id)
+        id=type(link)=="string" and tonumber(link:match("item:(%d+)")); kind="item"
+    end
+    return kind=="item" and id==spell.id
+end
+function R:Highlight(spell,optional,additional)
+    self.highlightCount=0; self.primaryHighlightCount=0; self.optionalHighlightCount=0
     for button,glow in pairs(self.highlights) do
         local slot=button.action or button.GetAttribute and button:GetAttribute("action")
-        local match=false
-        if spell and slot and GetActionInfo and button:IsVisible() then
-            if spell.item then
-                local kind,id,subtype=GetActionInfo(slot)
-                if kind=="macro" and subtype=="item" then kind="item"
-                elseif kind=="macro" and GetMacroItem then
-                    local _,link=GetMacroItem(id)
-                    id=link and tonumber(link:match("item:(%d+)")); kind="item"
+        local match,isOptional=false,optional
+        if slot and GetActionInfo and button:IsVisible() then
+            match=matchesAction(spell,slot)
+            if not match then
+                for _,extra in ipairs(additional or {}) do
+                    if matchesAction(extra,slot) then match=true; isOptional=true; break end
                 end
-                match=kind=="item" and id==spell.id
-            else
-                match=actionSpell(slot)==spell.id -- Preserve exact rank matching for spells and macros.
             end
         end
-        if match then colorHighlight(glow,optional) end
+        if match then colorHighlight(glow,isOptional) end
         glow:SetShown(match)
-        if match then self.highlightCount=self.highlightCount+1 end
+        if match then
+            self.highlightCount=self.highlightCount+1
+            if isOptional then self.optionalHighlightCount=self.optionalHighlightCount+1
+            else self.primaryHighlightCount=self.primaryHighlightCount+1 end
+        end
     end
 end
 local function retainable(s,key)
@@ -729,13 +739,22 @@ function R:Update()
     if not A.characterDB then return end
     if self.suspended or self:Mode()=="disabled" then
         self.approach=nil; self.powerSample=nil; self.healthSample=nil; self.immune=nil; self.lastDamage=nil; self.castPlan=nil
-        self.current=nil; self.optional=nil; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
+        self.current=nil; self.primary=nil; self.optional=nil; self.optionalActions={}; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
     else
         self.snapshot=self:Snapshot()
         local key,reason,optional,urgent=self.Decide(self.snapshot)
         key,reason,optional=self:StabilizeRecommendation(self.snapshot,key,reason,optional,urgent)
-        self.current=key and self.snapshot.spells[key]; self.reason=reason; self.optional=not not (self.current and optional)
-        self:Highlight(self:Mode()=="assistant" and self.current or nil,self.optional)
+        self.primary=key and self.snapshot.spells[key]
+        self.optionalActions={}
+        local choices=A.MageRotation.Optional(self.snapshot)
+        for _,choice in ipairs(choices) do
+            local spell=self.snapshot.spells[choice.key]
+            if spell and spell~=self.primary then self.optionalActions[#self.optionalActions+1]=spell end
+        end
+        self.current=self.primary or self.optionalActions[1]
+        self.reason=self.primary and reason or choices[1] and choices[1].reason or reason
+        self.optional=not not (self.current and not self.primary)
+        self:Highlight(self.primary,false,self.optionalActions)
     end
     if self.RefreshView then self:RefreshView() end
 end

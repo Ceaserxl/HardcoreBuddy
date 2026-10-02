@@ -28,9 +28,13 @@ override damage. Polymorph is limited to eligible targeted enemies in dangerous
 multi-enemy fights without an observed Mage damage-over-time effect. The player
 still chooses targets and escape directions.
 
-Between fights, optional red highlights suggest Intellect, an armor buff, Ice
-Barrier and safe Evocation. Existing armor buffs and Arcane Brilliance are
-respected. During combat, Evocation requires a healthy, undamaged Mage whose
+Optional red highlights are evaluated separately from the single gold primary
+action. Multiple missing buffs (Intellect, one appropriate armor buff and Ice
+Barrier) can remain highlighted together through movement, casts and combat,
+provided mana and readiness permit them. Existing buffs and Arcane Brilliance are
+respected. An urgent shield recommendation becomes the primary gold action;
+it is not also drawn red. Safe out-of-combat Evocation is optional. During combat,
+Evocation requires a healthy, undamaged Mage whose
 target is occupied in a group and has a sufficiently long estimated life.
 
 Damage choices compare Fireball, Frostbolt, Scorch, Arcane Missiles and appropriate
@@ -72,7 +76,13 @@ Flamestrike is not immediately overwritten. Ground placement remains manual.
 
 ## Highlight timing
 
-Gold uses Blizzard's spell-alert animation; red indicates optional preparation.
+Gold uses Blizzard's spell-alert animation; red indicates optional upkeep.
+The general highlighting contract is one primary action plus any number of
+eligible optional actions. Optional actions never replace the primary. Stopping
+movement can add a preparation highlight without removing the damage highlight,
+including when that preparation action has no button on the bar.
+The companion page displays the primary first, or an optional action when there
+is no primary. Disabling the assistant clears both groups.
 The addon owns separate cosmetic overlays and leaves native proc alerts intact.
 Macros are matched by Blizzard's resolved spell ID, including modifier changes
 and explicit ranks. The addon does not parse, create or rewrite casting macros.

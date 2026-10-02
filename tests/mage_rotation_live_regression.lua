@@ -184,6 +184,44 @@ do
     R:Highlight({id=8008}); check(not glow:IsShown(),'Item macro is never treated as matching spell')
     GetActionInfo,GetMacroItem=oldAction,oldMacro
 end
+do
+    local oldSnapshot,oldAction,oldView=R.Snapshot,GetActionInfo,R.RefreshView
+    local s=state({'frostbolt','intellect','barrier','ruby'})
+    s.combat=false; s.moving=true; s.prepareGem='ruby'; s.spells.ruby.cost=1200
+    s.buffs.intellect=100; s.buffs.barrier=100; s.targetGUID='movement-test'; s.time=now
+    R.Snapshot=function() return s end; R.RefreshView=function() end
+    GetActionInfo=function(slot)
+        return 'spell',slot==1 and s.spells.frostbolt.id or slot==2 and s.spells.barrier.id or s.spells.intellect.id
+    end
+    R.castPlan=nil; R:Update()
+    check(R.primary==s.spells.frostbolt and glow:IsShown(),'Moving keeps primary highlighted')
+    local starts=glow.ProcStartAnim.plays
+    s.moving=false; R:Update()
+    check(R.primary==s.spells.frostbolt and glow:IsShown(),'Stopping cannot replace primary with off-bar gem preparation')
+    check(glow.ProcStartAnim.plays==starts,'Stopping preserves primary animation')
+    check(#R.optionalActions==1 and R.optionalActions[1]==s.spells.ruby,'Stationary gem preparation remains independently optional')
+    s.buffs.intellect=nil; s.buffs.barrier=nil; R:Update()
+    check(glow.style=='primary' and R.highlights[other].style=='optional' and R.highlights[lower].style=='optional',
+        'One gold damage action coexists with red Barrier and Intellect')
+    check(R.primaryHighlightCount==1 and R.optionalHighlightCount==2,'Primary and optional counts remain separate')
+    local barrierStarts=R.highlights[other].ProcStartAnim.plays
+    s.combat=true; s.moving=true; s.casting=true; R:Update()
+    check(R.highlights[other]:IsShown() and R.highlights[lower]:IsShown(),'Missing buffs persist through movement, combat and casts')
+    s.moving=false; R:Update()
+    check(glow:IsShown() and R.highlights[other].ProcStartAnim.plays==barrierStarts,'Stopping leaves primary and optional animations intact')
+    s.buffs.intellect=100; R:Update()
+    check(not R.highlights[lower]:IsShown() and R.highlights[other]:IsShown(),'Applying one buff clears only its optional highlight')
+    s.casting=false; s.attackingPlayer=true; s.playerHealth=70; R:Update()
+    check(R.primary==s.spells.barrier and R.highlights[other].style=='primary','Urgent Barrier is gold, not duplicate red')
+    check(not glow:IsShown() and R.primaryHighlightCount==1,'Urgent action replaces the only primary')
+    s.playerHealth=100; s.attackingPlayer=false; R:Update()
+    check(R.highlights[other].style=='optional' and glow:IsShown(),'Barrier returns to optional when emergency passes')
+    s.dead=true; R:Update(); check(R.highlightCount==0,'Death clears primary and all optional highlights')
+    s.dead=false; R:Update(); R:SetMode('disabled')
+    check(R.highlightCount==0 and #R.optionalActions==0,'Disabled clears every recommendation')
+    R.Snapshot,GetActionInfo,R.RefreshView=oldSnapshot,oldAction,oldView
+    R:SetMode('assistant')
+end
 MOCK.class='ROGUE'; check(R:Mode()=='disabled','Old Rogue saved mode no longer enables removed prototype')
 MOCK.class='MAGE'; R:Update()
 print('PASS: '..count..' Mage rotation, live adapter, UI and highlight regression checks.')

@@ -94,6 +94,35 @@ function M.Estimate(s,key)
     return {score=score,damage=direct,cast=cast,cost=cost,school=d.school}
 end
 
+-- Optional upkeep is independent of the single primary action. Missing buffs
+-- remain visible through movement/casts and can coexist with urgent advice.
+function M.Optional(s)
+    local actions={}
+    if s.class~="MAGE" or s.dead or s.taxi or remaining(s,"iceblock")>0 or s.channelKey=="evocation" then return actions end
+    local mp=s.powerPercent or 100
+    local function add(key,reason)
+        if ready(s,key) then actions[#actions+1]={key=key,reason=reason}; return true end
+    end
+    if mp>40 and remaining(s,"intellect")==0 then add("intellect","Maintain Arcane Intellect.") end
+    if mp>40 and not s.hasArmor then
+        local preferred=(rank(s,"arcaneMeditation")>0 or s.grouped) and "magearmor" or "icearmor"
+        if not add(preferred,"Maintain your armor buff.") then
+            for _,key in ipairs({"icearmor","frostarmor","magearmor"}) do
+                if add(key,"Maintain your armor buff.") then break end
+            end
+        end
+    end
+    if mp>40 and remaining(s,"barrier")==0 then add("barrier","Maintain Ice Barrier.") end
+    if not s.combat and not s.casting and not s.targetCombat and not s.moving and not s.mounted then
+        if mp<25 and ready(s,"evocation",true) then add("evocation","Recover mana before pulling.") end
+        if mp>80 and s.prepareGem and ready(s,s.prepareGem,true)
+            and (s.power or 0)-(s.spells[s.prepareGem].cost or math.huge)>=(s.maxPower or 0)*.3 then
+            add(s.prepareGem,"Conjure a mana gem before the next pull.")
+        end
+    end
+    return actions
+end
+
 function M.Decide(s)
     if s.class~="MAGE" then return nil,"Rotation Advisor currently supports Mage." end
     if s.dead or s.taxi then return nil,"" end
@@ -123,27 +152,11 @@ function M.Decide(s)
     if threatened and hp<40 and s.targets>=2 and s.validTarget and not s.targetPlayer and s.polyEligible and not s.controlled and not s.targetDotted and can("polymorph",true) then
         return choose("polymorph","Control this attacker while dealing with the others.")
     end
-    -- Pre-pull upkeep is optional (red). Mounting does not remove combat advice.
+    -- Optional upkeep is evaluated separately and never replaces damage advice.
     urgentPhase=false
     if s.combat and not s.casting and not s.channelKey and can("managem",true)
         and (s.maxPower or 0)-(s.power or 0)>=(s.spells.managem.restore or math.huge) then
         return "managem","Restore mana without wasting the gem's recovery.",false,true
-    end
-    if not s.combat and not s.casting then
-        if mp<25 and not s.moving and not s.mounted and not s.targetCombat and can("evocation",true) then return choose("evocation","Recover mana before pulling.",true) end
-        if mp>40 and remaining(s,"intellect")==0 and can("intellect") then return choose("intellect","Maintain Arcane Intellect.",true) end
-        if mp>40 and not s.hasArmor then
-            local armor=(rank(s,"arcaneMeditation")>0 or s.grouped) and "magearmor" or "icearmor"
-            if can(armor) then return choose(armor,"Maintain your armor buff.",true) end
-            if can("icearmor") then return choose("icearmor","Maintain your armor buff.",true) end
-            if can("frostarmor") then return choose("frostarmor","Maintain your armor buff.",true) end
-            if can("magearmor") then return choose("magearmor","Maintain your armor buff.",true) end
-        end
-        if s.validTarget and not s.controlled and mp>65 and remaining(s,"barrier")==0 and can("barrier") then return choose("barrier","Shield before pulling.",true) end
-        if not s.targetCombat and not s.moving and not s.mounted and mp>80 and s.prepareGem and can(s.prepareGem,true)
-            and (s.power or 0)-(s.spells[s.prepareGem].cost or math.huge)>=(s.maxPower or 0)*.3 then
-            return choose(s.prepareGem,"Conjure a mana gem before the next pull.",true)
-        end
     end
     if not s.validTarget or s.targetPlayer or s.controlled then return nil,"" end
     if s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>1 then return nil,"" end
