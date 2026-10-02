@@ -135,14 +135,14 @@ check(U.results[1][2].link==suffix.link,"Different random suffixes of the same i
 check(U.results[11][1].percent==nil and U.results[12][1].percent==nil,"Empty ring slots get no fabricated percentage")
 check(U.results[16] and U.results[17],"Dual-wield weapon compared in both hand slots")
 check(U.results.paired[1].emptyOff,"A shared one-handed listing is scanned only once, not counted as two purchasable copies")
-check(#U.rows==5 and #U.display==4,"Overview shows only slots with recommendations, using five reusable cards")
+check(#U.rows==16 and #U.display==4,"Overview shows only slots with recommendations, using reusable rows")
 MOCK.Click(U.rows[1])
 check(U.slot==1 and #U.display==3 and U.display[1].link==best.link,"Slot opens every upgrade sorted descending")
 local _,backParent,backAnchor,backX,backY=U.back:GetPoint()
-check(backParent==U.panel and backAnchor=="TOPLEFT" and backX==204 and backY==-76,"Auction Back is above the left edge of results")
+check(backParent==U.panel and backAnchor=="TOPLEFT" and backX==204 and backY==-60,"Auction Back is above the left edge of results")
 local bx,by,bw,bh=U.back:GetRect(); local hx=U.heading:GetRect()
 check(hx>=bx+bw,"Auction heading stays clear of Back")
-check(U.rows[1].action:GetText()=="Find auctions >","Candidate action describes opening a search rather than purchasing")
+check(U.rows[1].action:GetText()=="Buyout >","Candidate offers a confirmed buyout")
 MOCK.Click(U.back); MOCK.Click(U.slotButtons[12])
 check(U.slot==12 and U.slotButtons[12].active,"Persistent slot picker opens Ring 2 with a selected highlight")
 MOCK.Click(U.slotButtons[18])
@@ -238,8 +238,8 @@ check(U.results[16][1].buyout==0 and U.results[16][1].bid==810,"Bid-only upgrade
 -- More than one screen of upgrades, no paging buttons or growing frame pool.
 pages[4]={}; pages[2]={}
 for i=1,25 do pages[4][i]={item=F.item("INVTYPE_HEAD",{ITEM_MOD_AGILITY_SHORT=20+i},4,1),buyout=i*100} end
-U:Start(); finish(); MOCK.Click(U.rows[1]); U.scroll:SetValue(20)
-check(#U.display==25 and U.rows[5].entry==U.display[25] and #U.rows==5,"All slot alternatives are continuously scrollable")
+U:Start(); finish(); MOCK.Click(U.rows[1]); U.scroll:SetValue(100)
+check(#U.display==25 and U.rows[math.floor((U.panel:GetHeight()-118-16)/38)].entry==U.display[25] and #U.rows==16,"All slot alternatives are continuously scrollable")
 
 BrowseName=CreateFrame("EditBox"); BrowseMinLevel=CreateFrame("EditBox"); BrowseMaxLevel=CreateFrame("EditBox")
 IsUsableCheckButton=CreateFrame("CheckButton")
@@ -247,8 +247,8 @@ local searches=0
 function AuctionFrameBrowse_Search() searches=searches+1 end
 local chosen=U.rows[1].entry
 MOCK.Click(U.rows[1])
-check(searches==1 and BrowseName:GetText()=='"'..chosen.name..'"',"Clicking alternative opens native exact-name search")
-check(not U.panel:IsShown() and AuctionFrameBrowse:IsShown() and AuctionFrameBrowse.page==0,"Browse takes over with clean paging")
+check(A.AuctionPurchase.request.row==chosen,"Clicking alternative starts live buyout verification")
+check(U.panel:IsShown() and not AuctionFrameBrowse:IsShown(),"Buyout remains in Upgrades")
 AuctionFrameTab_OnClick(U.tab); U:Start(); MOCK.FireAll("AUCTION_HOUSE_CLOSED")
 check(not U.scan and not U.open,"Auction close cancels pending work")
 local px,py,pw,ph=U.panel:GetRect(); local ax,ay,aw,ah=AuctionFrame:GetRect()
@@ -277,7 +277,7 @@ check(U.setup and #U.display==2 and U.rows[1].entry.label=="Main hand" and U.row
 check(U.rows[2].percent:GetText()=="Included","A component does not get a fabricated independent percentage")
 U.rows[1].scripts.OnEnter(U.rows[1]); U.rows[1].scripts.OnLeave(U.rows[1])
 MOCK.Click(U.rows[2])
-check(BrowseName:GetText()=='"'..held.name..'"',"Each component can open its own auction search")
+check(A.AuctionPurchase.request.row.link==held.link,"Each component can request its own buyout")
 AuctionFrameTab_OnClick(U.tab); MOCK.Click(U.back); MOCK.Click(U.back)
 check(U.weaponsOnly and not U.slot and not U.setup,"Back returns from setup to alternatives to style comparison")
 MOCK.Click(U.rows[1])
@@ -403,7 +403,8 @@ check(armorToggle.label:GetText()=="Best Armor: Leather","Hunter below 40 uses l
 MOCK.level=40; A:Refresh()
 check(armorToggle.label:GetText()=="Best Armor: Mail","Armor label updates when mail unlocks")
 local _,sy,_,sh=U.start:GetRect(); local _,cy,_,ch=U.armorOnly:GetRect(); local _,wy=U.weaponButton:GetRect()
-check(cy>=sy+sh and cy+ch<wy,"Best Armor fits below Scan upgrades without overlapping navigation")
+local cx=U.armorOnly:GetRect(); local sx=U.start:GetRect()
+check(cx+156<=sx and cy>=sy and cy+ch<=sy+sh,"Best Armor fits to the left of Scan")
 armorToggle:SetChecked(false); MOCK.Click(armorToggle)
 
 -- Hover after head results arrive, then continue querying the remaining slots.
@@ -415,7 +416,7 @@ local activeScan=U.scan
 MOCK.Click(U.slotButtons[18])
 check(U.scan==activeScan and U.emptyTitle:GetText()=="Waiting for this slot","Direct slot navigation preserves the active scan and explains pending results")
 MOCK.Click(U.slotButtons[1])
-check(U.rows[1].action:GetText()=="Stop scan to browse","Purchase search action explains why it is unavailable while scanning")
+check(U.rows[1].action:GetText()=="Stop scan to buy","Purchase search action explains why it is unavailable while scanning")
 MOCK.Click(U.overview)
 hovered=U.rows[1]; shift=true; hovered.scripts.OnEnter(hovered)
 local setsBefore=tooltipSets
@@ -440,7 +441,7 @@ check(not GameTooltip:IsShown() and not ShoppingTooltip1:IsShown(),"Removing the
 local _,panelY=U.panel:GetRect()
 for _,card in ipairs(U.rows) do
     local x,y,w,h=card:GetRect(); local sx=select(1,U.scroll:GetRect())
-    check(x+w<sx and y>=panelY+138 and y+h<=panelY+326,"Result cards do not overlap navigation, scrollbar or progress footer")
+    if card:IsShown() then check(x+w<sx and y>=panelY+84 and y+h<=panelY+U.panel:GetHeight()-12,"Visible rows stay inside expanded table") end
     local fields={card.item,card.percent,card.cost}
     for i=1,2 do
         local left,_,width=fields[i]:GetRect(); local right=fields[i+1]:GetRect()

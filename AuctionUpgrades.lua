@@ -123,6 +123,7 @@ function U:Stop(message)
 end
 
 function U:Start()
+    A.AuctionPurchase:Cancel()
     if not G:IsEnabled() then self:Refresh(); return end
     if self.scan then self:Stop("Scan stopped. Results are partial."); return end
     if not self.open or not self.panel or not self.panel:IsShown() then return end
@@ -218,6 +219,7 @@ end
 
 function U:Tick()
     if self.attachPending then self.attachPending=nil; self:Attach() end
+    A.AuctionPurchase:Tick()
     local scan=self.scan
     if not scan then return end
     if not self.open or not self.panel:IsShown() then self:Stop("Scan stopped. Results are partial."); return end
@@ -296,20 +298,7 @@ function U:SetHighestArmorOnly(value)
 end
 
 function U:Find(row)
-    if row and row.owned then return end
-    if self.stale then self.message="Gear or talents changed. Scan again before opening an upgrade."; self:Refresh(); return end
-    if self.scan or not row or not CanSendAuctionQuery("list") then
-        self.message="Wait for the scan to finish, or stop it, before opening an auction."; self:Refresh(); return
-    end
-    if not AuctionFrameBrowse_Search then return end
-    AuctionFrameTab_OnClick(AuctionFrameTab1)
-    BrowseMinLevel:SetText(""); BrowseMaxLevel:SetText(""); IsUsableCheckButton:SetChecked(false)
-    AuctionFrameBrowse.selectedCategoryIndex=nil; AuctionFrameBrowse.selectedSubCategoryIndex=nil
-    AuctionFrameBrowse.selectedSubSubCategoryIndex=nil; AuctionFrameBrowse.qualityIndex=FILTER_ALL_INDEX or -1
-    if BrowseDropdown and BrowseDropdown.GenerateMenu then BrowseDropdown:GenerateMenu() end
-    if AuctionFrameFilters_Update then AuctionFrameFilters_Update() end
-    BrowseName:SetText('"'..row.name..'"'); AuctionFrameBrowse.page=0
-    AuctionFrameBrowse_Search()
+    A.AuctionPurchase:Find(row)
 end
 
 local function label(parent,text,x,y,width,color,size)
@@ -341,6 +330,7 @@ end
 
 function U:Refresh()
     if not self.panel then return end
+    self:Layout()
     local enabled=G:IsEnabled()
     local list={}
     if self.setup then
@@ -363,14 +353,20 @@ function U:Refresh()
     self.offset=math.max(0,math.min(self.offset,#list-visibleRows))
     self.scroll:SetMinMaxValues(0,math.max(0,#list-visibleRows)); self.scroll:SetValue(self.offset)
     self.scroll:SetShown(#list>visibleRows)
-    self.start:SetText(self.scan and "Stop scan" or self.profile and "Rescan upgrades" or "Scan upgrades")
-    self.start:PaintState(true)
+    local scanText=self.scan and (self.scan.phase=="weapons" and "Comparing weapons" or
+        self.scan.queue and (self.scan.queue[self.scan.search].name.." "..self.scan.search.."/"..#self.scan.queue)
+        or "Scanning")
+    self.start:SetText(scanText
+        or self.complete and not self.cached and not self.stale and "Scan Complete" or self.profile and "Rescan upgrades" or "Scan upgrades")
+    self.start:PaintState(false)
+    if self.scan then self.start:SetBackdropColor(0.22,0.17,0.035,1) end
+    self.start.caption:SetTextColor(unpack(self.scan and Skin.colors.gold or Skin.colors.white))
     self.start:SetEnabled(enabled)
     self.back:SetShown(self.slot~=nil or self.weaponsOnly)
     self.back:SetText("< Back")
     local headingX=self.back:IsShown() and 312 or 204
-    self.heading:ClearAllPoints(); self.heading:SetPoint("TOPLEFT",headingX,-78); self.heading:SetWidth(762-headingX)
-    self.hint:ClearAllPoints(); self.hint:SetPoint("TOPLEFT",headingX,-99); self.hint:SetWidth(762-headingX)
+    self.heading:ClearAllPoints(); self.heading:SetPoint("TOPLEFT",headingX,-60); self.heading:SetWidth(self.panel:GetWidth()-28-headingX)
+    self.hint:ClearAllPoints(); self.hint:SetPoint("TOPLEFT",headingX,-80); self.hint:SetWidth(self.panel:GetWidth()-28-headingX)
     self.overview:PaintState(not self.slot and not self.weaponsOnly)
     self.weaponButton:PaintState(self.weaponsOnly or self.slot=="paired" or self.slot=="twoHand")
     for slot,tab in pairs(self.slotButtons) do tab:PaintState(self.slot==slot) end
@@ -383,7 +379,7 @@ function U:Refresh()
         (self.cached and ("Saved scan: "..(self.savedScanAt or "unknown time")) or "Compared with equipped gear")) or "Waiting for character data")
     local weaponView=self.slot=="paired" or self.slot=="twoHand"
     self.heading:SetText(self.setup and "Items in this setup" or self.slot and names[self.slot]
-        or self.weaponsOnly and "Compare weapon setups" or "Best upgrades by slot")
+        or self.weaponsOnly and "Compare weapon setups" or "")
     local bestTwo=self.results.twoHand and self.results.twoHand[1]
     local bestPair=self.results.paired and self.results.paired[1]
     local advice=bestTwo and bestPair and (bestTwo.score==bestPair.score and "Equal scores"
@@ -391,14 +387,14 @@ function U:Refresh()
     self.hint:SetText(self.setup and (change(self.setup).." for both hands"..(self.setup.emptyOff and " | Off hand stays empty" or ""))
         or weaponView and (#list.." setups | Score change includes both hands")
         or self.slot and (#list.." upgrades | Best score first | Hover to compare equipped gear")
-        or self.weaponsOnly and advice or "Choose a slot for all upgrades. Hover to compare equipped gear.")
+        or self.weaponsOnly and advice or "")
     self.status:SetText(self.message or "Start a scan to find upgrades. You can browse results as they arrive.")
     local diagnostics=A.characterDB and A.characterDB.auctionDiagnostics
     self.diagnosticsButton:SetShown(diagnostics~=nil)
-    self.status:SetWidth(diagnostics and 620 or 762)
+    self.status:SetWidth(self.panel:GetWidth()-434)
     self.status:SetTextColor(unpack(self.stale and Skin.colors.red or self.scan and Skin.colors.gold
         or self.complete and Skin.colors.green or Skin.colors.muted))
-    self.progressFill:SetWidth(math.max(1,762*(self.progress or 0)))
+    self.progressFill:SetWidth(math.max(1,(self.panel:GetWidth()-28)*(self.progress or 0)))
     self.progressFill:SetVertexColor(unpack(self.complete and Skin.colors.green or Skin.colors.gold))
     self.progressFill:SetShown((self.progress or 0)>0 or self.scan~=nil)
     self.empty:SetShown(#list==0)
@@ -406,7 +402,7 @@ function U:Refresh()
     self.emptyTitle:SetText(not self.profile and "Find your next upgrade" or self.scan and waiting and "Waiting for this slot"
         or self.scan and not self.slot and "Searching the auction house"
         or waiting and "This slot has not been scanned" or "No upgrades found here")
-    self.emptyText:SetText(not self.profile and "1. Scan upgrades   2. Choose a slot   3. Find auctions"
+    self.emptyText:SetText(not self.profile and "1. Scan upgrades   2. Choose a slot   3. Confirm buyout"
         or self.scan and self.slot and not waiting and "This slot is complete. Other slots are still being scanned."
         or self.scan and "Results will appear here as each slot is checked."
         or self.stale and "Your equipment changed. Rescan to update comparisons."
@@ -419,7 +415,7 @@ function U:Refresh()
         self.hint:SetText(""); self.progressFill:Hide()
     end
     for index,frame in ipairs(self.rows) do
-        local entry=list[self.offset+index]; frame.entry=entry; frame:SetShown(entry~=nil)
+        local entry=index<=visibleRows and list[self.offset+index] or nil; frame.entry=entry; frame:SetShown(entry~=nil)
         if entry then
             local row=self.slot and entry or entry.best
             local checked=self.checkedSlots and self.checkedSlots[entry.slot]
@@ -443,7 +439,7 @@ function U:Refresh()
             frame.cost:SetText(row and (row.owned and "No purchase" or money(value)) or "")
             frame.priceKind:SetText(row and not row.owned and (row.weaponSet and (row.priceLabel.." total") or kind) or "")
             frame.action:SetText(row and (self.slot and (row.weaponSet and "View items >" or row.owned and "Equipped"
-                or self.scan and "Stop scan to browse" or "Find auctions >") or "See options >") or "")
+                or self.scan and "Stop scan to buy" or row.buyout>0 and "Buyout >" or "No buyout") or "See options >") or "")
             frame.accent:SetShown(row~=nil)
             frame.accent:SetVertexColor(unpack(row and changeColor(row) or Skin.colors.muted))
         end
@@ -466,6 +462,39 @@ function U:Refresh()
     end
 end
 
+function U:Layout()
+    local width=math.max(790,math.min(1040,UIParent:GetWidth()-80))
+    local height=math.max(440,math.min(620,UIParent:GetHeight()-180))
+    if self.originalSize and self.panel:IsShown() then AuctionFrame:SetSize(width+42,height+70) end
+    self.panel:SetSize(width,height)
+    self.title:SetWidth(width-380); self.subtitle:SetWidth(390)
+    local top=(self.slot or self.weaponsOnly) and 118 or 84
+    local rowWidth=width-232
+    visibleRows=math.min(16,math.floor((height-top-16)/38))
+    for i,row in ipairs(self.rows) do
+        row:ClearAllPoints(); row:SetPoint("TOPLEFT",204,-top-(i-1)*38); row:SetWidth(rowWidth)
+        row.item:SetWidth(rowWidth-294); row.slot:SetWidth(rowWidth-294)
+        for _,entry in ipairs({{row.percent,rowWidth-240,0},{row.action,rowWidth-240,-17},
+            {row.cost,rowWidth-132,0},{row.priceKind,rowWidth-102,-17}}) do
+            entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],entry[3])
+        end
+    end
+    for _,entry in ipairs({{self.itemHeader,252},{self.scoreHeader,width-268},{self.priceHeader,width-150}}) do
+        entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],-top+21)
+    end
+    self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPRIGHT",-14,-top); self.scroll:SetHeight(visibleRows*38-2)
+    self.empty:ClearAllPoints(); self.empty:SetPoint("TOPLEFT",204,-top); self.empty:SetWidth(rowWidth)
+    self.divider:SetWidth(width-28)
+    for _,texture in ipairs({self.progressTrack,self.progressFill}) do
+        texture:ClearAllPoints(); texture:SetPoint("TOPLEFT",14,-54)
+    end
+    self.progressTrack:SetWidth(width-28)
+    -- Status stays in the compact header; no footer steals table height.
+    self.status:ClearAllPoints(); self.status:SetPoint("TOPLEFT",420,-31)
+    self.status:SetWidth(width-434); self.status:SetJustifyH("RIGHT")
+    self.diagnosticsButton:ClearAllPoints(); self.diagnosticsButton:SetPoint("TOPLEFT",14,-316)
+end
+
 function U:Attach()
     if self.panel or not AuctionFrame or not AuctionFrameTab_OnClick or not QueryAuctionItems then return end
     if InCombatLockdown and InCombatLockdown() then return end
@@ -479,31 +508,32 @@ function U:Attach()
     PanelTemplates_TabResize(tab,0,nil,36)
     tab:SetScript("OnClick",function(self) AuctionFrameTab_OnClick(self) end)
     local panel=CreateFrame("Frame",nil,AuctionFrame,"BackdropTemplate"); self.panel=panel
-    panel:SetPoint("TOPLEFT",AuctionFrame,"TOPLEFT",19,-55); panel:SetSize(790,377)
+    panel:SetPoint("TOPLEFT",AuctionFrame,"TOPLEFT",19,-55); panel:SetSize(1040,590)
     panel:SetFrameLevel(AuctionFrame:GetFrameLevel()+10); panel:EnableMouse(true)
     Skin.Paint(panel,"card"); panel:SetBackdropColor(0.025,0.031,0.037,1)
-    self.title=label(panel,"HardcoreBuddy  /  Gear upgrades",16,-12,580,Skin.colors.gold,22)
+    self.title=label(panel,"HardcoreBuddy  /  Gear upgrades",16,-4,580,Skin.colors.gold,22)
     Skin.TextStyle(self.title,"page")
-    self.subtitle=label(panel,"",16,-42,580,Skin.colors.muted,12)
+    self.title:SetHeight(26)
+    self.subtitle=label(panel,"",16,-31,390,Skin.colors.muted,12)
     Skin.TextStyle(self.subtitle,"subtitle")
-    self.start=button(panel,"Scan upgrades",156,function() U:Start() end); self.start:SetPoint("TOPRIGHT",-14,-12)
+    self.start=button(panel,"Scan upgrades",156,function() U:Start() end); self.start:SetPoint("TOPRIGHT",-14,-8)
     self.armorOnly=CreateFrame("CheckButton",nil,panel,"BackdropTemplate")
-    self.armorOnly:SetSize(18,18); self.armorOnly:SetPoint("TOPLEFT",self.start,"BOTTOMLEFT",0,-4)
+    self.armorOnly:SetSize(18,18); self.armorOnly:SetPoint("TOPRIGHT",self.start,"TOPLEFT",-150,-3)
     Skin.Paint(self.armorOnly,"edit")
     self.armorOnly.mark=label(self.armorOnly,"",0,0,18,Skin.colors.gold,11)
     self.armorOnly.mark:SetHeight(18); self.armorOnly.mark:SetJustifyH("CENTER")
     self.armorOnly.label=label(self.armorOnly,"",24,0,132,Skin.colors.muted,11)
     self.armorOnly.label:SetHeight(18)
     self.armorOnly:SetScript("OnClick",function(self) U:SetHighestArmorOnly(self:GetChecked()) end)
-    local divider=Skin.Divider(panel); divider:SetPoint("TOPLEFT",14,-68); divider:SetWidth(762)
+    local divider=Skin.Divider(panel); self.divider=divider; divider:SetPoint("TOPLEFT",14,-54); divider:SetWidth(762)
     divider:SetVertexColor(0.20,0.25,0.29,1)
     self.overview=button(panel,"Best by slot",174,function() U:SelectSlot(nil) end)
-    self.overview:SetPoint("TOPLEFT",14,-78)
+    self.overview:SetPoint("TOPLEFT",14,-62)
     self.weaponButton=button(panel,"Compare weapons",174,function()
         U:HideTooltip(); U.weaponsOnly=true; U.slot=nil; U.setup=nil; U.offset=0; U:Refresh()
     end)
-    self.weaponButton:SetPoint("TOPLEFT",14,-106)
-    label(panel,"JUMP TO SLOT",16,-133,172,Skin.colors.muted,9)
+    self.weaponButton:SetPoint("TOPLEFT",14,-90)
+    label(panel,"JUMP TO SLOT",16,-116,172,Skin.colors.muted,9)
     self.slotButtons={}
     for i,slot in ipairs(slots) do
         slot=slot==16 and "twoHand" or slot==17 and "paired" or slot
@@ -512,7 +542,7 @@ function U:Attach()
         local tab=button(panel,caption,85,function() U:SelectSlot(key) end)
         tab:SetSize(85,18); tab.caption:SetFont(STANDARD_TEXT_FONT,11,"")
         tab.caption:SetHeight(18); tab.caption:SetPoint("TOPLEFT",4,0); tab.caption:SetWidth(77)
-        tab:SetPoint("TOPLEFT",14+((i-1)%2)*89,-155-math.floor((i-1)/2)*19)
+        tab:SetPoint("TOPLEFT",14+((i-1)%2)*89,-138-math.floor((i-1)/2)*19)
         self.slotButtons[key]=tab
     end
     self.heading=label(panel,"",204,-78,430,Skin.colors.white,14)
@@ -522,16 +552,16 @@ function U:Attach()
         if U.setup then U.setup=nil elseif U.slot then U.slot=nil else U.weaponsOnly=false end
         U.offset=0; U:Refresh()
     end)
-    Skin.PlaceBackButton(self.back,panel,76,204,24)
-    label(panel,"ITEM / SLOT",252,-117,260,Skin.colors.muted,9)
-    label(panel,"SCORE CHANGE",526,-117,95,Skin.colors.muted,9)
-    local priceHeader=label(panel,"LISTING PRICE",640,-117,120,Skin.colors.muted,9); priceHeader:SetJustifyH("RIGHT")
+    Skin.PlaceBackButton(self.back,panel,60,204,24)
+    self.itemHeader=label(panel,"ITEM / SLOT",252,-117,260,Skin.colors.muted,9)
+    self.scoreHeader=label(panel,"SCORE CHANGE",526,-117,95,Skin.colors.muted,9)
+    local priceHeader=label(panel,"LISTING PRICE",640,-117,120,Skin.colors.muted,9); priceHeader:SetJustifyH("RIGHT"); self.priceHeader=priceHeader
     self.empty=CreateFrame("Frame",nil,panel); self.empty:SetPoint("TOPLEFT",204,-155); self.empty:SetSize(558,150)
     self.emptyTitle=label(self.empty,"",12,-24,534,Skin.colors.white,18); self.emptyTitle:SetJustifyH("CENTER")
     self.emptyText=label(self.empty,"",12,-60,534,Skin.colors.muted,11); self.emptyText:SetJustifyH("CENTER")
     label(self.empty,"Percentages compare item scores, not total character damage.",20,-99,518,Skin.colors.muted,10):SetJustifyH("CENTER")
     self.rows={}
-    for i=1,visibleRows do
+    for i=1,16 do
         local row=CreateFrame("Button",nil,panel,"BackdropTemplate"); self.rows[i]=row
         row.hardcoreBuddyAuctionRow=true
         -- The native GameTooltip OnUpdate calls its owner's UpdateTooltip.
@@ -591,7 +621,7 @@ function U:Attach()
     panel:EnableMouseWheel(true); panel:SetScript("OnMouseWheel",function(_,delta)
         self.scroll:SetValue(math.max(0,math.min(self.offset-delta*3,#(self.display or {})-visibleRows)))
     end)
-    local progressTrack=panel:CreateTexture(nil,"BACKGROUND"); progressTrack:SetTexture("Interface\\Buttons\\WHITE8x8")
+    local progressTrack=panel:CreateTexture(nil,"BACKGROUND"); self.progressTrack=progressTrack; progressTrack:SetTexture("Interface\\Buttons\\WHITE8x8")
     progressTrack:SetPoint("TOPLEFT",14,-336); progressTrack:SetSize(762,3); progressTrack:SetVertexColor(0.12,0.16,0.19,1)
     self.progressFill=panel:CreateTexture(nil,"ARTWORK"); self.progressFill:SetTexture("Interface\\Buttons\\WHITE8x8")
     self.progressFill:SetPoint("TOPLEFT",14,-336); self.progressFill:SetSize(1,3)
@@ -600,10 +630,12 @@ function U:Attach()
     self.diagnosticsButton:SetPoint("TOPRIGHT",-14,-345)
     panel:Hide()
     panel:SetScript("OnHide",function()
-        self:HideTooltip()
+        self:HideTooltip(); A.AuctionPurchase:Cancel()
+        if self.originalSize then AuctionFrame:SetSize(unpack(self.originalSize)); self.originalSize=nil end
         if self.scan then self:Stop("Scan stopped. Results are partial.") end
     end)
     hooksecurefunc("AuctionFrameTab_OnClick",function(selected)
+        if selected==tab and not self.originalSize then self.originalSize={AuctionFrame:GetWidth(),AuctionFrame:GetHeight()} end
         panel:SetShown(selected==tab)
         if selected==tab then
             if A.AuctionCache:Restore(self) then self.profileKey=profileKey(self.profile) end
@@ -615,6 +647,7 @@ function U:Attach()
         end
     end)
     hooksecurefunc("QueryAuctionItems",function()
+        if not A.AuctionPurchase.sending then A.AuctionPurchase:Cancel() end
         if self.scan and not self.sending then self:Stop("Another auction search started. Results are partial; scan again.") end
     end)
     self:Refresh()
@@ -626,10 +659,11 @@ for _,event in ipairs({"AUCTION_HOUSE_SHOW","AUCTION_HOUSE_CLOSED","AUCTION_ITEM
 U.events:SetScript("OnEvent",function(_,event)
     if event=="AUCTION_HOUSE_SHOW" then U.open=true; U.attachPending=true
     elseif event=="AUCTION_HOUSE_CLOSED" then
-        U.open=false; U:Stop("Auction house closed. Scan again for current listings.")
+        A.AuctionPurchase:Cancel(); U.open=false; U:Stop("Auction house closed. Scan again for current listings.")
         if U.profile then U.cached=true end
     elseif event=="PLAYER_LOGOUT" then A.AuctionCache:Save(U)
     elseif event=="AUCTION_ITEM_LIST_UPDATE" then
+        A.AuctionPurchase:ListUpdated()
         if U.scan and U.scan.phase=="waiting" then U.scan.phase="reading"; U.scan.index=1 end
     elseif event=="PLAYER_REGEN_ENABLED" then if U.open then U.attachPending=true end
     else U:Invalidate() end

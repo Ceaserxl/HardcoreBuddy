@@ -22,12 +22,75 @@ local function questLink(link)
     return class==12 or binding==4
 end
 
+-- Add context beneath the native binding prompt without changing its actions.
+function B:PrepareBindDetails(candidate,row)
+    local G=A.GearAdvisor; local replaced={}
+    local old=G:Equipped(row.slot); if old then replaced[#replaced+1]=old end
+    if candidate.item.equip=="INVTYPE_2HWEAPON" then
+        local off=G:Equipped(17); if off then replaced[#replaced+1]=off end
+    end
+    local profile=G:CurrentProfile()
+    self.pendingBind={link=candidate.link,item=candidate.item,row=row,expires=GetTime()+3,
+        gains=G.GainSummary(candidate.item,profile,replaced,false,false),
+        losses=G.LossSummary(candidate.item,profile,replaced,false,false)}
+    if self.bindHook or not hooksecurefunc or not StaticPopup_Show then return end
+    self.bindHook=true
+    hooksecurefunc("StaticPopup_Show",function(which,_,_,slot)
+        local pending=B.pendingBind
+        if not pending or GetTime()>pending.expires or slot~=pending.row.slot
+            or (which~="EQUIP_BIND" and which~="EQUIP_BIND_REFUNDABLE" and which~="EQUIP_BIND_TRADEABLE") then return end
+        local dialog=StaticPopup_FindVisible and StaticPopup_FindVisible(which)
+        if not dialog then return end
+        B.pendingBind=nil; B:ShowBindDetails(dialog,pending)
+    end)
+end
+
+function B:ShowBindDetails(dialog,pending)
+    local f=self.bindDetails
+    if not f then
+        f=CreateFrame("Frame",nil,dialog,"BackdropTemplate"); self.bindDetails=f
+        A.Skin.Paint(f,"card"); f:SetSize(380,130); f:SetClampedToScreen(true)
+        local function text(y,color)
+            local t=f:CreateFontString(nil,"OVERLAY","GameFontHighlight")
+            t:SetFont(STANDARD_TEXT_FONT,12,""); t:SetPoint("TOPLEFT",54,-y); t:SetWidth(312)
+            t:SetJustifyH("LEFT"); t:SetTextColor(unpack(color)); return t
+        end
+        f.name=text(12,A.Skin.colors.gold); f.score=text(32,A.Skin.colors.green)
+        f.gains=text(54,A.Skin.colors.green); f.losses=text(80,A.Skin.colors.red)
+        f.iconButton=CreateFrame("Button",nil,f); f.iconButton:SetSize(34,34); f.iconButton:SetPoint("TOPLEFT",12,-12)
+        f.icon=f.iconButton:CreateTexture(nil,"ARTWORK"); f.icon:SetAllPoints()
+        A.Skin.Hover(f.iconButton)
+        f.iconButton:SetScript("OnEnter",function(button)
+            GameTooltip:SetOwner(button,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink(f.link); GameTooltip:Show()
+        end)
+        f.iconButton:SetScript("OnLeave",function() GameTooltip:Hide() end)
+        f:SetScript("OnHide",function() GameTooltip:Hide() end)
+    end
+    f:SetParent(dialog); f:ClearAllPoints(); f:SetPoint("TOP",dialog,"BOTTOM",0,-6)
+    if not dialog.hardcoreBuddyBindHook then
+        dialog.hardcoreBuddyBindHook=true
+        dialog:HookScript("OnHide",function() if f:GetParent()==dialog then f:Hide() end end)
+    end
+    f:SetFrameStrata(dialog:GetFrameStrata()); f:SetFrameLevel(dialog:GetFrameLevel()+2)
+    f.link=pending.link
+    local icon=itemAPI("GetItemIconByID") or GetItemIcon
+    f.icon:SetTexture(icon and icon(pending.item.id) or "Interface\\Icons\\INV_Misc_QuestionMark")
+    f.name:SetText(pending.item.name)
+    f.score:SetText(pending.row.label.." | "..pending.row.text)
+    f.gains:SetText(pending.gains and "Stats gained: "..pending.gains or "")
+    f.losses:SetText(pending.losses and "Stats lost: "..pending.losses or "")
+    f.losses:ClearAllPoints(); f.losses:SetPoint("TOPLEFT",54,-(62+f.gains:GetStringHeight()))
+    f:SetHeight(math.max(90,76+f.gains:GetStringHeight()+f.losses:GetStringHeight()))
+    f:Show()
+end
+
 function B:Enabled()
     return A.GearAdvisor:IsEnabled() and (A.db.gearBagNotify or A.db.gearAutoEquip)
 end
 
 function B:Safe()
-    return not InCombatLockdown() and not (UnitIsDeadOrGhost and UnitIsDeadOrGhost("player"))
+    return not (self.bindDetails and self.bindDetails:IsVisible())
+        and not InCombatLockdown() and not (UnitIsDeadOrGhost and UnitIsDeadOrGhost("player"))
         and not (UnitOnTaxi and UnitOnTaxi("player")) and not (GetCursorInfo and GetCursorInfo())
 end
 
@@ -111,6 +174,7 @@ function B:Finish(job)
         local equip=itemAPI("EquipItemByName")
         if equip then
             self.attempted[best.key]=true
+            self:PrepareBindDetails(best.candidate,best.row)
             -- One mutation per pass. The equipment event triggers fresh scoring.
             -- Never accept a bind popup or clear a cursor on the user's behalf.
             equip(best.candidate.link,best.row.slot)

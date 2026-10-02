@@ -65,6 +65,7 @@ WeaponSetAdvisor.lua
 AuctionDiagnostics.lua
 AuctionCache.lua
 AuctionUpgrades.lua
+AuctionPurchase.lua
 
 Deaths\Model.lua
 Deaths\Core.lua
