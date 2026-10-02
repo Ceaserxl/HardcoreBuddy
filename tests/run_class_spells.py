@@ -131,6 +131,44 @@ for _,class in ipairs({"MAGE","HUNTER","WARRIOR"}) do
     A.window.atLevel.scripts.OnLeave(A.window.atLevel)
     assert(A.window.atLevel.active==false and A.window.atLevel.skinButton.active==false,"Collapsed future spells clear selected styling")
 end
+-- Live spellbook chooses untrained current spells before future training.
+do
+    local oldData=A.Data.ClassSpells.Mage; local oldInfo=GetSpellInfo
+    local oldKnown,oldPlayer,oldBook=IsSpellKnown,IsPlayerSpell,C_SpellBook
+    local names={[100001]='Bolt',[100002]='Bolt',[100003]='Talent Spell',[100004]='Future Spell'}
+    GetSpellInfo=function(id) return names[id] or ('Spell '..id),id==100002 and 'Rank 2' or 'Rank 1',135846 end
+    A.Data.ClassSpells.Mage={[2]={{id=100001,cost=10}},[8]={{id=100002,cost=20},{id=100003,cost=30,requiredTalentId=100099}},[12]={{id=100004,cost=40}}}
+    local learned={[100001]=true}
+    IsSpellKnown=function(id) return learned[id] or false end; IsPlayerSpell=nil; C_SpellBook=nil
+    MOCK.class='MAGE'; MOCK.level=10; A.db.profile.mode='live'; A.lastClass=nil
+    local doc=build('Mage',10); local rows=ids(doc)
+    assert(doc.cards[1].title=='Untrained Spells' and doc.total==1 and rows[100002] and not rows[100001] and not rows[100003] and not rows[100004],'Only currently eligible untrained spells appear by default')
+    assert(build('Mage',10,false,nil,'no match').total==0 and build('Mage',10,false,nil,'no match').cards[1].title=='Untrained Spells','Search does not change the selected training category')
+    local expanded=build('Mage',10,true)
+    assert(expanded.cards[1].title==doc.cards[1].title and expanded.cards[1].blocks[1].spellId==100002 and ids(expanded)[100004],'Future spells append without replacing current untrained rows')
+    learned={[100002]=true}; doc=build('Mage',10); rows=ids(doc)
+    assert(doc.cards[1].title=='Available at Trainer' and doc.total==1 and rows[100002] and not rows[100001],'Known higher rank suppresses obsolete untrained lower ranks and fallback uses highest rank')
+    learned[100099]=true; doc=build('Mage',10)
+    assert(doc.cards[1].title=='Untrained Spells' and ids(doc)[100003],'Allocated talent enables its untrained trainer rank')
+    assert(build('Mage',10,false,nil,nil,'preview').cards[1].title=='Next training: Level 12','Preview never uses the live spellbook to hide planned spells')
+    A:Navigate('training'); A.state.filter='Spells'; A.window:Show()
+    for _,event in ipairs({'SPELLS_CHANGED','PLAYER_LEVEL_UP','PLAYER_TALENT_UPDATE','TRAINER_UPDATE'}) do
+        A.needsRefresh=false; MOCK.FireAll(event,10); assert(A.needsRefresh,'Training changes refresh visible current spells')
+    end
+    A.Data.ClassSpells.Mage=oldData; GetSpellInfo=oldInfo
+    -- Verify current-level selection and fallback for every class at level 60.
+    for class in pairs(A.Data.ClassSpells) do
+        MOCK.class=class:upper(); MOCK.level=60
+        IsSpellKnown=function() return false end
+        assert(build(class,60).cards[1].title=='Untrained Spells','Untrained view covers '..class)
+        IsSpellKnown=function() return true end
+        assert(build(class,60).cards[1].title=='Available at Trainer','Current trainer fallback covers '..class)
+    end
+    IsSpellKnown=oldKnown; IsPlayerSpell=oldPlayer; C_SpellBook=oldBook
+    MOCK.class='MAGE'; MOCK.level=40; A.lastClass=nil; A:Navigate('training'); A.state.filter='Spells'; A.window:Show()
+    print('PASS: live untrained/current trainer selection, higher-rank suppression, talent eligibility, future append and refresh across nine classes.')
+end
+
 -- Missing spell data is requested once, then refreshes only the visible Spells page.
 local requests,loaded={},{}
 C_Spell={GetSpellInfo=function(id) if loaded[id] then return {name="Loaded "..id,iconID=135846} end end,

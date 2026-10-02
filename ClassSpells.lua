@@ -70,7 +70,7 @@ function S.PetEntries(context)
     return levels
 end
 
-function S.Build(context,state)
+function S.FutureBuild(context,state)
     local data=A.Data.ClassSpells[context.characterClass] or {}
     local pets=S.PetEntries(context)
     local race
@@ -141,11 +141,76 @@ function S.Build(context,state)
     return {view="training",context=context,cards=cards,continuous=true,page=1,pages=1,total=total,searchable=true,levelFilter=true}
 end
 
+local function known(id)
+    if IsPlayerSpell and IsPlayerSpell(id) then return true end
+    if C_SpellBook and C_SpellBook.IsSpellKnown and C_SpellBook.IsSpellKnown(id) then return true end
+    return IsSpellKnown and IsSpellKnown(id,false) or false
+end
+
+function S.Build(context,state)
+    local _,class=UnitClass("player")
+    local live=context.mode=="live" and class==context.characterClass:upper() and context.level==UnitLevel("player")
+        and (IsPlayerSpell or IsSpellKnown or C_SpellBook and C_SpellBook.IsSpellKnown)
+    if not live then return S.FutureBuild(context,state) end
+    local race
+    if UnitRace then local _,_,id=UnitRace("player"); race=id end
+    local entries,learned,highest={},{},{}
+    local data=A.Data.ClassSpells[context.characterClass] or {}
+    for level=1,context.level do
+        for _,entry in ipairs(data[level] or {}) do
+            if not entry.pet and allowed(entry,context,race) and (not entry.requiredTalentId or known(entry.requiredTalentId)) then
+                local name,rank,icon=spellInfo(entry.id)
+                local row={entry=entry,level=level,name=name,rank=rank,icon=icon}
+                entries[#entries+1]=row
+                -- Classic reports only the current rank as known for some spells.
+                if known(entry.id) then learned[name]=math.max(learned[name] or 0,level) end
+                if not highest[name] or highest[name].level<level then highest[name]=row end
+            end
+        end
+    end
+    local untrained={}
+    for _,row in ipairs(entries) do
+        if not known(row.entry.id) and (learned[row.name] or 0)<row.level then untrained[#untrained+1]=row end
+    end
+    local current=#untrained>0 and untrained or {}
+    if #untrained==0 then for _,row in pairs(highest) do current[#current+1]=row end end
+    table.sort(current,function(a,b)
+        if a.level~=b.level then return a.level<b.level end
+        if a.name~=b.name then return a.name<b.name end
+        return a.entry.id<b.entry.id
+    end)
+    local blocks={}; local query=(state.query or ""):lower()
+    for _,row in ipairs(current) do
+        local entry=row.entry
+        local title=row.name..(row.rank and row.rank~="" and (" | "..row.rank) or "")
+        local source="Level "..row.level.." | Class trainer"
+        local body="Listed cost: "..costText(entry.cost)
+        if entry.requiredTalentId then source=source.." | Requires Talent: "..spellInfo(entry.requiredTalentId) end
+        if (title.." "..body.." "..source):lower():find(query,1,true) then
+            blocks[#blocks+1]={title=title,body=body,icon=row.icon,spellId=entry.id,level=row.level,
+                spellColumns={row.name,row.rank or "—",costText(entry.cost),source}}
+        end
+    end
+    local heading=#untrained>0 and "Untrained Spells" or "Available at Trainer"
+    local cards={{title=heading,blocks=blocks,spellTable=true,fullWidth=true}}
+    local total=#blocks
+    if #blocks==0 then cards[1].blocks={{title=query~="" and "No matching spells" or "No trainer spells available",body=query~="" and "Try clearing your search." or nil}} end
+    if state.showAllFutureSpells then
+        local future=S.FutureBuild(context,state)
+        for _,card in ipairs(future.cards) do cards[#cards+1]=card end
+        total=total+future.total
+    end
+    return {view="training",context=context,cards=cards,continuous=true,page=1,pages=1,total=total,searchable=true,levelFilter=true}
+end
+
 local events=CreateFrame("Frame")
 events:RegisterEvent("SPELL_DATA_LOAD_RESULT")
-events:SetScript("OnEvent",function(_,_,id,success)
-    if not S.pending[id] then return end
-    -- Retain failed requests to avoid a repeated request/refresh loop.
-    if success then S.pending[id]=nil end
+for _,event in ipairs({"SPELLS_CHANGED","PLAYER_LEVEL_UP","PLAYER_TALENT_UPDATE","TRAINER_UPDATE"}) do events:RegisterEvent(event) end
+events:SetScript("OnEvent",function(_,event,id,success)
+    if event=="SPELL_DATA_LOAD_RESULT" then
+        if not S.pending[id] then return end
+        -- Retain failed requests to avoid a repeated request/refresh loop.
+        if success then S.pending[id]=nil end
+    end
     if A.window and A.window:IsShown() and A.state.view=="training" and A.state.filter=="Spells" then A.needsRefresh=true end
 end)

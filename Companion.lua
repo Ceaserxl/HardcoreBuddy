@@ -57,7 +57,7 @@ function C.Tabs(context)
     return context.characterClass=="Hunter" and {"Overview","Zone Advisor","Gear","Talents","Rotation Advisor","Spells","Pet Training","Pet Guide","First Aid","Engineering","Cooking"}
         or {"Overview","Zone Advisor","Gear","Talents","Rotation Advisor","Spells","First Aid","Engineering","Cooking"}
 end
-local tabDescriptions={["Zone Advisor"]="Recommended leveling zones, dangerous NPCs and maps.",Spells="Your next training level and future class and pet spells.",
+local tabDescriptions={["Zone Advisor"]="Recommended leveling zones, dangerous NPCs and maps.",Spells="Untrained spells, current trainer spells and future class and pet training.",
     Gear="Equipment scoring and upgrade advice.",Talents="Your next talent and point-by-point build path.",
     ["Rotation Advisor"]="Mage combat advice and class-filtered consumable preparation highlights.",
     ["Pet Training"]="Learn and teach pet abilities.",["Pet Guide"]="Pet families, abilities, taming sources and care.",

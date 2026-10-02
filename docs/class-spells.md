@@ -1,8 +1,14 @@
 # Companion spell training
 
-Companion > Spells displays the next training level after the selected character
-level. Show all future spells expands it into a continuous list through level 60.
-Search applies to the selected next-level or all-future view. Spell names, ranks,
+Companion > Spells shows untrained class spells available at the live character's
+level. When none are untrained, Available at Trainer shows the highest eligible
+rank of each trainer spell at the current level. Learned higher ranks suppress
+obsolete untrained ranks. Race, faction and allocated talent restrictions apply.
+Training and level/talent changes refresh the visible page.
+
+Planning mode still displays the next training level after the selected level.
+Show all future spells appends future class and pet sections through level 60,
+keeping the current section in place. Search applies to the displayed sections. Spell names, ranks,
 icons and hover descriptions come from the WoW client, with lazy loading for
 uncached spell data.
 
@@ -38,5 +44,7 @@ demon must be summoned to teach it. All pet entries participate in next-level,
 all-future and search views. Companion > Pet Training continues to check the
 active Hunter pet's learned ranks.
 
-This is a future training reference, not a list of unlearned past spells,
-quest rewards or dropped spell books.
+Current class training is checked against the live spellbook. Future pet training
+remains a reference; it does not infer every pet's learned spells. Quest rewards
+and dropped spell books are outside the trainer list. Costs remain reference
+prices, and earlier ranks or class quests may still be prerequisites.
