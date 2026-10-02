@@ -42,8 +42,8 @@ function R:Open()
     A.window:Show(); A:Refresh(true)
 end
 function R:BuildFrames()
-    local f=CreateFrame("Button",nil,UIParent,"BackdropTemplate"); self.panel=f
-    A.Skin.Hover(f)
+    local f=CreateFrame("Frame",nil,UIParent,"BackdropTemplate"); self.panel=f
+    f:EnableMouse(true)
     f:SetSize(330,240); f:SetPoint("RIGHT",UIParent,"RIGHT",-36,35)
     f:SetFrameStrata("MEDIUM"); f:SetClampedToScreen(true); A.Skin.Paint(f,"card")
     f:SetMovable(true); f:RegisterForDrag("LeftButton")
@@ -56,7 +56,7 @@ function R:BuildFrames()
     end
     local function stopDrag()
         if not self.dragging then return end
-        f:StopMovingOrSizing(); self.dragging=nil; self.ignoreClickUntil=GetTime()+0.2
+        f:StopMovingOrSizing(); self.dragging=nil
         local point,_,relative,x,y=f:GetPoint()
         self.settings.position={point=point,relative=relative,x=x,y=y}
     end
@@ -84,9 +84,6 @@ function R:BuildFrames()
         if self.previewUntil and not self.dragging and GetTime()>=self.previewUntil then
             self.previewUntil=nil; self.previewRows=nil; self:Refresh()
         end
-    end)
-    f:SetScript("OnClick",function()
-        if not self.dragging and (not self.ignoreClickUntil or GetTime()>self.ignoreClickUntil) then self:Open() end
     end)
     local close=CreateFrame("Button",nil,f,"BackdropTemplate"); f.close=close
     close:SetSize(22,22); close:SetPoint("TOPRIGHT",-6,-6); A.Skin.Button(close,"utility")

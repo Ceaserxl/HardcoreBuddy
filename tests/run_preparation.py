@@ -104,8 +104,10 @@ R:Refresh(); assert(R.dragging and R.panel:IsShown(),"Bag refresh must not inter
 R.panel:ClearAllPoints(); R.panel:SetPoint("CENTER",UIParent,"CENTER",123,45)
 R.panel.scripts.OnDragStop(R.panel)
 assert(not R.dragging and R.settings.position.x==123 and R.settings.position.y==45)
-MOCK.Click(R.panel); assert(opens==0,"Releasing a drag must not open Supplies")
-now=now+1; MOCK.Click(R.panel); assert(opens==1)
+local x,y=R.panel:GetRect()
+MOCK.ClickAt(x+15,y+16); assert(opens==0,"Releasing a drag must not open Supplies")
+now=now+1; MOCK.ClickAt(x+15,y+16); assert(opens==0,"Panel clicks do not open Supplies")
+MOCK.Click(R.panel.review); assert(opens==1,"Review button opens Supplies")
 R.panel.scripts.OnDragStart(R.panel); combat=true; R:Refresh()
 assert(not R.dragging and not R.panel:IsShown(),"Unsafe hide stops and saves movement")
 combat=false; R:Refresh(); R.Open=originalOpen
