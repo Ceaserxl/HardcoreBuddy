@@ -22,7 +22,7 @@ local function questLink(link)
     return class==12 or binding==4
 end
 
--- Add context beneath the native binding prompt without changing its actions.
+-- Insert gear context into Blizzard's own popup layout, above its buttons.
 function B:PrepareBindDetails(candidate,row)
     local G=A.GearAdvisor; local replaced={}
     local old=G:Equipped(row.slot); if old then replaced[#replaced+1]=old end
@@ -46,18 +46,20 @@ function B:PrepareBindDetails(candidate,row)
 end
 
 function B:ShowBindDetails(dialog,pending)
+    if dialog.insertedFrame and dialog.insertedFrame~=self.bindDetails then return end
+    if not dialog.Resize or not dialog.SetupInsertedFrame or not dialog.SetupElementAnchoring then return end
     local f=self.bindDetails
     if not f then
-        f=CreateFrame("Frame",nil,dialog,"BackdropTemplate"); self.bindDetails=f
-        A.Skin.Paint(f,"card"); f:SetSize(380,130); f:SetClampedToScreen(true)
+        f=CreateFrame("Frame",nil,dialog); self.bindDetails=f
+        f:SetSize(290,110)
         local function text(y,color)
             local t=f:CreateFontString(nil,"OVERLAY","GameFontHighlight")
-            t:SetFont(STANDARD_TEXT_FONT,12,""); t:SetPoint("TOPLEFT",54,-y); t:SetWidth(312)
+            t:SetFont(STANDARD_TEXT_FONT,12,""); t:SetPoint("TOPLEFT",44,-y); t:SetWidth(246)
             t:SetJustifyH("LEFT"); t:SetTextColor(unpack(color)); return t
         end
         f.name=text(12,A.Skin.colors.gold); f.score=text(32,A.Skin.colors.green)
         f.gains=text(54,A.Skin.colors.green); f.losses=text(80,A.Skin.colors.red)
-        f.iconButton=CreateFrame("Button",nil,f); f.iconButton:SetSize(34,34); f.iconButton:SetPoint("TOPLEFT",12,-12)
+        f.iconButton=CreateFrame("Button",nil,f); f.iconButton:SetSize(34,34); f.iconButton:SetPoint("TOPLEFT",0,-12)
         f.icon=f.iconButton:CreateTexture(nil,"ARTWORK"); f.icon:SetAllPoints()
         A.Skin.Hover(f.iconButton)
         f.iconButton:SetScript("OnEnter",function(button)
@@ -66,11 +68,8 @@ function B:ShowBindDetails(dialog,pending)
         f.iconButton:SetScript("OnLeave",function() GameTooltip:Hide() end)
         f:SetScript("OnHide",function() GameTooltip:Hide() end)
     end
-    f:SetParent(dialog); f:ClearAllPoints(); f:SetPoint("TOP",dialog,"BOTTOM",0,-6)
-    if not dialog.hardcoreBuddyBindHook then
-        dialog.hardcoreBuddyBindHook=true
-        dialog:HookScript("OnHide",function() if f:GetParent()==dialog then f:Hide() end end)
-    end
+    dialog.insertedFrame=f
+    dialog:SetupInsertedFrame(f)
     f:SetFrameStrata(dialog:GetFrameStrata()); f:SetFrameLevel(dialog:GetFrameLevel()+2)
     f.link=pending.link
     local icon=itemAPI("GetItemIconByID") or GetItemIcon
@@ -79,9 +78,16 @@ function B:ShowBindDetails(dialog,pending)
     f.score:SetText(pending.row.label.." | "..pending.row.text)
     f.gains:SetText(pending.gains and "Stats gained: "..pending.gains or "")
     f.losses:SetText(pending.losses and "Stats lost: "..pending.losses or "")
-    f.losses:ClearAllPoints(); f.losses:SetPoint("TOPLEFT",54,-(62+f.gains:GetStringHeight()))
-    f:SetHeight(math.max(90,76+f.gains:GetStringHeight()+f.losses:GetStringHeight()))
+    local y=12+f.name:GetStringHeight()+6
+    for _,line in ipairs({f.score,f.gains,f.losses}) do
+        line:ClearAllPoints(); line:SetPoint("TOPLEFT",44,-y)
+        if line:GetText()~="" then y=y+line:GetStringHeight()+6 end
+    end
+    f:SetHeight(math.max(54,y+4))
     f:Show()
+    -- Re-anchor the native elements after insertion, then expand its border.
+    dialog:SetupElementAnchoring()
+    dialog:Resize()
 end
 
 function B:Enabled()
