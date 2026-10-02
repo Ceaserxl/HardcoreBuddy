@@ -40,8 +40,27 @@ pressure. Solo approaching attackers can take precedence with a Frostbolt slow.
 Fire Blast finishes enemies or supplies instant damage while moving; it does not
 displace a normal filler just because its damage per GCD is higher. Presence of
 Mind, Arcane Power and Combustion are used when their observed context supports
-them. Scorch upkeep is reserved for longer Fire fights. Wand fallback does not
-tell the player to toggle an already active Shoot off.
+them. Scorch upkeep is reserved for longer Fire fights.
+
+Pyroblast has a dedicated pre-combat opener: a learned usable rank, confirmed
+distance of at least 25 yards, an unengaged target, at least 80% health, and enough
+mana for both the opener and a filler. It must hit harder than that filler. Moving,
+already casting, or an existing target DoT suppresses the long opener. In combat,
+Pyroblast remains limited to Presence of Mind opportunities.
+
+Wand finishing reads the equipped wand's damage and speed, estimates whole shots,
+and considers the five-second mana-regeneration rule. It permits a quick finish
+or a short low-mana regeneration window when healthy and safe; unknown wand data,
+nearby attackers, movement, recent damage and Clearcasting suppress this choice.
+An approaching attacker additionally needs confirmed distance and a lasting slow.
+Neither finishing nor fallback tells the player to toggle an active Shoot off.
+
+Mana-gem preparation optionally highlights the highest learned gem when missing
+from bags, outside combat and with sufficient mana. In combat, a carried usable
+gem is highlighted when its maximum restoration fits the missing mana. Shared
+item cooldowns are respected. Gem use waits for a current cast/channel to finish;
+emergency defenses and interrupts retain priority. Direct item buttons and
+Blizzard-resolved item macros are supported. Nothing is conjured or used automatically.
 
 Area comparisons include Arcane Explosion, Blast Wave, Cone of Cold, Flamestrike
 and Blizzard. Nearby unengaged or crowd-controlled enemies and unknown positions
@@ -97,7 +116,7 @@ This is a practical priority helper, not a full encounter simulator or guarantee
 of maximum DPS. Unknown enemies, line of sight, positions, resistances, future
 procs and damage from other players cannot be predicted perfectly. Partial
 resistance, travel time, consumable/trinket optimization and encounter scripts are
-not simulated. Utility such as portals, conjuring, Amplify/Dampen Magic and group
+not simulated. Utility such as portals, food/water conjuring, Amplify/Dampen Magic and group
 buff assignment remains manual. PvP, other class rotations and third-party bar
 integrations are outside this Mage helper.
 

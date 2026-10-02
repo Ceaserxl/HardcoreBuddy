@@ -228,6 +228,8 @@ function R:PowerForecast(s)
     normal=type(normal)=="number" and math.max(0,normal) or 0
     casting=type(casting)=="number" and math.max(0,casting) or 0
     self.powerSample=sample
+    s.normalRegen=normal
+    s.regenDelay=sample.spent and math.max(0,5-(s.time-sample.spent)) or s.combat and 5 or 0
     local horizon=1 -- Give the player reaction time even when no GCD is running.
     local start,duration,enabled=cooldown(61304)
     if enabled~=false and type(start)=="number" and type(duration)=="number" and duration<=1.55 then
@@ -528,6 +530,43 @@ function R:ObserveCombat()
         elseif event=="SPELL_CAST_SUCCESS" and key=="flamestrike" then self.flamestrike=now+8 end
     end
 end
+function R:MageResources(s)
+    if s.class~="MAGE" then return end
+    local ranged=GetInventoryItemID and GetInventoryItemID("player",18)
+    local instant=C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
+    if ranged and instant and UnitRangedDamage then
+        local _,_,_,_,_,classID,subclass=instant(ranged)
+        if classID==2 and subclass==19 then
+            local speed,low,high=UnitRangedDamage("player")
+            if type(speed)=="number" and speed>0 and type(low)=="number" and type(high)=="number" then
+                s.wandSpeed=speed; s.wandDamage=(low+high)/2*.9 -- Allow for misses/resists; no crit assumption.
+            end
+        end
+    end
+    local count=C_Item and C_Item.GetItemCount or GetItemCount
+    local itemCooldown=C_Container and C_Container.GetItemCooldown or C_Item and C_Item.GetItemCooldown or GetItemCooldown
+    local itemInfo=C_Item and C_Item.GetItemInfo or GetItemInfo
+    local usable=C_Item and C_Item.IsUsableItem or IsUsableItem
+    if not count then return end
+    local checkedPreparation=false
+    for _,gem in ipairs(A.MageRotation.gems) do
+        local owned=count(gem.id,false,false) or 0 -- Bags only; never plan around bank gems.
+        if not checkedPreparation and s.spells[gem.key] then
+            checkedPreparation=true
+            if owned==0 then s.prepareGem=gem.key end
+        end
+        if owned>0 and not s.spells.managem and itemCooldown and itemInfo and usable then
+            local start,duration,enabled=itemCooldown(gem.id)
+            local name,_,_,_,_,_,_,_,_,icon=itemInfo(gem.id)
+            local available=usable(gem.id)
+            if name and (available==true or available==1) and (enabled==1 or enabled==true)
+                and type(start)=="number" and type(duration)=="number" and start+duration<=s.time then
+                s.spells.managem={id=gem.id,item=true,name=name,icon=icon,restore=gem.maximum,
+                    ready=true,usable=true,usableNow=true,cooldownRemaining=0}
+            end
+        end
+    end
+end
 function R:Snapshot()
     if self.dirty then self:RefreshSpells() end
     local s={class=self.class,spells={},buffs={},combat=combat(),validTarget=hostile("target"),time=clock()}
@@ -568,6 +607,7 @@ function R:Snapshot()
         s.spells[key]=self:SpellState(spell,not selfSpell and "target" or nil,s)
         s.spells[key].immune=self.immune and self.immune[key] and self.immune[key]>s.time or false
     end
+    self:MageResources(s)
     self:UpdateRangePreview(s)
     return s
 end
@@ -626,8 +666,18 @@ function R:Highlight(spell,optional)
     for button,glow in pairs(self.highlights) do
         local slot=button.action or button.GetAttribute and button:GetAttribute("action")
         local match=false
-        if spell and button:IsVisible() then
-            match=actionSpell(slot)==spell.id -- Preserve exact rank matching for spells and macros.
+        if spell and slot and GetActionInfo and button:IsVisible() then
+            if spell.item then
+                local kind,id,subtype=GetActionInfo(slot)
+                if kind=="macro" and subtype=="item" then kind="item"
+                elseif kind=="macro" and GetMacroItem then
+                    local _,link=GetMacroItem(id)
+                    id=link and tonumber(link:match("item:(%d+)")); kind="item"
+                end
+                match=kind=="item" and id==spell.id
+            else
+                match=actionSpell(slot)==spell.id -- Preserve exact rank matching for spells and macros.
+            end
         end
         if match then colorHighlight(glow,optional) end
         glow:SetShown(match)

@@ -21,6 +21,43 @@ local function decide(s,expected,label)
     check(actual==expected,(label or '')..': expected '..tostring(expected)..', got '..tostring(actual))
 end
 check(not R.supported.ROGUE and not R.definitions.ROGUE,'Rogue prototype removed')
+do
+    local s=state({'fireball','pyroblast'}); s.combat=false; s.grouped=false; s.targetDistance=30
+    decide(s,'pyroblast','Dedicated distant Pyroblast opener beats sustained throughput')
+    for _,field in ipairs({'combat','targetCombat','casting','moving','targetDotted'}) do
+        s[field]=true; check(R.Decide(s)~='pyroblast','No long opener with '..field); s[field]=false
+    end
+    s.targetDistance=15; check(R.Decide(s)~='pyroblast','No long opener close to enemy')
+    s.targetDistance=nil; check(R.Decide(s)~='pyroblast','Unknown distance cannot authorize opener')
+    s.targetDistance=30; s.power=1; check(R.Decide(s)~='pyroblast','Opener reserves mana for following cast')
+    s=state({'frostbolt','shoot'}); s.targetHP=40; s.wandDamage=50; s.wandSpeed=1.5
+    decide(s,'shoot','Wand finishes without another mana expenditure')
+    s.wanding=true; decide(s,nil,'Wand finisher never toggles active Shoot off'); s.wanding=false
+    s.targetHP=150; s.powerPercent=20; s.normalRegen=30; s.regenDelay=1
+    decide(s,'shoot','Short low-mana finish permits regeneration')
+    s.regenDelay=5; decide(s,'frostbolt','No invented regen before five-second rule expires')
+    s.regenDelay=1
+    s.attackingPlayer=true; check(R.Decide(s)~='shoot','Closing attacker suppresses deliberate wand finish')
+    s.targetDistance=30; s.slowRemaining=10; decide(s,'shoot','Distant slowed attacker permits short wand finish')
+    s.attackingPlayer=false
+    for _,field in ipairs({'recentDamage','moving','targetClose','casting'}) do
+        s[field]=true; check(R.Decide(s)~='shoot','No deliberate wand finishing with '..field); s[field]=false
+    end
+    s.wandDamage=nil; decide(s,'frostbolt','Unknown wand damage preserves filler')
+    s=state({'frostbolt'}); s.spells.managem={id=8008,item=true,restore=1200,ready=true,usable=true}
+    s.power=3500; decide(s,'managem','Use carried gem when full restoration fits')
+    s.power=4000; decide(s,'frostbolt','Do not waste gem restoration')
+    s.power=3500; s.spells.managem.ready=false; decide(s,'frostbolt','Respect shared gem cooldown')
+    s.spells.managem.ready=true; s.casting=true; decide(s,'frostbolt','Gem does not interrupt current cast')
+    s.casting=false; s.spells.counterspell={ready=true,usable=true}; s.interrupt=true
+    decide(s,'counterspell','Enemy interrupt takes priority over mana gem')
+    s=state({'frostbolt','ruby'}); s.combat=false; s.prepareGem='ruby'; s.spells.ruby.cost=1200
+    decide(s,'ruby','Prepare learned missing gem before pull')
+    local _,_,optional=R.Decide(s); check(optional,'Gem preparation uses optional glow')
+    s.prepareGem=nil; decide(s,'frostbolt','Owned gem does not prompt reconjuring')
+    s.prepareGem='ruby'; s.moving=true; decide(s,'frostbolt','No conjuring while moving')
+    s.moving=false; s.spells.ruby.cost=4900; decide(s,'frostbolt','Preparation preserves combat mana reserve')
+end
 -- Every level and all three talent emphases can choose only a learned rank.
 for level=1,60 do
     for _,build in ipairs({'fire','frost','arcane'}) do

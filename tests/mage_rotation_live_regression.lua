@@ -149,6 +149,41 @@ do
     now=endTime+1.1; R:Update(); check(R.current.id==2136,'Live idle handoff eventually allows new advice')
     UnitCastingInfo=oldCasting; R.Decide=oldDecide; R.castPlan=nil; R:Update()
 end
+do
+    local oldItem,oldContainer,oldInventory,oldRanged=C_Item,C_Container,GetInventoryItemID,UnitRangedDamage
+    local owned,cd,subclass=1,0,19
+    C_Item={GetItemCount=function(id,bank) check(bank==false,'Gem count excludes bank'); return id==8008 and owned or 0 end,
+        GetItemInfo=function() return 'Mana Ruby',nil,nil,nil,nil,nil,nil,nil,nil,123 end,
+        IsUsableItem=function() return true end,
+        GetItemInfoInstant=function() return 1,nil,nil,nil,nil,2,subclass end}
+    C_Container={GetItemCooldown=function() return cd,120,1 end}
+    GetInventoryItemID=function() return 1 end
+    UnitRangedDamage=function() return 1.5,40,60 end
+    local function resources()
+        local s={class='MAGE',time=200,spells={ruby={}}}; R:MageResources(s); return s
+    end
+    local s=resources(); check(s.wandSpeed==1.5 and s.wandDamage==45,'Live wand damage read conservatively')
+    check(s.spells.managem and s.spells.managem.item and not s.prepareGem,'Carried gem becomes item recommendation')
+    cd=150; s=resources(); check(not s.spells.managem,'Live gem cooldown suppresses use')
+    owned=0; s=resources(); check(s.prepareGem=='ruby' and not s.spells.managem,'Consumed gem enables preparation')
+    subclass=2; s=resources(); check(not s.wandDamage,'Do not treat other ranged weapons as wands')
+    local oldCount,oldCooldown,oldInfo,oldUsable=GetItemCount,GetItemCooldown,GetItemInfo,IsUsableItem
+    GetItemCount=C_Item.GetItemCount; GetItemInfo=C_Item.GetItemInfo; IsUsableItem=C_Item.IsUsableItem
+    GetItemCooldown=C_Container.GetItemCooldown; C_Item=nil; C_Container=nil; owned=1; cd=0
+    s=resources(); check(s.spells.managem and s.spells.managem.id==8008,'Legacy gem API fallback')
+    GetItemCount,GetItemCooldown,GetItemInfo,IsUsableItem=oldCount,oldCooldown,oldInfo,oldUsable
+    C_Item,C_Container,GetInventoryItemID,UnitRangedDamage=oldItem,oldContainer,oldInventory,oldRanged
+    local oldAction,oldMacro=GetActionInfo,GetMacroItem
+    GetActionInfo=function() return 'item',8008 end
+    R:Highlight({id=8008,item=true}); check(glow:IsShown(),'Direct mana gem action highlights')
+    GetActionInfo=function() return 'macro',8008,'item' end
+    R:Highlight({id=8008,item=true}); check(glow:IsShown(),'Resolved item macro highlights')
+    GetActionInfo=function() return 'macro',1 end
+    GetMacroItem=function() return 'Mana Ruby','item:8008' end
+    R:Highlight({id=8008,item=true}); check(glow:IsShown(),'Legacy item macro highlights')
+    R:Highlight({id=8008}); check(not glow:IsShown(),'Item macro is never treated as matching spell')
+    GetActionInfo,GetMacroItem=oldAction,oldMacro
+end
 MOCK.class='ROGUE'; check(R:Mode()=='disabled','Old Rogue saved mode no longer enables removed prototype')
 MOCK.class='MAGE'; R:Update()
 print('PASS: '..count..' Mage rotation, live adapter, UI and highlight regression checks.')

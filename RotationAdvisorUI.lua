@@ -68,7 +68,7 @@ function R:CreateView(parent)
     view.next:EnableMouse(true)
     view.next:SetScript("OnEnter",function(frame)
         if self.current then
-            GameTooltip:SetOwner(frame,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink("spell:"..self.current.id)
+            GameTooltip:SetOwner(frame,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink((self.current.item and "item:" or "spell:")..self.current.id)
             if self.reason and self.reason~="" then GameTooltip:AddLine(self.reason,1,.8,.4,true) end
             GameTooltip:Show()
         end

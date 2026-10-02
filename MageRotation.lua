@@ -8,12 +8,16 @@ M.definitions={
     coldsnap=12472,evocation=12051,shoot=5019,polymorph=118,decurse=475,
     intellect=1459,frostarmor=168,icearmor=7302,magearmor=6117,fireward=543,frostward=6143,
     presence=12043,arcanepower=12042,combustion=11129,slowfall=130,
+    agate=759,jade=3552,citrine=10053,ruby=10054,
 }
+M.gems={{key="ruby",id=8008,maximum=1200},{key="citrine",id=8007,maximum=925},
+    {key="jade",id=5513,maximum=650},{key="agate",id=5514,maximum=425}}
 M.selfSpells={explosion=true,nova=true,cone=true,blastwave=true,barrier=true,shield=true,
     iceblock=true,blink=true,coldsnap=true,evocation=true,intellect=true,frostarmor=true,
     icearmor=true,magearmor=true,fireward=true,frostward=true,presence=true,arcanepower=true,combustion=true,decurse=true,slowfall=true}
 M.area={explosion=true,nova=true,cone=true,blastwave=true,blizzard=true,flamestrike=true}
 M.ground={blizzard=true,flamestrike=true}
+for _,gem in ipairs(M.gems) do M.selfSpells[gem.key]=true end
 M.buffIDs={clearcasting=12536,presence=12043,arcanepower=12042,combustion=11129,iceblock=11958,hypothermia=41425}
 M.debuffIDs={scorch=22959,winterschill=12579,frostbite=12494}
 
@@ -121,6 +125,10 @@ function M.Decide(s)
     end
     -- Pre-pull upkeep is optional (red). Mounting does not remove combat advice.
     urgentPhase=false
+    if s.combat and not s.casting and not s.channelKey and can("managem",true)
+        and (s.maxPower or 0)-(s.power or 0)>=(s.spells.managem.restore or math.huge) then
+        return "managem","Restore mana without wasting the gem's recovery.",false,true
+    end
     if not s.combat and not s.casting then
         if mp<25 and not s.moving and not s.mounted and not s.targetCombat and can("evocation",true) then return choose("evocation","Recover mana before pulling.",true) end
         if mp>40 and remaining(s,"intellect")==0 and can("intellect") then return choose("intellect","Maintain Arcane Intellect.",true) end
@@ -132,6 +140,10 @@ function M.Decide(s)
             if can("magearmor") then return choose("magearmor","Maintain your armor buff.",true) end
         end
         if s.validTarget and not s.controlled and mp>65 and remaining(s,"barrier")==0 and can("barrier") then return choose("barrier","Shield before pulling.",true) end
+        if not s.targetCombat and not s.moving and not s.mounted and mp>80 and s.prepareGem and can(s.prepareGem,true)
+            and (s.power or 0)-(s.spells[s.prepareGem].cost or math.huge)>=(s.maxPower or 0)*.3 then
+            return choose(s.prepareGem,"Conjure a mana gem before the next pull.",true)
+        end
     end
     if not s.validTarget or s.targetPlayer or s.controlled then return nil,"" end
     if s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>1 then return nil,"" end
@@ -142,9 +154,18 @@ function M.Decide(s)
     for _,key in ipairs({"fireball","frostbolt","scorch","missiles","pyroblast"}) do
         if can(key) then
             local e=M.Estimate(s,key)
-            if e and (key~="pyroblast" or not s.combat or remaining(s,"presence")>0) then
+            if e and (key~="pyroblast" or remaining(s,"presence")>0) then
                 if not bestEstimate or e.score>bestEstimate.score then best,bestEstimate=key,e end
             end
+        end
+    end
+    -- Spend the long opening cast before combat, never while an enemy is closing.
+    if not s.combat and not s.targetCombat and not s.casting and not s.moving and not s.targetDotted
+        and s.targetDistance and s.targetDistance>=25 and hp>=80 and can("pyroblast",true) then
+        local opener=M.Estimate(s,"pyroblast")
+        local filler=M.Estimate(s,"fireball") or M.Estimate(s,"frostbolt")
+        if opener and filler and opener.damage>filler.damage and (s.power or 0)>=opener.cost+filler.cost then
+            return choose("pyroblast","Open from a safe distance before the enemy is engaged.")
         end
     end
     -- A slow buys casting time when soloing, regardless of the damage build.
@@ -187,6 +208,19 @@ function M.Decide(s)
         area("explosion",s.nearby)
     end
     if aoe then return choose(aoe,M.ground[aoe] and "Place the area spell on the engaged group." or "Area damage for the nearby engaged group.") end
+    -- Estimate whole wand shots conservatively; do not trade safety for regen.
+    if s.combat and not s.casting and not s.moving and hp>=75 and not s.recentDamage and not s.targetClose
+        and s.targets==1 and can("shoot") and s.wandDamage and s.wandDamage>0 and (s.wandSpeed or 0)>0
+        and s.targetHP and s.targetHP>0 and remaining(s,"clearcasting")==0 then
+        local seconds=math.ceil(s.targetHP/s.wandDamage)*s.wandSpeed
+        local recovered=math.max(0,seconds-(s.regenDelay or 5))*(s.normalRegen or 0)
+        local castSeconds=bestEstimate and math.ceil(s.targetHP/math.max(1,bestEstimate.damage))*math.max(1.5,bestEstimate.cast) or math.huge
+        local safeWindow=not s.attackingPlayer or s.targetDistance and s.targetDistance>=25 and (s.slowRemaining or 0)>=seconds
+        if safeWindow and (seconds<=math.min(3,castSeconds+1) or mp<35 and seconds<=6 and recovered>0) then
+            if s.wanding then return nil,"" end
+            return choose("shoot","Finish with the wand while conserving and recovering mana.")
+        end
+    end
     if can("fireblast") then
         local e=M.Estimate(s,"fireblast")
         if s.moving or (e and s.targetHP and s.targetHP<=e.damage) or (s.frozen and (s.frozenRemaining or 0)<1.5) then
