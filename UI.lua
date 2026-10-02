@@ -200,7 +200,10 @@ local supplyEnds={0.31,0.59,0.74,0.86,1}
 local function placeSupplyCell(label,text,index,width,y,header)
     local usable=width-24
     local inset=index==1 and not header and 36 or 0
-    measure(label,text,usable*(supplyEnds[index]-supplyStarts[index])-inset,12+usable*supplyStarts[index]+inset,y)
+    local stockStart=math.min(usable*supplyStarts[5],usable-110)
+    local start=index==5 and stockStart or usable*supplyStarts[index]
+    local finish=index==4 and stockStart-8 or usable*supplyEnds[index]
+    measure(label,text,finish-start-inset,12+start+inset,y)
     label:SetWordWrap(false); label:SetHeight(18)
 end
 local function renderBlock(frame, block, width)
@@ -494,14 +497,15 @@ local function renderBlock(frame, block, width)
         -- Classification and stock share a right-hand column. Quantity editing
         -- is available only after opening the item or its rank details.
         frame:SetHeight(56); y=56
+        local stockWidth=math.max(84,frame.stock:GetStringWidth()+4)
         frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
-        measure(frame.title,block.title,width-150,52,8); frame.title:SetHeight(18); frame.title:SetWordWrap(false)
+        measure(frame.title,block.title,width-66-stockWidth,52,8); frame.title:SetHeight(18); frame.title:SetWordWrap(false)
         frame.body:SetFont(STANDARD_TEXT_FONT,12,"")
-        measure(frame.body,block.body,width-150,52,30); frame.body:SetHeight(16); frame.body:SetWordWrap(false)
+        measure(frame.body,block.body,width-66-stockWidth,52,30); frame.body:SetHeight(16); frame.body:SetWordWrap(false)
         frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-11)
         frame.priority:SetFont(STANDARD_TEXT_FONT,11,"")
         frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPRIGHT",-8,-5); frame.priority:SetSize(84,16); frame.priority:SetJustifyH("RIGHT")
-        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-26); frame.stock:SetSize(84,16); frame.stock:SetJustifyH("RIGHT")
+        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-26); frame.stock:SetSize(stockWidth,16); frame.stock:SetJustifyH("RIGHT")
         frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPRIGHT",-8,-30)
         frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("BOTTOMRIGHT",-8,7)
         Skin.RowArtwork(frame)

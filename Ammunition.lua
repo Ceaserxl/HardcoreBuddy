@@ -22,9 +22,9 @@ for kind, entries in pairs(tiers) do
     for _, entry in ipairs(entries) do
         local item={itemId=entry[1],id="ammo-"..entry[1],level=entry[2],name=entry[3],icon=icons[entry[1]]..".jpg",
             family="ammunition",ammoKind=kind,ammoDPS=entry[4],group="Class",classes={"Hunter","Warrior","Rogue"},ease=1,
-            short=kind=="thrown" and "Thrown weapon supply" or "Ammunition for your ranged weapon",
+            short="Ammunition",
             route="Buy from a weapons or ammunition vendor. Match the ammunition to your equipped ranged weapon."}
-        if item.ammoDPS then item.short="+"..item.ammoDPS.." ranged DPS"; item.detail=item.short end
+        if item.ammoDPS then item.detail="+"..item.ammoDPS.." ranged DPS" end
         if crafted[item.itemId] then
             item.ingredients=crafted[item.itemId]
             item.route="Craft with Engineering or obtain from another engineer where trading is allowed. Produces 200 rounds."
@@ -72,7 +72,7 @@ function M.Recommend(context)
                 copy.itemId,copy.id,copy.name,copy.level,copy.icon=equipped,"ammo-"..equipped,name,math.max(1,level),icon
                 if not M.items[equipped] then
                     copy.ammoDPS=nil; copy.ingredients=nil
-                    copy.short="Currently equipped ammunition"; copy.detail=nil
+                    copy.short="Ammunition"; copy.detail=nil
                     copy.route="Currently equipped. Check the item's tooltip for its source."
                 end
                 pick=copy; M.items[equipped]=copy

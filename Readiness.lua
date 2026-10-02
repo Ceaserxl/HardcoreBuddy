@@ -168,6 +168,9 @@ function R:ShowPanel(missing,preview)
             row:SetAttribute("macrotext",vendor and ("/targetexact "..vendor.name:gsub("[\r\n]","")) or nil)
             A.Skin.Hover(row,vendor~=nil)
             row.need:SetText("("..(item.count or 0).."/"..item.target..")")
+            local quantityWidth=math.max(70,row.need:GetStringWidth()+4)
+            row.need:ClearAllPoints(); row.need:SetPoint("TOPRIGHT",-8,-3); row.need:SetWidth(quantityWidth)
+            row.name:SetWidth(314-40-8-quantityWidth-6)
             row.need:SetTextColor(unpack(item.count==0 and A.Skin.colors.red or A.Skin.colors.amber))
         end
     end
