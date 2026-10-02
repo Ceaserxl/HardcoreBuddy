@@ -116,7 +116,7 @@ ready=true; finish()
 check(U.complete and #queries==17,"Scans sixteen slot groups and every server page")
 check(queries[1].filters[1].inventoryType==1 and queries[2].page==1 and queries[3].filters[1].inventoryType==2,
     "Finishes every head page before starting neck, with no broad armor query")
-for _,q in ipairs(queries) do check(q.max==40 and q.usable and not q.all,"Only level-appropriate usable listings, no full-dump query") end
+for _,q in ipairs(queries) do check(q.min==0 and q.max==40 and q.usable and not q.all,"Only level-appropriate usable listings, including no required level, no full-dump query") end
 for _,q in ipairs(queries) do
     for _,filter in ipairs(q.filters) do
         check(type(filter.classID)=="number" and type(filter.subClassID)=="number" and type(filter.inventoryType)=="number",

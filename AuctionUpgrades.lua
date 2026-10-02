@@ -256,7 +256,7 @@ function U:Tick()
         self.message=string.format("Scanning %s (%d/%d) | page %d | %d auctions checked",search.name,scan.search,#scan.queue,scan.page+1,scan.seen)
         self:Refresh()
         self.sending=true
-        QueryAuctionItems("",nil,self.profile.level,scan.page,true,nil,false,false,search.filters)
+        QueryAuctionItems("",0,self.profile.level,scan.page,true,nil,false,false,search.filters)
         self.sending=false
     elseif scan.phase=="waiting" then
         if now()-scan.since>20 then self:Stop("Auction response timed out. Results are partial; scan again.") end
