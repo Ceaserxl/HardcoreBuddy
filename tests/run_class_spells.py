@@ -34,6 +34,15 @@ for class,levels in pairs(A.Data.ClassSpells) do
         local nextDoc,allDoc=build(class,level),build(class,level,true)
         assert(nextDoc.pages==1 and allDoc.continuous)
         assert(nextDoc.total<=allDoc.total)
+        for index,card in ipairs(nextDoc.cards) do
+            local expanded=allDoc.cards[index]
+            assert(expanded and expanded.title==card.title and #expanded.blocks==#card.blocks,
+                "Expanding appends later sections without replacing next training")
+            for i,row in ipairs(card.blocks) do
+                assert(expanded.blocks[i].title==row.title and expanded.blocks[i].body==row.body,
+                    "Next-training rows stay unchanged when expanded")
+            end
+        end
         local nextLevel
         for _,row in pairs(ids(nextDoc)) do
             assert(row.level>level and row.level<=60 and row.icon==135846)
@@ -104,8 +113,13 @@ for _,class in ipairs({"MAGE","HUNTER","WARRIOR"}) do
     assert(A.state.filter=="Spells" and A.document.cards[1].title:find("Next training"))
     assert(A.window.atLevel:IsShown() and A.window.atLevel.label:GetText()=="Show all future spells")
     local total=A.document.total
+    local firstTitle=A.document.cards[1].title
+    local firstRow=A.window.cards[1].content.blocks[1]
+    local beforeX,beforeY=firstRow:GetRect()
     MOCK.Click(A.window.atLevel)
-    assert(A.state.showAllFutureSpells and A.document.total>total and A.window.atLevel.label:GetText()=="Next training level")
+    assert(A.state.showAllFutureSpells and A.document.total>total and A.window.atLevel.label:GetText()=="Hide future spells")
+    local afterX,afterY=A.window.cards[1].content.blocks[1]:GetRect()
+    assert(A.document.cards[1].title==firstTitle and afterX==beforeX and afterY==beforeY,"Expanding keeps the heading and first row in place")
     MOCK.Click(A.window.atLevel); assert(not A.state.showAllFutureSpells and A.document.total==total)
 end
 -- Missing spell data is requested once, then refreshes only the visible Spells page.

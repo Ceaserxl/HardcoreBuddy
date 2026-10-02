@@ -125,8 +125,8 @@ function S.Build(context,state)
     end
     if #cards==0 then cards[1]={title=nextLevel and "No matching spells" or "No future training",
         blocks={{title=nextLevel and "Try clearing your search or showing all future spells." or "No later trainer spells in the Classic Era level 1-60 list."}}} end
-    local title=state.showAllFutureSpells and "All future spells" or (nextLevel and "Next training: Level "..nextLevel or "Spells")
-    if not state.showAllFutureSpells and cards[1].title=="Level "..tostring(nextLevel) then
+    local title=nextLevel and "Next training: Level "..nextLevel or "Spells"
+    if cards[1].title=="Level "..tostring(nextLevel) then
         -- The page heading already identifies this level; keep its spells directly below it.
         cards[1].title=title
     else

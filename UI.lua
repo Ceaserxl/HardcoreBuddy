@@ -1119,7 +1119,7 @@ function addon:Layout()
     f.atLevel:SetShown(searchable and doc.levelFilter)
     if searchable then
         local extra=doc.levelFilter
-        f.atLevel.label:SetText(spellPage and (showAll and "Next training level" or "Show all future spells") or rangePage and (showAll and "Near my level" or zonePage and "Show All" or "Show all") or (self.state.atLevel and "Within my level" or "Any level"))
+        f.atLevel.label:SetText(spellPage and (showAll and "Hide future spells" or "Show all future spells") or rangePage and (showAll and "Near my level" or zonePage and "Show All" or "Show all") or (self.state.atLevel and "Within my level" or "Any level"))
         local extraButton=f.atLevel
         if extra then extraButton:SetWidth(math.max(112,math.ceil(extraButton.label:GetStringWidth())+22)) end
         local labelWidth=math.ceil(f.searchLabel:GetStringWidth())+6
