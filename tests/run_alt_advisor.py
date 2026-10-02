@@ -83,4 +83,32 @@ assert(rows[1].label=='Both hands','Offline two-hand comparison includes both eq
 local expected=(G.Score(two,p,16)/(G.Score(baseline[16],p,16)+G.Score(baseline[17],p,17))-1)*100
 assert(math.abs(rows[1].percent-math.floor(expected*100)/100)<.02)
 print('PASS: cached profiles/equipment, best-slot ranking, faction/realm identity, binding, tooltip deduplication and disable setting.')
+-- Native setters finish the Alt section synchronously, after binding is present.
+guid='Player-bank'; binding=2
+GameTooltip:ClearLines(); GameTooltip:SetHyperlink(candidate.link)
+local shows=0; local show=GameTooltip.Show
+GameTooltip.Show=function(self) shows=shows+1; show(self) end
+G:Add(GameTooltip); local before=shows; G:Add(GameTooltip)
+assert(shows==before,'Unchanged gear text never calls Show again')
+A.db.gearAdvisorEnabled=false
+GameTooltip:ClearLines(); GameTooltip:SetHyperlink(candidate.link); Alt:Add(GameTooltip); GameTooltip:Show()
+assert(GameTooltip.hardcoreBuddyAlt and not GameTooltip.hardcoreBuddyGear)
+G:RefreshTooltips(); assert(GameTooltip:IsShown(),'Gear tooltip preference must not hide enabled Alt advice')
+local previousHook=hooksecurefunc
+hooksecurefunc=function(target,method,callback)
+ local original=target[method]
+ target[method]=function(self,...) original(self,...); callback(self,...) end
+end
+local hyperlink=GameTooltip.SetHyperlink
+GameTooltip.SetBagItem=function(self,bag,slot)
+ hyperlink(self,candidate.link)
+ if slot==2 then self:AddLine('Soulbound') end
+end
+GameTooltip.hardcoreBuddyAltHook=nil; Alt.RegisterTooltip(GameTooltip)
+GameTooltip:SetBagItem(0,1)
+assert(GameTooltip.hardcoreBuddyAlt and not GameTooltip.hardcoreBuddyAltPending,'Alt advice present before first rendered frame')
+GameTooltip:SetBagItem(0,2)
+assert(not GameTooltip.hardcoreBuddyAlt,'Post-hook sees soulbound instance and excludes it')
+hooksecurefunc=previousHook
+print('PASS: stable repeated refresh, independent Alt visibility and synchronous binding-safe native setter hooks.')
 ''')

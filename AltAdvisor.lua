@@ -124,7 +124,20 @@ end
 local function register(tip)
     if not tip or tip.hardcoreBuddyAltHook then return end
     tip.hardcoreBuddyAltHook=true
-    -- Run after the native bag/inventory call has finished adding binding lines.
+    -- Finish advice within the native setter, before its first rendered frame.
+    -- A delayed append on every native tooltip refresh makes the height jump.
+    -- Post-hooks still see the completed instance-specific binding lines.
+    if hooksecurefunc then
+        for _,method in ipairs({"SetBagItem","SetInventoryItem","SetHyperlink","SetMerchantItem",
+            "SetAuctionItem","SetAuctionSellItem","SetLootItem","SetQuestItem","SetQuestLogItem","SetTradeSkillItem"}) do
+            if type(tip[method])=="function" then
+                hooksecurefunc(tip,method,function(t)
+                    t.hardcoreBuddyAltPending=nil; Alt:Add(t)
+                end)
+            end
+        end
+    end
+    -- Fallback for tooltip providers which do not use one of the native setters.
     if not tip.HasScript or tip:HasScript("OnTooltipSetItem") then tip:HookScript("OnTooltipSetItem",function(t) t.hardcoreBuddyAltPending=.02 end) end
     tip:HookScript("OnUpdate",function(t,elapsed)
         if not t.hardcoreBuddyAltPending then return end
@@ -132,6 +145,7 @@ local function register(tip)
         if t.hardcoreBuddyAltPending<=0 then t.hardcoreBuddyAltPending=nil; Alt:Add(t) end
     end)
     tip:HookScript("OnTooltipCleared",function(t) t.hardcoreBuddyAlt=nil; t.hardcoreBuddyAltPending=nil end)
+    tip:HookScript("OnHide",function(t) t.hardcoreBuddyAltPending=nil end)
 end
 Alt.RegisterTooltip=register
 for tip in pairs(G.tooltips) do register(tip) end

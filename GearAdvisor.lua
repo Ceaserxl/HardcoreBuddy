@@ -621,6 +621,7 @@ function G:Add(tip)
         local name=tip.GetName and tip:GetName()
         local header=state and name and _G[name.."TextLeft"..(state.start+1)]
         local reuse=state and state.link==link and header and header:GetText()==title
+        local changed=not reuse
         local start=reuse and state.start or tip:NumLines()+1
         for i,line in ipairs(lines) do
             local left=name and _G[name.."TextLeft"..(start+i-1)]
@@ -628,6 +629,7 @@ function G:Add(tip)
             local color=line[3]
             local leftColor=line[2]~="" and colors.equal or color
             if reuse and left and right then
+                if left:GetText()~=line[1] or (right:GetText() or "")~=line[2] then changed=true end
                 left:SetText(line[1]); left:SetTextColor(unpack(leftColor)); left:Show()
                 right:SetText(line[2]); right:SetTextColor(unpack(color)); right:SetShown(line[2]~="")
             elseif not reuse then
@@ -638,7 +640,7 @@ function G:Add(tip)
         local cacheable=true
         for _,row in ipairs(report.rows) do if row.status=="unknown" then cacheable=false end end
         tip.hardcoreBuddyGear={link=link,start=start,revision=self.revision,report=cacheable and report or nil}
-        if tip.Show then tip:Show() end
+        if changed and tip.Show then tip:Show() end
     end
     self.busy=false
 end
@@ -646,9 +648,11 @@ end
 function G:RefreshTooltips()
     for tip in pairs(self.tooltips) do
         if tip:IsShown() then
-            if not self:IsEnabled() or A.db.gearAdvisorEnabled==false then
+            if not self:IsEnabled() then
                 -- Close the visible tooltip so disabled advice is not left on screen.
                 if tip.hardcoreBuddyGear or tip.hardcoreBuddyAlt then tip:Hide() end
+            elseif A.db.gearAdvisorEnabled==false then
+                if tip.hardcoreBuddyGear then tip:Hide() end
             elseif tip.hardcoreBuddyGear then self:Add(tip) end
         end
     end
