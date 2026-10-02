@@ -447,12 +447,13 @@ function U:Refresh()
             local pair=row and row.weaponSet and #row.components==2
             frame.item:SetText(row and (pair and row.components[1].name or row.name) or names[entry.slot])
             frame.item:SetTextColor(unpack(row and Skin.colors.white or Skin.colors.muted))
-            frame.slotName:SetText(self.setup and entry.label or names[self.slot or entry.slot] or "")
+            local slotText=self.setup and entry.label or names[self.slot or entry.slot] or ""
+            frame.slotName:SetText((slotText:gsub("[Oo]ff hand","OH")))
             frame.options:SetText(row and (self.setup and "" or self.slot and tostring(self.offset+index)
                 or (entry.total..(entry.total==1 and " option >" or " options >"))) or "0")
             frame.options:SetTextColor(unpack(not self.slot and Skin.colors.gold or Skin.colors.white))
             local detail=""
-            if pair then detail="OH: "..row.components[2].name
+            if pair then detail="Off hand: "..row.components[2].name
             elseif not row then detail=checked and "No upgrade found" or self.scan and "Waiting for this slot" or "Slot not scanned"
             end
             frame.slot:SetText(detail)
