@@ -1,124 +1,30 @@
-# Unreleased
+# HardcoreBuddy v0.6.5
 
-- Applied the Map settings card layout throughout the main addon: grouped
-  settings, paired Companion and Advisor links, consistent guide headings and
-  spacing, and a matching journal table. Related controls sit side by side;
-  long lists remain scrollable and alert sliders display their value inside.
-- Death Alerts volume now applies to every sound, including the original Classic
-  raid warning. The slider stays visible and 0% mutes the alert independently.
-- Map icon selection now uses a scrollable six-column grid with 48 choices,
-  including raid markers, beasts and spell symbols.
-- NPC previews now have details and controls on the left and a larger bordered
-  model viewport on the right. Loading retries automatically up to three times;
-  delayed camera refreshes, extended zoom and Reset view help with framing.
-- Companion > Spells now separates Hunter pet trainer/taming abilities and
-  Warlock demon grimoires into pet sections in next-level and all-future views.
-- Tint color now uses Blizzard's color picker with live preview and Cancel;
-  the existing opacity slider remains available.
-- Talent Advisor's Point-by-point path now opens a separate scrolling page.
-- Map marker categories now open an icon picker with previews of every available
-  choice. Icon size also adjusts clustering distance and rebuilds nearby groups.
-- Added Companion > Spells with the next training level, all-future toggle,
-  search, spell tooltips and bundled Classic Era trainer data for all nine classes.
-- Reframed map NPC previews with a square full-body viewport and additional
-  zoom-out range to keep models from being cropped vertically.
-- Consolidated death alerts and banner appearance in Death Alerts, rares and
-  elites in NPC Alerts, and preparation reminders in General. Map controls now
-  live in Settings > Map, linked from the Map advisor. Existing preferences stay.
-- Moved the Talent Advisor settings link onto Talents. Gear now presents its
-  score explanation beneath the profile, supporting notes next, and settings last.
-- Added opt-in bag upgrade notices and automatic equipping to Gear Advisor
-  settings. Auto-equip preserves worn quest gear, checks both hands, and waits
-  during combat, cursor use or item locks. Both options default off.
-- Added Advisors > Map with full reveal or translucent unexplored-area tint,
-  category filters, known NPC locations across 46 Classic zones and cities,
-  zone browsing and optional silent zone-entry notices. Pins show recorded
-  areas, not live sightings; unavailable coordinates are labelled in the list.
-- Missing essentials can now be dragged; its position persists across reloads.
-- Gear Advisor settings now open Stat Weights and Gear Snapshot on separate
-  pages, each with a Back button to return to the main gear settings.
-- Moved gear snapshot capture, details and the saved item list into Settings >
-  Gear Advisor. Removed the snapshot entry from Advisors > Gear and the path
-  selection link from Advisors > Talents. Native Character UI is no longer used.
-- Added editable stat weights and Restore Defaults to Gear Advisor settings,
-  saved per character and scoring profile. Simplified the scoring header.
-- Overview now starts with Before you pull, followed by Shared cooldowns and
-  Self Found; Hunter pet navigation remains in its dedicated sidebar tabs.
-- Moved build selection to Settings > Talent Advisor. Gear scoring now follows
-  that build, replacing the independent scoring-profile selector.
-- Added green upgrade arrows and icon borders to native bag items and quest
-  reward choices, with an independent toggle under Gear Advisor settings.
-  Two-handed hints include both hands; unavailable data remains unmarked.
-- Fixed comparisons against zero-score gear and negative-stat empty-slot items.
-- Restored Best Armor beneath Scan upgrades in the auction window, synchronized
-  with Settings. Missing-essentials and departure reminders now default on;
-  existing saved choices are preserved.
-- Moved Pet Guide into Companion's Hunter navigation and removed the Looks tab.
-- Added a central Settings tab for general preferences, gear scoring, auction
-  filters, death alerts and appearance, low health, rares, elites, and preparation.
-  Existing preferences and command shortcuts are preserved. Long settings pages
-  scroll, and General includes minimap and field kit notification toggles.
-- Saved the last auction upgrade scan per character, including weapon setups
-  and partial scans across reloads. Cached results show their capture time and
-  require a rescan when gear, level, talent profile, weights, or armor filter changes.
-- Fixed legitimate negative item stats being rejected as unreadable auction
-  listings (including Cloak of Rot, Black Widow Band, and Ogremage Staff).
-- Simplified gear tooltips: green stat gains / red losses beneath the original
-  slot and percentage row, without specialization, scoring explanations, or listing counts.
-- Fixed equipped comparison flicker during auction scans by reusing visible
-  tooltips and updating listing counts without rebuilding item comparisons.
-- Auction upgrade hovers now show equipped-item comparisons automatically,
-  without requiring Shift.
-- Added saved diagnostics for skipped auction listings, including the precise
-  failure stage, item and equipped comparison data, and retry timing. Open the
-  copyable report with Scan details or `/hcb auction debug`.
-- Redesigned auction upgrades with persistent slot navigation, a focused best
-  upgrades overview, modern item cards, explicit bid/buyout labels, a scan
-  progress bar and clearer weapon comparisons and empty states.
-- Hovered auction upgrade tooltips and Shift comparisons now stay visible during
-  scan updates and refresh when the item under the pointer changes.
-- Gear scoring now prefers displayed intrinsic attack-power and ranged
-  attack-power bonuses over conflicting API values, correcting Assault Band's
-  upgrade percentages while continuing to exclude applied enchants.
-- Fixed auction slot filters missing their parent item subclass, which could
-  cause every slot to repeat a broad armor or weapon scan.
-- Auction upgrades now scan individual equipment slots in sequence. Added a
-  saved per-character checkbox under Scan upgrades to restrict body armor to the
-  class-and-level armor type, while retaining jewelry, cloaks and weapon setups.
-- Fixed Shift-hover equipped-item comparisons on auction upgrades and weapon
-  setup components, including modifier changes while already hovering.
-- Fixed weapon percentage mismatches by preserving each profile's DPS weight and
-  reading native displayed DPS precision. Two-handed tooltips show the reference
-  main-hand comparison plus a separate Both hands comparison when an off-hand
-  would be lost. Full auction setups continue to compare the complete equipment.
-- Added auction-house Weapon setups: compare two-handed weapons against complete
-  main-hand/off-hand pairs using the same equipped baseline. Includes upgrades
-  for either or both hands, equipped-item reuse, shields, caster off-hands,
-  legal dual wield, separate purchase links and combined listing prices.
-- Added a native-style Upgrades tab at the auction house: scan for the best
-  percentage upgrade per slot, browse all alternatives with continuous scrolling,
-  and open matching auctions in Browse. Uses the standalone gear advisor and
-  respects auction throttling, other searches, and equipment/talent changes.
-- Matched the reference percentage display's downward rounding to two decimals.
-  Gear scoring remains standalone, with no in-game interaction with Zygor.
-- Fixed short spell-damage suffixes such as `+15 Frost Spell Damage` being
-  omitted from gear scores, causing false upgrades against Frozen Wrath items.
-- Added an Advisors page with gear and talent advice for all nine Classic classes.
-- Rebuilt gear percentages around Classic specialization stat weights; all usable
-  armor materials compete without lighter-armor penalties. Enchants and armor
-  kits are excluded, and lost stats are shown in red.
-- Added automatic talent-based scoring and selectable role profiles.
-- Added 16 Hardcore talent paths, next-point advice, explicit respec guidance,
-  one-click single-point learning and complete scrollable build lists.
-- Preserved manual Character-window gear snapshots for offline review.
-- Removed the combat simulator, recovery sampling and unused research data.
-- Replaced paging throughout HardcoreBuddy with continuous scrolling,
-  including the complete Pet Guide, supply and training lists, and Death Journal.
-  The journal reuses visible rows to keep large histories responsive.
-- Supplies > Buffs now checks equipped chest armor, leggings, gloves and boots
-  for missing or outdated armor kits. Recommendations respect character and
-  armor item levels, preserve other enchants and Core Armor Kits, and update
-  when equipment or enhancements change.
+- Compact, consistent layouts across Supplies, Companion, settings and Death Journal.
+- Gear Advisor, Talent Advisor and Zone Advisor now live under Companion. Spells
+  includes class training, Hunter pet abilities and Warlock grimoires.
+- Supplies includes class- and specialization-aware enchants, armor kits and scopes,
+  with alternatives, material tracking and level-appropriate or maximum recommendations.
+- Per-item refill thresholds and targets, improved ammunition selection, vendor
+  guidance and map markers, optional vendor purchasing and repair settings.
+- AH Upgrades compares equipment and weapon setups. AH Essentials compares finished
+  items against learned crafting recipes, accounts for bags and saved bank stock,
+  and finds economical whole-stack purchases for refills.
+- Craft and Buy start unchecked. Craft is selected after scanning only when cheaper;
+  manual choices are respected. Click Buy once, then confirm each queued stack.
+  Own-auction errors try another seller or continue to the next queued item.
+- Bank snapshots save on close and persist between sessions. Ordinary vendor drink
+  alternatives are available across classes; Buffs is now Elixirs, followed by Scrolls.
+- Light of Elune uses quest completion status and bag-only quantities, provides quest
+  links, and creates a draggable Elune/Hearthstone macro with validation and repair.
+- Zone Advisor includes map exploration tint, NPC filters, configurable markers,
+  clustering and paged model previews. Updated NPC and vendor data are bundled.
+- Improved tooltip formatting, alternate-character upgrade advice, talent application,
+  death report controls, sound settings and diagnostic capture.
+
+Existing settings are retained. No other addons are required. Reload after updating.
+Automated checks cover Lua loading, recommendation logic, UI models, purchasing
+flows and package integrity; final visual and protected-action checks require WoW.
 
 ## HardcoreBuddy v0.3.0
 

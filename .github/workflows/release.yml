@@ -44,6 +44,14 @@ jobs:
         run: python tests/run_gear_snapshot.py
       - name: Test all Classic talent paths and advisor navigation
         run: python tests/run_talent_advisor.py
+      - name: Test essential purchasing, crafting and supply changes
+        run: |
+          python tests/run_auction_essentials.py
+          python tests/run_auction_crafting.py
+          python tests/run_auction_refill_plan.py
+          python tests/run_vendor_food.py
+          python tests/run_elune_macro.py
+          python tests/run_enchants.py
       - name: Stage shipping manifest
         id: release
         run: python scripts/prepare_ci_release.py

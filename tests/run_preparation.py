@@ -23,7 +23,7 @@ for _,family in ipairs({"Flask of Petrification","Free Action Potion","Limited I
     assert(seen[family] and seen[family].priority=="Advanced",family)
 end
 assert(seen.invisibility.priority=="Optional")
-assert(seen["Light of Elune"].target==0,"Do not demand an unavailable one-time quest reward")
+assert(seen["Light of Elune"].target==1 and not seen["Light of Elune"].refillNeeded,"Do not demand an unavailable one-time quest reward")
 local food=seen.recovery.item
 A:CyclePriority(food)
 assert(S.Priority(A:GetContext(),food)=="Advanced")

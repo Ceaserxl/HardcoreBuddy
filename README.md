@@ -22,8 +22,8 @@ grimoires have separate sections, with the matching demon listed for each book.
 ## Settings
 
 Open the **Settings** tab or use `/hcb settings`. The sidebar groups General,
-Gear Advisor, Talent Advisor, Auction House, Death Journal, Low Health, NPC Alerts,
-Zone Advisor and Debug. Long pages scroll. Existing saved preferences are kept.
+Zone Advisor, Gear Advisor, Talent Advisor, Auction House, Death Journal, Low Health,
+NPC Alerts and Debug. Long pages scroll. Existing saved preferences are kept.
 Pages use the Zone Advisor settings layout: clear headings, bordered sections and paired
 cards for related controls. Companion and Advisor overviews use matching cards;
 Supplies, Spells and Zone Advisor use two-column cards. Death reports keep full-width rows. Alert sliders
@@ -37,7 +37,7 @@ Nested pages share **< Back** above the upper-left of the content. It stays
 in place while scrolling; the auction upgrades window uses the same placement.
 Supplies opens to **All** by default.
 
-**Supplies > Enchants**, after Scrolls, checks equipped gear and recommends
+**Supplies > Enchants**, checks equipped gear and recommends
 Classic enchants by class and leveling tier. Open a slot for alternatives and
 recipe materials with bag counts. Armor kits are here too; shared materials
 are totaled across needed slots. Existing enhancements are kept unless a weaker
@@ -65,19 +65,19 @@ current visit with its close button. An unowned Light of Elune has no default
 restock requirement.
 
 Drag the **Missing essentials** panel to move it. Its position is saved between
-sessions; clicking it still opens your Essentials supplies.
+sessions; its View Essentials button opens your supplies. Item rows mark a vendor.
 
-**Supplies > Buffs** checks your equipped chest armor, leggings, gloves and boots
-for armor-kit upgrades. It respects both your character level and each piece's
-item level, recommends kits for unenhanced pieces or older armor kits, and keeps
-other enchants and Core Armor Kits. Suggested Carry quantities cover the pieces
-that need each kit. Open a kit to see which pieces to enhance. Recommendations
-refresh when equipment or enhancements change; unavailable item data stays
-unknown. Planning mode shows a level-based reference without checking live gear.
+**Supplies > Elixirs** contains consumable buffs, with **Scrolls** immediately after it.
+Armor kits are included in **Enchants** alongside permanent enchant recommendations.
+
+**AH > Essentials** scans non-vendor essentials and materials for learned recipes.
+Craft and Buy start unchecked; a completed scan selects Craft only when cheaper.
+Bag stock and bank snapshots saved on close reduce material requirements. Click
+Buy once and confirm each queued stack. Cancel stops the queue.
 
 ## Gear and talent advisors
 
-Open **Advisors** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
+Open **Companion > Gear Advisor** or **Talent Advisor** in HardcoreBuddy, `/hcb gear`, or `/hcb talents`.
 
 - Color-coded gear upgrade/downgrade percentages using Classic specialization stat weights.
 - Follows the build selected in **Settings → Talent Advisor**, including automatic Hardcore leveling paths.
