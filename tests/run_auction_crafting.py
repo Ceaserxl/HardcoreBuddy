@@ -83,8 +83,9 @@ MOCK.Click(E.rows[1])
 assert(not E.rows[1].craft:GetChecked() and E.rows[1].buy:GetChecked() and not E.rows[2].buy:GetChecked(),"Row click switches finished item to Buy and clears its material row")
 ctx.inventory.counts[900010]=0; A.characterDB.auctionBank.counts[900010]=9
 E:ToggleCraft(E.items[1])
-assert(E.items[1].children[1].bankUsed==9 and E.items[1].children[1].missing==0,"Bank fully covers required amount")
-assert(E.rows[2].record.itemId==900002,"Fulfilled material row is omitted")
+assert(E.craftParents[1].children[1].bankUsed==9 and E.craftParents[1].readyToCraft,"Bank fully covers required amount")
+assert(E.rows[1].record.itemId==900002,"Fulfilled craft and material rows are both omitted")
+assert(E.materialRecords[900010].missing==8,"Hidden craft still reserves shared materials for itself")
 E.craftChoices={}; E.craftManual={}; E.selected={}; E.materialOverrides={}
 ctx.inventory.counts[900010]=0; A.characterDB.auctionBank.counts[900010]=0
 E.results={

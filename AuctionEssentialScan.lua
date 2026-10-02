@@ -9,7 +9,7 @@ function E:Stop(message,keepBatch)
     if message then self.message=message end
     self:Refresh()
 end
-function E:Start(record,keepBatch)
+function E:Start(record,keepBatch,settle)
     if not self.open or not self.panel:IsShown() then return end
     self:Stop(nil,keepBatch)
     self.complete=false
@@ -18,7 +18,7 @@ function E:Start(record,keepBatch)
     if not queue then self.message=message; self:Refresh(); return end
     if not record then self.results={} end
     if #queue==0 then self.message="No Essentials to scan."; self:Refresh(); return end
-    self.scan={queue=queue,item=1,page=0,phase="query",since=GetTime(),purchase=record~=nil}
+    self.scan={queue=queue,item=1,page=0,phase=settle and "settling" or "query",since=GetTime(),purchase=record~=nil,settle=settle}
     self.message=record and "Checking the cheapest current buyout..." or "Scanning Essentials..."
     self:Refresh()
 end
@@ -72,9 +72,21 @@ function E:Tick()
     end
     local s=self.scan; if not s then return end
     if not self.open or not self.panel:IsShown() then self:Stop(); return end
-    if GetTime()-s.since>20 then self:Stop("Scan timed out. Rescan before buying."); return end
+    -- Query throttling is separate from waiting for an actual server reply.
+    -- Refill batches can legitimately spend longer than 20 seconds throttled.
+    if GetTime()-s.since>(s.phase=="query" and 60 or 20) then
+        self:Stop(s.phase=="query" and "Auction house is still busy. Try the remaining refills again." or "Scan timed out. Rescan before buying."); return
+    end
     local record=s.queue[s.item]
-    if s.phase=="craftPlanning" then
+    if s.phase=="settling" then
+        -- The bid acknowledgement can precede the old result-page update.
+        -- Drain that update before sending the next item's query; otherwise it
+        -- can be mistaken for the response to the new search.
+        local updated=s.settle.listUpdated
+        if updated and GetTime()-updated>=.5 or not updated and GetTime()-s.since>=2 then
+            s.phase="query"; s.since=GetTime(); s.settle=nil
+        end
+    elseif s.phase=="craftPlanning" then
         local ok=coroutine.resume(s.planner)
         if not ok then self:Stop("Unable to compare crafting costs. Scan again."); return end
         if coroutine.status(s.planner)~="dead" then s.since=GetTime(); return end
@@ -84,7 +96,7 @@ function E:Tick()
     elseif s.phase=="planning" then
         local ok,calculated=coroutine.resume(s.planner)
         if not ok then self:Stop("Unable to calculate refill. Scan again."); return end
-        if coroutine.status(s.planner)~="dead" then return end
+        if coroutine.status(s.planner)~="dead" then s.since=GetTime(); return end
         local plan=calculated.plan
         local result=self.results[record.itemId]
         result.plan=plan; result.plans=calculated.plans
@@ -107,7 +119,13 @@ function E:Tick()
         else self.message="Scanning "..s.item.." / "..#s.queue..": "..s.queue[s.item].name end
         self:Refresh()
     elseif s.phase=="query" then
-        if not CanSendAuctionQuery() then return end
+        if not CanSendAuctionQuery() then
+            if not s.throttled then
+                s.throttled=true; self.message="Waiting for the auction house: "..record.name; self:Refresh()
+            end
+            return
+        end
+        s.throttled=nil
         s.phase="waiting"; s.since=GetTime(); self.sending=true
         QueryAuctionItems(record.name,nil,nil,s.page,false,nil,false,true,nil)
         self.sending=false
@@ -116,12 +134,18 @@ function E:Tick()
         if count==0 and total>0 then return end
         local pageBest,verified,pageOffers=nil,nil,{}
         for i=1,count do
+            -- A delayed update for a different search is not this query's
+            -- result. Different IDs with the same exact name still get filtered
+            -- normally; they are legitimate results, not stale pages.
+            local link=GetAuctionItemLink("list",i)
+            if link and tonumber(link:match("item:(%d+)"))~=record.itemId
+                and GetAuctionItemInfo("list",i)~=record.name then return end
             local listing,loaded=self:Listing(i,record.itemId)
             if not loaded then return end
             if listing then
                 listing.page=s.page
                 pageOffers[#pageOffers+1]=listing
-                if s.verify and listing.link==s.best.link and listing.buyout==s.best.buyout and listing.count==s.best.count then
+                if s.verify and listing.link==s.best.link and listing.buyout==s.best.buyout and listing.count==s.best.count and listing.owner==s.best.owner then
                     verified=listing
                 end
                 if cheaper(listing,pageBest) then pageBest=listing end

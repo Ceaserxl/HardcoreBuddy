@@ -223,7 +223,9 @@ E.events:SetScript("OnEvent",function(_,event,...)
             else E:Stop("Purchase failed. Check the auction error before retrying.") end
         end
     elseif event=="AUCTION_ITEM_LIST_UPDATE" then
-        if E.confirmation then E:Stop("Listings changed. Click the item to check again.")
+        if E.awaitingBuy then E.awaitingBuy.listUpdated=GetTime()
+        elseif E.scan and E.scan.phase=="settling" then E.scan.settle.listUpdated=GetTime()
+        elseif E.confirmation then E:Stop("Listings changed. Click the item to check again.")
         elseif E.scan and E.scan.phase=="waiting" then E.scan.phase="reading" end
     elseif E.panel and E.panel:IsShown() then E:Refresh() end
 end)

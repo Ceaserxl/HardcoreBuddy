@@ -118,9 +118,12 @@ A.Data.AuctionRecipes[900001]={spellId=1001,output=1,reagents={{900010,1,'Materi
 C_SpellBook={IsSpellKnown=function(id) return id==1001 end}
 C_Item.GetItemInfo=function(id) return 'Material' end
 E.craftChoices[900001]=true; receipt(900010,20); E:Refresh()
-check(#E.items==1 and #E.items[1].children==1,'Fully covered material is hidden but recipe retains it')
-check(E.items[1].children[1].mailUsed==20 and E:CraftCost(E.items[1])==0,'Mail materials reduce crafting cost')
+check(#E.items==0 and #E.craftParents[1].children==1,'Fully covered material and finished craft are hidden together')
+check(E.craftParents[1].children[1].mailUsed==20 and E:CraftCost(E.craftParents[1])==0,'Mail materials reduce crafting cost')
 check(not E.selected[900010],'Materials in mail are not selected again')
+local co=coroutine.create(function() E:SelectCheaperCrafts() end)
+repeat local ok,err=coroutine.resume(co); assert(ok,err) until coroutine.status(co)=='dead'
+check(#E.items==0 and E.craftChoices[900001],'A subsequent cost comparison does not resurrect a ready craft')
 E:RecordMailPurchase({itemId=900010,count=5,name='Material'})
 E.mailEvents.scripts.OnEvent(nil,'MAIL_CLOSED')
 local character=A.characterDB
@@ -129,6 +132,13 @@ E.awaitingBuy={listing={itemId=900010,count=99,name='Material'},since=clock}; E.
 E.events.scripts.OnEvent(nil,'UI_ERROR_MESSAGE',2,'Not enough money')
 E.events.scripts.OnEvent(nil,'CHAT_MSG_SYSTEM',ERR_AUCTION_BID_PLACED)
 check(E:MailCount(900010)==25,'Failed purchase cannot be cached by a later unrelated success')
+-- Multiple materials must all be funded before the craft disappears.
+A.Data.AuctionRecipes[900001].reagents={{900010,2,'Material A'},{900011,1,'Material B'}}
+E:Refresh(); check(#E.items==3 and not E.craftParents[1].readyToCraft,'Partially funded craft stays visible')
+receipt(900011,20); E:Refresh()
+check(#E.items==2 and E.items[1].itemId==900001,'One completed material does not hide an incomplete craft')
+receipt(900010,15); E:Refresh()
+check(#E.items==0 and E.craftParents[1].readyToCraft,'Last successful material purchase removes parent and children')
 print('PASS: '..checks..' auction mail assertions, receipts, persistence, collection order, incomplete inboxes and refill filtering')
 ''')
 
@@ -139,5 +149,5 @@ character = plain(lua.globals().HardcoreBuddyCharacterDB)
 fresh, fresh_addon = boot()
 fresh.globals().HardcoreBuddyCharacterDB = fresh.table_from(character, recursive=True)
 fresh.execute("time=function() return " + str(lua.eval('time()')) + " end")
-fresh.execute("TestAddon:Initialize(); assert(TestAddon.AuctionEssentials:MailCount(900010)==25)")
+fresh.execute("TestAddon:Initialize(); assert(TestAddon.AuctionEssentials:MailCount(900010)==40)")
 print('PASS: mail stock restored from character SavedVariables in fresh Lua runtime')

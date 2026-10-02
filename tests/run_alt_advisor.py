@@ -93,6 +93,7 @@ Alt.events.scripts.OnEvent(Alt.events,'PLAYER_ENTERING_WORLD')
 Alt.events.scripts.OnUpdate(Alt.events,1)
 assert(A.db.altEquipment[guid],'Login event captures gear automatically')
 F.equip(11,nil)
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_EQUIPMENT_CHANGED',11,false)
 Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
 assert(A.db.altEquipment[guid].equipment[11]==false,'Logout persists an explicitly empty slot')
 local p=G:CurrentProfile(); p.cachedDualWield=false
@@ -170,6 +171,7 @@ print('PASS: stable repeated refresh, independent Alt visibility and synchronous
 
 -- Final capture cannot abort the whole character because one tooltip is loading.
 F.reset('MAGE',40,{0,0,31}); guid='Player-cache-logout'
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_ENTERING_WORLD')
 local worn=F.item('INVTYPE_FINGER',{ITEM_MOD_INTELLECT_SHORT=10},4,0)
 local head=F.item('INVTYPE_HEAD',{ITEM_MOD_INTELLECT_SHORT=5},4,1)
 F.equip(12,worn); assert(Alt:Capture())
@@ -192,15 +194,19 @@ for _,entry in ipairs(Alt:Upgrades(G:Read(candidate.link))) do
 end
 -- Removing equipment at the last instant also replaces a stale occupied slot.
 guid='Player-cache-logout'; F.equip(11,nil)
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_ENTERING_WORLD')
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_EQUIPMENT_CHANGED',11,false)
 Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
 assert(A.db.altEquipment[guid].equipment[11]==false,'Final empty slot persists despite another loading item')
 F.equip(11,worn); worn.loading=true
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_ENTERING_WORLD')
 Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
 assert(A.db.altEquipment[guid].equipment[11].unavailable,'Fresh occupied slot replaces old false even before its item data arrives')
 local offline=G:Comparisons(G:Read(candidate.link),A.db.altEquipment[guid].profile,nil,A.db.altEquipment[guid].equipment)
 assert(offline[1].status=='unknown' and offline[2].percent==100,
  'Unknown occupied slot is excluded; unchanged same-link scored slot remains usable')
 -- Late item information must restart retries after the normal retry budget.
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_ENTERING_WORLD')
 Alt.events.scripts.OnEvent(Alt.events,'PLAYER_EQUIPMENT_CHANGED',11)
 for i=1,10 do Alt.events.scripts.OnUpdate(Alt.events,2) end
 assert(not Alt.pending and Alt.incomplete and Alt.attempts==10)
@@ -232,6 +238,62 @@ Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
 assert(A.db.altEquipment[guid].equipment[11].id==worn.id,'Disabling tooltip advice does not disable final equipment caching')
 ALT_RELOAD_CANDIDATE=G:Read(candidate.link)
 print('PASS: final logout reads, partial item loading, filled/emptied slots, variant identity, late retries and dependent slots.')
+
+-- Reproduce real saved characters whose entire equipment table became false.
+F.reset('MAGE',40,{0,0,31}); guid='Player-shoulders'
+local shoulders=F.item('INVTYPE_SHOULDER',{ITEM_MOD_INTELLECT_SHORT=10},4,1)
+local upgrade=F.item('INVTYPE_SHOULDER',{ITEM_MOD_INTELLECT_SHORT=20},4,1)
+F.equip(3,shoulders); F.equip(1,head); assert(Alt:Capture())
+local live=A.db.altEquipment[guid]
+local inventoryID,inventoryLink=GetInventoryItemID,GetInventoryItemLink
+GetInventoryItemID=function() return nil end; GetInventoryItemLink=function() return nil end
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LEAVING_WORLD')
+for slot in pairs(live.equipment) do Alt.events.scripts.OnEvent(Alt.events,'PLAYER_EQUIPMENT_CHANGED',slot,false) end
+Alt.events.scripts.OnUpdate(Alt.events,1)
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
+assert(A.db.altEquipment[guid]==live and live.equipment[3].id==shoulders.id,
+ 'Inventory teardown cannot overwrite live shoulders or advance the snapshot timestamp')
+assert(not Alt:Capture() and A.db.altEquipment[guid]==live,'An all-nil live read is also unavailable, not naked')
+guid='Player-not-loaded'; assert(not Alt:Capture() and not A.db.altEquipment[guid],
+ 'An unavailable first read must not create an all-empty character')
+guid='Player-shoulders'
+GetInventoryItemID=function(unit,slot) if slot~=3 then return inventoryID(unit,slot) end end
+GetInventoryItemLink=function(unit,slot) if slot~=3 then return inventoryLink(unit,slot) end end
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
+assert(A.db.altEquipment[guid].equipment[3].id==shoulders.id,'Partial logout teardown preserves the last live slot')
+GetInventoryItemID=inventoryID; GetInventoryItemLink=inventoryLink
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_ENTERING_WORLD')
+assert(Alt:Capture())
+local damaged={schema=1,name='Damaged',realm='Realm',faction='Alliance',profile=live.profile,equipment={}}
+for slot in pairs(live.equipment) do damaged.equipment[slot]=false end
+A.db.altEquipment['Player-damaged']=damaged
+guid='Player-bank'
+local found=false
+for _,entry in ipairs(Alt:Upgrades(G:Read(upgrade.link))) do
+ assert(entry.character~=damaged,'Legacy all-empty corruption never produces Empty slot advice')
+ if entry.character.name=='Player-shoulders' then
+  found=true; assert(entry.row.percent==100,'Shoulders compare with the saved worn item after logout')
+ end
+end
+assert(found)
+assert(G:Comparisons(G:Read(upgrade.link),live.profile,nil,{})[1].status=='unknown',
+ 'An absent cached slot is unknown; only explicit false means empty')
+-- A real unequip remains distinguishable, including removing the final item.
+guid='Player-shoulders'; F.equip(3,nil)
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_EQUIPMENT_CHANGED',3,false)
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
+assert(A.db.altEquipment[guid].equipment[3]==false,'A confirmed shoulder removal is saved')
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_ENTERING_WORLD')
+F.equip(1,nil); Alt.events.scripts.OnEvent(Alt.events,'PLAYER_EQUIPMENT_CHANGED',1,false)
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
+assert(A.db.altEquipment[guid].schema==2 and A.db.altEquipment[guid].equipment[1]==false,
+ 'Confirmed removal of every item still saves a genuinely empty character')
+assert(G:Comparisons(G:Read(upgrade.link),live.profile,nil,A.db.altEquipment[guid].equipment)[1].text=='Upgrade: empty slot')
+-- Replace a damaged legacy character by logging in with its actual equipment.
+guid='Player-damaged'; F.equip(3,shoulders); Alt.events.scripts.OnEvent(Alt.events,'PLAYER_ENTERING_WORLD')
+Alt.events.scripts.OnUpdate(Alt.events,1)
+assert(A.db.altEquipment[guid].schema==2 and A.db.altEquipment[guid].equipment[3].id==shoulders.id)
+print('PASS: complete/partial inventory teardown, invalid legacy snapshots, real shoulders, genuine unequips and cache repair.')
 ''')
 
 def plain(value):

@@ -6,20 +6,52 @@ local function copy(t)
     if type(t)~="table" then return t end
     local out={}; for k,v in pairs(t) do out[k]=copy(v) end; return out
 end
-function Alt:Capture()
+local function hasEquipment(equipment)
+    for _,slot in ipairs(slots) do if type(equipment and equipment[slot])=="table" then return true end end
+    return false
+end
+local function usableSnapshot(character)
+    -- Older logout captures could replace every slot with false after the
+    -- inventory API stopped returning items. Those are not empty characters.
+    return character and type(character.equipment)=="table"
+        and (character.schema==2 or character.schema==1 and hasEquipment(character.equipment))
+end
+function Alt:Capture(final)
     if not A.db or not UnitGUID or not GetRealmName or not GetInventoryItemID or not GetInventoryItemLink then return end
     local guid=UnitGUID("player"); local profile=G:CurrentProfile()
     if not guid or not profile then return end
     local previous=A.db.altEquipment and A.db.altEquipment[guid]
-    local equipment,incomplete={},false
+    local observed,occupied={},false
     for _,slot in ipairs(slots) do
         local id,link=GetInventoryItemID("player",slot),GetInventoryItemLink("player",slot)
+        observed[slot]={id=id,link=link}
+        occupied=occupied or id~=nil and id~=0 or link~=nil
+    end
+    local emptied=self.emptyGUID==guid and self.emptied or {}
+    if not occupied then
+        -- Require actual unequip events to establish a completely naked
+        -- character. Login/loading/logout nil reads must preserve the last
+        -- live snapshot, including its timestamp.
+        local confirmed=usableSnapshot(previous)
+        for _,slot in ipairs(slots) do
+            if not previous or not previous.equipment or previous.equipment[slot]~=false then
+                confirmed=confirmed and emptied[slot]==true
+            end
+        end
+        if not confirmed then self.incomplete=true; return false end
+    end
+    local equipment,incomplete={},false
+    for _,slot in ipairs(slots) do
+        local id,link=observed[slot].id,observed[slot].link
+        if id and id~=0 or link then emptied[slot]=nil end
         local item,reason=G:Equipped(slot)
         local currentID,currentLink=GetInventoryItemID("player",slot),GetInventoryItemLink("player",slot)
         local stable=id==currentID and link==currentLink
         local old=previous and previous.equipment and previous.equipment[slot]
         if stable and (not id or id==0) and not link then
-            equipment[slot]=false -- Only a confirmed empty slot is an empty baseline.
+            if final and old and not emptied[slot] then
+                equipment[slot]=copy(old) -- Partial inventory teardown is not an unequip.
+            else equipment[slot]=false end
         elseif stable and item and not reason and item.id==id and item.link==link then
             equipment[slot]=copy(item)
         else
@@ -36,7 +68,7 @@ function Alt:Capture()
     end
     profile=copy(profile); profile.cachedDualWield=G.CanDualWield(profile)
     A.db.altEquipment=A.db.altEquipment or {}
-    A.db.altEquipment[guid]={schema=1,name=UnitName("player"),realm=GetRealmName(),
+    A.db.altEquipment[guid]={schema=2,name=UnitName("player"),realm=GetRealmName(),
         faction=UnitFactionGroup("player"),profile=profile,equipment=equipment,
         updated=time and time() or 0}
     self.incomplete=incomplete
@@ -99,7 +131,7 @@ function Alt:Upgrades(item)
     local realm=GetRealmName and GetRealmName()
     local faction=UnitFactionGroup and UnitFactionGroup("player")
     for id,character in pairs(A.db.altEquipment or {}) do
-        if id~=guid and character.schema==1 and character.realm==realm and character.faction==faction
+        if id~=guid and usableSnapshot(character) and character.realm==realm and character.faction==faction
             and G.Allowed(item,character.profile) then
             local best
             for _,row in ipairs(G:Comparisons(item,character.profile,nil,character.equipment)) do
@@ -189,12 +221,22 @@ end
 Alt.RegisterTooltip=register
 for tip in pairs(G.tooltips) do register(tip) end
 local events=CreateFrame("Frame"); Alt.events=events
-for _,event in ipairs({"PLAYER_ENTERING_WORLD","PLAYER_EQUIPMENT_CHANGED","PLAYER_LEVEL_UP","PLAYER_TALENT_UPDATE",
+for _,event in ipairs({"PLAYER_ENTERING_WORLD","PLAYER_LEAVING_WORLD","PLAYER_EQUIPMENT_CHANGED","PLAYER_LEVEL_UP","PLAYER_TALENT_UPDATE",
     "CHARACTER_POINTS_CHANGED","SPELLS_CHANGED","PLAYER_LOGOUT","GET_ITEM_INFO_RECEIVED"}) do events:RegisterEvent(event) end
-events:SetScript("OnEvent",function(_,event)
+events:SetScript("OnEvent",function(_,event,slot,hasCurrent)
     -- Logout, normal game exit and /reload flush current equipment immediately;
     -- do not depend on an outstanding debounced OnUpdate running first.
-    if event=="PLAYER_LOGOUT" then Alt.pending=nil; Alt:Capture(); return end
+    if event=="PLAYER_LOGOUT" or event=="PLAYER_LEAVING_WORLD" then
+        Alt.pending=nil; Alt:Capture(true); Alt.leavingWorld=true; return
+    end
+    if event=="PLAYER_ENTERING_WORLD" then Alt.leavingWorld=nil
+    elseif Alt.leavingWorld then return end -- Ignore inventory teardown events.
+    if event=="PLAYER_EQUIPMENT_CHANGED" then
+        local guid=UnitGUID and UnitGUID("player")
+        if Alt.emptyGUID~=guid then Alt.emptyGUID=guid; Alt.emptied={} end
+        Alt.emptied=Alt.emptied or {}
+        Alt.emptied[slot]=hasCurrent==false or nil
+    end
     if event~="GET_ITEM_INFO_RECEIVED" or Alt.pending or Alt.incomplete then Alt.pending=.5; Alt.attempts=0 end
 end)
 events:SetScript("OnUpdate",function(_,elapsed)

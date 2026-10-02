@@ -46,7 +46,7 @@ function E:PurchaseSucceeded()
         if current.record.material then self.materialOverrides[current.record.itemId]=false end
         table.remove(self.batch,1)
     end
-    if #self.batch>0 then self:Start(self.batch[1].record,true)
+    if #self.batch>0 then self:Start(self.batch[1].record,true,waiting)
     else self:Stop(self.skippedOwn and "Purchases complete. Some refills were skipped because your own auctions were excluded. Collect purchased items from the mailbox." or "Selected refill purchases complete. Collect your items from the mailbox.") end
 end
 

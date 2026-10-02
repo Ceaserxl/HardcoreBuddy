@@ -28,14 +28,18 @@ AuctionFrameTab_OnClick(E.tab)
 assert(E.panel:IsShown() and not U.panel:IsShown(),"Tabs are exclusive")
 assert(E.panel:GetWidth()==U.panel:GetWidth() and E.panel:GetHeight()==U.panel:GetHeight(),"Same dimensions")
 assert(E.rows[1].record.itemId==10513)
-local calls=0; local page=0; local ready=false; local empty=false; local bought
+local calls=0; local page=0; local ready=false; local empty=false; local bought; local queryName
+local clock=100; GetTime=function() return clock end
 local originalQuery=QueryAuctionItems
 QueryAuctionItems=function(name,minimum,maximum,p,usable,quality,all,exact,filters)
-    calls=calls+1; page=p
+    calls=calls+1; page=p; queryName=name
     assert(not minimum and not maximum and not usable and exact and not filters)
 end
 CanSendAuctionQuery=function() return ready end
-GetNumAuctionItems=function() return empty and 0 or 2,empty and 0 or 51 end
+GetNumAuctionItems=function()
+    local noResults=empty or queryName~='Crafted ammo'
+    return noResults and 0 or 2,noResults and 0 or 51
+end
 GetAuctionItemLink=function(_,index) return "item:10513:0:0:0" end
 UnitName=function() return "Player" end
 GetAuctionItemInfo=function(_,index)
@@ -50,6 +54,7 @@ StaticPopup_Show=function(_,text,_,data) E.testPopup=data; E.popupText=text end
 StaticPopup_Hide=function() E.testPopup=nil end
 PlaceAuctionBid=function(_,index,price) bought={index,price} end
 local function step()
+    clock=clock+.25
     E:Tick()
     if E.scan and E.scan.phase=="waiting" then E.scan.phase="reading" end
 end

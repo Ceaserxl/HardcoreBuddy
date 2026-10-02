@@ -58,6 +58,7 @@ local function materialName(pair)
 end
 function E:Items(context)
     local parents=baseItems(self,context)
+    self.craftParents=parents -- Keep stock reservations even when a ready craft is hidden.
     local out,demands,stockUsed={}, {}, {}
     local inventory=context.inventory or {}
     local bank=db() and db().auctionBank
@@ -65,7 +66,6 @@ function E:Items(context)
         local recipe=self:Recipe(parent.itemId)
         parent.craftable=recipe~=nil; parent.children={}
         parent.crafting=recipe and self.craftChoices[parent.itemId]==true
-        out[#out+1]=parent
         if recipe and (parent.missing or 0)>0 then
             local crafts=math.ceil(parent.missing/recipe.output)
             for _,pair in ipairs(recipe.reagents) do
@@ -86,7 +86,6 @@ function E:Items(context)
                     bankCount=banks,mailCount=mail,
                     bankKnown=bank~=nil,tracking=true}
                 parent.children[#parent.children+1]=child
-                if missing==nil or missing>0 then out[#out+1]=child end
                 if parent.crafting then
                     stockUsed[mid]=used+required
                     local demand=demands[mid]
@@ -98,6 +97,16 @@ function E:Items(context)
                     demand.target=demand.target+required
                     demand.missing=demand.count and math.max(0,demand.target-demand.count) or nil
                 end
+            end
+        end
+        parent.readyToCraft=parent.crafting and #parent.children>0
+        for _,child in ipairs(parent.children) do
+            if child.missing~=0 then parent.readyToCraft=false end
+        end
+        if not parent.readyToCraft then
+            out[#out+1]=parent
+            for _,child in ipairs(parent.children) do
+                if child.missing==nil or child.missing>0 then out[#out+1]=child end
             end
         end
     end
@@ -194,7 +203,12 @@ end
 -- Runs in the scan coroutine so larger whole-stack plans can yield.
 function E:SelectCheaperCrafts()
     local context=A:GetContext()
-    for id in pairs(self.craftChoices) do if not self.craftManual[id] then self.craftChoices[id]=nil end end
+    self.items=self:Items(context)
+    local ready={}
+    for _,parent in ipairs(self.craftParents) do if parent.readyToCraft then ready[parent.itemId]=true end end
+    for id in pairs(self.craftChoices) do
+        if not self.craftManual[id] and not ready[id] then self.craftChoices[id]=nil end
+    end
     local function plan(id,need)
         local result=self.results[id]
         if not result then return end
@@ -211,12 +225,12 @@ function E:SelectCheaperCrafts()
         self.craftChoices[id]=true
         self.items=self:Items(context)
         local parent
-        for _,r in ipairs(self.items) do if r.itemId==id and not r.craftParent then parent=r; break end end
+        for _,r in ipairs(self.craftParents) do if r.itemId==id then parent=r; break end end
         if parent then
             local buy=plan(id,parent.missing)
             for _,child in ipairs(parent.children) do if child.missing and child.missing>0 then plan(child.itemId,child.missing) end end
             local cost=self:CraftCost(parent)
-            if not buy or buy.units<parent.missing or not cost or cost>=buy.cost then self.craftChoices[id]=nil end
+            if not parent.readyToCraft and (not buy or buy.units<parent.missing or not cost or cost>=buy.cost) then self.craftChoices[id]=nil end
         else self.craftChoices[id]=nil end
     end
     self.items=self:Items(context)
@@ -225,7 +239,7 @@ end
 function E:CraftNotice()
     local bags,bank,mail,craftable=false,false,false,false
     local children={}
-    for _,parent in ipairs(self.items or {}) do
+    for _,parent in ipairs(self.craftParents or {}) do
         craftable=craftable or parent.craftable
         for _,child in ipairs(parent.children or {}) do children[#children+1]=child end
     end
