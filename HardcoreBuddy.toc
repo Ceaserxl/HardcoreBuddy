@@ -54,6 +54,7 @@ Data\CreatureAlertExclusions.lua
 CreatureAlerts.lua
 HunterTooltips.lua
 GearAdvisor.lua
+AltAdvisor.lua
 TalentAdvisor.lua
 TalentRanks.lua
 MapAdvisor.lua

@@ -493,6 +493,7 @@ function G:Equipped(slot)
 end
 
 function G.CanDualWield(p)
+    if p.cachedDualWield~=nil then return p.cachedDualWield end
     local dual=(p.class=="ROGUE" and p.level>=10) or ((p.class=="WARRIOR" or p.class=="HUNTER") and p.level>=20)
     if dual and IsSpellKnown then dual=IsSpellKnown(674) end
     return dual
@@ -506,7 +507,11 @@ function G.GainSummary(item,p,replacedItems,allStats,compact)
     return statChangeSummary(item,p,replacedItems,allStats,compact,true)
 end
 
-function G:Comparisons(item,p,slotOnly)
+function G:Comparisons(item,p,slotOnly,equipment)
+    local function equippedAt(slot)
+        if equipment then return equipment[slot] or nil end
+        return self:Equipped(slot)
+    end
     local candidates={}
     -- Slot, not armor subclass, chooses the baseline. Robes and chest armor
     -- both replace slot 5; stats decide the result across cloth/leather/mail/plate.
@@ -517,25 +522,25 @@ function G:Comparisons(item,p,slotOnly)
     for _,slot in ipairs(candidates) do
         local row={label=slotNames[slot],slot=slot}
         rows[#rows+1]=row
-        local equipped,reason=self:Equipped(slot)
+        local equipped,reason=equippedAt(slot)
         local candidateScore=self.Score(item,p,slot)
         local oldScore=0
         if equipped then oldScore=self.Score(equipped,p,slot) end
         local replacedItems=equipped and {equipped} or {}
         if item.unique and #candidates==2 then
             local otherSlot=slot==candidates[1] and candidates[2] or candidates[1]
-            local other,otherReason=self:Equipped(otherSlot)
+            local other,otherReason=equippedAt(otherSlot)
             reason=reason or otherReason
             if other and other.id==item.id then reason="Unique item in the other slot" end
         end
         if slot==17 then
-            local main,mainReason=self:Equipped(16)
+            local main,mainReason=equippedAt(16)
             reason=reason or mainReason
             if main and main.equip=="INVTYPE_2HWEAPON" then reason="Needs a one-handed main hand" end
             if item.classID==2 and not dual then reason="Dual wield not available" end
         elseif item.equip=="INVTYPE_2HWEAPON" and not slotOnly then
             row.label="Both hands"
-            local off,offReason=self:Equipped(17)
+            local off,offReason=equippedAt(17)
             reason=reason or offReason
             if off then
                 local offScore=self.Score(off,p,17)
@@ -643,7 +648,7 @@ function G:RefreshTooltips()
         if tip:IsShown() then
             if not self:IsEnabled() or A.db.gearAdvisorEnabled==false then
                 -- Close the visible tooltip so disabled advice is not left on screen.
-                if tip.hardcoreBuddyGear then tip:Hide() end
+                if tip.hardcoreBuddyGear or tip.hardcoreBuddyAlt then tip:Hide() end
             elseif tip.hardcoreBuddyGear then self:Add(tip) end
         end
     end
@@ -652,6 +657,7 @@ end
 function G:RegisterTooltip(tip)
     if not tip or G.tooltips[tip] then return end
     G.tooltips[tip]=true
+    if A.AltAdvisor then A.AltAdvisor.RegisterTooltip(tip) end
     if not tip.HasScript or tip:HasScript("OnTooltipSetItem") then
         tip:HookScript("OnTooltipSetItem",function(frame) G:Add(frame) end)
     end
