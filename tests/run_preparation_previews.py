@@ -49,7 +49,8 @@ combat=false; MOCK.Click(options.previewPanel)
 local x,y,w,h=R.panel.review:GetRect()
 assert(MOCK.HitTest(x+w/2,y+h/2)==R.panel.review,"Review is above the panel click target")
 MOCK.Click(R.panel.review)
-assert(A.state.view=="supplies" and A.state.filter=="Essentials" and not R.previewUntil and not R.panel:IsShown())
+assert(A.state.view=="supplies" and A.state.filter=="Essentials" and R.previewUntil and R.panel:IsShown(),"Review opens Essentials without dismissing the panel")
+R:Refresh(); assert(R.panel:IsShown(),"Preview remains visible after reviewing supplies")
 local rows={}
 for i=1,6 do rows[i]={itemId=117,name="Example "..i,count=i,target=20,missing=20-i} end
 R:ShowPanel(rows)

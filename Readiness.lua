@@ -41,7 +41,7 @@ function R:SuppliesChanged()
     self.refreshAt=GetTime()
 end
 function R:Open()
-    self.previewUntil=nil; self.previewRows=nil; self.panel:Hide(); self.toast:Hide()
+    self.toast:Hide()
     A:CreateWindow(); A.db.profile.mode="live"
     -- This is a fresh live-character destination, even after planning an alt.
     A.lastClass=nil
