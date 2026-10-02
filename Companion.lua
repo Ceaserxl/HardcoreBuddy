@@ -2,6 +2,44 @@
 local _, A = ...
 local P, G, D, S = A.Planner, A.Guide, A.Data, A.Supplies
 local C = {}; A.Companion = C
+C.eluneMacroBody="#showtooltip Light of Elune\n/use Light of Elune\n/use Hearthstone"
+function C.EluneMacroState()
+    if not GetMacroInfo or not GetNumMacros then return nil,false end
+    local general,character=GetNumMacros()
+    local found,correct
+    local function check(index)
+        local name,_,body=GetMacroInfo(index)
+        if name=="Light of Elune" then
+            found=index; correct=body==C.eluneMacroBody
+        elseif not found and body==C.eluneMacroBody then found=index; correct=true end
+    end
+    for i=1,general do check(i) end
+    for i=1,character do check((MAX_ACCOUNT_MACROS or 120)+i) end
+    return found,correct
+end
+function C.EluneMacroAction(drag)
+    local function notice(text)
+        if DEFAULT_CHAT_FRAME then DEFAULT_CHAT_FRAME:AddMessage("|cffffcd52HardcoreBuddy:|r "..text) end
+    end
+    if InCombatLockdown and InCombatLockdown() then notice("Leave combat to create, fix or drag the Elune macro."); return end
+    local index,correct=C.EluneMacroState()
+    if drag then
+        if index and correct then PickupMacro(index) else notice("Create or fix the Elune macro first.") end
+        return
+    end
+    if correct then return end
+    local ok,result
+    if index then
+        ok,result=pcall(EditMacro,index,nil,"INV_Potion_13",C.eluneMacroBody)
+    else
+        local general,character=GetNumMacros()
+        local perCharacter=character<(MAX_CHARACTER_MACROS or 18)
+        if not perCharacter and general>=(MAX_ACCOUNT_MACROS or 120) then notice("Your macro slots are full. Delete a macro, then try again."); return end
+        ok,result=pcall(CreateMacro,"Light of Elune","INV_Potion_13",C.eluneMacroBody,perCharacter)
+    end
+    if not ok or not result then notice("Could not save the Elune macro. Check your available macro slots.") end
+    A:Refresh()
+end
 local families, abilities = {}, {}
 for _, f in ipairs(D.PetGuide.families) do families[f.id]=f end
 for _, a in ipairs(D.PetGuide.abilities) do abilities[a.id]=a end
@@ -353,9 +391,17 @@ function C.Detail(context, action)
             for _,quest in ipairs({{1016,"Elemental Bracers"},{1017,"Mage Summoner"}}) do
                 local done=completed and completed(quest[1])
                 local status=done==true and "|cff66ee99Completed|r" or done==false and "|cffff6666Not completed|r" or "Status unknown"
-                out.blocks[#out.blocks+1]={title=quest[2],body=status,rightColumn=true,
+                out.blocks[#out.blocks+1]={title=quest[2]..(quest[1]==1017 and " - Recommended Level (28-30+)" or ""),body=status,rightColumn=true,
                     action={kind="questLink",questId=quest[1],name=quest[2]}}
             end
+            local macro,correct=C.EluneMacroState()
+            out.blocks[#out.blocks+1]={title="Create Elune Macro",plain=true,textInset=0,rightColumn=true}
+            out.blocks[#out.blocks+1]={title=correct and "Macro Created" or macro and "FIX ELUNE MACRO!!" or "Create Macro",
+                rightColumn=true,macroControl=true,macroCorrect=correct,macroBroken=macro and not correct,
+                action={kind="eluneMacro"}}
+            out.blocks[#out.blocks+1]={title="Light of Elune",body=correct and "Drag to your action bar" or "Create the macro to drag it to your action bar",
+                icon="Interface\\Icons\\INV_Potion_13",rightColumn=true,macroDrag=correct,
+                action=correct and {kind="eluneMacro",drag=true} or nil}
         end
         return out
     end

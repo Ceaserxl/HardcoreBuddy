@@ -68,6 +68,12 @@ local function tooltip(self)
     if not block then return end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:ClearLines()
+    if block.macroDrag or block.macroControl then
+        GameTooltip:SetText("Elune Macro")
+        GameTooltip:AddLine(addon.Companion.eluneMacroBody,1,1,1,true)
+        if block.macroDrag then GameTooltip:AddLine("Drag to your action bar",0.83,0.69,0.43,true) end
+        GameTooltip:Show(); return
+    end
     if block.enchantTooltip then
         local enchant=block.enchantTooltip
         GameTooltip:SetText(enchant.name,0.83,0.69,0.43,1,true)
@@ -135,6 +141,11 @@ local function newBlock(parent)
         tooltip(frame)
     end)
     frame.iconHit:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    local function dragMacro()
+        if frame.block and frame.block.macroDrag then addon.Companion.EluneMacroAction(true) end
+    end
+    frame:RegisterForDrag("LeftButton"); frame:SetScript("OnDragStart",dragMacro)
+    frame.iconHit:RegisterForDrag("LeftButton"); frame.iconHit:SetScript("OnDragStart",dragMacro)
     frame:EnableMouse(true)
     frame:SetScript("OnEnter",function(self)
         tooltip(self)
@@ -208,6 +219,7 @@ local function placeSupplyCell(label,text,index,width,y,header)
 end
 local function renderBlock(frame, block, width)
     frame.block = block; frame:SetWidth(width); frame:Show()
+    frame:SetEnabled(not block.macroCorrect); frame.iconHit:SetEnabled(not block.macroCorrect)
     frame.priority:SetShown(block.supply and block.priority~=nil)
     frame.title:SetFont(STANDARD_TEXT_FONT,block.supply and 14 or 15,"")
     frame.meta:SetFont(STANDARD_TEXT_FONT,11,"")
@@ -532,6 +544,15 @@ local function renderBlock(frame, block, width)
         frame.meta:Hide()
         y=math.max(headerBottom+summaryHeight,talentY+math.max(34,nameHeight+4+detailHeight))+10
         frame:SetHeight(y)
+    end
+    if block.macroControl then
+        local color=block.macroCorrect and {0.2,0.8,0.35} or block.macroBroken and {1,0.2,0.2}
+        if color then
+            frame.title:SetTextColor(unpack(color))
+            frame:SetBackdropColor(color[1]*0.15,color[2]*0.15,color[3]*0.15,1)
+            frame:SetBackdropBorderColor(color[1],color[2],color[3],1)
+        end
+        frame.chevron:Hide()
     end
     if block.guideTone then
         local tone=block.guideTone
@@ -1027,6 +1048,7 @@ function addon:OpenCurrentInstance()
     self:Refresh(true)
 end
 function addon:Activate(action)
+    if action.kind=="eluneMacro" then self.Companion.EluneMacroAction(action.drag); return end
     if action.kind=="questLink" then
         StaticPopupDialogs.HARDCOREBUDDY_QUEST_LINK={
             text="%s\nCtrl + C to copy the Wowhead link",button1=CLOSE or "Close",
