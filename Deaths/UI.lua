@@ -284,6 +284,17 @@ function H:LayoutPage(parent,left,top,width,height,state)
     self.host:ClearAllPoints()
     self.host:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)
     self.host:SetSize(width,height)
+    -- The journal scrolls its rows/body beneath fixed headings, but its scrollbar
+    -- uses the same full-page top edge as the other HardcoreBuddy pages.
+    for _,scroll in ipairs({self.window.listScroll,self.details.scroll}) do
+        local name=scroll.GetName and scroll:GetName()
+        local bar=scroll.ScrollBar or (name and _G[name.."ScrollBar"])
+        if bar then
+            bar:ClearAllPoints()
+            bar:SetPoint("TOPLEFT",self.host,"TOPRIGHT",4,-16)
+            bar:SetPoint("BOTTOMLEFT",self.host,"BOTTOMRIGHT",4,16)
+        end
+    end
     addon.Skin.LayoutSections(self.window,width)
     for i,stat in ipairs(self.window.stats) do
         local cell=(width-48)/4
@@ -335,7 +346,7 @@ function H:BuildUI()
     local f=Page(host)
     self.window=f
     addon.Skin.Paint(f,"note")
-    local title=Text(f,22,"TOPLEFT",0,-12,500)
+    local title=Text(f,22,"TOPLEFT",0,0,500)
     title:SetText("Death Journal"); title:SetTextColor(unpack(GOLD))
     f.realm=Text(f,12,"TOPLEFT",0,-42,650); f.realm:SetTextColor(unpack(MUTED))
     f.tableCard=addon.Skin.SectionBackdrop(f,154,274)
@@ -379,7 +390,7 @@ function H:BuildUI()
         if button.confirmUntil and GetTime()>=button.confirmUntil then button.confirmUntil=nil; button.label:SetText("Clear reports") end
     end)
     f.settings=Button(f,"Settings",110,0,0,function() addon:OpenSettings("Death Journal") end)
-    f.settings:ClearAllPoints(); f.settings:SetPoint("TOPRIGHT",-16,-12)
+    f.settings:ClearAllPoints(); f.settings:SetPoint("TOPRIGHT",-16,0)
     f.columnLabels={}
     for _,c in ipairs(self:JournalColumns(816)) do local label=Text(f,10,"TOPLEFT",c[2]+12,-163,c[3]); label:SetText(c[1]); label:SetTextColor(unpack(MUTED)); f.columnLabels[#f.columnLabels+1]=label end
     f.rows = {}
@@ -421,7 +432,7 @@ function H:BuildUI()
     local detail=Page(host); self.details=detail
     addon.Skin.Paint(detail,"note")
     detail.bodyCard=addon.Skin.SectionBackdrop(detail,54,354)
-    detail.title=Text(detail,19,"TOPLEFT",20,-20,390);detail.title:SetTextColor(unpack(GOLD))
+    detail.title=Text(detail,19,"TOPLEFT",0,0,390);detail.title:SetTextColor(unpack(GOLD))
     detail.scroll=CreateFrame("ScrollFrame",nil,detail,"UIPanelScrollFrameTemplate")
     detail.scroll:SetPoint("TOPLEFT",20,-58);detail.scroll:SetPoint("BOTTOMRIGHT",detail,"BOTTOMRIGHT",-40,60)
     detail.content=CreateFrame("Frame",nil,detail.scroll);detail.content:SetSize(375,230)
@@ -478,7 +489,7 @@ function H:BuildUI()
     addon.Skin.Paint(options,"note")
     addon.Skin.SectionBackdrop(options,82,344,1).title:SetText("Reports & sound")
     addon.Skin.SectionBackdrop(options,82,344,2).title:SetText("Display & volume")
-    local optionsTitle=Text(options,22,"TOPLEFT",0,-12,700)
+    local optionsTitle=Text(options,22,"TOPLEFT",0,0,700)
     optionsTitle:SetText("Death Journal"); optionsTitle:SetTextColor(unpack(addon.Skin.colors.gold))
     local intro=Text(options,12,"TOPLEFT",0,-46,720)
     intro:SetText("Using another death alert addon? Turn off HardcoreBuddy death alerts below.\nYour journal and compact feed will keep recording reports."); intro:SetTextColor(unpack(MUTED))

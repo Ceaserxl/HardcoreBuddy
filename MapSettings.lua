@@ -65,10 +65,10 @@ function M:LayoutSettings(parent,left,top,width,visible)
             b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE"); b.label:SetText(text)
             b:SetScript("OnClick",click); f.buttons[#f.buttons+1]=b; return b
         end
-        label(f,"Zone Advisor",0,12,480,22):SetTextColor(unpack(Skin.colors.gold))
+        label(f,"Zone Advisor",0,0,480,22):SetTextColor(unpack(Skin.colors.gold))
         label(f,"Choose how terrain, NPC markers and zone notices appear.",0,46,700)
         f.resetAll=button(f,"Reset all",0,12,120,function() M:ResetSettings("all") end)
-        f.resetAll:ClearAllPoints(); f.resetAll:SetPoint("TOPRIGHT",-12,-12)
+        f.resetAll:ClearAllPoints(); f.resetAll:SetPoint("TOPRIGHT",-12,0)
         local function section(name,title,description,y,height)
             local panel=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(panel,"card")
             panel:SetPoint("TOPLEFT",0,-y); panel:SetSize(720,height)

@@ -418,7 +418,7 @@ local function renderCard(frame, data, width)
     Skin.Paint(frame,"note")
     frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and not data.supplyTable and 22 or 15,"")
     frame.title:Show(); frame.note:Show()
-    local y=14
+    local y=frame.firstCard and 0 or 14
     if data.headerAction and not frame.headerButton then
         frame.headerButton=button(frame,"",112,function(self) addon:Activate(self.action) end)
     end
@@ -427,7 +427,7 @@ local function renderCard(frame, data, width)
         if data.headerAction then
             frame.headerButton.action=data.headerAction.action
             frame.headerButton.label:SetText(data.headerAction.label)
-            frame.headerButton:ClearAllPoints(); frame.headerButton:SetPoint("TOPRIGHT",-14,-10)
+            frame.headerButton:ClearAllPoints(); frame.headerButton:SetPoint("TOPRIGHT",-14,-y)
         end
     end
     if data.itemLayout then
@@ -989,6 +989,9 @@ function addon:Layout()
     for i=#navigation+1,#f.filters do f.filters[i]:Hide() end
     if doc.filters and not sidebar then y=y+34 end
     Skin.PlaceBackButton(f.back,f,y,left)
+    local toolbarY=y
+    -- Every page reserves navigation space, even when Back is hidden.
+    local toolbarHeight=bodyWidth<620 and 68 or 34
     local backRow=self:CanGoBack()
     local customDetail=doc.isDetail and self.state.detail and self.state.detail.item and self.state.detail.item.userItem
     local priorityItem=doc.isDetail and self.state.detail and self.state.detail.item
@@ -1013,8 +1016,7 @@ function addon:Layout()
     if customDetail then
         f.userRemove:ClearAllPoints(); f.userRemove:SetPoint("TOPLEFT",left+108,-y)
     end
-    if backRow or priorityItem or customDetail then y=y+34 end
-    if toolbarWrap then y=y+34 end
+    y=y+toolbarHeight
     local userPage=doc.view=="supplies" and self.state.filter=="User" and not doc.isDetail
     f.userEntry:SetShown(userPage)
     if userPage then
@@ -1027,7 +1029,7 @@ function addon:Layout()
     f.ammoChoice:SetShown(ammoPreview and true or false)
     if ammoPreview then
         f.ammoChoice.label:SetText("Plan ammo: "..(context.previewAmmo or "arrows"))
-        f.ammoChoice:ClearAllPoints(); f.ammoChoice:SetPoint("TOPLEFT",left,-y); y=y+34
+        f.ammoChoice:ClearAllPoints(); f.ammoChoice:SetPoint("TOPLEFT",left+108,-toolbarY)
     end
     local zonePage=doc.zoneRecommendations
     local spellPage=doc.view=="training" and self.state.filter=="Spells"
@@ -1044,19 +1046,18 @@ function addon:Layout()
         local labelWidth=math.ceil(f.searchLabel:GetStringWidth())+6
         local rowHeight=math.max(28,math.ceil(f.searchLabel:GetStringHeight())+8)
         local extraWidth=extra and extraButton:GetWidth()+6 or 0
-        local searchWidth=bodyWidth-labelWidth-8-f.clear:GetWidth()-6-extraWidth
+        local searchWidth=bodyWidth-108-labelWidth-8-f.clear:GetWidth()-6-extraWidth
         local wrapExtra=extra and searchWidth<80
         if wrapExtra then searchWidth=searchWidth+extraWidth; extraWidth=0 end
-        f.searchLabel:ClearAllPoints(); f.searchLabel:SetPoint("TOPLEFT",left,-y)
+        f.searchLabel:ClearAllPoints(); f.searchLabel:SetPoint("TOPLEFT",left+108,-toolbarY)
         f.searchLabel:SetSize(labelWidth,rowHeight)
-        f.search:ClearAllPoints(); f.search:SetPoint("TOPLEFT",left+labelWidth+8,-y)
+        f.search:ClearAllPoints(); f.search:SetPoint("TOPLEFT",left+108+labelWidth+8,-toolbarY)
         f.search:SetSize(math.max(50,searchWidth),rowHeight)
         if f.search:GetText()~=(self.state.query or "") then f.search:SetText(self.state.query or "") end
-        f.clear:ClearAllPoints(); f.clear:SetPoint("TOPRIGHT",-40-extraWidth,-y)
+        f.clear:ClearAllPoints(); f.clear:SetPoint("TOPRIGHT",-40-extraWidth,-toolbarY)
         f.clear:SetHeight(rowHeight)
-        f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("TOPRIGHT",-40,-y-(wrapExtra and rowHeight+6 or 0))
+        f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("TOPRIGHT",-40,-toolbarY-(wrapExtra and rowHeight+6 or 0))
         active(f.atLevel,(rangePage or spellPage) and showAll or self.state.atLevel)
-        y=y+rowHeight+8+(wrapExtra and 34 or 0)
     end
     y=y+self.MapAdvisor:LayoutControls(f,left,y,bodyWidth,doc.view=="training" and self.state.filter=="Zone Advisor")
     local deathPage=doc.view=="deaths"

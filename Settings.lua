@@ -88,7 +88,7 @@ function S:Create(parent)
     self.pages={}
     for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","NPC Alerts","Debug"}) do
         local page=CreateFrame("Frame",nil,content); page:SetAllPoints(content); page:Hide(); self.pages[name]=page
-        label(page,name,22,0,12,700):SetTextColor(unpack(Skin.colors.gold))
+        label(page,name,22,0,0,700):SetTextColor(unpack(Skin.colors.gold))
     end
     local general=self.pages.General
     label(general,"Window, access and field kit notifications.",12,0,46,700)
