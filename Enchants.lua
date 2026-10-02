@@ -211,7 +211,12 @@ function E.Detail(context,action)
         local b=row(title,body); b.plain=true; b.textInset=0; b.rightColumn=right; blocks[#blocks+1]=b
     end
     heading(selected~=recommended and "Selected Alternative" or "Recommended")
-    blocks[#blocks+1]=enchantBlock(g,selected)
+    local selectedBlock=enchantBlock(g,selected)
+    if selected==recommended and selectedBlock.enchantStatus=="Alt Enchanted" then
+        selectedBlock.enchantStatus="Missing"
+        selectedBlock.enchantTone="missing"
+    end
+    blocks[#blocks+1]=selectedBlock
     if selected then
         local requirement=row("Requirements",selected.armorKit and ("Leatherworking "..selected.skill.." | Item level "..selected.gearLevel.."+") or "Enchanting "..selected.skill)
         requirement.compactRow=true; blocks[#blocks+1]=requirement

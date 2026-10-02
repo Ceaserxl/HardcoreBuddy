@@ -147,6 +147,9 @@ local other
 for _,option in ipairs(feet.options) do if option~=feet.recommendation and option.enchantId~=1843 then other=option; break end end
 local ordered=E.Detail(A:GetContext(),{slotId=8,spellId=other.spellId})
 check(ordered.blocks[5].enchantStatus=="|cff62d79b(Recommended)|r" and ordered.blocks[6].enchantTooltip.enchantId==1843 and ordered.blocks[6].enchantStatus=="Enchanted","Applied enchant follows recommendation in alternatives")
+local recommendedDetail=E.Detail(A:GetContext(),{slotId=8,spellId=feet.recommendation.spellId})
+check(recommendedDetail.blocks[1].title=="Recommended" and recommendedDetail.blocks[2].enchantStatus=="Missing" and recommendedDetail.blocks[2].enchantTone=="missing","Selected recommendation is red and missing when an alternative is applied")
+check(recommendedDetail.blocks[5].enchantStatus=="Enchanted" and recommendedDetail.blocks[5].enchantTooltip.enchantId==1843,"Applied alternative remains enchanted beneath selected missing recommendation")
 gear[8].enchant=0
 local mats=E.MaterialItems(ctx)
 local saved=mats[1]
