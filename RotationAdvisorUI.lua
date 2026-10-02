@@ -1,5 +1,6 @@
 local _,A=...
 local R,S=A.RotationAdvisor,A.Skin
+local modeHelp="Gold: main recommendation. Blue: optional action. Press the highlighted spell on your Blizzard action bar. Disabled stops recommendations and removes HCB highlights."
 local function text(parent,value,x,y,width,style)
     local f=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
     S.TextStyle(f,style or "subtitle"); f:SetPoint("TOPLEFT",x,-y); f:SetWidth(width)
@@ -20,9 +21,9 @@ function R:CreateSettings(page)
         local b=button(page.mode,self.modes[key],220,function() self:SetMode(key) end)
         b:SetPoint("TOPLEFT",16+(i-1)*238,-38); page.buttons[key]=b
     end
-    page.help=text(page.mode,"Press the highlighted spell on your Blizzard action bar. Disabled stops recommendations and removes HCB highlights.",16,78,704)
+    page.help=text(page.mode,modeHelp,16,78,704)
     page.rogue=S.Section(page,"Rogue",182,100,1)
-    page.rogue.note=text(page.rogue,"Builders, finishers, Slice and Dice, interrupts and Evasion. Reacts to energy, combo points, health and learned talents.",16,38,320)
+    page.rogue.note=text(page.rogue,"Builders, finishers, Slice and Dice, interrupts and Evasion. Optional blue Throw glow for ranged pulls before combat, outside stealth.",16,38,320)
     page.mage=S.Section(page,"Mage",182,100,2)
     page.mage.note=text(page.mage,"Frost leveling, interrupts, shields and wand use. Reacts to movement, mana, health and observed nearby enemies.",16,38,320)
 end
@@ -37,7 +38,7 @@ function R:LayoutSettings(width)
         local b=page.buttons[key]; b:ClearAllPoints(); b:SetPoint("TOPLEFT",16+(i-1)*(cell+8),-38); b:SetWidth(cell)
         b.selected=self:Mode()==key; S.ControlEnabled(b,key=="disabled" or key=="assistant" and supported); S.ButtonState(b,b.selected,nil,false)
     end
-    page.help:SetText(supported and "Press the highlighted spell on your Blizzard action bar. Disabled stops recommendations and removes HCB highlights."
+    page.help:SetText(supported and modeHelp
         or "This proof of concept supports Rogue and Mage. Assistant Mode is unavailable for this character.")
     page.help:SetWidth(available); page.help:SetHeight(0)
     page.help:SetHeight(page.help:GetStringHeight())
@@ -95,11 +96,12 @@ function R:RefreshView()
     local _,class=UnitClass("player"); local mode=self:Mode(); local s=self.snapshot or {}
     view.subtitle:SetText("Live "..(self.supported[class] or class or "character").." | "..self.modes[mode].." | Proof of concept")
     local spell=self.current
+    view.next.title:SetText(self.optional and "Optional Action" or "Next Spell")
     view.next.icon:SetTexture(spell and spell.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
     view.next.icon:SetAlpha(spell and 1 or .35)
     view.next.name:SetText(spell and (spell.name..(spell.rank and spell.rank~="" and (" | "..spell.rank) or "")) or mode=="disabled" and "Disabled" or "Waiting")
     view.next.reason:SetText(not self.supported[class] and "Available for Rogue and Mage in this proof of concept." or self.reason or "Select a living enemy.")
-    view.next.bar:SetText(mode=="assistant" and (spell and ((self.highlightCount or 0)>0 and "Highlighted on your action bar." or "Place this spell on a Blizzard action bar to see the highlight.") or "No spell highlighted.")
+    view.next.bar:SetText(mode=="assistant" and (spell and ((self.highlightCount or 0)>0 and (self.optional and "Blue highlight: optional action." or "Gold highlight: main recommendation.") or "Place this spell on a Blizzard action bar to see the highlight.") or "No spell highlighted.")
         or "Enable Assistant Mode in Settings to begin.")
     view.character.values:SetText(mode=="disabled" and "Live monitoring is off." or
         "Health: "..pct(s.playerHealth).."\n"..(class=="ROGUE" and ("Energy: "..tostring(s.power or "Unknown").." | Combo points: "..(s.combo or 0)) or "Mana: "..pct(s.powerPercent))

@@ -85,6 +85,38 @@ decision(s,nil)
 s.interrupt=true; decision(s,"counterspell")
 s=state("MAGE",{"shoot"}); s.wanding=true; decision(s,nil)
 
+local function pullState()
+    local pull=state('ROGUE',{'strike','throw'})
+    pull.combat=false; pull.targetCombat=false; pull.targetClose=false; pull.thrownEquipped=true
+    pull.spells.strike.range=false
+    return pull
+end
+local pull=pullState()
+local key,reason,optional=R.Decide(pull)
+check(key=='throw' and optional==true and reason:find('Optional',1,true),'Throw is explicitly optional pre-combat advice')
+for _,field in ipairs({'combat','targetCombat','stealthed','moving','dead','mounted','casting','controlled','targetPlayer','targetClose'}) do
+    pull=pullState(); pull[field]=true
+    local result,_,isOptional=R.Decide(pull)
+    check(result~='throw' and not isOptional,'No optional pull while '..field)
+end
+for _,field in ipairs({'validTarget','thrownEquipped'}) do
+    pull=pullState(); pull[field]=false
+    check(R.Decide(pull)~='throw','Pull requires '..field)
+end
+for _,field in ipairs({'ready','usable','range'}) do
+    for _,unknown in ipairs({false,true}) do
+        pull=pullState()
+        if unknown then pull.spells.throw[field]=nil else pull.spells.throw[field]=false end
+        check(R.Decide(pull)~='throw','Throw requires confirmed '..field)
+    end
+end
+pull=pullState(); pull.spells.throw=nil; check(R.Decide(pull)~='throw','Unlearned Throw cannot be suggested')
+pull=pullState(); pull.targetCombat=nil; check(R.Decide(pull)~='throw','Unknown target combat state cannot suggest a pull')
+pull=pullState(); pull.class='MAGE'; check(R.Decide(pull)~='throw','Mage does not get Rogue pull advice')
+pull=pullState(); pull.combat=true; pull.spells.strike.range=true
+key,_,optional=R.Decide(pull)
+check(key=='strike' and not optional,'Combat builders remain primary recommendations')
+
 -- Simulate actual client reads; selection uses learned ranks, not future ranks.
 local now,combat=100,false
 GetTime=function() return now end
@@ -225,6 +257,9 @@ CreateFrame=function(kind,name,parent,template)
         frame.ProcStartFlipbook:SetAlpha(1)
         frame.ProcLoopFlipbook=frame:CreateTexture(nil,'ARTWORK')
         frame.ProcLoopFlipbook:SetAllPoints(frame); frame.ProcLoopFlipbook:SetAlpha(0)
+        for _,texture in ipairs({frame.ProcStartFlipbook,frame.ProcLoopFlipbook}) do
+            function texture:SetDesaturated(value) self.desaturated=value end
+        end
         frame.ProcStartAnim=animation(); frame.ProcLoop=animation()
         frame.ProcStartAnim.onFinished=function() frame.ProcLoop:Play() end
         frame:SetScript('OnHide',function(self)
@@ -257,6 +292,7 @@ check(R.highlights[action]:IsShown() and not R.highlights[other]:IsShown(),"Only
 check(not R.highlights[lower]:IsShown(),'Older rank with the same spell name is not highlighted')
 local glow=R.highlights[action]
 check(glow.template=='ActionButtonSpellAlertTemplate','Uses the actual Blizzard proc-alert template')
+check(glow.style=='primary' and glow.ProcStartFlipbook.desaturated==false and glow.ProcLoopFlipbook.vertexColor[1]==1,'Primary advice preserves the original gold artwork')
 check(action.SpellActivationAlert==nativeProc and nativeProc~=glow and nativeProc.ProcLoop:IsPlaying(),'Native proc ownership and animation stay untouched')
 check(glow.ProcStartAnim:IsPlaying() and glow.ProcStartAnim.plays==1,'New recommendation starts the native burst once')
 check(math.abs(glow:GetWidth()-50.4)<.001 and math.abs(glow:GetHeight()-50.4)<.001,'Native glow uses Blizzard button-relative sizing')
@@ -269,6 +305,13 @@ glow.ProcStartAnim:Finish()
 check(glow.ProcLoop:IsPlaying(),'Native startup completion begins the sustained proc loop')
 R:Update()
 check(glow.ProcStartAnim.plays==1 and glow.ProcLoop.plays==1,'Polling leaves the running native loop uninterrupted')
+R:Highlight(R.current,true)
+for _,texture in ipairs({glow.ProcStartFlipbook,glow.ProcLoopFlipbook}) do
+    check(texture.desaturated and texture.vertexColor[1]==.2 and texture.vertexColor[2]==.6 and texture.vertexColor[3]==1,'Both native animation phases are blue for optional advice')
+end
+check(glow.ProcStartAnim.plays==1 and glow.ProcLoop.plays==1,'Changing advice color preserves animation continuity')
+R:Update()
+check(glow.ProcStartFlipbook.desaturated==false and glow.ProcLoopFlipbook.vertexColor[1]==1,'Primary advice restores gold on reused frames')
 action:SetSize(42,40)
 check(originalResizeCalls==1 and math.abs(glow:GetWidth()-58.8)<.001 and glow:GetHeight()==56,'Bar resizing preserves existing scripts and native glow proportions')
 check(glow.ProcStartFlipbook:GetWidth()==150 and math.abs(glow.ProcStartFlipbook:GetHeight()-150*40/42)<.001,'Resizing updates the burst in both dimensions')
@@ -362,6 +405,43 @@ C_Spell,C_UnitAuras=modern,modernAuras
 GetSpellInfo,GetSpellCooldown,IsUsableSpell,IsSpellInRange,UnitAura=oldInfo,oldCooldown,oldUsable,oldRange,oldAura
 R.dirty=true
 A:HandleSlashCommand("rotation")
+
+-- Live Rogue equipment/range reads feed blue advice and return to gold in melee.
+local oldInventory,oldItemAPI,oldTargetCombat=GetInventoryItemID,C_Item,UnitAffectingCombat
+local oldX,oldAction=units.target.x,action.action
+local equippedRanged,targetCombat=2947,false
+GetInventoryItemID=function(_,slot) if slot==18 then return equippedRanged end end
+C_Item={GetItemInfoInstant=function(id) return id,'Weapon','Thrown','INVTYPE_THROWN',1,2,id==2947 and 16 or 3 end}
+UnitAffectingCombat=function() return targetCombat end
+spellData[1752]={name='Sinister Strike',iconID=136189}; spellData[2764]={name='Throw',iconID=132324}
+learned[1752]=true; learned[2764]=true
+range[1752]=false; range[2764]=true; units.target.x=15
+local oldActionInfo=GetActionInfo
+GetActionInfo=function(slot) if slot==4 then return 'spell',2764 elseif slot==5 then return 'spell',1752 end; return oldActionInfo(slot) end
+MOCK.class='ROGUE'; R.dirty=true; combat=false; action.action=4
+R:Update()
+check(R.current and R.current.id==2764 and R.optional and R.snapshot.thrownEquipped,'Rogue with equipped throwing weapons gets optional Throw')
+check(glow:IsShown() and glow.style=='optional','Throw button displays the blue native animation')
+check(R.view.next.title:GetText()=='Optional Action' and R.view.next.bar:GetText():find('Blue',1,true),'Advisor labels optional advice and explains blue')
+local throwStarts=glow.ProcStartAnim.plays
+R:Update(); check(glow.ProcStartAnim.plays==throwStarts,'Optional advice does not restart on each poll')
+equippedRanged=nil; R:Update(); check(not R.current and not glow:IsShown(),'Removing ranged weapon clears the optional highlight')
+equippedRanged=33333; R:Update(); check(not R.current,'A gun cannot produce a Throw suggestion')
+equippedRanged=2947; range[2764]=nil; R:Update(); check(not R.current,'Unknown Throw range cannot suggest a pull')
+range[2764]=true; targetCombat=true; R:Update(); check(not R.current,'Already engaged targets are not suggested for pulling')
+targetCombat=false; usable[2764]=false; R:Update(); check(not R.current,'Unusable Throw clears the pull suggestion')
+usable[2764]=nil; learned[2764]=nil; R.dirty=true; R:Update(); check(not R.current,'Unlearned Throw is excluded from live advice')
+learned[2764]=true; R.dirty=true; R:Update()
+A.characterDB.rotationMode='disabled'; R:Update()
+check(not R.optional and not R.current and not glow:IsShown(),'Disabled mode clears optional state and blue glow')
+A.characterDB.rotationMode='assistant'; combat=true; units.target.x=3; range[1752]=true; action.action=5
+R:Update()
+check(R.current.id==1752 and not R.optional and glow.style=='primary' and not glow.ProcLoopFlipbook.desaturated,'Entering melee restores the primary gold rotation on the same button')
+check(R.view.next.title:GetText()=='Next Spell' and R.view.next.bar:GetText():find('Gold',1,true),'Main advice restores the normal heading and gold explanation')
+check(action.SpellActivationAlert==nativeProc and nativeProc.ProcLoopFlipbook.desaturated==nil,'Optional coloring never changes native spell proc artwork')
+GetInventoryItemID,C_Item,UnitAffectingCombat=oldInventory,oldItemAPI,oldTargetCombat
+GetActionInfo=oldActionInfo; units.target.x=oldX; action.action=oldAction
+MOCK.class='MAGE'; combat=false; R.dirty=true; R:Update()
 MOCK.RotationChecks=count
 print("PASS: "..count.." rotation checks: priorities, live reads, rank changes, conservative AoE, mode state, UI and highlight lifecycle.")
 ''')

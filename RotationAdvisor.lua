@@ -7,7 +7,7 @@ R.definitions={
     MAGE={frostbolt=116,fireball=133,fireblast=2136,nova=122,explosion=1449,
         counterspell=2139,barrier=11426,shield=1463,evocation=12051,shoot=5019},
     ROGUE={strike=1752,eviscerate=2098,slice=5171,kick=1766,evasion=5277,
-        riposte=14251,hemorrhage=16511,flurry=13877,cheapshot=1833},
+        riposte=14251,hemorrhage=16511,flurry=13877,cheapshot=1833,throw=2764},
 }
 local ccIDs={118,6770,2094,1776,2637,9484,5782,6358}
 local function clock() return GetTime and GetTime() or 0 end
@@ -188,6 +188,8 @@ function R:Snapshot()
     s.casting=(UnitCastingInfo and UnitCastingInfo("player")) or (UnitChannelInfo and UnitChannelInfo("player"))
     s.attackingPlayer=UnitIsUnit and UnitIsUnit("targettarget","player") or false
     s.targetPlayer=UnitIsPlayer and UnitIsPlayer("target") or false
+    s.targetCombat=UnitAffectingCombat and not not UnitAffectingCombat("target")
+    s.thrownEquipped=self.class=="ROGUE" and A.Ammunition.Kind()=="thrown"
     s.targetClose=close("target",self.class=="ROGUE" and 5 or 10); s.controlled=s.validTarget and self:Controlled("target")
     local currentSpell=C_Spell and C_Spell.IsCurrentSpell or IsCurrentSpell
     local active=self.spells.shoot and currentSpell and currentSpell(self.spells.shoot.id)
@@ -224,6 +226,10 @@ function R.Decide(s)
     if s.controlled then return nil,"Target is crowd controlled. Avoid breaking it." end
     local hp,thp,mp=s.playerHealth,s.targetHealth,s.powerPercent
     if s.class=="ROGUE" then
+        if not s.combat and s.targetCombat==false and not s.stealthed and not s.moving
+            and s.targetClose==false and s.thrownEquipped and can("throw") and s.spells.throw.range==true then
+            return "throw","Optional: pull with Throw, then let the enemy come to you.",true
+        end
         if s.combat and hp and hp<=35 and s.attackingPlayer and s.targetClose and not s.buffs.evasion and can("evasion") then return choose("evasion","Low health while taking melee attacks.") end
         if s.interrupt and can("kick") then return choose("kick","Interrupt the target's cast.") end
         if s.stealthed and can("cheapshot") then return choose("cheapshot","Open from stealth with a stun.") end
@@ -293,7 +299,19 @@ function R:PrepareHighlights()
         end
     end
 end
-function R:Highlight(spell)
+local function colorHighlight(glow,optional)
+    local style=optional and "optional" or "primary"
+    if glow.style==style then return end
+    glow.style=style
+    for _,texture in ipairs({glow.ProcStartFlipbook,glow.ProcLoopFlipbook}) do
+        -- Remove the gold baked into the artwork before tinting it blue.
+        -- Primary recommendations retain Blizzard's original artwork colors.
+        texture:SetDesaturated(not not optional)
+        if optional then texture:SetVertexColor(.2,.6,1,1)
+        else texture:SetVertexColor(1,1,1,1) end
+    end
+end
+function R:Highlight(spell,optional)
     self.highlightCount=0
     for button,glow in pairs(self.highlights) do
         local slot=button.action or button.GetAttribute and button:GetAttribute("action")
@@ -303,6 +321,7 @@ function R:Highlight(spell)
         if spell and kind=="spell" and button:IsVisible() then
             match=id==spell.id -- Lower ranks with the same name are not the recommended spell.
         end
+        if match then colorHighlight(glow,optional) end
         glow:SetShown(match)
         if match then self.highlightCount=self.highlightCount+1 end
     end
@@ -310,12 +329,12 @@ end
 function R:Update()
     if not A.characterDB then return end
     if self.suspended or self:Mode()=="disabled" then
-        self.current=nil; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
+        self.current=nil; self.optional=nil; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
     else
         self.snapshot=self:Snapshot()
-        local key,reason=self.Decide(self.snapshot)
-        self.current=key and self.snapshot.spells[key]; self.reason=reason
-        self:Highlight(self:Mode()=="assistant" and self.current or nil)
+        local key,reason,optional=self.Decide(self.snapshot)
+        self.current=key and self.snapshot.spells[key]; self.reason=reason; self.optional=not not (self.current and optional)
+        self:Highlight(self:Mode()=="assistant" and self.current or nil,self.optional)
     end
     if self.RefreshView then self:RefreshView() end
 end
