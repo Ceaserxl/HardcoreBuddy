@@ -175,8 +175,11 @@ local function bandageCards(context,state)
         cards[1].blocks={bandage(recommended.itemId)}
         cards[1].supplyTable=true; cards[1].fullWidth=true
     elseif recommended then
-        cards[1].note=cards[1].note.."\n"..items[recommended.itemId].name.." is the health-based recommendation; "..
-            (plan.highest.status=="unknown" and "First Aid or recipe data is unavailable." or "you cannot make it yet.")
+        local block=bandage(recommended.itemId)
+        block.body=(plan.highest.status=="unknown" and "First Aid or recipe data is unavailable."
+            or "You cannot make it yet.").." Requires First Aid "..recommended.craftSkill.." and the learned recipe."
+        cards[1].blocks={block}
+        cards[1].supplyTable=true; cards[1].fullWidth=true
     end
     if context.mode=="preview" then cards[1].note=cards[1].note.." Uses your current character's health and First Aid." end
     local highest=plan.highest
@@ -198,7 +201,36 @@ local function bandageCards(context,state)
         local training=professionBlocks(context,"bandage")
         if #training>0 then cards[#cards+1]=card("First Aid training",nil,training) end
     end
-    return cards
+    -- Reuse the ordinary supply details layout and toolbar. Keep the other
+    -- health/recipe ranks in the right column, without duplicating the selected item.
+    local selected=S.Selection(context,"bandage")
+        or (plan.canMake and recommended.itemId) or highest.itemId or (recommended and recommended.itemId)
+    if not selected or not items[selected] then return cards end
+    local out=C.Detail(context,{kind="item",item=items[selected]})
+    local blocks={}
+    for _,block in ipairs(out.blocks) do
+        if not block.rightColumn and not (block.action and block.action.kind=="profession") then blocks[#blocks+1]=block end
+    end
+    for _,section in ipairs(cards) do
+        local remaining={}
+        for _,block in ipairs(section.blocks) do
+            if block.itemId~=selected then remaining[#remaining+1]=block
+            elseif block.supply then
+                out.itemSectionTitle=section.title
+                if recommended and selected==recommended.itemId and not plan.canMake then out.blocks[1].body=block.body end
+            end
+        end
+        if #remaining>0 then
+            local heading=row(section.title,section.note)
+            heading.plain=true; heading.textInset=0; heading.rightColumn=true
+            blocks[#blocks+1]=heading
+            for _,block in ipairs(remaining) do block.rightColumn=true; blocks[#blocks+1]=block end
+        end
+    end
+    local toggle=row(state.showAllBandages and "Show fewer" or "Show all",nil,{kind="bandageRanks"})
+    toggle.rightColumn=true; blocks[#blocks+1]=toggle
+    out.blocks=blocks
+    return {out}
 end
 function C.TabLabel(tab)
     return tab=="Gear" and "Gear Advisor" or tab=="Talents" and "Talent Advisor" or tab

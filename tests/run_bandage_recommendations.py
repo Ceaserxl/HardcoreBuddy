@@ -29,7 +29,9 @@ end
 context.maxHealth=640
 local d=doc(); local rows,count=ids(d)
 assert(count==2 and rows[6451] and rows[14530])
-assert(d.cards[1].title=="Recommended Based on Health - Maximum Health: 640" and d.cards[2].title=="Highest Rank Available")
+assert(d.cards[1].itemLayout and d.cards[1].quantityRecord, "Standard supply details layout and controls")
+assert(d.cards[1].itemSectionTitle=="Highest Rank Available")
+assert(rows[6451].rightColumn and not rows[14530].rightColumn,"Other ranks right, selected bandage left")
 for _,c in ipairs(d.cards) do assert(c.title~="Bandages","No redundant Bandages heading") end
 assert(not rows[6451].readOnlyTarget and rows[6451].editTarget,"Recommended lower rank remains editable")
 context.maxHealth=641; assert(ids(doc())[8544],"Next healing tier after boundary")
@@ -39,14 +41,15 @@ context.maxHealth=4000; assert(select(2,ids(doc()))==1,"Health above all ranks u
 context.maxHealth=700
 for i=5,#recipes do context.professions.known[recipes[i].spellId]=false end
 d=doc(); rows,count=ids(d)
-assert(count==1 and rows[3531] and d.cards[2].title=="Highest Rank Available","Cannot make recommended: show highest learned")
+assert(count==2 and rows[3531] and rows[8544],"Uncraftable recommendation is a real item row")
+assert(rows[8544].body:find("cannot make it yet",1,true) and rows[8544].action.kind=="item","Requirement subtext and clickable details")
 context.professions.skills.bandage=80
 assert(ids(doc())[3530],"Crafting skill gates known recipes")
 state.showAllBandages=true
 assert(select(2,ids(doc()))==10,"Show all includes every remaining rank once")
 state.showAllBandages=nil; context.maxHealth=nil
 assert(ids(doc())[3530],"Unknown health uses actual craftable rank")
-assert(doc().cards[1].title=="Recommended Based on Health - Maximum Health: Unavailable")
+assert(doc().cards[1].itemLayout,"Unknown health retains standard item layout")
 context.professions.skills.bandage=0
 assert(select(2,ids(doc()))==0,"Unlearned profession never claims a craftable rank")
 context.maxHealth=640; context.professions.skills.bandage=300
@@ -54,13 +57,14 @@ for _,r in ipairs(recipes) do context.professions.known[r.spellId]=true end
 A.GetContext=function() return context end
 A.state=state; A:Refresh(true)
 local original=A.state
-MOCK.Click(A.window.cards[1].headerButton)
+A:Activate({kind="bandageRanks"})
 assert(state.showAllBandages and select(2,ids(A.document))==10)
 for _,c in ipairs(A.document.cards) do assert(c.title~="First Aid training","Completed First Aid has no empty training heading") end
-MOCK.Click(A.window.cards[1].headerButton)
+A:Activate({kind="bandageRanks"})
 assert(not state.showAllBandages and select(2,ids(A.document))==2 and A.state==original)
-local header=A.window.cards[1].content.blocks[1]
-MOCK.Click(header)
+local target
+for _,b in ipairs(A.window.cards[1].content.blocks) do if b.block and b.block.itemId==6451 then target=b end end
+assert(target); MOCK.Click(target)
 assert(A.document.isDetail and A.window.cards[1].detailQuantity.quantity:IsShown(),"Recommended lower rank opens editable details")
 A:Back(); assert(A.state==original)
 
