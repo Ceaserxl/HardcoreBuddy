@@ -30,6 +30,7 @@ function E:BuySelected()
     if self.scan or self.batch or self.awaitingBuy or self.confirmation or not self.open then return end
     local _,_,_,unknown,queue=self:Estimate()
     if unknown or #queue==0 then return end
+    self.skippedOwn=false
     self.batch=queue
     self:Start(queue[1].record,true)
 end
@@ -45,5 +46,25 @@ function E:PurchaseSucceeded()
         table.remove(self.batch,1)
     end
     if #self.batch>0 then self:Start(self.batch[1].record,true)
-    else self:Stop("Selected refill purchases complete. Collect your items from the mailbox.") end
+    else self:Stop(self.skippedOwn and "Purchases complete. Some refills were skipped because your own auctions were excluded. Collect purchased items from the mailbox." or "Selected refill purchases complete. Collect your items from the mailbox.") end
+end
+
+function E:OwnAuctionRejected()
+    local waiting=self.awaitingBuy; if not waiting then return end
+    self.awaitingBuy=nil
+    self.ownSellers=self.ownSellers or {}
+    self.ownSellers[waiting.listing.owner]=true
+    self.results[waiting.listing.itemId]=nil
+    -- The failed buy filled nothing. Replan the unchanged remainder without this seller.
+    if self.batch and self.batch[1] then
+        self.batch[1].ownRejected=true
+        self:Start(self.batch[1].record,true)
+    else self:Stop("Your own auction was skipped. Scan again to find another seller.") end
+end
+function E:SkipOwnAuctionItem()
+    if not self.batch then return end
+    self.skippedOwn=true
+    table.remove(self.batch,1)
+    if #self.batch>0 then self:Start(self.batch[1].record,true)
+    else self:Stop("Queue finished. Some refills were skipped because your own auctions were excluded.") end
 end

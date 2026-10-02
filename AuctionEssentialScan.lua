@@ -33,7 +33,7 @@ function E:Listing(index,id)
     local link=GetAuctionItemLink("list",index)
     if not name or not link or not count or count<=0 or not owner or owner=="" then return nil,false end
     if tonumber(link:match("item:(%d+)"))~=id or not buyout or buyout<=0
-        or owner==UnitName("player") then return nil,true end
+        or owner==UnitName("player") or self.ownSellers and self.ownSellers[owner] then return nil,true end
     return {name=name,link=link,count=count,buyout=buyout,owner=owner,index=index,itemId=id},true
 end
 function E:AcceptPurchase(data)
@@ -92,7 +92,11 @@ function E:Tick()
         else result.count=nil; result.buyout=nil end
         if s.purchase then
             s.best=plan.offers[1]
-            if not s.best then self:Stop("No reasonably priced refill is available."); return end
+            if not s.best then
+                if self.batch and self.batch[1].ownRejected then self:SkipOwnAuctionItem()
+                else self:Stop("No reasonably priced refill is available.") end
+                return
+            end
             s.page=s.best.page; s.verify=true; s.phase="query"; s.since=GetTime(); self:Refresh(); return
         end
         s.item=s.item+1; s.page=0; s.best=nil; s.offers=nil; s.phase="query"; s.since=GetTime()

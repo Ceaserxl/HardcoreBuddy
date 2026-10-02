@@ -94,6 +94,33 @@ A.characterDB.essentialSkipConfirmation=true
 empty=false; bought=nil; E:Search(rows[1]); finish()
 assert(E.confirmation and E.testPopup and not bought,"Regular confirmation always shown")
 E:Stop()
+ERR_AUCTION_BID_OWN="Cannot buy own auction"
+local info=GetAuctionItemInfo
+GetAuctionItemInfo=function(...)
+ local values={info(...)}
+ if page==0 and values[14]=='Seller' then values[14]='OtherSeller' end
+ return unpack(values)
+end
+E.batch={{record=rows[1],remaining=11,ceiling=500}}
+E:Start(rows[1],true); finish()
+StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnAccept(nil,E.confirmation)
+E.events.scripts.OnEvent(nil,'UI_ERROR_MESSAGE',1,ERR_AUCTION_BID_OWN)
+assert(E.batch[1].remaining==11 and not E.awaitingBuy and E.scan,'Own-auction failure replans without reducing remaining quantity')
+finish()
+assert(E.confirmation and E.confirmation.owner=='OtherSeller','Next confirmation uses another seller')
+E:Stop()
+GetAuctionItemInfo=info
+E.batch={{record=rows[1],remaining=11,ceiling=500,ownRejected=true},{record=rows[2],remaining=4,ceiling=500}}
+E:Start(rows[1],true)
+for i=1,100 do
+ if E.batch and #E.batch==1 then break end
+ step()
+end
+assert(E.batch and #E.batch==1 and E.batch[1].record==rows[2] and E.scan,'If only own auctions remain, next queued item continues')
+E:Stop(); E.ownSellers=nil
+E.awaitingBuy={listing={owner='Seller'}}
+E.events.scripts.OnEvent(nil,'UI_ERROR_MESSAGE',2,'Not enough money')
+assert(not E.awaitingBuy and not E.scan,'Unrelated purchase errors still stop')
 AuctionFrame:SetSize(900,500); U:Layout(); E:Refresh()
 assert(E.panel:GetWidth()==U.panel:GetWidth() and E.panel:GetHeight()==U.panel:GetHeight())
 E:Start(); AuctionFrameTab_OnClick(U.tab)

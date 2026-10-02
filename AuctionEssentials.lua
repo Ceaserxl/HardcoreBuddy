@@ -180,7 +180,11 @@ E.events:SetScript("OnEvent",function(_,event,...)
         local message=...
         if ERR_AUCTION_BID_PLACED and message==ERR_AUCTION_BID_PLACED then E:PurchaseSucceeded() end
     elseif event=="UI_ERROR_MESSAGE" then
-        if E.awaitingBuy then E:Stop("Purchase failed. Check the auction error before retrying.") end
+        local code,message=...
+        if E.awaitingBuy then
+            if ERR_AUCTION_BID_OWN and (message==ERR_AUCTION_BID_OWN or code==ERR_AUCTION_BID_OWN) then E:OwnAuctionRejected()
+            else E:Stop("Purchase failed. Check the auction error before retrying.") end
+        end
     elseif event=="AUCTION_ITEM_LIST_UPDATE" then
         if E.confirmation then E:Stop("Listings changed. Click the item to check again.")
         elseif E.scan and E.scan.phase=="waiting" then E.scan.phase="reading" end
