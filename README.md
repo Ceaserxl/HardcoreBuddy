@@ -37,6 +37,13 @@ Nested pages share **< Back** above the upper-left of the content. It stays
 in place while scrolling; the auction upgrades window uses the same placement.
 Supplies opens to **All** by default.
 
+**Supplies > Enchants**, after Scrolls, checks equipped gear and recommends
+Classic enchants by class and leveling tier. Open a slot for alternatives and
+recipe materials with bag counts. Armor kits are here too; shared materials
+are totaled across needed slots. Existing enhancements are kept unless a weaker
+matching enchant can be upgraded or you explicitly choose a replacement.
+See [enchant coverage and requirements](docs/enchants.md).
+
 ## Supply priorities and preparation
 
 **Supplies > Essentials** collects core food, drink, buff food, bandages, healing,

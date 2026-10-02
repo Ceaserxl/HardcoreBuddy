@@ -910,6 +910,23 @@ function addon:OpenCurrentInstance()
     self:Refresh(true)
 end
 function addon:Activate(action)
+    if action.kind=="enchantChoose" then
+        self:CommitInputs()
+        local context=self:GetContext()
+        if context.mode=="preview" then return end
+        for _,g in ipairs(self.Enchants.Scan(context)) do if g.slotId==action.slotId then
+            local allowed=action.spellId==nil or action.spellId=="kit" and (g.slotId==5 or g.slotId==7 or g.slotId==8 or g.slotId==10)
+            for _,r in ipairs(g.options) do if r.spellId==action.spellId then allowed=true end end
+            if allowed then
+                self.characterDB.enchantChoices=self.characterDB.enchantChoices or {}
+                self.characterDB.enchantChoices[g.slotId]=action.spellId
+                self.characterDB.enchantChoices[tostring(g.slotId)]=nil
+                if self.Readiness then self.Readiness:SuppliesChanged() end
+                self:Refresh()
+            end
+        end end
+        return
+    end
     if action.kind=="supplyDefault" then
         self:CommitInputs()
         if self.Supplies.DefaultGroup(self:GetContext(),action.item) or self.Supplies.CanDefaultBandage(self:GetContext(),action.item) then
@@ -983,7 +1000,7 @@ local FILTER_ICONS={
     Essentials="INV_Misc_Bag_08",Preparation="INV_Misc_Note_01",Appearance="INV_Misc_Book_09",
     ["Low Health"]="Spell_Holy_SealOfSacrifice",Rares="Spell_Nature_FarSight",Elites="Ability_Warrior_BattleShout",
     ["Reports"]="INV_Misc_Book_09",Options="Trade_Engineering",["All"]="INV_Misc_Bag_08",["Food & Drink"]="INV_Misc_Food_11",Buffs="INV_Potion_27",
-    Emergency="INV_Misc_Bandage_12",Potions="INV_Potion_54",Class="INV_Misc_Rune_01",Optional="INV_Misc_PocketWatch_01",User="INV_Misc_Note_01",Scrolls="INV_Scroll_03",Families="Ability_Hunter_BeastTaming",
+    Emergency="INV_Misc_Bandage_12",Potions="INV_Potion_54",Class="INV_Misc_Rune_01",Optional="INV_Misc_PocketWatch_01",User="INV_Misc_Note_01",Scrolls="INV_Scroll_03",Enchants="Trade_Engraving",Families="Ability_Hunter_BeastTaming",
     Abilities="Ability_Hunter_BeastCall",Pets="Ability_Hunter_Pet_Bear",Care="Ability_Hunter_MendPet",
     ["Pet Guide"]="Ability_Hunter_Pet_Bear",
     Overview="INV_Misc_Book_09",["Zone Advisor"]="INV_Misc_Map_01",Spells="INV_Misc_Book_07",["First Aid"]="INV_Misc_Bandage_12",Engineering="Trade_Engineering",Cooking="INV_Misc_Food_15",

@@ -44,6 +44,13 @@ function G.ItemFields(item,context)
         field("Finished item AH",info.finishedAHText)
     else field("Auction House",info.ahText) end
     field("Materials",info.materials or item.ingredients,nil,true)
+    if item.armorKit and item.reagents then
+        local stock=context and context.inventory or {}
+        for _,material in ipairs(item.reagents) do
+            local count=stock.available and stock.counts and (stock.counts[material[1]] or 0)
+            field(material[3],(count and (count>=material[2] and "|cff62d79b" or "|cffff785e")..count.."/"..material[2].."|r in bags" or "Need "..material[2].." | Bags unavailable").." (per kit)",material[1],true)
+        end
+    end
     field("Use level","Level "..item.level)
     if item.useSkill then field("Use requirement",item.useSkill.name.." "..item.useSkill.value) end
     if item.recommendLevel then field("Suggested from","Level "..item.recommendLevel) end

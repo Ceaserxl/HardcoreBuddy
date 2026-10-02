@@ -266,6 +266,7 @@ local guides={
 
 function C.Detail(context, action)
     local kind=action.kind
+    if kind=="enchantSlot" or kind=="enchantRecipe" then return A.Enchants.Detail(context,action) end
     if kind=="hunterChoices" then
         local guide=G.Hunter(context)
         return card("Common pet choices",nil,{guide.blocks[1]})
@@ -275,6 +276,7 @@ function C.Detail(context, action)
         local item=P.ItemForFaction(action.item,P.ContextFaction(context))
         if not item then return card("Unavailable route",nil,{row(nil,"This quest reward is not available for your faction.")}) end
         if item.armorKit and A.ArmorKits then item=A.ArmorKits.DetailItem(context,item) end
+        if item.enchantMaterial then item=A.Enchants.DetailMaterial(context,item) end
         local family=P.grouped[item.family] and item.family or nil
         local defaults=S.DefaultGroup(context,item)
         if defaults then
@@ -411,6 +413,9 @@ function C.Build(context,state)
                 local section=card(category,#group==0 and "No matching items in this category." or nil,group)
                 section.supplyTable=true; section.allSupplyTable=true; section.fullWidth=true
                 result.cards[#result.cards+1]=section
+                if category=="Enchants" then
+                    section.headerAction={label="Choose enchants",action={view="supplies",filter="Enchants"}}
+                end
                 if category=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
                     result.cards[#result.cards+1]=A.HunterTraining.Card(context)
                 end
@@ -419,6 +424,17 @@ function C.Build(context,state)
             result.cards[1]=card(state.filter,
                 state.filter=="User" and "Drag an item from your bags anywhere onto this page to add it." or nil,rows)
             result.cards[1].supplyTable=true
+            if state.filter=="Enchants" then
+                local kits,materials={},{}
+                for _,b in ipairs(rows) do
+                    local item=b.action and b.action.item
+                    local group=item and item.armorKit and kits or materials
+                    group[#group+1]=b
+                end
+                result.cards={A.Enchants.Card(context)}
+                if #kits>0 then local c=card("Armor kits",nil,kits); c.supplyTable=true; result.cards[#result.cards+1]=c end
+                if #materials>0 then local c=card("Materials to collect","Total for needed enchants across equipped slots.",materials); c.supplyTable=true; result.cards[#result.cards+1]=c end
+            end
             if state.filter=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
                 result.cards[#result.cards+1]=A.HunterTraining.Card(context)
             end

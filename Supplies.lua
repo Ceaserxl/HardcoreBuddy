@@ -3,7 +3,7 @@ local _, addon = ...
 local P = addon.Planner
 local S = {}
 addon.Supplies = S
-S.categories = {"All", "Food & Drink", "Buffs", "Potions", "Emergency", "Class", "Scrolls", "Optional", "User"}
+S.categories = {"All", "Food & Drink", "Buffs", "Potions", "Emergency", "Class", "Scrolls", "Enchants", "Optional", "User"}
 S.filters={"All","Essentials"}
 for i=2,#S.categories do S.filters[#S.filters+1]=S.categories[i] end
 S.priorities={"Essentials","Advanced","Optional"}
@@ -69,7 +69,7 @@ end
 
 function S.Category(item)
     if item.supplyCategory then return item.supplyCategory end
-    if item.armorKit then return "Buffs" end
+    if item.armorKit then return "Enchants" end
     if item.ammoKind then return "Class" end
     if item.userItem then return "User" end
     if item.family=="trollsblood" then return "Buffs" end
@@ -86,7 +86,7 @@ function S.NormalizeTarget(value,limit)
 end
 
 function S.DefaultTarget(item)
-    if item.armorKit then return item.recommendedTarget or 1 end
+    if item.armorKit or item.enchantMaterial then return item.recommendedTarget or 1 end
     if item.ammoKind then return item.ammoKind=="thrown" and 100 or 1000 end
     if item.userItem then return 1 end
     local family = item.family
@@ -225,6 +225,7 @@ function S.Build(context, state)
     for _,family in ipairs(order) do add(best[family]) end
     if addon.Ammunition then local ammo=addon.Ammunition.Recommend(context); if ammo then add(ammo) end end
     if addon.ArmorKits then for _,item in ipairs(addon.ArmorKits.Recommendations(context)) do add(item) end end
+    if addon.Enchants then for _,item in ipairs(addon.Enchants.MaterialItems(context)) do add(item) end end
     for _,item in ipairs(context.userItems or {}) do add(item) end
     return rows
 end

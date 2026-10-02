@@ -9,6 +9,14 @@ local rows={
     {18251,"Core Armor Kit",50,45,3,2503,300,22727,"05","3 Core Leather, 2 Rune Thread"},
 }
 A.Data.ArmorKits={items={}}
+local reagents={
+    [2304]={{2318,1,"Light Leather"}},
+    [2313]={{2319,4,"Medium Leather"},{2320,1,"Coarse Thread"}},
+    [4265]={{4234,5,"Heavy Leather"},{2321,1,"Fine Thread"}},
+    [8173]={{4304,5,"Thick Leather"},{4291,1,"Silken Thread"}},
+    [15564]={{8170,5,"Rugged Leather"}},
+    [18251]={{17012,3,"Core Leather"},{14341,2,"Rune Thread"}},
+}
 for _,r in ipairs(rows) do
     local defense=r[1]==18251
     local stat=defense and "defense" or "armor"
@@ -20,7 +28,7 @@ for _,r in ipairs(rows) do
     local item={itemId=r[1],id="armor-kit-"..r[1],name=r[2],level=r[3],gearLevel=r[4],
         power=r[5],enchantId=r[6],armorKit=true,defenseKit=defense,
         family=defense and "armor-kit-defense" or "armor-kit",group="Armor kits",classes={"All"},ease=defense and 4 or 2,
-        binding=false,icon="inv_misc_armorkit_"..r[9]..".jpg",ingredients=r[10],crafting=crafting,
+        binding=false,icon="inv_misc_armorkit_"..r[9]..".jpg",ingredients=r[10],crafting=crafting,reagents=reagents[r[1]],
         short="+"..r[5].." "..stat.." on one armor piece",
         detail="Permanently adds "..r[5].." "..stat.." to chest armor, gloves, leggings or boots.",
         route="Craft with Leatherworking or obtain the finished kit through trading where allowed. Leatherworking is not required to apply it.",

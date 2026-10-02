@@ -18,6 +18,7 @@ Data\FactionRules.lua
 Data\ProfessionProgression.lua
 Data\Crafting.lua
 Data\ArmorKits.lua
+Data\Enchants.lua
 Data\AdvisorGear.lua
 Data\AdvisorTalents.lua
 Data\MapNPCs.lua
@@ -34,6 +35,7 @@ Crafting.lua
 Ammunition.lua
 ArmorKits.lua
 Supplies.lua
+Enchants.lua
 Guide.lua
 Instances.lua
 HunterTraining.lua

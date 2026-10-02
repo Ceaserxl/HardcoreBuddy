@@ -62,10 +62,11 @@ function K.Recommendations(context)
         return {item},nil
     end
     local scan=K.Read(context.level)
+    local planned=A.Enchants and A.Enchants.PlannedSlots(context) or {}
     local items,groups={},{}
     for _,slot in ipairs(scan.slots) do
         local kit=slot.recommendation
-        if kit then
+        if kit and not planned[slot.slotId] then
             if not groups[kit.itemId] then
                 local item=copy(kit); item.targetSlots={}; item.targetDetails={}; item.recommendedTarget=0
                 items[#items+1]=item; groups[kit.itemId]=item

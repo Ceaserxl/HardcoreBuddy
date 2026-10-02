@@ -1,0 +1,57 @@
+# Supplies: Enchants
+
+Enchants follows Scrolls. It contains equipped-slot recommendations, armor kits,
+and an exact-item material shopping list. Open a slot to browse alternatives,
+then open a recipe to inspect its effect, requirements and bag counts. A manual
+choice is saved per character and slot. Automatic recommendation clears it.
+
+The bundled catalog contains 132 Classic Era Enchanting profession recipes and
+58 consumed material types, plus the existing six armor kits. It excludes Season
+of Discovery recipes. Quest/reputation head, leg and shoulder augments and
+Engineering scopes are not part of the Enchanting profession catalog.
+
+Source: [Wowhead Classic Enchanting spells](https://www.wowhead.com/classic/spells/professions/enchanting?filter=16;1;0).
+Each spell's tooltip, enchant effect ID, required skill, reusable rod and consumed
+materials were checked against its individual Classic spell page. The normalized
+facts are checked in at `reference/research/enchants.json`. `research_enchants.py`
+preserves downloaded pages and stops on access errors; `build_enchants.py` builds
+the runtime catalog from that cache. Neither script runs inside the addon.
+
+## Leveling policy
+
+Recommended character levels are budget tiers, **not enchant use requirements**:
+Enchanting skill 1–50: Level 1; 51–100: 10; 101–150: 20; 151–200: 30;
+201–250: 40; 251–290: 50; 291–300: 60. These intentionally avoid recommending
+endgame material costs on a low-level character. Alternative recipes within
+the current tier remain available, including situational resistance/profession
+enchants. Recommendations are class-based preparation suggestions, not simulated
+damage gains or live auction price estimates.
+
+Defaults favor stamina/health, useful primary stats, and movement speed on boots.
+Mana enchants are excluded for classes without mana. Spell/healing enchants are
+restricted to relevant classes; melee damage enchants are not Hunter defaults.
+There is no dependency on another addon's scoring or data at runtime.
+
+## Gear and material checks
+
+Checks use the actual equipped item link, equipment location, item level and
+permanent enchant ID. Item data that has not loaded remains unknown. Shield
+enchants require a shield; two-handed recipes require a two-handed melee weapon.
+Held-in-offhand items and wands are excluded. Cloth/leather/mail/plate weight
+does not change an otherwise valid armor enchant. Preview mode never reads or
+plans materials for the live character's equipment.
+
+An existing identical enchant needs no materials. Lower ranks of the same
+recommended stat can trigger an upgrade; unrelated enchants/armor kits are kept.
+Explicitly choosing a replacement tracks its reagents and warns that it replaces
+the existing enhancement. The addon never casts an enchant or confirms an
+overwrite. Choosing armor kits returns eligible pieces to the kit list.
+
+Materials are summed across all verified slots needing enchants so shared bag
+stock is not counted twice. Armor kits are excluded for those same pieces to
+avoid planning two permanent enhancements on one item. Tools are listed separately
+and are not consumed. Recipe possession and the player's Enchanting skill are
+not assumed; Self Found players must learn and apply their own recipes.
+
+Offline checks: `tests/run_enchants.py` and `tests/run_armor_kits.py`. Live WoW
+tooltips, inventory events and rendering still require an in-game check.
