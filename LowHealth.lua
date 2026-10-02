@@ -80,20 +80,20 @@ function H:LayoutSettings(parent,x,y,width,height,visible)
             return f
         end
         label("Low Health",22,0,0,600):SetTextColor(unpack(addon.Skin.colors.gold))
-        label("Flashing red text and an alarm when health falls below your threshold.",12,0,-46,700)
-        local warning=addon.Skin.Section(page,"Warning",82,316,1)
-        local sound=addon.Skin.Section(page,"Sound",82,316,2)
+        label("Flashing red text and an alarm when health falls below your threshold.",12,0,-34,700)
+        local warning=addon.Skin.Section(page,"Warning",62,244,1)
+        local sound=addon.Skin.Section(page,"Sound",62,244,2)
         page.checks={}
         for i,entry in ipairs({{"enabled","Enable low health warning"},{"sound","Play alarm sound"}}) do
             local key=entry[1]
             local owner=i==1 and warning or sound
             local box=CreateFrame("CheckButton",nil,owner,"BackdropTemplate")
-            box:SetSize(24,24); box:SetPoint("TOPLEFT",20,-56)
+            box:SetSize(24,24); box:SetPoint("TOPLEFT",20,-48)
             addon.Skin.Paint(box,"edit")
             box.mark=box:CreateFontString(nil,"OVERLAY","GameFontHighlight")
             box.mark:SetAllPoints()
             box.mark:SetJustifyH("CENTER"); box.mark:SetJustifyV("MIDDLE")
-            label(entry[2],12,54,-60,260,owner)
+            label(entry[2],12,54,-52,260,owner)
             box:SetScript("OnClick",function()
                 self.settings[key]=box:GetChecked() and true or false
                 if key=="enabled" and not self.settings.enabled then self.previewRemaining=nil; self:StopSound() end
@@ -102,13 +102,13 @@ function H:LayoutSettings(parent,x,y,width,height,visible)
             end)
             page.checks[key]=box
         end
-        label("Warn below",12,20,-114,100,warning)
+        label("Warn below",12,20,-92,100,warning)
         local input=CreateFrame("EditBox",nil,warning,"BackdropTemplate")
-        page.threshold=input; input:SetSize(54,28); input:SetPoint("TOPLEFT",122,-106)
+        page.threshold=input; input:SetSize(54,28); input:SetPoint("TOPLEFT",122,-84)
         addon.Skin.Paint(input,"edit"); input:SetFont(STANDARD_TEXT_FONT,14,"")
         input:SetAutoFocus(false); input:SetNumeric(true); input:SetMaxLetters(3)
         input:SetJustifyH("CENTER")
-        label("% health",12,188,-114,140,warning)
+        label("% health",12,188,-92,140,warning)
         local function commit()
             local value=tonumber(input:GetText())
             if value then self.settings.threshold=math.max(1,math.min(100,math.floor(value))) end
@@ -118,7 +118,7 @@ function H:LayoutSettings(parent,x,y,width,height,visible)
         input:SetScript("OnEditFocusLost",commit)
         input:SetScript("OnEscapePressed",function() input:SetText(tostring(self.settings.threshold)); input:ClearFocus() end)
         local preview=CreateFrame("Button",nil,warning,"BackdropTemplate")
-        page.preview=preview; preview:SetSize(280,30); preview:SetPoint("TOPLEFT",20,-174)
+        page.preview=preview; preview:SetSize(280,30); preview:SetPoint("TOPLEFT",20,-130)
         local title=preview:CreateFontString(nil,"OVERLAY","GameFontHighlight")
         title:SetAllPoints(); title:SetJustifyH("CENTER"); title:SetJustifyV("MIDDLE"); title:SetText("Preview warning")
         preview.label=title
@@ -128,9 +128,9 @@ function H:LayoutSettings(parent,x,y,width,height,visible)
         preview:SetScript("OnMouseDown",function() addon.Skin.ButtonState(preview,false,true,true) end)
         preview:SetScript("OnMouseUp",function() addon.Skin.ButtonState(preview,false,true,false) end)
         preview:SetScript("OnClick",function() input:ClearFocus(); self:Preview() end)
-        page.volumeLabel=label("",12,20,-114,300,sound)
+        page.volumeLabel=label("",12,20,-92,300,sound)
         local slider=CreateFrame("Slider",nil,sound,"BackdropTemplate"); page.volume=slider
-        slider:SetPoint("TOPLEFT",20,-144); slider:SetSize(300,18); slider:SetOrientation("HORIZONTAL")
+        slider:SetPoint("TOPLEFT",20,-116); slider:SetSize(300,18); slider:SetOrientation("HORIZONTAL")
         addon.Skin.Paint(slider,"edit"); slider:SetMinMaxValues(0,100); slider:SetValueStep(10); slider:SetObeyStepOnDrag(true)
         slider:SetThumbTexture("Interface\\Buttons\\WHITE8x8")
         slider:GetThumbTexture():SetSize(12,22); slider:GetThumbTexture():SetVertexColor(unpack(addon.Skin.colors.gold))
@@ -140,7 +140,7 @@ function H:LayoutSettings(parent,x,y,width,height,visible)
             self:StopSound()
         end)
         addon.Skin.InlineSlider(slider,"%",10)
-        label("The alarm plays once when the warning starts. Volume follows game Master volume.\n\nDisable an equivalent WeakAura to avoid duplicate warnings.",12,20,-196,300,sound)
+        label("The alarm plays once when the warning starts. Volume follows game Master volume.\nDisable an equivalent WeakAura to avoid duplicate warnings.",12,20,-158,300,sound)
         page:SetScript("OnHide",function() input:ClearFocus() end)
     end
     if not self.page then return end

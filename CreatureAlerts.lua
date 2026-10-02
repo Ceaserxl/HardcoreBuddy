@@ -246,7 +246,7 @@ function H:LayoutSettings(parent,x,y,width,height,section,visible)
         for i,entry in ipairs({{"enabled","Enable warnings"},{"sound","Play alert sound"},{"nonHostile","Include attackable neutral elites"}}) do
             local key=entry[1]
             local b=CreateFrame("CheckButton",nil,p,"BackdropTemplate"); p.checks[key]=b
-            b:SetSize(24,24); b:SetPoint("TOPLEFT",20,-118-(i-1)*40); addon.Skin.Paint(b,"edit")
+            b:SetSize(24,24); b:SetPoint("TOPLEFT",20,-98-(i-1)*34); addon.Skin.Paint(b,"edit")
             b.mark=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.mark:SetAllPoints(); b.mark:SetTextColor(unpack(addon.Skin.colors.gold))
             b.mark:SetJustifyH("CENTER"); b.mark:SetJustifyV("MIDDLE")
             b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetPoint("LEFT",b,"RIGHT",10,0); b.label:SetText(entry[2])
@@ -257,24 +257,24 @@ function H:LayoutSettings(parent,x,y,width,height,section,visible)
                 if key=="enabled" and not b:GetChecked() and self.warning.category==p.category then self.warning:Hide() end
             end)
         end
-        text("Display duration (seconds, 1-30)",12,-248)
+        text("Display duration (seconds, 1-30)",12,-206)
         p.duration=CreateFrame("EditBox",nil,p,"BackdropTemplate")
-        local edit=p.duration; edit:SetSize(52,28); edit:SetPoint("TOPLEFT",20,-276)
+        local edit=p.duration; edit:SetSize(52,28); edit:SetPoint("TOPLEFT",20,-228)
         addon.Skin.Paint(edit,"edit"); edit:SetFont(STANDARD_TEXT_FONT,14,""); edit:SetAutoFocus(false); edit:SetNumeric(true); edit:SetMaxLetters(2); edit:SetJustifyH("CENTER")
         local function commit() self.settings[p.category].duration=math.max(1,math.min(30,tonumber(edit:GetText()) or 10)); edit:SetText(tostring(self.settings[p.category].duration)) end
         edit:SetScript("OnEditFocusLost",commit); edit:SetScript("OnEnterPressed",function() commit(); edit:ClearFocus() end)
         edit:SetScript("OnEscapePressed",function() edit:SetText(tostring(self.settings[p.category].duration)); edit:ClearFocus() end)
         local b=CreateFrame("Button",nil,p,"BackdropTemplate"); p.preview=b
-        b:SetSize(160,30); b:SetPoint("TOPLEFT",20,-326)
+        b:SetSize(160,30); b:SetPoint("TOPLEFT",20,-272)
         b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetAllPoints(); b.label:SetText("Preview warning")
         b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE")
         addon.Skin.Button(b,"utility")
         b:SetScript("OnEnter",function() addon.Skin.ButtonState(b,false,true,false) end)
         b:SetScript("OnLeave",function() addon.Skin.ButtonState(b,false,false,false) end)
         b:SetScript("OnClick",function() edit:ClearFocus(); self:Show("Example creature",30,p.category=="rares" and "rare" or "elite","Hostile",p.category) end)
-        p.volumeLabel=text("",12,-418)
+        p.volumeLabel=text("",12,-356)
         local slider=CreateFrame("Slider",nil,p,"BackdropTemplate"); p.volume=slider
-        slider:SetPoint("TOPLEFT",20,-446); slider:SetSize(230,18); slider:SetOrientation("HORIZONTAL")
+        slider:SetPoint("TOPLEFT",20,-380); slider:SetSize(230,18); slider:SetOrientation("HORIZONTAL")
         addon.Skin.Paint(slider,"edit"); slider:SetMinMaxValues(0,100); slider:SetValueStep(10); slider:SetObeyStepOnDrag(true)
         slider:SetThumbTexture("Interface\\Buttons\\WHITE8x8")
         local thumb=slider:GetThumbTexture(); thumb:SetSize(12,22); thumb:SetVertexColor(unpack(addon.Skin.colors.gold))
@@ -286,13 +286,13 @@ function H:LayoutSettings(parent,x,y,width,height,section,visible)
         end)
         addon.Skin.InlineSlider(slider,"%",10)
         local neutral=CreateFrame("Button",nil,p,"BackdropTemplate"); p.neutralPreview=neutral
-        neutral:SetSize(180,30); neutral:SetPoint("TOPLEFT",20,-364)
+        neutral:SetSize(180,30); neutral:SetPoint("TOPLEFT",20,-310)
         neutral.label=neutral:CreateFontString(nil,"OVERLAY","GameFontHighlight"); neutral.label:SetAllPoints(); neutral.label:SetText("Preview neutral rare")
         neutral.label:SetJustifyH("CENTER"); neutral.label:SetJustifyV("MIDDLE"); addon.Skin.Button(neutral,"utility")
         neutral:SetScript("OnEnter",function() addon.Skin.ButtonState(neutral,false,true,false) end)
         neutral:SetScript("OnLeave",function() addon.Skin.ButtonState(neutral,false,false,false) end)
         neutral:SetScript("OnClick",function() edit:ClearFocus(); self:Show("Example rare",30,"rare","Neutral","rares") end)
-        text("Rares use voice; elites use a siren. Alerts pause during flights and while dead.",12,-494)
+        text("Rares use voice; elites use a siren. Alerts pause during flights and while dead.",12,-412)
         p:SetScript("OnHide",function() edit:ClearFocus() end)
     end
     local p=self.pages[category]; if not p then return end

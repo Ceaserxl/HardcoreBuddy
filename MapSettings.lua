@@ -42,7 +42,7 @@ function M:ResetSettings(section)
     if section=="all" or section=="exploration" then self.tintRevision=(self.tintRevision or 0)+1 end
     self:Changed()
 end
-function M:SettingsHeight() return 572 end
+function M:SettingsHeight() return 514 end
 
 function M:LayoutSettings(parent,left,top,width,visible)
     local picking=visible and A.state.mapIconKind~=nil
@@ -66,21 +66,21 @@ function M:LayoutSettings(parent,left,top,width,visible)
             b:SetScript("OnClick",click); f.buttons[#f.buttons+1]=b; return b
         end
         label(f,"Zone Advisor",0,0,480,22):SetTextColor(unpack(Skin.colors.gold))
-        label(f,"Choose how terrain, NPC markers and zone notices appear.",0,46,700)
+        label(f,"Choose how terrain, NPC markers and zone notices appear.",0,34,700)
         f.resetAll=button(f,"Reset all",0,12,120,function() M:ResetSettings("all") end)
         f.resetAll:ClearAllPoints(); f.resetAll:SetPoint("TOPRIGHT",-12,0)
         local function section(name,title,description,y,height)
             local panel=CreateFrame("Frame",nil,f,"BackdropTemplate"); Skin.Paint(panel,"card")
             panel:SetPoint("TOPLEFT",0,-y); panel:SetSize(720,height)
             panel.title=label(panel,title,16,16,460,15); panel.title:SetTextColor(unpack(Skin.colors.gold))
-            panel.description=label(panel,description,16,48,680)
+            panel.description=label(panel,description,16,44,680)
             local reset=button(panel,"Reset",0,12,120,function() M:ResetSettings(name) end)
             reset:ClearAllPoints(); reset:SetPoint("TOPRIGHT",-16,-12)
             return panel,reset
         end
-        f.exploration,f.resetExploration=section("exploration","Exploration","Choose how undiscovered areas look on the map.",82,182)
-        f.markers,f.resetMarkers=section("markers","NPC markers","Choose visible categories and click an icon to change it.",276,284)
-        f.notices,f.resetNotices=section("notices","Zone notices","Show known dangers in chat when you enter a zone.",82,182)
+        f.exploration,f.resetExploration=section("exploration","Exploration","Choose how undiscovered areas look on the map.",62,164)
+        f.markers,f.resetMarkers=section("markers","NPC markers","Choose visible categories and click an icon to change it.",238,264)
+        f.notices,f.resetNotices=section("notices","Zone notices","Show known dangers in chat when you enter a zone.",62,164)
         f.resetExploration:SetWidth(72); f.resetNotices:SetWidth(72)
         for i,mode in ipairs({{"off","Unchanged"},{"full","Reveal all"},{"tint","Tint unexplored"}}) do
             local key=mode[1]
@@ -118,22 +118,22 @@ function M:LayoutSettings(parent,left,top,width,visible)
             end)
             f.sliders[key]=b
         end
-        f.tintColor=button(f.exploration,"Choose tint color",16,126,216,function() M:OpenTintPicker() end)
+        f.tintColor=button(f.exploration,"Choose tint color",16,116,216,function() M:OpenTintPicker() end)
         f.swatch=f.tintColor:CreateTexture(nil,"ARTWORK"); f.swatch:SetTexture("Interface\\Buttons\\WHITE8x8")
         f.swatch:SetPoint("RIGHT",-10,0); f.swatch:SetSize(18,18)
         slider(f.exploration,"tintAlpha","Tint opacity",244,103,184,0,100,0.55,100,"%",true)
         for i,kind in ipairs({"rare","elite","boss","danger"}) do
             local key=kind
             local caption=({rare="Rares",elite="Elites",boss="World bosses",danger="Dangerous NPCs"})[kind]
-            check(f.markers,key,caption,16,78+(i-1)*36,175)
-            f.icons[key]=button(f.markers,"",240,74+(i-1)*36,464,function()
+            check(f.markers,key,caption,16,72+(i-1)*32,175)
+            f.icons[key]=button(f.markers,"",240,68+(i-1)*32,464,function()
                 A.state.mapIconKind=key; A.Settings.scroll:SetVerticalScroll(0); A:Refresh(true)
             end)
         end
-        slider(f.markers,"iconSize","Icon size",16,230,328,12,40,18,1," px")
-        slider(f.markers,"iconAlpha","Icon opacity",376,230,328,10,100,1,100,"%")
-        check(f.notices,"notify","Silent zone notices",16,104,220)
-        f.noticeHint=label(f.notices,"Chat only. No sound or banner.",16,146,220)
+        slider(f.markers,"iconSize","Icon size",16,210,328,12,40,18,1," px")
+        slider(f.markers,"iconAlpha","Icon opacity",376,210,328,10,100,1,100,"%")
+        check(f.notices,"notify","Silent zone notices",16,86,220)
+        f.noticeHint=label(f.notices,"Chat only. No sound or banner.",16,124,220)
     end
     local f=self.controls; f:SetShown(visible); if not visible then return 0 end
     local scale=math.min(1,width/744); local baseWidth=width/scale
@@ -143,7 +143,7 @@ function M:LayoutSettings(parent,left,top,width,visible)
     local explorationWidth=math.floor((panelWidth-12)*0.60)
     local noticeWidth=panelWidth-12-explorationWidth
     f.exploration:SetWidth(explorationWidth); f.notices:SetWidth(noticeWidth); f.markers:SetWidth(panelWidth)
-    f.notices:ClearAllPoints(); f.notices:SetPoint("TOPLEFT",12+explorationWidth,-82)
+    f.notices:ClearAllPoints(); f.notices:SetPoint("TOPLEFT",12+explorationWidth,-62)
     for _,panel in ipairs({f.exploration,f.notices,f.markers}) do
         panel.title:SetWidth(panel:GetWidth()-(panel==f.markers and 168 or 120))
         panel.description:SetWidth(panel:GetWidth()-32)
@@ -152,10 +152,10 @@ function M:LayoutSettings(parent,left,top,width,visible)
     local tintWidth=(explorationWidth-44)/2
     f.tintColor:SetWidth(tintWidth)
     f.sliders.tintAlpha:SetWidth(tintWidth); f.sliders.tintAlpha:ClearAllPoints()
-    f.sliders.tintAlpha:SetPoint("TOPLEFT",28+tintWidth,-126)
+    f.sliders.tintAlpha:SetPoint("TOPLEFT",28+tintWidth,-116)
     local modeWidth=(explorationWidth-48)/3
     for i,key in ipairs({"off","full","tint"}) do
-        local b=f.modes[key]; b:SetWidth(modeWidth); b:ClearAllPoints(); b:SetPoint("TOPLEFT",16+(i-1)*(modeWidth+8),-82)
+        local b=f.modes[key]; b:SetWidth(modeWidth); b:ClearAllPoints(); b:SetPoint("TOPLEFT",16+(i-1)*(modeWidth+8),-78)
         Skin.ButtonState(b,s.reveal==key,nil,false)
     end
     for key,b in pairs(f.checks) do b:SetChecked(s[key]); b.mark:SetText(s[key] and "X" or "") end
@@ -164,8 +164,8 @@ function M:LayoutSettings(parent,left,top,width,visible)
     f.sliders.iconSize:SetWidth(sliderWidth)
     for _,key in ipairs({"iconAlpha"}) do
         local b=f.sliders[key]; b:SetWidth(sliderWidth); b:ClearAllPoints()
-        b:SetPoint("TOPLEFT",40+sliderWidth,-253)
-        b.caption:ClearAllPoints(); b.caption:SetPoint("TOPLEFT",40+sliderWidth,-230); b.caption:SetWidth(sliderWidth)
+        b:SetPoint("TOPLEFT",40+sliderWidth,-233)
+        b.caption:ClearAllPoints(); b.caption:SetPoint("TOPLEFT",40+sliderWidth,-210); b.caption:SetWidth(sliderWidth)
     end
     for key,b in pairs(f.icons) do b:SetWidth(panelWidth-256); b.label:SetText(self:IconLabel(key,true)) end
     f.swatch:SetVertexColor(s.tintR,s.tintG,s.tintB,s.tintAlpha)

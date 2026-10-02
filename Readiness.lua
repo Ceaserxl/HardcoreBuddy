@@ -188,13 +188,13 @@ function R:LayoutSettings(parent,left,top,width,height,visible)
     if not self.options then
         local f=CreateFrame("Frame",nil,parent,"BackdropTemplate"); self.options=f; A.Skin.Paint(f,"card")
         text(f,15,16,-16,700,"Preparation reminders"):SetTextColor(unpack(A.Skin.colors.gold))
-        text(f,12,20,-56,700,"Quiet, optional reminders based on your Essentials priorities and Carry quantities.")
+        text(f,12,20,-46,700,"Quiet, optional reminders based on your Essentials priorities and Carry quantities.")
         f.checks={}
         for i,entry in ipairs({{"panel","Show missing essentials while resting in a city or inn"},
             {"departure","Remind me when leaving a resting area with missing essentials"}}) do
             local key,label=entry[1],entry[2]
             local check=CreateFrame("CheckButton",nil,f,"BackdropTemplate")
-            check:SetSize(24,24); check:SetPoint("TOPLEFT",20,-102-(i-1)*48); A.Skin.Paint(check,"edit")
+            check:SetSize(24,24); check:SetPoint("TOPLEFT",20,-80-(i-1)*36); A.Skin.Paint(check,"edit")
             check.mark=text(check,13,7,-4,16); text(check,12,34,-4,650,label)
             check:SetScript("OnClick",function(b)
                 self.settings[key]=b:GetChecked() and true or false; b.mark:SetText(self.settings[key] and "X" or "")
@@ -203,11 +203,11 @@ function R:LayoutSettings(parent,left,top,width,height,visible)
             f.checks[key]=check
         end
         f.previewPanel=button(f,"Preview missing essentials",210,function() self:Preview("panel") end)
-        f.previewPanel:SetPoint("TOPLEFT",20,-190)
+        f.previewPanel:SetPoint("TOPLEFT",20,-154)
         f.previewReminder=button(f,"Preview reminder",174,function() self:Preview("reminder") end)
         f.previewReminder:SetPoint("TOPLEFT",f.previewPanel,"TOPRIGHT",12,0)
-        text(f,12,20,-238,690,"Essentials covers your core supplies. Advanced covers situational survival tools; other supplies start as Optional. Open an item to change its priority. Your choices follow that item's family as ranks improve.")
-        text(f,12,20,-310,690,"Set Keep on hand to 0 to skip restocking. Unknown bag or profession data does not trigger a shortage. Reminders are silent, stay out of combat, and are limited to one every five minutes.")
+        text(f,12,20,-198,690,"Essentials covers your core supplies. Advanced covers situational survival tools; other supplies start as Optional. Open an item to change its priority. Your choices follow that item's family as ranks improve.")
+        text(f,12,20,-246,690,"Set Keep on hand to 0 to skip restocking. Unknown bag or profession data does not trigger a shortage. Reminders are silent, stay out of combat, and are limited to one every five minutes.")
     end
     local f=self.options; f:SetShown(visible)
     if not visible then return end
