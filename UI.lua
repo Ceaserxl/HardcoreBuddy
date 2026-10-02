@@ -328,6 +328,13 @@ local function renderBlock(frame, block, width)
         native=native or (texture and ("Interface\\Icons\\" .. texture)) or named or "Interface\\Icons\\INV_Misc_QuestionMark"
         if not frame.icon:SetTexture(native) then frame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark") end
     end
+    if block.compactRow then
+        frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
+        measure(frame.title,block.title,width-24,12,8)
+        measure(frame.body,block.body,width-24,12,30)
+        frame.meta:Hide(); frame.chevron:Hide()
+        frame:SetHeight(56); return 56
+    end
     if block.enchantRow then
         Skin.Paint(frame,"row"); frame.chevron:Hide(); frame.meta:Hide()
         frame.stock:Show(); frame.stock:SetJustifyH("RIGHT")

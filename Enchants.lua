@@ -202,7 +202,8 @@ function E.Detail(context,action)
     heading(selected~=recommended and "Selected Alternative" or "Recommended")
     blocks[#blocks+1]=enchantBlock(g,selected)
     if selected then
-        blocks[#blocks+1]=row("Requirements",selected.armorKit and ("Crafting: Leatherworking "..selected.skill.."\nTarget item level "..selected.gearLevel.."+") or "Enchanting "..selected.skill)
+        local requirement=row("Requirements",selected.armorKit and ("Leatherworking "..selected.skill.." | Item level "..selected.gearLevel.."+") or "Enchanting "..selected.skill)
+        requirement.compactRow=true; blocks[#blocks+1]=requirement
     end
     heading("Alternatives")
     -- Options are sorted by recommendation strength, so the automatic choice
