@@ -221,6 +221,8 @@ function E.Detail(context,action)
     -- remains first when another enhancement is being inspected.
     for _,option in ipairs(g.options) do if option~=selected then
         local b=enchantBlock(g,option,{kind="enchantRecipe",slotId=g.slotId,spellId=option.spellId})
+        b.enchantAlternative=true
+        if b.enchantStatus=="Alt Enchanted" then b.enchantStatus="" end
         if option==recommended then b.title=b.title.." |cff62d79b(Recommended)|r" end
         blocks[#blocks+1]=b
     end end

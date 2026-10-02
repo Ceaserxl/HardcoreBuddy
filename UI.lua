@@ -337,11 +337,11 @@ local function renderBlock(frame, block, width)
     end
     if block.enchantRow then
         Skin.Paint(frame,"row"); frame.chevron:Hide(); frame.meta:Hide()
-        frame.stock:Show(); frame.stock:SetJustifyH("RIGHT")
+        frame.stock:SetShown(block.enchantStatus~=""); frame.stock:SetJustifyH("RIGHT")
         local color=STOCK_COLORS[block.enchantTone] or MUTED
         measure(frame.stock,block.enchantStatus,100,width-108,7)
         frame.stock:SetTextColor(unpack(color))
-        for _,edge in ipairs(frame.statusBorder) do edge:Show(); edge:SetVertexColor(color[1],color[2],color[3],0.7) end
+        for _,edge in ipairs(frame.statusBorder) do edge:SetShown(not block.enchantAlternative); edge:SetVertexColor(color[1],color[2],color[3],0.7) end
         frame.title:SetFont(STANDARD_TEXT_FONT,14,""); frame.title:SetTextColor(unpack(WHITE))
         local titleHeight=measure(frame.title,block.title,width-164,52,7)
         local bodyHeight=measure(frame.body,block.body,width-64,52,9+titleHeight)
