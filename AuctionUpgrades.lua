@@ -466,7 +466,7 @@ function U:Layout()
     -- Fit the native auction content area. Enlarging AuctionFrame does not
     -- stretch its Classic artwork and leaves the panel outside the border.
     local width=AuctionFrame:GetWidth()-18
-    local height=AuctionFrame:GetHeight()-48
+    local height=AuctionFrame:GetHeight()-47
     self.panel:SetSize(width,height)
     self.title:SetWidth(width-380); self.subtitle:SetWidth(390)
     local top=(self.slot or self.weaponsOnly) and 118 or 84
@@ -510,7 +510,7 @@ function U:Attach()
     tab:SetScript("OnClick",function(self) AuctionFrameTab_OnClick(self) end)
     local panel=CreateFrame("Frame",nil,AuctionFrame,"BackdropTemplate"); self.panel=panel
     panel:SetPoint("TOPLEFT",AuctionFrame,"TOPLEFT",14,-34)
-    panel:SetSize(AuctionFrame:GetWidth()-18,AuctionFrame:GetHeight()-48)
+    panel:SetSize(AuctionFrame:GetWidth()-18,AuctionFrame:GetHeight()-47)
     panel:SetFrameLevel(AuctionFrame:GetFrameLevel()+10); panel:EnableMouse(true)
     Skin.Paint(panel,"card"); panel:SetBackdropColor(0.025,0.031,0.037,1)
     self.title=label(panel,"HardcoreBuddy  /  Gear upgrades",16,-4,580,Skin.colors.gold,22)
