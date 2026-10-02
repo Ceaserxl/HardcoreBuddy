@@ -21,7 +21,7 @@ end
 A:Activate({kind="item",item=group})
 local original=A.state
 local card=A.window.cards[1]
-assert(card.defaultChoice:IsShown() and not card.defaultChoice:IsEnabled())
+assert(not card.defaultChoice:IsShown(),"Default items hide Set as default")
 local header,option
 for _,r in ipairs(card.content.blocks) do if r:IsShown() then
     if r.block.title=="Alternatives" then header=r end
@@ -34,10 +34,8 @@ local backX=A.window.back:GetRect()
 assert(hx==backX and ox==ix,"Heading aligns with Back; item text retains consistent padding")
 assert(card.content.blocks[1]:GetRect()==backX and option:GetRect()==backX)
 local qx,qy,qw=card.detailQuantity:GetRect()
-local bx,by,bw=card.defaultChoice:GetRect()
 local px,py=A.window.priorityChoice:GetRect()
-assert(qy==by and by==py and qx+qw+8==bx and bx+bw+8==px,
-    "Keep on hand and default button sit directly left of Priority")
+assert(qy==py and qx+qw+8==px,"Keep on hand sits directly left of Priority")
 for _,r in ipairs(card.content.blocks) do if r:IsShown() then
     if r.block.title=="Next" then assert(r.title:GetRect()==backX) end
     if r.block.fields then
@@ -47,16 +45,18 @@ for _,r in ipairs(card.content.blocks) do if r:IsShown() then
 end end
 MOCK.Click(option)
 card=A.window.cards[1]
-assert(card.defaultChoice:IsEnabled() and card.defaultChoice.label:GetText()=="Set as default")
+assert(card.defaultChoice:IsShown() and card.defaultChoice:IsEnabled() and card.defaultChoice.label:GetText()=="Set as default")
+local bx,by,bw=A.window.back:GetRect(); local dx,dy=card.defaultChoice:GetRect()
+assert(dx==bx+bw+8 and dy==by,"Set as default sits immediately right of Back")
 local state=A.state; local history=#A.history
 MOCK.Click(card.defaultChoice)
 assert(A.state==state and #A.history==history,"Selecting default preserves Back history")
 assert(A.characterDB.supplyDefaults[group.family]==alternative.itemId)
-assert(not card.defaultChoice:IsEnabled() and card.defaultChoice.label:GetText()=="Default item")
+assert(not card.defaultChoice:IsShown(),"Button hides immediately after setting default")
 local selected=listed(alternative.itemId)
 assert(selected and not listed(group.itemId),"Preference replaces the primary row")
 assert(selected.category==S.Category(group),"Alternative keeps the original supply category")
-A:Back(); assert(A.state==original and A.window.cards[1].defaultChoice:IsEnabled())
+A:Back(); assert(A.state==original and A.window.cards[1].defaultChoice:IsShown() and A.window.cards[1].defaultChoice:IsEnabled())
 MOCK.Click(A.window.cards[1].defaultChoice)
 assert(listed(group.itemId) and not listed(alternative.itemId),"Original choice can be restored")
 A:Activate({kind="supplyDefault",item=alternative})

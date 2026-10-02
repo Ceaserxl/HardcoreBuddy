@@ -496,13 +496,13 @@ local function renderCard(frame, data, width)
                     end)
                 end
                 local choice=frame.defaultChoice
-                choice.item=data.defaultItem; choice.label:SetText(data.isDefault and "Default item" or "Set as default")
-                choice:SetEnabled(not data.isDefault); choice:Show(); choice:ClearAllPoints()
-                choice:SetPoint("TOPRIGHT",addon.window.priorityChoice,"TOPLEFT",-8,0)
+                choice.item=data.defaultItem; choice.label:SetText("Set as default")
+                choice:SetEnabled(not data.isDefault); choice:SetShown(not data.isDefault); choice:ClearAllPoints()
+                choice:SetPoint("TOPLEFT",addon.window.back,"TOPRIGHT",8,0)
             end
             if i==1 and data.quantityRecord then
                 frame.detailQuantity:ClearAllPoints()
-                frame.detailQuantity:SetPoint("TOPRIGHT",data.defaultItem and frame.defaultChoice or addon.window.priorityChoice,"TOPLEFT",-8,0)
+                frame.detailQuantity:SetPoint("TOPRIGHT",addon.window.priorityChoice,"TOPLEFT",-8,0)
             end
         end
         for i=#data.blocks+1,#frame.content.blocks do frame.content.blocks[i]:Hide() end
@@ -1006,8 +1006,9 @@ function addon:Layout()
         f.priorityChoice.label:SetText("Priority: "..self.Supplies.Priority(context,priorityItem))
         local inset=doc.cards[1] and doc.cards[1].itemLayout and 12 or 0
         local data=doc.cards[1]
-        local controlsWidth=190+(data and data.quantityRecord and 176 or 0)+(data and data.defaultItem and 138 or 0)
-        local leftControls=customDetail and 230 or backRow and 104 or 0
+        local controlsWidth=190+(data and data.quantityRecord and 176 or 0)
+        local leftControls=customDetail and 230 or backRow and f.back:GetWidth()+8 or 0
+        if data and data.defaultItem and not data.isDefault then leftControls=leftControls+138 end
         toolbarWrap=bodyWidth-inset<controlsWidth+leftControls
         f.priorityChoice:ClearAllPoints(); f.priorityChoice:SetPoint("TOPRIGHT",-40-inset,-y-(toolbarWrap and 34 or 0))
     end
