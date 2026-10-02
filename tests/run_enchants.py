@@ -38,7 +38,7 @@ check(slot(9).status=="upgrade" and slot(9).needed,"Older matching stat enchant 
 gear[9].enchant=99999
 check(slot(9).status=="enchanted" and not slot(9).needed,"Unknown permanent enhancement preserved")
 ctx.enchantChoices[9]=g.recommendation.spellId
-check(slot(9).status=="replace" and slot(9).needed,"Explicit replacement may collect materials")
+check(slot(9).status=="enchanted" and not slot(9).needed,"Legacy selection does not replace an applied enchant")
 ctx.enchantChoices={}; gear[9].enchant=0; gear[9].unknown=true
 check(slot(9).status=="unknown" and #E.MaterialItems(ctx)==0,"Unloaded link is unknown")
 gear[9].unknown=nil; gear[9].noInfo=true
@@ -77,7 +77,7 @@ end
 check(kitMaterials,"Kit crafting materials in comparison details")
 ctx.enchantChoices[7]=22727
 local coreKit=A.ArmorKits.Recommendations(ctx)
-check(#coreKit==1 and coreKit[1].itemId==18251 and coreKit[1].short:find("defense",1,true),"Selected Core kit tracks defense, not armor")
+check(#coreKit==1 and coreKit[1].itemId==15564,"Legacy Core kit selection cannot override recommendation")
 ctx.enchantChoices[7]=nil
 local expected={}
 for _,s in ipairs(E.Scan(ctx)) do if s.needed then for _,p in ipairs(s.recommendation.reagents) do expected[p[1]]=(expected[p[1]] or 0)+p[2] end end end
@@ -90,7 +90,7 @@ local kits=A.ArmorKits.Recommendations(ctx)
 check(#kits==1 and kits[1].recommendedTarget==1 and kits[1].targetSlots[1]=="Legs","Do not double-plan kits and enchants")
 ctx.enchantChoices[5]="kit"
 kits=A.ArmorKits.Recommendations(ctx)
-check(kits[1].recommendedTarget==2,"Explicit kit choice returns chest to kit plan")
+check(kits[1].recommendedTarget==1,"Legacy kit choice does not override chest recommendation")
 for _,r in ipairs(A.Supplies.Build(ctx,{filter="Buffs"})) do check(not r.item.armorKit,"Kits removed from Buffs") end
 for _,class in ipairs({"Mage","Priest","Warlock","Rogue","Hunter","Warrior","Paladin","Shaman","Druid"}) do
     ctx.characterClass=class
@@ -126,14 +126,18 @@ end
 local material=false
 for _,b in ipairs(A.document.cards[1].blocks) do if b.itemId then material=true end end
 check(material,"Recipe material rows have item tooltips")
-local other
-for _,r in ipairs(E.Scan(A:GetContext())) do if r.slotId==9 then
-    for _,o in ipairs(r.options) do if o.spellId~=recipe.spellId then other=o.spellId; break end end
-end end
-A:Activate({kind="enchantChoose",slotId=9,spellId=other})
-check(A.characterDB.enchantChoices[9]==other,"Manual selection persisted")
-A:Activate({kind="enchantChoose",slotId=9})
-check(A.characterDB.enchantChoices[9]==nil,"Automatic clears saved selection")
+A.characterDB.enchantChoices={[8]="kit"}
+local feet
+for _,v in ipairs(E.Scan(A:GetContext())) do if v.slotId==8 then feet=v end end
+check(feet.recommendation.family=="Speed","Legacy saved kit choice cannot replace Minor Speed")
+local feetCard=E.Card(A:GetContext()).blocks[6]
+check(feetCard.title=="Feet - Minor Speed" and feetCard.enchantStatus=="Recommended","Overview shows automatic recommendation when missing")
+gear[8].enchant=1843
+feetCard=E.Card(A:GetContext()).blocks[6]
+check(feetCard.title=="Feet - Rugged Armor Kit" and feetCard.enchantStatus=="Alternative","Overview shows actually applied alternative")
+local feetDetail=E.Detail(A:GetContext(),{slotId=8,kind="enchantSlot"})
+check(feetDetail.blocks[1].title=="Selected Alternative" and feetDetail.blocks[2].enchantTooltip.itemId==15564,"Applied alternative detail matches overview")
+gear[8].enchant=0
 local mats=E.MaterialItems(ctx)
 local saved=mats[1]
 for _,s in ipairs(E.Scan(ctx)) do if s.recommendation and gear[s.slotId] then gear[s.slotId].enchant=s.recommendation.enchantId end end

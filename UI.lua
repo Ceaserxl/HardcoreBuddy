@@ -940,23 +940,6 @@ function addon:OpenCurrentInstance()
     self:Refresh(true)
 end
 function addon:Activate(action)
-    if action.kind=="enchantChoose" then
-        self:CommitInputs()
-        local context=self:GetContext()
-        if context.mode=="preview" then return end
-        for _,g in ipairs(self.Enchants.Scan(context)) do if g.slotId==action.slotId then
-            local allowed=action.spellId==nil or action.spellId=="kit" and (g.slotId==5 or g.slotId==7 or g.slotId==8 or g.slotId==10)
-            for _,r in ipairs(g.options) do if r.spellId==action.spellId then allowed=true end end
-            if allowed then
-                self.characterDB.enchantChoices=self.characterDB.enchantChoices or {}
-                self.characterDB.enchantChoices[g.slotId]=action.spellId
-                self.characterDB.enchantChoices[tostring(g.slotId)]=nil
-                if self.Readiness then self.Readiness:SuppliesChanged() end
-                self:Refresh()
-            end
-        end end
-        return
-    end
     if action.kind=="supplyDefault" then
         self:CommitInputs()
         if self.Supplies.DefaultGroup(self:GetContext(),action.item) or self.Supplies.CanDefaultBandage(self:GetContext(),action.item) then

@@ -104,7 +104,6 @@ function E.Options(context,g)
 end
 function E.Scan(context)
     local result={}
-    local choices=context.enchantChoices or (context.mode~="preview" and A.characterDB and A.characterDB.enchantChoices) or {}
     for _,slot in ipairs(E.slots) do
         local g
         if context.mode=="preview" then
@@ -112,17 +111,13 @@ function E.Scan(context)
                 equipLoc=slot[3]=="Weapon" and "INVTYPE_WEAPON" or next(locations[slot[1]])}
         else g=E.Read(slot) end
         g.options=E.Options(context,g)
-        local choice=choices[g.slotId] or choices[tostring(g.slotId)]
-        for _,r in ipairs(g.options) do if choice==r.spellId then g.recommendation=r; g.selected=true; break end end
-        if choice=="kit" then
-            for _,r in ipairs(g.options) do if r.armorKit and not r.defenseKit then g.recommendation=r; g.selected=true; break end end
-        end
-        if not g.recommendation then g.recommendation=g.options[1] end
+        -- Browsing an alternative is temporary. Old saved choices must never
+        -- replace the automatic recommendation or create material demand.
+        g.recommendation=g.options[1]
         local r=g.recommendation
         if r and g.status=="checked" then
             if g.enchantId==0 then g.status="missing"; g.needed=true
             elseif g.enchantId==r.enchantId then g.status="ready"
-            elseif g.selected then g.status="replace"; g.needed=true
             elseif g.current and g.current.family==r.family
                 and points(r,context.characterClass)>points(g.current,context.characterClass) then g.status="upgrade"; g.needed=true
             else g.status="enchanted" end
@@ -169,7 +164,7 @@ local labels={empty="No item equipped",unknown="Waiting for item data",incompati
     enchanted="Existing enhancement kept",preview="Preview: gear eligibility not checked"}
 local function enchantBlock(g,r,action)
     local status,tone
-    if not g.enchantId then status,tone=labels[g.status] or "Unknown","unknown"
+    if not g.enchantId or g.status=="incompatible" then status,tone=labels[g.status] or "Unknown","unknown"
     elseif g.enchantId==0 then status,tone="Missing","missing"
     elseif r and g.enchantId==r.enchantId then status,tone="Enchanted","ready"
     else status,tone="Alt Enchanted","ready" end
@@ -184,9 +179,15 @@ end
 function E.Card(context)
     local blocks={}
     for _,g in ipairs(E.Scan(context)) do
-        local b=enchantBlock(g,g.recommendation,{kind="enchantSlot",slotId=g.slotId})
+        local alternative=g.enchantId and g.enchantId>0 and g.status~="incompatible"
+            and (not g.recommendation or g.enchantId~=g.recommendation.enchantId)
+        local shown=alternative and g.current or g.recommendation
+        if alternative and not g.current then
+            shown={name="Enchant - Unidentified enhancement",description="An enhancement is applied; its effect is not in the catalog.",icon="Trade_Engraving"}
+        end
+        local b=enchantBlock(g,shown,{kind="enchantSlot",slotId=g.slotId})
         if b.enchantStatus=="Missing" and g.recommendation then b.enchantStatus="Recommended"
-        elseif b.enchantStatus=="Alt Enchanted" then b.enchantStatus="Alternative" end
+        elseif alternative then b.enchantStatus="Alternative" end
         blocks[#blocks+1]=b
     end
     return {title="Enchants",note="Class and level recommendations. Choose a slot for alternatives and materials.",blocks=blocks,supplyTable=true}
@@ -195,7 +196,7 @@ function E.Detail(context,action)
     local g
     for _,v in ipairs(E.Scan(context)) do if v.slotId==action.slotId then g=v; break end end
     if not g then return {title="Enchants",blocks={}} end
-    local selected=g.recommendation
+    local selected=g.current or g.recommendation
     local recommended=g.options[1]
     for _,option in ipairs(g.options) do if option.spellId==action.spellId then selected=option end end
     local blocks={}

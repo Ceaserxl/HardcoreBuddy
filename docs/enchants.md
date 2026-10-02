@@ -2,12 +2,15 @@
 
 Enchants follows Scrolls. It contains equipped-slot recommendations, armor kits,
 and an exact-item material shopping list. Open a slot to browse alternatives,
-then open a recipe to inspect its effect, requirements and bag counts. A manual
-choice is saved per character and slot. Automatic recommendation clears it.
+then open an alternative to inspect its effect, requirements and bag counts.
+Browsing alternatives is temporary; old saved enchant choices are ignored.
+Missing slots always display the automatic recommendation. Applied alternatives
+display their actual enhancement rather than replacing the recommendation.
 
 Rows display `Slot - Enchant`, the effect as the subtitle, and status at the
-upper right. Missing enchants have red borders; the recommended enchant shows
-Enchanted and another applied enhancement shows Alt Enchanted, both green.
+upper right. Missing enchants show Recommended with red borders; the recommended
+enchant applied shows Enchanted and another applied enhancement shows Alternative,
+both green on the overview.
 Hover shows the enchant effect rather than its crafting recipe. Details place
 the recommendation and alternatives on the left and tracked reagents on the right.
 Armor kits participate in these same comparisons for chest, gloves, legs and boots,
@@ -53,9 +56,10 @@ plans materials for the live character's equipment.
 
 An existing identical enchant needs no materials. Lower ranks of the same
 recommended stat can trigger an upgrade; unrelated enchants/armor kits are kept.
-Explicitly choosing a replacement tracks its reagents. The addon never casts an
-enchant or confirms an overwrite. Choosing an armor kit tracks that finished kit;
-its crafting materials are shown in the detail's material column.
+Browsing a replacement displays its reagents without changing the automatic
+shopping list. The addon never casts an enchant or confirms an overwrite.
+Recommended armor kits track the finished kit; crafting materials are shown
+in the detail's material column.
 
 Materials are summed across all verified slots needing enchants so shared bag
 stock is not counted twice. Armor kits are excluded for those same pieces to
