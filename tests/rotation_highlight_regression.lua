@@ -58,7 +58,7 @@ check(R.highlights[action]:IsShown() and not R.highlights[other]:IsShown(),"Only
 check(not R.highlights[lower]:IsShown(),'Older rank with the same spell name is not highlighted')
 local glow=R.highlights[action]
 check(glow.template=='ActionButtonSpellAlertTemplate','Uses the actual Blizzard proc-alert template')
-check(glow.style=='primary' and glow.ProcStartFlipbook.desaturated==false and glow.ProcLoopFlipbook.vertexColor[1]==1,'Primary advice preserves the original gold artwork')
+check(glow.style=='main' and glow.ProcStartFlipbook.desaturated==false and glow.ProcLoopFlipbook.vertexColor[1]==1,'Primary advice preserves the original gold artwork')
 check(action.SpellActivationAlert==nativeProc and nativeProc~=glow and nativeProc.ProcLoop:IsPlaying(),'Native proc ownership and animation stay untouched')
 check(glow.ProcStartAnim:IsPlaying() and glow.ProcStartAnim.plays==1,'New recommendation starts the native burst once')
 check(math.abs(glow:GetWidth()-50.4)<.001 and math.abs(glow:GetHeight()-50.4)<.001,'Native glow uses Blizzard button-relative sizing')
@@ -71,7 +71,7 @@ glow.ProcStartAnim:Finish()
 check(glow.ProcLoop:IsPlaying(),'Native startup completion begins the sustained proc loop')
 R:Update()
 check(glow.ProcStartAnim.plays==1 and glow.ProcLoop.plays==1,'Polling leaves the running native loop uninterrupted')
-R:Highlight(R.current,true)
+R:Highlight({id=R.current.id,category='defensive'})
 for _,texture in ipairs({glow.ProcStartFlipbook,glow.ProcLoopFlipbook}) do
     check(texture.desaturated and texture.vertexColor[1]==1 and texture.vertexColor[2]==.15 and texture.vertexColor[3]==.15,'Both native animation phases are red for optional advice')
 end

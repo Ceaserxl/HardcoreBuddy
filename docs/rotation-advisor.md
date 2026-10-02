@@ -16,47 +16,53 @@ that main attack. No target death-time estimate drives priorities.
 The combat list is ordered and short:
 
 1. Immediate survival emergencies: critical-health protection/escape or a dangerous fall.
-2. An appropriate distant Pyroblast opener or an active Presence of Mind Pyroblast.
-3. Safe observed AoE: Flamestrike then Blizzard on a verified cluster, or Blast Wave
+2. Required Nova setup for a solo Shatter opportunity.
+3. An appropriate distant Pyroblast opener or an active Presence of Mind Pyroblast.
+4. Safe observed AoE: Flamestrike then Blizzard on a verified cluster, or Blast Wave
    then Arcane Explosion for nearby engaged enemies.
-4. A conservative short wand finish or a noncritical Fire Blast finisher.
-5. Improved Scorch upkeep for a Fire profile on a substantial grouped/boss target.
-6. The main attack, followed by a fixed fallback order when range, immunity, a
+5. A conservative short wand finish or a noncritical Fire Blast finisher.
+6. Improved Scorch upkeep for a Fire profile on a substantial grouped/boss target.
+7. The main attack, followed by a fixed fallback order when range, immunity, a
    school lockout, mana or cooldown readiness makes it unavailable.
-7. Instant damage or the wand when the normal attacks are unavailable.
+8. Instant damage or the wand when the normal attacks are unavailable.
 
 Critical-health checks are heuristics, not guarantees of survival. Other health,
 range, mana and AoE thresholds also remain conservative rules. Spell damage is
 estimated; Fire Blast finishing uses a reduced noncritical estimate. Unknown
 wand damage never invents a finishing opportunity. Active Shoot is not toggled off.
 
-## Independent situational highlights
+## Four recommendation categories
 
-Counterspell, Nova, wards, Blink, Remove Lesser Curse, Polymorph, mana gems,
-safe Evocation and damage cooldowns can light alongside the primary attack.
-A changed utility condition clears that utility highlight without changing the
-committed damage spell. For solo Shatter Mages, Rank 1 Nova is suggested against
-a nearby attacker when another root is useful. An incidental Frostbite clears
-Nova without blanking the Frostbolt highlight.
-Offensive Nova requires target health above two estimated Frostbolt hits both
-between and during casts, preventing a completion/start flash. Defensive Nova
-can still appear at low health regardless of this damage threshold.
+| Category | Color | Meaning |
+| --- | --- | --- |
+| Main | Gold | One next combat action, including required setup or an urgent response. |
+| Offensive Support | Purple | Optional damage cooldowns supporting Main. |
+| Defensive | Red | Situational protection, escape, interrupts and control. |
+| Preparation & Recovery | Blue | Buffs, food, drinks, gem creation/use and mana recovery; several can appear together. |
 
-Crowd-control, range, mana, cooldown, immunity and target eligibility checks apply
-to utility too. Counterspell and emergency actions require current readiness,
-not forecast mana. Mana gems require carried inventory and enough missing mana.
-Grouped recovery requires the enemy to be occupied and the player not under attack.
-Burst cooldowns use grouped/boss context and remaining health rather than death-time
-predictions. Only immediate survival emergencies displace the damage primary.
+Each recommendation has one category. A Main action takes precedence over an
+auxiliary recommendation for the same spell. Threat-specific Barrier advice is
+Defensive; routine Barrier upkeep is Preparation. Immediate survival emergencies
+become Main. The old generic optional color and missing-versus-expiring buff
+color rules have been removed, along with multiple gold preparation actions.
+Category descriptions appear in Settings and the recommendation tooltip, with a
+color legend on the advisor page. Action bars display glows only.
 
-## Preparation and colors
+For solo Shatter Mages, offensive Nova setup is Main: root first, then Frostbolt.
+It is never an optional offensive glow beside a gold Frostbolt. The setup requires
+a nearby attacker, safe AoE, no existing freeze and health above two estimated
+Frostbolt hits. Defensive Nova may still appear red at low health. Required setup
+uses the same cast-start commitment as damage; an already frozen target makes
+planned Nova invalid, without inserting another spell late in the current cast.
 
-Gold: one combat primary, or multiple missing buffs/preparation actions out of combat.
-Red: independent situational actions. Blue: an existing buff with five minutes or
-less remaining. Missing buffs return to gold. Unknown active buff expiration is
-not invented. Intellect, armor, Barrier, elixirs, scrolls and lasting food buffs use
-these shared refresh semantics; an equal/stronger Intellect elixir suppresses a
-weaker Arcane Intellect recommendation.
+Auxiliary conditions update independently. Counterspell, wards, Blink, curse
+removal and defensive control are red. Arcane Power, Combustion and Presence of
+Mind are purple. Mana gems and safe Evocation are blue. Readiness, range, immunity,
+CC safety and inventory checks apply. Recovery does not interrupt active drinking.
+
+Buffs are blue whether missing or within five minutes of expiration. Unknown
+expiration is not invented. An equal/stronger Intellect elixir suppresses weaker
+Arcane Intellect. Preparation never creates additional gold Main actions.
 
 `ConsumableBuffs.lua` owns class-filtered carried-supply preparation. Food and
 water require recovery need; Well Fed food, elixirs and scrolls can be suggested
@@ -112,7 +118,7 @@ WoW's per-character SavedVariables; world transitions do not start a new session
 
 Version 2 entries store `time` and recursive `delta` fields. Logs include character
 stats/talents, raw decisions, selected action, actual primary, profile main attack,
-cast locks/events, resources, spells, auras and highlighted slots/colors. Wanding
+cast locks/events, resources, spells, auras, recommendation categories and highlighted slots/colors. Wanding
 is recorded explicitly so an already-active wand is distinguishable from a missing
 recommendation. Drinking state and remaining global cooldown are recorded separately
 from spell readiness, which permits early previews. Target health trends remain

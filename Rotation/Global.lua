@@ -3,6 +3,13 @@ local _,A=...
 local R={spells={},highlights={},dirty=true,elapsed=0}; A.RotationAdvisor=R
 R.supported={}; R.classes={}
 R.modes={disabled="Disabled",assistant="Assistant Mode"}
+R.categories={
+    main={name="Main",color={1,1,1},description="Main (Gold): your next combat action, including setup or an urgent response."},
+    offensive={name="Offensive Support",color={.8,.25,1},description="Offensive Support (Purple): optional damage cooldowns supporting Main."},
+    defensive={name="Defensive",color={1,.15,.15},description="Defensive (Red): protection, escape, interrupts and situational control."},
+    preparation={name="Preparation & Recovery",color={.15,.55,1},description="Preparation & Recovery (Blue): buffs, food, drinks and mana recovery."},
+}
+R.categoryOrder={"main","offensive","defensive","preparation"}
 R.definitions={}
 function R:RegisterClass(token,module)
     self.classes[token]=module; self.definitions[token]=module.definitions or {}
@@ -551,17 +558,14 @@ function R:PrepareHighlights()
         end
     end
 end
-local function colorHighlight(glow,optional,buffColor)
-    local style=buffColor or (optional and "optional" or "primary")
+local function colorHighlight(glow,category)
+    local style=R.categories[category] and category or "main"
+    local definition=R.categories[style]
     if glow.style==style then return end
     glow.style=style
     for _,texture in ipairs({glow.ProcStartFlipbook,glow.ProcLoopFlipbook}) do
-        -- Remove the gold baked into the artwork before tinting it bright red.
-        -- Primary recommendations retain Blizzard's original artwork colors.
-        texture:SetDesaturated(style~="primary")
-        if style=="refresh" then texture:SetVertexColor(.15,.55,1,1)
-        elseif style=="optional" then texture:SetVertexColor(1,.15,.15,1)
-        else texture:SetVertexColor(1,1,1,1) end
+        texture:SetDesaturated(style~="main")
+        texture:SetVertexColor(definition.color[1],definition.color[2],definition.color[3],1)
     end
 end
 local function matchesAction(spell,slot)
@@ -575,30 +579,25 @@ local function matchesAction(spell,slot)
     end
     return kind=="item" and id==spell.id
 end
-function R:Highlight(spell,optional,additional,primaries)
+function R:Highlight(spell,additional)
     self.highlightCount=0; self.primaryHighlightCount=0; self.optionalHighlightCount=0
     for button,glow in pairs(self.highlights) do
         local slot=button.action or button.GetAttribute and button:GetAttribute("action")
-        local match,isOptional=false,optional
+        local match=false
         local matched=spell
         if slot and GetActionInfo and button:IsVisible() then
             match=matchesAction(spell,slot)
             if not match then
-                for _,extra in ipairs(primaries or {}) do
-                    if matchesAction(extra,slot) then match=true; isOptional=false; matched=extra; break end
-                end
-            end
-            if not match then
                 for _,extra in ipairs(additional or {}) do
-                    if matchesAction(extra,slot) then match=true; isOptional=true; matched=extra; break end
+                    if matchesAction(extra,slot) then match=true; matched=extra; break end
                 end
             end
         end
-        if match then colorHighlight(glow,isOptional,matched and matched.buffColor) end
+        if match then colorHighlight(glow,matched and matched.category) end
         glow:SetShown(match)
         if match then
             self.highlightCount=self.highlightCount+1
-            if isOptional then self.optionalHighlightCount=self.optionalHighlightCount+1
+            if glow.style~="main" then self.optionalHighlightCount=self.optionalHighlightCount+1
             else self.primaryHighlightCount=self.primaryHighlightCount+1 end
         end
     end
@@ -698,8 +697,8 @@ function R:TraceRotation(event,force)
     local s=self.snapshot or {}; local now=clock()
     local row={time=now,wallTime=time and time(),event=event or "poll",mode=self:Mode(),
         reason=self.reason,lock=self.lockStatus,decision=self.traceDecision,
-        selected=diagnosticFields(self.current,"id name item buffColor"),
-        primary=diagnosticFields(self.primary,"id name item buffColor"),
+        selected=diagnosticFields(self.current,"id name item category"),
+        primary=diagnosticFields(self.primary,"id name item category"),
         damageProfile=diagnosticFields(s.damageProfile,"main school damage"),
         plan=diagnosticFields(self.castPlan,"key id token finish target"),
         castEvent=diagnosticFields(self.lastCastEvent,"event time id token target"),
@@ -716,14 +715,14 @@ function R:TraceRotation(event,force)
     for key,value in pairs(s.buffs or {}) do row.buffs[key]=diagnosticValue(value) end
     for key,value in pairs(s.buffDurations or {}) do row.buffDurations[key]=diagnosticValue(value) end
     for key,spell in pairs(s.spells or {}) do
-        local entry=diagnosticFields(spell,"id name item ready usable usableNow immune range requiresRange approaching powerPreview plannedPower cost castTime cooldownRemaining lowPower buffColor")
+        local entry=diagnosticFields(spell,"id name item ready usable usableNow immune range requiresRange approaching powerPreview plannedPower cost castTime cooldownRemaining lowPower category")
         local module=self:Class(s.class)
         local estimate=module and module.Estimate and module.Estimate(s,key)
         if estimate then entry.estimate=diagnosticFields(estimate,"score damage cast cost school") end
         row.spells[key]=entry
     end
-    for _,spell in ipairs(self.optionalActions or {}) do row.optional[#row.optional+1]=diagnosticFields(spell,"id name item buffColor") end
-    for _,spell in ipairs(self.oocActions or {}) do row.ooc[#row.ooc+1]=diagnosticFields(spell,"id name item buffColor") end
+    for _,spell in ipairs(self.optionalActions or {}) do row.optional[#row.optional+1]=diagnosticFields(spell,"id name item category") end
+    for _,spell in ipairs(self.oocActions or {}) do row.ooc[#row.ooc+1]=diagnosticFields(spell,"id name item category") end
     for button,glow in pairs(self.highlights) do
         if glow:IsShown() then
             local slot=button.action or button.GetAttribute and button:GetAttribute("action")
@@ -766,14 +765,17 @@ function R:Update(event)
         self.traceDecision=self.logging and {key=key,reason=reason,optional=optional,urgent=urgent} or nil
         key,reason,optional=self:StabilizeRecommendation(self.snapshot,key,reason,optional,urgent)
         local selected=key and self.snapshot.spells[key]
+        if selected then selected.category=optional and "preparation" or "main" end
         self.primary=not optional and selected or nil
         self.optionalActions={}
         local module=self:Class(self.snapshot.class)
         local choices=module and module.Optional and module.Optional(self.snapshot) or {}
         for _,choice in ipairs(choices) do
             local spell=self.snapshot.spells[choice.key]
-            if spell then spell.buffColor=choice.buffColor end
-            if spell and spell~=self.primary then self.optionalActions[#self.optionalActions+1]=spell end
+            if spell and spell~=selected then
+                spell.category=choice.category
+                self.optionalActions[#self.optionalActions+1]=spell
+            end
         end
         self.current=selected or self.optionalActions[1]
         self.reason=selected and reason or choices[1] and choices[1].reason or reason
@@ -785,10 +787,10 @@ function R:Update(event)
             for _,spell in ipairs(self:OutOfCombatSupplies(self.snapshot)) do self.oocActions[#self.oocActions+1]=spell end
         end
         if #self.oocActions>0 then
-            self.primary=self.oocActions[1]; self.current=self.primary; self.optional=false
-            self.reason="Prepare before combat. Multiple gold actions can be highlighted."
-            self:Highlight(self.primary,false,nil,self.oocActions)
-        else self:Highlight(selected,optional,self.optionalActions) end
+            self.primary=nil; self.current=self.oocActions[1]; self.optional=true
+            self.reason="Prepare and recover. Blue actions can be used as needed."
+            self:Highlight(nil,self.oocActions)
+        else self:Highlight(selected,self.optionalActions) end
     end
     self:TraceRotation(event)
     if self.RefreshView then self:RefreshView() end

@@ -265,16 +265,16 @@ do
     check(R.primary==s.spells.frostbolt and glow:IsShown(),'Moving keeps primary highlighted')
     local starts=glow.ProcStartAnim.plays
     s.prepareGem='ruby'; R:Update()
-    check(R.current==s.spells.ruby and not R.optional,'Gem preview stays available while moving')
+    check(R.current==s.spells.ruby and R.optional,'Gem preview stays available while moving')
     s.moving=false; R:Update()
-    check(R.current==s.spells.ruby and not R.optional and not glow:IsShown(),'Stopping restores stationary gem preparation even when off-bar')
-    check(R.primary==s.spells.ruby,'OOC gem preparation is a gold primary')
+    check(R.current==s.spells.ruby and R.optional and not glow:IsShown(),'Stopping restores stationary gem preparation even when off-bar')
+    check(not R.primary and R.current.category=='preparation','OOC gem preparation is blue and does not claim Main')
     s.prepareGem=nil; R:Update(); check(glow:IsShown(),'Finishing preparation restores damage advice')
     s.buffs.intellect=nil; s.buffs.barrier=nil; R:Update()
-    check(R.primaryHighlightCount==2 and R.optionalHighlightCount==0,'OOC Intellect and Barrier are simultaneous gold primaries')
+    check(R.primaryHighlightCount==0 and R.optionalHighlightCount==2,'OOC Intellect and Barrier are simultaneous blue preparation actions')
     s.combat=true; R:Update()
-    check(glow.style=='primary' and R.highlights[other].style=='primary' and R.highlights[lower].style=='primary',
-        'One gold damage action coexists with red Barrier and Intellect')
+    check(glow.style=='main' and R.highlights[other].style=='preparation' and R.highlights[lower].style=='preparation',
+        'One gold Main action coexists with blue Barrier and Intellect')
     check(R.primaryHighlightCount==1 and R.optionalHighlightCount==2,'Primary and optional counts remain separate')
     local barrierStarts=R.highlights[other].ProcStartAnim.plays
     s.combat=true; s.moving=true; s.casting=true; R:Update()
@@ -284,10 +284,10 @@ do
     s.buffs.intellect=1800; R:Update()
     check(not R.highlights[lower]:IsShown() and R.highlights[other]:IsShown(),'Applying one buff clears only its optional highlight')
     s.casting=false; s.attackingPlayer=true; s.playerHealth=20; R:Update()
-    check(R.primary==s.spells.barrier and R.highlights[other].style=='primary','Urgent Barrier is gold, not duplicate red')
+    check(R.primary==s.spells.barrier and R.highlights[other].style=='main','Urgent Barrier is gold, not duplicate red')
     check(not glow:IsShown() and R.primaryHighlightCount==1,'Urgent action replaces the only primary')
     s.playerHealth=100; s.attackingPlayer=false; R:Update()
-    check(R.highlights[other].style=='primary' and glow:IsShown(),'Barrier returns to optional when emergency passes')
+    check(R.highlights[other].style=='preparation' and glow:IsShown(),'Barrier returns to preparation when emergency passes')
     s.dead=true; R:Update(); check(R.highlightCount==0,'Death clears primary and all optional highlights')
     s.dead=false; R:Update(); R:SetMode('disabled')
     check(R.highlightCount==0 and #R.optionalActions==0,'Disabled clears every recommendation')
@@ -357,12 +357,12 @@ MOCK.class='MAGE'; R:Update()
 do
     local actionInfo=GetActionInfo
     GetActionInfo=function() return 'spell',837 end
-    R:Highlight({id=837,buffColor='refresh'},false)
-    check(glow.style=='refresh' and glow.ProcLoopFlipbook.vertexColor[3]==1 and glow.ProcLoopFlipbook.vertexColor[1]==.15,'Expiring buff has blue animation')
+    R:Highlight({id=837,category='preparation'})
+    check(glow.style=='preparation' and glow.ProcLoopFlipbook.vertexColor[3]==1 and glow.ProcLoopFlipbook.vertexColor[1]==.15,'Expiring buff has blue animation')
     local starts=glow.ProcStartAnim.plays
-    R:Highlight({id=837,buffColor='primary'},true)
-    check(glow.style=='primary' and not glow.ProcLoopFlipbook.desaturated,'Missing buff is gold even in optional group')
-    check(glow.ProcStartAnim.plays==starts,'Blue-to-gold transition does not restart animation')
+    R:Highlight({id=837,category='preparation'})
+    check(glow.style=='preparation' and glow.ProcLoopFlipbook.desaturated,'Missing buff stays blue in every highlight group')
+    check(glow.ProcStartAnim.plays==starts,'Buff expiration does not restart its blue animation')
     GetActionInfo=actionInfo; R:Update()
 end
 do
@@ -411,6 +411,7 @@ do
     end
     local restored=replay(nil,current.entries[1].delta)
     check(restored.state.power==R.snapshot.power and restored.selected.id==R.current.id,'Full sample can be reconstructed from first delta')
+    check(R.categories[restored.selected.category] and restored.selected.category==R.current.category,'Diagnostic replay retains the recommendation category')
     check(type(restored.state.drinking)=='boolean' and type(restored.state.gcdRemaining)=='number'
         and restored.state.drinking==R.snapshot.drinking and restored.state.gcdRemaining==R.snapshot.gcdRemaining,
         'Diagnostic replay retains drinking state and remaining GCD')
@@ -546,48 +547,48 @@ do
     s.spellPower[5]=200; s.talents.shatter=5; s.talents.iceShards=5
     s.talents.improvedFrostbolt=5; s.talents.piercingIce=3
     s.grouped=false; s.attackingPlayer=true; s.targetClose=true; s.targetHP=1200
-    decide(s,'frostbolt','Healthy solo Shatter Mage keeps its damage primary'); check(optional(s,'nova'),'Proactive Shatter root has an independent highlight')
+    decide(s,'nova','Required Shatter setup is the next Main action'); check(not optional(s,'nova'),'Offensive setup never competes as an auxiliary root')
     s.channelKey='evocation'; decide(s,nil,'Proactive Nova does not interrupt mana recovery'); s.channelKey=nil
-    s.safeAOE=false; check(not optional(s,'nova'),'Proactive Nova respects nearby crowd control')
+    s.safeAOE=false; check(R.Decide(s)~='nova' and not optional(s,'nova'),'Proactive Nova respects nearby crowd control')
     s.safeAOE=true; s.frozen=true; s.frozenRemaining=5
-    decide(s,'frostbolt','Use frozen-target Frostbolt after Nova'); check(not optional(s,'nova'),'Do not root an already frozen target')
+    decide(s,'frostbolt','Use frozen-target Frostbolt after Nova'); check(R.Decide(s)~='nova' and not optional(s,'nova'),'Do not root an already frozen target')
     s.frozen=false; s.grouped=true
-    check(not optional(s,'nova'),'Do not impose solo rooting on grouped damage')
+    check(R.Decide(s)~='nova' and not optional(s,'nova'),'Do not impose solo rooting on grouped damage')
     s.grouped=false; s.targetHP=100
-    check(not optional(s,'nova'),'Do not spend Nova on a target within one finishing cast')
+    check(R.Decide(s)~='nova' and not optional(s,'nova'),'Do not spend Nova on a target within one finishing cast')
     s.targetHP=1200; s.rotationCast=true; s.casting=true
     s.targetHP=M.Estimate(s,'frostbolt').damage*1.5
-    check(not optional(s,'nova'),'Pending current damage prevents a wasteful finishing Nova')
+    check(R.Decide(s)~='nova' and not optional(s,'nova'),'Pending current damage prevents a wasteful finishing Nova')
     s.casting=nil; s.rotationCast=nil
-    check(not optional(s,'nova'),'Finishing Nova does not flash between successive Frostbolts')
+    check(R.Decide(s)~='nova' and not optional(s,'nova'),'Finishing Nova does not flash between successive Frostbolts')
     s.targetHP=793; s.spellPower[5]=153; s.spellCrit[5]=4.779; s.talents.elementalPrecision=2
     check(math.abs(M.Estimate(s,'frostbolt').damage-401.933)<.001,'Fixture matches the recorded Frostbolt damage estimate')
-    check(not optional(s,'nova'),'Recorded 793 health target does not invite an offensive root between casts')
+    check(R.Decide(s)~='nova' and not optional(s,'nova'),'Recorded 793 health target does not invite an offensive root between casts')
     s.casting=true; s.rotationCast=true
-    check(not optional(s,'nova'),'Starting the next Frostbolt preserves the recorded no-root advice')
+    check(R.Decide(s)~='nova' and not optional(s,'nova'),'Starting the next Frostbolt preserves the recorded no-root advice')
     s.targetHP=M.Estimate(s,'frostbolt').damage*3
-    check(optional(s,'nova'),'Durable target retains offensive Nova during a Frostbolt')
+    decide(s,'nova','Durable target retains Main Nova setup during a Frostbolt')
     s.casting=nil; s.rotationCast=nil
-    check(optional(s,'nova'),'Durable target retains offensive Nova between Frostbolts')
+    decide(s,'nova','Durable target retains Main Nova setup between Frostbolts')
     s.targetHP=100; s.playerHealth=50
     check(optional(s,'nova'),'Low health still allows defensive Nova on a nearly dead target')
     s.playerHealth=100; s.spellPower[5]=200
     s.casting=nil; s.rotationCast=nil; s.targetHP=1200; s.talents.shatter=0
-    check(not optional(s,'nova'),'No Shatter means no extra offensive Nova priority')
+    check(R.Decide(s)~='nova' and not optional(s,'nova'),'No Shatter means no extra offensive Nova priority')
     s.talents.shatter=5; s.targetBoss=true
-    check(not optional(s,'nova'),'Bosses do not get the solo Shatter root recommendation')
+    check(R.Decide(s)~='nova' and not optional(s,'nova'),'Bosses do not get the solo Shatter root recommendation')
     s.targetBoss=false; s.targetClose=false
-    check(not optional(s,'nova'),'Nova requires a nearby attacker')
+    check(R.Decide(s)~='nova' and not optional(s,'nova'),'Nova requires a nearby attacker')
     s.targetClose=true; s.spells.nova.immune=true
-    check(not optional(s,'nova'),'Observed root immunity blocks proactive Nova')
+    check(R.Decide(s)~='nova' and not optional(s,'nova'),'Observed root immunity blocks proactive Nova')
     s.spells.nova.immune=false; s.targetGUID='nova-plan'; s.time=10
     s.casting=true; s.rotationCast=true; s.castToken='cast:root-plan'; s.castEnd=12.5
     R.castPlan=nil
-    local key=R:StabilizeRecommendation(s,'frostbolt','Main attack',false,false)
-    check(key=='frostbolt' and R.castPlan.key=='frostbolt' and optional(s,'nova'),'Cast starts with damage plus independent Nova')
+    local key=R:StabilizeRecommendation(s,R.Decide(s))
+    check(key=='nova' and R.castPlan.key=='nova' and not optional(s,'nova'),'Cast starts with Nova setup as the sole Main action')
     s.frozen=true
     key=R:StabilizeRecommendation(s,'frostbolt','damage',false,false)
-    check(key=='frostbolt' and R.lockStatus=='held' and not optional(s,'nova'),'A new freeze clears only Nova and leaves the damage highlight steady')
+    check(key==nil and R.lockStatus=='suppressed-invalid-plan' and not optional(s,'nova'),'A new freeze invalidates Nova without inserting a late cast substitution')
     R.castPlan=nil
     local old=R.snapshot
     R.snapshot=s; R.tracePrevious=nil; R:TraceRotation('talent-context',true)
@@ -646,9 +647,9 @@ do
     check(#choices()==0,'Shared healthy food and elixir buffs do not warn')
     active={['Well Fed']=300,Use3=300}
     local list=choices()
-    check(has(list,1).buffColor=='refresh' and has(list,3).buffColor=='refresh','Shared food/elixir warning glows are blue at five minutes')
+    check(has(list,1).category=='preparation' and has(list,3).category=='preparation','Shared food/elixir warning glows are blue at five minutes')
     active={}; list=choices()
-    check(has(list,1).buffColor=='primary' and has(list,3).buffColor=='primary','Shared missing buffs remain gold')
+    check(has(list,1).category=='preparation' and has(list,3).category=='preparation','Shared missing buffs remain blue')
     snapshot.class='PRIEST'; active={['Arcane Intellect']=1000}
     check(not has(choices(),5),'An external class buff blocks redundant Intellect scroll advice')
     snapshot.combat=true; check(#choices()==0,'Shared preparation does not suggest consuming food in combat')
@@ -664,7 +665,7 @@ do
     local oldSnapshot,oldRecommend,oldAction,oldView=R.Snapshot,A.ConsumableBuffs.Recommend,GetActionInfo,R.RefreshView
     local oldClass=MOCK.class; MOCK.class='ROGUE'
     R.Snapshot=function() return {class='ROGUE',level=41,time=now,combat=false,buffs={},spells={}} end
-    A.ConsumableBuffs.Recommend=function() return {{id=1,item=true,name='Buff Food',buffColor='primary'}} end
+    A.ConsumableBuffs.Recommend=function() return {{id=1,item=true,name='Buff Food',category='preparation'}} end
     GetActionInfo=function() return 'item',1 end
     R.RefreshView=function() end; R.castPlan=nil; R:Update()
     check(R.current.item and R.current.id==1 and R.highlightCount>0,'A Rogue receives shared consumable item highlights')
@@ -766,7 +767,7 @@ do
     check(R.Decide(s)=='scorch','Insufficient mana can reach the cheaper fixed fallback')
     s.spells.frostbolt.usable=true; s.spells.fireball.usable=true
     s.interrupt=true; s.grouped=false; s.frozen=false; s.targetClose=true; s.targetHP=3000; s.powerPercent=100
-    check(R.Decide(s)=='frostbolt' and optional(s,'counterspell') and optional(s,'nova'),'Main attack, interrupt and Shatter root coexist')
+    check(R.Decide(s)=='nova' and optional(s,'counterspell') and not optional(s,'nova'),'Main setup and independent interrupt have separate roles')
     s.targetHP=10; s.spells.fireblast.cooldownRemaining=0
     check(R.Decide(s)=='fireblast','A conservative instant finisher overrides the filler')
     s.targetHP=M.Estimate(s,'fireblast').minimumDamage+1
@@ -790,12 +791,63 @@ do
     R.Snapshot=function() return s end; R.RefreshView=function() end
     GetActionInfo=function(slot) return 'spell',slot==1 and s.spells.frostbolt.id or slot==2 and s.spells.counterspell.id or s.spells.nova.id end
     R.castPlan=nil; R:Update()
-    check(glow:IsShown() and glow.style=='primary' and R.highlights[other].style=='optional' and R.highlights[lower].style=='optional','Live renderer shows gold damage and red interrupt/root together')
+    check(not glow:IsShown() and R.highlights[other].style=='defensive' and R.highlights[lower]:IsShown() and R.highlights[lower].style=='main','Live renderer shows gold Nova setup and red interrupt without competing Frostbolt')
     local starts=glow.ProcStartAnim.plays
     s.frozen=true; s.interrupt=false; R:Update()
-    check(glow:IsShown() and not R.highlights[other]:IsShown() and not R.highlights[lower]:IsShown(),'Ending utility conditions clears only their highlights')
-    check(glow.ProcStartAnim.plays==starts and R.lockStatus=='held','Utility changes do not restart or replace the primary glow')
+    check(not glow:IsShown() and not R.highlights[other]:IsShown() and not R.highlights[lower]:IsShown(),'Freeze invalidates Main Nova without a late replacement')
+    check(glow.ProcStartAnim.plays==starts and R.lockStatus=='suppressed-invalid-plan','Invalid setup does not introduce a late Frostbolt highlight')
     R.Snapshot,R.RefreshView,GetActionInfo=oldSnapshot,oldView,oldAction; R.castPlan=nil
+end
+
+-- Four categories replace the old optional/refresh/missing-buff color rules.
+do
+    local s=state({'frostbolt','nova','barrier','intellect','arcanepower','counterspell','managem'})
+    s.targetBoss=true; s.interrupt=true; s.attackingPlayer=true; s.playerHealth=60
+    s.spells.managem={id=5513,item=true,ready=true,usable=true,restore=650}
+    s.power=3000; s.maxPower=5000
+    local choices={}; local counts={}
+    for _,choice in ipairs(M.Optional(s)) do
+        choices[choice.key]=choice.category; counts[choice.key]=(counts[choice.key] or 0)+1
+    end
+    check(choices.arcanepower=='offensive','Damage cooldowns use Offensive Support')
+    check(choices.counterspell=='defensive','Interrupts use Defensive')
+    check(choices.managem=='preparation' and choices.intellect=='preparation','Recovery and buffs share Preparation')
+    check(choices.barrier=='defensive' and counts.barrier==1,'Threat protection supersedes routine Barrier upkeep without duplication')
+    local oldAction=GetActionInfo
+    GetActionInfo=function() return 'spell',837 end
+    for _,key in ipairs(R.categoryOrder) do
+        R:Highlight({id=837,category=key})
+        local rgb=R.categories[key].color
+        check(glow.style==key and glow.ProcLoopFlipbook.vertexColor[1]==rgb[1]
+            and glow.ProcLoopFlipbook.vertexColor[2]==rgb[2] and glow.ProcLoopFlipbook.vertexColor[3]==rgb[3],
+            'Native glow uses the '..key..' category color')
+        check(glow.ProcStartFlipbook.desaturated==(key~='main'),'Only Main retains native gold artwork')
+    end
+    local repeated=glow.ProcStartAnim.plays
+    R:Highlight({id=837,category='preparation'})
+    check(glow.ProcStartAnim.plays==repeated,'Category continuity never restarts the animation')
+    GetActionInfo=oldAction
+end
+
+do
+    local oldSnapshot,oldAction,oldView=R.Snapshot,GetActionInfo,R.RefreshView
+    local s=state({'frostbolt','nova','counterspell'},42)
+    s.grouped=false; s.talents.shatter=5; s.targetHP=5000; s.targetClose=true
+    s.attackingPlayer=true; s.targetGUID='setup-sequence'; s.time=now
+    s.casting=true; s.rotationCast=true; s.castToken='cast:setup-first'; s.castEnd=now+2.5
+    R.Snapshot=function() return s end; R.RefreshView=function() end
+    GetActionInfo=function(slot) return 'spell',slot==1 and s.spells.frostbolt.id or slot==2 and s.spells.nova.id or s.spells.counterspell.id end
+    R.castPlan=nil; R:Update()
+    check(R.primary==s.spells.nova and not glow:IsShown() and R.highlights[other].style=='main','Required Nova setup is the sole gold spell')
+    s.targetHP=1; R:Update()
+    check(R.primary==s.spells.nova and R.lockStatus=='held','Changing damage opportunity does not replace committed setup late in a cast')
+    s.frozen=true; R:Update()
+    check(not R.primary and R.lockStatus=='suppressed-invalid-plan','A root that already landed safely invalidates planned Nova')
+    s.castToken='cast:setup-followup'; s.time=now+3; s.castEnd=now+5.5; R:Update()
+    check(R.primary==s.spells.frostbolt and glow.style=='main' and not R.highlights[other]:IsShown(),'The next cast plans Frostbolt after the root lands')
+    s.targetHP=5000; s.frozen=false; R:Update()
+    check(R.primary==s.spells.frostbolt and R.lockStatus=='held','A newly available setup cannot replace Frostbolt late in its cast')
+    R.Snapshot,GetActionInfo,R.RefreshView=oldSnapshot,oldAction,oldView; R.castPlan=nil
 end
 
 print('PASS: '..count..' Mage rotation, live adapter, UI and highlight regression checks.')

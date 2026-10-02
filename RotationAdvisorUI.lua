@@ -1,6 +1,9 @@
 local _,A=...
 local R,S=A.RotationAdvisor,A.Skin
-local modeHelp="Gold: one combat primary, or multiple preparation actions out of combat. Red: situational actions. Blue: buffs with five minutes remaining. Gold: missing buffs. Disabled removes all HCB highlights."
+local legend="|cffffd100Gold: Main|r   |cffcc40ffPurple: Offensive|r   |cffff2626Red: Defensive|r   |cff268cffBlue: Preparation|r"
+local descriptions={}
+for _,key in ipairs(R.categoryOrder) do descriptions[#descriptions+1]=R.categories[key].description end
+local modeHelp=table.concat(descriptions,"\n")
 local function text(parent,value,x,y,width,style)
     local f=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
     S.TextStyle(f,style or "subtitle"); f:SetPoint("TOPLEFT",x,-y); f:SetWidth(width)
@@ -23,9 +26,9 @@ function R:CreateSettings(page)
     end
     page.help=text(page.mode,modeHelp,16,78,704)
     page.damage=S.Section(page,"Mage Damage",182,100,1)
-    page.damage.note=text(page.damage,"Uses your learned spells, talents and gear to choose a stable main attack. Clear finishers, safe AoE and unavailable spells provide exceptions. Previews the next action during your cast or GCD.",16,38,320)
+    page.damage.note=text(page.damage,"Gold shows the next action, including setup such as Nova before Frostbolt. The choice stays fixed during a cast unless urgent or invalid. Learned spells, talents, gear, range and readiness determine eligibility.",16,38,320)
     page.survival=S.Section(page,"Mage Survival",182,100,2)
-    page.survival.note=text(page.survival,"Red highlights show interrupts, control, recovery and damage cooldowns alongside your main attack. Only immediate survival emergencies replace it. Area spells respect nearby crowd control.",16,38,320)
+    page.survival.note=text(page.survival,"Red: situational protection and interrupts. Purple: optional damage cooldowns. Blue: buffs and recovery, whether missing or expiring. An urgent response becomes the single gold Main action.",16,38,320)
 end
 function R:LayoutSettings(width)
     local page=self.settingsPage; if not page then return end
@@ -39,7 +42,7 @@ function R:LayoutSettings(width)
         b.selected=self:Mode()==key; S.ControlEnabled(b,key=="disabled" or key=="assistant" and supported); S.ButtonState(b,b.selected,nil,false)
     end
     page.help:SetText(self.supported[class] and modeHelp
-        or "Consumable preparation supports all classes. Combat spell recommendations currently support Mage.")
+        or modeHelp.."\nConsumable preparation supports all classes; combat advice currently supports Mage.")
     page.help:SetWidth(available); page.help:SetHeight(0)
     page.help:SetHeight(page.help:GetStringHeight())
     page.mode:SetHeight(78+page.help:GetHeight()+16)
@@ -69,6 +72,8 @@ function R:CreateView(parent)
     view.next:SetScript("OnEnter",function(frame)
         if self.current then
             GameTooltip:SetOwner(frame,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink((self.current.item and "item:" or "spell:")..self.current.id)
+            local category=self.categories[self.current.category]
+            if category then GameTooltip:AddLine(category.description,1,.8,.4,true) end
             if self.reason and self.reason~="" then GameTooltip:AddLine(self.reason,1,.8,.4,true) end
             GameTooltip:Show()
         end
@@ -100,13 +105,13 @@ function R:RefreshView()
     local _,class=UnitClass("player"); local mode=self:Mode(); local s=self.snapshot or {}
     view.subtitle:SetText("Live "..(A.ConsumableBuffs.classes[class] or class or "character").." | "..self.modes[mode].." | Levels 1–60")
     local spell=self.current
-    view.next.title:SetText(self.oocActions and #self.oocActions>0 and "Out-of-Combat Preparation" or self.optional and "Optional Action" or "Next Spell")
+    view.next.title:SetText(spell and self.categories[spell.category] and self.categories[spell.category].name or "Next Action")
     view.next.icon:SetTexture(spell and spell.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
     view.next.icon:SetAlpha(spell and 1 or .35)
     view.next.name:SetText(spell and (spell.name..(spell.rank and spell.rank~="" and (" | "..spell.rank) or "")) or mode=="disabled" and "Disabled" or "Waiting")
     view.next.reason:SetText(self.reason or "")
     local currentCount=self.optional and self.optionalHighlightCount or self.primaryHighlightCount
-    view.next.bar:SetText(mode=="assistant" and (spell and ((currentCount or 0)>0 and (self.optional and "Red: situational actions. Blue: expiring buffs. Gold: missing buffs." or "Gold: primary or missing buff. Red: situational. Blue: refresh soon.") or "Place this action on a Blizzard action bar to see its highlight.") or "No spell highlighted.")
+    view.next.bar:SetText(mode=="assistant" and (spell and ((currentCount or 0)>0 and legend or "Place this action on a Blizzard action bar to see its highlight.") or "No spell highlighted.")
         or "Enable Assistant Mode in Settings to begin.")
     view.character.values:SetText(mode=="disabled" and "Live monitoring is off." or
         "Health: "..pct(s.playerHealth).."\nMana: "..pct(s.powerPercent)

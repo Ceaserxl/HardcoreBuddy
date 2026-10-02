@@ -118,7 +118,7 @@ function B:Recommend(s,readAuras,cache)
                 local old=best[group]
                 if itemName and (not old or priority>old.priority or priority==old.priority and (item.level or 0)>old.level) then
                     best[group]={id=id,item=true,name=itemName,icon=icon,level=item.level or 0,priority=priority,
-                        buffColor=not recovery and ((buffFood and foodBuffRemaining or left)>0 and "refresh" or "primary") or nil,
+                        category="preparation",
                         reason=recovery and "Recover before the next fight." or "Refresh the tracked consumable buff."}
                 end
             end

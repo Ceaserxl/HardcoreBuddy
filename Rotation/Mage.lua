@@ -113,18 +113,12 @@ function M.Situational(s,add)
     if danger and (s.rooted or s.stunned) then add("blink","Break the root or stun; check your landing direction.",true) end
     if danger and hp<70 and remaining(s,"fireward")==0 and s.damageSchool==4 then add("fireward","Absorb incoming fire damage.",true) end
     if danger and hp<70 and remaining(s,"frostward")==0 and s.damageSchool==16 then add("frostward","Absorb incoming frost damage.",true) end
-    if danger and hp<85 and remaining(s,"barrier")==0 then add("barrier","Absorb incoming damage.",true) end
+    if danger and hp<85 and remaining(s,"barrier")==0 then add("barrier","Absorb incoming damage.",true,"defensive") end
     if not validEnemy(s) then return end
     if danger and s.targetClose and not s.frozen and s.safeAOE then
-        local bolt=M.Estimate(s,"frostbolt")
-        -- Offensive rooting needs enough life for the setup and follow-up.
-        -- Keep the same threshold between and during casts so Nova does not
-        -- flash on cast completion and vanish as the next Frostbolt starts.
-        local setup=not s.grouped and not s.targetBoss and rank(s,"shatter")>0 and ready(s,"frostbolt")
-            and bolt and s.targetHP and s.targetHP>bolt.damage*2 and mp>15
-        if hp<65 or setup then
-            if not add("nova","Root the attacker and make room for your next cast.",true) and hp<65 and s.facingTarget then
-                add("cone","Slow the attacker in front of you.",true)
+        if hp<65 then
+            if not add("nova","Root the attacker and make room to escape.",true,"defensive") and s.facingTarget then
+                add("cone","Slow the attacker in front of you.",true,"defensive")
             end
         end
     end
@@ -132,14 +126,14 @@ function M.Situational(s,add)
         add("polymorph","Control the selected attacker.",true)
     end
     if s.combat and s.grouped and s.targetCombat and mp<10 and hp>75 and not danger then
-        add("evocation","Recover mana while the enemy is occupied.",true)
+        add("evocation","Recover mana while the enemy is occupied.",true,"preparation")
     end
     local plan=profile(s)
     local durable=s.targetBoss or s.grouped and s.targetHP and plan.damage and s.targetHP>plan.damage*4
     if s.combat and durable and mp>45 and hp>50 then
-        if remaining(s,"arcanepower")==0 then add("arcanepower","Increase damage for this fight.",true) end
-        if plan.school==3 and remaining(s,"combustion")==0 then add("combustion","Increase critical strikes for fire spells.",true) end
-        if remaining(s,"presence")==0 then add("presence","Make your next damage cast instant.",true) end
+        if remaining(s,"arcanepower")==0 then add("arcanepower","Increase damage for this fight.",true,"offensive") end
+        if plan.school==3 and remaining(s,"combustion")==0 then add("combustion","Increase critical strikes for fire spells.",true,"offensive") end
+        if remaining(s,"presence")==0 then add("presence","Make your next damage cast instant.",true,"offensive") end
     end
 end
 
@@ -153,11 +147,15 @@ function M.Optional(s)
     if s.class~="MAGE" or not R.CanAdvise(s) or remaining(s,"iceblock")>0 or s.channelKey=="evocation" then return actions end
     local mp=s.powerPercent or 100
     local refreshLeft
-    local function add(key,reason,immediate)
-        if seen[key] then return true end
+    local function add(key,reason,immediate,category)
+        if seen[key] then
+            -- A threat-specific reason takes precedence over routine upkeep.
+            if category=="defensive" then seen[key].category=category; seen[key].reason=reason end
+            return true
+        end
         if ready(s,key,immediate) then
-            seen[key]=true
-            actions[#actions+1]={key=key,reason=reason,buffColor=refreshLeft and (refreshLeft>0 and "refresh" or "primary")}
+            local choice={key=key,reason=reason,category=category or (refreshLeft~=nil and "preparation" or "defensive")}
+            seen[key]=choice; actions[#actions+1]=choice
             return true
         end
     end
@@ -185,10 +183,10 @@ function M.Optional(s)
     -- not replace the next damage action whenever a cast finishes.
     if s.combat and ready(s,"managem",true)
         and (s.maxPower or 0)-(s.power or 0)>=(s.spells.managem.restore or math.huge) then
-        add("managem","Restore mana without wasting the gem's recovery.")
+        add("managem","Restore mana without wasting the gem's recovery.",true,"preparation")
     end
     if not s.combat and not s.casting and not s.targetCombat and not s.drinking then
-        if mp<25 and ready(s,"evocation",true) then add("evocation","Recover mana before pulling.") end
+        if mp<25 and ready(s,"evocation",true) then add("evocation","Recover mana before pulling.",true,"preparation") end
     end
     M.Situational(s,add)
     return actions
@@ -217,6 +215,13 @@ function M.Decide(s)
     end
     if not validEnemy(s) or s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>1 then return nil,"" end
     local plan=profile(s)
+    -- Required setup is the next action, never a competing auxiliary glow.
+    local bolt=M.Estimate(s,"frostbolt")
+    if danger and not s.grouped and not s.targetBoss and s.targetClose and not s.frozen
+        and s.safeAOE and rank(s,"shatter")>0 and ready(s,"nova",true) and ready(s,"frostbolt")
+        and bolt and s.targetHP and s.targetHP>bolt.damage*2 and mp>15 then
+        return choose("nova","Root first, then cast Frostbolt for Shatter.")
+    end
     -- A distant opener and a consumed Presence proc are explicit exceptions.
     if ready(s,"pyroblast") and remaining(s,"presence")>0 then return choose("pyroblast","Use Presence of Mind for an instant Pyroblast.") end
     if not s.combat and not s.targetCombat and not s.casting and not s.targetDotted
