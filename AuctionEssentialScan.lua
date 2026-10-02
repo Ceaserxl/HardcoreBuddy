@@ -3,7 +3,7 @@ local _,A=...
 local E=A.AuctionEssentials
 local popup="HARDCOREBUDDY_ESSENTIAL_BUYOUT"
 function E:Stop(message,keepBatch)
-    self.scan=nil; self.confirmation=nil; self.inlineBuy=nil
+    self.scan=nil; self.confirmation=nil
     if not keepBatch then self.batch=nil; self.awaitingBuy=nil end
     if StaticPopup_Hide then StaticPopup_Hide(popup) end
     if message then self.message=message end
@@ -44,19 +44,13 @@ function E:AcceptPurchase(data)
         self:Stop("Listing changed. Click the item to check again."); return
     end
     if GetMoney()<data.buyout then self:Stop("Not enough money for this stack."); return end
-    self.confirmation=nil; self.inlineBuy=nil
+    self.confirmation=nil
     self.awaitingBuy={listing=data,since=GetTime()}
     PlaceAuctionBid("list",data.index,data.buyout)
     self.results[data.itemId]=nil; self.complete=false
     self.message="Waiting for the auction house to confirm the purchase."; self:Refresh()
 end
 function E:Confirm(listing)
-    if A.characterDB and A.characterDB.essentialSkipConfirmation==true then
-        self.scan=nil; self.confirmation=listing
-        self.inlineBuy=true
-        self.message="Ready to buy "..listing.count.." x "..listing.name..". Click Buy Stack."
-        self:Refresh(); return
-    end
     if not StaticPopupDialogs or not StaticPopupDialogs.BUYOUT_AUCTION then self:Stop("Buyout confirmation unavailable."); return end
     if not StaticPopupDialogs[popup] then
         local dialog={}; for k,v in pairs(StaticPopupDialogs.BUYOUT_AUCTION) do dialog[k]=v end

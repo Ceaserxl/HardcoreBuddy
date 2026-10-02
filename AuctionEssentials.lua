@@ -37,8 +37,7 @@ function E:Refresh()
     -- Share the exact Upgrades content bounds, including native AH resizing.
     local width,height=AuctionFrame:GetWidth()-18,AuctionFrame:GetHeight()-47
     self.panel:SetSize(width,height)
-    self.title:SetWidth(math.max(160,width-370))
-    self.skipConfirmation:SetChecked(A.characterDB and A.characterDB.essentialSkipConfirmation==true)
+    self.title:SetWidth(math.max(160,width-190))
     self.items=self:Items(A:GetContext())
     local shown=math.max(1,math.min(#self.rows,math.floor((height-128)/38)))
     self.offset=math.max(0,math.min(self.offset,math.max(0,#self.items-shown)))
@@ -95,13 +94,7 @@ function E:Refresh()
     local money=GetCoinTextureString and GetCoinTextureString(cost) or tostring(cost).."c"
     self.total:SetWidth(width-310)
     self.total:SetText("Refill: "..units.." / "..need.."  |  Est. cost: "..(unknown and "Scan needed" or money))
-    local ready=self.inlineBuy and self.confirmation and not self.scan and not self.awaitingBuy
-    self.buy.label:SetText(ready and "Buy Stack" or "Buy")
-    if ready then
-        local price=GetCoinTextureString and GetCoinTextureString(self.confirmation.buyout) or tostring(self.confirmation.buyout).."c"
-        self.total:SetText("Stack: "..self.confirmation.count.."  |  Cost: "..price)
-    end
-    self.buy:SetEnabled(ready or (#queue>0 and not unknown and not self.scan and not self.batch and not self.confirmation and not self.awaitingBuy))
+    self.buy:SetEnabled(#queue>0 and not unknown and not self.scan and not self.batch and not self.confirmation and not self.awaitingBuy)
     if MoneyFrame_Update then MoneyFrame_Update("HardcoreBuddyEssentialsMoneyFrame",GetMoney()) end
 end
 function E:Attach()
@@ -126,14 +119,6 @@ function E:Attach()
     self.start.label=self.start.caption; self.start.caption:SetJustifyH("CENTER")
     Skin.Button(self.start,"category")
     self.start:SetScript("OnClick",function() if E.scan then E:Stop("Scan stopped. Results may be incomplete.") else E:Start() end end)
-    self.skipConfirmation=CreateFrame("CheckButton",nil,panel,"UICheckButtonTemplate")
-    self.skipConfirmation:SetSize(22,22)
-    self.skipConfirmation:SetPoint("RIGHT",self.start,"LEFT",-158,0)
-    self.skipConfirmation.caption=label(self.skipConfirmation,"Skip buy confirmation",22,0,150)
-    self.skipConfirmation.caption:SetFont(STANDARD_TEXT_FONT,11,"")
-    self.skipConfirmation:SetScript("OnClick",function(control)
-        if A.characterDB then A.characterDB.essentialSkipConfirmation=control:GetChecked()==true end
-    end)
     self.notice=label(panel,"",16,-31,560); Skin.TextStyle(self.notice,"subtitle")
     self.headers={}
     for i,title in ipairs({"ITEM","CRAFT","OWNED","TARGET","NEED","STACK","COST","BUY"}) do self.headers[i]=label(panel,title,0,-60,80) end
