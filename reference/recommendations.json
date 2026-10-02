@@ -4235,6 +4235,28 @@
       "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
       "reference": "https://www.wowhead.com/classic/item=21033",
       "verifiedOn": "2026-10-02"
+    },
+    {
+      "id": "classic-bottled-winterspring-water",
+      "itemId": 19300,
+      "name": "Bottled Winterspring Water",
+      "level": 35,
+      "classes": [
+        "All"
+      ],
+      "family": "drink",
+      "group": "Food & drink",
+      "alternative": true,
+      "vendorFood": true,
+      "binding": false,
+      "ease": 0,
+      "short": "Mana between fights",
+      "detail": "Use: Restores 1992 mana over 30 sec.  Must remain seated while drinking.",
+      "route": "Buy from Winterspring food and drink vendors.",
+      "caution": "",
+      "icon": "/images/hcclassic/inv_drink_18.jpg",
+      "reference": "https://www.wowhead.com/classic/item=19300",
+      "verifiedOn": "2026-10-02"
     }
   ]
 }

@@ -12,10 +12,15 @@ local function join(lines) return table.concat(lines, "\n") end
 local function requirement(item)
     return item.useSkill and (item.useSkill.name .. " " .. item.useSkill.value) or ("Use level " .. item.level)
 end
+local function hasAlternatives(item)
+    local options=item.options or (P.grouped[item.family] and item.progression) or {}
+    for _,other in ipairs(options) do if other.itemId~=item.itemId then return true end end
+    return false
+end
 local function fullRequirement(item)
     local result = requirement(item)
     if item.craftSkill then result = result .. " | Craft: " .. item.craftSkill.name .. " " .. item.craftSkill.value end
-    if item.recommendLevel then result = result .. " | Suggested from level " .. item.recommendLevel end
+    if item.recommendLevel and hasAlternatives(item) then result = result .. " | Suggested from level " .. item.recommendLevel end
     return result
 end
 function G.ItemFields(item,context)
@@ -53,7 +58,7 @@ function G.ItemFields(item,context)
     end
     field("Use level","Level "..item.level)
     if item.useSkill then field("Use requirement",item.useSkill.name.." "..item.useSkill.value) end
-    if item.recommendLevel then field("Suggested from","Level "..item.recommendLevel) end
+    if item.recommendLevel and hasAlternatives(item) then field("Suggested from","Level "..item.recommendLevel) end
     local notes={}
     if item.binding then notes[#notes+1]="Binds on pickup; obtain it yourself." end
     if item.caution and item.caution~="" then notes[#notes+1]=item.caution end
@@ -293,7 +298,8 @@ G.ItemBlocks = function(item,context)
     if item then
         add(out,{fields=G.ItemFields(item,context),family=item.family,recordId=item.id})
         local alternatives=item.options or (P.grouped[item.family] and item.progression) or {}
-        if #alternatives>0 then text(out,"Alternatives","Open a different item to compare its requirements.") end
+        local hasOptions=hasAlternatives(item)
+        if hasOptions then text(out,"Alternatives","Open a different item to compare its requirements.") end
         for _,other in ipairs(alternatives) do
             if other.itemId~=item.itemId then
                 add(out,{title=other.name,body=other.short,itemId=other.itemId,icon=other.icon,
@@ -301,7 +307,7 @@ G.ItemBlocks = function(item,context)
             end
         end
         if item.next then
-            text(out,"Next","Suggested from level "..P.AvailableAt(item.next))
+            text(out,"Next",hasOptions and ("Suggested from level "..P.AvailableAt(item.next)) or nil)
             add(out,{title=item.next.name,body=item.next.short,itemId=item.next.itemId,icon=item.next.icon,
                 action={kind="item",item=item.next},child=true})
         end

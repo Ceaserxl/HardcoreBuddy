@@ -1,0 +1,37 @@
+{
+  "https://nether.wowhead.com/classic/tooltip/item/19300": {
+    "name": "Bottled Winterspring Water",
+    "quality": 1,
+    "icon": "inv_drink_18",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Bottled Winterspring Water</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->45</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->35<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=1135/drink\" class=\"q2\">Restores 1992 mana over 30 sec. &nbsp;Must remain seated while drinking.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">1</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/19318": {
+    "name": "Bottled Alterac Spring Water",
+    "quality": 1,
+    "icon": "inv_drink_11",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Bottled Alterac Spring Water</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->55</span><!--bo--><br>Binds when picked up<!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->55<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=23698/alterac-spring-water\" class=\"q2\">Restores 4410 mana over 30 sec. &nbsp;Must remain seated while drinking. Also increases your Spirit by 10 for 10 min.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><span class=\"q\">&quot;From the mountain springs of Alterac!&quot;</span><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">2</span> <span class=\"moneycopper\">50</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/17405": {
+    "name": "Green Garden Tea",
+    "quality": 1,
+    "icon": "inv_drink_milk_05",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Green Garden Tea</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->35</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->25<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=1133/drink\" class=\"q2\">Restores 1344.6 mana over 27 sec. &nbsp;Must remain seated while drinking.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneycopper\">50</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/13813": {
+    "name": "Blessed Sunfruit Juice",
+    "quality": 1,
+    "icon": "inv_drink_16",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Blessed Sunfruit Juice</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->55</span><!--bo--><br>Binds when picked up<!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->45<br>Requires <a href=\"/classic/faction=529/argent-dawn\" class=\"q1\">Argent Dawn</a> - Revered<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=18140/blessed-sunfruit-juice\" class=\"q2\">Restores 4410 mana over 30 sec. &nbsp;Must remain seated while drinking. Also increases your Spirit by 10 for 10 min.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">3</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/19299": {
+    "name": "Fizzy Faire Drink",
+    "quality": 1,
+    "icon": "inv_drink_05",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Fizzy Faire Drink</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->25</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->15<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=432/drink\" class=\"q2\">Restores 835.2 mana over 24 sec. &nbsp;Must remain seated while drinking.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneycopper\">25</span></div></td></tr></table>",
+    "spells": []
+  }
+}

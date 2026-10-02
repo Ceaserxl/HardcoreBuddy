@@ -59,7 +59,18 @@ assert(A.characterDB.auctionRecipes[900003].output==3 and A.characterDB.auctionR
 E.bankOpen=true
 C_Container.GetContainerNumSlots=function(bag) return bag==-1 and 2 or 0 end
 C_Container.GetContainerItemInfo=function(_,slot) return {itemID=900010,stackCount=slot} end
-E:CaptureBank(); assert(A.characterDB.auctionBank.counts[900010]==3,"Character bank snapshot")
+local previous=A.characterDB.auctionBank
+E.craftingEvents.scripts.OnEvent(nil,"BANKFRAME_OPENED")
+assert(A.characterDB.auctionBank==previous and not E.bankDraft,"Opening bank does not cache contents")
+E:CaptureBank(); assert(A.characterDB.auctionBank==previous,"Bank changes remain staged until close")
+C_Container.GetContainerItemInfo=function(_,slot) return {itemID=900010,stackCount=slot+1} end
+E.craftingEvents.scripts.OnEvent(nil,"BANKFRAME_CLOSED")
+assert(A.characterDB.auctionBank.counts[900010]==5,"Closing bank persists final contents")
+local persisted=A.characterDB.auctionBank
+E.craftingEvents.scripts.OnEvent(nil,"BANKFRAME_OPENED")
+C_Container.GetContainerNumSlots=function() return 0 end
+E.craftingEvents.scripts.OnEvent(nil,"BANKFRAME_CLOSED")
+assert(A.characterDB.auctionBank==persisted,"Unavailable bank API preserves saved snapshot")
 learned=true; E.Refresh=refresh; E:Attach(); E.open=true
 E.craftChoices={}; E.materialOverrides={}; E:Refresh()
 assert(E.rows[1].cells[1]:GetText():find("|cff62d79b(Craftable)|r",1,true),"Green inline Craftable label")

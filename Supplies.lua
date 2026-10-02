@@ -3,7 +3,7 @@ local _, addon = ...
 local P = addon.Planner
 local S = {}
 addon.Supplies = S
-S.categories = {"All", "Food & Drink", "Buffs", "Potions", "Emergency", "Class", "Scrolls", "Enchants", "Optional", "User"}
+S.categories = {"All", "Food & Drink", "Elixirs", "Scrolls", "Potions", "Emergency", "Class", "Enchants", "Optional", "User"}
 S.filters={"All","Essentials"}
 for i=2,#S.categories do S.filters[#S.filters+1]=S.categories[i] end
 S.priorities={"Essentials","Advanced","Optional"}
@@ -63,16 +63,16 @@ local function defaultCategory(item)
     if item.family == "healing" or item.family == "mana" then return "Emergency" end
     if item.group == "Route-specific backups" or item.alternative then return "Optional" end
     if item.group == "Food & drink" then return "Food & Drink" end
-    if item.group == "Potions & elixirs" then return "Buffs" end
+    if item.group == "Potions & elixirs" then return "Elixirs" end
     return "Emergency"
 end
 
 function S.Category(item)
-    if item.supplyCategory then return item.supplyCategory end
+    if item.supplyCategory then return item.supplyCategory=="Buffs" and "Elixirs" or item.supplyCategory end
     if item.armorKit then return "Enchants" end
     if item.ammoKind then return "Class" end
     if item.userItem then return "User" end
-    if item.family=="trollsblood" then return "Buffs" end
+    if item.family=="trollsblood" then return "Elixirs" end
     if item.name and item.name:find("Potion",1,true) then return "Potions" end
     if item.family=="healthstone" or item.family=="managem" or item.family=="feather"
         or item.family=="tea" or item.family=="vanish" or item.family=="blind" then return "Class" end
@@ -86,6 +86,7 @@ function S.NormalizeTarget(value,limit)
 end
 
 function S.DefaultTarget(item)
+    if item.itemId==5816 then return 1 end
     if item.armorKit or item.enchantMaterial then return item.recommendedTarget or 1 end
     if item.ammoKind then return item.ammoKind=="thrown" and 100 or 1000 end
     if item.userItem then return 1 end
@@ -93,7 +94,7 @@ function S.DefaultTarget(item)
     if family == "recovery" or family == "drink" or family == "bandage" then return 20 end
     if family == "healthstone" or family == "managem" or defaultCategory(item) == "Optional" then return 1 end
     if family == "vanish" or family == "blind" or family == "feather" then return 10 end
-    if family == "healing" or family == "mana" or defaultCategory(item) == "Buffs"
+    if family == "healing" or family == "mana" or defaultCategory(item) == "Elixirs"
         or family == "wellfed" or family == "manafood" then return 5 end
     return 3
 end
@@ -113,7 +114,10 @@ function S.Record(context, item, groupFamily)
     if item.ammoKind and addon.Ammunition then count=addon.Ammunition.Count(context,item) end
     if item.ammoKind and context.characterClass~="Hunter" and targets[id]==nil and targets[tostring(id)]==nil then target=100 end
     -- A consumed, unique quest reward cannot be restocked by another purchase.
-    if item.family=="Light of Elune" and (count==nil or count==0) and targets[id]==nil and targets[tostring(id)]==nil then target=0 end
+    local oneTime=id==5816
+    if oneTime then target=1 end
+    local completed=C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted or IsQuestFlaggedCompleted
+    local obtainable=oneTime and count==0 and P.ContextFaction(context)=="Alliance" and completed and completed(1017)==false
     if count ~= nil and (type(count) ~= "number" or count ~= count or count < 0
         or count == math.huge or count ~= math.floor(count)) then count = nil end
     local missing = count ~= nil and math.max(0, target - count) or nil
@@ -125,12 +129,13 @@ function S.Record(context, item, groupFamily)
     local note = item.useSkill and ("Requires " .. item.useSkill.name .. " " .. item.useSkill.value)
         or groupFamily == "antivenom" and ("Poisons up to level "..item.power) or nil
     return {
-        item=item, itemId=id, name=item.name, displayName=item.name, icon=item.icon,
+        item=item, itemId=id, name=item.name..(obtainable and " |cff66ee99(Obtainable)|r" or ""), displayName=item.name, icon=item.icon,
+        oneTime=oneTime,
         family=item.family, groupFamily=groupFamily, category=S.Category(item),priority=S.Priority(context,item),
         count=count, target=target, targetKey=id, status=status, missing=missing,
         owned=count ~= nil and count > 0 or false, available=count ~= nil,
         quantityNote=note, defaultTarget=suggested,
-        refillThreshold=threshold,refillNeeded=count~=nil and count<threshold,
+        refillThreshold=oneTime and 0 or threshold,refillNeeded=not oneTime and count~=nil and count<threshold,
         optional=S.Category(item) == "Optional", tracking=target > 0,
     }
 end
@@ -205,6 +210,7 @@ end
 function S.Build(context, state)
     state = state or {}
     local category = state.category or state.filter or "All"
+    if category=="Buffs" then category="Elixirs" end
     if category == "Recovery" or category == "Food & drink" then category = "Food & Drink" end
     local stock = state.stock or "All"
     local plan = P.BuildList(context.characterClass, context.level, P.ContextFaction(context))

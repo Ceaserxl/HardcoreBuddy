@@ -322,7 +322,7 @@ function C.Detail(context, action)
         local out=card(item.displayName or item.name,nil,blocks)
         out.supplyTable=true
         local r=S.Record(context,item,family)
-        table.insert(out.blocks,1,supplyRow(r)); out.blocks[1].action=nil; out.blocks[1].editTarget=true
+        table.insert(out.blocks,1,supplyRow(r)); out.blocks[1].action=nil; out.blocks[1].editTarget=not r.oneTime
         if family then rankState(out.blocks[1],r,context) end
         out.itemLayout=true
         out.itemSectionTitle=S.GenericTitle(item)
@@ -333,7 +333,7 @@ function C.Detail(context, action)
             out.defaultItem=item
             out.isDefault=S.Selection(context,"bandage")==item.itemId
         end
-        out.quantityRecord={title="Auto-buy amount",quantityEditor=true,targetKey=r.targetKey,target=r.target,refillThreshold=r.refillThreshold}
+        if not r.oneTime then out.quantityRecord={title="Auto-buy amount",quantityEditor=true,targetKey=r.targetKey,target=r.target,refillThreshold=r.refillThreshold} end
         local alternatives=false
         for _,block in ipairs(out.blocks) do
             if block.fields then
@@ -435,6 +435,7 @@ function C.Build(context,state)
         else result.cards[1]=C.Detail(context,state.detail) end
         result.isDetail=true
     elseif view=="supplies" then
+        if state.filter=="Buffs" then state.filter="Elixirs" end
         if state.filter=="Food & drink" then state.filter="Food & Drink" end
         result.filters=S.filters
         local rows,summary=supplyRows(context,state)

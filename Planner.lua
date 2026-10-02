@@ -116,6 +116,7 @@ function P.BuildList(class, level, faction)
                 or family == "antivenom" and "Match the poison level, not your level" or item.short
             row.options = filter(options, function(other)
                 return other.id ~= item.id and ((family ~= "recovery" and family ~= "drink" and family ~= "wellfed")
+                    or family=="drink" and other.vendorFood
                     or other.level >= item.level or (other.power ~= nil and item.power ~= nil and other.power >= item.power))
             end)
             row.progression = sorted(filter(items, function(other)

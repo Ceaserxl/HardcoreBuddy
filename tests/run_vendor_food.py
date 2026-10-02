@@ -7,6 +7,34 @@ lua,A=boot()
 lua.execute('''
 local A=TestAddon; local P,V=A.Planner,A.VendorServices
 for _,class in ipairs(P.classes) do
+    local drink
+    for _,row in ipairs(P.BuildList(class,60,'Alliance').rows) do if row.family=='drink' then drink=row end end
+    local ids={[drink.itemId]=true}
+    for _,item in ipairs(drink.options) do ids[item.itemId]=true end
+    for _,id in ipairs({159,1179,1205,1708,1645,8766,19300}) do assert(ids[id],'Vendor drink alternative '..id) end
+end
+local elune
+for _,item in ipairs(A.Data.Items.items) do if item.itemId==5816 then elune=item end end
+local ctx={characterClass='Mage',level=40,faction='Alliance',inventory={available=true,counts={}},targets={[5816]=99}}
+C_QuestLog={IsQuestFlaggedCompleted=function(id) assert(id==1017); return false end}
+local r=A.Supplies.Record(ctx,elune)
+assert(r.target==1 and r.count==0 and r.name:find('(Obtainable)',1,true) and not r.refillNeeded)
+local detail=A.Companion.Detail(ctx,{kind='item',item=elune})
+assert(not detail.quantityRecord,'Quest reward has no refill controls')
+C_QuestLog.IsQuestFlaggedCompleted=function() return true end
+r=A.Supplies.Record(ctx,elune)
+assert(r.count==0 and r.target==1 and not r.name:find('Obtainable'))
+ctx.inventory.counts[5816]=1
+r=A.Supplies.Record(ctx,elune)
+assert(r.count==1 and r.target==1 and r.status=='ready')
+C_QuestLog=nil
+assert(A.Supplies.filters[4]=='Elixirs' and A.Supplies.filters[5]=='Scrolls','Elixirs followed by Scrolls')
+local lone={itemId=1,name='Only item',level=1,classes={'All'},recommendLevel=5,next={itemId=2,name='Next',level=10}}
+for _,b in ipairs(A.Guide.ItemBlocks(lone,{})) do
+    if b.title=='Next' then assert(b.body==nil,'No suggested line without alternatives') end
+    for _,f in ipairs(b.fields or {}) do assert(f.label~='Suggested from') end
+end
+for _,class in ipairs(P.classes) do
  for _,level in ipairs({1,5,15,25,35,45,60}) do
   local food,drink
   for _,row in ipairs(P.BuildList(class,level,'Alliance').rows) do

@@ -48,7 +48,7 @@ function E:CaptureBank()
             end
         end
     end
-    db().auctionBank={counts=counts,at=time and time() or 0}
+    self.bankDraft={counts=counts,at=time and time() or 0}
 end
 local function materialName(pair)
     local info=C_Item and C_Item.GetItemInfo or GetItemInfo
@@ -196,14 +196,18 @@ function E:CraftNotice()
         if DEFAULT_CHAT_FRAME then DEFAULT_CHAT_FRAME:AddMessage("|cffffcd52HardcoreBuddy:|r "..text) end
         return " "..text
     end
-    if craftable and not (db() and db().auctionBank) then return " Open your bank once to include stored materials." end
+    if craftable and not (db() and db().auctionBank) then return " Open and close your bank once to save stored materials." end
     return ""
 end
 local events=CreateFrame("Frame")
+E.craftingEvents=events
 for _,event in ipairs({"TRADE_SKILL_SHOW","TRADE_SKILL_UPDATE","BANKFRAME_OPENED","BANKFRAME_CLOSED","PLAYERBANKSLOTS_CHANGED","BAG_UPDATE_DELAYED"}) do events:RegisterEvent(event) end
 events:SetScript("OnEvent",function(_,event)
-    if event=="BANKFRAME_OPENED" then E.bankOpen=true; E:CaptureBank()
-    elseif event=="BANKFRAME_CLOSED" then E:CaptureBank(); E.bankOpen=false
+    if event=="BANKFRAME_OPENED" then E.bankOpen=true; E.bankDraft=nil
+    elseif event=="BANKFRAME_CLOSED" then
+        E:CaptureBank()
+        if db() and E.bankDraft then db().auctionBank=E.bankDraft end
+        E.bankOpen=false; E.bankDraft=nil
     elseif event=="TRADE_SKILL_SHOW" or event=="TRADE_SKILL_UPDATE" then E:CaptureRecipes()
     else E:CaptureBank() end
 end)
