@@ -494,7 +494,7 @@ function U:Layout()
     self.panel:SetSize(width,height)
     self.title:SetWidth(width-380); self.subtitle:SetWidth(390)
     local top=(self.slot or self.weaponsOnly) and 114 or 80
-    local rowWidth=width-223
+    local rowWidth=width-218
     visibleRows=math.min(16,math.floor((height-top-16)/38))
     for i,row in ipairs(self.rows) do
         row:ClearAllPoints(); row:SetPoint("TOPLEFT",199,-top-(i-1)*38); row:SetWidth(rowWidth)
@@ -504,10 +504,10 @@ function U:Layout()
             entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],entry[3])
         end
     end
-    for _,entry in ipairs({{self.itemHeader,247},{self.scoreHeader,width-264},{self.priceHeader,width-146}}) do
+    for _,entry in ipairs({{self.itemHeader,247},{self.scoreHeader,width-259},{self.priceHeader,width-141}}) do
         entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],-top+21)
     end
-    self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPRIGHT",-10,-top); self.scroll:SetHeight(visibleRows*38-2)
+    self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPRIGHT",-5,-top); self.scroll:SetHeight(visibleRows*38-2)
     self.empty:ClearAllPoints(); self.empty:SetPoint("TOPLEFT",199,-top); self.empty:SetWidth(rowWidth)
     self.divider:SetWidth(width-28)
     for _,texture in ipairs({self.progressTrack,self.progressFill}) do
