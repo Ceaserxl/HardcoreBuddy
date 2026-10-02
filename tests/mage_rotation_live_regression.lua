@@ -178,7 +178,7 @@ do
     R.castPlan=nil; s.safeAOE=true; choose('explosion'); s.playerHealth=30
     check(choose('frostbolt')==nil,'Health dropping below area safety thresholds invalidates the area plan without a late replacement')
     s=state({'frostbolt','counterspell'}); s.interrupt=true
-    local _,_,_,urgent=R.Decide(s); check(urgent==true,'Actual interrupt decisions are marked urgent for the stabilizer')
+    local _,_,_,urgent=R.Decide(s); check(not urgent and optional(s,'counterspell'),'Interrupt stays independent of the primary cast lock')
     s.interrupt=false; _,_,_,urgent=R.Decide(s); check(not urgent,'Ordinary damage decisions can be stabilized')
     -- Reproduce the report through the live update/highlight path, not only the helper.
     local oldCasting=UnitCastingInfo; local oldDecide=R.Decide
@@ -260,7 +260,7 @@ do
     check(glow:IsShown() and R.highlights[other].ProcStartAnim.plays==barrierStarts,'Stopping leaves primary and optional animations intact')
     s.buffs.intellect=1800; R:Update()
     check(not R.highlights[lower]:IsShown() and R.highlights[other]:IsShown(),'Applying one buff clears only its optional highlight')
-    s.casting=false; s.attackingPlayer=true; s.playerHealth=70; R:Update()
+    s.casting=false; s.attackingPlayer=true; s.playerHealth=20; R:Update()
     check(R.primary==s.spells.barrier and R.highlights[other].style=='primary','Urgent Barrier is gold, not duplicate red')
     check(not glow:IsShown() and R.primaryHighlightCount==1,'Urgent action replaces the only primary')
     s.playerHealth=100; s.attackingPlayer=false; R:Update()
@@ -495,7 +495,7 @@ do
     s.timeToDie=1.657; s.spells.fireblast.immune=true
     decide(s,'frostbolt','Lethal Frostbolt beats nonlethal Scorch after an immune Fire Blast')
     s.targetHP=825
-    check(M.Estimate(s,'frostbolt').score<score,'Nonlethal casts still respect a short death forecast')
+    check(M.Estimate(s,'frostbolt').score==score,'A short death forecast no longer penalizes the normal attack')
     s.spells.fireball.immune=true; s.spells.scorch.immune=true
     decide(s,'frostbolt','Observed Fire immunity leaves the finishing Frostbolt')
 end
@@ -520,36 +520,34 @@ do
     s.spellPower[5]=200; s.talents.shatter=5; s.talents.iceShards=5
     s.talents.improvedFrostbolt=5; s.talents.piercingIce=3
     s.grouped=false; s.attackingPlayer=true; s.targetClose=true; s.targetHP=1200
-    decide(s,'nova','Healthy solo Shatter Mage roots the melee attacker proactively')
+    decide(s,'frostbolt','Healthy solo Shatter Mage keeps its damage primary'); check(optional(s,'nova'),'Proactive Shatter root has an independent highlight')
     s.channelKey='evocation'; decide(s,nil,'Proactive Nova does not interrupt mana recovery'); s.channelKey=nil
-    s.safeAOE=false; decide(s,'frostbolt','Proactive Nova respects nearby crowd control')
+    s.safeAOE=false; check(not optional(s,'nova'),'Proactive Nova respects nearby crowd control')
     s.safeAOE=true; s.frozen=true; s.frozenRemaining=5
-    decide(s,'frostbolt','Use frozen-target Frostbolt after Nova rather than rooting again')
+    decide(s,'frostbolt','Use frozen-target Frostbolt after Nova'); check(not optional(s,'nova'),'Do not root an already frozen target')
     s.frozen=false; s.grouped=true
-    decide(s,'frostbolt','Do not impose solo rooting on grouped damage')
+    check(not optional(s,'nova'),'Do not impose solo rooting on grouped damage')
     s.grouped=false; s.targetHP=100
-    decide(s,'frostbolt','Do not spend Nova on a target within one finishing cast')
+    check(not optional(s,'nova'),'Do not spend Nova on a target within one finishing cast')
     s.targetHP=1200; s.rotationCast=true; s.casting=true
     s.targetHP=M.Estimate(s,'frostbolt').damage*1.5
-    decide(s,'frostbolt','Pending current damage prevents a wasteful finishing Nova')
+    check(not optional(s,'nova'),'Pending current damage prevents a wasteful finishing Nova')
     s.casting=nil; s.rotationCast=nil; s.targetHP=1200; s.talents.shatter=0
-    decide(s,'frostbolt','No Shatter means no extra offensive Nova priority')
+    check(not optional(s,'nova'),'No Shatter means no extra offensive Nova priority')
     s.talents.shatter=5; s.targetBoss=true
-    decide(s,'frostbolt','Bosses do not get the solo Shatter root recommendation')
+    check(not optional(s,'nova'),'Bosses do not get the solo Shatter root recommendation')
     s.targetBoss=false; s.targetClose=false
-    decide(s,'frostbolt','Nova requires a nearby attacker')
+    check(not optional(s,'nova'),'Nova requires a nearby attacker')
     s.targetClose=true; s.spells.nova.immune=true
-    decide(s,'frostbolt','Observed root immunity blocks proactive Nova')
+    check(not optional(s,'nova'),'Observed root immunity blocks proactive Nova')
     s.spells.nova.immune=false; s.targetGUID='nova-plan'; s.time=10
     s.casting=true; s.rotationCast=true; s.castToken='cast:root-plan'; s.castEnd=12.5
     R.castPlan=nil
-    local key=R:StabilizeRecommendation(s,'nova','Shatter setup',false,false)
-    check(key=='nova' and R.castPlan.key=='nova','Single-target Nova can be committed at cast start')
-    key=R:StabilizeRecommendation(s,'frostbolt','damage',false,false)
-    check(key=='nova' and R.lockStatus=='held','Nova plan keeps the cast-start decision')
+    local key=R:StabilizeRecommendation(s,'frostbolt','Main attack',false,false)
+    check(key=='frostbolt' and R.castPlan.key=='frostbolt' and optional(s,'nova'),'Cast starts with damage plus independent Nova')
     s.frozen=true
     key=R:StabilizeRecommendation(s,'frostbolt','damage',false,false)
-    check(not key and R.lockStatus=='suppressed-invalid-plan','A new freeze suppresses redundant Nova without late replacement')
+    check(key=='frostbolt' and R.lockStatus=='held' and not optional(s,'nova'),'A new freeze clears only Nova and leaves the damage highlight steady')
     R.castPlan=nil
     local old=R.snapshot
     R.snapshot=s; R.tracePrevious=nil; R:TraceRotation('talent-context',true)
@@ -697,23 +695,67 @@ do
     R.Update=update; R.castPlan=nil; R.interruptedCastToken=nil
 end
 
--- Latest log: 438 HP and 2.478 seconds left cannot receive five seconds of Missiles.
+-- Former short-lifetime scorer failure cannot change the stable main attack.
 do
     local s=state({'frostbolt','scorch','missiles'},41)
     s.targetHP=438; s.timeToDie=2.478; s.spellPower={[5]=153,[7]=72}; s.spellCrit={[5]=5.033,[7]=5.033,[3]=5.033}
     s.spells.frostbolt.castTime=2.5; s.talents.piercingIce=3; s.talents.iceShards=5
-    local short=M.Estimate(s,'missiles').score
-    s.timeToDie=nil; local full=M.Estimate(s,'missiles').score
-    check(short<full,'Full-channel lethal damage cannot bypass a shorter target lifetime')
-    s.timeToDie=2.478
-    check(M.Estimate(s,'scorch').score>short,'Available short cast beats undeliverable channel damage')
-    decide(s,'scorch','Recorded short-life target does not prefer a five-second channel')
-    s.targetHP=50
-    check(M.Estimate(s,'missiles').score==full,'A lethal first missile tick retains its finishing exemption')
-    s.spells.blizzard={id=8427,ready=true,usable=true,castTime=0}
-    s.targetHP=400; local brief=M.Estimate(s,'blizzard').score
+    local score=M.Estimate(s,'missiles').score
+    decide(s,'frostbolt','Short lifetime does not switch Frostbolt to Missiles or Scorch')
     s.timeToDie=nil
-    check(brief<M.Estimate(s,'blizzard').score,'Blizzard also cannot credit lethal full-channel damage outside the lifetime')
+    check(M.Estimate(s,'missiles').score==score,'Death forecast has no effect on damage comparisons')
+    decide(s,'frostbolt','Removing the lifetime forecast preserves the same recommendation')
+end
+
+-- Stable character profiles ignore target fluctuations and coexist with utility.
+do
+    local s=state({'frostbolt','fireball','scorch','missiles','fireblast','counterspell','nova'},41)
+    s.talents={improvedFrostbolt=5,iceShards=5,shatter=5,piercingIce=3,frostChanneling=3}
+    s.spellPower={[5]=153,[3]=72,[7]=72}; s.spellCrit={[5]=5,[3]=5,[7]=5}
+    local owner={}; local chosen=M.Profile(owner,s); s.damageProfile=chosen
+    check(chosen.main=='frostbolt','Recorded Frost build selects Frostbolt as its stable main attack')
+    for _,lifetime in ipairs({.1,1,2.478,60}) do
+        s.timeToDie=lifetime; s.frozen=lifetime<3; s.frozenRemaining=5
+        s.scorchStacks=5; s.winterChillStacks=5; s.buffs.arcanepower=10
+        s.attackingPlayer=true; s.powerPercent=20; s.moving=true
+        check(M.Profile(owner,s)==chosen and R.Decide(s)=='frostbolt','Target and resource fluctuations preserve the main attack')
+    end
+    s.spells.frostbolt.immune=true
+    check(R.Decide(s)=='fireball','Observed immunity follows the fixed fallback order')
+    s.spells.frostbolt.immune=false; s.spells.frostbolt.usable=false; s.spells.fireball.usable=false
+    check(R.Decide(s)=='scorch','Insufficient mana can reach the cheaper fixed fallback')
+    s.spells.frostbolt.usable=true; s.spells.fireball.usable=true
+    s.interrupt=true; s.grouped=false; s.frozen=false; s.targetClose=true; s.targetHP=3000; s.powerPercent=100
+    check(R.Decide(s)=='frostbolt' and optional(s,'counterspell') and optional(s,'nova'),'Main attack, interrupt and Shatter root coexist')
+    s.targetHP=10; s.spells.fireblast.cooldownRemaining=0
+    check(R.Decide(s)=='fireblast','A conservative instant finisher overrides the filler')
+    s.targetHP=M.Estimate(s,'fireblast').minimumDamage+1
+    check(R.Decide(s)=='frostbolt','Expected critical damage alone does not justify a finisher')
+    s.spellPower[3]=2000
+    check(M.Profile(owner,s)==chosen,'A live profile remains fixed until character refresh')
+    owner.damageProfile=nil
+    check(M.Profile(owner,s).main=='fireball','Rebuilding the profile incorporates new school-specific gear')
+    local oldProfile=R.damageProfile; R.damageProfile={main='sentinel'}
+    R:RefreshSpells(); check(not R.damageProfile,'Live spell/talent/equipment refresh invalidates the profile')
+    R.damageProfile=oldProfile
+end
+
+-- The live renderer keeps utility highlights alongside a cast-start primary.
+do
+    local oldSnapshot,oldAction,oldView=R.Snapshot,GetActionInfo,R.RefreshView
+    local s=state({'frostbolt','counterspell','nova'},41)
+    s.talents={shatter=5}; s.time=now; s.targetGUID='independent-utility'; s.attackingPlayer=true
+    s.grouped=false; s.targetClose=true; s.targetHP=5000; s.interrupt=true
+    s.castToken='cast:independent'; s.castEnd=now+2.5; s.rotationCast=true; s.casting=true
+    R.Snapshot=function() return s end; R.RefreshView=function() end
+    GetActionInfo=function(slot) return 'spell',slot==1 and s.spells.frostbolt.id or slot==2 and s.spells.counterspell.id or s.spells.nova.id end
+    R.castPlan=nil; R:Update()
+    check(glow:IsShown() and glow.style=='primary' and R.highlights[other].style=='optional' and R.highlights[lower].style=='optional','Live renderer shows gold damage and red interrupt/root together')
+    local starts=glow.ProcStartAnim.plays
+    s.frozen=true; s.interrupt=false; R:Update()
+    check(glow:IsShown() and not R.highlights[other]:IsShown() and not R.highlights[lower]:IsShown(),'Ending utility conditions clears only their highlights')
+    check(glow.ProcStartAnim.plays==starts and R.lockStatus=='held','Utility changes do not restart or replace the primary glow')
+    R.Snapshot,R.RefreshView,GetActionInfo=oldSnapshot,oldView,oldAction; R.castPlan=nil
 end
 
 print('PASS: '..count..' Mage rotation, live adapter, UI and highlight regression checks.')

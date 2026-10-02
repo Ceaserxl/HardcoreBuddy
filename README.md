@@ -124,27 +124,27 @@ that character with HardcoreBuddy enabled and log out normally.
 ## Mage Rotation Advisor
 
 Open **Companion > Rotation Advisor** or `/hcb rotation`. Enable **Assistant Mode**
-in its Settings. This is a Mage-only Classic Era 1?60 assistant; the old Rogue
-and Mage prototype priorities have been replaced. Disabled remains the default,
+in its Settings. Combat advice supports Classic Era Mages from levels 1-60;
+consumable preparation supports all nine classes. Disabled remains the default,
 saved per character. You cast every spell yourself.
 
-The helper compares learned ranks using actual talents, cast times, school spell
-power and critical chance. It adapts to mana, enemy health trends,
-control effects and incoming damage. Survival, interrupts and curse removal take
-priority over damage. It handles Fire/Frost/Arcane damage choices, cooldowns,
-preparation buffs, safe observed AoE, wand fallback and Evocation.
+The helper chooses a stable main attack from learned ranks, actual talents and
+school-specific character stats. Clear finishers, safe observed AoE and unavailable
+spells provide explicit exceptions. The next damage choice is held through the
+current cast, with mana and cooldown previews for the following action.
 
-Gold highlights show the main recommendation; red highlights show optional
-preparation. Exact spell ranks and Blizzard-resolved spell macros are supported
-on Blizzard action bars, even with HCB closed. Mounted characters retain cast
-previews. The next spell can appear before the GCD/cast or mana recovery finishes;
-ordinary damage channels show the next action during their last second.
+Red highlights show interrupts, roots, recovery and damage cooldowns alongside
+the main attack. Only immediate survival emergencies replace the primary.
+Shared preparation supports all nine classes: missing buffs are gold and buffs
+with five minutes or less remaining are blue. Spell and item macros are supported
+on Blizzard action bars. Movement and mounting do not suppress the advice.
 
 [Behavior, data sources, limitations and live checks](docs/rotation-advisor.md).
 Offline validation: `tests/run_rotation_advisor.py`. Damage comparisons are
 estimates, not a guarantee of optimal DPS. Unseen enemies and unknown positions
 cannot establish safe AoE. This does not automate casting, targeting or ground
-placement. PvP, other classes and third-party action bars are outside this helper.
+placement. PvP, combat rotations for other classes and third-party action bars
+are outside this helper.
 
 ## Custom talent builds and stat weights
 

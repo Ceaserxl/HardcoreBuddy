@@ -1,6 +1,6 @@
 local _,A=...
 local R,S=A.RotationAdvisor,A.Skin
-local modeHelp="Gold: one combat primary, or multiple preparation actions out of combat. Blue: buffs with five minutes remaining. Gold: missing buffs. Disabled removes all HCB highlights."
+local modeHelp="Gold: one combat primary, or multiple preparation actions out of combat. Red: situational actions. Blue: buffs with five minutes remaining. Gold: missing buffs. Disabled removes all HCB highlights."
 local function text(parent,value,x,y,width,style)
     local f=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
     S.TextStyle(f,style or "subtitle"); f:SetPoint("TOPLEFT",x,-y); f:SetWidth(width)
@@ -23,9 +23,9 @@ function R:CreateSettings(page)
     end
     page.help=text(page.mode,modeHelp,16,78,704)
     page.damage=S.Section(page,"Mage Damage",182,100,1)
-    page.damage.note=text(page.damage,"Uses learned ranks, actual talents, school spell power, critical strike chance, mana and target health. Previews the next cast during the GCD or current cast. Supports spell macros.",16,38,320)
+    page.damage.note=text(page.damage,"Uses your learned spells, talents and gear to choose a stable main attack. Clear finishers, safe AoE and unavailable spells provide exceptions. Previews the next action during your cast or GCD.",16,38,320)
     page.survival=S.Section(page,"Mage Survival",182,100,2)
-    page.survival.note=text(page.survival,"Interrupts, shields, control, curse removal and emergency cooldowns take priority. Red highlights suggest preparation. Area spells require observed engaged enemies and no nearby crowd control.",16,38,320)
+    page.survival.note=text(page.survival,"Red highlights show interrupts, control, recovery and damage cooldowns alongside your main attack. Only immediate survival emergencies replace it. Area spells respect nearby crowd control.",16,38,320)
 end
 function R:LayoutSettings(width)
     local page=self.settingsPage; if not page then return end
@@ -106,7 +106,7 @@ function R:RefreshView()
     view.next.name:SetText(spell and (spell.name..(spell.rank and spell.rank~="" and (" | "..spell.rank) or "")) or mode=="disabled" and "Disabled" or "Waiting")
     view.next.reason:SetText(self.reason or "")
     local currentCount=self.optional and self.optionalHighlightCount or self.primaryHighlightCount
-    view.next.bar:SetText(mode=="assistant" and (spell and ((currentCount or 0)>0 and (self.optional and "Blue: expiring buffs. Gold: missing buffs." or "Gold: primary or missing buff. Blue: refresh soon.") or "Place this action on a Blizzard action bar to see its highlight.") or "No spell highlighted.")
+    view.next.bar:SetText(mode=="assistant" and (spell and ((currentCount or 0)>0 and (self.optional and "Red: situational actions. Blue: expiring buffs. Gold: missing buffs." or "Gold: primary or missing buff. Red: situational. Blue: refresh soon.") or "Place this action on a Blizzard action bar to see its highlight.") or "No spell highlighted.")
         or "Enable Assistant Mode in Settings to begin.")
     view.character.values:SetText(mode=="disabled" and "Live monitoring is off." or
         "Health: "..pct(s.playerHealth).."\nMana: "..pct(s.powerPercent)

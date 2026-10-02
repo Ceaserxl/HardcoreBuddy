@@ -95,6 +95,7 @@ function R:RefreshSpells()
     local live=module and module.usesTalents and A.TalentAdvisor:ReadCurrent(class,UnitLevel("player"))
     self.talents=live and live.ranks or {}
     self.talentsReady=not not live; self.talentRetryAt=clock()+2
+    self.damageProfile=nil
     self.dirty=false
 end
 local function percent(unit,power)
@@ -501,6 +502,7 @@ function R:Snapshot()
     end
     if module and module.Resources then module.Resources(self,s) end
     self:UpdateRangePreview(s)
+    if module and module.Profile then s.damageProfile=module.Profile(self,s) end
     return s
 end
 function R.Decide(s)
@@ -694,9 +696,11 @@ function R:TraceRotation(event,force)
     local row={time=now,wallTime=time and time(),event=event or "poll",mode=self:Mode(),
         reason=self.reason,lock=self.lockStatus,decision=self.traceDecision,
         selected=diagnosticFields(self.current,"id name item buffColor"),
+        primary=diagnosticFields(self.primary,"id name item buffColor"),
+        damageProfile=diagnosticFields(s.damageProfile,"main school damage"),
         plan=diagnosticFields(self.castPlan,"key id token finish target"),
         castEvent=diagnosticFields(self.lastCastEvent,"event time id token target"),
-        state=diagnosticFields(s,"class level targetLevel targetBoss grouped targetCombat targetDotted scorchStacks scorchRemaining winterChillStacks spellHit haste time combat dead taxi moving mounted casting castToken castSpellID rotationCast castEnd channelKey channelRemaining targetGUID validTarget targetPlayer targetHP targetHealth targetDistance targetClose controlled frozen frozenRemaining slowRemaining timeToDie healthTrendDuration healthTrendLosses healthTrendRate playerHealth power maxPower powerPercent projectedPower powerHorizon regenDelay normalRegen targets nearby cluster safeAOE safeCluster attackingPlayer recentDamage interrupt"),
+        state=diagnosticFields(s,"class level targetLevel targetBoss grouped targetCombat targetDotted scorchStacks scorchRemaining winterChillStacks spellHit haste time combat dead taxi moving mounted wanding casting castToken castSpellID rotationCast castEnd channelKey channelRemaining targetGUID validTarget targetPlayer targetHP targetHealth targetDistance targetClose controlled frozen frozenRemaining slowRemaining timeToDie healthTrendDuration healthTrendLosses healthTrendRate playerHealth power maxPower powerPercent projectedPower powerHorizon regenDelay normalRegen targets nearby cluster safeAOE safeCluster attackingPlayer recentDamage interrupt"),
         spells={},buffs={},buffDurations={},highlights={},optional={},ooc={},supplyChecks={},
         talents={},talentsReady=self.talentsReady,spellPower={},spellCrit={},
         intellectBlocker=diagnosticFields(s.intellectBlocker,"id power remaining")}

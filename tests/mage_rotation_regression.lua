@@ -59,7 +59,7 @@ do
     s.wanding=true; decide(s,nil,'Wand finisher never toggles active Shoot off'); s.wanding=false
     s.targetHP=150; s.powerPercent=20; s.normalRegen=30; s.regenDelay=1
     decide(s,'shoot','Short low-mana finish permits regeneration')
-    s.regenDelay=5; decide(s,'frostbolt','No invented regen before five-second rule expires')
+    s.regenDelay=5; decide(s,'shoot','Short wand finish is stable across regeneration timing')
     s.regenDelay=1
     s.attackingPlayer=true; check(R.Decide(s)~='shoot','Closing attacker suppresses deliberate wand finish')
     s.targetDistance=30; s.slowRemaining=10; decide(s,'shoot','Distant slowed attacker permits short wand finish')
@@ -78,7 +78,7 @@ do
     check(optional(s,'managem'),'Gem auxiliary persists while casting and moving'); s.moving=true
     check(optional(s,'managem'),'Movement preserves gem auxiliary'); s.moving=false
     s.casting=false; s.spells.counterspell={ready=true,usable=true}; s.interrupt=true
-    decide(s,'counterspell','Enemy interrupt takes priority over mana gem')
+    decide(s,'frostbolt','Enemy interrupt leaves damage primary intact'); check(optional(s,'counterspell') and optional(s,'managem'),'Interrupt and mana gem can coexist')
     s=state({'frostbolt','ruby'}); s.combat=false; s.prepareGem='ruby'; s.spells.ruby.cost=1200
     decide(s,'ruby','Stationary preparation takes priority before pulling')
     local _,_,isOptional=R.Decide(s); check(isOptional,'Gem preparation retains optional glow')
@@ -119,35 +119,35 @@ s.spells.frostbolt.range=false; s.spells.frostbolt.approaching=true; decide(s,'f
 s.spells.frostbolt.immune=true; decide(s,nil,'Observed immunity blocks spell')
 s=state({'frostbolt'}); s.spells.frostbolt.ready=false; decide(s,nil,'Cooldown blocks unavailable spells')
 s=state({'frostbolt'}); s.spells.frostbolt.usable=false; decide(s,nil,'Other usability failures respected')
-s=state({'frostbolt','counterspell'}); s.interrupt=true; decide(s,'counterspell','Interrupt priority')
-s.spells.counterspell.usable=false; s.spells.counterspell.usableNow=true; decide(s,'counterspell','Interrupt uses current mana instead of reserving the cast it cancels')
-s.spells.counterspell.cooldownRemaining=.8; decide(s,'frostbolt','Interrupt must actually be ready')
-s=state({'frostbolt','barrier'}); s.playerHealth=70; s.attackingPlayer=true; decide(s,'barrier','Shield under pressure')
+s=state({'frostbolt','counterspell'}); s.interrupt=true; decide(s,'frostbolt','Interrupt does not replace damage'); check(optional(s,'counterspell'),'Interrupt gets an independent highlight')
+s.spells.counterspell.usable=false; s.spells.counterspell.usableNow=true; check(optional(s,'counterspell'),'Interrupt uses current mana instead of reserving the cast it cancels')
+s.spells.counterspell.cooldownRemaining=.8; check(not optional(s,'counterspell'),'Interrupt must actually be ready')
+s=state({'frostbolt','barrier'}); s.playerHealth=70; s.attackingPlayer=true; decide(s,'frostbolt','Shield under pressure does not replace damage'); check(optional(s,'barrier'),'Shield has its own highlight')
 s.buffs.barrier=20; decide(s,'frostbolt','Do not overwrite shield')
 s=state({'frostbolt','iceblock','counterspell'}); s.playerHealth=10; s.recentDamage=true; s.interrupt=true
 decide(s,'iceblock','Emergency survival beats damage')
 s.buffs.iceblock=10; decide(s,nil,'Never encourage cancelling Ice Block')
-s.buffs.iceblock=nil; s.buffs.hypothermia=20; decide(s,'counterspell','Hypothermia forbids Ice Block')
-s=state({'frostbolt','blink'}); s.rooted=true; s.attackingPlayer=true; decide(s,'blink','Escape root')
-s=state({'frostbolt','decurse'}); s.curse=true; decide(s,'decurse','Self curse removal')
+s.buffs.iceblock=nil; s.buffs.hypothermia=20; decide(s,'frostbolt','Hypothermia forbids Ice Block'); check(optional(s,'counterspell'),'Interrupt still lights with hypothermia')
+s=state({'frostbolt','blink'}); s.rooted=true; s.attackingPlayer=true; decide(s,'frostbolt','Noncritical escape does not replace damage'); check(optional(s,'blink'),'Root escape is highlighted alongside damage')
+s=state({'frostbolt','decurse'}); s.curse=true; decide(s,'frostbolt','Curse removal does not replace damage'); check(optional(s,'decurse'),'Self curse removal gets its own highlight')
 s=state({'frostbolt','slowfall'}); s.fallingFor=2; decide(s,'slowfall','Sustained fall recommends Slow Fall')
 s.buffs.slowfall=10; decide(s,'frostbolt','Existing Slow Fall is respected')
 s=state({'frostbolt','counterspell'}); s.interrupt=true; s.validTarget=false; decide(s,nil,'Never interrupt a friendly target')
 s=state({'frostbolt','fireblast'}); s.channelKey='missiles'; s.channelRemaining=3; decide(s,nil,'Do not encourage clipping a damage channel')
 s.channelRemaining=.8; check(R.Decide(s)~=nil,'Next spell leads the end of a damage channel')
 s=state({'frostbolt','counterspell'}); s.channelKey='missiles'; s.channelRemaining=3; s.interrupt=true
-decide(s,'counterspell','Interrupt can override a running channel')
+decide(s,nil,'Damage channel remains uninterrupted'); check(optional(s,'counterspell'),'Interrupt highlights independently during a running channel')
 s=state({'frostbolt','fireward','frostward'}); s.recentDamage=true; s.playerHealth=60; s.damageSchool=4
-decide(s,'fireward','Fire ward matches incoming school'); s.damageSchool=16; decide(s,'frostward','Frost ward matches incoming school')
+check(optional(s,'fireward') and not optional(s,'frostward'),'Fire ward matches incoming school'); s.damageSchool=16; check(optional(s,'frostward') and not optional(s,'fireward'),'Frost ward matches incoming school')
 s=state({'frostbolt','nova','cone'}); s.attackingPlayer=true; s.targetClose=true; s.playerHealth=50
-decide(s,'nova','Root to survive melee'); s.safeAOE=false; decide(s,'frostbolt','Do not break CC with Nova')
-s.safeAOE=true; s.frozen=true; decide(s,'frostbolt','Do not re-root an already frozen enemy')
+decide(s,'frostbolt','Noncritical root does not replace damage'); check(optional(s,'nova'),'Root can light alongside damage'); s.safeAOE=false; check(not optional(s,'nova'),'Do not break CC with Nova')
+s.safeAOE=true; s.frozen=true; check(not optional(s,'nova'),'Do not re-root an already frozen enemy')
 s=state({'frostbolt','shield'}); s.attackingPlayer=true; s.playerHealth=25
 decide(s,'shield','Mana Shield emergency'); s.powerPercent=20; decide(s,'frostbolt','Do not drain last mana on Mana Shield')
 s=state({'frostbolt','coldsnap','barrier'}); s.playerHealth=20; s.attackingPlayer=true; s.spells.barrier.ready=false
 decide(s,'coldsnap','Cold Snap restores defensive cooldown')
 s=state({'frostbolt','polymorph'}); s.attackingPlayer=true; s.targets=2; s.polyEligible=true; s.playerHealth=35
-decide(s,'polymorph','Control eligible extra attacker'); s.targetDotted=true; decide(s,'frostbolt','Do not sheep a dotted target')
+check(optional(s,'polymorph'),'Control eligible extra attacker'); s.targetDotted=true; check(not optional(s,'polymorph'),'Do not sheep a dotted target')
 s=state({'fireball','intellect','frostarmor'}); s.combat=false
 check(optional(s,'intellect') and optional(s,'frostarmor'),'Prepull buffs coexist')
 decide(s,'fireball','Prepull buffs do not replace primary'); s.buffs.intellect=301
@@ -157,11 +157,11 @@ s=state({'frostbolt','evocation'}); s.combat=false; s.powerPercent=10
 check(optional(s,'evocation'),'Safe optional mana recovery'); s.mounted=true
 check(optional(s,'evocation'),'Mounted recovery remains visible as a preview'); decide(s,'frostbolt','Mounted preview remains')
 s=state({'frostbolt','evocation'}); s.powerPercent=5; s.timeToDie=30; s.targetCombat=true
-decide(s,'evocation','Safe grouped recovery'); s.recentDamage=true; decide(s,'frostbolt','Do not channel under damage')
+decide(s,'frostbolt','Recovery does not replace damage'); check(optional(s,'evocation'),'Safe grouped recovery'); s.recentDamage=true; check(not optional(s,'evocation'),'Do not channel under damage')
 s=state({'frostbolt','shoot'}); s.spells.frostbolt.usable=false; decide(s,'shoot','Wand fallback')
 s.wanding=true; decide(s,nil,'Never toggle active wand off')
 s=state({'fireball','frostbolt'}); s.grouped=false; s.attackingPlayer=true; s.slowRemaining=0; s.targetDistance=25
-decide(s,'frostbolt','Solo approach gets slow regardless of spec')
+decide(s,M.BuildProfile(s).main,'Solo approach does not rerank the learned main attack')
 s=state({'frostbolt','fireblast'}); s.moving=true; decide(s,'frostbolt','Movement alone does not replace Frostbolt with Fire Blast')
 s.moving=false; s.targetHP=10; decide(s,'fireblast','Fast finisher')
 s=state({'frostbolt','fireblast'},6); s.spells.frostbolt.id=116; s.targetHP=1000
@@ -173,9 +173,9 @@ decide(s,'scorch','Fire vulnerability on long fight'); s.scorchStacks=5; s.scorc
 decide(s,'fireball','Do not rebuild full Scorch stacks')
 s.scorchRemaining=2; decide(s,'scorch','Refresh vulnerability before expiry')
 s=state({'fireball','arcanepower','combustion'}); s.timeToDie=30
-decide(s,'arcanepower','Use burst in long fight'); s.buffs.arcanepower=10; decide(s,'combustion','Combustion for fire damage')
-s.timeToDie=2; decide(s,'fireball','Save cooldowns on dying target')
-s=state({'fireball','presence'}); s.moving=true; s.timeToDie=30; decide(s,'presence','Presence remains available during movement')
+decide(s,'fireball','Burst does not replace damage'); check(optional(s,'arcanepower') and optional(s,'combustion'),'Burst cooldowns have independent highlights'); s.buffs.arcanepower=10; check(not optional(s,'arcanepower') and optional(s,'combustion'),'Active burst does not repeat')
+s.targetHP=20; check(not optional(s,'combustion'),'Save cooldowns on a low-health target')
+s=state({'fireball','presence'}); s.moving=true; s.timeToDie=30; check(optional(s,'presence'),'Presence remains available during movement'); decide(s,'fireball','Presence does not replace damage')
 s=state({'fireball','pyroblast'}); s.buffs.presence=10; decide(s,'pyroblast','Instant Pyroblast with Presence')
 s=state({'frostbolt','explosion','blizzard','flamestrike','blastwave'}); s.nearby=0; s.cluster=4; s.safeCluster=true; s.targetClose=false
 decide(s,'flamestrike','Ground cluster opening'); s.flamestrikeActive=true; decide(s,'blizzard','Do not repeatedly overwrite ground DoT')

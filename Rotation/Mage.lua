@@ -52,8 +52,7 @@ function M.Estimate(s,key)
     local multiplier=1+.01*rank(s,"arcaneInstability")
     if d.school==3 then
         multiplier=multiplier+.02*rank(s,"firePower")
-        -- Ignite benefits are discounted on targets that will die before its ticks.
-        critBonus=critBonus+1.5*.08*rank(s,"ignite")*math.min(1,(s.timeToDie or 8)/4)
+        critBonus=critBonus+1.5*.08*rank(s,"ignite")
         multiplier=multiplier*(1+.03*(s.scorchStacks or 0))
     elseif d.school==5 then
         multiplier=multiplier+.02*rank(s,"piercingIce")
@@ -62,6 +61,7 @@ function M.Estimate(s,key)
     end
     if remaining(s,"arcanepower")>0 then multiplier=multiplier*1.3 end
     if key=="cone" and rank(s,"improvedConeOfCold")>0 then multiplier=multiplier*(1.05+.1*rank(s,"improvedConeOfCold")) end
+    local minimumDamage=damage*multiplier*.85 -- Conservative noncritical finisher allowance.
     if key~="blizzard" then damage=damage*(1+math.min(1,crit)*critBonus) end
     damage=damage*multiplier
     -- Classic hit penalty rises sharply against enemies three levels higher.
@@ -72,31 +72,72 @@ function M.Estimate(s,key)
     damage=damage*(1-math.max(.01,math.min(.99,miss-talentHit-(s.spellHit or 0)/100)))
     local direct=damage
     -- Fireball's short refresh interval clips its own DoT; do not add every tick.
-    local dotFraction=key=="fireball" and math.min(1,math.max(1.5,cast)/8) or math.min(1,(s.timeToDie or 12)/12)
+    local dotFraction=key=="fireball" and math.min(1,math.max(1.5,cast)/8) or 1
     damage=damage+(d.dot or 0)*dotFraction*multiplier
     local cost=a.cost or d.mana
     if remaining(s,"clearcasting")>0 then cost=0 end
-    local score=damage/math.max(1.5,cast)
-    if s.attackingPlayer and s.targetClose and cast>0 then
-        local protection=key=="missiles" and .2*rank(s,"improvedArcaneMissiles")
-            or d.school==3 and .35*rank(s,"burningSoul") or 0
-        if remaining(s,"barrier")==0 then score=score*(.7+.3*math.min(1,protection)) end
+    return {score=damage/math.max(1.5,cast),damage=direct,minimumDamage=minimumDamage,cast=cast,cost=cost,school=d.school}
+end
+
+-- Pick a stable filler from character data, never from target lifetime or momentary
+-- availability. The live adapter caches this until spells/talents/gear/level change.
+function M.BuildProfile(s)
+    local character={spells=s.spells,talents=s.talents,spellPower=s.spellPower,spellCrit=s.spellCrit,
+        spellHit=s.spellHit,haste=s.haste,level=s.level,targetLevel=s.level,buffs={}}
+    local main,best
+    for _,key in ipairs({"frostbolt","fireball","missiles"}) do
+        local estimate=M.Estimate(character,key)
+        if estimate and (not best or estimate.score>best.score) then main,best=key,estimate end
     end
-    -- This forecast includes our own damage: a cast that can finish the target
-    -- must not lose to a faster nonlethal cast just because its duration exceeds it.
-    local lethal=s.targetHP and s.targetHP>0 and direct>=s.targetHP
-    if lethal and s.timeToDie and (key=="missiles" or key=="blizzard") then
-        -- Channel damage arrives in ticks, not as a lethal hit on completion.
-        -- Only keep the lethal exemption if enough ticks fit the living window.
-        local ticks=key=="missiles" and 5 or 8
-        local killTime=math.ceil(s.targetHP/(direct/ticks))*cast/ticks
-        lethal=killTime<=s.timeToDie
+    local order={}
+    if main then order[1]=main end
+    for _,key in ipairs({"frostbolt","fireball","scorch","missiles"}) do
+        if key~=main and s.spells[key] then order[#order+1]=key end
     end
-    if s.timeToDie and cast>s.timeToDie and not lethal then score=score*.15 end
-    if s.powerPercent and s.powerPercent<30 and cost>0 then
-        score=score/(1+cost/math.max(1,s.maxPower or 1000))
+    return {main=main,order=order,damage=best and best.damage,school=best and best.school}
+end
+function M.Profile(self,s)
+    if not self.damageProfile then self.damageProfile=M.BuildProfile(s) end
+    return self.damageProfile
+end
+local function profile(s) return s.damageProfile or M.BuildProfile(s) end
+local function threatened(s) return s.combat and (s.attackingPlayer or s.recentDamage) end
+local function validEnemy(s) return s.validTarget and not s.targetPlayer and not s.controlled end
+
+-- Situational actions have independent highlights; they do not rerank damage.
+function M.Situational(s,add)
+    local hp,mp=s.playerHealth or 100,s.powerPercent or 100
+    local danger=threatened(s)
+    if validEnemy(s) and s.interrupt then add("counterspell","Interrupt the enemy cast.",true) end
+    if s.curse then add("decurse","Remove the curse on you.",true) end
+    if danger and (s.rooted or s.stunned) then add("blink","Break the root or stun; check your landing direction.",true) end
+    if danger and hp<70 and remaining(s,"fireward")==0 and s.damageSchool==4 then add("fireward","Absorb incoming fire damage.",true) end
+    if danger and hp<70 and remaining(s,"frostward")==0 and s.damageSchool==16 then add("frostward","Absorb incoming frost damage.",true) end
+    if danger and hp<85 and remaining(s,"barrier")==0 then add("barrier","Absorb incoming damage.",true) end
+    if not validEnemy(s) then return end
+    if danger and s.targetClose and not s.frozen and s.safeAOE then
+        local bolt=M.Estimate(s,"frostbolt")
+        local setup=not s.grouped and not s.targetBoss and rank(s,"shatter")>0 and ready(s,"frostbolt")
+            and bolt and s.targetHP and s.targetHP>bolt.damage*(s.rotationCast and s.casting and 2 or 1) and mp>15
+        if hp<65 or setup then
+            if not add("nova","Root the attacker and make room for your next cast.",true) and hp<65 and s.facingTarget then
+                add("cone","Slow the attacker in front of you.",true)
+            end
+        end
     end
-    return {score=score,damage=direct,cast=cast,cost=cost,school=d.school}
+    if danger and hp<40 and (s.targets or 0)>=2 and s.polyEligible and not s.targetDotted then
+        add("polymorph","Control the selected attacker.",true)
+    end
+    if s.combat and s.grouped and s.targetCombat and mp<10 and hp>75 and not danger then
+        add("evocation","Recover mana while the enemy is occupied.",true)
+    end
+    local plan=profile(s)
+    local durable=s.targetBoss or s.grouped and s.targetHP and plan.damage and s.targetHP>plan.damage*4
+    if s.combat and durable and mp>45 and hp>50 then
+        if remaining(s,"arcanepower")==0 then add("arcanepower","Increase damage for this fight.",true) end
+        if plan.school==3 and remaining(s,"combustion")==0 then add("combustion","Increase critical strikes for fire spells.",true) end
+        if remaining(s,"presence")==0 then add("presence","Make your next damage cast instant.",true) end
+    end
 end
 
 -- Optional upkeep is independent of the single primary action. Expiring buffs
@@ -105,12 +146,17 @@ function M.BuffRefresh(left)
     return A.ConsumableBuffs.RefreshDue(left)
 end
 function M.Optional(s)
-    local actions={}
+    local actions,seen={},{}
     if s.class~="MAGE" or not R.CanAdvise(s) or remaining(s,"iceblock")>0 or s.channelKey=="evocation" then return actions end
     local mp=s.powerPercent or 100
     local refreshLeft
-    local function add(key,reason)
-        if ready(s,key) then actions[#actions+1]={key=key,reason=reason,buffColor=refreshLeft and (refreshLeft>0 and "refresh" or "primary")}; return true end
+    local function add(key,reason,immediate)
+        if seen[key] then return true end
+        if ready(s,key,immediate) then
+            seen[key]=true
+            actions[#actions+1]={key=key,reason=reason,buffColor=refreshLeft and (refreshLeft>0 and "refresh" or "primary")}
+            return true
+        end
     end
     local armorRemaining=math.max(remaining(s,"frostarmor"),remaining(s,"icearmor"),remaining(s,"magearmor"))
     -- A presence-only snapshot cannot establish an expiration time.
@@ -141,143 +187,69 @@ function M.Optional(s)
     if not s.combat and not s.casting and not s.targetCombat then
         if mp<25 and ready(s,"evocation",true) then add("evocation","Recover mana before pulling.") end
     end
+    M.Situational(s,add)
     return actions
 end
 
 function M.Decide(s)
-    if s.class~="MAGE" then return nil,"Rotation Advisor currently supports Mage." end
-    if not R.CanAdvise(s) then return nil,"" end
+    if s.class~="MAGE" or not R.CanAdvise(s) or remaining(s,"iceblock")>0 then return nil,"" end
     local hp,mp=s.playerHealth or 100,s.powerPercent or 100
-    local threatened=s.combat and (s.attackingPlayer or s.recentDamage)
-    local function can(key,now) return ready(s,key,now) end
-    local urgentPhase=true
-    local function choose(key,why,optional) return key,why or "",optional,urgentPhase end
-    -- Never suggest cancelling an active defensive immunity or clipping Evocation.
-    if remaining(s,"iceblock")>0 then return nil,"" end
-    if hp<=18 and threatened and remaining(s,"hypothermia")==0 and can("iceblock",true) then return choose("iceblock","Emergency immunity at critical health.") end
-    if s.validTarget and not s.targetPlayer and s.interrupt and can("counterspell",true) and not s.controlled then return choose("counterspell","Interrupt the enemy cast.") end
-    if (s.fallingFor or 0)>1.5 and remaining(s,"slowfall")==0 and can("slowfall",true) then return choose("slowfall","Slow the fall before landing.") end
-    if threatened and (s.rooted or s.stunned) and can("blink",true) then return choose("blink","Break the root or stun; check your landing direction.") end
-    if s.curse and can("decurse",true) then return choose("decurse","Remove the curse on you.") end
-    if threatened and hp<85 and remaining(s,"barrier")==0 and can("barrier") then return choose("barrier","Absorb incoming damage and prevent pushback.") end
-    if threatened and hp<70 and s.damageSchool==4 and remaining(s,"fireward")==0 and can("fireward") then return choose("fireward","Absorb the fire damage hitting you.") end
-    if threatened and hp<70 and s.damageSchool==16 and remaining(s,"frostward")==0 and can("frostward") then return choose("frostward","Absorb the frost damage hitting you.") end
-    local escape=threatened and hp<65 and s.targetClose and not s.frozen
-    if escape and s.safeAOE and can("nova",true) then return choose("nova","Freeze nearby attackers to make room for a cast.") end
-    if escape and s.safeAOE and s.facingTarget and can("cone",true) then return choose("cone","Slow the attackers in front of you.") end
-    if threatened and hp<30 and remaining(s,"barrier")==0 and remaining(s,"shield")==0 and mp>40 and can("shield") then return choose("shield","Emergency protection; consumes mana when hit.") end
-    if threatened and hp<30 and can("coldsnap",true) and
-        ((s.spells.barrier and not s.spells.barrier.ready) or (s.spells.iceblock and not s.spells.iceblock.ready and remaining(s,"hypothermia")==0)) then
-        return choose("coldsnap","Restore a defensive Frost cooldown.")
+    local danger=threatened(s)
+    local function choose(key,why) return key,why,false,false end
+    local function emergency(key,why) if ready(s,key,true) then return key,why,false,true end end
+    -- Only immediate survival emergencies replace the damage highlight.
+    if hp<=18 and danger and remaining(s,"hypothermia")==0 and ready(s,"iceblock",true) then return emergency("iceblock","Emergency immunity at critical health.") end
+    if (s.fallingFor or 0)>1.5 and remaining(s,"slowfall")==0 and ready(s,"slowfall",true) then return emergency("slowfall","Slow the fall before landing.") end
+    if danger and hp<30 then
+        if (s.rooted or s.stunned) and ready(s,"blink",true) then return emergency("blink","Break the root or stun to escape.") end
+        if remaining(s,"barrier")==0 and ready(s,"barrier",true) then return emergency("barrier","Absorb damage at critical health.") end
+        if validEnemy(s) and s.targetClose and not s.frozen and s.safeAOE and ready(s,"nova",true) then return emergency("nova","Root nearby attackers to escape.") end
+        if remaining(s,"barrier")==0 and remaining(s,"shield")==0 and mp>40 and ready(s,"shield",true) then return emergency("shield","Emergency protection; consumes mana when hit.") end
+        if ready(s,"coldsnap",true) and ((s.spells.barrier and not s.spells.barrier.ready)
+            or (s.spells.iceblock and not s.spells.iceblock.ready and remaining(s,"hypothermia")==0)) then return emergency("coldsnap","Restore a defensive Frost cooldown.") end
     end
-    if threatened and hp<40 and s.targets>=2 and s.validTarget and not s.targetPlayer and s.polyEligible and not s.controlled and not s.targetDotted and can("polymorph",true) then
-        return choose("polymorph","Control this attacker while dealing with the others.")
-    end
-    -- Optional upkeep is evaluated separately and never replaces damage advice.
-    urgentPhase=false
-    if not s.combat and not s.casting and not s.targetCombat
-        and mp>80 and s.prepareGem and can(s.prepareGem,true)
+    if not s.combat and not s.casting and not s.targetCombat and mp>80 and s.prepareGem and ready(s,s.prepareGem,true)
         and (s.power or 0)-(s.spells[s.prepareGem].cost or math.huge)>=(s.maxPower or 0)*.3 then
-        return choose(s.prepareGem,"Conjure a mana gem before the next pull.",true)
+        return s.prepareGem,"Conjure a mana gem before the next pull.",true,false
     end
-    if not s.validTarget or s.targetPlayer or s.controlled then return nil,"" end
-    if s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>1 then return nil,"" end
-    -- Solo Shatter leveling uses Nova before health is already low: stop the
-    -- melee attacker and make room for a frozen-target cast. Do not spend a
-    -- root/GCD on an enemy the current and next Frostbolt can already finish.
-    if threatened and not s.grouped and not s.targetBoss and s.attackingPlayer
-        and s.targetClose and s.safeAOE and not s.frozen and rank(s,"shatter")>0
-        and can("nova",true) and can("frostbolt") then
-        local bolt=M.Estimate(s,"frostbolt")
-        local casts=s.rotationCast and s.casting and 2 or 1
-        if bolt and s.targetHP and s.targetHP>bolt.damage*casts and mp>15 then
-            return choose("nova","Root the attacker, make distance, then use Shatter with Frostbolt.")
-        end
-    end
-    local survivalChannel=s.combat and mp<10 and hp>75 and not s.attackingPlayer and not s.recentDamage
-        and s.grouped and s.targetCombat and (s.timeToDie or 0)>12
-    if survivalChannel and can("evocation",true) then return choose("evocation","Recover mana while the enemy is occupied.") end
-    local best,bestEstimate
-    for _,key in ipairs({"fireball","frostbolt","scorch","missiles","pyroblast"}) do
-        if can(key) then
-            local e=M.Estimate(s,key)
-            if e and (key~="pyroblast" or remaining(s,"presence")>0) then
-                if not bestEstimate or e.score>bestEstimate.score then best,bestEstimate=key,e end
-            end
-        end
-    end
-    -- Spend the long opening cast before combat, never while an enemy is closing.
+    if not validEnemy(s) or s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>1 then return nil,"" end
+    local plan=profile(s)
+    -- A distant opener and a consumed Presence proc are explicit exceptions.
+    if ready(s,"pyroblast") and remaining(s,"presence")>0 then return choose("pyroblast","Use Presence of Mind for an instant Pyroblast.") end
     if not s.combat and not s.targetCombat and not s.casting and not s.targetDotted
-        and s.targetDistance and s.targetDistance>=25 and hp>=80 and can("pyroblast",true) then
-        local opener=M.Estimate(s,"pyroblast")
-        local filler=M.Estimate(s,"fireball") or M.Estimate(s,"frostbolt")
-        if opener and filler and opener.damage>filler.damage and (s.power or 0)>=opener.cost+filler.cost then
-            return choose("pyroblast","Open from a safe distance before the enemy is engaged.")
-        end
+        and s.targetDistance and s.targetDistance>=25 and hp>=80 and ready(s,"pyroblast",true) then
+        local opener=M.Estimate(s,"pyroblast"); local filler=plan.main and M.Estimate(s,plan.main)
+        if opener and filler and opener.damage>filler.damage and (s.power or 0)>=opener.cost+filler.cost then return choose("pyroblast","Open from a safe distance.") end
     end
-    -- A slow buys casting time when soloing, regardless of the damage build.
-    if can("frostbolt") and not s.frozen and (s.slowRemaining or 0)<1.5 and not s.targetClose
-        and not s.targetBoss and not s.grouped and (not s.combat or s.attackingPlayer)
-        and (s.timeToDie or 15)>4 then best="frostbolt"; bestEstimate=M.Estimate(s,best) end
-    if threatened and not s.frozen and (s.slowRemaining or 0)<1.5 and s.targetDistance and s.targetDistance>8
-        and s.targetDistance<18 and can("slowbolt") and not s.targetBoss then
-        return choose("slowbolt","Apply a quick slow before the attacker reaches you.")
+    -- Fixed, safe AoE priority; observed enemies and CC protection are mandatory.
+    local kite=s.targetDistance and s.targetDistance>=20 and ((s.slowRemaining or 0)>2 or s.frozen) and rank(s,"improvedBlizzard")>=2
+    if s.combat and s.safeCluster and (s.cluster or 0)>=3 and hp>55 and mp>35 and (not s.attackingPlayer or kite) then
+        if not s.attackingPlayer and not s.flamestrikeActive and ready(s,"flamestrike") then return choose("flamestrike","Place Flamestrike on the engaged group.") end
+        if ready(s,"blizzard") then return choose("blizzard","Channel Blizzard on the engaged group.") end
     end
-    if best and bestEstimate then
-        if s.combat and bestEstimate.school==3 and rank(s,"improvedScorch")>0 and can("scorch")
-            and (s.timeToDie or 0)>10 and ((s.scorchStacks or 0)<5 or (s.scorchRemaining or 0)<5) then
-            return choose("scorch","Build or refresh Fire Vulnerability for this longer fight.")
-        end
-        if s.combat and (s.timeToDie or 0)>12 and mp>45 and hp>50 then
-            if remaining(s,"arcanepower")==0 and can("arcanepower",true) then return choose("arcanepower","Increase damage for the longer fight.") end
-            if bestEstimate.school==3 and remaining(s,"combustion")==0 and can("combustion",true) then return choose("combustion","Increase critical strikes for your fire spells.") end
-        end
-        if s.combat and can("presence",true) and remaining(s,"presence")==0 and bestEstimate.cast>=2.5
-            and (s.timeToDie or 0)>8 then return choose("presence","Make the next damage cast instant.") end
+    if s.combat and s.safeAOE and (s.nearby or 0)>=3 and s.targetClose and hp>55 and mp>30 then
+        for _,key in ipairs({"blastwave","explosion"}) do if ready(s,key) then return choose(key,"Area damage for the nearby engaged group.") end end
     end
-    -- Ground AoE requires a confirmed cluster around the target; never invent
-    -- positions or select a ground location for the player.
-    local aoe,aoeScore
-    local function area(key,targets)
-        if can(key) then
-            local e=M.Estimate(s,key)
-            if e and (not aoeScore or e.score*targets>aoeScore) then aoe,aoeScore=key,e.score*targets end
-        end
-    end
-    local kiteWindow=s.targetDistance and s.targetDistance>=20 and ((s.slowRemaining or 0)>2 or s.frozen) and rank(s,"improvedBlizzard")>=2
-    if s.combat and s.safeCluster and (s.cluster or 0)>=3 and hp>55 and mp>35 and (not s.attackingPlayer or kiteWindow) then
-        if not s.flamestrikeActive and not s.attackingPlayer then area("flamestrike",s.cluster) end
-        area("blizzard",s.cluster)
-    end
-    if s.combat and s.safeAOE and s.nearby>=3 and hp>55 and mp>30 and s.targetClose then
-        area("blastwave",s.nearby)
-        if s.facingTarget then area("cone",1) end -- Facing the target does not prove every enemy is in the cone.
-        area("explosion",s.nearby)
-    end
-    if aoe then return choose(aoe,M.ground[aoe] and "Place the area spell on the engaged group." or "Area damage for the nearby engaged group.") end
-    -- Estimate whole wand shots conservatively; do not trade safety for regen.
+    -- Cheap, short wand finishes and noncritical instant kills need no lifespan forecast.
     if s.combat and not s.casting and hp>=75 and not s.recentDamage and not s.targetClose
-        and s.targets==1 and can("shoot") and s.wandDamage and s.wandDamage>0 and (s.wandSpeed or 0)>0
-        and s.targetHP and s.targetHP>0 and remaining(s,"clearcasting")==0 then
-        local seconds=math.ceil(s.targetHP/s.wandDamage)*s.wandSpeed
-        local recovered=math.max(0,seconds-(s.regenDelay or 5))*(s.normalRegen or 0)
-        local castSeconds=bestEstimate and math.ceil(s.targetHP/math.max(1,bestEstimate.damage))*math.max(1.5,bestEstimate.cast) or math.huge
-        local safeWindow=not s.attackingPlayer or s.targetDistance and s.targetDistance>=25 and (s.slowRemaining or 0)>=seconds
-        if safeWindow and (seconds<=math.min(3,castSeconds+1) or mp<35 and seconds<=6 and recovered>0) then
-            if s.wanding then return nil,"" end
-            return choose("shoot","Finish with the wand while conserving and recovering mana.")
-        end
+        and s.targets==1 and ready(s,"shoot") and (s.wandDamage or 0)>0 and s.targetHP and s.targetHP>0
+        and remaining(s,"clearcasting")==0 and (not s.attackingPlayer or s.targetDistance and s.targetDistance>=25 and (s.slowRemaining or 0)>=5)
+        and s.targetHP<=s.wandDamage*(mp<25 and 3 or 1) then
+        if s.wanding then return nil,"" end
+        return choose("shoot","Finish with your wand and conserve mana.")
     end
-    if can("fireblast") then
-        local e=M.Estimate(s,"fireblast")
-        if (e and s.targetHP and s.targetHP<=e.damage) or (s.frozen and (s.frozenRemaining or 0)<1.5) then
-            return choose("fireblast","Instant damage to finish the target or use the remaining freeze.")
-        end
-        if not best then return choose("fireblast","Instant damage while other damage casts are unavailable.") end
+    if ready(s,"fireblast") then
+        local finish=M.Estimate(s,"fireblast")
+        if finish and s.targetHP and s.targetHP>0 and s.targetHP<=finish.minimumDamage then return choose("fireblast","Finish with instant damage.") end
     end
-    if not best and s.safeAOE and s.targetClose and s.facingTarget and can("cone") then return choose("cone","Instant damage and a slow while other casts are unavailable.") end
-    if best then return choose(best,"Best available damage cast for your learned ranks and talents.") end
-    if can("shoot") and not s.wanding then return choose("shoot","Use your wand while mana or spells recover.") end
+    if plan.school==3 and s.combat and (s.grouped or s.targetBoss) and rank(s,"improvedScorch")>0 and ready(s,"scorch")
+        and s.targetHP and plan.damage and s.targetHP>plan.damage*3 and ((s.scorchStacks or 0)<5 or (s.scorchRemaining or 0)<5) then
+        return choose("scorch","Build or refresh Fire Vulnerability.")
+    end
+    for _,key in ipairs(plan.order) do if ready(s,key) then return choose(key,key==plan.main and "Your main attack for this build." or "Available fallback for your main attack.") end end
+    if ready(s,"fireblast") then return choose("fireblast","Instant damage while your other attacks are unavailable.") end
+    if s.safeAOE and s.targetClose and s.facingTarget and ready(s,"cone") then return choose("cone","Damage and slow the attacker in front of you.") end
+    if ready(s,"shoot") and not s.wanding then return choose("shoot","Use your wand while mana or spells recover.") end
     return nil,""
 end
 
@@ -303,7 +275,7 @@ function M.Snapshot(self,s)
     local intellectPower=self.spells.intellect and intellectRanks[self.spells.intellect.id]
     if not self.talentsReady and s.time>=(self.talentRetryAt or 0) then
         local live=A.TalentAdvisor:ReadCurrent("MAGE",UnitLevel("player"))
-        self.talents=live and live.ranks or {}; self.talentsReady=not not live; self.talentRetryAt=s.time+2
+        self.talents=live and live.ranks or {}; self.talentsReady=not not live; self.talentRetryAt=s.time+2; self.damageProfile=nil
     end
     s.level=UnitLevel("player"); s.targetLevel=UnitLevel("target")
     s.talents=self.talents or {}; s.spellPower={}; s.spellCrit={}

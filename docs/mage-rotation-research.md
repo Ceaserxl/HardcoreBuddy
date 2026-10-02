@@ -4,6 +4,17 @@ Reviewed 2026-10-02 against the current helper. Scope: original Classic Era
 1–60 PvE and Hardcore; expansion, Retail and Season of Discovery rotations are
 excluded. Guide strategies inform priorities but do not prove numerical optimality.
 
+## Current simplification
+
+The current helper uses a cached character main attack and a fixed priority list.
+The historical observations below explain earlier iterations. Continuous damage
+reranking, target death-time score penalties and regeneration-based wand comparisons
+have been removed. Death-time trends remain in diagnostics only. Nova, interrupts,
+wards, recovery and burst cooldowns now have independent situational highlights;
+only immediate survival emergencies replace the primary. Character talents, learned
+ranks, gear, range, immunity and AoE safety checks remain. The behavior is described
+in [Rotation Advisor](rotation-advisor.md) and requires live validation.
+
 ## Findings and implementation
 
 | Topic | Research finding | Current helper / action |
