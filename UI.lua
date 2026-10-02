@@ -43,6 +43,7 @@ local function enabled(frame, value)
     if frame.label then Skin.ButtonState(frame,frame.active,frame.hovered,false) end
 end
 local function active(frame,value)
+    value=not not value
     frame.active=value; Skin.ButtonState(frame,value,frame.hovered,false)
 end
 local function measure(label, text, width, x, y)
@@ -161,6 +162,15 @@ local npcColumnStarts={0,0.10,0.55,0.80}
 local npcColumnEnds={0.09,0.54,0.79,1}
 local talentColumnStarts={0,0.08,0.53,0.64,0.83}
 local talentColumnEnds={0.07,0.52,0.63,0.82,1}
+local spellColumnStarts={0,0.43,0.55,0.70}
+local spellColumnEnds={0.42,0.54,0.69,1}
+local function placeSpellCell(label,text,index,width,y,header)
+    local usable=width-24
+    local inset=index==1 and not header and 32 or 0
+    measure(label,text,usable*(spellColumnEnds[index]-spellColumnStarts[index])-inset,
+        12+usable*spellColumnStarts[index]+inset,y)
+    label:SetWordWrap(false); label:SetHeight(18)
+end
 local function placeTalentCell(label,text,index,width,y,header)
     local usable=width-24
     local inset=index==2 and not header and 32 or 0
@@ -176,7 +186,6 @@ end
 local function renderBlock(frame, block, width)
     frame.block = block; frame:SetWidth(width); frame:Show()
     frame.priority:SetShown(block.supply and block.priority~=nil)
-    if frame.genericTitle then frame.genericTitle:Hide() end
     frame.title:SetFont(STANDARD_TEXT_FONT,block.supply and 14 or 15,"")
     frame.meta:SetFont(STANDARD_TEXT_FONT,11,"")
     frame.icon:SetSize(34,34)
@@ -190,6 +199,7 @@ local function renderBlock(frame, block, width)
     if frame.carryLabel then frame.carryLabel:Hide() end
     for _,cell in ipairs(frame.npcCells or {}) do cell:Hide() end
     for _,cell in ipairs(frame.talentCells or {}) do cell:Hide() end
+    for _,cell in ipairs(frame.spellCells or {}) do cell:Hide() end
     if frame.quantity:HasFocus() and (frame.quantity.targetKey~=block.targetKey
         or not block.quantityEditor) then frame.quantity:ClearFocus() end
     frame.count:Hide(); frame.stock:SetShown(block.supply and not block.pickRank); frame.quantity:SetShown(block.quantityEditor==true)
@@ -207,6 +217,21 @@ local function renderBlock(frame, block, width)
     if block.action then frame.iconHit:GetHighlightTexture():SetAllPoints(frame) end
     for _, col in ipairs(frame.columns) do col:Hide() end
     for _, field in ipairs(frame.fields) do field:Hide() end
+    if block.spellColumns then
+        frame.title:Hide(); frame.body:Hide(); frame.meta:Hide(); frame.chevron:Hide()
+        frame.spellCells=frame.spellCells or {}
+        Skin.Paint(frame,"note"); Skin.Hover(frame,true)
+        frame.icon:Show(); frame.iconHit:Show(); frame.iconBorder:Show()
+        local texture=type(block.icon)=="string" and block.icon:match("([^/]+)%.%w+$")
+        frame.icon:SetTexture(texture and ("Interface\\Icons\\"..texture) or block.icon or 134400)
+        frame.icon:SetSize(24,24); frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",12,-4)
+        for i,value in ipairs(block.spellColumns) do
+            local cell=frame.spellCells[i]
+            if not cell then cell=font(frame,12,i==1 and WHITE or MUTED); frame.spellCells[i]=cell end
+            cell:Show(); placeSpellCell(cell,value,i,width,7)
+        end
+        frame:SetHeight(32); return 32
+    end
     if block.talentColumns then
         frame.title:Hide(); frame.body:Hide(); frame.meta:Hide(); frame.chevron:Hide()
         frame.talentCells=frame.talentCells or {}
@@ -379,19 +404,15 @@ local function renderBlock(frame, block, width)
     if block.supply then
         -- Classification and stock share a right-hand column. Quantity editing
         -- is available only after opening the item or its rank details.
-        frame:SetHeight(64); y=64
-        if not frame.genericTitle then frame.genericTitle=font(frame,11,GOLD) end
-        frame.genericTitle:Show()
-        measure(frame.genericTitle,block.genericTitle or "Item",width-150,52,5)
-        frame.genericTitle:SetHeight(15); frame.genericTitle:SetWordWrap(false)
+        frame:SetHeight(56); y=56
         frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
-        measure(frame.title,block.title,width-150,52,21); frame.title:SetHeight(18); frame.title:SetWordWrap(false)
+        measure(frame.title,block.title,width-150,52,8); frame.title:SetHeight(18); frame.title:SetWordWrap(false)
         frame.body:SetFont(STANDARD_TEXT_FONT,12,"")
-        measure(frame.body,block.body,width-150,52,41); frame.body:SetHeight(16); frame.body:SetWordWrap(false)
-        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-21)
+        measure(frame.body,block.body,width-150,52,30); frame.body:SetHeight(16); frame.body:SetWordWrap(false)
+        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-11)
         frame.priority:SetFont(STANDARD_TEXT_FONT,11,"")
         frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPRIGHT",-8,-5); frame.priority:SetSize(84,16); frame.priority:SetJustifyH("RIGHT")
-        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-35); frame.stock:SetSize(84,18); frame.stock:SetJustifyH("RIGHT")
+        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-26); frame.stock:SetSize(84,16); frame.stock:SetJustifyH("RIGHT")
         frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPRIGHT",-8,-30)
         frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("BOTTOMRIGHT",-8,7)
         Skin.RowArtwork(frame)
@@ -448,17 +469,17 @@ renderBlocks = function(parent, blocks, width)
             height=math.max(height,pending:GetHeight()); pending:SetHeight(height); frame:SetHeight(height)
             y=y+height+12; pending=nil
         elseif paired and index<#blocks then pending=frame
-        else y=y+height+(block.talentColumns and 1 or (block.supply and not paired or block.npcColumns) and 4 or 12) end
+        else y=y+height+((block.talentColumns or block.spellColumns) and 1 or (block.supply and not paired or block.npcColumns) and 4 or 12) end
         if block.supply then
             local shade=index%2==0 and 0.075 or 0.045
             frame:SetBackdropColor(shade,shade+0.009,shade+0.014,1)
-        elseif block.npcColumns or block.talentColumns then
+        elseif block.npcColumns or block.talentColumns or block.spellColumns then
             local shade=index%2==0 and 0.06 or 0.035
             frame:SetBackdropColor(shade,shade+0.008,shade+0.012,1)
         end
     end
     for index=#blocks+1,#parent.blocks do parent.blocks[index]:Hide() end
-    return math.max(1,y-(blocks[#blocks] and (blocks[#blocks].talentColumns and 1 or (blocks[#blocks].supply and not parent.supplyGrid or blocks[#blocks].npcColumns) and 4 or 12) or 0))
+    return math.max(1,y-(blocks[#blocks] and ((blocks[#blocks].talentColumns or blocks[#blocks].spellColumns) and 1 or (blocks[#blocks].supply and not parent.supplyGrid or blocks[#blocks].npcColumns) and 4 or 12) or 0))
 end
 local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
@@ -466,6 +487,7 @@ local function renderCard(frame, data, width)
         frame.detailQuantity.quantity:ClearFocus(); frame.detailQuantity:Hide()
     end
     if frame.defaultChoice then frame.defaultChoice:Hide() end
+    if frame.itemHeading then frame.itemHeading:Hide() end
     Skin.Paint(frame,"note")
     frame.title:SetFont(STANDARD_TEXT_FONT,frame.firstCard and not data.supplyTable and 22 or 15,"")
     frame.title:Show(); frame.note:Show()
@@ -502,6 +524,16 @@ local function renderCard(frame, data, width)
     for _,control in ipairs(frame.npcFilters or {}) do control:Hide() end
     for _,label in ipairs(frame.npcHeaders or {}) do label:Hide() end
     for _,label in ipairs(frame.talentHeaders or {}) do label:Hide() end
+    for _,label in ipairs(frame.spellHeaders or {}) do label:Hide() end
+    if data.spellTable then
+        frame.spellHeaders=frame.spellHeaders or {}
+        for i,text in ipairs({"SPELL","RANK","COST","TRAINING"}) do
+            local label=frame.spellHeaders[i]
+            if not label then label=font(frame,10,MUTED); frame.spellHeaders[i]=label end
+            label:Show(); placeSpellCell(label,text,i,width-12,y,true)
+        end
+        y=y+26
+    end
     if data.talentTable then
         frame.talentHeaders=frame.talentHeaders or {}
         for i,text in ipairs({"LEVEL","TALENT","RANK","TREE","STATUS"}) do
@@ -546,6 +578,11 @@ local function renderCard(frame, data, width)
         local leftWidth=math.floor((contentWidth-16)/2)
         local rightWidth=contentWidth-leftWidth-16
         local leftHeight,rightHeight=0,0
+        if data.itemSectionTitle then
+            if not frame.itemHeading then frame.itemHeading=font(frame.content,15,GOLD) end
+            frame.itemHeading:Show()
+            leftHeight=measure(frame.itemHeading,data.itemSectionTitle,leftWidth,0,0)+8
+        end
         for i,block in ipairs(data.blocks) do
             local row=frame.content.blocks[i]
             if not row then row=newBlock(frame.content); frame.content.blocks[i]=row end
@@ -823,7 +860,7 @@ end
 function addon:Activate(action)
     if action.kind=="supplyDefault" then
         self:CommitInputs()
-        if self.Supplies.DefaultGroup(self:GetContext(),action.item) then
+        if self.Supplies.DefaultGroup(self:GetContext(),action.item) or self.Supplies.CanDefaultBandage(self:GetContext(),action.item) then
             self.characterDB.supplyDefaults=self.characterDB.supplyDefaults or {}
             self.characterDB.supplyDefaults[action.item.family]=action.item.itemId
             if self.Readiness then self.Readiness:SuppliesChanged() end
@@ -1138,7 +1175,7 @@ function addon:Layout()
         f.clear:ClearAllPoints(); f.clear:SetPoint("TOPRIGHT",-rightInset-extraWidth,-toolbarY)
         f.clear:SetHeight(rowHeight)
         f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("TOPRIGHT",-40,-toolbarY-(wrapExtra and rowHeight+6 or 0))
-        active(f.atLevel,(rangePage or spellPage) and showAll or self.state.atLevel)
+        active(f.atLevel,(rangePage or spellPage) and not not showAll or not (rangePage or spellPage) and self.state.atLevel)
     end
     y=y+self.MapAdvisor:LayoutControls(f,left,y,bodyWidth,doc.view=="training" and self.state.filter=="Zone Advisor")
     local deathPage=doc.view=="deaths"

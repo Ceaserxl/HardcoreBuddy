@@ -92,7 +92,8 @@ function S.Build(context,state)
                     end
                     local title=name..(rank and rank~="" and (" | "..rank) or "")
                     if (title.." "..body):lower():find(query,1,true) then
-                        blocks[#blocks+1]={title=title,body=body,icon=icon,spellId=entry.id,level=level}
+                        blocks[#blocks+1]={title=title,body=body,icon=icon,spellId=entry.id,level=level,
+                            spellColumns={name,rank or "—",costText(entry.cost),entry.requiredTalentId and ("Requires "..spellInfo(entry.requiredTalentId)) or "Class trainer"}}
                         total=total+1
                     end
                 end
@@ -100,7 +101,7 @@ function S.Build(context,state)
         end
         if #blocks>0 then
             table.sort(blocks,function(a,b) if a.title==b.title then return a.spellId<b.spellId end; return a.title<b.title end)
-            cards[#cards+1]={title="Level "..level,blocks=blocks}
+            cards[#cards+1]={title="Level "..level,blocks=blocks,spellTable=true,fullWidth=true}
         end
         local petBlocks={}
         for _,entry in ipairs(pets[level] or {}) do
@@ -112,14 +113,19 @@ function S.Build(context,state)
                     row={title=name..(rank and rank~="" and (" | "..rank) or ""),
                         body=entry.family.." | Grimoire from a demon trainer | Listed cost: "..costText(entry.cost),
                         meta="Summon the matching demon to teach it with this grimoire.",
-                        icon=icon,spellId=entry.id,itemId=entry.itemId,level=level}
+                        icon=icon,spellId=entry.id,itemId=entry.itemId,level=level,
+                        spellColumns={name,rank or "—",costText(entry.cost),entry.family.." grimoire"}}
+                end
+                if context.characterClass=="Hunter" then
+                    local name,rank=row.title:match("^(.-) | (.+)$")
+                    row.spellColumns={name or row.title,rank or "—","—",row.body:match("^Tame (.-) %(") or "Pet trainer"}
                 end
                 if (row.title.." "..row.body):lower():find(query,1,true) then petBlocks[#petBlocks+1]=row; total=total+1 end
             end
         end
         if #petBlocks>0 then
             table.sort(petBlocks,function(a,b) return a.title<b.title end)
-            cards[#cards+1]={title="Level "..level.." | "..(context.characterClass=="Hunter" and "Pet abilities" or "Demon grimoires"),blocks=petBlocks}
+            cards[#cards+1]={title="Level "..level.." | "..(context.characterClass=="Hunter" and "Pet abilities" or "Demon grimoires"),blocks=petBlocks,spellTable=true,fullWidth=true}
         end
         if nextLevel and not state.showAllFutureSpells then break end
     end

@@ -73,5 +73,24 @@ A:Activate({kind="supplyDefault",item={itemId=999999,family=group.family}})
 assert(saved[group.family]==alternative.itemId,"Reject unlisted alternatives")
 A:Navigate("supplies")
 assert(not A.window.cards[1].defaultChoice:IsShown(),"Default button is hidden outside item details")
+local bandage
+for _,item in ipairs(A.Data.Items.items) do if item.itemId==1251 then bandage=item end end
+A:Activate({kind="item",item=bandage})
+local choice=A.window.cards[1].defaultChoice
+assert(choice:IsShown() and choice:IsEnabled(),"A usable lower bandage rank offers Set as default")
+local bx,by,bw=A.window.back:GetRect(); local dx,dy=choice:GetRect()
+assert(dx==bx+bw+8 and dy==by,"Bandage default button sits immediately right of Back")
+MOCK.Click(choice)
+assert(A.characterDB.supplyDefaults.bandage==1251 and S.Selection(A:GetContext(),"bandage")==1251)
+assert(not choice:IsShown(),"Selected bandage hides the default button")
+A:Navigate("supplies")
+local selectedBandage
+for _,card in ipairs(A.document.cards) do for _,block in ipairs(card.blocks) do
+    if block.action and block.action.family=="bandage" then selectedBandage=block end
+end end
+assert(selectedBandage and selectedBandage.itemId==1251 and selectedBandage.body=="Your default bandage",
+    "The supplies list uses the saved bandage instead of the automatic rank")
+local noSkill=A:GetContext(); noSkill.professions={skills={bandage=0},known={}}
+assert(S.Selection(noSkill,"bandage")~=1251,"Unusable saved bandage falls back to live profession selection")
 print("PASS: Alternative alignment, default switching/restoration, character persistence, availability and pooled controls.")
 ''')

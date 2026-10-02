@@ -112,6 +112,12 @@ for _,class in ipairs({"MAGE","HUNTER","WARRIOR"}) do
     assert(tab and tab:IsVisible()); MOCK.Click(tab)
     assert(A.state.filter=="Spells" and A.document.cards[1].title:find("Next training"))
     assert(A.window.atLevel:IsShown() and A.window.atLevel.label:GetText()=="Show all future spells")
+    for _,card in ipairs(A.window.cards) do if card:IsShown() and card.spellHeaders then
+        assert(#card.spellHeaders==4,"Spell tables have four columns")
+        for _,row in ipairs(card.content.blocks) do if row:IsShown() and row.block.spellColumns then
+            assert(row:GetHeight()==32 and row.icon:GetWidth()==24 and #row.spellCells==4,"Compact spell rows retain native icons")
+        end end
+    end end
     local total=A.document.total
     local firstTitle=A.document.cards[1].title
     local firstRow=A.window.cards[1].content.blocks[1]
@@ -121,6 +127,8 @@ for _,class in ipairs({"MAGE","HUNTER","WARRIOR"}) do
     local afterX,afterY=A.window.cards[1].content.blocks[1]:GetRect()
     assert(A.document.cards[1].title==firstTitle and afterX==beforeX and afterY==beforeY,"Expanding keeps the heading and first row in place")
     MOCK.Click(A.window.atLevel); assert(not A.state.showAllFutureSpells and A.document.total==total)
+    A.window.atLevel.scripts.OnLeave(A.window.atLevel)
+    assert(A.window.atLevel.active==false and A.window.atLevel.skinButton.active==false,"Collapsed future spells clear selected styling")
 end
 -- Missing spell data is requested once, then refreshes only the visible Spells page.
 local requests,loaded={},{}

@@ -23,7 +23,10 @@ A:Activate({kind="item",item=item})
 local card=A.window.cards[1]; local rows=card.content.blocks
 local itemRow,details=rows[1],rows[2]
 local x,y,w,h=itemRow:GetRect(); local dx,dy=details:GetRect()
-assert(h==64 and dx>x+w and dy==y,"Item and details share a top edge in separate columns")
+local heading=card.itemHeading
+local hx,hy,hw,hh=heading:GetRect()
+assert(h==56 and dx>x+w and hy==dy and y>=hy+hh,"Item section heading aligns with details and sits above the supply row")
+assert(heading:GetText()==A.Supplies.GenericTitle(item),"Generic label is the item section heading")
 assert(not itemRow.quantity:IsShown() and card.detailQuantity:IsShown())
 local ex,ey,ew,eh=card.detailQuantity:GetRect()
 assert(ey+eh<y,"Quantity control is above the item border")
@@ -44,7 +47,7 @@ A:Navigate("supplies")
 assert(A.characterDB.targets[item.itemId]==13,"Navigation commits the separate editor")
 assert(not A.window.cards[1].detailQuantity:IsVisible(),"Separate editor hidden on supply list")
 for _,c in ipairs(A.window.cards) do if c:IsShown() then for _,r in ipairs(c.content.blocks) do
-    if r:IsShown() and r.block.supply then assert(r:GetHeight()==64 and not r.quantity:IsShown()) end
+    if r:IsShown() and r.block.supply then assert(r:GetHeight()==56 and not r.quantity:IsShown()) end
 end end end
 print("PASS: Item/details columns, compact rows, external quantity editor, borderless Alternatives and detail return paths.")
 ''')

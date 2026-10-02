@@ -56,7 +56,6 @@ local function supplyRow(record)
     b.title=record.name
     b.body=record.quantityNote or record.item.short
     b.supply=true
-    b.genericTitle=S.GenericTitle(record.item)
     b.category=record.category
     b.priority=record.priority
     b.count,b.target,b.targetKey=record.count,record.target,record.targetKey
@@ -68,7 +67,7 @@ local function rankState(block,record,context)
     local selected,automatic=S.Selection(context,record.groupFamily)
     block.rankFamily=record.groupFamily
     if automatic then
-        block.autoRank=true
+        block.autoRank=not automatic.manual
         block.readOnlyTarget=selected~=record.itemId
         if record.groupFamily=="bandage" then
             local plan=A.Professions.BandagePlan(context)
@@ -110,7 +109,6 @@ local function supplyRows(context,state,onlyFamily)
                     local selected,automatic=S.Selection(context,r.groupFamily)
                     local b=row(groupNames[r.groupFamily],automatic and automatic.note or "Select one rank to track",{kind="supplyFamily",family=r.groupFamily})
                     b.supply,b.groupSupply,b.status=true,true,"choose"
-                    b.genericTitle=S.GenericTitle(r.item)
                     b.priority=S.Priority(context,r.item)
                     b.target=r.target
                     if r.groupFamily=="dummy" then b.itemId,b.icon=r.itemId,r.item.icon end
@@ -138,8 +136,8 @@ local function supplyRows(context,state,onlyFamily)
         local r=group.selected
         if r then
             local b=supplyRow(r); b.action={kind="supplyFamily",family=family}
-            b.autoRank=group.automatic~=nil
-            b.body=group.automatic and (upgradeHint(context,family) or group.automatic.note)
+            b.autoRank=group.automatic~=nil and not group.automatic.manual
+            b.body=group.automatic and (group.automatic.manual and group.automatic.note or upgradeHint(context,family) or group.automatic.note)
                 or (r.quantityNote or "").." | Change rank"
             b.omit=not include(r); blocks[group.index]=b; track(r)
         else
@@ -290,9 +288,13 @@ function C.Detail(context, action)
         table.insert(out.blocks,1,supplyRow(r)); out.blocks[1].action=nil; out.blocks[1].editTarget=true
         if family then rankState(out.blocks[1],r,context) end
         out.itemLayout=true
+        out.itemSectionTitle=S.GenericTitle(item)
         if defaults then
             out.defaultItem=item
             out.isDefault=S.PreferredItem(context,defaults).itemId==item.itemId
+        elseif S.CanDefaultBandage(context,item) then
+            out.defaultItem=item
+            out.isDefault=S.Selection(context,"bandage")==item.itemId
         end
         if not out.blocks[1].readOnlyTarget and not out.blocks[1].pickRank then
             out.quantityRecord={title="Keep on hand",quantityEditor=true,targetKey=r.targetKey,target=r.target}

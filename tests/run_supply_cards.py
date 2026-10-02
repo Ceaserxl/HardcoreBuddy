@@ -17,9 +17,7 @@ local function find(id)
     end
 end
 local row=first(); local id=row.block.itemId; local count=row.block.count
-assert(row.genericTitle:IsShown() and row.genericTitle:GetText()==A.Supplies.GenericTitle(row.block.action.item),"Generic supply title is visible")
-local gx,gy,gw,gh=row.genericTitle:GetRect(); local tx,ty=row.title:GetRect()
-assert(gx==tx and gy+gh<=ty,"Generic title aligns above the item name")
+assert(not row.genericTitle and row:GetHeight()==56,"Supply rows are compact without a generic title")
 for _,item in ipairs(A.Data.Items.items) do
     assert(A.Supplies.GenericTitle(item):match("^%a+$"),"Every generic title is one word")
 end

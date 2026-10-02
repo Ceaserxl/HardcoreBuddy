@@ -33,9 +33,24 @@ function S.Priority(context,item)
     return essentials[item.family] and "Essentials" or advanced[item.family] and "Advanced" or "Optional"
 end
 
--- Automatic profession choices always come from the current character, even
--- while previewing a different class/level. Old manual choices cannot pin them.
+function S.CanDefaultBandage(context,item)
+    if not item or item.family~="bandage" then return false end
+    local skill=context.professions and context.professions.skills and context.professions.skills.bandage
+    for _,recipe in ipairs(addon.Professions.recipes.bandage) do
+        if recipe.itemId==item.itemId then return type(skill)=="number" and skill>=recipe.useSkill end
+    end
+    return false
+end
+
+-- Explicit bandage defaults use the live character's use-skill requirement.
+-- Other profession families continue to select the best learned recipe.
 function S.Selection(context, family)
+    if family=="bandage" then
+        local id=(context.supplyDefaults or {}).bandage
+        if id and S.CanDefaultBandage(context,{family="bandage",itemId=id}) then
+            return id,{status="selected",itemId=id,note="Your default bandage",manual=true}
+        end
+    end
     if addon.Professions.autoFamilies[family] then
         local result=addon.Professions.Best(context.professions,family)
         return result.itemId,result
