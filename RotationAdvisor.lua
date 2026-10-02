@@ -258,8 +258,12 @@ function R.Decide(s)
 end
 local function sizeHighlight(glow)
     local button=glow:GetParent()
-    -- Match Blizzard's ActionButtonSpellAlertManager sizing.
-    glow:SetSize(button:GetWidth()*1.4,button:GetHeight()*1.4)
+    local width,height=button:GetWidth(),button:GetHeight()
+    -- The loop follows the button, but the native template leaves its burst at
+    -- 150px (art authored for a 42px button). Scale both phases together so the
+    -- burst does not snap to a different size when it becomes the loop.
+    glow:SetSize(width*1.4,height*1.4)
+    glow.ProcStartFlipbook:SetSize(width*150/42,height*150/42)
 end
 function R:PrepareHighlights()
     if combat() then return end
@@ -274,6 +278,8 @@ function R:PrepareHighlights()
                 glow:SetPoint("CENTER",button,"CENTER",0,0)
                 glow:SetFrameLevel(button:GetFrameLevel()+8); glow:EnableMouse(false)
                 glow:HookScript("OnShow",function(self)
+                    self.ProcStartFlipbook:SetAlpha(1)
+                    self.ProcLoopFlipbook:SetAlpha(0)
                     self.ProcStartAnim:Play()
                 end)
                 glow:HookScript("OnHide",function(self)
