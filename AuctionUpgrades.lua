@@ -386,7 +386,7 @@ function U:Refresh()
     if self.scan then self.start:SetBackdropColor(0.22,0.17,0.035,1) end
     self.start.caption:SetTextColor(unpack(self.scan and Skin.colors.gold or Skin.colors.white))
     self.start:SetEnabled(enabled)
-    self.back:SetShown(self.slot~=nil or self.weaponsOnly)
+    self.back:SetShown(self.slot~=nil)
     self.back:SetText("< Back")
     local headingX=self.back:IsShown() and 312 or 204
     self.heading:ClearAllPoints(); self.heading:SetPoint("TOPLEFT",headingX,-60); self.heading:SetWidth(self.panel:GetWidth()-28-headingX)
