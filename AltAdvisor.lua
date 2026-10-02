@@ -96,6 +96,17 @@ function Alt:Upgrades(item)
     end)
     return result
 end
+function Alt:LineCapacity()
+    if not A.db or A.db.altAdvisorEnabled==false then return 0 end
+    local count=0
+    local guid=UnitGUID and UnitGUID("player")
+    local realm=GetRealmName and GetRealmName()
+    local faction=UnitFactionGroup and UnitFactionGroup("player")
+    for id,c in pairs(A.db.altEquipment or {}) do
+        if id~=guid and c.schema==1 and c.realm==realm and c.faction==faction then count=count+1 end
+    end
+    return count>0 and 1+count*3 or 0
+end
 function Alt:Add(tip)
     if self.busy or not A.db or A.db.altAdvisorEnabled==false or not G:IsEnabled() or tip.hardcoreBuddyAlt or not tip.GetItem then return end
     local _,link=tip:GetItem()
@@ -104,13 +115,28 @@ function Alt:Add(tip)
     local ok,err=pcall(function()
         local item=self:Candidate(link); if not item then return end
         local upgrades=self:Upgrades(item); if #upgrades==0 then return end
-        tip:AddLine(" ")
-        tip:AddLine("HardcoreBuddy | Alt Advisor",1,.8,.3)
+        local lines={{"|TInterface\\AddOns\\HardcoreBuddy\\Media\\SurvivorShield.tga:16:16:0:0|t HardcoreBuddy  |  Alt Advisor","",{1,.8,.3}}}
         for _,entry in ipairs(upgrades) do
             local c,row=entry.character,entry.row
-            tip:AddDoubleLine(c.name.." - Level "..c.profile.level,
-                row.percent and string.format("+%.2f%%",row.percent) or (row.zeroBaseline and "Zero baseline" or "Empty slot"),1,.82,.4,.38,.84,.6)
-            tip:AddLine(row.label.." | "..c.profile.name,.65,.65,.65)
+            lines[#lines+1]={c.name.." - Level "..c.profile.level,
+                row.percent and string.format("+%.2f%%",row.percent) or (row.zeroBaseline and "Zero baseline" or "Empty slot"),{1,.82,.4},{.38,.84,.6}}
+            lines[#lines+1]={row.label.." | "..c.profile.name,"",{.65,.65,.65}}
+            lines[#lines+1]={" ","",{.65,.65,.65}}
+        end
+        local gear=tip.hardcoreBuddyGear
+        local reserved=gear and gear.altStart and (gear.altCount or 0)>=#lines
+        if not reserved then tip:AddLine(" ") end
+        for i,line in ipairs(lines) do
+            local leftColor,rightColor=line[3],line[4] or line[3]
+            if reserved then
+                local prefix=tip:GetName()
+                local left=_G[prefix.."TextLeft"..(gear.altStart+i-1)]
+                local right=_G[prefix.."TextRight"..(gear.altStart+i-1)]
+                left:SetText(line[1]); left:SetTextColor(unpack(leftColor)); left:Show()
+                right:SetText(line[2]); right:SetTextColor(unpack(rightColor)); right:SetShown(line[2]~="")
+            else
+                tip:AddDoubleLine(line[1],line[2],leftColor[1],leftColor[2],leftColor[3],rightColor[1],rightColor[2],rightColor[3])
+            end
         end
         tip.hardcoreBuddyAlt=true; tip:Show()
     end)

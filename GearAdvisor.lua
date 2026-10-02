@@ -613,10 +613,11 @@ function G:Add(tip)
             lines[#lines+1]={row and row.label or "",row and row.text or "",colors[row and row.status or "equal"]}
             lines[#lines+1]={row and row.gains and "Stats gained" or "",row and row.gains or "",colors.up}
             lines[#lines+1]={row and row.losses and "Stats lost" or "",row and row.losses or "",colors.down}
-            lines[#lines+1]={row and row.losses and " " or "","",colors.equal}
+            lines[#lines+1]={row and " " or "","",colors.equal}
         end
         local auctionLines=A.AuctionUpgrades and A.AuctionUpgrades:TooltipLines(tip,link)
         for _,line in ipairs(auctionLines or {}) do lines[#lines+1]=line end
+        if auctionLines then lines[#lines+1]={" ","",colors.equal} end
         local state=tip.hardcoreBuddyGear
         local name=tip.GetName and tip:GetName()
         local header=state and name and _G[name.."TextLeft"..(state.start+1)]
@@ -639,7 +640,15 @@ function G:Add(tip)
         end
         local cacheable=true
         for _,row in ipairs(report.rows) do if row.status=="unknown" then cacheable=false end end
-        tip.hardcoreBuddyGear={link=link,start=start,revision=self.revision,report=cacheable and report or nil}
+        -- Reserve collapsed lines beside Gear advice before other tooltip hooks
+        -- append vendor text. Alt advice fills these after binding is finalized.
+        local altStart=reuse and state.altStart or start+#lines
+        local altCount=reuse and state.altCount or (A.AltAdvisor and A.AltAdvisor:LineCapacity() or 0)
+        if not reuse then
+            for _=1,altCount do tip:AddDoubleLine("","") end
+        end
+        tip.hardcoreBuddyGear={link=link,start=start,revision=self.revision,report=cacheable and report or nil,
+            altStart=altStart,altCount=altCount}
         if changed and tip.Show then tip:Show() end
     end
     self.busy=false

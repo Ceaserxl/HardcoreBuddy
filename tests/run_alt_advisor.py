@@ -47,7 +47,16 @@ end
 ITEM_SOULBOUND='Soulbound'; ITEM_BIND_ON_PICKUP='Binds when picked up'
 GameTooltip:SetHyperlink(candidate.link)
 assert(Alt:Transferable(GameTooltip,candidate.link))
+GameTooltip:AddLine('Vendor prices')
+local vendorLine=GameTooltip:NumLines()
 Alt:Add(GameTooltip); assert(GameTooltip.hardcoreBuddyAlt)
+local gear=GameTooltip.hardcoreBuddyGear
+local prefix=GameTooltip:GetName()..'TextLeft'
+assert(_G[prefix..gear.altStart]:GetText():find('SurvivorShield.tga',1,true),'Alt title includes shield icon')
+assert(gear.altStart<vendorLine and _G[prefix..vendorLine]:GetText()=='Vendor prices','Alt advice stays before vendor text')
+assert(_G[prefix..(gear.altStart+6)]:GetText()==' ','Alt section ends with a gap')
+G:Add(GameTooltip)
+assert(_G[prefix..gear.altStart]:GetText():find('Alt Advisor',1,true),'Gear refresh preserves Alt section')
 local count=GameTooltip:NumLines(); Alt:Add(GameTooltip); assert(GameTooltip:NumLines()==count,'No duplicate Alt section')
 GameTooltip:ClearLines(); GameTooltip:SetHyperlink(candidate.link); GameTooltip:AddLine('Soulbound')
 assert(not Alt:Transferable(GameTooltip,candidate.link)); Alt:Add(GameTooltip)
@@ -110,5 +119,16 @@ assert(GameTooltip.hardcoreBuddyAlt and not GameTooltip.hardcoreBuddyAltPending,
 GameTooltip:SetBagItem(0,2)
 assert(not GameTooltip.hardcoreBuddyAlt,'Post-hook sees soulbound instance and excludes it')
 hooksecurefunc=previousHook
+local report=G.Report; A.db.gearAdvisorEnabled=true
+for _,labels in ipairs({{'Ring 1','Ring 2'},{'Trinket 1','Trinket 2'},{'Main hand','Both hands'}}) do
+ G.Report=function() return {rows={{label=labels[1],text='+10%',status='up'},{label=labels[2],text='+20%',status='up'}}} end
+ GameTooltip:ClearLines(); hyperlink(GameTooltip,candidate.link)
+ local state=GameTooltip.hardcoreBuddyGear
+ local prefix=GameTooltip:GetName()..'TextLeft'
+ assert(_G[prefix..(state.start+5)]:GetText()==' ' and _G[prefix..(state.start+6)]:GetText()==labels[2],
+  'Paired comparisons remain separated without stat losses')
+ assert(_G[prefix..(state.start+9)]:GetText()==' ','Final comparison ends with spacing')
+end
+G.Report=report
 print('PASS: stable repeated refresh, independent Alt visibility and synchronous binding-safe native setter hooks.')
 ''')

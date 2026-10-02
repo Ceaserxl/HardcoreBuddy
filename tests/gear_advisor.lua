@@ -362,7 +362,7 @@ check(GameTooltip:NumLines()==lineCount and #readLinks==reads,"No duplicate rows
 equipment[10]=scorpid; MOCK.FireAll("PLAYER_EQUIPMENT_CHANGED",10)
 check(GameTooltip:NumLines()==lineCount and GameTooltip.hardcoreBuddyGear.report.rows[1].percent==0,"Visible advice refreshes without new rows")
 check(adviceLine(3):GetText()=="" and adviceLine(4):GetText()=="","Refresh clears obsolete gains and losses")
-check(adviceLine(5):GetText()=="","Refresh clears the spacer when losses disappear")
+check(adviceLine(5):GetText()==" ","Refresh preserves comparison spacing when losses disappear")
 A.db.gearAdvisorEnabled=false; G:RefreshTooltips(); check(not GameTooltip:IsShown(),"Disable hides stale visible advice")
 A.db.gearAdvisorEnabled=true
 GameTooltip:SetHyperlink(scorpid.link); G:SetEnabled(false)
