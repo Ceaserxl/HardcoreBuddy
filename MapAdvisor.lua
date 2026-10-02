@@ -41,10 +41,78 @@ for _,entry in ipairs({
     {"trainer","Trainer","Profession"},{"food","Food","Food"},
     {"reagents","Reagents","Reagents"},{"mailbox","Mailbox","Mailbox"},
     {"poisons","Poison","Poisons"},{"battle","Battleground","BattleMaster"},
+    {"ammunition","Ammunition","Ammunition"},{"class-trainer","Class trainer","Class"},
+    {"fishing","Fishing","Fish"},
+    {"herbs","Herbs","Herbalism"},{"ore","Ore","Mining"},
 }) do
     local key=entry[1]; names[key]=entry[2]
     icons[key]={fallback="Interface\\Minimap\\Tracking\\"..entry[3]}
     M.iconChoices[#M.iconChoices+1]=key
+end
+-- Standalone Blizzard symbols only. Atlas availability varies across Classic
+-- builds, so show only symbols the running client actually supplies.
+local atlasChoices={
+    {"quest-available","Quest available","QuestNormal"},
+    {"quest-complete","Quest complete","QuestTurnin"},
+    {"quest-incomplete","Quest incomplete","QuestInProgress"},
+    {"quest-daily","Daily quest","QuestDaily"},
+    {"quest-daily-complete","Daily complete","QuestDailyTurnin"},
+    {"quest-repeatable","Repeatable quest","QuestRepeatableTurnin"},
+    {"quest-trivial","Trivial quest","QuestNormalTrivial"},
+    {"quest-legendary","Legendary quest","QuestLegendary"},
+    {"quest-legendary-complete","Legendary complete","QuestLegendaryTurnin"},
+    {"quest-campaign","Campaign quest","Quest-Campaign-Available"},
+    {"quest-campaign-complete","Campaign complete","Quest-Campaign-TurnIn"},
+    {"quest-important","Important quest","ImportantAvailableQuest"},
+    {"quest-important-complete","Important complete","ImportantQuestTurnin"},
+    {"quest-shield","Quest objective","QuestNormal-Shield"},
+    {"quest-area","Quest area","QuestArea"},
+    {"quest-boss","Quest boss","QuestBoss"},
+    {"objective","Objective","QuestObjective"},
+    {"poi-rare","Rare creature","VignetteKill"},
+    {"poi-elite","Elite creature","VignetteKillElite"},
+    {"poi-loot","Treasure","VignetteLoot"},
+    {"poi-loot-elite","Rare treasure","VignetteLootElite"},
+    {"poi-event","Event","VignetteEvent"},
+    {"poi-event-elite","Elite event","VignetteEventElite"},
+    {"poi-dungeon","Dungeon","Dungeon"},
+    {"poi-raid","Raid","Raid"},
+    {"poi-cave","Cave","poi-cave"},
+    {"poi-door","Door","poi-door"},
+    {"poi-portal","Portal","poi-portal"},
+    {"poi-boat","Boat","poi-boat"},
+    {"poi-town","Town","poi-town"},
+    {"poi-hub","Quest hub","poi-hub"},
+    {"poi-camp","Camp","poi-camp"},
+    {"poi-campfire","Campfire","poi-campfire"},
+    {"poi-flight","Flight point","FlightMaster"},
+    {"poi-graveyard","Graveyard","poi-graveyard"},
+    {"poi-stable","Stable","poi-stable"},
+    {"poi-anvil","Anvil","poi-anvil"},
+    {"poi-mine","Mine","poi-mine"},
+    {"poi-fishing","Fishing spot","Fishing-Hole"},
+    {"service-repair","Repair service","services-icon-repair"},
+    {"service-vendor","Vendor","services-icon-vendor"},
+    {"service-bank","Bank service","services-icon-bank"},
+    {"service-auction","Auction service","services-icon-auctionhouse"},
+    {"service-transmog","Appearance","services-icon-transmogrification"},
+    {"role-tank","Tank","roleicon-tiny-tank"},
+    {"role-healer","Healer","roleicon-tiny-healer"},
+    {"role-damage","Damage","roleicon-tiny-dps"},
+    {"checkmark","Check mark","common-icon-checkmark"},
+    {"red-x","Red X","common-icon-redx"},
+    {"shield","Shield","UI-HUD-UnitFrame-Player-PortraitOn-Bar-Shield"},
+}
+for _,entry in ipairs(atlasChoices) do
+    names[entry[1]]=entry[2]
+    icons[entry[1]]={atlas=entry[3],fallback="Interface\\TargetingFrame\\UI-TargetingFrame-Skull"}
+end
+function M:LoadIconChoices()
+    if self.iconCatalogLoaded then return end
+    self.iconCatalogLoaded=true
+    for _,entry in ipairs(atlasChoices) do
+        if atlasFor(entry[1]) then self.iconChoices[#self.iconChoices+1]=entry[1] end
+    end
 end
 function M:IconName(key) return names[key] or (key:sub(1,1):upper()..key:sub(2)) end
 function M:SetIconTexture(texture,key)

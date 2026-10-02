@@ -33,12 +33,18 @@ function T:Build(class,level)
     local s=settings()
     local chosen=s and s.builds[class]
     if chosen and builds[chosen] then return builds[chosen],true end
+    return self:DefaultBuild(class,level),false
+end
+
+function T:DefaultBuild(class,level)
+    local builds=D.AdvisorBuilds[class]
+    if not builds then return end
     -- The first path is the Hardcore default. Short early-level phases switch
     -- to their next path when their stated range ends, with respec advice.
     for _,build in ipairs(builds) do
-        if level<=build.maxLevel then return build,false end
+        if level<=build.maxLevel then return build end
     end
-    return builds[#builds],false
+    return builds[#builds]
 end
 
 function T:ReadCurrent(class,level)

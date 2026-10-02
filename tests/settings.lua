@@ -2,7 +2,7 @@ local A=TestAddon
 local S=A.Settings
 local count=0
 local function check(ok,why) count=count+1; assert(ok,why) end
-check(table.concat(S.sections,",")=="General,Gear Advisor,Talent Advisor,Auction House,Death Journal,Low Health,NPC Alerts,Zone Advisor,Debug","Consolidated sidebar order")
+check(table.concat(S.sections,",")=="General,Zone Advisor,Gear Advisor,Talent Advisor,Auction House,Death Journal,Low Health,NPC Alerts,Debug","Consolidated sidebar order")
 local settingsTab
 for _,tab in ipairs(A.window.tabs) do
     check(tab.view~="alerts","Old Alerts tab is replaced by Settings")
@@ -69,9 +69,11 @@ check(A.db.gearAdvisorEnabled==false,"Gear tooltip setting takes effect")
 check(not gear.profiles,"Gear settings no longer have an independent profile selector")
 A:OpenSettings("Talent Advisor")
 local talent=S.pages["Talent Advisor"]
+A:SetProfile("mode","preview"); A:SetProfile("characterClass","Mage"); A:SetProfile("level",40)
 MOCK.Click(talent.builds[2])
 check(A.state.filter=="Talent Advisor" and A.GearAdvisor:CurrentProfile().fromBuild,"Build selection stays in settings and controls gear scoring")
 MOCK.Click(talent.builds[1]); check(not A.GearAdvisor:CurrentProfile().manual,"Automatic Hardcore path remains available")
+A:SetProfile("mode","live")
 gear.enabled:SetChecked(true); MOCK.Click(gear.enabled)
 A:Navigate("advisors")
 local blocks=A.document.cards[1].blocks
@@ -93,14 +95,14 @@ check(not A.GearSnapshot.panel and not S.pages["Gear Snapshot"],"Old snapshot co
 A:OpenSettings("Gear Advisor")
 MOCK.Click(gear.openWeights)
 MOCK.Click(A.window.filters[1])
-MOCK.Click(A.window.filters[2])
+MOCK.Click(A.window.filters[3])
 check(A.state.filter=="Gear Advisor" and not A.state.gearPage and gear:IsVisible(),"Sidebar navigation resets nested gear pages")
 for _,screen in ipairs({{1920,1080},{1024,768},{640,480}}) do
     UIParent.width,UIParent.height=screen[1],screen[2]; A:RestoreWindow()
     for _,section in ipairs(S.sections) do
         A:OpenSettings(section)
         local x,y,w,h=S.scroll:GetRect(); local wx,wy,ww,wh=A.window:GetRect()
-        check(x>=wx and x+w<=wx+ww and y>=wy and y+h<=wy+wh-40,"Settings viewport fits: "..section)
+        check(x>=wx and x+w<=wx+ww and y>=wy and y+h<=wy+wh-18,"Settings viewport fits: "..section)
     end
 end
 UIParent.width,UIParent.height=1920,1080; A:RestoreWindow()

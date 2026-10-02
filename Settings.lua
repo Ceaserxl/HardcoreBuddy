@@ -1,5 +1,5 @@
 local _,A=...
-local S={sections={"General","Gear Advisor","Talent Advisor","Auction House","Death Journal","Low Health","NPC Alerts","Zone Advisor","Debug"}}
+local S={sections={"General","Zone Advisor","Gear Advisor","Talent Advisor","Auction House","Death Journal","Low Health","NPC Alerts","Debug"}}
 A.Settings=S
 local Skin=A.Skin
 local aliases={Map="Zone Advisor",["Death Banner"]="Death Journal",["Death Alerts"]="Death Journal",Rares="NPC Alerts",Elites="NPC Alerts",Preparation="General"}
@@ -75,6 +75,94 @@ function S:CommitInputs()
     end
 end
 
+function S:SyncDependencies()
+    if not self.pages or self.syncingDependencies then return end
+    self.syncingDependencies=true
+    local function watch(control)
+        if control and not control.settingsDependencyHook then
+            control.settingsDependencyHook=true
+            control:HookScript("OnClick",function() self:SyncDependencies() end)
+        end
+    end
+    local function enable(control,value,caption)
+        if not control then return end
+        Skin.ControlEnabled(control,value)
+        if caption then caption:SetAlpha(value and 1 or 0.4) end
+    end
+    local gear=self.pages["Gear Advisor"]
+    local gearOn=A.GearAdvisor:IsEnabled()
+    for _,panel in ipairs(gear.sectionCards) do Skin.GroupEnabled(panel,gearOn) end
+    for _,edit in ipairs(gear.weights) do enable(edit,gearOn and edit.profile~=nil) end
+    enable(gear.restore,gearOn and A.GearAdvisor:CurrentProfile()~=nil)
+    enable(self.pages["Auction House"].armor,gearOn)
+    local talent=self.pages["Talent Advisor"]
+    local talentOn=A.TalentAdvisor:IsEnabled()
+    Skin.GroupEnabled(talent.paths,talentOn)
+    enable(talent.auto,talentOn and A:GetContext().mode~="preview")
+    if not talentOn then enable(talent.apply,false)
+    else enable(talent.apply,talent.apply:IsEnabled()) end
+    watch(talent.auto)
+    local low=A.LowHealth.page
+    if low then
+        local s=A.LowHealth.settings
+        for _,b in pairs(low.checks) do watch(b) end
+        enable(low.checks.sound,s.enabled)
+        enable(low.threshold,s.enabled)
+        enable(low.preview,s.enabled)
+        enable(low.volume,s.enabled and s.sound,low.volumeLabel)
+        low.soundHint:SetAlpha(s.enabled and s.sound and 1 or 0.4)
+        for _,caption in ipairs(low.thresholdLabels or {}) do caption:SetAlpha(s.enabled and 1 or 0.4) end
+    end
+    for _,page in pairs(A.CreatureAlerts.pages or {}) do
+        local s=A.CreatureAlerts.settings[page.category]
+        for _,b in pairs(page.checks) do watch(b) end
+        enable(page.checks.sound,s.enabled); enable(page.checks.nonHostile,s.enabled)
+        enable(page.duration,s.enabled,page.durationLabel)
+        enable(page.preview,s.enabled); enable(page.neutralPreview,s.enabled and s.nonHostile)
+        enable(page.volume,s.enabled and s.sound,page.volumeLabel)
+        page.soundHint:SetAlpha(s.enabled and s.sound and 1 or 0.4)
+    end
+    local death=A.Deaths.options
+    if death then
+        local s=A.Deaths.db.settings
+        for _,b in pairs(death.checks) do watch(b) end
+        enable(death.checks.sound,s.alerts)
+        enable(death.checks.locked,s.alerts or s.mini)
+        for _,control in ipairs({death.duration,death.alertLevel,death.preview}) do enable(control,s.alerts) end
+        for _,caption in ipairs(death.alertCaptions or {}) do caption:SetAlpha(s.alerts and 1 or 0.4) end
+        for _,control in ipairs({death.scaleDown,death.scaleUp,death.resetPositions}) do enable(control,s.alerts or s.mini) end
+        death.scaleText:SetAlpha((s.alerts or s.mini) and 1 or 0.4)
+        for _,control in ipairs({death.soundPrev,death.soundChoice,death.soundNext,death.volume}) do enable(control,s.alerts and s.sound) end
+        death.volumeLabel:SetAlpha(s.alerts and s.sound and 1 or 0.4)
+        death.soundLabel:SetAlpha(s.alerts and s.sound and 1 or 0.4)
+        local appearance=A.Deaths.appearance
+        if appearance then
+            Skin.GroupEnabled(appearance.styleSection,s.alerts)
+            Skin.GroupEnabled(appearance.positionSection,s.alerts)
+            -- Text-only alerts have no background to adjust.
+            enable(appearance.opacity,s.alerts and s.alertStyle~="Text-only",appearance.opacityText)
+            for _,b in pairs(appearance.styles) do watch(b) end
+        end
+    end
+    local map=A.MapAdvisor.controls
+    if map then
+        local s=A.MapAdvisor:Settings()
+        enable(map.tintColor,s.reveal=="tint"); enable(map.sliders.tintAlpha,s.reveal=="tint")
+        local any=false
+        for key,b in pairs(map.icons) do enable(b,s[key]); any=any or s[key] end
+        enable(map.sliders.iconSize,any); enable(map.sliders.iconAlpha,any)
+        map.noticeHint:SetAlpha(s.notify and 1 or 0.4)
+    end
+    local readiness=A.Readiness.options
+    if readiness then
+        for _,b in pairs(readiness.checks) do watch(b) end
+        enable(readiness.previewPanel,A.Readiness.settings.panel)
+        enable(readiness.previewReminder,A.Readiness.settings.departure)
+        readiness.reminderHelp:SetAlpha(A.Readiness.settings.departure and 1 or 0.4)
+    end
+    self.syncingDependencies=nil
+end
+
 function S:Create(parent)
     local scroll=CreateFrame("ScrollFrame","HardcoreBuddySettingsScroll",parent,"UIPanelScrollFrameTemplate")
     self.scroll=scroll
@@ -101,7 +189,7 @@ function S:Create(parent)
         A.db.kitNotifications=value; if not value and A.kitAlert then A.kitAlert:Hide() end
     end)
     general.reset=button(access,"Recenter main window",82,function() A:HandleSlashCommand("reset") end)
-    label(access,"Open settings with /hcb settings.",12,16,122,300)
+    label(access,"Author: CeaserXL (CXL)",12,16,122,300)
     label(kit,"Manage Carry quantities and item priorities in Supplies. Find talent recommendations in Advisors.",12,16,86,300)
     general.contentHeight=486
     local npc=self.pages["NPC Alerts"]
@@ -197,15 +285,15 @@ function S:Create(parent)
         if value then A.TalentAdvisor:ApplyUnused(true) else A.TalentAdvisor.applying=nil end
     end)
     label(talent.spending,"Uses your selected path. Stops if your learned talents do not match. Points cannot be undone without a respec.",12,16,86,700)
-    talent.paths=Skin.Section(talent,"Talent paths",236,48+(maxBuilds+1)*46)
-    for i=1,maxBuilds+1 do
+    talent.paths=Skin.Section(talent,"Talent paths",236,48+maxBuilds*46)
+    for i=1,maxBuilds do
         local b=button(talent.paths,"",42+(i-1)*46,function(self)
-            A.TalentAdvisor:Activate({command=self.buildID and "build" or "defaultBuild",id=self.buildID,class=self.class})
+            A.TalentAdvisor:Activate({command=self.automatic and "defaultBuild" or "build",id=self.buildID,class=self.class})
         end,700)
         b:SetHeight(40); b.label:SetHeight(40); b.label:SetFont(STANDARD_TEXT_FONT,12,"")
         talent.builds[i]=b
     end
-    talent.contentHeight=296+(maxBuilds+1)*46
+    talent.contentHeight=296+maxBuilds*46
 
     local auction=self.pages["Auction House"]
     auction.subtitle=label(auction,"Filters and saved scans for the auction house Upgrades tab.",12,0,34,700)
@@ -299,18 +387,20 @@ function S:Layout(parent,left,top,width,height,section,visible)
     talent.auto:SetEnabled(context.mode~="preview")
     local builds=A.Data.AdvisorBuilds[class] or {}
     local selected,manual=A.TalentAdvisor:Build(class,context.level)
+    local automatic=A.TalentAdvisor:DefaultBuild(class,context.level)
     talent.context:SetText(context.characterClass.." | Level "..context.level..(context.mode=="preview" and " | Planning another character" or " | Your character"))
     for i,b in ipairs(talent.builds) do
-        local build=builds[i-1]
-        b:SetShown(i==1 or build~=nil); b.buildID=build and build.id or nil; b.class=class
+        local build=builds[i]
+        b:SetShown(build~=nil); b.buildID=build and build.id or nil; b.class=class
+        b.automatic=build and automatic and build.id==automatic.id or false
         local score=build and A.GearAdvisor.Profile(class,context.level,nil,build.profile)
-        b.label:SetText(i==1 and ("Automatic Hardcore path\n"..(selected and selected.name or "")) or build and (build.name.."\nLevels "..build.minLevel.."-"..build.maxLevel.." | Scoring: "..(score and score.name or "Unavailable")) or "")
+        b.label:SetText(build and (build.name..(not manual and selected and selected.id==build.id and " (Automatic)" or "").."\nLevels "..build.minLevel.."-"..build.maxLevel.." | Scoring: "..(score and score.name or "Unavailable")) or "")
         b:SetWidth(talent.paths:GetWidth()-32); b.label:SetWidth(b:GetWidth()-20); b.label:SetJustifyH("LEFT")
-        b.selected=i==1 and not manual or manual and build and selected.id==build.id or false
+        b.selected=build and selected and selected.id==build.id or false
         Skin.ButtonState(b,b.selected,nil,false)
     end
-    talent.paths:SetHeight(48+(#builds+1)*46)
-    talent.contentHeight=296+(#builds+1)*46
+    talent.paths:SetHeight(48+#builds*46)
+    talent.contentHeight=296+#builds*46
     if pageName=="Talent Advisor" then self.content:SetHeight(math.max(talent.contentHeight,height/scale)) end
     local auction=self.pages["Auction House"]; auction.armor:Sync()
     local armor=profile and ({"Cloth","Leather","Mail","Plate"})[A.GearAdvisor.HighestArmorSubclass(profile)] or "..."
@@ -333,6 +423,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
         A.Deaths:LayoutPage(content,0,0,contentWidth,contentHeight,{filter="Settings"})
         A.Deaths.host:Show()
     end
+    self:SyncDependencies()
     self.range=math.max(0,self.content:GetHeight()*scale-height)
     self.scroll:UpdateScrollChildRect()
     self.scroll:SetVerticalScroll(self.section~=pageName and 0 or math.min(self.scroll:GetVerticalScroll(),self.range))

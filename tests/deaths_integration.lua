@@ -99,7 +99,7 @@ for _,screen in ipairs({{1920,1080},{1024,768},{640,480}}) do
     A:RestoreWindow(); A:Refresh()
     local hx,hy,hw,hh=H.host:GetRect()
     local wx,wy,ww,wh=A.window:GetRect()
-    assert(hx>=wx+20 and hy>wy+100 and hx+hw<=wx+ww and hy+hh<=wy+wh-40)
+    assert(hx>=wx+20 and hy>wy+100 and hx+hw<=wx+ww and hy+hh<=wy+wh-18)
     for _,row in ipairs(H.window.rows) do
         if row:IsVisible() then
             local rx,ry,rw,rh=row:GetRect()
@@ -182,6 +182,8 @@ assert(not A.window.sidebar:IsShown() and not A.window.filters[1]:IsShown(),"Jou
 local count=#H.db.records
 A:OpenDeaths("Options")
 assert(H.options:IsVisible())
+local alertsBeforePreview=H.db.settings.alerts
+H.options.checks.alerts:SetChecked(true); MOCK.Click(H.options.checks.alerts)
 MOCK.Click(H.options.preview)
 assert(H.alert.record==H.db.records[count] and H.alert.title==nil)
 assert(#H.db.records==count,"real-record preview does not duplicate history")
@@ -402,3 +404,4 @@ H.db.settings.sound=true; H.options.volume:SetValue(70)
 PlaySoundFile=originalPlaySoundFile
 PlaySound=originalPlaySound
 print("PASS: Original native warning, custom bell and five Deathlog sounds, all volume steps, mute, selector clicks, wrapping and invalid-setting recovery.")
+H.db.settings.alerts=alertsBeforePreview; H:ApplySettings()

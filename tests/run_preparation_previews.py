@@ -15,6 +15,8 @@ R.settings.panel=false; R.settings.departure=false; R.resting=false; R.dismissed
 A:OpenSettings("General")
 local options=R.options
 assert(options.previewPanel:IsVisible() and options.previewReminder:IsVisible())
+assert(not options.previewPanel:IsEnabled() and not options.previewReminder:IsEnabled(),"Disabled features disable their preview controls")
+R.settings.panel=true; R.settings.departure=true; A:Refresh()
 MOCK.Click(options.previewPanel)
 assert(R.panel:IsShown() and R.previewUntil==120)
 assert(R.panel:GetFrameStrata()=="DIALOG" and R.panel:GetFrameLevel()>A.window:GetFrameLevel())
@@ -31,7 +33,7 @@ for i=1,3 do
 end
 assert(not R.panel.rows[4]:IsShown())
 R:Refresh(); assert(R.panel:IsShown(),"Bag/rest refresh preserves preview")
-assert(not R.settings.panel and not R.settings.departure and R.dismissed and R.lastReminder==77)
+assert(R.settings.panel and R.settings.departure and R.dismissed and R.lastReminder==77)
 MOCK.Click(R.panel.close)
 assert(not R.panel:IsShown() and not R.previewUntil and R.dismissed,"Preview close preserves normal dismissal")
 MOCK.Click(options.previewPanel); now=121; R.panel.scripts.OnUpdate(R.panel,21)

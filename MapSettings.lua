@@ -173,10 +173,14 @@ function M:LayoutSettings(parent,left,top,width,visible)
     return self:SettingsHeight()*scale
 end
 
-function M:IconPickerHeight() return 74+math.ceil(#self.iconChoices/6)*80 end
+function M:IconPickerHeight()
+    self:LoadIconChoices()
+    return 74+math.ceil(#self.iconChoices/6)*80
+end
 
 function M:LayoutIconPicker(parent,left,top,width,visible)
     if not self.iconPicker and not visible then return end
+    self:LoadIconChoices()
     if not self.iconPicker then
         local f=CreateFrame("Frame",nil,parent,"BackdropTemplate"); self.iconPicker=f; Skin.Paint(f,"note")
         f.title=f:CreateFontString(nil,"OVERLAY","GameFontHighlight"); f.title:SetPoint("TOPLEFT",16,-16)
@@ -191,7 +195,8 @@ function M:LayoutIconPicker(parent,left,top,width,visible)
             Skin.Button(b,"category")
             b.icon=b:CreateTexture(nil,"ARTWORK"); b.icon:SetPoint("TOP",0,-8); b.icon:SetSize(32,32)
             b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetPoint("TOP",0,-42)
-            b.label:SetSize(102,24); b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE")
+            b.label:SetFont(STANDARD_TEXT_FONT,12,""); b.label:SetWordWrap(true)
+            b.label:SetSize(102,28); b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE")
             b:SetScript("OnEnter",function(self)
                 Skin.ButtonState(self,self.selected,true,false)
                 GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetText(M:IconName(key),1,0.8,0.4,1,true)

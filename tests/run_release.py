@@ -50,7 +50,7 @@ with zipfile.ZipFile(archive_path) as archive:
                 H:PlayAlertSound()
             end
         end
-        assert(A.window.footer:GetText():find(A.version,1,true))
+        assert(A.window.title:GetText():find("v"..A.version,1,true))
     ''')
     for _, frame in lua.globals().MOCK['frames'].items():
         if frame['texture']:
@@ -64,5 +64,5 @@ with zipfile.ZipFile(archive_path) as archive:
                 assert audio.getnframes() > 0
                 assert audio.readframes(audio.getnframes())
     print(f'PASS: Release ZIP boots under Lua 5.1; menus, death sounds, custom textures, '
-          f'TGA/WAV decoding and version footer verified ({len(names)} files).')
+          f'TGA/WAV decoding and version title verified ({len(names)} files).')
 

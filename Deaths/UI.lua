@@ -218,6 +218,9 @@ function H:Refresh()
 end
 function H:ApplySettings()
     local s = self.db.settings
+    if not s.alerts and self.alert.positioning and self.FinishPositioning then
+        self:FinishPositioning(); return
+    end
     if self.ApplyAppearance then self:ApplyAppearance() end
     s.alertDuration=self.NormalizeAlertDuration(s.alertDuration)
     self.db.positions = self.db.positions or {}
@@ -254,6 +257,7 @@ function H:ApplySettings()
         self.alert:Hide()
     end
     self:Refresh()
+    if addon.Settings then addon.Settings:SyncDependencies() end
 end
 function H:ShowAlert(record, preview)
     local a = self.alert
@@ -523,7 +527,7 @@ function H:BuildUI()
         addon.Skin.Paint(checkbox,"edit")
         checkbox.mark=Text(checkbox,13,"CENTER",0,0,20); checkbox.mark:SetJustifyH("CENTER")
         checkbox.mark:SetTextColor(unpack(GOLD))
-        local text=Text(checkbox,12,"LEFT",34,0,300); text:SetWordWrap(true); text:SetText(label)
+        local text=Text(checkbox,12,"LEFT",34,0,300); text:SetWordWrap(true); text:SetText(label); checkbox.label=text
         checkbox:SetScript("OnClick",function(box)
             self.db.settings[key]=box:GetChecked() and true or false
             self:ApplySettings()
@@ -531,9 +535,11 @@ function H:BuildUI()
         end)
         options.checks[key]=checkbox
     end
-    Text(display,13,"TOPLEFT",16,-44,230):SetText("Alert display duration")
+    options.alertCaptions={Text(display,13,"TOPLEFT",16,-44,230)}
+    options.alertCaptions[1]:SetText("Alert display duration")
     local duration=Edit(display,56,0,0,true); options.duration=duration
     local durationHint=Text(display,11,"TOPLEFT",16,-76,310)
+    options.alertCaptions[2]=durationHint
     durationHint:SetText("seconds (1-30), then a short fade"); durationHint:SetTextColor(unpack(MUTED))
     local function commitDuration(box)
         self.db.settings.alertDuration=self.NormalizeAlertDuration(tonumber(box:GetText()) or self.db.settings.alertDuration)
@@ -542,7 +548,8 @@ function H:BuildUI()
     duration:SetScript("OnEnterPressed",function(box) commitDuration(box); box:ClearFocus() end)
     duration:SetScript("OnEditFocusLost",commitDuration)
     duration:SetScript("OnEscapePressed",function(box) box:SetText(tostring(self.db.settings.alertDuration)); box:ClearFocus() end)
-    Text(display,13,"TOPLEFT",16,-106,230):SetText("Alert minimum level")
+    options.alertCaptions[3]=Text(display,13,"TOPLEFT",16,-106,230)
+    options.alertCaptions[3]:SetText("Alert minimum level")
     local alertLevel=Edit(display,56,0,0,true); options.alertLevel=alertLevel
     alertLevel:SetText(tostring(self.db.settings.minAlertLevel))
     alertLevel:SetScript("OnTextChanged",function(box)self.db.settings.minAlertLevel=math.max(1,math.min(60,tonumber(box:GetText()) or 1))end)
@@ -552,7 +559,7 @@ function H:BuildUI()
     local hint=Text(reports,11,"TOPLEFT",16,-212,330); hint:SetWordWrap(true)
     hint:SetText("Reports are recorded while you play.")
     hint:SetTextColor(unpack(MUTED))
-    Text(reports,13,"TOPLEFT",16,-236,330):SetText("Death alert sound")
+    options.soundLabel=Text(reports,13,"TOPLEFT",16,-236,330); options.soundLabel:SetText("Death alert sound")
     local function changeSound(step)
         local _,index=self.NormalizeAlertSound(self.db.settings.alertSound)
         index=(index-1+step)%#self.soundChoices+1
@@ -577,6 +584,7 @@ function H:BuildUI()
     options.preview=Button(display,"Preview alert",140,0,0,function() duration:ClearFocus(); self:Slash("test") end)
     options.preview:ClearAllPoints(); options.preview:SetPoint("TOPLEFT",16,-248)
     local reset=Button(display,"Reset positions",184,0,0,function()self:Slash("resetposition")end)
+    options.resetPositions=reset
     reset:ClearAllPoints(); reset:SetPoint("TOPRIGHT",-16,-248)
     local history=addon.Skin.SectionBackdrop(options,382,124); history.title:SetText("Journal history"); options.history=history
     options.import=Button(history,"Import Deathlog",240,16,-40,function() self:ImportLegacy() end)

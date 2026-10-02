@@ -183,7 +183,7 @@ assert(M.pins[4].icon.texture=="Interface\\TargetingFrame\\UI-TargetingFrame-Sku
 C_Texture=previousTexture; M.Records=records
 
 -- Appearance settings update the map, persist, and reset independently of filters.
-s.notify=false
+s.notify=false; s.reveal="tint"
 A:OpenSettings("Map")
 local controls=M.controls
 ColorPickerFrame=CreateFrame("Frame")
@@ -212,6 +212,7 @@ mapID=1436; art=1240; scale=1; s.reveal="tint"; known={}
 M:Attach(); M:RefreshPins()
 assert(t.vertexColor[1]==1 and t.vertexColor[2]==0 and t.vertexColor[3]==128/255 and t.vertexColor[4]==0.25)
 assert(M.pins[1]:GetWidth()==30 and M.pins[1].icon:GetAlpha()==0.4)
+controls.checks.rare:SetChecked(true); MOCK.Click(controls.checks.rare)
 local oldIcon=s.icons.rare; MOCK.Click(controls.icons.rare)
 assert(s.icons.rare==oldIcon and A.state.mapIconKind=="rare" and M.iconPicker:IsVisible() and not controls:IsShown(),"Category opens picker without changing its icon")
 local choices=0
@@ -219,7 +220,7 @@ for _,key in ipairs(M.iconChoices) do
     local b=M.iconPicker.choices[key]; assert(b and b:IsVisible()); choices=choices+1
     MOCK.Click(b); assert(s.icons.rare==key and b.selected and b.icon)
 end
-assert(choices==24 and A:CanGoBack(),"All 24 transparent map symbols are listed")
+assert(choices>=29 and A:CanGoBack(),"All available transparent map symbols are listed")
 for index,key in ipairs(M.iconChoices) do
     local button=M.iconPicker.choices[key]
     local x,y,w,h=button:GetRect()
@@ -265,6 +266,7 @@ MOCK.Click(controls.resetMarkers)
 assert(s.iconSize==18 and s.icons.rare=="rare" and s.rare and s.reveal=="off" and s.tintR==1 and not s.notify,"Marker reset is isolated")
 MOCK.Click(controls.resetNotices)
 assert(s.notify and s.reveal=="off" and s.tintR==1,"Notices reset is isolated")
+MOCK.Click(controls.modes.tint)
 MOCK.Click(controls.tintColor)
 local cancel=ColorPickerFrame.cancelFunc
 MOCK.Click(controls.resetAll); cancel()

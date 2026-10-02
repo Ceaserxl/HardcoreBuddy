@@ -93,7 +93,7 @@ function H:LayoutSettings(parent,x,y,width,height,visible)
             box.mark=box:CreateFontString(nil,"OVERLAY","GameFontHighlight")
             box.mark:SetAllPoints()
             box.mark:SetJustifyH("CENTER"); box.mark:SetJustifyV("MIDDLE")
-            label(entry[2],12,50,-52,260,owner)
+            box.label=label(entry[2],12,50,-52,260,owner)
             box:SetScript("OnClick",function()
                 self.settings[key]=box:GetChecked() and true or false
                 if key=="enabled" and not self.settings.enabled then self.previewRemaining=nil; self:StopSound() end
@@ -102,13 +102,13 @@ function H:LayoutSettings(parent,x,y,width,height,visible)
             end)
             page.checks[key]=box
         end
-        label("Warn below",12,16,-92,100,warning)
+        page.thresholdLabels={label("Warn below",12,16,-92,100,warning)}
         local input=CreateFrame("EditBox",nil,warning,"BackdropTemplate")
         page.threshold=input; input:SetSize(54,28); input:SetPoint("TOPLEFT",122,-84)
         addon.Skin.Paint(input,"edit"); input:SetFont(STANDARD_TEXT_FONT,14,"")
         input:SetAutoFocus(false); input:SetNumeric(true); input:SetMaxLetters(3)
         input:SetJustifyH("CENTER")
-        label("% health",12,188,-92,140,warning)
+        page.thresholdLabels[2]=label("% health",12,188,-92,140,warning)
         local function commit()
             local value=tonumber(input:GetText())
             if value then self.settings.threshold=math.max(1,math.min(100,math.floor(value))) end

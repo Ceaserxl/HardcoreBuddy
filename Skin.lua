@@ -39,7 +39,10 @@ function S.Paint(frame,kind)
     if kind=="edit" and frame.GetObjectType and frame:GetObjectType()=="CheckButton" then S.Hover(frame) end
     if kind=="edit" and not frame.flatEditHooks then
         frame.flatEditHooks=true
-        frame:HookScript("OnEnter",function(self) self:SetBackdropBorderColor(0.72,0.56,0.29,1) end)
+        frame:HookScript("OnEnter",function(self)
+            if self.IsEnabled and not self:IsEnabled() then return end
+            self:SetBackdropBorderColor(0.72,0.56,0.29,1)
+        end)
         frame:HookScript("OnLeave",function(self) self:SetBackdropBorderColor(0.34,0.36,0.38,1) end)
     end
     if kind=="row" then S.RowArtwork(frame)
@@ -182,10 +185,6 @@ function S.DecorateWindow(frame)
     chrome.toplineShadow=texture(frame,"ARTWORK",0)
     chrome.toplineShadow:SetVertexColor(0,0,0,0.82)
     chrome.toplineShadow:SetHeight(1)
-    chrome.bottomline=S.Divider(frame)
-    chrome.bottomline:SetVertexColor(0.47,0.36,0.18,0.55)
-    chrome.footer=texture(frame,"BACKGROUND",1,DARK)
-    chrome.footer:SetVertexColor(0.53,0.51,0.38,0.74)
     chrome.leftAccent=texture(frame,"BORDER",0)
     chrome.leftAccent:SetVertexColor(0.42,0.30,0.14,0.32)
     chrome.rightAccent=texture(frame,"BORDER",0)
@@ -223,18 +222,12 @@ function S.LayoutWindow(frame,width,height,compact)
     chrome.toplineShadow:ClearAllPoints()
     chrome.toplineShadow:SetPoint("TOPLEFT",frame,"TOPLEFT",18,-headerHeight-1)
     chrome.toplineShadow:SetWidth(math.max(1,width-36))
-    chrome.bottomline:ClearAllPoints()
-    chrome.bottomline:SetPoint("BOTTOMLEFT",frame,"BOTTOMLEFT",18,37)
-    chrome.bottomline:SetWidth(math.max(1,width-36))
-    chrome.footer:ClearAllPoints()
-    chrome.footer:SetPoint("BOTTOMLEFT",frame,"BOTTOMLEFT",14,13)
-    chrome.footer:SetSize(math.max(1,width-28),24)
     chrome.leftAccent:ClearAllPoints()
     chrome.leftAccent:SetPoint("TOPLEFT",frame,"TOPLEFT",13,-headerHeight-1)
-    chrome.leftAccent:SetSize(1,math.max(1,height-headerHeight-40))
+    chrome.leftAccent:SetSize(1,math.max(1,height-headerHeight-18))
     chrome.rightAccent:ClearAllPoints()
     chrome.rightAccent:SetPoint("TOPRIGHT",frame,"TOPRIGHT",-13,-headerHeight-1)
-    chrome.rightAccent:SetSize(1,math.max(1,height-headerHeight-40))
+    chrome.rightAccent:SetSize(1,math.max(1,height-headerHeight-18))
     return headerHeight
 end
 
@@ -319,6 +312,38 @@ function S.PlaceBackButton(button,parent,top,left,height)
     button:ClearAllPoints()
     button:SetSize(100,height or 28)
     button:SetPoint("TOPLEFT",parent,"TOPLEFT",left or 22,-top)
+end
+
+-- Disable the actual input as well as its appearance; sibling captions need
+-- their own alpha because they do not inherit the control's disabled state.
+function S.ControlEnabled(control,enabled)
+    if not control then return end
+    enabled=not not enabled
+    if not enabled and control.HasFocus and control:HasFocus() then control:ClearFocus() end
+    control:SetEnabled(enabled)
+    control:SetAlpha(enabled and 1 or 0.4)
+    for _,key in ipairs({"label","caption"}) do
+        local caption=control[key]
+        if caption and caption:GetParent()~=control then caption:SetAlpha(enabled and 1 or 0.4) end
+    end
+    if enabled then S.ButtonState(control) else S.ButtonState(control,nil,false,false) end
+end
+
+function S.GroupEnabled(frame,enabled)
+    if not frame then return end
+    frame:SetAlpha(enabled and 1 or 0.4)
+    local function visit(parent)
+        for _,child in ipairs({parent:GetChildren()}) do
+            local kind=child:GetObjectType()
+            if kind=="Button" or kind=="CheckButton" or kind=="EditBox" or kind=="Slider" then
+                if not enabled and child.HasFocus and child:HasFocus() then child:ClearFocus() end
+                child:SetEnabled(enabled)
+                if enabled then S.ButtonState(child) else S.ButtonState(child,nil,false,false) end
+            end
+            visit(child)
+        end
+    end
+    visit(frame)
 end
 
 function S.IconBorder(parent,icon)

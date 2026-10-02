@@ -587,7 +587,7 @@ function addon:CreateWindow()
     self.window=f
     f:Hide(); f:SetFrameStrata("DIALOG"); f:SetFrameLevel(20); f:SetClampedToScreen(true); f:SetMovable(true); f:SetResizable(false); f:EnableMouse(true)
     Skin.Paint(f,"window"); f.chrome=Skin.DecorateWindow(f)
-    f.title=font(f, 26, GOLD); f.title:SetText("HardcoreBuddy")
+    f.title=font(f, 26, GOLD); f.title:SetText("HardcoreBuddy |cffa6a68fv"..addon.version.."|r")
     f.subtitle=font(f, 12, WHITE)
     f.motto=font(f,10,MUTED); f.motto:SetText("ONE LIFE. STAY PREPARED.")
     local drag=CreateFrame("Frame",nil,f); f.drag=drag; drag:SetPoint("TOPLEFT"); drag:SetSize(1,57)
@@ -667,8 +667,6 @@ function addon:CreateWindow()
         scroll:SetVerticalScroll(math.max(0,math.min(scroll:GetVerticalScrollRange(),scroll:GetVerticalScroll()-delta*65)))
     end)
     f.content=CreateFrame("Frame",nil,f.scroll); f.content:SetSize(1,1); f.scroll:SetScrollChild(f.content); f.cards={}
-    f.footer=font(f,10,MUTED); f.footer:SetPoint("BOTTOMLEFT",22,17); f.footer:SetPoint("BOTTOMRIGHT",-22,17)
-    f.footer:SetText("Author CeaserXL (CXL) | Version "..addon.version)
     f.userEntry=CreateFrame("Frame",nil,f); f.userEntry:SetHeight(30)
     local entry=f.userEntry
     entry.input=CreateFrame("EditBox",nil,entry,"BackdropTemplate")
@@ -979,10 +977,10 @@ function addon:Layout()
     local bodyWidth=width-left-40
     f.sidebar:SetShown(sidebar)
     if sidebar then
-        f.sidebar:ClearAllPoints(); f.sidebar:SetPoint("TOPLEFT",20,-y); f.sidebar:SetPoint("BOTTOMLEFT",20,46); f.sidebar:SetWidth(148)
+        f.sidebar:ClearAllPoints(); f.sidebar:SetPoint("TOPLEFT",20,-y); f.sidebar:SetPoint("BOTTOMLEFT",20,18); f.sidebar:SetWidth(148)
         f.sidebarTitle:SetText(doc.view=="settings" and "SETTINGS" or doc.view=="advisors" and "ADVISORS" or instancePage and "INSTANCES" or doc.view=="deaths" and "DEATH JOURNAL" or doc.view=="petguide" and "PET JOURNAL" or doc.view=="training" and "COMPANION" or "FIELD KIT")
         f.sidebarNote:SetText(doc.view=="settings" and "Your preferences.\nOne place." or instancePage and "Levels and\nitems to bring." or doc.view=="deaths" and "Every journey\nleaves a story." or doc.view=="petguide" and "Find a companion.\nLearn its strengths." or "Pack with purpose.\nEvery slot matters.")
-        f.sidebarNote:SetShown(height-y-46>35+#navigation*41+70)
+        f.sidebarNote:SetShown(height-y-18>35+#navigation*41+70)
     end
     x=22
     local filterY=y
@@ -1022,7 +1020,7 @@ function addon:Layout()
         b.navIcon:SetTexture(iconPath); b.navIcon:SetShown(sidebar)
         b.label:ClearAllPoints()
         if sidebar then
-            local step=math.min(41,math.floor((height-filterY-86)/math.max(1,#navigation)))
+            local step=math.min(41,math.floor((height-filterY-58)/math.max(1,#navigation)))
             b:SetSize(132,math.min(36,step-4)); b:SetPoint("TOPLEFT",28,-filterY-35-(i-1)*step)
             b.label:SetPoint("TOPLEFT",32,0); b.label:SetPoint("BOTTOMRIGHT",-5,0); b.label:SetJustifyH("LEFT")
         else
@@ -1072,7 +1070,7 @@ function addon:Layout()
     local userPage=doc.view=="supplies" and self.state.filter=="User" and not doc.isDetail
     f.userEntry:SetShown(userPage)
     if userPage then
-        f.userDrop:ClearAllPoints(); f.userDrop:SetPoint("TOPLEFT",left,-y); f.userDrop:SetPoint("BOTTOMRIGHT",-40,46)
+        f.userDrop:ClearAllPoints(); f.userDrop:SetPoint("TOPLEFT",left,-y); f.userDrop:SetPoint("BOTTOMRIGHT",-40,18)
     else
         f.userDrop:Hide()
     end
@@ -1117,10 +1115,10 @@ function addon:Layout()
     if self.Deaths and self.Deaths.host then
         local deathSettings=doc.view=="settings" and self.Settings:Section(self.state.filter)=="Death Journal"
         self.Deaths.host:SetShown(deathPage or deathSettings)
-        if deathPage then self.Deaths:LayoutPage(f,left,y,bodyWidth,height-y-46,self.state) end
+        if deathPage then self.Deaths:LayoutPage(f,left,y,bodyWidth,height-y-18,self.state) end
     end
-    self.Settings:Layout(f,left,y,bodyWidth,height-y-46,self.state.filter,doc.view=="settings")
-    f.scroll:ClearAllPoints(); f.scroll:SetPoint("TOPLEFT",left,-y); f.scroll:SetPoint("BOTTOMRIGHT",-40,46)
+    self.Settings:Layout(f,left,y,bodyWidth,height-y-18,self.state.filter,doc.view=="settings")
+    f.scroll:ClearAllPoints(); f.scroll:SetPoint("TOPLEFT",left,-y); f.scroll:SetPoint("BOTTOMRIGHT",-40,18)
     local contentWidth=math.max(250,bodyWidth); f.content:SetWidth(contentWidth)
     local top=self.MapAdvisor:LayoutViewer(f.content,contentWidth,doc.view=="training" and self.state.filter=="Zone Advisor",f.scroll:GetHeight())
     for index,data in ipairs(doc.cards) do
@@ -1150,5 +1148,4 @@ function addon:Layout()
     -- WoW resolves nested texture/frame anchors after this layout pass. Refresh
     -- the scroll child's cached geometry next frame, as scrolling would do.
     f.refreshScrollGeometry=true
-    f.footer:SetText("Author CeaserXL (CXL) | Version "..addon.version)
 end
