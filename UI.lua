@@ -868,6 +868,24 @@ function addon:CreateWindow()
         self.state.showLesserEnchants=not self.state.showLesserEnchants
         self:Refresh(true)
     end)
+    f.enchantMode=button(f,"",300,function()
+        f.enchantModeMenu:SetShown(not f.enchantModeMenu:IsShown())
+    end)
+    local enchantMenu=CreateFrame("Frame",nil,f.enchantMode,"BackdropTemplate")
+    f.enchantModeMenu=enchantMenu; f.enchantModeOptions={}
+    Skin.Paint(enchantMenu,"card"); enchantMenu:SetSize(300,64)
+    enchantMenu:SetPoint("TOPRIGHT",f.enchantMode,"BOTTOMRIGHT",0,-2)
+    enchantMenu:SetFrameStrata("DIALOG"); enchantMenu:SetFrameLevel(f.enchantMode:GetFrameLevel()+20)
+    enchantMenu:Hide()
+    f.enchantMode:SetScript("OnHide",function() enchantMenu:Hide() end)
+    for i,entry in ipairs({{"level","Show Level Appropriate Enchants"},{"max","Show Max Enchants"}}) do
+        local mode=entry[1]
+        local choice=button(enchantMenu,entry[2],292,function()
+            enchantMenu:Hide(); self.Enchants.SetMode(mode)
+        end)
+        choice:SetPoint("TOPLEFT",4,-4-(i-1)*28)
+        f.enchantModeOptions[mode]=choice
+    end
     f.currentInstance=button(f,"",500,function() self:OpenCurrentInstance() end)
     f.currentInstance.label:Hide()
     f.currentInstance.heading=font(f.currentInstance,11,GOLD)
@@ -1344,6 +1362,14 @@ local function layoutDocument(self)
         f.enchantRanks.label:SetText(self.state.showLesserEnchants and "Hide Lesser Ranks" or "Show Lesser Ranks")
         active(f.enchantRanks,not not self.state.showLesserEnchants)
     end
+    local enchantsPage=doc.view=="supplies" and self.state.filter=="Enchants" and not doc.isDetail
+    f.enchantMode:SetShown(enchantsPage)
+    if enchantsPage then
+        f.enchantMode:ClearAllPoints(); f.enchantMode:SetPoint("TOPRIGHT",-52,-y)
+        local mode=self.Enchants.Mode()
+        f.enchantMode.label:SetText((mode=="max" and "Show Max Enchants" or "Show Level Appropriate Enchants").."  v")
+        for value,choice in pairs(f.enchantModeOptions) do active(choice,value==mode) end
+    else f.enchantModeMenu:Hide() end
     local toolbarY=y
     -- Every page reserves navigation space, even when Back is hidden.
     local toolbarHeight=bodyWidth<620 and 68 or 34
