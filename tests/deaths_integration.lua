@@ -240,7 +240,8 @@ for _,mode in ipairs({"live","preview"}) do
     A:OpenDeaths("Options")
     local px,py,pw,ph=H.options.preview:GetRect()
     local dx,dy,dw,dh=duration:GetRect()
-    assert(dy>=y and dy+dh<py and px>=x and px+pw<=x+w and py+ph<=y+h)
+    assert(py>=y and py+ph<dy and dy+dh<=y+h and px>=x and px+pw<=x+w,
+        "Preview stays in the header above the alert duration controls")
 end
 print("PASS: Duration defaults, bounds, commit/cancel, exact hold/fade timing, removed Verified tab and redesigned live/planning bounds.")
 for _,pair in ipairs({{"a Defias Knuckleduster","Defias Knuckleduster"},{"an Ogre","Ogre"},

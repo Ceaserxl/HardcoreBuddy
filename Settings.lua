@@ -326,7 +326,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local pageName=section
     if section=="Gear Advisor" and A.state.gearPage=="Stat Weights" then pageName=A.state.gearPage end
     local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 282
-    if section=="Death Journal" then contentHeight=832 end
+    if section=="Death Journal" then contentHeight=682 end
     if section=="Zone Advisor" then contentHeight=A.state.mapIconKind and A.MapAdvisor:IconPickerHeight() or A.MapAdvisor:SettingsHeight() end
     if pageName=="Debug" then A.DebugDump:Refresh() end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPLEFT",parent,"TOPLEFT",left,-top)

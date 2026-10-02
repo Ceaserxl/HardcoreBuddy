@@ -9,6 +9,10 @@ function addon.Skin.SectionBackdrop(parent)
     local frame=CreateFrame("Frame",nil,parent); frame.title=frame:CreateFontString()
     return frame
 end
+function addon.Skin.Section(parent,title)
+    local frame=addon.Skin.SectionBackdrop(parent); frame.title:SetText(title)
+    return frame
+end
 function addon:OpenDeaths(section,record)
     self.state={view="deaths",filter=section or "All reports",deathRecord=record}
     self.Deaths:LayoutPage(UIParent,184,146,816,468,self.state)
@@ -96,6 +100,7 @@ function CreateFrame(_,name,parent)
     return f
 end
 function methods:HasFocus()return false end
+function methods:GetParent()return self.parent end
 function methods:GetFont()return "font",12,""end
 function methods:CreateFontString()return CreateFrame()end
 function methods:CreateTexture()return CreateFrame()end

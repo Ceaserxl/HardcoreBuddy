@@ -73,8 +73,8 @@ function H:BuildAppearance(host)
     a.done:ClearAllPoints(); a.done:SetPoint("TOPLEFT",a,"BOTTOMLEFT",0,-8); a.done:Hide()
     local f=CreateFrame("Frame",nil,host,"BackdropTemplate"); self.appearance=f
     f:SetAllPoints(host); A.Skin.Paint(f,"note"); f:Hide()
-    local style=A.Skin.Section(f,"Style & opacity",62,228,1); f.styleSection=style
-    local position=A.Skin.Section(f,"Position",62,228,2); f.positionSection=position
+    local style=A.Skin.Section(f,"Alert appearance",62,196,1); f.styleSection=style
+    local position=A.Skin.Section(f,"Alert position",62,196,2); f.positionSection=position
     f.title=label(f,22,0,0,700,"Appearance")
     f.subtitle=label(f,12,0,-34,700,"Choose how much space a death report takes. Background opacity leaves text readable.")
     f.styles={}
@@ -83,9 +83,9 @@ function H:BuildAppearance(host)
             self.db.settings.alertStyle=name; self:ApplySettings(); self:Slash("test")
         end)
     end
-    f.opacityText=label(style,13,16,-100,320)
+    f.opacityText=label(style,12,16,-90,320)
     local slider=CreateFrame("Slider",nil,style,"BackdropTemplate"); f.opacity=slider
-    slider:SetPoint("TOPLEFT",16,-124); slider:SetSize(300,18); slider:SetOrientation("HORIZONTAL")
+    slider:SetPoint("TOPLEFT",16,-114); slider:SetSize(300,18); slider:SetOrientation("HORIZONTAL")
     A.Skin.Paint(slider,"edit"); slider:SetMinMaxValues(0,100); slider:SetValueStep(5); slider:SetObeyStepOnDrag(true)
     slider:SetThumbTexture("Interface\\Buttons\\WHITE8x8")
     slider:GetThumbTexture():SetSize(12,22); slider:GetThumbTexture():SetVertexColor(unpack(A.Skin.colors.gold))
@@ -99,14 +99,18 @@ function H:BuildAppearance(host)
     f.move=button(position,"Unlock and move",160,16,-48,function() self:TogglePositioning() end)
     f.preview=button(position,"Preview alert",140,188,-48,function() self:Slash("test") end)
     f.reset=button(position,"Reset position",140,16,-88,function() self:Slash("resetposition") end)
-    f.moveHint=label(position,12,16,-130,320,"Unlock and move keeps a silent preview on screen. Drag the alert, then click Save position. Locked alerts let clicks pass through to the game.")
-    f.styleHint=label(style,12,16,-172,320,"Duration, sound, volume and live feed controls are above. Your saved position is shared by all three styles.")
+    f.moveHint=label(position,12,16,-128,320,"Drag the silent preview, then Save position. Locked alerts let clicks pass through.")
+    f.styleHint=label(style,12,16,-148,320,"Opacity changes the background only. Text stays readable.")
+    f.moveHint:SetTextColor(unpack(A.Skin.colors.muted)); f.styleHint:SetTextColor(unpack(A.Skin.colors.muted))
 end
 
-function H:LayoutAppearance(width)
+function H:LayoutAppearance(width,combined)
     local f=self.appearance
+    f.styleSection.sectionTop=combined and 0 or 62
+    f.positionSection.sectionTop=combined and 0 or 62
     A.Skin.LayoutSections(f,width)
     A.Skin.SettingsHeader(f,width,f.title,f.subtitle)
+    f.title:SetShown(not combined); f.subtitle:SetShown(not combined)
     local inner=f.styleSection:GetWidth()-32
     local buttonWidth=(inner-16)/3
     for i,name in ipairs({"Compact","Banner","Text-only"}) do
@@ -115,7 +119,8 @@ function H:LayoutAppearance(width)
     end
     f.opacity:SetWidth(inner); f.styleHint:SetWidth(inner); f.moveHint:SetWidth(inner)
     local half=(inner-12)/2
-    f.move:SetWidth(half); f.preview:SetWidth(half)
+    f.move:SetWidth(combined and inner or half); f.preview:SetWidth(half)
+    f.preview:SetShown(not combined)
     f.preview:ClearAllPoints(); f.preview:SetPoint("TOPRIGHT",-16,-48)
     f.reset:SetWidth(inner)
 end

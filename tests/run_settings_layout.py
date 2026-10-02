@@ -54,7 +54,11 @@ for _,screen in ipairs({{1920,1080},{1024,768},{640,480}}) do
         local page=A.Settings.pages[name] or (name=="Death Journal" and A.Deaths.options) or
             (name=="Low Health" and A.LowHealth.page) or A.MapAdvisor.controls
         header(page); sections(page)
-        if name=="Death Journal" then header(A.Deaths.appearance); sections(A.Deaths.appearance)
+        if name=="Death Journal" then
+            local appearance=A.Deaths.appearance
+            check(not appearance.title:IsShown() and not appearance.subtitle:IsShown(),"Combined death settings has one page header")
+            check(not appearance.preview:IsShown(),"Preview appears only in the main header")
+            sections(appearance)
         elseif name=="General" then
             local r=A.Readiness.options
             inside(r.previewPanel,r); inside(r.previewReminder,r)
