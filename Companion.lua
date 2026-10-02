@@ -3,6 +3,12 @@ local _, A = ...
 local P, G, D, S = A.Planner, A.Guide, A.Data, A.Supplies
 local C = {}; A.Companion = C
 C.eluneMacroBody="#showtooltip Light of Elune\n/use Light of Elune\n/use Hearthstone"
+-- Macro serialization may normalize line endings and add a final newline.
+-- Ignore only those differences; preserve command text, order and spacing.
+local function sameEluneBody(body)
+    if type(body)~="string" then return false end
+    return body:gsub("\r\n","\n"):gsub("\r","\n"):gsub("\n+$","")==C.eluneMacroBody
+end
 function C.EluneMacroState()
     if not GetMacroInfo or not GetNumMacros then return nil,false end
     local general,character=GetNumMacros()
@@ -10,8 +16,8 @@ function C.EluneMacroState()
     local function check(index)
         local name,_,body=GetMacroInfo(index)
         if name=="Light of Elune" then
-            found=index; correct=body==C.eluneMacroBody
-        elseif not found and body==C.eluneMacroBody then found=index; correct=true end
+            found=index; correct=sameEluneBody(body)
+        elseif not found and sameEluneBody(body) then found=index; correct=true end
     end
     for i=1,general do check(i) end
     for i=1,character do check((MAX_ACCOUNT_MACROS or 120)+i) end

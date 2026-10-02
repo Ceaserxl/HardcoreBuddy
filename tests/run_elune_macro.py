@@ -4,7 +4,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from render_layout import boot
 lua,A=boot()
-lua.execute('''
+lua.execute(r'''
 local A=TestAddon; local C=A.Companion
 local macros={}; local combat=false; local refreshed=0
 A.Refresh=function() refreshed=refreshed+1 end
@@ -21,6 +21,15 @@ C.EluneMacroAction(false)
 local id,correct=C.EluneMacroState(); assert(id==121 and correct and refreshed==1)
 C.EluneMacroAction(false); assert(#macros==1 and refreshed==1)
 C.EluneMacroAction(true); assert(picked)
+for _,body in ipairs({C.eluneMacroBody..'\n',C.eluneMacroBody:gsub('\n','\r\n')..'\r\n'}) do
+ macros[1].body=body
+ id,correct=C.EluneMacroState(); assert(id==121 and correct,'Reload line endings are unchanged commands')
+ C.EluneMacroAction(false); assert(refreshed==1,'Do not rewrite a valid reloaded macro')
+end
+for _,body in ipairs({'/use Hearthstone\n/use Light of Elune', C.eluneMacroBody..'\n/say extra', C.eluneMacroBody:gsub('Hearthstone','Other Item'), C.eluneMacroBody:gsub('\n','\n\n',1)}) do
+ macros[1].body=body
+ id,correct=C.EluneMacroState(); assert(id==121 and not correct,'Actual edits still require repair')
+end
 macros[1].body=C.eluneMacroBody..' '
 id,correct=C.EluneMacroState(); assert(id==121 and not correct)
 picked=false; C.EluneMacroAction(true); assert(not picked)
