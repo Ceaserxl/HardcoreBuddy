@@ -17,6 +17,11 @@ F.reset('MAGE',40,{0,0,31})
 local weak=F.item('INVTYPE_FINGER',{ITEM_MOD_INTELLECT_SHORT=5},4,0)
 local strong=F.item('INVTYPE_FINGER',{ITEM_MOD_INTELLECT_SHORT=10},4,0)
 local candidate=F.item('INVTYPE_FINGER',{ITEM_MOD_INTELLECT_SHORT=20},4,0)
+local doubleLine=GameTooltip.AddDoubleLine
+GameTooltip.AddDoubleLine=function(self,left,...)
+ if left=='' then return end -- WoW can omit entirely empty native lines.
+ return doubleLine(self,left,...)
+end
 F.equip(11,weak); F.equip(12,strong)
 guid='Player-first'; assert(Alt:Capture())
 F.equip(11,strong)
@@ -44,12 +49,17 @@ local binding=2
 C_Item.GetItemInfo=function(link)
  local values={info(link)}; values[14]=binding; return unpack(values,1,14)
 end
+C_Container.GetContainerItemLink=function() return candidate.link end
+C_Container.GetContainerItemInfo=function() return {isBound=false} end
+local function bagAdvice()
+ GameTooltip.hardcoreBuddyAltLocation={bag=0,slot=1}; Alt:Add(GameTooltip)
+end
 ITEM_SOULBOUND='Soulbound'; ITEM_BIND_ON_PICKUP='Binds when picked up'
 GameTooltip:SetHyperlink(candidate.link)
 assert(Alt:Transferable(GameTooltip,candidate.link))
 GameTooltip:AddLine('Vendor prices')
 local vendorLine=GameTooltip:NumLines()
-Alt:Add(GameTooltip); assert(GameTooltip.hardcoreBuddyAlt)
+bagAdvice(); assert(GameTooltip.hardcoreBuddyAlt)
 local gear=GameTooltip.hardcoreBuddyGear
 local prefix=GameTooltip:GetName()..'TextLeft'
 assert(_G[prefix..gear.altStart]:GetText():find('SurvivorShield.tga',1,true),'Alt title includes shield icon')
@@ -57,14 +67,14 @@ assert(gear.altStart<vendorLine and _G[prefix..vendorLine]:GetText()=='Vendor pr
 assert(_G[prefix..(gear.altStart+6)]:GetText()==' ','Alt section ends with a gap')
 G:Add(GameTooltip)
 assert(_G[prefix..gear.altStart]:GetText():find('Alt Advisor',1,true),'Gear refresh preserves Alt section')
-local count=GameTooltip:NumLines(); Alt:Add(GameTooltip); assert(GameTooltip:NumLines()==count,'No duplicate Alt section')
+local count=GameTooltip:NumLines(); bagAdvice(); assert(GameTooltip:NumLines()==count,'No duplicate Alt section')
 GameTooltip:ClearLines(); GameTooltip:SetHyperlink(candidate.link); GameTooltip:AddLine('Soulbound')
-assert(not Alt:Transferable(GameTooltip,candidate.link)); Alt:Add(GameTooltip)
+assert(not Alt:Transferable(GameTooltip,candidate.link)); bagAdvice()
 assert(not GameTooltip.hardcoreBuddyAlt,'Bound BoE instance must not receive advice')
 binding=1; GameTooltip:SetHyperlink(candidate.link); assert(not Alt:Transferable(GameTooltip,candidate.link),'No BoP advice')
 binding=0; GameTooltip:SetHyperlink(candidate.link); assert(Alt:Transferable(GameTooltip,candidate.link),'Nonbinding equipment is eligible')
 binding=nil; assert(not Alt:Transferable(GameTooltip,candidate.link),'Unknown binding is excluded')
-binding=2; Alt:SetEnabled(false); GameTooltip:SetHyperlink(candidate.link); Alt:Add(GameTooltip)
+binding=2; Alt:SetEnabled(false); GameTooltip:SetHyperlink(candidate.link); bagAdvice()
 assert(not GameTooltip.hardcoreBuddyAlt,'Setting disables advice')
 Alt:SetEnabled(true)
 local noUpgrade=G:Read(weak.link); assert(#Alt:Upgrades(noUpgrade)==0,'No equal/downgrade entries')
@@ -100,7 +110,7 @@ GameTooltip.Show=function(self) shows=shows+1; show(self) end
 G:Add(GameTooltip); local before=shows; G:Add(GameTooltip)
 assert(shows==before,'Unchanged gear text never calls Show again')
 A.db.gearAdvisorEnabled=false
-GameTooltip:ClearLines(); GameTooltip:SetHyperlink(candidate.link); Alt:Add(GameTooltip); GameTooltip:Show()
+GameTooltip:ClearLines(); GameTooltip:SetHyperlink(candidate.link); bagAdvice(); GameTooltip:Show()
 assert(GameTooltip.hardcoreBuddyAlt and not GameTooltip.hardcoreBuddyGear)
 G:RefreshTooltips(); assert(GameTooltip:IsShown(),'Gear tooltip preference must not hide enabled Alt advice')
 local previousHook=hooksecurefunc
@@ -109,6 +119,7 @@ hooksecurefunc=function(target,method,callback)
  target[method]=function(self,...) original(self,...); callback(self,...) end
 end
 local hyperlink=GameTooltip.SetHyperlink
+BankButtonIDToInvSlotID=function(index) return 39+index end
 GameTooltip.SetBagItem=function(self,bag,slot)
  hyperlink(self,candidate.link)
  if slot==2 then self:AddLine('Soulbound') end
@@ -118,6 +129,22 @@ GameTooltip:SetBagItem(0,1)
 assert(GameTooltip.hardcoreBuddyAlt and not GameTooltip.hardcoreBuddyAltPending,'Alt advice present before first rendered frame')
 GameTooltip:SetBagItem(0,2)
 assert(not GameTooltip.hardcoreBuddyAlt,'Post-hook sees soulbound instance and excludes it')
+GameTooltip:SetBagItem(-1,1)
+assert(GameTooltip.hardcoreBuddyAlt,'Main bank container is eligible')
+GameTooltip:SetBagItem(5,1)
+assert(GameTooltip.hardcoreBuddyAlt,'Bank bags are eligible')
+F.equip(40,candidate); GameTooltip:SetInventoryItem('player',40)
+assert(GameTooltip.hardcoreBuddyAlt,'Native bank inventory slots are eligible')
+F.equip(11,candidate); GameTooltip:SetInventoryItem('player',11)
+assert(not GameTooltip.hardcoreBuddyAlt,'Equipped gear is excluded')
+GameTooltip:SetHyperlink(candidate.link); Alt:Add(GameTooltip)
+assert(not GameTooltip.hardcoreBuddyAlt,'Links and other tooltips have no bag provenance')
+C_Container.GetContainerItemLink=function() return nil end
+GameTooltip:SetBagItem(0,1); assert(not GameTooltip.hardcoreBuddyAlt,'Missing or stale container contents are excluded')
+C_Container.GetContainerItemLink=function() return candidate.link end
+C_Container.GetContainerItemInfo=function() return {isBound=true} end
+GameTooltip:SetBagItem(0,1); assert(not GameTooltip.hardcoreBuddyAlt,'Native bound flag overrides absent binding text')
+C_Container.GetContainerItemInfo=function() return {isBound=false} end
 hooksecurefunc=previousHook
 local report=G.Report; A.db.gearAdvisorEnabled=true
 for _,labels in ipairs({{'Ring 1','Ring 2'},{'Trinket 1','Trinket 2'},{'Main hand','Both hands'}}) do
@@ -130,5 +157,11 @@ for _,labels in ipairs({{'Ring 1','Ring 2'},{'Trinket 1','Trinket 2'},{'Main han
  assert(_G[prefix..(state.start+9)]:GetText()==' ','Final comparison ends with spacing')
 end
 G.Report=report
+GameTooltip:ClearLines(); hyperlink(GameTooltip,candidate.link)
+local state=GameTooltip.hardcoreBuddyGear
+local region=GameTooltip:GetName()..'TextLeft'..state.altStart
+local savedRegion=_G[region]; _G[region]=nil
+bagAdvice(); assert(GameTooltip.hardcoreBuddyAlt,'Unavailable reserved regions safely fall back without a hover error')
+_G[region]=savedRegion
 print('PASS: stable repeated refresh, independent Alt visibility and synchronous binding-safe native setter hooks.')
 ''')

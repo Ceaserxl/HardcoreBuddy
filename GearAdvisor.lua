@@ -634,7 +634,12 @@ function G:Add(tip)
                 left:SetText(line[1]); left:SetTextColor(unpack(leftColor)); left:Show()
                 right:SetText(line[2]); right:SetTextColor(unpack(color)); right:SetShown(line[2]~="")
             elseif not reuse then
-                if tip.AddDoubleLine then tip:AddDoubleLine(line[1],line[2],leftColor[1],leftColor[2],leftColor[3],color[1],color[2],color[3])
+                if tip.AddDoubleLine then
+                    -- Native tooltips may skip empty AddDoubleLine calls entirely.
+                    -- Allocate the line first, then collapse unused fields.
+                    tip:AddDoubleLine(line[1]~="" and line[1] or " ",line[2],leftColor[1],leftColor[2],leftColor[3],color[1],color[2],color[3])
+                    local allocated=name and _G[name.."TextLeft"..(start+i-1)]
+                    if line[1]=="" and allocated then allocated:SetText(""); allocated:Hide() end
                 else tip:AddLine(line[1]..(line[2]~="" and ("  "..line[2]) or ""),unpack(color)) end
             end
         end
@@ -645,7 +650,11 @@ function G:Add(tip)
         local altStart=reuse and state.altStart or start+#lines
         local altCount=reuse and state.altCount or (A.AltAdvisor and A.AltAdvisor:LineCapacity() or 0)
         if not reuse then
-            for _=1,altCount do tip:AddDoubleLine("","") end
+            for i=1,altCount do
+                tip:AddDoubleLine(" ","")
+                local left=name and _G[name.."TextLeft"..(altStart+i-1)]
+                if left then left:SetText(""); left:Hide() end
+            end
         end
         tip.hardcoreBuddyGear={link=link,start=start,revision=self.revision,report=cacheable and report or nil,
             altStart=altStart,altCount=altCount}

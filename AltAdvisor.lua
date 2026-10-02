@@ -107,10 +107,24 @@ function Alt:LineCapacity()
     end
     return count>0 and 1+count*3 or 0
 end
+function Alt:IsStoredItem(tip,link)
+    local location=tip.hardcoreBuddyAltLocation
+    if not location then return false end
+    if location.inventory then
+        return GetInventoryItemLink and GetInventoryItemLink("player",location.inventory)==link
+    end
+    local bag=location.bag
+    if type(bag)~="number" or (bag~=-1 and (bag<0 or bag>(NUM_BAG_SLOTS or 4)+(NUM_BANKBAGSLOTS or 7))) then return false end
+    local getLink=C_Container and C_Container.GetContainerItemLink or GetContainerItemLink
+    if not getLink or getLink(bag,location.slot)~=link then return false end
+    local info=C_Container and C_Container.GetContainerItemInfo and C_Container.GetContainerItemInfo(bag,location.slot)
+    if info and info.isBound then return false end
+    return true
+end
 function Alt:Add(tip)
     if self.busy or not A.db or A.db.altAdvisorEnabled==false or not G:IsEnabled() or tip.hardcoreBuddyAlt or not tip.GetItem then return end
     local _,link=tip:GetItem()
-    if not link or not self:Transferable(tip,link) then return end
+    if not link or not self:IsStoredItem(tip,link) or not self:Transferable(tip,link) then return end
     self.busy=true
     local ok,err=pcall(function()
         local item=self:Candidate(link); if not item then return end
@@ -125,11 +139,18 @@ function Alt:Add(tip)
         end
         local gear=tip.hardcoreBuddyGear
         local reserved=gear and gear.altStart and (gear.altCount or 0)>=#lines
+        local prefix=tip:GetName()
+        if reserved then
+            for i=1,#lines do
+                if not _G[prefix.."TextLeft"..(gear.altStart+i-1)] or not _G[prefix.."TextRight"..(gear.altStart+i-1)] then
+                    reserved=false; break
+                end
+            end
+        end
         if not reserved then tip:AddLine(" ") end
         for i,line in ipairs(lines) do
             local leftColor,rightColor=line[3],line[4] or line[3]
             if reserved then
-                local prefix=tip:GetName()
                 local left=_G[prefix.."TextLeft"..(gear.altStart+i-1)]
                 local right=_G[prefix.."TextRight"..(gear.altStart+i-1)]
                 left:SetText(line[1]); left:SetTextColor(unpack(leftColor)); left:Show()
@@ -150,34 +171,32 @@ end
 local function register(tip)
     if not tip or tip.hardcoreBuddyAltHook then return end
     tip.hardcoreBuddyAltHook=true
-    -- Finish advice within the native setter, before its first rendered frame.
-    -- A delayed append on every native tooltip refresh makes the height jump.
-    -- Post-hooks still see the completed instance-specific binding lines.
     if hooksecurefunc then
-        for _,method in ipairs({"SetBagItem","SetInventoryItem","SetHyperlink","SetMerchantItem",
-            "SetAuctionItem","SetAuctionSellItem","SetLootItem","SetQuestItem","SetQuestLogItem","SetTradeSkillItem"}) do
-            if type(tip[method])=="function" then
-                hooksecurefunc(tip,method,function(t)
-                    t.hardcoreBuddyAltPending=nil; Alt:Add(t)
-                end)
-            end
+        if type(tip.SetBagItem)=="function" then
+            hooksecurefunc(tip,"SetBagItem",function(t,bag,slot)
+                t.hardcoreBuddyAltLocation={bag=bag,slot=slot}
+                Alt:Add(t)
+            end)
+        end
+        if type(tip.SetInventoryItem)=="function" then
+            hooksecurefunc(tip,"SetInventoryItem",function(t,unit,slot)
+                if unit~="player" or not BankButtonIDToInvSlotID then return end
+                for index=1,(NUM_BANKGENERIC_SLOTS or 28) do
+                    if BankButtonIDToInvSlotID(index)==slot then
+                        t.hardcoreBuddyAltLocation={inventory=slot}
+                        Alt:Add(t); return
+                    end
+                end
+            end)
         end
     end
-    -- Fallback for tooltip providers which do not use one of the native setters.
-    if not tip.HasScript or tip:HasScript("OnTooltipSetItem") then tip:HookScript("OnTooltipSetItem",function(t) t.hardcoreBuddyAltPending=.02 end) end
-    tip:HookScript("OnUpdate",function(t,elapsed)
-        if not t.hardcoreBuddyAltPending then return end
-        t.hardcoreBuddyAltPending=t.hardcoreBuddyAltPending-elapsed
-        if t.hardcoreBuddyAltPending<=0 then t.hardcoreBuddyAltPending=nil; Alt:Add(t) end
+    tip:HookScript("OnTooltipCleared",function(t)
+        t.hardcoreBuddyAlt=nil; t.hardcoreBuddyAltLocation=nil
     end)
-    tip:HookScript("OnTooltipCleared",function(t) t.hardcoreBuddyAlt=nil; t.hardcoreBuddyAltPending=nil end)
-    tip:HookScript("OnHide",function(t) t.hardcoreBuddyAltPending=nil end)
+    tip:HookScript("OnHide",function(t) t.hardcoreBuddyAltLocation=nil end)
 end
 Alt.RegisterTooltip=register
 for tip in pairs(G.tooltips) do register(tip) end
-if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall and Enum and Enum.TooltipDataType then
-    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item,function(tip) if G.tooltips[tip] then tip.hardcoreBuddyAltPending=.02 end end)
-end
 local events=CreateFrame("Frame"); Alt.events=events
 for _,event in ipairs({"PLAYER_ENTERING_WORLD","PLAYER_EQUIPMENT_CHANGED","PLAYER_LEVEL_UP","PLAYER_TALENT_UPDATE",
     "CHARACTER_POINTS_CHANGED","SPELLS_CHANGED","PLAYER_LOGOUT","GET_ITEM_INFO_RECEIVED"}) do events:RegisterEvent(event) end

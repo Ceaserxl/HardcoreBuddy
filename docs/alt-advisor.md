@@ -8,7 +8,10 @@ each character once after installing this feature, then log out normally to pers
 its equipment. Subsequent visits refresh it. Reset AddOn clears these snapshots too.
 
 `HardcoreBuddy | Alt Advisor` appears below item advice only for BoE or nonbinding
-equipment that improves another cached character on the same realm and faction.
+equipment in the current character's bags or bank that improves another cached
+character on the same realm and faction. Native container/bank tooltip sources
+must match the actual slot's item link. Auction, vendor, chat-link, equipped-gear
+and offline cached bank tooltips do not show Alt Advisor.
 The native tooltip's binding lines are checked after the item tooltip finishes
 building, so an already-soulbound BoE is excluded. BoP, quest-bound and unknown
 binding types are excluded. Special profession/reputation/race/class-list requirements
