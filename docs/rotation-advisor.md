@@ -57,7 +57,7 @@ Pyroblast remains limited to Presence of Mind opportunities.
 Wand finishing reads the equipped wand's damage and speed, estimates whole shots,
 and considers the five-second mana-regeneration rule. It permits a quick finish
 or a short low-mana regeneration window when healthy and safe; unknown wand data,
-nearby attackers, movement, recent damage and Clearcasting suppress this choice.
+nearby attackers, recent damage and Clearcasting suppress this choice.
 An approaching attacker additionally needs confirmed distance and a lasting slow.
 Neither finishing nor fallback tells the player to toggle an active Shoot off.
 
@@ -146,6 +146,14 @@ the supply list refreshes every five seconds. Bank-only items and tracking targe
 of zero are excluded. Item buttons and resolved item macros use the same gold glow.
 The assistant neither uses items nor auto-dismounts or stops movement.
 
+Tracked Well Fed and mana-regeneration food also highlight at full health/mana
+when the lasting food buff is missing or has at most 60 seconds remaining.
+Eating suppresses repeat prompts before the lasting buff applies. Only one buff
+food is highlighted, preferring the Supplies Essentials choice, then higher level.
+Buff names are localized through Classic spell data:
+[Well Fed](https://www.wowhead.com/classic/spell=19705/well-fed) and
+[Mana Regeneration](https://www.wowhead.com/classic/spell=18194/mana-regeneration).
+
 ## Validation
 
 `tests/run_rotation_advisor.py` exercises every level with Fire/Frost/Arcane talent
@@ -164,3 +172,104 @@ actual client API timing, visual quality or unseen enemy geometry.
 Movement alone does not promote Fire Blast or Cone of Cold over a valid filler.
 Mounted characters retain preparation and recovery previews, including mana gems
 and Evocation; the player must dismount to perform actions that require it.
+
+Buff refresh colors now use actual aura duration: blue at or below five minutes remaining,
+gold when missing. This applies to Intellect, armor, Barrier, tracked elixirs,
+scrolls and food buffs, replacing fixed 60-second/five-second refresh windows.
+Unknown-duration active buffs do not get an estimated early warning.
+
+## Rotation diagnostics
+
+Logging starts automatically when the character data is ready. Every rotation
+update is recorded, with unchanged fields omitted through recursive deltas.
+There is no sample-count cap. Logging runs in the background without diagnostics
+controls in Rotation Advisor. `/hcb rotation log mark` records a searchable `USER_MARK` and
+`/hcb rotation log status` prints the saved location.
+
+On UI startup, the prior `rotationDiagnosticsPrevious` moves to
+`rotationDiagnosticsPrevious2`, and the last nonempty capture moves to `rotationDiagnosticsPrevious`
+and a fresh `rotationDiagnostics` begins. World transitions do not start a new
+session. Logout records a final sample. WoW flushes these per-character
+SavedVariables on `/reload` or logout; the addon does not create arbitrary files.
+At most three sessions are retained: the current log and two previous logs.
+The oldest is discarded on the next reload; empty sessions do not evict useful logs.
+
+Open `_classic_era_/WTF/Account/<ACCOUNT>/<Realm>/<Character>/SavedVariables/HardcoreBuddy.lua`
+and send the whole file after reloading. WoW writes the ending session under
+`rotationDiagnostics` before the UI restarts; the new in-memory session and
+`rotationDiagnosticsPrevious` and `rotationDiagnosticsPrevious2` are written on the next save. No manual capture,
+large in-game textbox, or automatic reload is needed.
+
+Version 2 entries contain a monotonic `time` and recursive `delta`: `fields`
+updates table keys, `value` replaces a scalar, and `remove=true` deletes a key.
+Replaying from the first entry reconstructs each full sample. Logs include raw
+and selected advice, lock state, spell estimates/readiness, cast timing, mana and
+range forecasts, buff durations, highlighted action slots and colors, UI errors,
+and a stronger Intellect elixir when it blocks the learned spell.
+
+Classic Intellect strengths are +2/+7/+15/+22/+31 for learned ranks 1–5.
+[Lesser Intellect](https://www.wowhead.com/classic/spell=3166/lesser-intellect)
+gives +6 and [Greater Intellect](https://www.wowhead.com/classic/spell=11396/greater-intellect)
+gives +25. While an equal or stronger elixir is active, the weaker class buff is
+not highlighted, including during the elixir's final five minutes.
+
+Opening offensive casts retain damage advice before combat starts, including
+the cast handoff. Ready mana gems remain auxiliary through movement and casts.
+Non-rotation interactions do not create damage plans or erase forecast mana
+when their power cost is unavailable. Unchanged false diagnostic values are
+not written again; every update is still recorded.
+
+Target death-time forecasts require at least four seconds and two observed
+health losses. An eight-second rolling trend includes downtime between hits;
+healing, target changes, and observation gaps reset confidence. Diagnostic
+snapshots record the trend duration, loss count, and damage rate. This avoids
+treating a single spell burst as sustained damage and preserves cast-start locks.
+
+The next live capture exposed Fire immunity and a finishing-score edge case.
+An immune pure-damage Fire Blast now temporarily blocks Fire damage spells on
+that target (15 seconds); successful Fire damage clears the school evidence.
+Control immunity and ordinary resists do not supply school immunity. Casts
+whose estimated direct damage can finish the target are exempt from the short
+death-time score penalty. Spell sent/success/failure events now record spell ID,
+cast token, and the sent target name to help identify instant-cast errors.
+
+Solo Shatter leveling now considers proactive Rank 1 Frost Nova on a nearby
+attacker even at healthy HP, rather than waiting for the emergency threshold.
+It requires learned Shatter, usable Frostbolt, safe nearby enemies, and enough
+remaining target HP to justify the root. Grouped fights, bosses, existing
+freezes, immunity, low mana, and active channels retain their safeguards.
+This non-emergency choice follows the cast-start lock. Logs now include actual
+talent ranks and readiness, school damage/crit, target level, grouping, hit,
+haste, vulnerability stacks, and target combat context.
+
+Buff warning glows now begin at five minutes (300 seconds) remaining for self buffs and
+tracked consumable buffs, including elixirs, scrolls, and food. This replaces
+the previous percentage threshold. Expiring buffs stay blue; missing buffs
+stay gold. Presence-only buffs with unknown expiry do not warn prematurely.
+
+Consumable preparation is now provided by ConsumableBuffs.lua, a shared
+module independent of Mage rotation rules. It uses each class's supply plan
+and item restrictions, carried stock, live aura expiry and cooldowns. All
+Classic classes can enable Assistant Mode for preparation highlights; Mage
+is still the only supported combat rotation. Mana-free classes do not get
+water or mana-food advice. Shifted Druids check mana rather than energy/rage.
+The shared refresh threshold remains five minutes, with blue warning glows
+and gold missing-buff glows. Disabled still clears all HCB highlights.
+
+## Class module layout and movement policy
+
+Rotation/Global.lua owns the class registry, common readiness and validity
+gates, learned-rank discovery, cooldown/power/range forecasts, cast-start
+locking, diagnostics, and native action-bar highlights. The nine class files
+are Warrior.lua, Paladin.lua, Hunter.lua, Rogue.lua, Priest.lua, Shaman.lua,
+Mage.lua, Warlock.lua, and Druid.lua in Rotation/. Mage.lua owns Mage priorities,
+state interpretation, talents, special ranks, resources and immunity rules.
+The other eight registered modules retain shared consumable preparation only;
+their combat profiles are disabled. ConsumableBuffs.lua remains independent.
+
+Movement is telemetry only. No class recommendation or plan-retention rule
+checks movement. Evocation, Pyroblast opening, ground AoE, wand finishing,
+Presence of Mind, and instant fallback advice use the same non-movement
+conditions while walking or standing. This does not change the client's
+casting requirements. Dead/taxi, range, resources, cooldowns, immunity, active
+channels, crowd control, and observed-enemy safety gates remain in effect.

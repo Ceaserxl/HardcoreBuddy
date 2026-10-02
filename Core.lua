@@ -81,6 +81,8 @@ function addon:HandleSlashCommand(message)
         self:ToggleWindow()
     elseif command == "auction debug" then
         self.AuctionDiagnostics:Show()
+    elseif command:match("^rotation log") then
+        self.RotationAdvisor:Diagnostics(command:match("^rotation log%s*(.*)$"))
     elseif command == "settings" then
         self:OpenSettings()
     elseif command == "health" then

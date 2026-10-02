@@ -47,9 +47,35 @@ do
     R:ObserveCombat(); s=R:Snapshot(); check(s.spells.frostbolt.immune and s.spells.slowbolt.immune,'Observed immunity applies to all ranks of Frostbolt')
     units.target.guid='other'; s=R:Snapshot(); check(not s.spells.frostbolt.immune,'Immunity does not leak to another enemy')
     units.target.guid='enemy'; R.lastDamage=nil; R:Snapshot()
+    local oldFireball=R.spells.fireball
+    R.spells.fireball={id=133,name='Fireball',castTime=1.5}
+    local blast=R.spells.fireblast
+    check(blast~=nil,'Live fixture has learned Fire Blast')
+    event={0,'SPELL_MISSED',false,'player','Player',0,0,'enemy','Enemy',0,0,blast.id,'Fire Blast',4,'IMMUNE'}
+    R:ObserveCombat(); s=R:Snapshot()
+    check(s.spells.fireblast.immune and s.spells.fireball.immune,'Pure damage immunity blocks the Fire school')
+    check(not s.spells.frostbolt.immune,'Fire immunity leaves Frostbolt available')
+    units.target.guid='fire-other'; s=R:Snapshot()
+    check(not s.spells.fireblast.immune and not s.spells.fireball.immune,'School immunity never leaks to another target')
+    units.target.guid='enemy'; R:Snapshot()
+    R:ObserveCombat(); now=now+16; s=R:Snapshot()
+    check(not s.spells.fireball.immune,'Observed school immunity expires and permits reassessment')
+    R:ObserveCombat()
+    event={0,'SPELL_DAMAGE',false,'player','Player',0,0,'enemy','Enemy',0,0,blast.id,'Fire Blast',4,100}
+    R:ObserveCombat(); s=R:Snapshot()
+    check(not s.spells.fireblast.immune and not s.spells.fireball.immune,'Successful Fire damage clears stale immunity')
+    event={0,'SPELL_MISSED',false,'player','Player',0,0,'enemy','Enemy',0,0,blast.id,'Fire Blast',4,'RESIST'}
+    R:ObserveCombat(); s=R:Snapshot()
+    check(not s.spells.fireball.immune,'A normal resist does not imply school immunity')
+    R.spells.fireball=oldFireball
+    R.healthSample=nil; R:Snapshot()
     now=now+1; units.target.health=4500; s=R:Snapshot()
-    check(s.timeToDie==9,'Target health trend estimates remaining fight duration')
-    now=now+1; units.target.health=5000; s=R:Snapshot(); check(not s.timeToDie,'Healing invalidates stale kill-time estimates')
+    check(not s.timeToDie,'One burst does not establish target death time')
+    now=now+2; units.target.health=4000; s=R:Snapshot()
+    check(not s.timeToDie,'Two hits still require four seconds of observation')
+    now=now+1; s=R:Snapshot()
+    check(s.timeToDie==16,'Sustained target trend includes time between spell hits')
+    now=now+.2; units.target.health=5000; s=R:Snapshot(); check(not s.timeToDie,'Healing immediately invalidates kill-time estimates')
     units.target.x=32; range[837]=false; R.approach=nil; R:Snapshot()
     now=now+.2; units.target.x=31; s=R:Snapshot()
     check(s.spells.frostbolt.approaching,'Mage highlights before an approaching enemy reaches range')
@@ -179,7 +205,7 @@ do
     GetInventoryItemID=function() return 1 end
     UnitRangedDamage=function() return 1.5,40,60 end
     local function resources()
-        local s={class='MAGE',time=200,spells={ruby={}}}; R:MageResources(s); return s
+        local s={class='MAGE',time=200,spells={ruby={}}}; R:Class("MAGE").Resources(R,s); return s
     end
     local s=resources(); check(s.wandSpeed==1.5 and s.wandDamage==45,'Live wand damage read conservatively')
     check(s.spells.managem and s.spells.managem.item and not s.prepareGem,'Carried gem becomes item recommendation')
@@ -207,7 +233,7 @@ do
     local oldSnapshot,oldAction,oldView=R.Snapshot,GetActionInfo,R.RefreshView
     local s=state({'frostbolt','intellect','barrier','ruby'})
     s.combat=false; s.moving=true; s.spells.ruby.cost=1200
-    s.buffs.intellect=100; s.buffs.barrier=100; s.targetGUID='movement-test'; s.time=now
+    s.buffs.intellect=301; s.buffs.barrier=301; s.targetGUID='movement-test'; s.time=now
     R.Snapshot=function() return s end; R.RefreshView=function() end
     GetActionInfo=function(slot)
         return 'spell',slot==1 and s.spells.frostbolt.id or slot==2 and s.spells.barrier.id or s.spells.intellect.id
@@ -224,7 +250,7 @@ do
     s.buffs.intellect=nil; s.buffs.barrier=nil; R:Update()
     check(R.primaryHighlightCount==2 and R.optionalHighlightCount==0,'OOC Intellect and Barrier are simultaneous gold primaries')
     s.combat=true; R:Update()
-    check(glow.style=='primary' and R.highlights[other].style=='optional' and R.highlights[lower].style=='optional',
+    check(glow.style=='primary' and R.highlights[other].style=='primary' and R.highlights[lower].style=='primary',
         'One gold damage action coexists with red Barrier and Intellect')
     check(R.primaryHighlightCount==1 and R.optionalHighlightCount==2,'Primary and optional counts remain separate')
     local barrierStarts=R.highlights[other].ProcStartAnim.plays
@@ -232,13 +258,13 @@ do
     check(R.highlights[other]:IsShown() and R.highlights[lower]:IsShown(),'Missing buffs persist through movement, combat and casts')
     s.moving=false; R:Update()
     check(glow:IsShown() and R.highlights[other].ProcStartAnim.plays==barrierStarts,'Stopping leaves primary and optional animations intact')
-    s.buffs.intellect=100; R:Update()
+    s.buffs.intellect=1800; R:Update()
     check(not R.highlights[lower]:IsShown() and R.highlights[other]:IsShown(),'Applying one buff clears only its optional highlight')
     s.casting=false; s.attackingPlayer=true; s.playerHealth=70; R:Update()
     check(R.primary==s.spells.barrier and R.highlights[other].style=='primary','Urgent Barrier is gold, not duplicate red')
     check(not glow:IsShown() and R.primaryHighlightCount==1,'Urgent action replaces the only primary')
     s.playerHealth=100; s.attackingPlayer=false; R:Update()
-    check(R.highlights[other].style=='optional' and glow:IsShown(),'Barrier returns to optional when emergency passes')
+    check(R.highlights[other].style=='primary' and glow:IsShown(),'Barrier returns to optional when emergency passes')
     s.dead=true; R:Update(); check(R.highlightCount==0,'Death clears primary and all optional highlights')
     s.dead=false; R:Update(); R:SetMode('disabled')
     check(R.highlightCount==0 and #R.optionalActions==0,'Disabled clears every recommendation')
@@ -259,25 +285,416 @@ do
         GetItemInfo=function(id) return 'Item'..id,nil,nil,nil,nil,nil,nil,nil,nil,123 end,
         IsUsableItem=function() return true end}
     C_Container={GetItemCooldown=function() return cooling and 200 or 0,cooling and 120 or 0,1 end}
-    A.Supplies.Build=function() return rows end; R.Auras=function() return active end
+    A.Supplies.Build=function() return rows end; R.Auras=function() return active,{Buff3=1200,Buff4=1200,['Localized Well Fed']=1200,['Localized Mana Regeneration']=1200} end
     R.supplyAdviceAt=nil
     local s={class='MAGE',level=40,time=200,buffs={},spells={},playerHealth=50,powerPercent=50}
     check(#R:OutOfCombatSupplies(s)==4,'Food drink elixir and scroll can be recommended together')
-    active={Buff1=20,Buff2=20,Buff3=61,Buff4=61}
+    check(R.supplyChecks[2].owned==1 and R.supplyChecks[2].eligible and R.supplyChecks[2].usable,'Supply trace records water ownership and availability')
+    active={Buff1=20,Buff2=20,Buff3=301,Buff4=301}
     check(#R:OutOfCombatSupplies(s)==0,'Active recovery and healthy buff durations suppress repeated use')
-    active.Buff3=60; active.Buff4=60
-    check(#R:OutOfCombatSupplies(s)==2,'Long consumable buffs refresh in final minute')
+    active.Buff3=300; active.Buff4=300
+    check(#R:OutOfCombatSupplies(s)==2,'Long consumable buffs refresh in final five minutes')
     owned[3]=0; rows[4].tracking=false
     check(#R:OutOfCombatSupplies(s)==0,'Missing or untracked consumables never highlighted')
     active={}; s.playerHealth=100; s.powerPercent=100
     check(#R:OutOfCombatSupplies(s)==0,'Full resources do not suggest recovery')
     s.playerHealth=50; s.powerPercent=50; cooling=true
     check(#R:OutOfCombatSupplies(s)==0,'Consumable cooldowns respected')
+    check(not R.supplyChecks[2].eligible and R.supplyChecks[2].cooldownDuration==120,'Supply trace explains cooldown suppression')
     cooling=false; s.combat=true
     check(#R:OutOfCombatSupplies(s)==0,'Preparation items cannot enter combat recommendations')
+    s.combat=false; s.playerHealth=100; s.powerPercent=100
+    local oldFoodInfo=spellData[19705]; local oldManaInfo=spellData[18194]
+    spellData[19705]={name='Localized Well Fed'}; spellData[18194]={name='Localized Mana Regeneration'}
+    rows[#rows+1]={itemId=5,family='wellfed',tracking=true,priority='Optional',item={level=45}}
+    rows[#rows+1]={itemId=6,family='manafood',tracking=true,priority='Essentials',item={level=30}}
+    owned[5]=1; owned[6]=1
+    local food=R:OutOfCombatSupplies(s)
+    check(#food==1 and food[1].id==6,'One class-preferred buff food is suggested even at full health and mana')
+    active['Localized Well Fed']=301
+    check(#R:OutOfCombatSupplies(s)==0,'Lasting Well Fed suppresses food independently of eating aura')
+    active['Localized Well Fed']=300
+    check(#R:OutOfCombatSupplies(s)==1,'Buff food refresh appears in final five minutes')
+    active.Buff6=20
+    -- Both food items share the same eating spell in the real client.
+    local originalSpell=C_Item.GetItemSpell
+    C_Item.GetItemSpell=function(id) if id==5 or id==6 then return 'Eating',1000 end return originalSpell(id) end
+    active.Eating=20
+    check(#R:OutOfCombatSupplies(s)==0,'Eating blocks repeated buff-food suggestions before Well Fed applies')
+    active={['Localized Mana Regeneration']=900}
+    check(#R:OutOfCombatSupplies(s)==0,'Mana food lasting buff is also respected')
+    active={}; owned[5]=0; owned[6]=0
+    check(#R:OutOfCombatSupplies(s)==0,'Buff food requires carried stock')
+    spellData[19705]=oldFoodInfo; spellData[18194]=oldManaInfo
     C_Item,C_Container,A.Supplies.Build,R.Auras=oldItem,oldContainer,oldBuild,oldAuras
     R.supplyAdviceAt=nil; R.supplyAdviceRows=nil
 end
-MOCK.class='ROGUE'; check(R:Mode()=='disabled','Old Rogue saved mode no longer enables removed prototype')
+MOCK.class='ROGUE'; check(R:Mode()=='assistant' and not R.supported.ROGUE,'Rogue shares preparation without reviving its removed combat prototype')
 MOCK.class='MAGE'; R:Update()
+do
+    local actionInfo=GetActionInfo
+    GetActionInfo=function() return 'spell',837 end
+    R:Highlight({id=837,buffColor='refresh'},false)
+    check(glow.style=='refresh' and glow.ProcLoopFlipbook.vertexColor[3]==1 and glow.ProcLoopFlipbook.vertexColor[1]==.15,'Expiring buff has blue animation')
+    local starts=glow.ProcStartAnim.plays
+    R:Highlight({id=837,buffColor='primary'},true)
+    check(glow.style=='primary' and not glow.ProcLoopFlipbook.desaturated,'Missing buff is gold even in optional group')
+    check(glow.ProcStartAnim.plays==starts,'Blue-to-gold transition does not restart animation')
+    GetActionInfo=actionInfo; R:Update()
+end
+do
+    check(R.logging,'Rotation diagnostics start automatically')
+    local oldIntellect=R.spells.intellect; local oldAuras=auras
+    R.spells.intellect={id=1461,name='Arcane Intellect'}
+    auras={playerHELPFUL={{name='Greater Intellect',spellId=11396,expirationTime=now+1,duration=3600}}}
+    local snap=R:Snapshot()
+    check(snap.intellectBlocked and snap.intellectBlocker.power==25,'Greater Intellect blocks weaker learned rank until expiration')
+    check(not optional(snap,'intellect'),'Blocked Intellect does not highlight even during refresh window')
+    R.spells.intellect={id=10157,name='Arcane Intellect'}
+    snap=R:Snapshot(); check(not snap.intellectBlocked,'Rank five Intellect is stronger than the elixir')
+    R.spells.intellect={id=1459,name='Arcane Intellect'}
+    auras.playerHELPFUL[1]={name='Lesser Intellect',spellId=3166,expirationTime=now+100,duration=3600}
+    snap=R:Snapshot(); check(snap.intellectBlocked,'Lesser Intellect blocks rank one')
+    auras.playerHELPFUL={}; snap=R:Snapshot(); check(not snap.intellectBlocked,'Expired elixir restores normal Intellect recommendation')
+    R.spells.intellect=oldIntellect; auras=oldAuras
+    local log=A.characterDB.rotationDiagnostics
+    check(log.version==2 and log.count>0,'Current session is a persisted delta trace')
+    local total=log.count
+    R:TraceRotation('poll'); R:TraceRotation('poll')
+    check(log.count==total+2,'Every prediction sample is retained')
+    local oldPrint=A.Print; A.Print=function() end
+    R:Diagnostics('mark')
+    local patch=log.entries[log.count].delta
+    check(patch.fields.event.value=='USER_MARK','Automatic log supports issue markers')
+    for i=1,305 do R:TraceRotation('retention-test',true) end
+    check(log.count>300 and #log.entries==log.count,'Complete session is not truncated to a ring buffer')
+    local original=log
+    R.loggingInitialized=nil; R:BeginDiagnostics()
+    check(A.characterDB.rotationDiagnosticsPrevious==original and A.characterDB.rotationDiagnostics.count==0,'Reload initialization archives prior session and creates fresh log')
+    local current=A.characterDB.rotationDiagnostics
+    local secondPrevious=A.characterDB.rotationDiagnosticsPrevious2
+    R:BeginDiagnostics(); check(A.characterDB.rotationDiagnostics==current,'World transitions cannot rotate the log twice')
+    check(A.characterDB.rotationDiagnosticsPrevious2==secondPrevious,'World transitions preserve second previous capture')
+    R:Update(); check(current.count==1 and current.entries[1].delta.fields.state,'New session starts with full state')
+    local function replay(before,patch)
+        if not patch then return before end
+        if patch.remove then return nil end
+        if patch.fields then
+            local out=type(before)=='table' and before or {}
+            for key,value in pairs(patch.fields) do out[key]=replay(out[key],value) end
+            return out
+        end
+        return patch.value
+    end
+    local restored=replay(nil,current.entries[1].delta)
+    check(restored.state.power==R.snapshot.power and restored.selected.id==R.current.id,'Full sample can be reconstructed from first delta')
+    local savedPower=R.snapshot.power
+    R.snapshot.power=1; R:TraceRotation('delta-test',true)
+    restored=replay(restored,current.entries[2].delta)
+    check(restored.state.power==1 and restored.event=='delta-test','Later delta preserves and changes the correct fields')
+    R:TraceRotation('delta-test',true)
+    check(current.entries[3].delta==nil,'Unchanged false fields do not inflate every log sample')
+    R.snapshot.power=savedPower
+    R.events.scripts.OnEvent(R.events,'PLAYER_LOGOUT')
+    check(current.entries[current.count].delta.fields.event.value=='PLAYER_LOGOUT','Logout records final state')
+    R:Diagnostics('off'); check(R.logging,'Legacy off command cannot silently disable automatic capture')
+    -- Simulate enough reloads to evict the oldest capture, preserving samples.
+    local discarded=A.characterDB.rotationDiagnosticsPrevious
+    R.loggingInitialized=nil; R:BeginDiagnostics()
+    check(A.characterDB.rotationDiagnosticsPrevious==current and A.characterDB.rotationDiagnosticsPrevious2==discarded,'Second reload retains two completed sessions')
+    R:Update(); local third=A.characterDB.rotationDiagnostics
+    R.loggingInitialized=nil; R:BeginDiagnostics()
+    check(A.characterDB.rotationDiagnosticsPrevious==third and A.characterDB.rotationDiagnosticsPrevious2==current,'Third reload evicts the oldest completed session')
+    check(A.characterDB.rotationDiagnostics~=third,'Retention includes a fresh current session')
+    R.loggingInitialized=nil; R:BeginDiagnostics()
+    check(A.characterDB.rotationDiagnosticsPrevious==third and A.characterDB.rotationDiagnosticsPrevious2==current,'Empty sessions do not evict useful captures')
+    R:Update()
+    A.Print=oldPrint
+end
+
+-- First live log: opening pull casts must not be masked by drinking advice.
+do
+    local oldSnapshot,oldSupplies,oldView=R.Snapshot,R.OutOfCombatSupplies,R.RefreshView
+    local s=state({'frostbolt'}); s.combat=false; s.time=100; s.targetGUID='pull'
+    s.casting=true; s.castToken='cast:pull'; s.castEnd=103; s.rotationCast=true
+    R.Snapshot=function() return s end; R.RefreshView=function() end
+    R.OutOfCombatSupplies=function() return {{id=1645,item=true,name='Moonberry Juice'}} end
+    R.castPlan=nil; R:Update('UNIT_SPELLCAST_START')
+    check(R.primary==s.spells.frostbolt and #R.oocActions==0,'Opening Frostbolt stays primary before combat flag is set')
+    s.casting=false; s.castToken=nil; s.rotationCast=nil; s.time=103.1
+    R:Update('UNIT_SPELLCAST_STOP')
+    check(R.primary==s.spells.frostbolt,'Opening cast handoff preserves damage instead of water')
+    s.combat=true; s.casting=true; s.castToken='cast:second'; s.castEnd=106
+    s.spells.managem={id=5513,item=true,restore=650,ready=true,usable=true}; s.power=3000
+    R:Update('UNIT_SPELLCAST_START'); local primary=R.primary
+    check(R.optionalActions[1]==s.spells.managem,'Mana gem remains auxiliary during damage cast')
+    s.casting=false; s.castToken=nil; s.time=106.1; R:Update('UNIT_SPELLCAST_STOP')
+    check(R.primary==primary and R.optionalActions[1]==s.spells.managem,'Gem does not steal primary at cast completion')
+    R.castPlan=nil; s.rotationCast=false; s.castToken='cast:opening'; s.castEnd=111
+    R:StabilizeRecommendation(s,nil,'',false,false)
+    check(R.castPlan==nil,'Opening interaction cannot create an empty damage plan')
+    R.Snapshot,R.OutOfCombatSupplies,R.RefreshView=oldSnapshot,oldSupplies,oldView
+    R.castPlan=nil; R:Update()
+end
+
+
+-- Replay the short burst which previously forced a premature Scorch choice.
+do
+    local sample=R.healthSample
+    R.healthSample=nil
+    local function observe(t,hp,guid)
+        local snapshot={time=t,targetHP=hp,validTarget=true}
+        R:TargetLife(snapshot,guid or 'trend-regression')
+        return snapshot
+    end
+    observe(177.05,1604)
+    observe(178.502,1224)
+    observe(180.671,825)
+    local snapshot=observe(181.068,825)
+    check(snapshot.timeToDie>2.5,'Recorded burst does not predict death before the next Frostbolt')
+    snapshot=observe(181.292,825)
+    check(snapshot.timeToDie>2.5,'Recorded cast-start trend preserves time for Frostbolt')
+    local decision=state({'frostbolt','scorch'},41)
+    decision.targetHP=825; decision.timeToDie=snapshot.timeToDie
+    decision.talents.frostbolt=5
+    local score=M.Estimate(decision,'frostbolt').score
+    decision.timeToDie=nil
+    check(M.Estimate(decision,'frostbolt').score==score,'Recorded trend does not penalize the full Frostbolt cast')
+    local before=snapshot.timeToDie
+    snapshot=observe(182.292,825)
+    check(snapshot.timeToDie>before,'Between-hit downtime lengthens the estimate')
+    snapshot=observe(183,900)
+    check(not snapshot.timeToDie,'Healing resets rolling health history')
+    observe(184,800); observe(187,600)
+    snapshot=observe(189,600)
+    check(snapshot.timeToDie~=nil,'Idle intervals between spells retain the rolling trend')
+    snapshot=observe(192,600); snapshot=observe(194,600)
+    check(not snapshot.timeToDie,'Stalled damage stops publishing stale death predictions')
+    R.healthSample=nil
+    observe(184,800); observe(187,600)
+    snapshot=observe(187.2,600,'different-target')
+    check(not snapshot.timeToDie,'Target changes cannot inherit death estimates')
+    observe(188.2,500); observe(191.2,400)
+    snapshot=observe(196.3,300)
+    check(not snapshot.timeToDie,'A long observation gap resets confidence')
+    R.healthSample=nil
+    for i=0,100 do snapshot=observe(i*.1,2000-i*5) end
+    check(#R.healthSample.samples<=64,'Health history remains bounded under rapid damage')
+    snapshot=observe(11,0)
+    check(not snapshot.timeToDie and not R.healthSample,'Dead targets clear the health history')
+    R.healthSample=sample
+end
+
+-- The Lesser Infernal log had 240 HP, a 1.657-second trend, and Fire immunity.
+do
+    local s=state({'frostbolt','scorch','fireball','fireblast'},41)
+    s.spells.frostbolt.castTime=2.5; s.spellPower[5]=200; s.targetHP=240; s.timeToDie=1.657
+    local score=M.Estimate(s,'frostbolt').score
+    s.timeToDie=nil
+    check(M.Estimate(s,'frostbolt').score==score,'A lethal Frostbolt is not penalized by its own death forecast')
+    s.timeToDie=1.657; s.spells.fireblast.immune=true
+    decide(s,'frostbolt','Lethal Frostbolt beats nonlethal Scorch after an immune Fire Blast')
+    s.targetHP=825
+    check(M.Estimate(s,'frostbolt').score<score,'Nonlethal casts still respect a short death forecast')
+    s.spells.fireball.immune=true; s.spells.scorch.immune=true
+    decide(s,'frostbolt','Observed Fire immunity leaves the finishing Frostbolt')
+end
+
+-- Instant attempts and failures are logged, not just spells with cast bars.
+do
+    local handler=R.events.scripts.OnEvent
+    handler(R.events,'UNIT_SPELLCAST_SENT','player','Enemy','attempt-token',8413)
+    check(R.lastCastEvent.id==8413 and R.lastCastEvent.token=='attempt-token' and R.lastCastEvent.target=='Enemy','Sent spell records the spell and destination')
+    handler(R.events,'UNIT_SPELLCAST_FAILED','player','attempt-token',8413)
+    check(R.lastCastEvent.id==8413 and R.lastCastEvent.event=='UNIT_SPELLCAST_FAILED','Failed instant spell retains its identity')
+    handler(R.events,'UNIT_SPELLCAST_SUCCEEDED','player','success-token',8413)
+    check(R.lastCastEvent.id==8413 and R.lastCastEvent.token=='success-token' and not R.lastCastEvent.target,'Successful instant spell uses the standard event argument order')
+    local log=A.characterDB.rotationDiagnostics
+    local fields=log.entries[log.count].delta.fields.castEvent.fields
+    check(fields.event.value=='UNIT_SPELLCAST_SUCCEEDED','Attempt metadata is persisted in the diagnostic delta')
+end
+
+-- Level-41 solo Frost talents should inform control as well as damage.
+do
+    local s=state({'frostbolt','nova'},41)
+    s.spellPower[5]=200; s.talents.shatter=5; s.talents.iceShards=5
+    s.talents.improvedFrostbolt=5; s.talents.piercingIce=3
+    s.grouped=false; s.attackingPlayer=true; s.targetClose=true; s.targetHP=1200
+    decide(s,'nova','Healthy solo Shatter Mage roots the melee attacker proactively')
+    s.channelKey='evocation'; decide(s,nil,'Proactive Nova does not interrupt mana recovery'); s.channelKey=nil
+    s.safeAOE=false; decide(s,'frostbolt','Proactive Nova respects nearby crowd control')
+    s.safeAOE=true; s.frozen=true; s.frozenRemaining=5
+    decide(s,'frostbolt','Use frozen-target Frostbolt after Nova rather than rooting again')
+    s.frozen=false; s.grouped=true
+    decide(s,'frostbolt','Do not impose solo rooting on grouped damage')
+    s.grouped=false; s.targetHP=100
+    decide(s,'frostbolt','Do not spend Nova on a target within one finishing cast')
+    s.targetHP=1200; s.rotationCast=true; s.casting=true
+    s.targetHP=M.Estimate(s,'frostbolt').damage*1.5
+    decide(s,'frostbolt','Pending current damage prevents a wasteful finishing Nova')
+    s.casting=nil; s.rotationCast=nil; s.targetHP=1200; s.talents.shatter=0
+    decide(s,'frostbolt','No Shatter means no extra offensive Nova priority')
+    s.talents.shatter=5; s.targetBoss=true
+    decide(s,'frostbolt','Bosses do not get the solo Shatter root recommendation')
+    s.targetBoss=false; s.targetClose=false
+    decide(s,'frostbolt','Nova requires a nearby attacker')
+    s.targetClose=true; s.spells.nova.immune=true
+    decide(s,'frostbolt','Observed root immunity blocks proactive Nova')
+    s.spells.nova.immune=false; s.targetGUID='nova-plan'; s.time=10
+    s.casting=true; s.rotationCast=true; s.castToken='cast:root-plan'; s.castEnd=12.5
+    R.castPlan=nil
+    local key=R:StabilizeRecommendation(s,'nova','Shatter setup',false,false)
+    check(key=='nova' and R.castPlan.key=='nova','Single-target Nova can be committed at cast start')
+    key=R:StabilizeRecommendation(s,'frostbolt','damage',false,false)
+    check(key=='nova' and R.lockStatus=='held','Nova plan keeps the cast-start decision')
+    s.frozen=true
+    key=R:StabilizeRecommendation(s,'frostbolt','damage',false,false)
+    check(not key and R.lockStatus=='suppressed-invalid-plan','A new freeze suppresses redundant Nova without late replacement')
+    R.castPlan=nil
+    local old=R.snapshot
+    R.snapshot=s; R.tracePrevious=nil; R:TraceRotation('talent-context',true)
+    local fields=A.characterDB.rotationDiagnostics.entries[A.characterDB.rotationDiagnostics.count].delta.fields
+    check(fields.talents.fields.shatter.value==5 and fields.talents.fields.iceShards.value==5,'Actual talent ranks persist in the combat trace')
+    check(fields.spellPower.fields[5].value==200 and fields.state.fields.grouped.value==false,'School stats and solo context persist in the combat trace')
+    R.snapshot=old
+end
+
+-- Shared consumables work without any Mage rotation implementation.
+do
+    local B=A.ConsumableBuffs
+    local oldItem,oldContainer,oldBuild,oldMage=C_Item,C_Container,A.Supplies.Build,A.MageRotation
+    local oldInfo=C_Spell.GetSpellInfo
+    local active={}
+    local rows={
+        {itemId=1,family='wellfed',tracking=true,priority='Essentials',item={level=1,classes={'All'}}},
+        {itemId=2,family='drink',tracking=true,item={level=1,classes={'All'}}},
+        {itemId=3,family='elixir',category='Elixirs',tracking=true,item={level=1,classes={'Rogue'},detail='Buff for 1 hour.'}},
+        {itemId=4,family='mage-elixir',category='Elixirs',tracking=true,item={level=1,classes={'Mage'},detail='Buff for 1 hour.'}},
+        {itemId=5,family='scroll-intellect',category='Scrolls',tracking=true,item={level=1,classes={'All'}}},
+    }
+    local contextClass
+    A.Supplies.Build=function(context) contextClass=context.characterClass; return rows end
+    C_Item={GetItemCount=function(_,bank) check(not bank,'Shared consumables use carried stock'); return 1 end,
+        GetItemSpell=function(id) return 'Use'..id,100+id end,
+        GetItemInfo=function(id) return 'Item'..id,nil,nil,nil,nil,nil,nil,nil,nil,123 end,
+        IsUsableItem=function() return true end}
+    C_Container={GetItemCooldown=function() return 0,0,1 end}
+    C_Spell.GetSpellInfo=function(id)
+        if id==19705 then return {name='Well Fed'} end
+        if id==1459 then return {name='Arcane Intellect'} end
+        return oldInfo(id)
+    end
+    A.MageRotation=nil
+    local cache={}
+    local snapshot={class='ROGUE',level=41,time=100,playerHealth=100,powerPercent=20,buffs={},spells={}}
+    local function choices() return B:Recommend(snapshot,function() return active,{} end,cache) end
+    local function has(list,id) for _,a in ipairs(list) do if a.id==id then return a end end end
+    for class,name in pairs(B.classes) do
+        snapshot.class=class; local list=choices()
+        check(contextClass==name,'Shared supply context uses '..name)
+        check(has(list,1)~=nil,name..' can receive buff-food advice without Mage code')
+        check((has(list,2)~=nil)==not not B.manaClasses[class],name..' water advice follows its resource type')
+        check((has(list,3)~=nil)==(class=='ROGUE'),name..' respects consumable class restrictions')
+        check((has(list,4)~=nil)==(class=='MAGE'),name..' cannot receive another class exclusive elixir')
+    end
+    local oldPower,oldMax=UnitPower,UnitPowerMax
+    snapshot.class='DRUID'; snapshot.powerType=3
+    UnitPower=function() return 950 end; UnitPowerMax=function() return 1000 end
+    check(not has(choices(),2),'A shifted Druid does not drink because its energy is low')
+    UnitPower=function() return 100 end
+    check(has(choices(),2)~=nil,'A shifted Druid checks its actual mana for recovery')
+    UnitPower,UnitPowerMax=oldPower,oldMax; snapshot.powerType=nil
+    snapshot.class='ROGUE'; active={['Well Fed']=301,Use3=301}
+    check(#choices()==0,'Shared healthy food and elixir buffs do not warn')
+    active={['Well Fed']=300,Use3=300}
+    local list=choices()
+    check(has(list,1).buffColor=='refresh' and has(list,3).buffColor=='refresh','Shared food/elixir warning glows are blue at five minutes')
+    active={}; list=choices()
+    check(has(list,1).buffColor=='primary' and has(list,3).buffColor=='primary','Shared missing buffs remain gold')
+    snapshot.class='PRIEST'; active={['Arcane Intellect']=1000}
+    check(not has(choices(),5),'An external class buff blocks redundant Intellect scroll advice')
+    snapshot.combat=true; check(#choices()==0,'Shared preparation does not suggest consuming food in combat')
+    snapshot.combat=false; snapshot.dead=true; check(#choices()==0,'Shared preparation stops while dead')
+    snapshot.dead=false; snapshot.taxi=true; check(#choices()==0,'Shared preparation stops on a taxi')
+    snapshot.taxi=false; snapshot.channelKey='anything'; check(#choices()==0,'Shared preparation does not interrupt channels')
+    C_Item,C_Container,A.Supplies.Build,A.MageRotation=oldItem,oldContainer,oldBuild,oldMage
+    C_Spell.GetSpellInfo=oldInfo
+end
+
+-- Non-Mage preparation reaches the normal action-bar highlight path.
+do
+    local oldSnapshot,oldRecommend,oldAction,oldView=R.Snapshot,A.ConsumableBuffs.Recommend,GetActionInfo,R.RefreshView
+    local oldClass=MOCK.class; MOCK.class='ROGUE'
+    R.Snapshot=function() return {class='ROGUE',level=41,time=now,combat=false,buffs={},spells={}} end
+    A.ConsumableBuffs.Recommend=function() return {{id=1,item=true,name='Buff Food',buffColor='primary'}} end
+    GetActionInfo=function() return 'item',1 end
+    R.RefreshView=function() end; R.castPlan=nil; R:Update()
+    check(R.current.item and R.current.id==1 and R.highlightCount>0,'A Rogue receives shared consumable item highlights')
+    check(not R.traceDecision.key,'Shared Rogue support never creates a combat spell recommendation')
+    R.Snapshot,A.ConsumableBuffs.Recommend,GetActionInfo,R.RefreshView=oldSnapshot,oldRecommend,oldAction,oldView
+    MOCK.class=oldClass; R.dirty=true; R:Update()
+end
+
+-- All nine class boundaries resolve through one global coordinator.
+do
+    local total=0
+    for token,name in pairs(A.ConsumableBuffs.classes) do
+        local module=R:Class(token); total=total+1
+        check(module and module.name==name and type(module.definitions)=='table','Registered '..name..' class file')
+        check((module.combat==true)==(token=='MAGE'),'Only the approved Mage combat profile is active')
+        local s=state({'frostbolt'}); s.class=token
+        if token~='MAGE' then check(R.Decide(s)==nil,name..' cannot fall through into Mage combat choices') end
+    end
+    check(total==9,'Nine Classic classes share the global dispatcher')
+end
+-- Moving changes telemetry, never the recommendation or optional-action list.
+do
+    local profiles={}
+    local s=state({'frostbolt','evocation'}); s.combat=false; s.powerPercent=10; profiles[#profiles+1]=s
+    s=state({'frostbolt','evocation'}); s.powerPercent=5; s.timeToDie=30; s.targetCombat=true; profiles[#profiles+1]=s
+    s=state({'fireball','pyroblast'}); s.combat=false; s.targetCombat=false; s.targetDistance=30; profiles[#profiles+1]=s
+    s=state({'frostbolt','blizzard','flamestrike'}); s.cluster=4; s.safeCluster=true; profiles[#profiles+1]=s
+    s=state({'frostbolt','shoot'}); s.targetHP=40; s.wandDamage=50; s.wandSpeed=1.5; profiles[#profiles+1]=s
+    s=state({'cone'}); s.targetClose=true; s.facingTarget=true; profiles[#profiles+1]=s
+    s=state({'fireball','presence'}); s.timeToDie=30; profiles[#profiles+1]=s
+    for i,profile in ipairs(profiles) do
+        profile.moving=false; local still=R.Decide(profile)
+        local optionalStill=M.Optional(profile)
+        profile.moving=true; local moving=R.Decide(profile)
+        local optionalMoving=M.Optional(profile)
+        check(still==moving,'Movement does not change profile '..i..' primary')
+        check(#optionalStill==#optionalMoving,'Movement does not clear profile '..i..' optional choices')
+        for n,v in ipairs(optionalStill) do check(v.key==optionalMoving[n].key,'Moving preserves the same optional action') end
+    end
+    s=state({'frostbolt','blizzard'}); s.cluster=4; s.safeCluster=true; s.targetGUID='movement-ground'; s.time=10
+    s.castToken='cast:ground'; s.castEnd=12.5; s.rotationCast=true
+    R.castPlan=nil
+    local key=R:StabilizeRecommendation(s,'blizzard','Area damage',false,false)
+    s.moving=true
+    check(R:StabilizeRecommendation(s,'frostbolt','other',false,false)==key and R.lockStatus=='held','Movement cannot suppress a committed ground-spell plan')
+    R.castPlan=nil
+end
+
+-- Recorded interruption arrives while UnitCastingInfo still reports the old cast.
+do
+    local s=state({'frostbolt','nova','counterspell'})
+    s.time=10; s.targetGUID='interrupted'; s.castToken='cast:cancelled'; s.castEnd=12.5; s.rotationCast=true
+    s.targetClose=true; s.attackingPlayer=true
+    R.castPlan=nil
+    R:StabilizeRecommendation(s,'nova','setup',false,false)
+    local update=R.Update; R.Update=function() end
+    R.events.scripts.OnEvent(R.events,'UNIT_SPELLCAST_INTERRUPTED','player','different-cast',8408)
+    check(R.castPlan and R.castPlan.key=='nova','An unrelated interrupted token cannot clear the active plan')
+    check(R:StabilizeRecommendation(s,'frostbolt','damage',false,false)=='nova','Active cast keeps its plan after unrelated interruption')
+    R.events.scripts.OnEvent(R.events,'UNIT_SPELLCAST_INTERRUPTED','player','cancelled',8408)
+    check(not R.castPlan,'Matching interruption cancels the plan')
+    check(not R:StabilizeRecommendation(s,'frostbolt','damage',false,false) and not R.castPlan and R.lockStatus=='interrupted-cast','Stale interrupted cast cannot create a late Frostbolt plan')
+    check(R:StabilizeRecommendation(s,'counterspell','interrupt',false,true)=='counterspell','Urgent interrupt remains available during stale snapshot')
+    s.castToken=nil; s.castEnd=nil
+    check(R:StabilizeRecommendation(s,'frostbolt','damage',false,false)=='frostbolt' and not R.interruptedCastToken,'Cleared cast resumes normal decisions')
+    s.castToken='cast:new'; s.castEnd=13
+    check(R:StabilizeRecommendation(s,'frostbolt','damage',false,false)=='frostbolt' and R.castPlan,'New cast can create its own plan')
+    R.Update=update; R.castPlan=nil; R.interruptedCastToken=nil
+end
+
 print('PASS: '..count..' Mage rotation, live adapter, UI and highlight regression checks.')

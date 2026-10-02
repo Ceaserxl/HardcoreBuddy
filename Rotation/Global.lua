@@ -1,9 +1,24 @@
--- Classic Era Mage assistant. Recommendations never execute combat actions.
+-- Classic Era shared rotation assistant. Recommendations never execute combat actions.
 local _,A=...
 local R={spells={},highlights={},dirty=true,elapsed=0}; A.RotationAdvisor=R
-R.supported={MAGE="Mage"}
+R.supported={}; R.classes={}
 R.modes={disabled="Disabled",assistant="Assistant Mode"}
-R.definitions={MAGE=A.MageRotation.definitions}
+R.definitions={}
+function R:RegisterClass(token,module)
+    self.classes[token]=module; self.definitions[token]=module.definitions or {}
+    self.supported[token]=module.combat and module.name or nil
+end
+function R:Class(token) return self.classes[token or self.class] end
+function R.CanAdvise(s) return not s.dead and not s.taxi end
+function R.Ready(s,key,immediate)
+    local a=s.spells[key]
+    if not a or not a.ready or a.immune then return false end
+    local usable=a.usable
+    if immediate and a.usableNow~=nil then usable=a.usableNow end
+    if not usable then return false end
+    if immediate and ((a.cooldownRemaining or 0)>.15 or a.powerPreview) then return false end
+    return not a.requiresRange or a.range==true or a.approaching==true
+end
 local ccIDs={118,6770,2094,1776,2637,9484,5782,6358}
 local function clock() return GetTime and GetTime() or 0 end
 local function combat() return InCombatLockdown and InCombatLockdown() or false end
@@ -24,14 +39,14 @@ local function known(id)
 end
 function R:Mode()
     local _,class=UnitClass("player")
-    if not self.supported[class] then return "disabled" end
+    if not A.ConsumableBuffs.classes[class] then return "disabled" end
     local mode=A.characterDB and A.characterDB.rotationMode
     return mode=="assistant" and mode or "disabled"
 end
 function R:SetMode(mode)
     if not A.characterDB or not self.modes[mode] then return end
     local _,class=UnitClass("player")
-    if mode=="assistant" and not self.supported[class] then return end
+    if mode=="assistant" and not A.ConsumableBuffs.classes[class] then return end
     A.characterDB.rotationMode=mode; self.dirty=true; self:Update()
     if A.window and A.window:IsShown() then A:Refresh() end
 end
@@ -45,7 +60,7 @@ function R:RefreshSpells()
             if known(id) then self.spells[key]={id=id,name=value.name,icon=value.iconID,level=0,rank=value.rank} end
         end
     end
-    for level,entries in pairs(A.Data.ClassSpells[self.supported[class]] or {}) do
+    for level,entries in pairs(A.Data.ClassSpells[A.ConsumableBuffs.classes[class]] or {}) do
         for _,entry in ipairs(entries) do
             if known(entry.id) then
                 local value=info(entry.id); local key=value and byName[value.name]
@@ -55,27 +70,18 @@ function R:RefreshSpells()
             end
         end
     end
-    -- Includes the level-60 spell books absent from trainer-only listings.
-    if class=="MAGE" then
-        for id,data in pairs(A.Data.MageRotationSpells) do
+    local module=self:Class(class)
+    if module and module.spellData then
+        for id,data in pairs(module.spellData) do
             local current=self.spells[data.key]
-            local currentData=current and A.Data.MageRotationSpells[current.id]
+            local currentData=current and module.spellData[current.id]
             if known(id) and (not currentData or data.rank>currentData.rank) then
                 local value=info(id)
                 if value then self.spells[data.key]={id=id,name=value.name,icon=value.iconID,level=data.level,rank=value.rank} end
             end
         end
     end
-    if class=="MAGE" and known(116) and self.spells.frostbolt and self.spells.frostbolt.id~=116 then
-        local value=info(116)
-        if value then self.spells.slowbolt={id=116,name=value.name,icon=value.iconID,rank=value.rank} end
-    end
-    -- Nova is selected for control, not damage. Rank 1 has the same root duration
-    -- at a lower mana cost; keep exact rank matching on the action bar.
-    if class=="MAGE" and known(122) then
-        local value=info(122)
-        if value then self.spells.nova={id=122,name=value.name,icon=value.iconID,level=10,rank=value.rank} end
-    end
+    if module and module.RefreshSpells then module.RefreshSpells(self) end
     if C_Spell and C_Spell.GetSpellSubtext then
         for _,spell in pairs(self.spells) do spell.rank=C_Spell.GetSpellSubtext(spell.id) end
     end
@@ -86,7 +92,7 @@ function R:RefreshSpells()
         spell.castTime=value and type(value.castTime)=="number" and value.castTime/1000 or nil
     end
     for _,id in ipairs(ccIDs) do local value=info(id); if value then self.ccNames[value.name]=true end end
-    local live=class=="MAGE" and A.TalentAdvisor:ReadCurrent("MAGE",UnitLevel("player"))
+    local live=module and module.usesTalents and A.TalentAdvisor:ReadCurrent(class,UnitLevel("player"))
     self.talents=live and live.ranks or {}
     self.talentsReady=not not live; self.talentRetryAt=clock()+2
     self.dirty=false
@@ -108,15 +114,15 @@ local function aura(unit,index,filter)
     end
 end
 function R:Auras(unit,filter)
-    local out={}
+    local out,durations={},{}
     for i=1,40 do
         local a=aura(unit,i,filter); if not a then break end
         if a.name then
             local remaining=a.expirationTime and a.expirationTime>0 and math.max(0,a.expirationTime-clock()) or math.huge
-            if remaining>0 then out[a.name]=math.max(out[a.name] or 0,remaining) end
+            if remaining>0 and remaining>=(out[a.name] or 0) then out[a.name]=remaining; durations[a.name]=a.duration end
         end
     end
-    return out
+    return out,durations
 end
 function R:Controlled(unit)
     for name in pairs(self:Auras(unit,"HARMFUL")) do if self.ccNames[name] then return true end end
@@ -170,7 +176,7 @@ local function close(unit,radius)
             return (px-x)^2+(py-y)^2+(pz-z)^2<=radius*radius
         end
     end
-    -- A positive duel-distance check fits inside the Mage's 10-yard area.
+    -- A positive duel-distance check fits inside the requested 10-yard area.
     -- A negative check is not proof that an enemy is outside that area.
     if radius>=10 and CheckInteractDistance and CheckInteractDistance(unit,3) then return true end
     return nil
@@ -242,6 +248,8 @@ function R:PowerForecast(s)
         if name and token then s.castToken="cast:"..tostring(token)
         elseif name and type(starting)=="number" then s.castToken="cast:"..tostring(id or name)..":"..starting end
     end
+    s.castSpellID=castID
+    if castID then local module=self:Class(s.class); s.rotationCast=module and module.spellData and module.spellData[castID]~=nil or false end
     local channel
     if not cast and UnitChannelInfo then
         local name,_,_,starting,ending=UnitChannelInfo("player"); channel,finish=name,ending
@@ -259,7 +267,9 @@ function R:PowerForecast(s)
         -- before predicting the following spell; unknown cast cost is conservative.
         if cast then
             local costs=powerCosts(castID or cast)
-            if not costs then projected=0 else
+            if not costs then
+                if s.rotationCast~=false then projected=0 end
+            else
                 for _,cost in ipairs(costs) do
                     if cost.type==0 then projected=projected-(cost.cost or 0) end
                 end
@@ -303,7 +313,8 @@ function R:SpellState(spell,unit,s)
     if not activeGCD() then
         -- These learned damage spells have no intrinsic cooldown in Classic Era.
         -- Do not interpret a longer school lockout as a global cooldown.
-        local reference=self.spells.frostbolt or self.spells.fireball
+        local module=self:Class(s and s.class)
+        local reference=module and module.GCDReference and module.GCDReference(self)
         if reference then gcdStart,gcdDuration,gcdEnabled=cooldown(reference.id) end
     end
     local onGCD=activeGCD() and type(start)=="number" and type(duration)=="number"
@@ -396,227 +407,53 @@ end
 local function distance(a,b)
     if a and b and a.map==b.map then return math.sqrt((a.x-b.x)^2+(a.y-b.y)^2+(a.z-b.z)^2) end
 end
-function R:MageSnapshot(s)
-    local M=A.MageRotation
-    if not self.talentsReady and s.time>=(self.talentRetryAt or 0) then
-        local live=A.TalentAdvisor:ReadCurrent("MAGE",UnitLevel("player"))
-        self.talents=live and live.ranks or {}; self.talentsReady=not not live; self.talentRetryAt=s.time+2
+-- Observe sustained health loss, including the downtime between discrete spell hits.
+-- A single burst is not enough evidence to shorten the next cast.
+function R:TargetLife(s,guid)
+    s.timeToDie=nil; s.healthTrendDuration=nil; s.healthTrendLosses=nil; s.healthTrendRate=nil
+    local hp,t=s.targetHP,s.time
+    local previous=self.healthSample
+    local changed=not previous or previous.guid~=guid or not guid or not s.validTarget
+    if changed then
+        self.immune={}
+        local module=self:Class(s.class)
+        if module and module.ResetTarget then module.ResetTarget(self) end
     end
-    s.level=UnitLevel("player"); s.targetLevel=UnitLevel("target")
-    s.talents=self.talents or {}; s.spellPower={}; s.spellCrit={}
-    s.spellHit=GetCombatRatingBonus and CR_HIT_SPELL and GetCombatRatingBonus(CR_HIT_SPELL) or 0
-    s.haste=UnitSpellHaste and math.max(0,UnitSpellHaste("player") or 0)/100 or 0
-    for _,school in ipairs({3,5,7}) do
-        s.spellPower[school]=GetSpellBonusDamage and GetSpellBonusDamage(school) or 0
-        s.spellCrit[school]=GetSpellCritChance and GetSpellCritChance(school) or 0
+    if not guid or not s.validTarget or type(hp)~="number" or hp<=0 then
+        self.healthSample=nil; return
     end
-    s.grouped=IsInGroup and IsInGroup() or false
-    local classification=UnitClassification and UnitClassification("target")
-    s.targetBoss=classification=="worldboss" or (UnitLevel and UnitLevel("target")==-1)
-    local creature,creatureID
-    if UnitCreatureType then creature,creatureID=UnitCreatureType("target") end
-    s.polyEligible=creatureID==1 or creatureID==7 or creatureID==8
-        or creature~=nil and (creature==HUMANOID or creature==BEAST or creature==CRITTER)
-    s.recentDamage=self.lastDamage and s.time-self.lastDamage<3 or false
-    s.damageSchool=s.recentDamage and self.damageSchool or nil
-    if IsFalling and IsFalling() and not s.taxi then self.fallingSince=self.fallingSince or s.time
-    else self.fallingSince=nil end
-    s.fallingFor=self.fallingSince and s.time-self.fallingSince or 0
-    for i=1,40 do
-        local a=aura("player",i,"HELPFUL"); if not a then break end
-        for key,id in pairs(M.buffIDs) do if a.spellId==id then s.buffs[key]=auraRemaining(a,s.time) end end
-        -- Brilliance shares the Intellect benefit; never overwrite group buffs.
-        if a.spellId==23028 then s.buffs.intellect=math.max(s.buffs.intellect or 0,auraRemaining(a,s.time)) end
+    if changed or not previous.hp or hp>previous.hp or t<previous.time or t-previous.time>4 then
+        self.healthSample={guid=guid,time=t,hp=hp,samples={{time=t,hp=hp}}}
+        return
     end
-    s.hasArmor=s.buffs.frostarmor or s.buffs.icearmor or s.buffs.magearmor
-    for i=1,40 do
-        local a=aura("player",i,"HARMFUL"); if not a then break end
-        if a.dispelName=="Curse" or a.debuffType=="Curse" then s.curse=true end
-        if a.spellId==M.buffIDs.hypothermia then s.buffs.hypothermia=auraRemaining(a,s.time) end
-    end
-    for i=1,40 do
-        local a=aura("target",i,"HARMFUL"); if not a then break end
-        local left=auraRemaining(a,s.time)
-        if a.spellId==M.debuffIDs.scorch then s.scorchStacks=a.applications or 1; s.scorchRemaining=left end
-        if a.spellId==M.debuffIDs.winterschill then s.winterChillStacks=a.applications or 1 end
-        if a.name==self.names.nova or a.spellId==M.debuffIDs.frostbite then s.frozen=true; s.frozenRemaining=left end
-        if a.name==self.names.frostbolt or a.name==self.names.cone then s.slowRemaining=left end
-        if a.name==self.names.fireball or a.name==self.names.pyroblast or a.name==self.names.flamestrike then s.targetDotted=true end
-        -- Unknown harmful effects could be periodic damage from another player.
-        -- Only known harmless control/vulnerability effects permit Polymorph.
-        if a.name~=self.names.nova and a.name~=self.names.frostbolt and a.name~=self.names.cone
-            and a.spellId~=M.debuffIDs.scorch and a.spellId~=M.debuffIDs.winterschill and a.spellId~=M.debuffIDs.frostbite then s.targetDotted=true end
-    end
-    if C_LossOfControl and C_LossOfControl.GetActiveLossOfControlDataCount and C_LossOfControl.GetActiveLossOfControlData then
-        for i=1,math.min(20,C_LossOfControl.GetActiveLossOfControlDataCount()) do
-            local effect=C_LossOfControl.GetActiveLossOfControlData(i)
-            if effect and (not effect.timeRemaining or effect.timeRemaining>0) then
-                s.rooted=s.rooted or effect.locType=="ROOT"
-                s.stunned=s.stunned or effect.locType=="STUN" or effect.locType=="STUN_MECHANIC"
-            end
-        end
-    end
-    local guid=UnitGUID and UnitGUID("target")
-    s.targetGUID=guid
-    if not guid or not self.healthSample or self.healthSample.guid~=guid or not s.validTarget then
-        self.healthSample={guid=guid,time=s.time,hp=s.targetHP}; self.immune={}; self.flamestrike=nil
-    else
-        local previous=self.healthSample
-        if s.time-previous.time>=1 then
-            local loss=previous.hp and s.targetHP and previous.hp-s.targetHP or 0
-            if loss>0 and s.time-previous.time<4 then
-                local rate=loss/(s.time-previous.time)
-                previous.rate=previous.rate and previous.rate*.5+rate*.5 or rate
-            else previous.rate=nil end
-            previous.time=s.time; previous.hp=s.targetHP
-        end
-        if previous.rate and previous.rate>0 then s.timeToDie=math.min(120,s.targetHP/previous.rate) end
-    end
-    s.flamestrikeActive=self.flamestrike and self.flamestrike>s.time or false
-    if UnitChannelInfo then
-        local name,_,_,_,ending=UnitChannelInfo("player")
-        for key,spell in pairs(self.spells) do if name==spell.name then s.channelKey=key end end
-        s.channelRemaining=type(ending)=="number" and math.max(0,ending/1000-s.time) or 0
-    end
-    local player,target=position("player"),position("target")
-    s.targetDistance=distance(player,target)
-    if player and target and player.map==target.map and GetPlayerFacing then
-        local facing=GetPlayerFacing()
-        if facing then
-            local dx,dy=target.x-player.x,target.y-player.y
-            local length=math.sqrt(dx*dx+dy*dy)
-            s.facingTarget=length>0 and (math.cos(facing)*dx+math.sin(facing)*dy)/length>.707 and math.abs(target.z-player.z)<4
-        end
-    end
-    s.cluster=0; s.safeCluster=target~=nil and s.targetCombat and not s.controlled
-    if s.safeCluster then
-        local seen={}; local units={"target"}
-        if C_NamePlate and C_NamePlate.GetNamePlates then
-            for i,plate in ipairs(C_NamePlate.GetNamePlates()) do
-                if i>40 then break end
-                local unit=plate.namePlateUnitToken or plate.UnitFrame and plate.UnitFrame.unit
-                if unit then units[#units+1]=unit end
-            end
-        end
-        for _,unit in ipairs(units) do
-            local id=UnitGUID(unit)
-            if id and not seen[id] and hostile(unit) then
-                seen[id]=true
-                local d=distance(target,position(unit))
-                if not d then s.safeCluster=false
-                elseif d<=8 then
-                    local engaged=UnitAffectingCombat and UnitAffectingCombat(unit)
-                    local threat=UnitThreatSituation and UnitThreatSituation("player",unit)
-                    if not engaged or threat==nil or self:Controlled(unit) then s.safeCluster=false
-                    else s.cluster=s.cluster+1 end
-                end
-            end
-        end
+    local samples=previous.samples
+    local last=samples[#samples]
+    if hp<previous.hp then previous.lastLoss=t end
+    if hp~=last.hp or t-last.time>=1 then samples[#samples+1]={time=t,hp=hp} end
+    previous.time=t; previous.hp=hp
+    -- Retain the observation before the window boundary so its damage interval
+    -- includes the full elapsed time rather than treating a hit as instant DPS.
+    while #samples>2 and samples[2].time<t-8 do table.remove(samples,1) end
+    while #samples>64 do table.remove(samples,1) end
+    local duration=t-samples[1].time
+    local loss=samples[1].hp-hp
+    local hits=0
+    for i=2,#samples do if samples[i].hp<samples[i-1].hp then hits=hits+1 end end
+    s.healthTrendDuration=duration; s.healthTrendLosses=hits
+    if duration>=4 and hits>=2 and loss>0 and previous.lastLoss and t-previous.lastLoss<=6 then
+        s.healthTrendRate=loss/duration
+        s.timeToDie=math.min(120,hp/s.healthTrendRate)
     end
 end
+
 function R:ObserveCombat()
-    if not CombatLogGetCurrentEventInfo then return end
-    local _,event,_,source,_,_,_,dest,_,_,_,id,_,school,amount=CombatLogGetCurrentEventInfo()
-    local now=clock(); local player=UnitGUID("player"); local target=UnitGUID("target")
-    if dest==player and (event=="SPELL_DAMAGE" or event=="RANGE_DAMAGE" or event=="SPELL_PERIODIC_DAMAGE" or event=="SWING_DAMAGE") then
-        self.lastDamage=now; self.damageSchool=event=="SWING_DAMAGE" and 1 or school
-    end
-    if source==player then
-        local key
-        for k,spell in pairs(self.spells) do if spell.id==id then key=k; break end end
-        if key and event=="SPELL_MISSED" and amount=="IMMUNE" and dest==target then
-            self.immune=self.immune or {}; self.immune[key]=now+15
-            if key=="frostbolt" or key=="slowbolt" then self.immune.frostbolt=now+15; self.immune.slowbolt=now+15 end
-        elseif event=="SPELL_CAST_SUCCESS" and key=="flamestrike" then self.flamestrike=now+8 end
-    end
+    local module=self:Class()
+    if module and module.ObserveCombat then module.ObserveCombat(self) end
 end
-function R:MageResources(s)
-    if s.class~="MAGE" then return end
-    local ranged=GetInventoryItemID and GetInventoryItemID("player",18)
-    local instant=C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
-    if ranged and instant and UnitRangedDamage then
-        local _,_,_,_,_,classID,subclass=instant(ranged)
-        if classID==2 and subclass==19 then
-            local speed,low,high=UnitRangedDamage("player")
-            if type(speed)=="number" and speed>0 and type(low)=="number" and type(high)=="number" then
-                s.wandSpeed=speed; s.wandDamage=(low+high)/2*.9 -- Allow for misses/resists; no crit assumption.
-            end
-        end
-    end
-    local count=C_Item and C_Item.GetItemCount or GetItemCount
-    local itemCooldown=C_Container and C_Container.GetItemCooldown or C_Item and C_Item.GetItemCooldown or GetItemCooldown
-    local itemInfo=C_Item and C_Item.GetItemInfo or GetItemInfo
-    local usable=C_Item and C_Item.IsUsableItem or IsUsableItem
-    if not count then return end
-    local checkedPreparation=false
-    for _,gem in ipairs(A.MageRotation.gems) do
-        local owned=count(gem.id,false,false) or 0 -- Bags only; never plan around bank gems.
-        if not checkedPreparation and s.spells[gem.key] then
-            checkedPreparation=true
-            if owned==0 then s.prepareGem=gem.key end
-        end
-        if owned>0 and not s.spells.managem and itemCooldown and itemInfo and usable then
-            local start,duration,enabled=itemCooldown(gem.id)
-            local name,_,_,_,_,_,_,_,_,icon=itemInfo(gem.id)
-            local available=usable(gem.id)
-            if name and (available==true or available==1) and (enabled==1 or enabled==true)
-                and type(start)=="number" and type(duration)=="number" and start+duration<=s.time then
-                s.spells.managem={id=gem.id,item=true,name=name,icon=icon,restore=gem.maximum,
-                    ready=true,usable=true,usableNow=true,cooldownRemaining=0}
-            end
-        end
-    end
-end
--- Supply planning is cached; live ownership, cooldowns and auras are checked on
--- each update. Only tracked, carried recommendations may consume an item.
+-- Compatibility adapter; the shared module also serves non-Mage characters.
 function R:OutOfCombatSupplies(s)
-    local result={}
-    if s.combat or s.dead or s.taxi or (s.buffs.iceblock or 0)>0 or s.channelKey then return result end
-    local count=C_Item and C_Item.GetItemCount or GetItemCount
-    local itemSpell=C_Item and C_Item.GetItemSpell or GetItemSpell
-    local itemInfo=C_Item and C_Item.GetItemInfo or GetItemInfo
-    local usable=C_Item and C_Item.IsUsableItem or IsUsableItem
-    local cd=C_Container and C_Container.GetItemCooldown or GetItemCooldown
-    if not count or not itemSpell or not itemInfo or not usable or not cd then return result end
-    if not self.supplyAdviceAt or s.time>=self.supplyAdviceAt then
-        local context=A:GetContext()
-        context.characterClass=self.supported[s.class]; context.level=s.level; context.mode="live"
-        self.supplyAdviceRows=A.Supplies.Build(context); self.supplyAdviceAt=s.time+5
-    end
-    local active=self:Auras("player","HELPFUL")
-    local best={}
-    for _,row in ipairs(self.supplyAdviceRows or {}) do
-        local id=row.itemId; local item=row.item or {}; local family=row.family
-        local recovery=family=="recovery" or family=="drink"
-        local timed=row.category=="Elixirs" or row.category=="Scrolls"
-        if row.tracking and (recovery or timed) and (count(id,false,false) or 0)>0 then
-            local name,spellID=itemSpell(id)
-            local start,duration,enabled=cd(id)
-            local left=name and active[name] or 0
-            local allowed=name and spellID and usable(id) and enabled~=0 and enabled~=false
-                and type(start)=="number" and type(duration)=="number" and start+duration<=s.time
-            if recovery then
-                allowed=allowed and left==0 and (family=="recovery" and s.playerHealth<90 or family=="drink" and s.powerPercent<90)
-            else
-                local detail=item.detail or ""
-                local minutes=tonumber(detail:match("for (%d+) min"))
-                local hours=tonumber(detail:match("for (%d+) hour")) or tonumber(detail:match("for (%d+) hr"))
-                allowed=allowed and left<=60 and (row.category=="Scrolls" or (minutes or 0)>=5 or (hours or 0)>=1)
-                -- Intellect scrolls are redundant with the Mage's class buff.
-                if family=="scroll-intellect" and ((s.buffs.intellect or 0)>60 or s.spells.intellect) then allowed=false end
-            end
-            if allowed then
-                local itemName,_,_,_,_,_,_,_,_,icon=itemInfo(id)
-                local old=best[family or id]
-                if itemName and (not old or (item.level or 0)>old.level) then
-                    best[family or id]={id=id,item=true,name=itemName,icon=icon,level=item.level or 0,
-                        reason=recovery and "Recover before the next fight." or "Refresh the tracked consumable buff."}
-                end
-            end
-        end
-    end
-    for _,action in pairs(best) do result[#result+1]=action end
-    table.sort(result,function(a,b) return a.id<b.id end)
+    local result=A.ConsumableBuffs:Recommend(s,function(unit,filter) return self:Auras(unit,filter) end,self)
+    self.supplyChecks=A.ConsumableBuffs.checks
     return result
 end
 function R:Snapshot()
@@ -639,7 +476,7 @@ function R:Snapshot()
     s.targetClose=close("target",10); s.controlled=s.validTarget and self:Controlled("target")
     local currentSpell=C_Spell and C_Spell.IsCurrentSpell or IsCurrentSpell
     local active=self.spells.shoot and currentSpell and currentSpell(self.spells.shoot.id)
-    s.wanding=self.class=="MAGE" and (self.autoRepeat or active==true or active==1) or false
+    s.wanding=self:Class() and self:Class().usesWand and (self.autoRepeat or active==true or active==1) or false
     s.targets,s.nearby,s.safeAOE=self:Enemies()
     local cast,finish,uninterruptible
     if UnitCastingInfo then
@@ -651,19 +488,27 @@ function R:Snapshot()
         cast,finish,uninterruptible=name,ending,blocked
     end
     s.interrupt=cast~=nil and uninterruptible~=true and type(finish)=="number" and finish/1000>clock()
-    local buffs=self:Auras("player","HELPFUL")
-    for key,name in pairs(self.names) do s.buffs[key]=buffs[name] end
-    self:MageSnapshot(s)
+    local buffs,durations=self:Auras("player","HELPFUL")
+    s.buffDurations={}
+    for key,name in pairs(self.names) do s.buffs[key]=buffs[name]; s.buffDurations[key]=(durations or {})[name] end
+    local module=self:Class()
+    s.level=UnitLevel("player")
+    if module and module.Snapshot then module.Snapshot(self,s) end
     for key,spell in pairs(self.spells) do
-        local selfSpell=A.MageRotation.selfSpells[key]
+        local selfSpell=module and module.selfSpells and module.selfSpells[key]
         s.spells[key]=self:SpellState(spell,not selfSpell and "target" or nil,s)
-        s.spells[key].immune=self.immune and self.immune[key] and self.immune[key]>s.time or false
+        s.spells[key].immune=module and module.IsImmune and module.IsImmune(self,s,key,spell) or false
     end
-    self:MageResources(s)
+    if module and module.Resources then module.Resources(self,s) end
     self:UpdateRangePreview(s)
     return s
 end
-R.Decide=A.MageRotation.Decide
+function R.Decide(s)
+    if not R.CanAdvise(s) then return nil,"" end
+    local module=R:Class(s.class)
+    if module and module.combat and module.Decide then return module.Decide(s) end
+    return nil,"No consumable preparation needed."
+end
 local function sizeHighlight(glow)
     local button=glow:GetParent()
     local width,height=button:GetWidth(),button:GetHeight()
@@ -701,15 +546,16 @@ function R:PrepareHighlights()
         end
     end
 end
-local function colorHighlight(glow,optional)
-    local style=optional and "optional" or "primary"
+local function colorHighlight(glow,optional,buffColor)
+    local style=buffColor or (optional and "optional" or "primary")
     if glow.style==style then return end
     glow.style=style
     for _,texture in ipairs({glow.ProcStartFlipbook,glow.ProcLoopFlipbook}) do
         -- Remove the gold baked into the artwork before tinting it bright red.
         -- Primary recommendations retain Blizzard's original artwork colors.
-        texture:SetDesaturated(not not optional)
-        if optional then texture:SetVertexColor(1,.15,.15,1)
+        texture:SetDesaturated(style~="primary")
+        if style=="refresh" then texture:SetVertexColor(.15,.55,1,1)
+        elseif style=="optional" then texture:SetVertexColor(1,.15,.15,1)
         else texture:SetVertexColor(1,1,1,1) end
     end
 end
@@ -729,20 +575,21 @@ function R:Highlight(spell,optional,additional,primaries)
     for button,glow in pairs(self.highlights) do
         local slot=button.action or button.GetAttribute and button:GetAttribute("action")
         local match,isOptional=false,optional
+        local matched=spell
         if slot and GetActionInfo and button:IsVisible() then
             match=matchesAction(spell,slot)
             if not match then
                 for _,extra in ipairs(primaries or {}) do
-                    if matchesAction(extra,slot) then match=true; isOptional=false; break end
+                    if matchesAction(extra,slot) then match=true; isOptional=false; matched=extra; break end
                 end
             end
             if not match then
                 for _,extra in ipairs(additional or {}) do
-                    if matchesAction(extra,slot) then match=true; isOptional=true; break end
+                    if matchesAction(extra,slot) then match=true; isOptional=true; matched=extra; break end
                 end
             end
         end
-        if match then colorHighlight(glow,isOptional) end
+        if match then colorHighlight(glow,isOptional,matched and matched.buffColor) end
         glow:SetShown(match)
         if match then
             self.highlightCount=self.highlightCount+1
@@ -752,25 +599,19 @@ function R:Highlight(spell,optional,additional,primaries)
     end
 end
 local function retainable(s,key)
-    local M=A.MageRotation
-    if s.dead or s.taxi or not s.validTarget or s.targetPlayer or s.controlled or (s.buffs.iceblock or 0)>0 then return false end
-    if s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>1 then return false end
-    if not M.Ready(s,key) or key=="shoot" and s.wanding then return false end
-    if key=="pyroblast" and s.combat and (s.buffs.presence or 0)==0 then return false end
-    if M.ground[key] then
-        local kiteWindow=s.targetDistance and s.targetDistance>=20 and ((s.slowRemaining or 0)>2 or s.frozen)
-            and (s.talents.improvedBlizzard or 0)>=2
-        return s.safeCluster and (s.cluster or 0)>=3 and not s.moving
-            and (s.playerHealth or 100)>55 and (s.powerPercent or 100)>35
-            and (not s.attackingPlayer or key=="blizzard" and kiteWindow)
-            and (key~="flamestrike" or not s.flamestrikeActive)
-    elseif M.area[key] then
-        return s.safeAOE and s.targetClose and (s.playerHealth or 100)>55 and (s.powerPercent or 100)>30
-            and (key=="cone" and s.facingTarget or s.nearby>=3)
-    end
-    return true
+    if not R.CanAdvise(s) or not s.validTarget or s.targetPlayer or s.controlled or not R.Ready(s,key) then return false end
+    local module=R:Class(s.class)
+    return module and module.Retainable and module.Retainable(s,key) or false
 end
 function R:StabilizeRecommendation(s,key,reason,optional,urgent)
+    self.lockStatus="unlocked"
+    -- The interruption event can arrive before UnitCastingInfo clears the cast.
+    -- Never create a fresh plan from that briefly stale cast snapshot.
+    if self.interruptedCastToken then
+        if s.castToken==self.interruptedCastToken then
+            if not urgent then self.lockStatus="interrupted-cast"; return nil,"",false end
+        else self.interruptedCastToken=nil end
+    end
     local plan=self.castPlan
     if plan then
         local spell=s.spells[plan.key]
@@ -779,45 +620,159 @@ function R:StabilizeRecommendation(s,key,reason,optional,urgent)
         if not urgent and plan.target==s.targetGUID and (sameCast or handoff) then
             if sameCast and s.castEnd then plan.finish=s.castEnd end -- Pushback can move the cast end.
             if spell and spell.id==plan.id and retainable(s,plan.key) then
+                self.lockStatus="held"
                 return plan.key,plan.reason,plan.optional
             end
             -- Do not replace a temporarily unavailable plan with a different
             -- damage spell halfway through the cast. Hide it until valid again.
+            self.lockStatus="suppressed-invalid-plan"
             return nil,"",false
         end
         self.castPlan=nil
+        self.lockStatus=urgent and "urgent-override" or "released"
     end
     -- Commit to the next damage action, not to a transient numerical ranking.
     -- New casts start a new plan; emergency advice and invalid actions bypass it.
     local spell=key and s.spells[key]
-    if not urgent and not optional and s.castToken and s.castEnd and s.targetGUID
+    if not urgent and not optional and s.rotationCast~=false and s.castToken and s.castEnd and s.targetGUID
         and (spell and retainable(s,key) or not spell and s.castToken:sub(1,5)=="cast:") then
         self.castPlan={token=s.castToken,finish=s.castEnd,target=s.targetGUID,key=key,id=spell and spell.id,reason=reason,optional=optional}
+        self.lockStatus="new-plan"
     end
     return key,reason,optional
 end
-function R:Update()
+local function diagnosticValue(value)
+    if type(value)=="number" then
+        if value~=value then return "unknown" end
+        if value==math.huge then return "infinite" end
+        return math.floor(value*1000+.5)/1000
+    end
+    if type(value)=="string" or type(value)=="boolean" then return value end
+end
+local function diagnosticFields(source,fields)
+    local out={}
+    for word in fields:gmatch("%S+") do out[word]=diagnosticValue(source and source[word]) end
+    return out
+end
+-- Each entry stores only fields that changed since the prior sample. No samples
+-- are dropped; the first entry contains the complete state.
+local function diagnosticDelta(before,after)
+    if type(after)~="table" then
+        if before==after then return nil end
+        return after==nil and {remove=true} or {value=after}
+    end
+    local fields={}; local changed=false
+    for key,value in pairs(after) do
+        local prior
+        if type(before)=="table" then prior=before[key] end
+        local patch=diagnosticDelta(prior,value)
+        if patch then fields[key]=patch; changed=true end
+    end
+    if type(before)=="table" then
+        for key in pairs(before) do if after[key]==nil then fields[key]={remove=true}; changed=true end end
+    end
+    if changed or type(before)~="table" then return {fields=fields} end
+end
+function R:BeginDiagnostics()
+    if self.loggingInitialized or not A.characterDB then return end
+    self.loggingInitialized=true; self.logging=true; self.tracePrevious=nil
+    local previous=A.characterDB.rotationDiagnostics
+    if previous and (previous.count or 0)>0 then
+        -- Keep at most three sessions: current, previous and second previous.
+        -- Replacing the second previous releases the oldest capture.
+        local older=A.characterDB.rotationDiagnosticsPrevious
+        A.characterDB.rotationDiagnosticsPrevious2=older and (older.count or 0)>0 and older or nil
+        A.characterDB.rotationDiagnosticsPrevious=previous
+    end
+    A.characterDB.rotationDiagnostics={version=2,startedAt=time and time(),count=0,total=0,entries={}}
+end
+function R:TraceRotation(event,force)
+    if not self.logging or not A.characterDB then return end
+    local log=A.characterDB.rotationDiagnostics
+    if not log then return end
+    local s=self.snapshot or {}; local now=clock()
+    local row={time=now,wallTime=time and time(),event=event or "poll",mode=self:Mode(),
+        reason=self.reason,lock=self.lockStatus,decision=self.traceDecision,
+        selected=diagnosticFields(self.current,"id name item buffColor"),
+        plan=diagnosticFields(self.castPlan,"key id token finish target"),
+        castEvent=diagnosticFields(self.lastCastEvent,"event time id token target"),
+        state=diagnosticFields(s,"class level targetLevel targetBoss grouped targetCombat targetDotted scorchStacks scorchRemaining winterChillStacks spellHit haste time combat dead taxi moving mounted casting castToken castSpellID rotationCast castEnd channelKey channelRemaining targetGUID validTarget targetPlayer targetHP targetHealth targetDistance targetClose controlled frozen frozenRemaining slowRemaining timeToDie healthTrendDuration healthTrendLosses healthTrendRate playerHealth power maxPower powerPercent projectedPower powerHorizon regenDelay normalRegen targets nearby cluster safeAOE safeCluster attackingPlayer recentDamage interrupt"),
+        spells={},buffs={},buffDurations={},highlights={},optional={},ooc={},supplyChecks={},
+        talents={},talentsReady=self.talentsReady,spellPower={},spellCrit={},
+        intellectBlocker=diagnosticFields(s.intellectBlocker,"id power remaining")}
+    for key,value in pairs(s.talents or {}) do row.talents[key]=diagnosticValue(value) end
+    for school,value in pairs(s.spellPower or {}) do row.spellPower[school]=diagnosticValue(value) end
+    for school,value in pairs(s.spellCrit or {}) do row.spellCrit[school]=diagnosticValue(value) end
+    for id,check in pairs(self.supplyChecks or {}) do
+        row.supplyChecks[id]=diagnosticFields(check,"tracking owned family name spellID usable cooldownStart cooldownDuration enabled auraRemaining buffRemaining eligible itemInfoAvailable")
+    end
+    for key,value in pairs(s.buffs or {}) do row.buffs[key]=diagnosticValue(value) end
+    for key,value in pairs(s.buffDurations or {}) do row.buffDurations[key]=diagnosticValue(value) end
+    for key,spell in pairs(s.spells or {}) do
+        local entry=diagnosticFields(spell,"id name item ready usable usableNow immune range requiresRange approaching powerPreview plannedPower cost castTime cooldownRemaining lowPower buffColor")
+        local module=self:Class(s.class)
+        local estimate=module and module.Estimate and module.Estimate(s,key)
+        if estimate then entry.estimate=diagnosticFields(estimate,"score damage cast cost school") end
+        row.spells[key]=entry
+    end
+    for _,spell in ipairs(self.optionalActions or {}) do row.optional[#row.optional+1]=diagnosticFields(spell,"id name item buffColor") end
+    for _,spell in ipairs(self.oocActions or {}) do row.ooc[#row.ooc+1]=diagnosticFields(spell,"id name item buffColor") end
+    for button,glow in pairs(self.highlights) do
+        if glow:IsShown() then
+            local slot=button.action or button.GetAttribute and button:GetAttribute("action")
+            local kind,id,subtype
+            if slot and GetActionInfo then kind,id,subtype=GetActionInfo(slot) end
+            row.highlights[#row.highlights+1]={button=button.GetName and button:GetName(),slot=slot,
+                kind=kind,id=id,subtype=subtype,resolvedSpell=actionSpell(slot),style=glow.style}
+        end
+    end
+    row.highlightCount=self.highlightCount
+    row.time=nil -- Entry timestamp is stored once, outside the delta.
+    log.count=log.count+1; log.total=log.count
+    log.entries[log.count]={time=now,delta=diagnosticDelta(self.tracePrevious,row)}
+    self.tracePrevious=row
+end
+function R:Diagnostics(command)
+    self:BeginDiagnostics()
+    command=command and command~="" and command or "status"
+    if command=="mark" then self:TraceRotation("USER_MARK",true)
+    elseif command~="status" then A:Print("Rotation logging is automatic. Use /hcb rotation log mark or status."); return end
+    local log=A.characterDB.rotationDiagnostics
+    A:Print("Rotation logging automatically | "..(log and log.count or 0).." samples. /hcb rotation log mark flags an issue.")
+    if command=="status" then
+        A:Print("After /reload or logout, current and previous logs are in "..A.DebugDump:SavedPath())
+    end
+end
+function R:Update(event)
     if not A.characterDB then return end
+    self:BeginDiagnostics()
+    self.supplyChecks=nil
     if self.suspended or self:Mode()=="disabled" then
+        self.traceDecision=nil; self.lockStatus="disabled"
         self.approach=nil; self.powerSample=nil; self.healthSample=nil; self.immune=nil; self.lastDamage=nil; self.castPlan=nil
         self.current=nil; self.primary=nil; self.optional=nil; self.optionalActions={}; self.oocActions={}; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
     else
         self.snapshot=self:Snapshot()
-        local key,reason,optional,urgent=self.Decide(self.snapshot)
+        local key,reason,optional,urgent
+        if self.supported[self.snapshot.class] then key,reason,optional,urgent=self.Decide(self.snapshot)
+        else reason="No consumable preparation needed." end
+        self.traceDecision=self.logging and {key=key,reason=reason,optional=optional,urgent=urgent} or nil
         key,reason,optional=self:StabilizeRecommendation(self.snapshot,key,reason,optional,urgent)
         local selected=key and self.snapshot.spells[key]
         self.primary=not optional and selected or nil
         self.optionalActions={}
-        local choices=A.MageRotation.Optional(self.snapshot)
+        local module=self:Class(self.snapshot.class)
+        local choices=module and module.Optional and module.Optional(self.snapshot) or {}
         for _,choice in ipairs(choices) do
             local spell=self.snapshot.spells[choice.key]
+            if spell then spell.buffColor=choice.buffColor end
             if spell and spell~=self.primary then self.optionalActions[#self.optionalActions+1]=spell end
         end
         self.current=selected or self.optionalActions[1]
         self.reason=selected and reason or choices[1] and choices[1].reason or reason
         self.optional=not not (self.current and not self.primary)
         self.oocActions={}
-        if not self.snapshot.combat and not urgent then
+        if not self.snapshot.combat and not urgent and not self.castPlan and not self.snapshot.rotationCast then
             if selected and optional then self.oocActions[#self.oocActions+1]=selected end
             for _,spell in ipairs(self.optionalActions) do self.oocActions[#self.oocActions+1]=spell end
             for _,spell in ipairs(self:OutOfCombatSupplies(self.snapshot)) do self.oocActions[#self.oocActions+1]=spell end
@@ -828,22 +783,39 @@ function R:Update()
             self:Highlight(self.primary,false,nil,self.oocActions)
         else self:Highlight(selected,optional,self.optionalActions) end
     end
+    self:TraceRotation(event)
     if self.RefreshView then self:RefreshView() end
 end
 local events=CreateFrame("Frame"); R.events=events
+events:RegisterEvent("PLAYER_LOGOUT")
+events:RegisterEvent("UI_ERROR_MESSAGE")
 for _,event in ipairs({"PLAYER_LOGIN","PLAYER_ENTERING_WORLD","PLAYER_LEAVING_WORLD","SPELLS_CHANGED","SPELL_DATA_LOAD_RESULT","PLAYER_TALENT_UPDATE","PLAYER_REGEN_ENABLED","ACTIONBAR_SLOT_CHANGED","ACTIONBAR_PAGE_CHANGED","PLAYER_TARGET_CHANGED","START_AUTOREPEAT_SPELL","STOP_AUTOREPEAT_SPELL"}) do events:RegisterEvent(event) end
-for _,event in ipairs({"UNIT_POWER_UPDATE","UNIT_POWER_FREQUENT","UNIT_MAXPOWER","UNIT_SPELLCAST_START","UNIT_SPELLCAST_STOP","UNIT_SPELLCAST_CHANNEL_START","UNIT_SPELLCAST_CHANNEL_STOP"}) do events:RegisterEvent(event) end
+for _,event in ipairs({"UNIT_POWER_UPDATE","UNIT_POWER_FREQUENT","UNIT_MAXPOWER","UNIT_SPELLCAST_SENT","UNIT_SPELLCAST_SUCCEEDED","UNIT_SPELLCAST_FAILED","UNIT_SPELLCAST_FAILED_QUIET","UNIT_SPELLCAST_START","UNIT_SPELLCAST_STOP","UNIT_SPELLCAST_CHANNEL_START","UNIT_SPELLCAST_CHANNEL_STOP"}) do events:RegisterEvent(event) end
 for _,event in ipairs({"MODIFIER_STATE_CHANGED","UPDATE_MACROS","ACTIONBAR_UPDATE_STATE"}) do events:RegisterEvent(event) end
 events:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
 for _,event in ipairs({"COMBAT_LOG_EVENT_UNFILTERED","PLAYER_EQUIPMENT_CHANGED","PLAYER_LEVEL_UP","CHARACTER_POINTS_CHANGED","UNIT_AURA","LOSS_OF_CONTROL_ADDED","LOSS_OF_CONTROL_UPDATE"}) do events:RegisterEvent(event) end
-events:SetScript("OnEvent",function(_,event,unit)
+events:SetScript("OnEvent",function(_,event,unit,message,castID,sentSpellID)
+    if event=="PLAYER_LOGOUT" then
+        R:TraceRotation("PLAYER_LOGOUT",true)
+        if A.characterDB and A.characterDB.rotationDiagnostics then A.characterDB.rotationDiagnostics.endedAt=time and time() end
+        return
+    end
+    if event=="UI_ERROR_MESSAGE" then R:TraceRotation(event..":"..tostring(message or unit),true); return end
     if event=="COMBAT_LOG_EVENT_UNFILTERED" then
-        if R:Mode()=="assistant" and R.class=="MAGE" and not R.suspended then R:ObserveCombat() end
+        if R:Mode()=="assistant" and R:Class() and R:Class().ObserveCombat and not R.suspended then R:ObserveCombat() end
         return
     end
     if event:sub(1,5)=="UNIT_" then
-        if unit=="player" and event=="UNIT_SPELLCAST_INTERRUPTED" then R.castPlan=nil end
-        if (unit=="player" or event=="UNIT_AURA" and unit=="target") and not R.suspended and R:Mode()~="disabled" then R:Update() end
+        if unit=="player" and event:sub(1,15)=="UNIT_SPELLCAST_" then
+            local sent=event=="UNIT_SPELLCAST_SENT"
+            R.lastCastEvent={event=event,time=clock(),id=sent and sentSpellID or castID,
+                token=sent and castID or message,target=sent and message or nil}
+        end
+        if unit=="player" and event=="UNIT_SPELLCAST_INTERRUPTED" and type(message)=="string" then
+            R.interruptedCastToken="cast:"..message
+            if R.castPlan and R.castPlan.token==R.interruptedCastToken then R.castPlan=nil end
+        end
+        if (unit=="player" or event=="UNIT_AURA" and unit=="target") and not R.suspended and R:Mode()~="disabled" then R:Update(event) end
         return
     end
     if event=="PLAYER_TARGET_CHANGED" or event=="PLAYER_LEAVING_WORLD" or event=="PLAYER_ENTERING_WORLD" then R.approach=nil; R.castPlan=nil end
@@ -854,9 +826,11 @@ events:SetScript("OnEvent",function(_,event,unit)
     elseif event=="STOP_AUTOREPEAT_SPELL" then R.autoRepeat=nil end
     if event=="SPELLS_CHANGED" or event=="SPELL_DATA_LOAD_RESULT" or event=="PLAYER_TALENT_UPDATE" or event=="PLAYER_ENTERING_WORLD"
         or event=="PLAYER_EQUIPMENT_CHANGED" or event=="PLAYER_LEVEL_UP" or event=="CHARACTER_POINTS_CHANGED" then R.dirty=true end
-    R:PrepareHighlights(); R:Update()
+    R:PrepareHighlights(); R:Update(event)
 end)
 events:SetScript("OnUpdate",function(_,elapsed)
     R.elapsed=R.elapsed+elapsed; if R.elapsed<.2 then return end; R.elapsed=0
     if not R.suspended and R:Mode()~="disabled" then R:Update() end
 end)
+
+R.api={clock=clock,info=info,known=known,aura=aura,auraRemaining=auraRemaining,position=position,distance=distance,hostile=hostile}

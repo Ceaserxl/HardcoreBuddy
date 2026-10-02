@@ -3,6 +3,7 @@ local count=0
 local function check(ok,why) count=count+1; assert(ok,why) end
 local function state(keys,level)
     local s={class='MAGE',level=level or 60,spells={},buffs={},talents={},spellPower={},spellCrit={},
+        buffDurations={intellect=1200,icearmor=1200,magearmor=1200,barrier=100},
         combat=true,grouped=true,validTarget=true,playerHealth=100,targetHealth=100,targetHP=5000,
         powerPercent=100,power=5000,maxPower=5000,targets=1,nearby=1,safeAOE=true,targetClose=false}
     for _,key in ipairs(keys or {'frostbolt','fireball'}) do
@@ -24,16 +25,20 @@ local function optional(s,key)
     for _,choice in ipairs(M.Optional(s)) do if choice.key==key then return true end end
     return false
 end
-check(not R.supported.ROGUE and not R.definitions.ROGUE,'Rogue prototype removed')
+check(not R.supported.ROGUE and R.classes.ROGUE and not R.classes.ROGUE.combat,'Rogue class boundary does not restore the old combat prototype')
+check(M.BuffRefresh(300,3600) and not M.BuffRefresh(300.001,3600),'Hour buff warning starts at five minutes')
+check(M.BuffRefresh(300,1800) and not M.BuffRefresh(301,1800),'Self buff warning uses five minutes instead of a percentage')
+check(M.BuffRefresh(60,60),'Short self buffs also fall within the five-minute threshold')
+check(M.BuffRefresh(300,nil) and M.BuffRefresh(0,nil) and not M.BuffRefresh(math.huge,nil),'Known remaining time works without duration; indefinite buffs do not warn')
 do
     local s=state({'frostbolt','intellect','icearmor','magearmor','barrier'})
-    s.buffs={intellect=61,icearmor=61,barrier=6}; s.hasArmor=true
+    s.buffs={intellect=301,icearmor=301,barrier=301}; s.hasArmor=true
     check(#M.Optional(s)==0,'Healthy buff durations do not prompt refresh')
-    s.buffs={intellect=60,icearmor=60,barrier=5}
+    s.buffs={intellect=300,icearmor=300,barrier=300}
     check(optional(s,'intellect') and optional(s,'magearmor') and optional(s,'barrier'),'Buff refresh windows begin before expiration')
     check(#M.Optional(s)==3,'Only one armor choice accompanies other expiring buffs')
     decide(s,'frostbolt','Early refresh leaves damage primary intact')
-    s.buffs.intellect=1800; s.buffs.icearmor=1800; s.buffs.barrier=60
+    s.buffs.intellect=1800; s.buffs.icearmor=1800; s.buffs.barrier=301
     check(#M.Optional(s)==0,'Fresh durations clear all early refresh prompts')
     s.buffs={intellect=math.huge,magearmor=math.huge,barrier=math.huge}
     check(#M.Optional(s)==0,'Unknown or unlimited durations do not prompt refresh')
@@ -43,7 +48,7 @@ end
 do
     local s=state({'fireball','pyroblast'}); s.combat=false; s.grouped=false; s.targetDistance=30
     decide(s,'pyroblast','Dedicated distant Pyroblast opener beats sustained throughput')
-    for _,field in ipairs({'combat','targetCombat','casting','moving','targetDotted'}) do
+    for _,field in ipairs({'combat','targetCombat','casting','targetDotted'}) do
         s[field]=true; check(R.Decide(s)~='pyroblast','No long opener with '..field); s[field]=false
     end
     s.targetDistance=15; check(R.Decide(s)~='pyroblast','No long opener close to enemy')
@@ -59,15 +64,19 @@ do
     s.attackingPlayer=true; check(R.Decide(s)~='shoot','Closing attacker suppresses deliberate wand finish')
     s.targetDistance=30; s.slowRemaining=10; decide(s,'shoot','Distant slowed attacker permits short wand finish')
     s.attackingPlayer=false
-    for _,field in ipairs({'recentDamage','moving','targetClose','casting'}) do
+    for _,field in ipairs({'recentDamage','targetClose','casting'}) do
         s[field]=true; check(R.Decide(s)~='shoot','No deliberate wand finishing with '..field); s[field]=false
     end
     s.wandDamage=nil; decide(s,'frostbolt','Unknown wand damage preserves filler')
     s=state({'frostbolt'}); s.spells.managem={id=8008,item=true,restore=1200,ready=true,usable=true}
-    s.power=3500; decide(s,'managem','Use carried gem when full restoration fits')
+    s.power=3500; decide(s,'frostbolt','Mana gem leaves damage primary intact')
+    check(optional(s,'managem'),'Full restoration fits: gem remains auxiliary')
     s.power=4000; decide(s,'frostbolt','Do not waste gem restoration')
+    check(not optional(s,'managem'),'Gem auxiliary respects full restoration threshold')
     s.power=3500; s.spells.managem.ready=false; decide(s,'frostbolt','Respect shared gem cooldown')
     s.spells.managem.ready=true; s.casting=true; decide(s,'frostbolt','Gem does not interrupt current cast')
+    check(optional(s,'managem'),'Gem auxiliary persists while casting and moving'); s.moving=true
+    check(optional(s,'managem'),'Movement preserves gem auxiliary'); s.moving=false
     s.casting=false; s.spells.counterspell={ready=true,usable=true}; s.interrupt=true
     decide(s,'counterspell','Enemy interrupt takes priority over mana gem')
     s=state({'frostbolt','ruby'}); s.combat=false; s.prepareGem='ruby'; s.spells.ruby.cost=1200
@@ -141,7 +150,7 @@ s=state({'frostbolt','polymorph'}); s.attackingPlayer=true; s.targets=2; s.polyE
 decide(s,'polymorph','Control eligible extra attacker'); s.targetDotted=true; decide(s,'frostbolt','Do not sheep a dotted target')
 s=state({'fireball','intellect','frostarmor'}); s.combat=false
 check(optional(s,'intellect') and optional(s,'frostarmor'),'Prepull buffs coexist')
-decide(s,'fireball','Prepull buffs do not replace primary'); s.buffs.intellect=100
+decide(s,'fireball','Prepull buffs do not replace primary'); s.buffs.intellect=301
 check(not optional(s,'intellect') and optional(s,'frostarmor'),'Only missing buff remains optional')
 s.hasArmor=true; decide(s,'fireball','No repeat armor buff')
 s=state({'frostbolt','evocation'}); s.combat=false; s.powerPercent=10
@@ -166,7 +175,7 @@ s.scorchRemaining=2; decide(s,'scorch','Refresh vulnerability before expiry')
 s=state({'fireball','arcanepower','combustion'}); s.timeToDie=30
 decide(s,'arcanepower','Use burst in long fight'); s.buffs.arcanepower=10; decide(s,'combustion','Combustion for fire damage')
 s.timeToDie=2; decide(s,'fireball','Save cooldowns on dying target')
-s=state({'fireball','presence'}); s.moving=true; decide(s,'presence','Presence while moving')
+s=state({'fireball','presence'}); s.moving=true; s.timeToDie=30; decide(s,'presence','Presence remains available during movement')
 s=state({'fireball','pyroblast'}); s.buffs.presence=10; decide(s,'pyroblast','Instant Pyroblast with Presence')
 s=state({'frostbolt','explosion','blizzard','flamestrike','blastwave'}); s.nearby=0; s.cluster=4; s.safeCluster=true; s.targetClose=false
 decide(s,'flamestrike','Ground cluster opening'); s.flamestrikeActive=true; decide(s,'blizzard','Do not repeatedly overwrite ground DoT')

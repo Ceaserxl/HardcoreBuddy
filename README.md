@@ -129,7 +129,7 @@ and Mage prototype priorities have been replaced. Disabled remains the default,
 saved per character. You cast every spell yourself.
 
 The helper compares learned ranks using actual talents, cast times, school spell
-power and critical chance. It adapts to mana, movement, enemy health trends,
+power and critical chance. It adapts to mana, enemy health trends,
 control effects and incoming damage. Survival, interrupts and curse removal take
 priority over damage. It handles Fire/Frost/Arcane damage choices, cooldowns,
 preparation buffs, safe observed AoE, wand fallback and Evocation.

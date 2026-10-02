@@ -9,7 +9,7 @@ excluded. Guide strategies inform priorities but do not prove numerical optimali
 | Topic | Research finding | Current helper / action |
 | --- | --- | --- |
 | Leveling fillers | Newly learned Fireball/Frostbolt ranks matter early; later Frost talents change the balance. | Keep learned-rank and actual-talent comparisons instead of a fixed spell for every level. |
-| Fire Blast | Movement and finishing are useful contexts; single-target sustained casting is built around the main filler. | Removed the raw damage-per-GCD rule that could repeatedly displace the filler. Retain movement, finishing, expiring-freeze and unavailable-filler uses. |
+| Fire Blast | Movement and finishing are useful contexts; single-target sustained casting is built around the main filler. | Removed the raw damage-per-GCD rule that could repeatedly displace the filler. Retain finishing, expiring-freeze and unavailable-filler uses; movement does not select a different action. |
 | Defensive Nova | Rank 1 preserves the root while saving mana. | Select learned Rank 1 for the existing defensive Nova priority. Higher ranks are not needed for that control action. |
 | Scorch | Its vulnerability benefits longer Fire fights more than short leveling kills. | Existing longer-fight stack/refresh gating is appropriate; the exact ten-second cutoff is an addon heuristic. |
 | Arcane leveling | Arcane investment does not require exclusive Arcane Missiles use. Fireball and Frostbolt remain relevant. | Keep cross-school comparisons; evaluate actual talents rather than assuming every Arcane build has the guide's level-47 allocation. |
@@ -31,7 +31,7 @@ guides. The research does not establish that the entire helper is optimal.
 - [Frost Nova Rank 1](https://www.wowhead.com/classic/spell=122/frost-nova) and [Rank 4](https://www.wowhead.com/classic/spell=10230/frost-nova): Classic tooltip checks show 55 versus 145 base mana, both with up to eight seconds of rooting. Damage can break either root.
 
 Regression coverage checks that a higher instantaneous score alone no longer
-promotes Fire Blast, that movement/finisher/fallback uses remain, and that the
+promotes Fire Blast, that finisher/fallback uses remain, and that the
 Nova rank choice follows actual learned spells. In-game validation remains
 separate from these offline checks.
 
@@ -53,3 +53,22 @@ The live adapter uses Blizzard's
 [item count](https://github.com/Gethe/wow-ui-source/blob/classic/Interface/AddOns/Blizzard_APIDocumentationGenerated/ItemDocumentation.lua)
 and [item cooldown](https://github.com/Gethe/wow-ui-source/blob/classic/Interface/AddOns/Blizzard_APIDocumentationGenerated/ContainerDocumentation.lua)
 contracts, with legacy fallbacks and bag-only counts.
+
+## Level-41 Shatter follow-up
+
+The next capture showed a 2.5-second Rank 7 Frostbolt and a frozen-target damage
+increase, consistent with active Frost talent effects. Exact talent ranks were
+not recorded in that session; an older gear snapshot is not a substitute for
+current combat state. Those ranks and school stats are now recorded directly.
+
+The helper's defensive Nova threshold did not proactively use the solo
+Shatter/Nova interaction described in the [Classic single-target leveling
+guide](https://www.icy-veins.com/wow-classic/single-target-frost-mage-leveling-talent-build-from-1-to-60).
+Added healthy solo melee-attacker rooting when Shatter is actually allocated,
+with crowd-control, finishing, mana, range, grouping, and channel safeguards.
+The finishing threshold counts two Frostbolts when a damage cast is in progress
+and one otherwise; this is a conservative heuristic, not projectile tracking.
+It does not request an early cast cancel or replace a committed next spell
+mid-cast. Exact thresholds remain subject to further in-game validation.
+
+Movement-dependent gates were removed at the user's request. Mage recommendations and optional actions now use the same conditions while moving or stationary; ground-spell plan retention follows that policy too. This is a highlight policy, not a change to Classic casting mechanics.

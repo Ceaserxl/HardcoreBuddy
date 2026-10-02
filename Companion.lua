@@ -59,7 +59,7 @@ function C.Tabs(context)
 end
 local tabDescriptions={["Zone Advisor"]="Recommended leveling zones, dangerous NPCs and maps.",Spells="Your next training level and future class and pet spells.",
     Gear="Equipment scoring and upgrade advice.",Talents="Your next talent and point-by-point build path.",
-    ["Rotation Advisor"]="Rogue and Mage spell recommendations and action-bar highlights. Proof of concept.",
+    ["Rotation Advisor"]="Mage combat advice and class-filtered consumable preparation highlights.",
     ["Pet Training"]="Learn and teach pet abilities.",["Pet Guide"]="Pet families, abilities, taming sources and care.",
     ["First Aid"]="Bandages, anti-venom and profession training.",Engineering="Target dummy recipes and profession training.",
     Cooking="Food recommendations and profession training."}
