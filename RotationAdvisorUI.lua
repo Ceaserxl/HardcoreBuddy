@@ -115,7 +115,7 @@ function R:RefreshView()
         or "Enable Assistant Mode in Settings to begin.")
     view.character.values:SetText(mode=="disabled" and "Live monitoring is off." or
         "Health: "..pct(s.playerHealth).."\nMana: "..pct(s.powerPercent)
-        .."\nMoving: "..(s.moving and "Yes" or "No").."\nPlanning ahead: "..string.format("%.1fs",s.powerHorizon or 1))
+        .."\nMoving: "..(s.moving and "Yes" or "No").."\nPlanning ahead: "..string.format("%.1fs",s.powerHorizon or self.lookahead))
     view.target.values:SetText(mode=="disabled" and "Live monitoring is off." or
         not s.validTarget and "Select a living enemy." or
         "Health: "..pct(s.targetHealth).." | Mana: "..(s.targetPowerType==0 and pct(s.targetMana) or "Not a mana user")

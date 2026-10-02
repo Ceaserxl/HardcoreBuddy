@@ -213,7 +213,7 @@ function M.Decide(s)
         and (s.power or 0)-(s.spells[s.prepareGem].cost or math.huge)>=(s.maxPower or 0)*.3 then
         return s.prepareGem,"Conjure a mana gem before the next pull.",true,false
     end
-    if not validEnemy(s) or s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>1 then return nil,"" end
+    if not validEnemy(s) or s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>R.lookahead then return nil,"" end
     local plan=profile(s)
     -- Required setup is the next action, never a competing auxiliary glow.
     local bolt=M.Estimate(s,"frostbolt")
@@ -452,7 +452,7 @@ end
 
 function M.Retainable(s,key)
     if (s.buffs.iceblock or 0)>0 then return false end
-    if s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>1 then return false end
+    if s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>R.lookahead then return false end
     if not M.Ready(s,key) or key=="shoot" and s.wanding then return false end
     if key=="pyroblast" and s.combat and (s.buffs.presence or 0)==0 then return false end
     if M.ground[key] then

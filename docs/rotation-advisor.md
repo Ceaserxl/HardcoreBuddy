@@ -82,7 +82,7 @@ need to stop or dismount when a spell requires it.
 A normal damage cast commits its next action at cast start. That action remains
 through the cast and a short completion handoff. Current cast mana is reserved
 before forecasting the next action. Cooldowns and mana can be previewed through
-the remaining cast/GCD with at least a one-second reaction lead. Enemy approach
+the remaining cast/GCD with at least a two-second reaction lead. Enemy approach
 previews require actual position/range evidence.
 
 Invalid range, immunity, insufficient mana, crowd control or unsafe AoE can
@@ -91,7 +91,7 @@ cast, target change or immediate survival emergency can replace the plan.
 An interrupted cast token cannot create a new plan while the client briefly
 continues reporting that cancelled cast.
 
-Damage channels preview their next action in the final second. Utility can
+Damage channels preview their next action in the final two seconds. Utility can
 remain available; Evocation is allowed to finish except for an immediate survival
 emergency. A primary may be absent while the wand is already firing or no eligible
 attack is available.

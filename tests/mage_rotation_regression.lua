@@ -134,7 +134,7 @@ s=state({'frostbolt','slowfall'}); s.fallingFor=2; decide(s,'slowfall','Sustaine
 s.buffs.slowfall=10; decide(s,'frostbolt','Existing Slow Fall is respected')
 s=state({'frostbolt','counterspell'}); s.interrupt=true; s.validTarget=false; decide(s,nil,'Never interrupt a friendly target')
 s=state({'frostbolt','fireblast'}); s.channelKey='missiles'; s.channelRemaining=3; decide(s,nil,'Do not encourage clipping a damage channel')
-s.channelRemaining=.8; check(R.Decide(s)~=nil,'Next spell leads the end of a damage channel')
+s.channelRemaining=2; check(R.Decide(s)~=nil,'Next spell previews the final two seconds of a damage channel')
 s=state({'frostbolt','counterspell'}); s.channelKey='missiles'; s.channelRemaining=3; s.interrupt=true
 decide(s,nil,'Damage channel remains uninterrupted'); check(optional(s,'counterspell'),'Interrupt highlights independently during a running channel')
 s=state({'frostbolt','fireward','frostward'}); s.recentDamage=true; s.playerHealth=60; s.damageSchool=4

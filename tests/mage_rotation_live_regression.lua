@@ -9,10 +9,12 @@ do
     units.player.power=20; R.powerSample=nil; s=R:Snapshot()
     check(not s.spells.frostbolt.usable,'Large mana deficit is not forecast as ready')
     units.player.power=45; R.powerSample=nil; ready[61304]={startTime=now,duration=1.5,isEnabled=true}
-    s=R:Snapshot(); check(s.powerHorizon==1.5 and s.projectedPower==52.5,'Forecast covers remaining GCD')
+    s=R:Snapshot(); check(s.powerHorizon==2 and s.projectedPower==55,'Forecast leads two seconds even during a shorter GCD')
     check(s.gcdRemaining==1.5,'Snapshot records remaining GCD independently of spell cooldown readiness')
-    ready[837]={startTime=now-6.6,duration=8,isEnabled=true}
-    s=R:Snapshot(); check(s.spells.frostbolt.ready,'Cooldown ending during current GCD can be previewed')
+    ready[837]={startTime=now-6,duration=8,isEnabled=true}
+    s=R:Snapshot(); check(s.spells.frostbolt.ready,'Cooldown ending in two seconds can be previewed')
+    ready[837].startTime=now-5.9
+    s=R:Snapshot(); check(not s.spells.frostbolt.ready,'Cooldown beyond two seconds waits for the preview window')
     ready={}; units.player.power=80; casts.player=true; R.powerSample=nil
     s=R:Snapshot(); check(s.projectedPower==40 and not s.spells.frostbolt.usable,'Reserve the current cast mana before recommending the next')
     casts={}; usable={}; units.player.power=900

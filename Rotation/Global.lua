@@ -10,6 +10,7 @@ R.categories={
     preparation={name="Preparation & Recovery",color={.15,.55,1},description="Preparation & Recovery (Blue): buffs, food, drinks and mana recovery."},
 }
 R.categoryOrder={"main","offensive","defensive","preparation"}
+R.lookahead=2
 R.definitions={}
 function R:RegisterClass(token,module)
     self.classes[token]=module; self.definitions[token]=module.definitions or {}
@@ -245,7 +246,7 @@ function R:PowerForecast(s)
     self.powerSample=sample
     s.normalRegen=normal
     s.regenDelay=sample.spent and math.max(0,5-(s.time-sample.spent)) or s.combat and 5 or 0
-    local horizon=1 -- Give the player reaction time even when no GCD is running.
+    local horizon=self.lookahead -- Reaction lead even when no GCD is running.
     local start,duration,enabled=cooldown(61304)
     if enabled~=false and type(start)=="number" and type(duration)=="number" and duration<=1.55 then
         horizon=math.max(horizon,start+duration-s.time)
@@ -330,10 +331,10 @@ function R:SpellState(spell,unit,s)
     local onGCD=activeGCD() and type(start)=="number" and type(duration)=="number"
         and math.abs(start-gcdStart)<.05 and duration<=gcdDuration+.05
     local gcdLength=activeGCD() and gcdDuration or 1.5
-    -- Plan for the end of the current cast/GCD, with at least one second of
+    -- Plan for the end of the current cast/GCD, with at least two seconds of
     -- reaction time. GCD-only spells remain eligible throughout the GCD.
     local ready=enabled~=false and type(start)=="number" and type(duration)=="number"
-        and (start+duration<=now or onGCD or duration>gcdLength and start+duration-now<=math.max(1,s and s.powerHorizon or 0))
+        and (start+duration<=now or onGCD or duration>gcdLength and start+duration-now<=math.max(self.lookahead,s and s.powerHorizon or 0))
     local range
     if unit then
         range=spellRange(spell,unit)
