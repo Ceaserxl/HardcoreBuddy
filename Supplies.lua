@@ -105,9 +105,10 @@ function S.Record(context, item, groupFamily)
     local inventory = context.inventory or {}
     local available = inventory.available == true and type(inventory.counts) == "table"
     local targets = type(context.targets) == "table" and context.targets or {}
+    local suggested=item.ammoKind and addon.Ammunition.DefaultTarget(context,item) or S.DefaultTarget(item)
     groupFamily = groupFamily or (P.grouped[item.family] and item.family or nil)
     local target = S.NormalizeTarget(targets[id] ~= nil and targets[id] or targets[tostring(id)],item.ammoKind and 10000 or 200)
-    if target == nil then target = S.DefaultTarget(item) end
+    if target == nil then target = suggested end
     local count = available and (inventory.counts[id] or 0) or nil
     if item.ammoKind and addon.Ammunition then count=addon.Ammunition.Count(context,item) end
     if item.ammoKind and context.characterClass~="Hunter" and targets[id]==nil and targets[tostring(id)]==nil then target=100 end
@@ -128,7 +129,7 @@ function S.Record(context, item, groupFamily)
         family=item.family, groupFamily=groupFamily, category=S.Category(item),priority=S.Priority(context,item),
         count=count, target=target, targetKey=id, status=status, missing=missing,
         owned=count ~= nil and count > 0 or false, available=count ~= nil,
-        quantityNote=note, defaultTarget=S.DefaultTarget(item),
+        quantityNote=note, defaultTarget=suggested,
         refillThreshold=threshold,refillNeeded=count~=nil and count<threshold,
         optional=S.Category(item) == "Optional", tracking=target > 0,
     }

@@ -65,6 +65,13 @@ sizes are still respected without buying over the target.
 Only items marked **Essentials** trigger notifications and purchases. Other
 priorities retain their editable quantities without triggering restocking.
 Hunter ammo is Essentials by default, with existing priority overrides preserved.
+For live hunters, the default ammo target is 200 times the largest equipped
+matching quiver/pouch's total slot count (not empty slots). Arrows and bullets
+keep separate per-character capacity targets. Larger containers raise the
+remembered target and smaller replacements do not lower it. Existing custom
+amounts remain until a container upgrade raises them; zero always stays disabled.
+Without a detected matching container, the previous 1,000-round fallback applies.
+Bow/crossbow and gun swaps refresh arrows/bullets and their matching targets.
 
 Ammo recommendations include ordinary vendor tiers and stronger crafted bullets
 at levels 5, 15, 30, 37, 44 and 52. At level 52, Thorium Headed Arrows replace

@@ -44,6 +44,48 @@ function M.Kind()
     if classID~=2 then return nil end
     return (subclassID==2 or subclassID==18) and "arrows" or subclassID==3 and "bullets" or subclassID==16 and "thrown" or nil
 end
+function M.RefreshCapacity()
+    if not A.characterDB or not UnitClass then return end
+    local _,class=UnitClass("player"); if class~="HUNTER" then return end
+    local C=C_Container
+    if not C or not C.GetContainerNumSlots or not C.GetContainerNumFreeSlots then return end
+    local slots={arrows=0,bullets=0}
+    for bag=1,4 do
+        local count=C.GetContainerNumSlots(bag)
+        local _,family=C.GetContainerNumFreeSlots(bag)
+        if type(count)=="number" and count>0 and type(family)=="number" then
+            -- Classic bag-family masks: arrows=1, bullets=2. Count total slots,
+            -- never free slots; ordinary bags do not increase the ammo target.
+            if family%2>=1 then slots.arrows=math.max(slots.arrows,count) end
+            if family%4>=2 then slots.bullets=math.max(slots.bullets,count) end
+        end
+    end
+    if type(A.characterDB.ammoCapacityTargets)~="table" then A.characterDB.ammoCapacityTargets={} end
+    for kind,count in pairs(slots) do
+        local amount=count*200
+        local previous=A.characterDB.ammoCapacityTargets[kind]
+        if amount>0 and (type(previous)~="number" or amount>previous) then
+            A.characterDB.ammoCapacityTargets[kind]=amount
+            -- Keep explicit quantities until the container grows. Zero remains off.
+            if type(previous)=="number" then
+                for id,item in pairs(M.items) do
+                    local targets=A.characterDB.targets or {}
+                    local target=targets[id] or targets[tostring(id)]
+                    if item.ammoKind==kind and type(target)=="number" and target>0 and target<amount then
+                        targets[id]=amount; targets[tostring(id)]=nil
+                    end
+                end
+            end
+        end
+    end
+end
+function M.DefaultTarget(context,item)
+    if context.characterClass~="Hunter" or item.ammoKind=="thrown" then return 100 end
+    if context.mode=="preview" then return 1000 end
+    M.RefreshCapacity()
+    local targets=A.characterDB and A.characterDB.ammoCapacityTargets
+    return targets and targets[item.ammoKind] or 1000
+end
 function M.Recommend(context)
     if context.characterClass~="Hunter" and context.characterClass~="Warrior" and context.characterClass~="Rogue" then return nil end
     -- Preview weapon choices must not inherit the real character's equipment.

@@ -331,6 +331,10 @@ events:SetScript("OnEvent", function(self, event, arg, success)
         self:UnregisterEvent("ADDON_LOADED")
         addon:Initialize()
     elseif addon.db then
+        if event=="PLAYER_ENTERING_WORLD" or event=="BAG_UPDATE_DELAYED" or event=="PLAYER_EQUIPMENT_CHANGED"
+            or event=="GET_ITEM_INFO_RECEIVED" or event=="UNIT_INVENTORY_CHANGED" and arg=="player" then
+            addon.Ammunition.RefreshCapacity()
+        end
         if event=="GET_ITEM_INFO_RECEIVED" then
             addon.needsRefresh=true
             for _,item in ipairs(addon.characterDB.userItems) do
