@@ -12,7 +12,7 @@ function UnitRace() return "Human","Human",race end
 function GetSpellInfo(id) return "Spell "..id,"Rank 2",135846 end
 local function build(class,level,all,faction,query,mode)
     return A.ClassSpells.Build({characterClass=class,level=level,faction=faction or "Alliance",mode=mode or "live"},
-        {showAllFutureSpells=all,query=query})
+        {showAllFutureSpells=all==true,query=query})
 end
 local function ids(doc)
     local result={}
@@ -56,6 +56,9 @@ for class,levels in pairs(A.Data.ClassSpells) do
     end
 end
 assert(classes==9 and count==1324)
+local defaultState={}
+local defaultDoc=A.ClassSpells.Build({characterClass='Mage',level=40,faction='Alliance',mode='preview'},defaultState)
+assert(defaultState.showAllFutureSpells==true and defaultDoc.total==build('Mage',40,true).total,'Unset preference defaults to all future spells')
 assert(build("Mage",40).cards[1].title=="Next training: Level 42")
 assert(#build("Mage",40).cards==1 and #build("Mage",40).cards[1].blocks>0)
 local alliance,horde=ids(build("Mage",19,true)),ids(build("Mage",19,true,"Horde"))
@@ -112,7 +115,11 @@ for _,class in ipairs({"MAGE","HUNTER","WARRIOR"}) do
     for _,button in ipairs(A.window.filters) do if button.filter=="Spells" then tab=button end end
     assert(tab and tab:IsVisible()); MOCK.Click(tab)
     assert(A.state.filter=="Spells" and A.document.cards[1].title:find("Next training"))
-    assert(A.window.atLevel:IsShown() and A.window.atLevel.label:GetText()=="Show all future spells")
+    assert(A.state.showAllFutureSpells and A.window.atLevel:IsShown() and A.window.atLevel.label:GetText()=="Hide future spells","Future spells start enabled")
+    MOCK.Click(A.window.atLevel)
+    assert(A.state.showAllFutureSpells==false and A.window.atLevel.label:GetText()=="Show all future spells","Default future view can be hidden")
+    A:Refresh(true)
+    assert(A.state.showAllFutureSpells==false,"Refresh preserves an explicit hidden choice")
     for _,card in ipairs(A.window.cards) do if card:IsShown() and card.spellHeaders then
         assert(#card.spellHeaders==4,"Spell tables have four columns")
         for _,row in ipairs(card.content.blocks) do if row:IsShown() and row.block.spellColumns then

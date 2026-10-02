@@ -7,7 +7,7 @@ obsolete untrained ranks. Race, faction and allocated talent restrictions apply.
 Training and level/talent changes refresh the visible page.
 
 Planning mode still displays the next training level after the selected level.
-Show all future spells appends future class and pet sections through level 60,
+Future spells are shown by default. The toggle hides or appends future class and pet sections through level 60,
 keeping the current section in place. Search applies to the displayed sections. Spell names, ranks,
 icons and hover descriptions come from the WoW client, with lazy loading for
 uncached spell data.

@@ -148,6 +148,7 @@ local function known(id)
 end
 
 function S.Build(context,state)
+    if state.showAllFutureSpells==nil then state.showAllFutureSpells=true end
     local _,class=UnitClass("player")
     local live=context.mode=="live" and class==context.characterClass:upper() and context.level==UnitLevel("player")
         and (IsPlayerSpell or IsSpellKnown or C_SpellBook and C_SpellBook.IsSpellKnown)
