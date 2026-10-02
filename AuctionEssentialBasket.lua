@@ -27,7 +27,7 @@ function E:Estimate()
     return cost,units,need,unknown,queue
 end
 function E:BuySelected()
-    if self.scan or self.batch or self.awaitingBuy or self.confirmation or not self.open then return end
+    if self.scan or self.batch or self.awaitingBuy or self.purchaseReceipt or self.confirmation or not self.open then return end
     local _,_,_,unknown,queue=self:Estimate()
     if unknown or #queue==0 then return end
     self.skippedOwn=false
@@ -35,8 +35,9 @@ function E:BuySelected()
     self:Start(queue[1].record,true)
 end
 function E:PurchaseSucceeded()
-    local waiting=self.awaitingBuy; if not waiting then return end
-    self.awaitingBuy=nil
+    local waiting=self.awaitingBuy or self.purchaseReceipt; if not waiting then return end
+    self.awaitingBuy=nil; self.purchaseReceipt=nil
+    self:RecordMailPurchase(waiting.listing)
     if not self.batch then self.message="Buyout confirmed. Your items will arrive by mail."; self:Refresh(); return end
     local current=self.batch[1]
     current.remaining=current.remaining-waiting.listing.count
@@ -51,7 +52,7 @@ end
 
 function E:OwnAuctionRejected()
     local waiting=self.awaitingBuy; if not waiting then return end
-    self.awaitingBuy=nil
+    self.awaitingBuy=nil; self.purchaseReceipt=nil
     self.ownSellers=self.ownSellers or {}
     self.ownSellers[waiting.listing.owner]=true
     self.results[waiting.listing.itemId]=nil

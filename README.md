@@ -72,8 +72,11 @@ Armor kits are included in **Enchants** alongside permanent enchant recommendati
 
 **AH > Essentials** scans non-vendor essentials and materials for learned recipes.
 Craft and Buy start unchecked; a completed scan selects Craft only when cheaper.
-Bag stock and bank snapshots saved on close reduce material requirements. Click
-Buy once and confirm each queued stack. Cancel stops the queue.
+Bag stock, bank snapshots saved on close, and confirmed purchases in mail reduce
+refill and material requirements. Fulfilled rows are hidden. Hover **In Mail** to
+see cached purchases; collecting attachments updates their location. The cache
+persists per character across reloads. Click Buy once and confirm each queued
+stack. Cancel stops the queue.
 
 ## Gear and talent advisors
 

@@ -37,7 +37,7 @@ function E:Listing(index,id)
     return {name=name,link=link,count=count,buyout=buyout,owner=owner,index=index,itemId=id},true
 end
 function E:AcceptPurchase(data)
-    if self.confirmation~=data or not self.open or not self.panel:IsShown() or self.scan then return end
+    if self.confirmation~=data or not self.open or not self.panel:IsShown() or self.scan or self.purchaseReceipt then return end
     local current,loaded=self:Listing(data.index,data.itemId)
     if not loaded or not current or current.link~=data.link or current.count~=data.count
         or current.buyout~=data.buyout or current.owner~=data.owner then
@@ -46,6 +46,7 @@ function E:AcceptPurchase(data)
     if GetMoney()<data.buyout then self:Stop("Not enough money for this stack."); return end
     self.confirmation=nil
     self.awaitingBuy={listing=data,since=GetTime()}
+    self.purchaseReceipt=self.awaitingBuy
     PlaceAuctionBid("list",data.index,data.buyout)
     self.results[data.itemId]=nil; self.complete=false
     self.message="Waiting for the auction house to confirm the purchase."; self:Refresh()

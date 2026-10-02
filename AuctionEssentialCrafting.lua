@@ -72,22 +72,26 @@ function E:Items(context)
                 local mid,required=pair[1],pair[2]*crafts
                 local bags=inventory.available and (inventory.counts[mid] or 0) or nil
                 local banks=bank and (bank.counts[mid] or 0) or 0
+                local mail=self:MailCount(mid)
                 local used=parent.crafting and (stockUsed[mid] or 0) or 0
-                local have=bags and math.max(0,bags+banks-used)
+                local have=bags and math.max(0,bags+banks+mail-used)
                 local fromBags=bags and math.min(required,math.max(0,bags-used)) or 0
-                local fromBank=have and math.min(required-fromBags,have-fromBags) or 0
+                local fromBank=have and math.min(required-fromBags,math.max(0,banks-math.max(0,used-bags))) or 0
+                local fromMail=have and math.min(required-fromBags-fromBank,math.max(0,mail-math.max(0,used-bags-banks))) or 0
                 local missing=have and math.max(0,required-have)
                 local name,ready=materialName(pair)
                 local child={itemId=mid,name=name or ("Item "..mid),nameReady=ready,craftParent=parent.itemId,
                     craftActive=parent.crafting,
-                    item={itemId=mid},target=required,count=have,missing=missing,bagUsed=fromBags,bankUsed=fromBank,
+                    item={itemId=mid},target=required,count=have,missing=missing,bagUsed=fromBags,bankUsed=fromBank,mailUsed=fromMail,
+                    bankCount=banks,mailCount=mail,
                     bankKnown=bank~=nil,tracking=true}
-                parent.children[#parent.children+1]=child; out[#out+1]=child
+                parent.children[#parent.children+1]=child
+                if missing==nil or missing>0 then out[#out+1]=child end
                 if parent.crafting then
                     stockUsed[mid]=used+required
                     local demand=demands[mid]
                     if not demand then
-                        demand={itemId=mid,name=child.name,nameReady=ready,item=child.item,count=bags and bags+banks,
+                        demand={itemId=mid,name=child.name,nameReady=ready,item=child.item,count=bags and bags+banks+mail,
                             target=0,missing=0,tracking=true,material=true}
                         demands[mid]=demand
                     end
@@ -148,8 +152,14 @@ function E:PurchaseRecords()
 end
 function E:ScanItems()
     self.items=self:Items(A:GetContext())
-    local out,seen={},{}
+    local out,seen,candidates={},{},{}
     for _,r in ipairs(self.items) do
+        candidates[#candidates+1]=r
+        -- Hidden, owned reagents can still be shared by several recipes. Keep
+        -- their prices available when the combined crafting demand exceeds stock.
+        for _,child in ipairs(r.children or {}) do candidates[#candidates+1]=child end
+    end
+    for _,r in ipairs(candidates) do
         if not seen[r.itemId] then
             if r.nameReady==false then return nil,"Waiting for material names. Try Scan again." end
             seen[r.itemId]=true; out[#out+1]=r
@@ -202,27 +212,35 @@ function E:SelectCheaperCrafts()
         self.items=self:Items(context)
         local parent
         for _,r in ipairs(self.items) do if r.itemId==id and not r.craftParent then parent=r; break end end
-        local buy=plan(id,parent.missing)
-        for _,child in ipairs(parent.children) do if child.missing and child.missing>0 then plan(child.itemId,child.missing) end end
-        local cost=self:CraftCost(parent)
-        if not buy or buy.units<parent.missing or not cost or cost>=buy.cost then self.craftChoices[id]=nil end
+        if parent then
+            local buy=plan(id,parent.missing)
+            for _,child in ipairs(parent.children) do if child.missing and child.missing>0 then plan(child.itemId,child.missing) end end
+            local cost=self:CraftCost(parent)
+            if not buy or buy.units<parent.missing or not cost or cost>=buy.cost then self.craftChoices[id]=nil end
+        else self.craftChoices[id]=nil end
     end
     self.items=self:Items(context)
     for _,r in ipairs(self:PurchaseRecords()) do if r.missing and r.missing>0 then plan(r.itemId,r.missing) end end
 end
 function E:CraftNotice()
-    local bags,bank,craftable=false,false,false
-    for _,r in ipairs(self.items or {}) do
-        craftable=craftable or r.craftable
+    local bags,bank,mail,craftable=false,false,false,false
+    local children={}
+    for _,parent in ipairs(self.items or {}) do
+        craftable=craftable or parent.craftable
+        for _,child in ipairs(parent.children or {}) do children[#children+1]=child end
+    end
+    for _,r in ipairs(children) do
         local demand=r.craftParent and self.materialRecords[r.itemId]
         local result=demand and self.results[r.itemId]
         local plan=result and result.plans and result.plans[demand.missing]
         if r.craftActive and self.selected[r.itemId] and plan and plan.units>=demand.missing and plan.units<demand.target then
-            bags=bags or r.bagUsed>0; bank=bank or r.bankUsed>0
+            bags=bags or r.bagUsed>0; bank=bank or r.bankUsed>0; mail=mail or r.mailUsed>0
         end
     end
-    if bags or bank then
-        local text="Material purchases cover the shortfall. Combine them with materials in your "..(bags and bank and "bags and bank" or bags and "bags" or "bank").."."
+    if bags or bank or mail then
+        local locations={}; if bags then locations[#locations+1]="bags" end; if bank then locations[#locations+1]="bank" end; if mail then locations[#locations+1]="mail" end
+        local location=#locations==3 and "bags, bank and mail" or table.concat(locations," and ")
+        local text="Material purchases cover the shortfall. Combine them with materials in your "..location.."."
         if DEFAULT_CHAT_FRAME then DEFAULT_CHAT_FRAME:AddMessage("|cffffcd52HardcoreBuddy:|r "..text) end
         return " "..text
     end

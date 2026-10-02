@@ -78,6 +78,7 @@ AuctionPurchase.lua
 AuctionEssentials.lua
 AuctionEssentialScan.lua
 AuctionEssentialBasket.lua
+AuctionEssentialMail.lua
 AuctionRefillPlan.lua
 AuctionEssentialCrafting.lua
 

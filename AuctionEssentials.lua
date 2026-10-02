@@ -15,7 +15,15 @@ end
 function E:Items(context)
     local out={}
     for _,record in ipairs(A.Supplies.Build(context,{filter="Essentials"})) do
-        if record.tracking and record.item.binding~=true and not self:VendorItem(record.item) then out[#out+1]=record end
+        if record.tracking and record.item.binding~=true and not self:VendorItem(record.item) then
+            local r={}; for k,v in pairs(record) do r[k]=v end
+            local bank=A.characterDB and A.characterDB.auctionBank
+            r.bagCount=record.count; r.bankCount=bank and bank.counts[record.itemId] or 0
+            r.mailCount=self:MailCount(record.itemId)
+            r.count=r.bagCount and (r.bagCount+r.bankCount+r.mailCount)
+            r.missing=r.count and math.max(0,r.target-r.count)
+            if r.missing==nil or r.missing>0 then out[#out+1]=r end
+        end
     end
     table.sort(out,function(a,b)
         local am,bm=a.missing or 0,b.missing or 0
@@ -69,6 +77,7 @@ function E:Refresh()
             if record.craftParent and record.missing==0 then
                 price=record.bagUsed>0 and ("In Bags ("..record.bagUsed..")") or ""
                 if record.bankUsed>0 then price=price..(price~="" and " / " or "").."In Bank ("..record.bankUsed..")" end
+                if record.mailUsed>0 then price=price..(price~="" and " / " or "").."In Mail ("..record.mailUsed..")" end
             elseif record.craftable then
                 local craft=self:CraftCost(record)
                 local buyResult=self.results[record.itemId]
@@ -78,6 +87,7 @@ function E:Refresh()
             end
             local values={record.name..(record.craftable and " |cff62d79b(Craftable)|r" or ""),"",record.count==nil and "?" or tostring(record.count),tostring(record.target),
                 record.missing==nil and "?" or tostring(record.missing),result and tostring(result.count) or "?",price}
+            if (record.mailCount or 0)>0 then values[3]=values[3].."\nMail "..record.mailCount end
             for column,cell in ipairs(row.cells) do
                 local indent=column==1 and record.craftParent and 14 or 0
                 cell:ClearAllPoints(); cell:SetPoint("LEFT",row,"LEFT",positions[column]+indent,0)
@@ -88,8 +98,10 @@ function E:Refresh()
             row.icon:SetTexture(icon or "Interface\\Icons\\INV_Misc_QuestionMark")
         end
     end
-    self.notice:SetWidth(width-28)
-    self.notice:SetText(self.message or (#self.items==0 and "No non-vendor Essentials configured. Set item priority in Supplies." or "Scan prices, select items, then Buy to refill."))
+    local _,inMail=self:MailStock()
+    self.mailStatus:SetShown(inMail>0); self.mailStatus.label:SetText("In Mail: "..inMail)
+    self.notice:SetWidth(width-28-(inMail>0 and 166 or 0))
+    self.notice:SetText(self.message or (#self.items==0 and "No Essentials need an auction refill." or "Scan prices, select items, then Buy to refill."))
     local cost,units,need,unknown,queue=self:Estimate()
     local money=GetCoinTextureString and GetCoinTextureString(cost) or tostring(cost).."c"
     self.total:SetWidth(width-310)
@@ -120,6 +132,15 @@ function E:Attach()
     Skin.Button(self.start,"category")
     self.start:SetScript("OnClick",function() if E.scan then E:Stop("Scan stopped. Results may be incomplete.") else E:Start() end end)
     self.notice=label(panel,"",16,-31,560); Skin.TextStyle(self.notice,"subtitle")
+    self.mailStatus=CreateFrame("Frame",nil,panel); self.mailStatus:SetSize(156,22)
+    self.mailStatus:SetPoint("TOPRIGHT",-14,-31); self.mailStatus:EnableMouse(true)
+    self.mailStatus.label=label(self.mailStatus,"",0,0,156); self.mailStatus.label:SetJustifyH("RIGHT")
+    self.mailStatus:SetScript("OnEnter",function(frame)
+        GameTooltip:SetOwner(frame,"ANCHOR_RIGHT"); GameTooltip:SetText("Essentials in Mail")
+        for _,r in ipairs(E:MailStock()) do GameTooltip:AddDoubleLine(r.name,tostring(r.count),1,1,1,1,0.8,0.4) end
+        GameTooltip:AddLine("Collect these items from your mailbox. They already count toward AH refill targets.",1,0.8,0.4,true); GameTooltip:Show()
+    end)
+    self.mailStatus:SetScript("OnLeave",function() GameTooltip:Hide() end)
     self.headers={}
     for i,title in ipairs({"ITEM","CRAFT","OWNED","TARGET","NEED","STACK","COST","BUY"}) do self.headers[i]=label(panel,title,0,-60,80) end
     self.rows={}
@@ -136,7 +157,22 @@ function E:Attach()
         row.buy:SetScript("OnClick",function() E:Toggle(row.record) end)
         row:SetScript("OnClick",function(self) E:Toggle(self.record) end)
         row:SetScript("OnEnter",function(self)
-            if self.record then GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink("item:"..self.record.itemId); GameTooltip:AddLine("Click to select for refill",1,0.8,0.4); GameTooltip:Show() end
+                if self.record then
+                    local r=self.record
+                    GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink("item:"..r.itemId)
+                    if (r.bankCount or 0)>0 then GameTooltip:AddLine("In Bank ("..r.bankCount..")",1,0.8,0.4) end
+                    if (r.mailCount or 0)>0 then GameTooltip:AddLine("In Mail ("..r.mailCount..")",1,0.8,0.4) end
+                    for _,child in ipairs(r.children or {}) do
+                        if child.missing==0 then
+                            local locations={}
+                            if child.bagUsed>0 then locations[#locations+1]="Bags "..child.bagUsed end
+                            if child.bankUsed>0 then locations[#locations+1]="Bank "..child.bankUsed end
+                            if child.mailUsed>0 then locations[#locations+1]="Mail "..child.mailUsed end
+                            GameTooltip:AddLine(child.name..": "..table.concat(locations,", "),0.4,0.85,0.6,true)
+                        end
+                    end
+                    GameTooltip:AddLine("Click to select for refill",1,0.8,0.4); GameTooltip:Show()
+                end
         end)
         row:SetScript("OnLeave",function() GameTooltip:Hide() end)
     end
@@ -181,7 +217,8 @@ E.events:SetScript("OnEvent",function(_,event,...)
         if ERR_AUCTION_BID_PLACED and message==ERR_AUCTION_BID_PLACED then E:PurchaseSucceeded() end
     elseif event=="UI_ERROR_MESSAGE" then
         local code,message=...
-        if E.awaitingBuy then
+        if E.awaitingBuy or E.purchaseReceipt then
+            E.purchaseReceipt=nil
             if ERR_AUCTION_BID_OWN and (message==ERR_AUCTION_BID_OWN or code==ERR_AUCTION_BID_OWN) then E:OwnAuctionRejected()
             else E:Stop("Purchase failed. Check the auction error before retrying.") end
         end
@@ -191,6 +228,7 @@ E.events:SetScript("OnEvent",function(_,event,...)
     elseif E.panel and E.panel:IsShown() then E:Refresh() end
 end)
 E.events:SetScript("OnUpdate",function()
+    if E.purchaseReceipt and GetTime()-E.purchaseReceipt.since>20 then E.purchaseReceipt=nil end
     if E.pending then E:Attach(); if E.panel then E.pending=nil end end
     if E.scan or E.awaitingBuy then E:Tick() end
 end)

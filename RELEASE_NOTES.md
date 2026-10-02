@@ -1,5 +1,8 @@
 # Unreleased
 
+- Essentials auction purchases are cached as In Mail after server confirmation.
+  Mailbox collection updates stock; fulfilled refill rows are hidden, including
+  crafting materials already covered by bags, the saved bank or pending mail.
 - Added account-wide custom talent builds bundled with stat weights, including
   talent-tree editing, current-talent capture, selection, deletion, reviewed
   export/import codes and in-game whisper links.

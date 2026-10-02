@@ -25,11 +25,11 @@ E.Refresh=function(self) self.items=self:Items(ctx) end
 E:Refresh()
 assert(not E.items[1].crafting and not E.selected[900001] and not E.selected[900010],"Craft and Buy default off")
 E.craftChoices[900001]=true; E.craftChoices[900002]=true; E:Refresh()
-assert(#E.items==5 and E.items[1].craftable and E.items[1].crafting)
+assert(#E.items==4 and E.items[1].craftable and E.items[1].crafting)
 assert(not E.selected[900001] and not E.selected[900002] and E.selected[900010])
 assert(E.items[2].target==9 and E.items[2].missing==2,"Round crafts up for two-item output")
 assert(E.materialRecords[900010].target==17 and E.materialRecords[900010].missing==10,"Shared bag/bank stock is deducted once")
-assert(E.items[5].missing==0 and E.items[5].bagUsed==4 and not E.selected[900011],"Fully owned materials need no purchase")
+assert(E.items[3].children[2].missing==0 and E.items[3].children[2].bagUsed==4 and not E.selected[900011],"Fully owned materials stay in the recipe but are hidden from refill rows")
 E:Toggle(E.items[1])
 assert(E.selected[900001] and not E.craftChoices[900001] and E.selected[900010],"Buy clears Craft but keeps other recipe's shared material")
 assert(E.materialRecords[900010].missing==1)
@@ -43,7 +43,7 @@ local cost,units,need,unknown=E:Estimate()
 assert(cost==90 and units==6 and need==6 and not unknown,"Basket uses net reagent cost plus selected finished item")
 local queue=E:ScanItems(); local seen={}
 for _,r in ipairs(queue) do assert(not seen[r.itemId]); seen[r.itemId]=true end
-assert(seen[900001] and seen[900010],"Scan finished and material prices once per item")
+assert(seen[900001] and seen[900010] and seen[900011],"Scan finished and material prices once per item, including hidden stock shared between recipes")
 local message
 DEFAULT_CHAT_FRAME={AddMessage=function(_,text) message=text end}
 assert(E:CraftNotice():find("bags and bank",1,true) and message,"Partial stock combination notice")
@@ -74,15 +74,17 @@ C_Container.GetContainerNumSlots=function() return 0 end
 E.craftingEvents.scripts.OnEvent(nil,"BANKFRAME_CLOSED")
 assert(A.characterDB.auctionBank==persisted,"Unavailable bank API preserves saved snapshot")
 learned=true; E.Refresh=refresh; E:Attach(); E.open=true
+A.characterDB.auctionBank={counts={[900010]=2}}
 E.craftChoices={[900001]=true,[900002]=true}; E.materialOverrides={}; E:Refresh()
 assert(E.rows[1].cells[1]:GetText():find("|cff62d79b(Craftable)|r",1,true),"Green inline Craftable label")
 assert(E.rows[1].craft:GetChecked() and not E.rows[1].buy:GetChecked(),"Craft checked, finished Buy unchecked")
-assert(E.rows[5].cells[7]:GetText()=="In Bags (4)" and not E.rows[5].buy:GetChecked(),"Covered material replaces price and remains unchecked")
+assert(not E.rows[5]:IsShown() and not E.selected[900011],"Covered materials are hidden and remain unchecked")
 MOCK.Click(E.rows[1])
 assert(not E.rows[1].craft:GetChecked() and E.rows[1].buy:GetChecked() and not E.rows[2].buy:GetChecked(),"Row click switches finished item to Buy and clears its material row")
 ctx.inventory.counts[900010]=0; A.characterDB.auctionBank.counts[900010]=9
 E:ToggleCraft(E.items[1])
-assert(E.rows[2].cells[7]:GetText()=="In Bank (9)" and not E.rows[2].buy:GetChecked(),"Bank fully covers required amount")
+assert(E.items[1].children[1].bankUsed==9 and E.items[1].children[1].missing==0,"Bank fully covers required amount")
+assert(E.rows[2].record.itemId==900002,"Fulfilled material row is omitted")
 E.craftChoices={}; E.craftManual={}; E.selected={}; E.materialOverrides={}
 ctx.inventory.counts[900010]=0; A.characterDB.auctionBank.counts[900010]=0
 E.results={

@@ -48,6 +48,7 @@ jobs:
         run: |
           python tests/run_auction_essentials.py
           python tests/run_auction_crafting.py
+          python tests/run_auction_mail.py
           python tests/run_auction_refill_plan.py
           python tests/run_vendor_food.py
           python tests/run_elune_macro.py

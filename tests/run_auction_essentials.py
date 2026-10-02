@@ -12,7 +12,8 @@ local A=TestAddon; local E=A.AuctionEssentials; local U=A.AuctionUpgrades
 local original=A.Supplies.Build
 local function record(id,name,missing,extra)
     local item={itemId=id,name=name}; for k,v in pairs(extra or {}) do item[k]=v end
-    return {itemId=id,name=name,item=item,count=20-missing,target=20,missing=missing,tracking=true}
+    local target=math.max(20,missing)
+    return {itemId=id,name=name,item=item,count=target-missing,target=target,missing=missing,tracking=true}
 end
 A.Supplies.Build=function(_,state)
     assert(state.filter=="Essentials")
@@ -21,7 +22,7 @@ A.Supplies.Build=function(_,state)
         record(999902,"Limited stock potion",4),record(999903,"Bound item",4,{binding=true})}
 end
 local rows=E:Items({})
-assert(#rows==3 and rows[1].name=="Crafted ammo" and rows[3].name=="User item")
+assert(#rows==2 and rows[1].name=="Crafted ammo" and rows[2].name=="Limited stock potion","Fulfilled items are omitted")
 E:Attach(); E.open=true
 AuctionFrameTab_OnClick(E.tab)
 assert(E.panel:IsShown() and not U.panel:IsShown(),"Tabs are exclusive")
@@ -63,12 +64,15 @@ assert(E.popupText=="10 x Crafted ammo" and E.panel:IsShown(),"Confirm whole sta
 assert(E.rows[1].cells[6]:GetText()=="10","Separate stack column")
 StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnAccept(nil,E.confirmation)
 assert(bought[2]==500 and not E.results[10513],"Confirmed stack buyout invalidates cached result")
+assert(E:MailCount(10513)==0,"A requested buyout is not yet owned")
+E:PurchaseSucceeded()
+assert(E:MailCount(10513)==10,"Successful buyout cached in mail")
 E:Start(); finish(); assert(E.complete and E.results[10513].buyout==500,"Scan all finishes")
-assert(E.results[999901].plan.units==0 and E.results[999902].plan.units==0,"Only exact item IDs accepted")
+assert(not E.results[999901] and E.results[999902].plan.units==0,"Fulfilled items aren't scanned; only exact item IDs accepted")
 MOCK.Click(E.rows[1])
 assert(E.selected[10513] and E.rows[1].buy:GetChecked(),"Row toggles its checkbox without purchasing")
 local cost,units,need,unknown=E:Estimate()
-assert(cost==600 and units==11 and need==200 and not unknown,"Whole-stack refill estimate reports limited stock")
+assert(cost==600 and units==11 and need==190 and not unknown,"Whole-stack refill estimate deducts pending mail")
 MOCK.Click(E.rows[1].buy)
 assert(not E.selected[10513],"Checkbox toggles same selection")
 E:Toggle(rows[1]); E:BuySelected(); finish()
