@@ -235,9 +235,9 @@ function T:Document(context,state)
     local plan=self.Plan(class,level,build,ranks)
     local top={}
     if live then
-        top[#top+1]=row(plan.status,live.points.." spent | "..live.unspent.." unspent",
+        top[#top+1]=row("Next Talent",plan.status,
             action("open"),#plan.divergences>0 and table.concat(plan.divergences,", ") or nil)
-    else top[#top+1]=row(preview and "Planning another character" or "Load current talents",reason,not preview and action("open") or nil) end
+    else top[#top+1]=row("Next Talent",reason,not preview and action("open") or nil) end
     local nextPoint=plan.next
     if nextPoint then
         local node=D.AdvisorTalents[class][nextPoint.key]
@@ -245,17 +245,20 @@ function T:Document(context,state)
         local learn=canLearn and action("learn",build.id) or nil
         if learn then learn.key=nextPoint.key; learn.rank=nextPoint.rank end
         local nextRow=top[1]
+        nextRow.body=live and "Click to apply 1pt" or reason
         nextRow.recommendation={summary=nextRow.body,
             name=live and live.names[nextPoint.key] or node.name,
             detail=node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank}
         nextRow.body=nextRow.body.."\n"..(live and live.names[nextPoint.key] or node.name)..
             "\n"..node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank
         nextRow.icon=live and live.icons[nextPoint.key] or spellIcon(node.spellID)
-        if learn then nextRow.action=learn; nextRow.meta="Click to spend one talent point" end
+        if learn then nextRow.action=learn; nextRow.meta="Click to apply 1pt" end
     end
     top[#top+1]=row("Point-by-point path",build.name.." | View the complete talent path.",action("path"))
-    top[#top+1]=row("Talent Advisor settings","Choose your talent build and manage talent recommendations.",action("talentSettings"))
-    doc.cards[1]=card("Talent Advisor",context.characterClass.." | Level "..level,top)
+    top[#top+1]=row("Talent Advisor settings","Choose your talent build and configure auto talents.",action("talentSettings"))
+    local subtitle=context.characterClass.." | Level "..level
+    if live then subtitle=subtitle.." | "..live.points.." spent | "..live.unspent.." unspent" end
+    doc.cards[1]=card("Talent Advisor",subtitle,top)
     if not state.talentPath then return doc end
     local steps,occurrences={},{}
     for index,key in ipairs(build.steps) do

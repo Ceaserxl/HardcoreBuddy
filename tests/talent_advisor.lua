@@ -99,6 +99,8 @@ MOCK.Click(A.window.back)
 check(A.state==overview and not A.state.talentPath,"Back restores the talent overview")
 check(A.window.sidebarTitle:GetText()=="ADVISORS","Sidebar identity")
 local lesson=A.document.cards[1].blocks[1]
+check(lesson.title=="Next Talent" and lesson.recommendation.summary=="Click to apply 1pt","Stable next talent label and compact apply hint")
+check(A.document.cards[1].note:find("spent | ",1,true) and A.document.cards[1].note:find(" unspent",1,true),"Point counts follow the advisor level subtitle")
 check(lesson.action and lesson.action.command=="learn" and lesson.icon==132127,"Visible single-point button and native icon")
 check(#A.document.cards[1].blocks==3 and lesson.body:find("Localized Bestial Wrath",1,true)
     and lesson.body:find("Rank 1 / 1",1,true),"Next recommendation is inside the status item")

@@ -354,15 +354,18 @@ local function renderBlock(frame, block, width)
             frame.recommendationName=font(frame,14,WHITE)
             frame.recommendationDetail=font(frame,12,MUTED)
         end
-        local talentX=math.floor(width*0.40)
+        frame.recommendationName:SetText(rec.name)
+        frame.recommendationDetail:SetText(rec.detail)
+        local detailWidth=math.min(math.max(frame.recommendationName:GetStringWidth(),frame.recommendationDetail:GetStringWidth())+2,math.floor(width*0.56)-72)
+        local talentX=width-72-detailWidth
         measure(frame.title,block.title,talentX-24,12,10)
         frame.body:SetFont(STANDARD_TEXT_FONT,11,"")
         local headerBottom=10+frame.title:GetHeight()+3
         local summaryHeight=measure(frame.body,rec.summary,talentX-24,12,headerBottom)
         local talentY=10
         frame.recommendationName:Show(); frame.recommendationDetail:Show()
-        local nameHeight=measure(frame.recommendationName,rec.name,width-talentX-72,talentX+42,talentY)
-        local detailHeight=measure(frame.recommendationDetail,rec.detail,width-talentX-72,talentX+42,talentY+nameHeight+4)
+        local nameHeight=measure(frame.recommendationName,rec.name,detailWidth,talentX+42,talentY)
+        local detailHeight=measure(frame.recommendationDetail,rec.detail,detailWidth,talentX+42,talentY+nameHeight+4)
         frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",talentX,-talentY)
         frame.meta:Hide()
         y=math.max(headerBottom+summaryHeight,talentY+math.max(34,nameHeight+4+detailHeight))+10
