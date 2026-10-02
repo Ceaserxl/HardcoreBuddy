@@ -28,8 +28,8 @@ override damage. Polymorph is limited to eligible targeted enemies in dangerous
 multi-enemy fights without an observed Mage damage-over-time effect. The player
 still chooses targets and escape directions.
 
-Optional red highlights are evaluated separately from the single gold primary
-action. Multiple missing buffs (Intellect, one appropriate armor buff and Ice
+In combat, optional red highlights are evaluated separately from the single gold
+primary action. Multiple missing buffs (Intellect, one appropriate armor buff and Ice
 Barrier) can remain highlighted together through movement, casts and combat,
 provided mana and readiness permit them. Intellect (including Arcane Brilliance)
 and armor become optional at 60 seconds remaining; Ice Barrier at five seconds.
@@ -79,10 +79,11 @@ Flamestrike is not immediately overwritten. Ground placement remains manual.
 ## Highlight timing
 
 Gold uses Blizzard's spell-alert animation; red indicates optional upkeep.
-The general highlighting contract is one primary action plus any number of
-eligible optional actions. Optional buffs do not replace the primary. Out-of-combat
-mana-gem preparation takes precedence over pulling and uses a red highlight,
-including while moving. This previews the action for when the player stops.
+In combat, highlighting permits one primary action plus eligible optional actions.
+Out of combat, multiple preparation actions use gold together: Intellect, armor,
+Barrier, gem preparation, safe recovery and eligible carried supplies. Preparation
+takes precedence over pulling; urgent defenses still take priority.
+Mana-gem preparation remains visible while moving as a preview for when the player stops.
 Place the conjure spell on the bar to see its highlight.
 The companion page displays the primary first, or an optional action when there
 is no primary. Disabling the assistant clears both groups.
@@ -135,6 +136,15 @@ resistance, travel time, consumable/trinket optimization and encounter scripts a
 not simulated. Utility such as portals, food/water conjuring, Amplify/Dampen Magic and group
 buff assignment remains manual. PvP, other class rotations and third-party bar
 integrations are outside this Mage helper.
+
+Out-of-combat supply preparation uses the current character's tracked Supplies
+recommendations. Food/drink highlight below 90% health/mana unless their recovery
+aura is already active. Carried elixirs with duration of at least five minutes and
+scrolls highlight when their use-spell aura is missing or has 60 seconds remaining.
+Unknown use spells are skipped. Ownership, usability and cooldown are read live;
+the supply list refreshes every five seconds. Bank-only items and tracking targets
+of zero are excluded. Item buttons and resolved item macros use the same gold glow.
+The assistant neither uses items nor auto-dismounts or stops movement.
 
 ## Validation
 

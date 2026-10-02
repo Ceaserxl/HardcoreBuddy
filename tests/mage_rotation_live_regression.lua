@@ -216,12 +216,14 @@ do
     check(R.primary==s.spells.frostbolt and glow:IsShown(),'Moving keeps primary highlighted')
     local starts=glow.ProcStartAnim.plays
     s.prepareGem='ruby'; R:Update()
-    check(R.current==s.spells.ruby and R.optional,'Gem preview stays available while moving')
+    check(R.current==s.spells.ruby and not R.optional,'Gem preview stays available while moving')
     s.moving=false; R:Update()
-    check(R.current==s.spells.ruby and R.optional and not glow:IsShown(),'Stopping restores stationary gem preparation even when off-bar')
-    check(not R.primary,'Stationary gem preparation does not leave damage highlighted')
+    check(R.current==s.spells.ruby and not R.optional and not glow:IsShown(),'Stopping restores stationary gem preparation even when off-bar')
+    check(R.primary==s.spells.ruby,'OOC gem preparation is a gold primary')
     s.prepareGem=nil; R:Update(); check(glow:IsShown(),'Finishing preparation restores damage advice')
     s.buffs.intellect=nil; s.buffs.barrier=nil; R:Update()
+    check(R.primaryHighlightCount==2 and R.optionalHighlightCount==0,'OOC Intellect and Barrier are simultaneous gold primaries')
+    s.combat=true; R:Update()
     check(glow.style=='primary' and R.highlights[other].style=='optional' and R.highlights[lower].style=='optional',
         'One gold damage action coexists with red Barrier and Intellect')
     check(R.primaryHighlightCount==1 and R.optionalHighlightCount==2,'Primary and optional counts remain separate')
@@ -242,6 +244,39 @@ do
     check(R.highlightCount==0 and #R.optionalActions==0,'Disabled clears every recommendation')
     R.Snapshot,GetActionInfo,R.RefreshView=oldSnapshot,oldAction,oldView
     R:SetMode('assistant')
+end
+do
+    local oldItem,oldContainer,oldBuild,oldAuras=C_Item,C_Container,A.Supplies.Build,R.Auras
+    local owned,active,cooling={ [1]=1,[2]=1,[3]=1,[4]=1 },{},false
+    local rows={
+        {itemId=1,family='recovery',tracking=true,item={level=1}},
+        {itemId=2,family='drink',tracking=true,item={level=1}},
+        {itemId=3,family='elixir',category='Elixirs',tracking=true,item={level=1,detail='Increases armor for 1 hour.'}},
+        {itemId=4,family='scroll-spirit',category='Scrolls',tracking=true,item={level=1}},
+    }
+    C_Item={GetItemCount=function(id,bank) check(not bank,'Preparation excludes bank stock'); return owned[id] or 0 end,
+        GetItemSpell=function(id) return 'Buff'..id,100+id end,
+        GetItemInfo=function(id) return 'Item'..id,nil,nil,nil,nil,nil,nil,nil,nil,123 end,
+        IsUsableItem=function() return true end}
+    C_Container={GetItemCooldown=function() return cooling and 200 or 0,cooling and 120 or 0,1 end}
+    A.Supplies.Build=function() return rows end; R.Auras=function() return active end
+    R.supplyAdviceAt=nil
+    local s={class='MAGE',level=40,time=200,buffs={},spells={},playerHealth=50,powerPercent=50}
+    check(#R:OutOfCombatSupplies(s)==4,'Food drink elixir and scroll can be recommended together')
+    active={Buff1=20,Buff2=20,Buff3=61,Buff4=61}
+    check(#R:OutOfCombatSupplies(s)==0,'Active recovery and healthy buff durations suppress repeated use')
+    active.Buff3=60; active.Buff4=60
+    check(#R:OutOfCombatSupplies(s)==2,'Long consumable buffs refresh in final minute')
+    owned[3]=0; rows[4].tracking=false
+    check(#R:OutOfCombatSupplies(s)==0,'Missing or untracked consumables never highlighted')
+    active={}; s.playerHealth=100; s.powerPercent=100
+    check(#R:OutOfCombatSupplies(s)==0,'Full resources do not suggest recovery')
+    s.playerHealth=50; s.powerPercent=50; cooling=true
+    check(#R:OutOfCombatSupplies(s)==0,'Consumable cooldowns respected')
+    cooling=false; s.combat=true
+    check(#R:OutOfCombatSupplies(s)==0,'Preparation items cannot enter combat recommendations')
+    C_Item,C_Container,A.Supplies.Build,R.Auras=oldItem,oldContainer,oldBuild,oldAuras
+    R.supplyAdviceAt=nil; R.supplyAdviceRows=nil
 end
 MOCK.class='ROGUE'; check(R:Mode()=='disabled','Old Rogue saved mode no longer enables removed prototype')
 MOCK.class='MAGE'; R:Update()

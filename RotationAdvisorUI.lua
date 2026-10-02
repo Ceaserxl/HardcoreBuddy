@@ -1,6 +1,6 @@
 local _,A=...
 local R,S=A.RotationAdvisor,A.Skin
-local modeHelp="Gold: one primary action. Red: optional actions, which can stay highlighted together alongside the primary. Disabled removes all HCB highlights."
+local modeHelp="Gold: one combat primary, or multiple preparation actions out of combat. Red: optional combat upkeep. Disabled removes all HCB highlights."
 local function text(parent,value,x,y,width,style)
     local f=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
     S.TextStyle(f,style or "subtitle"); f:SetPoint("TOPLEFT",x,-y); f:SetWidth(width)
@@ -100,7 +100,7 @@ function R:RefreshView()
     local _,class=UnitClass("player"); local mode=self:Mode(); local s=self.snapshot or {}
     view.subtitle:SetText("Live "..(self.supported[class] or class or "character").." | "..self.modes[mode].." | Levels 1–60")
     local spell=self.current
-    view.next.title:SetText(self.optional and "Optional Action" or "Next Spell")
+    view.next.title:SetText(self.oocActions and #self.oocActions>0 and "Out-of-Combat Preparation" or self.optional and "Optional Action" or "Next Spell")
     view.next.icon:SetTexture(spell and spell.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
     view.next.icon:SetAlpha(spell and 1 or .35)
     view.next.name:SetText(spell and (spell.name..(spell.rank and spell.rank~="" and (" | "..spell.rank) or "")) or mode=="disabled" and "Disabled" or "Waiting")

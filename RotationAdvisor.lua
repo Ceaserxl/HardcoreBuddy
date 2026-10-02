@@ -567,6 +567,58 @@ function R:MageResources(s)
         end
     end
 end
+-- Supply planning is cached; live ownership, cooldowns and auras are checked on
+-- each update. Only tracked, carried recommendations may consume an item.
+function R:OutOfCombatSupplies(s)
+    local result={}
+    if s.combat or s.dead or s.taxi or (s.buffs.iceblock or 0)>0 or s.channelKey then return result end
+    local count=C_Item and C_Item.GetItemCount or GetItemCount
+    local itemSpell=C_Item and C_Item.GetItemSpell or GetItemSpell
+    local itemInfo=C_Item and C_Item.GetItemInfo or GetItemInfo
+    local usable=C_Item and C_Item.IsUsableItem or IsUsableItem
+    local cd=C_Container and C_Container.GetItemCooldown or GetItemCooldown
+    if not count or not itemSpell or not itemInfo or not usable or not cd then return result end
+    if not self.supplyAdviceAt or s.time>=self.supplyAdviceAt then
+        local context=A:GetContext()
+        context.characterClass=self.supported[s.class]; context.level=s.level; context.mode="live"
+        self.supplyAdviceRows=A.Supplies.Build(context); self.supplyAdviceAt=s.time+5
+    end
+    local active=self:Auras("player","HELPFUL")
+    local best={}
+    for _,row in ipairs(self.supplyAdviceRows or {}) do
+        local id=row.itemId; local item=row.item or {}; local family=row.family
+        local recovery=family=="recovery" or family=="drink"
+        local timed=row.category=="Elixirs" or row.category=="Scrolls"
+        if row.tracking and (recovery or timed) and (count(id,false,false) or 0)>0 then
+            local name,spellID=itemSpell(id)
+            local start,duration,enabled=cd(id)
+            local left=name and active[name] or 0
+            local allowed=name and spellID and usable(id) and enabled~=0 and enabled~=false
+                and type(start)=="number" and type(duration)=="number" and start+duration<=s.time
+            if recovery then
+                allowed=allowed and left==0 and (family=="recovery" and s.playerHealth<90 or family=="drink" and s.powerPercent<90)
+            else
+                local detail=item.detail or ""
+                local minutes=tonumber(detail:match("for (%d+) min"))
+                local hours=tonumber(detail:match("for (%d+) hour")) or tonumber(detail:match("for (%d+) hr"))
+                allowed=allowed and left<=60 and (row.category=="Scrolls" or (minutes or 0)>=5 or (hours or 0)>=1)
+                -- Intellect scrolls are redundant with the Mage's class buff.
+                if family=="scroll-intellect" and ((s.buffs.intellect or 0)>60 or s.spells.intellect) then allowed=false end
+            end
+            if allowed then
+                local itemName,_,_,_,_,_,_,_,_,icon=itemInfo(id)
+                local old=best[family or id]
+                if itemName and (not old or (item.level or 0)>old.level) then
+                    best[family or id]={id=id,item=true,name=itemName,icon=icon,level=item.level or 0,
+                        reason=recovery and "Recover before the next fight." or "Refresh the tracked consumable buff."}
+                end
+            end
+        end
+    end
+    for _,action in pairs(best) do result[#result+1]=action end
+    table.sort(result,function(a,b) return a.id<b.id end)
+    return result
+end
 function R:Snapshot()
     if self.dirty then self:RefreshSpells() end
     local s={class=self.class,spells={},buffs={},combat=combat(),validTarget=hostile("target"),time=clock()}
@@ -672,13 +724,18 @@ local function matchesAction(spell,slot)
     end
     return kind=="item" and id==spell.id
 end
-function R:Highlight(spell,optional,additional)
+function R:Highlight(spell,optional,additional,primaries)
     self.highlightCount=0; self.primaryHighlightCount=0; self.optionalHighlightCount=0
     for button,glow in pairs(self.highlights) do
         local slot=button.action or button.GetAttribute and button:GetAttribute("action")
         local match,isOptional=false,optional
         if slot and GetActionInfo and button:IsVisible() then
             match=matchesAction(spell,slot)
+            if not match then
+                for _,extra in ipairs(primaries or {}) do
+                    if matchesAction(extra,slot) then match=true; isOptional=false; break end
+                end
+            end
             if not match then
                 for _,extra in ipairs(additional or {}) do
                     if matchesAction(extra,slot) then match=true; isOptional=true; break end
@@ -743,7 +800,7 @@ function R:Update()
     if not A.characterDB then return end
     if self.suspended or self:Mode()=="disabled" then
         self.approach=nil; self.powerSample=nil; self.healthSample=nil; self.immune=nil; self.lastDamage=nil; self.castPlan=nil
-        self.current=nil; self.primary=nil; self.optional=nil; self.optionalActions={}; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
+        self.current=nil; self.primary=nil; self.optional=nil; self.optionalActions={}; self.oocActions={}; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
     else
         self.snapshot=self:Snapshot()
         local key,reason,optional,urgent=self.Decide(self.snapshot)
@@ -759,7 +816,17 @@ function R:Update()
         self.current=selected or self.optionalActions[1]
         self.reason=selected and reason or choices[1] and choices[1].reason or reason
         self.optional=not not (self.current and not self.primary)
-        self:Highlight(selected,optional,self.optionalActions)
+        self.oocActions={}
+        if not self.snapshot.combat and not urgent then
+            if selected and optional then self.oocActions[#self.oocActions+1]=selected end
+            for _,spell in ipairs(self.optionalActions) do self.oocActions[#self.oocActions+1]=spell end
+            for _,spell in ipairs(self:OutOfCombatSupplies(self.snapshot)) do self.oocActions[#self.oocActions+1]=spell end
+        end
+        if #self.oocActions>0 then
+            self.primary=self.oocActions[1]; self.current=self.primary; self.optional=false
+            self.reason="Prepare before combat. Multiple gold actions can be highlighted."
+            self:Highlight(self.primary,false,nil,self.oocActions)
+        else self:Highlight(selected,optional,self.optionalActions) end
     end
     if self.RefreshView then self:RefreshView() end
 end
