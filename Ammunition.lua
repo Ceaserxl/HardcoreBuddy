@@ -24,7 +24,7 @@ for kind, entries in pairs(tiers) do
             family="ammunition",ammoKind=kind,ammoDPS=entry[4],group="Class",classes={"Hunter","Warrior","Rogue"},ease=1,
             short="Ammunition",
             route="Buy from a weapons or ammunition vendor. Match the ammunition to your equipped ranged weapon."}
-        if item.ammoDPS then item.detail="+"..item.ammoDPS.." ranged DPS" end
+        if item.ammoDPS then item.short="+"..item.ammoDPS.." ranged DPS"; item.detail=item.short end
         if crafted[item.itemId] then
             item.ingredients=crafted[item.itemId]
             item.route="Craft with Engineering or obtain from another engineer where trading is allowed. Produces 200 rounds."
