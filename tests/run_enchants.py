@@ -122,7 +122,7 @@ check(A.document.cards[1].title=="Wrists enchants","Recipe detail")
 local detail=A.document.cards[1]
 check(detail.blocks[1].title=="Selected Alternative" and detail.blocks[2].enchantTooltip.spellId==recipe.spellId,"Selected alternative replaces recommendation display")
 check(detail.blocks[3].title=="Requirements" and not detail.blocks[3].rightColumn,"Requirements below selected enchant on left")
-check(detail.blocks[5].enchantStatus=="|cff62d79b(Recommended)|r" and not detail.blocks[5].title:find("(Recommended)",1,true),"Recommended enchant first in alternatives with green top-right label")
+check(detail.blocks[5].enchantStatus=="|cff62d79bRecommended|r" and not detail.blocks[5].title:find("(Recommended)",1,true),"Recommended enchant first in alternatives with green top-right label")
 local selectedReagents={}
 for _,pair in ipairs(E.byId[recipe.spellId].reagents) do selectedReagents[pair[1]]=pair[2] end
 for _,b in ipairs(detail.blocks) do
@@ -146,7 +146,7 @@ check(feetDetail.blocks[1].title=="Selected Alternative" and feetDetail.blocks[2
 local other
 for _,option in ipairs(feet.options) do if option~=feet.recommendation and option.enchantId~=1843 then other=option; break end end
 local ordered=E.Detail(A:GetContext(),{slotId=8,spellId=other.spellId})
-check(ordered.blocks[5].enchantStatus=="|cff62d79b(Recommended)|r" and ordered.blocks[6].enchantTooltip.enchantId==1843 and ordered.blocks[6].enchantStatus=="Enchanted","Applied enchant follows recommendation in alternatives")
+check(ordered.blocks[5].enchantStatus=="|cff62d79bRecommended|r" and ordered.blocks[6].enchantTooltip.enchantId==1843 and ordered.blocks[6].enchantStatus=="Enchanted","Applied enchant follows recommendation in alternatives")
 local recommendedDetail=E.Detail(A:GetContext(),{slotId=8,spellId=feet.recommendation.spellId})
 check(recommendedDetail.blocks[1].title=="Recommended" and recommendedDetail.blocks[2].enchantStatus=="Missing" and recommendedDetail.blocks[2].enchantTone=="missing","Selected recommendation is red and missing when an alternative is applied")
 check(recommendedDetail.blocks[5].enchantStatus=="Enchanted" and recommendedDetail.blocks[5].enchantTooltip.enchantId==1843,"Applied alternative remains enchanted beneath selected missing recommendation")

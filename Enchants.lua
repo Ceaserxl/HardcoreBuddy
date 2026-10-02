@@ -229,7 +229,7 @@ function E.Detail(context,action)
         local b=enchantBlock(g,option,{kind="enchantRecipe",slotId=g.slotId,spellId=option.spellId})
         b.enchantAlternative=true
         if b.enchantStatus=="Alt Enchanted" then b.enchantStatus="" end
-        if option==recommended then b.enchantStatus="|cff62d79b(Recommended)|r" end
+        if option==recommended then b.enchantStatus="|cff62d79bRecommended|r" end
         blocks[#blocks+1]=b
     end
     alternative(recommended)
