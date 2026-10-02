@@ -90,6 +90,61 @@ do
     s=R:Snapshot(); check(s.spellPower[3]==123 and s.spellPower[5]==0,'Current school-specific gear bonuses reach the damage scorer')
     GetSpellBonusDamage=function() return 0 end
 end
+do
+    local s=state({'frostbolt','fireball','fireblast','counterspell','iceblock'})
+    s.time=100; s.targetGUID='enemy'; s.castToken='cast:1'; s.castEnd=103
+    local function choose(key,urgent)
+        return R:StabilizeRecommendation(s,key,key..' reason',false,urgent)
+    end
+    R.castPlan=nil
+    check(choose('frostbolt')=='frostbolt' and R.castPlan,'First next-cast recommendation creates a plan')
+    s.time=102.9
+    check(choose('fireblast')=='frostbolt','Changing damage scores cannot swap the highlight at the end of a cast')
+    s.castToken=nil; s.castEnd=nil; s.time=103.05
+    check(choose('fireball')=='frostbolt','Cast completion retains the spell the player was preparing to press')
+    s.time=104.1; check(choose('fireball')=='fireball' and not R.castPlan,'Idle handoff expires instead of holding stale advice forever')
+    s.time=110; s.castToken='cast:2'; s.castEnd=113; choose('frostbolt')
+    s.castToken='cast:3'; s.castEnd=115
+    check(choose('fireball')=='fireball','Starting the next cast permits a fresh plan even for repeated spells')
+    check(choose('counterspell',true)=='counterspell' and not R.castPlan,'Interrupt priority immediately overrides a damage plan')
+    choose('frostbolt'); check(choose('iceblock',true)=='iceblock','Survival priority immediately overrides a damage plan')
+    choose('frostbolt'); s.targetGUID='other'
+    check(choose('fireball')=='fireball','Target changes cannot inherit the previous enemy plan')
+    R.castPlan=nil; choose('frostbolt'); s.spells.frostbolt.immune=true
+    check(choose('fireball')=='fireball','New immunity invalidates the committed spell')
+    s.spells.frostbolt.immune=nil; R.castPlan=nil; choose('frostbolt'); s.spells.frostbolt.range=false
+    check(choose('fireball')=='fireball','Losing range invalidates the committed spell')
+    s.spells.frostbolt.range=true; R.castPlan=nil; choose('frostbolt'); s.spells.frostbolt.usable=false
+    check(choose('fireball')=='fireball','Insufficient mana does not preserve an impossible cast')
+    s.spells.frostbolt.usable=true; R.castPlan=nil; choose('frostbolt'); s.controlled=true
+    local key=R:StabilizeRecommendation(s,nil,'',false,false)
+    check(not key and not R.castPlan,'Crowd control immediately clears the plan')
+    s.controlled=false; s.time=110; s.castToken='cast:4'; s.castEnd=113; choose('frostbolt')
+    s.castEnd=114; choose('fireball'); check(R.castPlan.finish==114,'Pushback extends the existing plan without replacing it')
+    s.castToken=nil; s.castEnd=nil; s.time=111
+    check(choose('fireball')=='fireball','An early stop cancels the plan rather than waiting for the old cast end')
+    s=state({'explosion','frostbolt'}); s.time=120; s.targetGUID='enemy'; s.castToken='cast:5'; s.castEnd=123
+    s.targetClose=true; s.nearby=3; R.castPlan=nil; choose('explosion'); s.safeAOE=false
+    check(choose('frostbolt')=='frostbolt','New area danger overrides a committed AoE spell')
+    R.castPlan=nil; s.safeAOE=true; choose('explosion'); s.playerHealth=30
+    check(choose('frostbolt')=='frostbolt','Health dropping below area safety thresholds invalidates the area plan')
+    s=state({'frostbolt','counterspell'}); s.interrupt=true
+    local _,_,_,urgent=R.Decide(s); check(urgent==true,'Actual interrupt decisions are marked urgent for the stabilizer')
+    s.interrupt=false; _,_,_,urgent=R.Decide(s); check(not urgent,'Ordinary damage decisions can be stabilized')
+    -- Reproduce the report through the live update/highlight path, not only the helper.
+    local oldCasting=UnitCastingInfo; local oldDecide=R.Decide
+    local candidate='frostbolt'; local endTime=now+2
+    UnitCastingInfo=function(u) if u=='player' then return 'Frostbolt',nil,nil,(endTime-2)*1000,endTime*1000,false,'live-cast',false,837 end end
+    R.Decide=function() return candidate,'test',false,false end
+    R.castPlan=nil; R:Update(); local starts=glow.ProcStartAnim.plays
+    check(R.current.id==837 and glow:IsShown(),'Live cast holds the first next spell')
+    candidate='fireblast'; now=endTime-.1; R:Update()
+    check(R.current.id==837 and glow.ProcStartAnim.plays==starts,'End-of-cast reranking neither swaps nor restarts the glow')
+    UnitCastingInfo=function() end; now=endTime+.05; R:Update()
+    check(R.current.id==837 and glow:IsShown(),'Glow remains on the prepared spell immediately after cast completion')
+    now=endTime+1.1; R:Update(); check(R.current.id==2136,'Live idle handoff eventually allows new advice')
+    UnitCastingInfo=oldCasting; R.Decide=oldDecide; R.castPlan=nil; R:Update()
+end
 MOCK.class='ROGUE'; check(R:Mode()=='disabled','Old Rogue saved mode no longer enables removed prototype')
 MOCK.class='MAGE'; R:Update()
 print('PASS: '..count..' Mage rotation, live adapter, UI and highlight regression checks.')

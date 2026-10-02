@@ -96,7 +96,8 @@ function M.Decide(s)
     local hp,mp=s.playerHealth or 100,s.powerPercent or 100
     local threatened=s.combat and (s.attackingPlayer or s.recentDamage)
     local function can(key,now) return ready(s,key,now) end
-    local function choose(key,why,optional) return key,why or "",optional end
+    local urgentPhase=true
+    local function choose(key,why,optional) return key,why or "",optional,urgentPhase end
     -- Never suggest cancelling an active defensive immunity or clipping Evocation.
     if remaining(s,"iceblock")>0 then return nil,"" end
     if hp<=18 and threatened and remaining(s,"hypothermia")==0 and can("iceblock",true) then return choose("iceblock","Emergency immunity at critical health.") end
@@ -119,6 +120,7 @@ function M.Decide(s)
         return choose("polymorph","Control this attacker while dealing with the others.")
     end
     -- Pre-pull upkeep is optional (blue). Mounting does not remove combat advice.
+    urgentPhase=false
     if not s.combat and not s.casting then
         if mp<25 and not s.moving and not s.mounted and not s.targetCombat and can("evocation",true) then return choose("evocation","Recover mana before pulling.",true) end
         if mp>40 and remaining(s,"intellect")==0 and can("intellect") then return choose("intellect","Maintain Arcane Intellect.",true) end

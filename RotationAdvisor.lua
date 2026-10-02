@@ -229,13 +229,17 @@ function R:PowerForecast(s)
     end
     local cast,finish,castID
     if UnitCastingInfo then
-        local name,_,_,_,ending,_,_,_,id=UnitCastingInfo("player")
+        local name,_,_,starting,ending,_,token,_,id=UnitCastingInfo("player")
         cast,finish,castID=name,ending,id
+        if name and token then s.castToken="cast:"..tostring(token)
+        elseif name and type(starting)=="number" then s.castToken="cast:"..tostring(id or name)..":"..starting end
     end
     local channel
     if not cast and UnitChannelInfo then
-        local name,_,_,_,ending=UnitChannelInfo("player"); channel,finish=name,ending
+        local name,_,_,starting,ending=UnitChannelInfo("player"); channel,finish=name,ending
+        if name and type(starting)=="number" then s.castToken="channel:"..name..":"..starting end
     end
+    s.castEnd=(cast or channel) and type(finish)=="number" and finish/1000 or nil
     if (cast or channel) and type(finish)=="number" then horizon=math.max(horizon,math.min(10,finish/1000-s.time)) end
     local projected=s.power or 0
     if s.powerType==0 then
@@ -445,6 +449,7 @@ function R:MageSnapshot(s)
         end
     end
     local guid=UnitGUID and UnitGUID("target")
+    s.targetGUID=guid
     if not guid or not self.healthSample or self.healthSample.guid~=guid or not s.validTarget then
         self.healthSample={guid=guid,time=s.time,hp=s.targetHP}; self.immune={}; self.flamestrike=nil
     else
@@ -623,14 +628,56 @@ function R:Highlight(spell,optional)
         if match then self.highlightCount=self.highlightCount+1 end
     end
 end
+local function retainable(s,key)
+    local M=A.MageRotation
+    if s.dead or s.taxi or not s.validTarget or s.targetPlayer or s.controlled or (s.buffs.iceblock or 0)>0 then return false end
+    if s.channelKey=="evocation" or s.channelKey and (s.channelRemaining or 0)>1 then return false end
+    if not M.Ready(s,key) or key=="shoot" and s.wanding then return false end
+    if key=="pyroblast" and s.combat and (s.buffs.presence or 0)==0 then return false end
+    if M.ground[key] then
+        local kiteWindow=s.targetDistance and s.targetDistance>=20 and ((s.slowRemaining or 0)>2 or s.frozen)
+            and (s.talents.improvedBlizzard or 0)>=2
+        return s.safeCluster and (s.cluster or 0)>=3 and not s.moving
+            and (s.playerHealth or 100)>55 and (s.powerPercent or 100)>35
+            and (not s.attackingPlayer or key=="blizzard" and kiteWindow)
+            and (key~="flamestrike" or not s.flamestrikeActive)
+    elseif M.area[key] then
+        return s.safeAOE and s.targetClose and (s.playerHealth or 100)>55 and (s.powerPercent or 100)>30
+            and (key=="cone" and s.facingTarget or s.nearby>=3)
+    end
+    return true
+end
+function R:StabilizeRecommendation(s,key,reason,optional,urgent)
+    local plan=self.castPlan
+    if plan then
+        local spell=s.spells[plan.key]
+        local sameCast=s.castToken==plan.token
+        local handoff=not s.castToken and s.time>=plan.finish-.15 and s.time<=plan.finish+1
+        if not urgent and plan.target==s.targetGUID and spell and spell.id==plan.id
+            and (sameCast or handoff) and retainable(s,plan.key) then
+            if sameCast and s.castEnd then plan.finish=s.castEnd end -- Pushback can move the cast end.
+            return plan.key,plan.reason,plan.optional
+        end
+        self.castPlan=nil
+    end
+    -- Commit to the next damage action, not to a transient numerical ranking.
+    -- New casts start a new plan; emergency advice and invalid actions bypass it.
+    local spell=key and s.spells[key]
+    if not urgent and not optional and spell and (A.Data.MageRotationSpells[spell.id] or key=="shoot")
+        and s.castToken and s.castEnd and s.targetGUID and retainable(s,key) then
+        self.castPlan={token=s.castToken,finish=s.castEnd,target=s.targetGUID,key=key,id=spell.id,reason=reason,optional=optional}
+    end
+    return key,reason,optional
+end
 function R:Update()
     if not A.characterDB then return end
     if self.suspended or self:Mode()=="disabled" then
-        self.approach=nil; self.powerSample=nil; self.healthSample=nil; self.immune=nil; self.lastDamage=nil
+        self.approach=nil; self.powerSample=nil; self.healthSample=nil; self.immune=nil; self.lastDamage=nil; self.castPlan=nil
         self.current=nil; self.optional=nil; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
     else
         self.snapshot=self:Snapshot()
-        local key,reason,optional=self.Decide(self.snapshot)
+        local key,reason,optional,urgent=self.Decide(self.snapshot)
+        key,reason,optional=self:StabilizeRecommendation(self.snapshot,key,reason,optional,urgent)
         self.current=key and self.snapshot.spells[key]; self.reason=reason; self.optional=not not (self.current and optional)
         self:Highlight(self:Mode()=="assistant" and self.current or nil,self.optional)
     end
@@ -640,6 +687,7 @@ local events=CreateFrame("Frame"); R.events=events
 for _,event in ipairs({"PLAYER_LOGIN","PLAYER_ENTERING_WORLD","PLAYER_LEAVING_WORLD","SPELLS_CHANGED","SPELL_DATA_LOAD_RESULT","PLAYER_TALENT_UPDATE","PLAYER_REGEN_ENABLED","ACTIONBAR_SLOT_CHANGED","ACTIONBAR_PAGE_CHANGED","PLAYER_TARGET_CHANGED","START_AUTOREPEAT_SPELL","STOP_AUTOREPEAT_SPELL"}) do events:RegisterEvent(event) end
 for _,event in ipairs({"UNIT_POWER_UPDATE","UNIT_POWER_FREQUENT","UNIT_MAXPOWER","UNIT_SPELLCAST_START","UNIT_SPELLCAST_STOP","UNIT_SPELLCAST_CHANNEL_START","UNIT_SPELLCAST_CHANNEL_STOP"}) do events:RegisterEvent(event) end
 for _,event in ipairs({"MODIFIER_STATE_CHANGED","UPDATE_MACROS","ACTIONBAR_UPDATE_STATE"}) do events:RegisterEvent(event) end
+events:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
 for _,event in ipairs({"COMBAT_LOG_EVENT_UNFILTERED","PLAYER_EQUIPMENT_CHANGED","PLAYER_LEVEL_UP","CHARACTER_POINTS_CHANGED","UNIT_AURA","LOSS_OF_CONTROL_ADDED","LOSS_OF_CONTROL_UPDATE"}) do events:RegisterEvent(event) end
 events:SetScript("OnEvent",function(_,event,unit)
     if event=="COMBAT_LOG_EVENT_UNFILTERED" then
@@ -647,10 +695,11 @@ events:SetScript("OnEvent",function(_,event,unit)
         return
     end
     if event:sub(1,5)=="UNIT_" then
+        if unit=="player" and event=="UNIT_SPELLCAST_INTERRUPTED" then R.castPlan=nil end
         if (unit=="player" or event=="UNIT_AURA" and unit=="target") and not R.suspended and R:Mode()~="disabled" then R:Update() end
         return
     end
-    if event=="PLAYER_TARGET_CHANGED" or event=="PLAYER_LEAVING_WORLD" or event=="PLAYER_ENTERING_WORLD" then R.approach=nil end
+    if event=="PLAYER_TARGET_CHANGED" or event=="PLAYER_LEAVING_WORLD" or event=="PLAYER_ENTERING_WORLD" then R.approach=nil; R.castPlan=nil end
     if event=="PLAYER_LEAVING_WORLD" then R.suspended=true; R.autoRepeat=nil; R.powerSample=nil; R:Highlight(nil); return end
     if event=="PLAYER_ENTERING_WORLD" then R.suspended=nil end
     if R.suspended then return end

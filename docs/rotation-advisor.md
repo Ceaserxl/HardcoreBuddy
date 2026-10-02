@@ -56,8 +56,15 @@ The addon owns separate cosmetic overlays and leaves native proc alerts intact.
 Macros are matched by Blizzard's resolved spell ID, including modifier changes
 and explicit ranks. The addon does not parse, create or rewrite casting macros.
 
-Normal casts and the GCD do not clear the next recommendation. Mana and cooldown
-forecasts cover the remaining cast/GCD, with at least a one-second reaction lead.
+Normal casts and the GCD do not clear the next recommendation.
+Once a next damage spell is selected during a cast, it stays selected through
+completion and a one-second handoff, or until the next cast starts. Ordinary
+damage reranking cannot switch it just as the player presses the prepared spell.
+Urgent survival/interrupt advice, changed targets, crowd control, lost range,
+insufficient mana, immunity and unsafe AoE still invalidate that choice.
+
+Mana and cooldown forecasts cover the remaining cast/GCD, with at least a
+one-second reaction lead.
 Current cast mana is reserved before forecasting another spell. Damage channels
 show their next action in the final second; emergency priorities remain available
 during channels. Evocation is allowed to finish. Enemy approach prediction can
