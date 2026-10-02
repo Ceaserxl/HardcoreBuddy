@@ -96,6 +96,20 @@ assert(#R:Missing(live)==0,"Carry 0 skips restocking")
 R.settings.panel=true; R.settings.departure=true
 R:Refresh(); assert(not R.toast:IsShown(),"No login departure")
 resting=true; R:Refresh(); assert(R.panel:IsShown())
+-- Priority and quantity edits do not fire bag events, but must update this frame.
+local missing=R:Missing(R:LiveContext()); local edited=missing[1]
+local originalTarget=A.characterDB.targets[edited.itemId]
+A:CyclePriority(edited.item)
+assert(R.refreshAt==now,"Priority change schedules readiness refresh immediately")
+R.events.scripts.OnUpdate(R.events)
+assert(not R.refreshAt and #R:Missing(R:LiveContext())==#missing-1,"Priority removes the essential on the next frame")
+assert(R.panel.summary:GetText()==(#missing-1).." supplies below target","Visible panel updates without a bag event")
+A:CyclePriority(edited.item); A:CyclePriority(edited.item)
+R.events.scripts.OnUpdate(R.events)
+assert(R.panel.summary:GetText()==#missing.." supplies below target","Changing back restores the essential")
+A:SetCarryTarget(edited.itemId,0); R.events.scripts.OnUpdate(R.events)
+assert(R.panel.summary:GetText()==(#missing-1).." supplies below target","Quantity changes also refresh the panel")
+A:SetCarryTarget(edited.itemId,originalTarget); R.events.scripts.OnUpdate(R.events)
 local opens=0; local originalOpen=R.Open
 R.Open=function() opens=opens+1 end
 R.panel.scripts.OnDragStart(R.panel)

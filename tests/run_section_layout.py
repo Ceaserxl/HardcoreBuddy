@@ -56,7 +56,7 @@ for _,class in ipairs({"HUNTER","WARLOCK","WARRIOR","PALADIN","ROGUE","MAGE","PR
     assert(xx>x and yy==y,"Overview follows sidebar order across paired cards")
     local state=A.state
     local hit=MOCK.ClickAt(x+w/2,y+h/2)
-    assert(hit==left and A.state.filter=="Zones","Section card backdrop must not intercept navigation")
+    assert(hit==left and A.state.filter=="Zone Advisor","Section card backdrop must not intercept navigation")
     A:Back(); assert(A.state==state)
 end
 print("PASS: "..checked.." section/control bounds at three screen sizes; nine-class paired navigation and inline slider values.")

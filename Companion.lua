@@ -55,6 +55,7 @@ local function supplyRow(record)
     b.title=record.name
     b.body=record.quantityNote or record.item.short
     b.supply=true
+    b.genericTitle=S.GenericTitle(record.item)
     b.category=record.category
     b.priority=record.priority
     b.count,b.target,b.targetKey=record.count,record.target,record.targetKey
@@ -108,6 +109,7 @@ local function supplyRows(context,state,onlyFamily)
                     local selected,automatic=S.Selection(context,r.groupFamily)
                     local b=row(groupNames[r.groupFamily],automatic and automatic.note or "Select one rank to track",{kind="supplyFamily",family=r.groupFamily})
                     b.supply,b.groupSupply,b.status=true,true,"choose"
+                    b.genericTitle=S.GenericTitle(r.item)
                     b.priority=S.Priority(context,r.item)
                     b.target=r.target
                     if r.groupFamily=="dummy" then b.itemId,b.icon=r.itemId,r.item.icon end

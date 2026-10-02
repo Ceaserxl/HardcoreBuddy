@@ -255,14 +255,14 @@ function T:Document(context,state)
         local learn=canLearn and action("learn",build.id) or nil
         if learn then learn.key=nextPoint.key; learn.rank=nextPoint.rank end
         local nextRow=top[1]
-        nextRow.body=live and "Click to apply 1pt" or reason
+        nextRow.body=live and "Click to Apply Talent" or reason
         nextRow.recommendation={summary=nextRow.body,
             name=live and live.names[nextPoint.key] or node.name,
             detail=node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank}
         nextRow.body=nextRow.body.."\n"..(live and live.names[nextPoint.key] or node.name)..
             "\n"..node.treeName.." | Rank "..nextPoint.rank.." / "..node.maxRank
         nextRow.icon=live and live.icons[nextPoint.key] or spellIcon(node.spellID)
-        if learn then nextRow.action=learn; nextRow.meta="Click to apply 1pt" end
+        if learn then nextRow.action=learn; nextRow.meta=nil end
     end
     top[#top+1]=row("Point-by-point path","View the complete talent path.",action("path"))
     top[#top+1]=row("Talent Advisor settings","Choose your talent build and configure auto talents.",action("talentSettings"))

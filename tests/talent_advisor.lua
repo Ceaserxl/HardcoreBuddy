@@ -114,7 +114,16 @@ check(A.state==overview and not A.state.talentPath,"Back restores the talent ove
 check(A.window.cards[1].content.blocks[1].icon:GetWidth()==34 and not A.window.cards[1].talentHeaders[1]:IsShown(),"Back restores overview icon size and hides table headings")
 check(A.window.sidebarTitle:GetText()=="ADVISORS","Sidebar identity")
 local lesson=A.document.cards[1].blocks[1]
-check(lesson.title=="Next Talent" and lesson.recommendation.summary=="Click to apply 1pt","Stable next talent label and compact apply hint")
+check(lesson.title=="Next Talent" and lesson.recommendation.summary=="Click to Apply Talent","Stable next talent label and apply hint")
+local talentRow=A.window.cards[1].content.blocks[1]
+talentRow.scripts.OnEnter(talentRow)
+local promptCount=0
+for _,line in ipairs(GameTooltip.lines) do
+    local text=type(line)=="table" and line[1] or line
+    if text=="Click to Apply Talent" then promptCount=promptCount+1 end
+    check(not tostring(text):find("1pt",1,true),"Tooltip omits the old one-point prompt")
+end
+check(promptCount==1,"Talent tooltip has exactly one apply prompt")
 check(A.document.cards[1].note:find("spent | ",1,true) and A.document.cards[1].note:find(" unspent",1,true),"Point counts follow the advisor level subtitle")
 check(lesson.action and lesson.action.command=="learn" and lesson.icon==132127,"Visible single-point button and native icon")
 check(#A.document.cards[1].blocks==3 and lesson.body:find("Localized Bestial Wrath",1,true)

@@ -71,7 +71,10 @@ local function tooltip(self)
         GameTooltip:ClearLines()
     end
     GameTooltip:SetText(block.title or "Reference", 0.83, 0.69, 0.43, 1, true)
-    if block.body then GameTooltip:AddLine(block.body, 0.94, 0.92, 0.87, true) end
+    if block.recommendation then
+        GameTooltip:AddLine(block.recommendation.name,0.94,0.92,0.87,true)
+        GameTooltip:AddLine(block.recommendation.detail,0.72,0.73,0.75,true)
+    elseif block.body then GameTooltip:AddLine(block.body, 0.94, 0.92, 0.87, true) end
     if block.meta then GameTooltip:AddLine(block.meta, 0.72, 0.73, 0.75, true) end
     if block.supply then
         GameTooltip:AddLine(block.autoRank and "The best learned recipe is selected automatically from your character's profession skill. Materials are not checked."
@@ -161,6 +164,7 @@ end
 local function renderBlock(frame, block, width)
     frame.block = block; frame:SetWidth(width); frame:Show()
     frame.priority:SetShown(block.supply and block.priority~=nil)
+    if frame.genericTitle then frame.genericTitle:Hide() end
     frame.title:SetFont(STANDARD_TEXT_FONT,block.supply and 14 or 15,"")
     frame.meta:SetFont(STANDARD_TEXT_FONT,11,"")
     frame.icon:SetSize(34,34)
@@ -363,16 +367,20 @@ local function renderBlock(frame, block, width)
     if block.supply then
         -- Classification and stock share a right-hand column. Quantity editing
         -- is available only after opening the item or its rank details.
-        frame:SetHeight(56); y=56
+        frame:SetHeight(64); y=64
+        if not frame.genericTitle then frame.genericTitle=font(frame,11,GOLD) end
+        frame.genericTitle:Show()
+        measure(frame.genericTitle,block.genericTitle or "Item",width-150,52,5)
+        frame.genericTitle:SetHeight(15); frame.genericTitle:SetWordWrap(false)
         frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
-        measure(frame.title,block.title,width-150,52,8); frame.title:SetHeight(18); frame.title:SetWordWrap(false)
+        measure(frame.title,block.title,width-150,52,21); frame.title:SetHeight(18); frame.title:SetWordWrap(false)
         frame.body:SetFont(STANDARD_TEXT_FONT,12,"")
-        measure(frame.body,block.body,width-150,52,28); frame.body:SetHeight(16); frame.body:SetWordWrap(false)
-        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-8)
+        measure(frame.body,block.body,width-150,52,41); frame.body:SetHeight(16); frame.body:SetWordWrap(false)
+        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-21)
         frame.priority:SetFont(STANDARD_TEXT_FONT,11,"")
-        frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPRIGHT",-8,-10); frame.priority:SetSize(84,16); frame.priority:SetJustifyH("RIGHT")
-        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-27); frame.stock:SetSize(84,18); frame.stock:SetJustifyH("RIGHT")
-        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPRIGHT",-8,-22)
+        frame.priority:ClearAllPoints(); frame.priority:SetPoint("TOPRIGHT",-8,-5); frame.priority:SetSize(84,16); frame.priority:SetJustifyH("RIGHT")
+        frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-35); frame.stock:SetSize(84,18); frame.stock:SetJustifyH("RIGHT")
+        frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPRIGHT",-8,-30)
         frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("BOTTOMRIGHT",-8,7)
         Skin.RowArtwork(frame)
     elseif frame.carryLabel then frame.carryLabel:Hide() end
@@ -475,7 +483,8 @@ local function renderCard(frame, data, width)
     if data.itemLayout then
         frame.title:Hide(); frame.note:Hide()
     else
-        y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 140 or headerTextWidth>0 and headerTextWidth+30 or 12), 0, y))+5
+        local extraHeaderWidth=data.zoneRangeToggle and addon.window.atLevel:GetWidth()+8 or 0
+        y=y+math.max(data.headerAction and 24 or 0,measure(frame.title, data.title, width-(data.headerAction and 140 or headerTextWidth>0 and headerTextWidth+30 or 12)-extraHeaderWidth, 0, y))+5
         y=y+measure(frame.note, data.note, width-12, 0, y)+12
     end
     for _,control in ipairs(frame.npcFilters or {}) do control:Hide() end
@@ -803,6 +812,7 @@ function addon:Activate(action)
         if self.Supplies.DefaultGroup(self:GetContext(),action.item) then
             self.characterDB.supplyDefaults=self.characterDB.supplyDefaults or {}
             self.characterDB.supplyDefaults[action.item.family]=action.item.itemId
+            if self.Readiness then self.Readiness:SuppliesChanged() end
             self:Refresh()
         end
         return
@@ -875,6 +885,9 @@ local FILTER_ICONS={
 function addon:Layout()
     local f,doc=self.window,self.document
     if not f or not doc then return end
+    -- Zone recommendations place this control alongside their scrolling title.
+    -- Restore the normal toolbar parent before laying out any other page.
+    f.atLevel:SetParent(f); f.atLevel:SetFrameLevel(f.clear:GetFrameLevel())
     for i,card in ipairs(f.cards or {}) do
         local data=doc.cards[i]
         if card.detailQuantity and not (data and data.quantityRecord) then
@@ -1090,21 +1103,23 @@ function addon:Layout()
     f.atLevel:SetShown(searchable and doc.levelFilter)
     if searchable then
         local extra=doc.levelFilter
-        f.atLevel.label:SetText(spellPage and (showAll and "Next training level" or "Show all future spells") or rangePage and (showAll and "Near my level" or "Show all") or (self.state.atLevel and "Within my level" or "Any level"))
+        f.atLevel.label:SetText(spellPage and (showAll and "Next training level" or "Show all future spells") or rangePage and (showAll and "Near my level" or zonePage and "Show All" or "Show all") or (self.state.atLevel and "Within my level" or "Any level"))
         local extraButton=f.atLevel
         if extra then extraButton:SetWidth(math.max(112,math.ceil(extraButton.label:GetStringWidth())+22)) end
         local labelWidth=math.ceil(f.searchLabel:GetStringWidth())+6
         local rowHeight=math.max(28,math.ceil(f.searchLabel:GetStringHeight())+8)
-        local extraWidth=extra and extraButton:GetWidth()+6 or 0
-        local searchWidth=bodyWidth-108-labelWidth-8-f.clear:GetWidth()-6-extraWidth
-        local wrapExtra=extra and searchWidth<80
+        local extraWidth=extra and not zonePage and extraButton:GetWidth()+6 or 0
+        local searchLeft=left+(zonePage and (backRow and 108 or 0) or 108)
+        local rightInset=zonePage and 54 or 40
+        local searchWidth=width-rightInset-searchLeft-labelWidth-8-f.clear:GetWidth()-6-extraWidth
+        local wrapExtra=extra and not zonePage and searchWidth<80
         if wrapExtra then searchWidth=searchWidth+extraWidth; extraWidth=0 end
-        f.searchLabel:ClearAllPoints(); f.searchLabel:SetPoint("TOPLEFT",left+108,-toolbarY)
+        f.searchLabel:ClearAllPoints(); f.searchLabel:SetPoint("TOPLEFT",searchLeft,-toolbarY)
         f.searchLabel:SetSize(labelWidth,rowHeight)
-        f.search:ClearAllPoints(); f.search:SetPoint("TOPLEFT",left+108+labelWidth+8,-toolbarY)
+        f.search:ClearAllPoints(); f.search:SetPoint("TOPLEFT",searchLeft+labelWidth+8,-toolbarY)
         f.search:SetSize(math.max(50,searchWidth),rowHeight)
         if f.search:GetText()~=(self.state.query or "") then f.search:SetText(self.state.query or "") end
-        f.clear:ClearAllPoints(); f.clear:SetPoint("TOPRIGHT",-40-extraWidth,-toolbarY)
+        f.clear:ClearAllPoints(); f.clear:SetPoint("TOPRIGHT",-rightInset-extraWidth,-toolbarY)
         f.clear:SetHeight(rowHeight)
         f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("TOPRIGHT",-40,-toolbarY-(wrapExtra and rowHeight+6 or 0))
         active(f.atLevel,(rangePage or spellPage) and showAll or self.state.atLevel)
@@ -1135,6 +1150,10 @@ function addon:Layout()
             or doc.view=="training" and self.state.filter=="Zone Advisor" and not self.state.mapNPCs and (self.state.mapZonePicker or index==1) and (self.state.mapZonePicker and 2 or 1)
             or doc.view=="advisors" and not self.state.talentPath and 1) or nil
         top=top+renderCard(c,data,contentWidth)+10
+        if data.zoneRangeToggle then
+            f.atLevel:SetParent(c); f.atLevel:SetFrameLevel(c.headerButton:GetFrameLevel())
+            f.atLevel:ClearAllPoints(); f.atLevel:SetPoint("RIGHT",c.headerButton,"LEFT",-8,0)
+        end
         if userPage and index==1 then
             -- Keep drag feedback in the subtitle, inside the scrolling page.
             f.userEntry:SetParent(c); f.userEntry:ClearAllPoints(); f.userEntry:SetAllPoints(c.note)

@@ -35,9 +35,16 @@ function R:Missing(context)
     end
     return rows
 end
+function R:SuppliesChanged()
+    -- Supply preferences do not fire bag events. Coalesce edits into the next
+    -- frame, after quantity focus handlers and the main window finish updating.
+    self.refreshAt=GetTime()
+end
 function R:Open()
     self.previewUntil=nil; self.previewRows=nil; self.panel:Hide(); self.toast:Hide()
     A:CreateWindow(); A.db.profile.mode="live"
+    -- This is a fresh live-character destination, even after planning an alt.
+    A.lastClass=nil
     A.state={view="supplies",filter="Essentials",page=1}; A.history={}
     A.window:Show(); A:Refresh(true)
 end
@@ -224,7 +231,7 @@ function R:LayoutSettings(parent,left,top,width,height,visible)
     f.reminderHelp:ClearAllPoints(); f.reminderHelp:SetPoint("TOPLEFT",half+28,-168); f.reminderHelp:SetWidth(half-32)
     for key,check in pairs(f.checks) do check:SetChecked(self.settings[key]); check.mark:SetText(self.settings[key] and "X" or "") end
 end
-local events=CreateFrame("Frame")
+local events=CreateFrame("Frame"); R.events=events
 events:RegisterEvent("ADDON_LOADED")
 events:SetScript("OnEvent",function(_,event,name)
     if event=="ADDON_LOADED" then

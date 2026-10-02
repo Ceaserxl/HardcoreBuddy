@@ -27,7 +27,7 @@ function Z.Build(context,state)
         ..(state.showAllZones and " | All levels" or " | Ranges within 3 levels")
         .."\nClick a zone to review its dangers and NPCs in Zone Advisor. For Hardcore, favor green quests and check individual enemy levels."
     return {view="training",context=context,cards={
-        {title="Zone Advisor",note="Choose where to level and prepare for the dangers ahead.",
+        {title="Zone Advisor",note="Choose where to level and prepare for the dangers ahead.",zoneRangeToggle=true,
             headerAction={label="Settings",action={kind="mapAdvisor",command="settings"}},blocks={
                 {title="Use my current zone",body="View nearby dangers and NPCs.",action={kind="mapAdvisor",command="current"}},
                 {title="Browse all zones",body="Explore every outdoor zone and city.",action={kind="mapAdvisor",command="zones"}}}},

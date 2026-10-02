@@ -141,6 +141,20 @@ function S.PreferredItem(context, row)
     return out
 end
 
+local genericTitles={recovery="Food",drink="Drink",wellfed="Food",manafood="Food",
+    bandage="Bandage",dummy="Dummy",antivenom="Antivenom",healing="Healing",mana="Mana",
+    healthstone="Healthstone",managem="Gem",feather="Reagent",vanish="Reagent",blind="Reagent",tea="Tea"}
+function S.GenericTitle(item)
+    if item.armorKit then return "Armor" end
+    if item.ammoKind then return ({arrows="Arrows",bullets="Bullets",thrown="Thrown"})[item.ammoKind] or "Ammo" end
+    if genericTitles[item.family] then return genericTitles[item.family] end
+    if item.group=="Scrolls" then return "Scroll" end
+    if (item.name or ""):find("Potion",1,true) then return "Potion" end
+    if (item.name or ""):find("Elixir",1,true) then return "Elixir" end
+    if (item.name or ""):find("Flask",1,true) then return "Flask" end
+    return item.userItem and "Item" or "Utility"
+end
+
 function S.DefaultGroup(context, item)
     if not item or item.userItem or P.grouped[item.family] then return end
     for _,row in ipairs(P.BuildList(context.characterClass,context.level,P.ContextFaction(context)).rows) do

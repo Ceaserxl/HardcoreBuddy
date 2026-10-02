@@ -17,6 +17,12 @@ local function find(id)
     end
 end
 local row=first(); local id=row.block.itemId; local count=row.block.count
+assert(row.genericTitle:IsShown() and row.genericTitle:GetText()==A.Supplies.GenericTitle(row.block.action.item),"Generic supply title is visible")
+local gx,gy,gw,gh=row.genericTitle:GetRect(); local tx,ty=row.title:GetRect()
+assert(gx==tx and gy+gh<=ty,"Generic title aligns above the item name")
+for _,item in ipairs(A.Data.Items.items) do
+    assert(A.Supplies.GenericTitle(item):match("^%a+$"),"Every generic title is one word")
+end
 assert(count>0 and row.stock:GetText()=="("..count.."/"..row.block.target..")")
 assert(not row.quantity:IsShown() and not row.count:IsShown())
 local _,py=row.priority:GetCenter(); local _,sy=row.stock:GetCenter()
@@ -69,5 +75,11 @@ assert(not A.window.cards[1].detailQuantity:IsShown(),"Old recipe detail loses e
 A:Back(); MOCK.Click(find(recipes[2].itemId))
 assert(editor():IsVisible(),"Current recipe has a separate editor")
 A.GetContext=original
+A:Navigate("advisors")
+for _,card in ipairs(A.window.cards) do if card:IsShown() then
+    for _,r in ipairs(card.content.blocks) do
+        assert(not r:IsShown() or not r.genericTitle or not r.genericTitle:IsShown(),"Pooled titles hide outside supplies")
+    end
+end end
 print("PASS: Supply labels, stock placement, zero/unknown/surplus, details editing, Enter/Escape/Back and optional target dummies.")
 ''')

@@ -45,7 +45,15 @@ for _,class in ipairs({"HUNTER","WARRIOR"}) do
     assert(tab and tab:IsVisible()); MOCK.Click(tab)
     for _,b in ipairs(A.window.filters) do assert(not b:IsShown() or b.filter~="Zones","Only one zone tab") end
     assert(A.state.filter=="Zone Advisor" and A.document.cards[2].title=="Recommended leveling zones")
-    assert(A.window.atLevel.label:GetText()=="Show all")
+    assert(A.window.atLevel.label:GetText()=="Show All")
+    local header=A.window.cards[1].headerButton
+    local hx,hy,hw,hh=header:GetRect()
+    local ax,ay,aw,ah=A.window.atLevel:GetRect()
+    local cx,cy,cw,ch=A.window.clear:GetRect()
+    local sx,sy,sw,sh=A.window.search:GetRect()
+    assert(ax+aw+8==hx and ay==hy,"Show All sits immediately left of Settings")
+    assert(cx+cw==hx+hw and sx+sw+6==cx,"Expanded search row ends at the Settings edge")
+    assert(A.window.atLevel:GetParent()==A.window.cards[1],"Show All scrolls with its title")
     local filtered=A.document.total
     MOCK.Click(A.window.atLevel)
     assert(A.state.showAllZones and A.document.total>filtered and A.window.atLevel.label:GetText()=="Near my level")
@@ -59,6 +67,7 @@ for _,class in ipairs({"HUNTER","WARRIOR"}) do
     assert(A.state.view=="training" and A.state.filter=="Zone Advisor" and A.state.mapZone==destination)
     assert(not opened,"Zone row must not open the world map")
     assert(A.document.cards[1].title==A.Data.MapZones[destination].name)
+    assert(not A.window.atLevel:IsShown() and A.window.atLevel:GetParent()==A.window,"Header toggle resets on zone details")
     local zoneState=A.state
     A.MapAdvisor:Activate({command="zones"})
     local choice=A.document.cards[1].blocks[2].action

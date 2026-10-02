@@ -207,6 +207,7 @@ function addon:SetCarryTarget(itemId,value)
         end
     end
     self.needsRefresh=true
+    if self.Readiness then self.Readiness:SuppliesChanged() end
 end
 
 function addon:CyclePriority(item)
@@ -218,6 +219,7 @@ function addon:CyclePriority(item)
     for i,value in ipairs(values) do
         if current==value then self.characterDB.priorities[key]=values[i%#values+1]; break end
     end
+    if self.Readiness then self.Readiness:SuppliesChanged() end
     self:Refresh()
 end
 
