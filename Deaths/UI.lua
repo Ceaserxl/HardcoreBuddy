@@ -316,13 +316,30 @@ function H:LayoutPage(parent,left,top,width,height,state)
     local combined=state.filter=="Settings"
     self.window:SetShown(not combined and state.filter~="Options" and state.filter~="Appearance" and not state.deathRecord)
     self.options:ClearAllPoints()
-    if combined then self.options:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,0); self.options:SetSize(width,560)
+    if combined then self.options:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,0); self.options:SetSize(width,518)
     else self.options:SetAllPoints(self.host) end
     self.options:SetShown((combined or state.filter=="Options") and not state.deathRecord)
+    local options=self.options
+    addon.Skin.SettingsHeader(options,width,options.title,options.subtitle)
+    for _,box in ipairs({options.duration,options.alertLevel}) do
+        box:ClearAllPoints(); box:SetPoint("TOPRIGHT",-16,box==options.duration and -38 or -100)
+    end
+    options.scaleDown:ClearAllPoints(); options.scaleDown:SetPoint("TOPRIGHT",-54,-142)
+    options.scaleUp:ClearAllPoints(); options.scaleUp:SetPoint("TOPRIGHT",-16,-142)
+    options.volume:SetWidth(options.display:GetWidth()-142)
+    options.soundChoice:SetWidth(options.reports:GetWidth()-104)
+    options.soundNext:ClearAllPoints(); options.soundNext:SetPoint("TOPRIGHT",-16,-258)
+    local right=options.history:GetWidth()/2+22
+    options.retentionTitle:ClearAllPoints(); options.retentionTitle:SetPoint("TOPLEFT",right,-40)
+    options.retention:ClearAllPoints(); options.retention:SetPoint("TOPLEFT",right,-64)
+    options.retentionUnits:ClearAllPoints(); options.retentionUnits:SetPoint("TOPLEFT",right+74,-71)
+    options.retentionHint:ClearAllPoints(); options.retentionHint:SetPoint("TOPLEFT",right,-104)
+
     if self.appearance then
         self.appearance:ClearAllPoints()
-        if combined then self.appearance:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,-572); self.appearance:SetSize(width,368)
+        if combined then self.appearance:SetPoint("TOPLEFT",self.host,"TOPLEFT",0,-530); self.appearance:SetSize(width,302)
         else self.appearance:SetAllPoints(self.host) end
+        self:LayoutAppearance(width)
         self.appearance:SetShown((combined or state.filter=="Appearance") and not state.deathRecord)
     end
     self.details:SetShown(state.deathRecord~=nil)
@@ -487,11 +504,11 @@ function H:BuildUI()
 
     local options=Page(host); self.options=options
     addon.Skin.Paint(options,"note")
-    addon.Skin.SectionBackdrop(options,72,298,1).title:SetText("Reports & sound")
-    addon.Skin.SectionBackdrop(options,72,298,2).title:SetText("Display & volume")
-    local optionsTitle=Text(options,22,"TOPLEFT",0,0,700)
+    local reports=addon.Skin.SectionBackdrop(options,72,298,1); reports.title:SetText("Reports & sound"); options.reports=reports
+    local display=addon.Skin.SectionBackdrop(options,72,298,2); display.title:SetText("Display & volume"); options.display=display
+    local optionsTitle=Text(options,22,"TOPLEFT",0,0,700); options.title=optionsTitle
     optionsTitle:SetText("Death Journal"); optionsTitle:SetTextColor(unpack(addon.Skin.colors.gold))
-    local intro=Text(options,12,"TOPLEFT",0,-34,720)
+    local intro=Text(options,12,"TOPLEFT",0,-34,720); options.subtitle=intro
     intro:SetText("Using another death alert addon? Turn off HardcoreBuddy death alerts below.\nYour journal and compact feed will keep recording reports."); intro:SetTextColor(unpack(MUTED))
     options.checks={}
     local checks={
@@ -501,12 +518,12 @@ function H:BuildUI()
     }
     for i,entry in ipairs(checks) do
         local key,label=entry[1],entry[2]
-        local checkbox=CreateFrame("CheckButton",nil,options,"BackdropTemplate")
-        checkbox:SetSize(24,24); checkbox:SetPoint("TOPLEFT",28,-116-(i-1)*32)
+        local checkbox=CreateFrame("CheckButton",nil,reports,"BackdropTemplate")
+        checkbox:SetSize(24,24); checkbox:SetPoint("TOPLEFT",16,-44-(i-1)*32)
         addon.Skin.Paint(checkbox,"edit")
         checkbox.mark=Text(checkbox,13,"CENTER",0,0,20); checkbox.mark:SetJustifyH("CENTER")
         checkbox.mark:SetTextColor(unpack(GOLD))
-        local text=Text(checkbox,12,"LEFT",34,0,326); text:SetWordWrap(true); text:SetText(label)
+        local text=Text(checkbox,12,"LEFT",34,0,300); text:SetWordWrap(true); text:SetText(label)
         checkbox:SetScript("OnClick",function(box)
             self.db.settings[key]=box:GetChecked() and true or false
             self:ApplySettings()
@@ -514,9 +531,9 @@ function H:BuildUI()
         end)
         options.checks[key]=checkbox
     end
-    Text(options,13,"TOPLEFT",436,-116,310):SetText("Alert display duration")
-    local duration=Edit(options,56,436,-138,true); options.duration=duration
-    local durationHint=Text(options,11,"TOPLEFT",506,-145,240)
+    Text(display,13,"TOPLEFT",16,-44,230):SetText("Alert display duration")
+    local duration=Edit(display,56,0,0,true); options.duration=duration
+    local durationHint=Text(display,11,"TOPLEFT",16,-76,310)
     durationHint:SetText("seconds (1-30), then a short fade"); durationHint:SetTextColor(unpack(MUTED))
     local function commitDuration(box)
         self.db.settings.alertDuration=self.NormalizeAlertDuration(tonumber(box:GetText()) or self.db.settings.alertDuration)
@@ -525,29 +542,29 @@ function H:BuildUI()
     duration:SetScript("OnEnterPressed",function(box) commitDuration(box); box:ClearFocus() end)
     duration:SetScript("OnEditFocusLost",commitDuration)
     duration:SetScript("OnEscapePressed",function(box) box:SetText(tostring(self.db.settings.alertDuration)); box:ClearFocus() end)
-    Text(options,13,"TOPLEFT",436,-190,300):SetText("Alert minimum level")
-    local alertLevel=Edit(options,56,436,-212,true); options.alertLevel=alertLevel
+    Text(display,13,"TOPLEFT",16,-106,230):SetText("Alert minimum level")
+    local alertLevel=Edit(display,56,0,0,true); options.alertLevel=alertLevel
     alertLevel:SetText(tostring(self.db.settings.minAlertLevel))
     alertLevel:SetScript("OnTextChanged",function(box)self.db.settings.minAlertLevel=math.max(1,math.min(60,tonumber(box:GetText()) or 1))end)
-    options.scaleText=Text(options,13,"TOPLEFT",436,-254,300)
-    Button(options,"-",30,436,-276,function()self.db.settings.scale=math.max(0.7,self.db.settings.scale-0.1);self:ApplySettings()end)
-    Button(options,"+",30,476,-276,function()self.db.settings.scale=math.min(1.5,self.db.settings.scale+0.1);self:ApplySettings()end)
-    local hint=Text(options,11,"TOPLEFT",28,-284,350); hint:SetWordWrap(true)
+    options.scaleText=Text(display,13,"TOPLEFT",16,-150,200)
+    options.scaleDown=Button(display,"-",30,0,0,function()self.db.settings.scale=math.max(0.7,self.db.settings.scale-0.1);self:ApplySettings()end)
+    options.scaleUp=Button(display,"+",30,0,0,function()self.db.settings.scale=math.min(1.5,self.db.settings.scale+0.1);self:ApplySettings()end)
+    local hint=Text(reports,11,"TOPLEFT",16,-212,330); hint:SetWordWrap(true)
     hint:SetText("Reports are recorded while you play.")
     hint:SetTextColor(unpack(MUTED))
-    Text(options,13,"TOPLEFT",28,-308,350):SetText("Death alert sound")
+    Text(reports,13,"TOPLEFT",16,-236,330):SetText("Death alert sound")
     local function changeSound(step)
         local _,index=self.NormalizeAlertSound(self.db.settings.alertSound)
         index=(index-1+step)%#self.soundChoices+1
         self.db.settings.alertSound=self.soundChoices[index].id
         self:ApplySettings(); self:PlayAlertSound()
     end
-    options.soundPrev=Button(options,"<",28,28,-330,function() changeSound(-1) end)
-    options.soundChoice=Button(options,"",248,64,-330,function() self:PlayAlertSound() end)
-    options.soundNext=Button(options,">",28,320,-330,function() changeSound(1) end)
-    options.volumeLabel=Text(options,13,"TOPLEFT",436,-312,300)
-    local volume=CreateFrame("Slider",nil,options,"BackdropTemplate"); options.volume=volume
-    volume:SetPoint("TOPLEFT",436,-336); volume:SetSize(230,18); volume:SetOrientation("HORIZONTAL")
+    options.soundPrev=Button(reports,"<",28,16,-258,function() changeSound(-1) end)
+    options.soundChoice=Button(reports,"",248,52,-258,function() self:PlayAlertSound() end)
+    options.soundNext=Button(reports,">",28,0,-258,function() changeSound(1) end)
+    options.volumeLabel=Text(display,13,"TOPLEFT",16,-196,104)
+    local volume=CreateFrame("Slider",nil,display,"BackdropTemplate"); options.volume=volume
+    volume:SetPoint("TOPLEFT",126,-190); volume:SetSize(230,18); volume:SetOrientation("HORIZONTAL")
     addon.Skin.Paint(volume,"edit"); volume:SetMinMaxValues(0,100); volume:SetValueStep(10); volume:SetObeyStepOnDrag(true)
     volume:SetThumbTexture("Interface\\Buttons\\WHITE8x8")
     volume:GetThumbTexture():SetSize(12,22); volume:GetThumbTexture():SetVertexColor(unpack(GOLD))
@@ -557,18 +574,18 @@ function H:BuildUI()
         if self.soundHandle and StopSound then StopSound(self.soundHandle); self.soundHandle=nil end
     end)
     addon.Skin.InlineSlider(volume,"%",10)
-    options.preview=Button(options,"Preview alert",140,0,0,function() duration:ClearFocus(); self:Slash("test") end)
-    options.preview:ClearAllPoints(); options.preview:SetPoint("TOPLEFT",20,-382)
-    local reset=Button(options,"Reset overlay positions",184,0,0,function()self:Slash("resetposition")end)
-    reset:ClearAllPoints(); reset:SetPoint("TOPLEFT",170,-382)
-    addon.Skin.SectionBackdrop(options,424,124).title:SetText("Journal history")
-    options.import=Button(options,"Import Deathlog",240,28,-464,function() self:ImportLegacy() end)
-    Text(options,12,"TOPLEFT",28,-508,330):SetText("Import saved reports from a loaded Deathlog history.")
-    Text(options,13,"TOPLEFT",436,-464,300):SetText("Keep reports for")
-    local retention=Edit(options,64,436,-488,true); options.retention=retention
+    options.preview=Button(display,"Preview alert",140,0,0,function() duration:ClearFocus(); self:Slash("test") end)
+    options.preview:ClearAllPoints(); options.preview:SetPoint("TOPLEFT",16,-248)
+    local reset=Button(display,"Reset positions",184,0,0,function()self:Slash("resetposition")end)
+    reset:ClearAllPoints(); reset:SetPoint("TOPRIGHT",-16,-248)
+    local history=addon.Skin.SectionBackdrop(options,382,124); history.title:SetText("Journal history"); options.history=history
+    options.import=Button(history,"Import Deathlog",240,16,-40,function() self:ImportLegacy() end)
+    Text(history,12,"TOPLEFT",16,-84,330):SetText("Import saved reports from a loaded Deathlog history.")
+    options.retentionTitle=Text(history,13,"TOPLEFT",400,-40,300); options.retentionTitle:SetText("Keep reports for")
+    local retention=Edit(history,64,400,-64,true); options.retention=retention
     retention:SetText(tostring(self.db.settings.retentionDays or 30))
-    Text(options,12,"TOPLEFT",510,-495,150):SetText("days (0-3650)")
-    Text(options,11,"TOPLEFT",436,-528,290):SetText("0 = Never remove reports automatically.")
+    options.retentionUnits=Text(history,12,"TOPLEFT",474,-71,150); options.retentionUnits:SetText("days (0-3650)")
+    options.retentionHint=Text(history,11,"TOPLEFT",400,-104,290); options.retentionHint:SetText("0 = Never remove reports automatically.")
     local function saveRetention(box)
         self.db.settings.retentionDays=tonumber(box:GetText()) or self.db.settings.retentionDays
         self:PruneReports(); box:SetText(tostring(self.db.settings.retentionDays)); self:Refresh()

@@ -62,6 +62,29 @@ function S.Hover(button,enabled)
 end
 
 -- Shared page sections follow the Map settings spacing and restrained card style.
+-- All Settings pages, including nested pages, share these header anchors.
+function S.SettingsHeader(parent,width,title,subtitle,action,detail)
+    parent.settingsHeader={title=title,subtitle=subtitle,action=action,detail=detail}
+    title:ClearAllPoints(); title:SetPoint("TOPLEFT",parent,"TOPLEFT",0,0)
+    title:SetFont(STANDARD_TEXT_FONT,22,""); title:SetTextColor(unpack(S.colors.gold))
+    title:SetWidth(width-(action and action:GetWidth()+36 or 12)); title:SetJustifyH("LEFT")
+    for i,text in ipairs({subtitle,detail}) do
+        if text then
+            text:ClearAllPoints(); text:SetPoint("TOPLEFT",parent,"TOPLEFT",0,-(i==1 and 34 or 54))
+            text:SetFont(STANDARD_TEXT_FONT,12,""); text:SetTextColor(unpack(S.colors.muted))
+            text:SetWidth(width-12); text:SetJustifyH("LEFT")
+        end
+    end
+    if action then
+        action:ClearAllPoints(); action:SetPoint("TOPRIGHT",parent,"TOPRIGHT",-12,0); action:SetHeight(28)
+        if action.label then
+            action.label:ClearAllPoints(); action.label:SetAllPoints(action)
+            action.label:SetFont(STANDARD_TEXT_FONT,13,"")
+            action.label:SetJustifyH("CENTER"); action.label:SetJustifyV("MIDDLE")
+        end
+    end
+end
+
 function S.Section(parent,title,top,height,column)
     local panel=CreateFrame("Frame",nil,parent,"BackdropTemplate")
     S.Paint(panel,"card")

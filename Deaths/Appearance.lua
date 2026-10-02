@@ -73,19 +73,19 @@ function H:BuildAppearance(host)
     a.done:ClearAllPoints(); a.done:SetPoint("TOPLEFT",a,"BOTTOMLEFT",0,-8); a.done:Hide()
     local f=CreateFrame("Frame",nil,host,"BackdropTemplate"); self.appearance=f
     f:SetAllPoints(host); A.Skin.Paint(f,"note"); f:Hide()
-    A.Skin.SectionBackdrop(f,62,132)
-    A.Skin.SectionBackdrop(f,206,150)
-    label(f,22,0,-12,700,"Appearance"):SetTextColor(unpack(A.Skin.colors.gold))
-    label(f,12,20,-42,700,"Choose how much space a death report takes. Background opacity leaves text readable.")
+    local style=A.Skin.Section(f,"Style & opacity",62,228,1); f.styleSection=style
+    local position=A.Skin.Section(f,"Position",62,228,2); f.positionSection=position
+    f.title=label(f,22,0,0,700,"Appearance")
+    f.subtitle=label(f,12,0,-34,700,"Choose how much space a death report takes. Background opacity leaves text readable.")
     f.styles={}
     for i,name in ipairs({"Compact","Banner","Text-only"}) do
-        f.styles[name]=button(f,name,140,20+(i-1)*152,-78,function()
+        f.styles[name]=button(style,name,104,16+(i-1)*112,-48,function()
             self.db.settings.alertStyle=name; self:ApplySettings(); self:Slash("test")
         end)
     end
-    f.opacityText=label(f,13,20,-134,500)
-    local slider=CreateFrame("Slider",nil,f,"BackdropTemplate"); f.opacity=slider
-    slider:SetPoint("TOPLEFT",20,-158); slider:SetSize(300,18); slider:SetOrientation("HORIZONTAL")
+    f.opacityText=label(style,13,16,-100,320)
+    local slider=CreateFrame("Slider",nil,style,"BackdropTemplate"); f.opacity=slider
+    slider:SetPoint("TOPLEFT",16,-124); slider:SetSize(300,18); slider:SetOrientation("HORIZONTAL")
     A.Skin.Paint(slider,"edit"); slider:SetMinMaxValues(0,100); slider:SetValueStep(5); slider:SetObeyStepOnDrag(true)
     slider:SetThumbTexture("Interface\\Buttons\\WHITE8x8")
     slider:GetThumbTexture():SetSize(12,22); slider:GetThumbTexture():SetVertexColor(unpack(A.Skin.colors.gold))
@@ -96,9 +96,26 @@ function H:BuildAppearance(host)
         a.flat:SetAlpha(value/100); a.rule:SetAlpha(value/100)
     end)
     A.Skin.InlineSlider(slider)
-    f.move=button(f,"Unlock and move",180,20,-222,function() self:TogglePositioning() end)
-    f.preview=button(f,"Preview alert",140,212,-222,function() self:Slash("test") end)
-    button(f,"Reset position",140,364,-222,function() self:Slash("resetposition") end)
-    label(f,12,20,-268,690,"Unlock and move keeps a silent preview on screen. Drag the alert, then click Save position. Locked alerts let clicks pass through to the game.")
-    label(f,12,20,-318,690,"Duration, sound, volume and live feed controls are above. Your saved position is shared by all three styles.")
+    f.move=button(position,"Unlock and move",160,16,-48,function() self:TogglePositioning() end)
+    f.preview=button(position,"Preview alert",140,188,-48,function() self:Slash("test") end)
+    f.reset=button(position,"Reset position",140,16,-88,function() self:Slash("resetposition") end)
+    f.moveHint=label(position,12,16,-130,320,"Unlock and move keeps a silent preview on screen. Drag the alert, then click Save position. Locked alerts let clicks pass through to the game.")
+    f.styleHint=label(style,12,16,-172,320,"Duration, sound, volume and live feed controls are above. Your saved position is shared by all three styles.")
+end
+
+function H:LayoutAppearance(width)
+    local f=self.appearance
+    A.Skin.LayoutSections(f,width)
+    A.Skin.SettingsHeader(f,width,f.title,f.subtitle)
+    local inner=f.styleSection:GetWidth()-32
+    local buttonWidth=(inner-16)/3
+    for i,name in ipairs({"Compact","Banner","Text-only"}) do
+        local b=f.styles[name]; b:SetWidth(buttonWidth)
+        b:ClearAllPoints(); b:SetPoint("TOPLEFT",16+(i-1)*(buttonWidth+8),-48)
+    end
+    f.opacity:SetWidth(inner); f.styleHint:SetWidth(inner); f.moveHint:SetWidth(inner)
+    local half=(inner-12)/2
+    f.move:SetWidth(half); f.preview:SetWidth(half)
+    f.preview:ClearAllPoints(); f.preview:SetPoint("TOPRIGHT",-16,-48)
+    f.reset:SetWidth(inner)
 end

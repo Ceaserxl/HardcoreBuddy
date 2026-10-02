@@ -65,8 +65,8 @@ function M:LayoutSettings(parent,left,top,width,visible)
             b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE"); b.label:SetText(text)
             b:SetScript("OnClick",click); f.buttons[#f.buttons+1]=b; return b
         end
-        label(f,"Zone Advisor",0,0,480,22):SetTextColor(unpack(Skin.colors.gold))
-        label(f,"Choose how terrain, NPC markers and zone notices appear.",0,34,700)
+        f.title=label(f,"Zone Advisor",0,0,480,22)
+        f.subtitle=label(f,"Choose how terrain, NPC markers and zone notices appear.",0,34,700)
         f.resetAll=button(f,"Reset all",0,12,120,function() M:ResetSettings("all") end)
         f.resetAll:ClearAllPoints(); f.resetAll:SetPoint("TOPRIGHT",-12,0)
         local function section(name,title,description,y,height)
@@ -138,6 +138,7 @@ function M:LayoutSettings(parent,left,top,width,visible)
     local f=self.controls; f:SetShown(visible); if not visible then return 0 end
     local scale=math.min(1,width/744); local baseWidth=width/scale
     f:SetScale(scale); f:SetSize(baseWidth,self:SettingsHeight())
+    Skin.SettingsHeader(f,baseWidth,f.title,f.subtitle,f.resetAll)
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
     local panelWidth=baseWidth-12
     local explorationWidth=math.floor((panelWidth-12)*0.60)
@@ -172,25 +173,25 @@ function M:LayoutSettings(parent,left,top,width,visible)
     return self:SettingsHeight()*scale
 end
 
-function M:IconPickerHeight() return 94+math.ceil(#self.iconChoices/6)*88 end
+function M:IconPickerHeight() return 74+math.ceil(#self.iconChoices/6)*80 end
 
 function M:LayoutIconPicker(parent,left,top,width,visible)
     if not self.iconPicker and not visible then return end
     if not self.iconPicker then
-        local f=CreateFrame("Frame",nil,parent,"BackdropTemplate"); self.iconPicker=f; Skin.Paint(f,"card")
+        local f=CreateFrame("Frame",nil,parent,"BackdropTemplate"); self.iconPicker=f; Skin.Paint(f,"note")
         f.title=f:CreateFontString(nil,"OVERLAY","GameFontHighlight"); f.title:SetPoint("TOPLEFT",16,-16)
         f.title:SetTextColor(unpack(Skin.colors.gold))
         local note=f:CreateFontString(nil,"OVERLAY","GameFontHighlight"); note:SetPoint("TOPLEFT",16,-44)
-        note:SetText("Choose an icon. Use Back to return to Zone Advisor settings.")
+        f.subtitle=note; note:SetText("Choose an icon. Use Back to return to Zone Advisor settings.")
         f.choices={}
         for i,choice in ipairs(self.iconChoices) do
             local key=choice
             local b=CreateFrame("Button",nil,f,"BackdropTemplate")
-            b:SetPoint("TOPLEFT",16+((i-1)%6)*118,-78-math.floor((i-1)/6)*88); b:SetSize(110,80)
+            b:SetPoint("TOPLEFT",((i-1)%6)*118,-62-math.floor((i-1)/6)*80); b:SetSize(110,72)
             Skin.Button(b,"category")
             b.icon=b:CreateTexture(nil,"ARTWORK"); b.icon:SetPoint("TOP",0,-8); b.icon:SetSize(32,32)
-            b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetPoint("TOP",0,-46)
-            b.label:SetSize(102,28); b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE")
+            b.label=b:CreateFontString(nil,"OVERLAY","GameFontHighlight"); b.label:SetPoint("TOP",0,-42)
+            b.label:SetSize(102,24); b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE")
             b:SetScript("OnEnter",function(self)
                 Skin.ButtonState(self,self.selected,true,false)
                 GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetText(M:IconName(key),1,0.8,0.4,1,true)
@@ -207,9 +208,14 @@ function M:LayoutIconPicker(parent,left,top,width,visible)
     local f=self.iconPicker; f:SetShown(visible); if not visible then return end
     local scale=math.min(1,width/744); f:SetScale(scale); f:SetSize(width/scale,self:IconPickerHeight())
     f:ClearAllPoints(); f:SetPoint("TOPLEFT",parent,"TOPLEFT",left/scale,-top/scale)
+    Skin.SettingsHeader(f,width/scale,f.title,f.subtitle)
     local kind=A.state.mapIconKind
     f.title:SetText((({rare="Rare",elite="Elite",boss="World boss",danger="Dangerous"})[kind] or "NPC").." marker icon")
-    for key,b in pairs(f.choices) do
+    local cellWidth=(width/scale-12-5*8)/6
+    for i,key in ipairs(self.iconChoices) do
+        local b=f.choices[key]
+        b:ClearAllPoints(); b:SetPoint("TOPLEFT",((i-1)%6)*(cellWidth+8),-62-math.floor((i-1)/6)*80)
+        b:SetWidth(cellWidth); b.label:SetWidth(cellWidth-12)
         local selected=self:Settings().icons[kind]==key
         b.selected=selected; b.label:SetText(self:IconName(key)); self:SetIconTexture(b.icon,key)
         Skin.ButtonState(b,selected,nil,false)

@@ -157,10 +157,10 @@ function D:Refresh()
     p.dump.label:SetText(self.job and "Dumping..." or "Dump Data")
     p.cached:SetText(saved and ((date and date("%b %d %H:%M",saved.capturedAt) or tostring(saved.capturedAt)).." | "..math.ceil(#saved.text/1024).." KB cached") or "")
     p.status:SetText(self.error and (self.phase.." "..self.error) or self.phase or (saved and "Cached full dump restored. Select text in the box to copy." or "No dump cached yet."))
-    p.fill:SetWidth(math.max(1,700*(self.displayProgress or (saved and 1 or 0))))
+    p.fill:SetWidth(math.max(1,p.track:GetWidth()*(self.displayProgress or (saved and 1 or 0))))
     p.percent:SetText(math.floor((self.displayProgress or (saved and 1 or 0))*100).."%")
     p.sheen:SetShown(self.job~=nil)
-    p.sheen:ClearAllPoints(); p.sheen:SetPoint("TOPLEFT",p.track,"TOPLEFT",((self.animationTime or 0)*220)%660,0)
+    p.sheen:ClearAllPoints(); p.sheen:SetPoint("TOPLEFT",p.track,"TOPLEFT",((self.animationTime or 0)*220)%math.max(1,p.track:GetWidth()-40),0)
     if saved and p.shownDump~=saved then
         p.shownDump=saved
         local _,lines=saved.text:gsub("\n","\n")
@@ -173,25 +173,25 @@ end
 function D:Create(page)
     if self.page then return end
     self.page=page
-    Skin.SectionBackdrop(page,62,144).title:SetText("Capture data")
-    Skin.SectionBackdrop(page,218,298).title:SetText("Dump output")
-    label(page,"Capture all HardcoreBuddy data and available character details for offline review.",0,34,700)
-    page.dump=button(page,"Dump Data",28,104,function() self:Start() end)
-    page.copyHint=label(page,"Ctrl + C to copy",188,104,530)
-    page.cached=label(page,"",188,126,530)
-    page.status=label(page,"",28,146,700); page.status:SetHeight(30)
+    Skin.SectionBackdrop(page,62,148).title:SetText("Capture data")
+    Skin.SectionBackdrop(page,222,298).title:SetText("Dump output")
+    page.subtitle=label(page,"Capture all HardcoreBuddy data and available character details for offline review.",0,34,700)
+    page.dump=button(page,"Dump Data",16,104,function() self:Start() end)
+    page.copyHint=label(page,"Ctrl + C to copy",176,104,530)
+    page.cached=label(page,"",176,126,530)
+    page.status=label(page,"",16,146,700); page.status:SetHeight(30)
     local track=CreateFrame("Frame",nil,page,"BackdropTemplate"); page.track=track
-    track:SetPoint("TOPLEFT",28,-178); track:SetSize(700,18); Skin.Paint(track,"edit")
+    track:SetPoint("TOPLEFT",16,-182); track:SetSize(700,18); Skin.Paint(track,"edit")
     page.fill=track:CreateTexture(nil,"ARTWORK"); page.fill:SetTexture("Interface\\Buttons\\WHITE8x8"); page.fill:SetVertexColor(0.25,0.7,0.42,1)
     page.fill:SetPoint("TOPLEFT"); page.fill:SetHeight(18)
     page.sheen=track:CreateTexture(nil,"OVERLAY"); page.sheen:SetTexture("Interface\\Buttons\\WHITE8x8")
     page.sheen:SetSize(40,18); page.sheen:SetVertexColor(1,1,1,0.22)
     page.percent=label(track,"",0,0,700); page.percent:SetHeight(18); page.percent:SetJustifyH("CENTER")
-    local border=CreateFrame("Frame",nil,page,"BackdropTemplate"); Skin.Paint(border,"edit")
-    border:SetPoint("TOPLEFT",26,-256); border:SetSize(704,254)
+    local border=CreateFrame("Frame",nil,page,"BackdropTemplate"); page.outputBorder=border; Skin.Paint(border,"edit")
+    border:SetPoint("TOPLEFT",14,-260); border:SetSize(704,254)
     local scroll=CreateFrame("ScrollFrame","HardcoreBuddyDebugTextScroll",page,"UIPanelScrollFrameTemplate"); page.scroll=scroll
     scroll:SetFrameLevel(border:GetFrameLevel()+1)
-    scroll:SetPoint("TOPLEFT",28,-258); scroll:SetSize(680,250)
+    scroll:SetPoint("TOPLEFT",16,-262); scroll:SetSize(680,250)
     local edit=CreateFrame("EditBox",nil,scroll); page.edit=edit
     edit:SetMultiLine(true); edit:SetAutoFocus(false); edit:SetFontObject(ChatFontNormal); edit:SetWidth(670); edit:SetHeight(250); edit:SetMaxLetters(0)
     if edit.SetMaxBytes then edit:SetMaxBytes(0) end
@@ -223,7 +223,17 @@ function D:Create(page)
         if math.abs(wanted-current)>0.5 then scroll:SetVerticalScroll(wanted) end
         page.scrolling=nil
     end)
-    label(page,"Full editable dump. Select text manually (Ctrl + A for all), then Ctrl + C. The original dump stays cached.",12,532,700)
+    label(page,"Full editable dump. Select text manually (Ctrl + A for all), then Ctrl + C. The original dump stays cached.",16,536,700)
     page:SetScript("OnHide",function() edit:ClearFocus() end)
-    page.contentHeight=566; self:Refresh()
+    page.contentHeight=570; self:Refresh()
+end
+
+function D:Layout(width)
+    local page=self.page
+    if not page then return end
+    local changed=page.track:GetWidth()~=width-44
+    page.track:SetWidth(width-44); page.percent:SetWidth(width-44)
+    page.outputBorder:SetWidth(width-40)
+    page.scroll:SetWidth(width-64); page.edit:SetWidth(width-74)
+    if changed then self:Refresh() end
 end
