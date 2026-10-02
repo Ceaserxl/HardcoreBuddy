@@ -4,14 +4,17 @@ local _, A = ...
 local E={}; A.Enchants=E
 local D=A.Data.Enchants
 E.slots={{15,"Back","Cloak"},{5,"Chest","Chest"},{9,"Wrists","Bracer"},{10,"Hands","Gloves"},
-    {7,"Legs","Legs"},{8,"Feet","Boots"},{16,"Main hand","Weapon"},{17,"Off hand","Weapon"}}
+    {7,"Legs","Legs"},{8,"Feet","Boots"},{16,"Main hand","Weapon"},{17,"Off-Hand","Weapon"},{18,"Ranged","Ranged"}}
 local locations={[15]={INVTYPE_CLOAK=true},[5]={INVTYPE_CHEST=true,INVTYPE_ROBE=true},[9]={INVTYPE_WRIST=true},
     [10]={INVTYPE_HAND=true},[7]={INVTYPE_LEGS=true},[8]={INVTYPE_FEET=true},
     [16]={INVTYPE_WEAPON=true,INVTYPE_WEAPONMAINHAND=true,INVTYPE_2HWEAPON=true},
-    [17]={INVTYPE_WEAPON=true,INVTYPE_WEAPONOFFHAND=true,INVTYPE_SHIELD=true}}
+    [17]={INVTYPE_WEAPON=true,INVTYPE_WEAPONOFFHAND=true,INVTYPE_SHIELD=true},
+    [18]={INVTYPE_RANGED=true,INVTYPE_RANGEDRIGHT=true}}
+local scopeClasses={Hunter=true,Warrior=true,Rogue=true}
 local mana={Mage=true,Priest=true,Warlock=true,Druid=true,Paladin=true,Shaman=true,Hunter=true}
 local byId,byEnchant={},{}
 local function family(r)
+    if r.scope then return r.scopeHit and "scope-hit" or "scope-damage" end
     return r.name:match(" %- (.*)$"):gsub("Minor ",""):gsub("Lesser ",""):gsub("Greater ","")
         :gsub("Superior ",""):gsub("Major ",""):gsub("Mighty ",""):gsub("Advanced ","")
 end
@@ -27,6 +30,7 @@ function E.SetMode(mode)
     A:Refresh(true)
 end
 local function withinRecommendationTier(r,context)
+    if r.scope then return true end -- Scopes have explicit wearer levels, like armor kits.
     if E.Mode()=="max" then return true end
     -- Budget tiers guide recommendations, not whether a wearer can use an enchant.
     local level=context.level or 1
@@ -53,6 +57,10 @@ function E.Profile(context)
         profile=A.GearAdvisor:ApplyWeights(profile)
         local source=A.Data.AdvisorGear[class][profile.id]
         profile.weights.haste=source.stats.HASTE or 0
+        if context.mode~="preview" and UnitRangedDamage then
+            local speed=UnitRangedDamage("player")
+            if type(speed)=="number" and speed>0 then profile.rangedSpeed=speed end
+        end
     end
     return profile
 end
@@ -76,6 +84,12 @@ local effectStats={Health="health",Mana="mana",Stamina="stamina",Strength="stren
 function E.Score(r,profile)
     if not profile then return nil end
     local w=profile.weights
+    if r.scope then
+        -- Scope hit is ranged-only; do not value it as melee hit for rogues/warriors.
+        if r.scopeHit then return profile.class=="HUNTER" and r.power*(w.hit or 0) or 0 end
+        -- A three-second estimate is used only when ranged speed is unavailable (e.g. preview).
+        return r.power*(w.rangedDPS or 0)/(profile.rangedSpeed or 3)
+    end
     if r.armorKit then return r.power*(w[r.defenseKit and "defense" or "armor"] or 0) end
     local effect=r.effect
     if type(effect)~="string" then return nil end
@@ -104,6 +118,7 @@ local meleeEffects={Striking=true,Impact=true,Crusader=true,["Fiery Weapon"]=tru
     Beastslayer=true,["Elemental Slayer"]=true,Haste=true}
 local function relevant(r,context,profile)
     local class=context.characterClass
+    if r.scope then return scopeClasses[class] and context.level>=r.level end
     profile=profile or E.Profile(context)
     local roles=role(profile)
     local w=profile and profile.weights or {}
@@ -133,6 +148,9 @@ end
 function E.Compatible(r,gear)
     if gear.status=="unknown" or gear.status=="empty" or gear.status=="incompatible" then return false end
     if gear.itemLevel and gear.itemLevel<r.gearLevel then return false end
+    if r.scope then
+        return gear.slotId==18 and (gear.subclassID==2 or gear.subclassID==3 or gear.subclassID==18)
+    end
     if r.armorKit then return kitSlots[gear.slotId]==true end
     if r.slot=="2H Weapon" then return gear.equipLoc=="INVTYPE_2HWEAPON" end
     if r.slot=="Shield" then return gear.equipLoc=="INVTYPE_SHIELD" end
@@ -149,10 +167,12 @@ function E.Read(slot)
     local linked,enchant=tostring(g.link):match("item:(%d+):([^:]*):")
     enchant=enchant=="" and 0 or tonumber(enchant)
     if tonumber(linked)~=id or not enchant or enchant<0 then return g end
-    local name,_,_,level,_,_,_,_,loc,_,_,classId=info(g.link)
+    local name,_,_,level,_,_,_,_,loc,_,_,classId,subclassID=info(g.link)
     if not name or not level or level<=0 or not loc or loc=="" then return g end
     g.itemLevel,g.equipLoc,g.enchantId=level,loc,enchant
+    g.subclassID=subclassID
     if not locations[g.slotId][loc] or classId and classId~=2 and classId~=4 then g.status="incompatible"; return g end
+    if g.slotId==18 and not (subclassID==2 or subclassID==3 or subclassID==18) then g.status="incompatible"; return g end
     g.status="checked"; g.current=byEnchant[enchant]
     return g
 end
@@ -195,6 +215,7 @@ function E.Scan(context)
         local g
         if context.mode=="preview" then
             g={slotId=slot[1],name=slot[2],kind=slot[3],status="preview",
+                subclassID=slot[1]==18 and 2 or nil,
                 equipLoc=slot[3]=="Weapon" and "INVTYPE_WEAPON" or next(locations[slot[1]])}
         else g=E.Read(slot) end
         g.options=E.Options(context,g)
@@ -232,7 +253,7 @@ function E.MaterialItems(context)
         items[#items+1]={itemId=id,name=base.name,icon=base.icon,family="enchant-material-"..id,
             enchantMaterial=true,supplyCategory="Enchants",recommendedTarget=n,classes={"All"},level=1,
             short="Need "..n.." for equipped gear",detail=table.concat(uses[id],"\n"),
-            route="Collect these materials for an enchanter. Self Found characters must supply and apply their own enchants.",
+            route="Materials for the listed enhancement's crafter. Self Found characters must craft their own enhancements.",
             caution="Materials are totaled across needed slots. Already enchanted, incompatible and unknown pieces are excluded."}
     end
     table.sort(items,function(a,b) return a.name<b.name end); return items
@@ -259,8 +280,8 @@ function E.Subtitle(r)
         if stat then effect="+"..amount.." "..stat end
         effect=effect:gsub("Mana Regen (%d+) per 5 sec%.","+%1 Mana / 5 sec")
     end
-    if r.skill then effect=effect.." - "..(r.armorKit and "Leatherworking " or "Enchanting ")..r.skill end
-    if r.armorKit then effect=effect.." - Level "..r.level end
+    if r.skill then effect=effect.." - "..(r.scope and "Engineering " or r.armorKit and "Leatherworking " or "Enchanting ")..r.skill end
+    if r.armorKit or r.scope then effect=effect.." - Level "..r.level end
     if r.gearLevel and r.gearLevel>1 then effect=effect.." - Item level "..r.gearLevel.."+" end
     return effect
 end
@@ -292,7 +313,8 @@ function E.Card(context)
         local b=enchantBlock(g,shown,{kind="enchantSlot",slotId=g.slotId})
         if b.enchantStatus=="Missing" and g.recommendation then b.enchantStatus="Not Enchanted"
         elseif alternative then b.enchantStatus="Alternative" end
-        if g.slotId~=17 then blocks[#blocks+1]=b end
+        local visibleOffhand=g.slotId~=17 or g.itemId and g.status~="incompatible" and g.status~="unknown" and g.status~="empty"
+        if visibleOffhand and (g.slotId~=18 or scopeClasses[context.characterClass] and g.status~="incompatible") then blocks[#blocks+1]=b end
     end
     return {title="Enchants",note="Recommendations for your class and equipped gear. Choose a slot for alternatives and materials.",blocks=blocks,supplyTable=true}
 end

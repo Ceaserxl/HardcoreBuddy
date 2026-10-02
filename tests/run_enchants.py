@@ -93,7 +93,7 @@ end
 ctx.professions=nil
 ctx.level=60; gear={}; A.characterDB.enchantMode="level"
 
-check(#A.Data.Enchants.recipes==132,"Complete Era profession catalog")
+check(#A.Data.Enchants.recipes==138,"Complete Era profession catalog including six scopes")
 for _,r in ipairs(A.Data.Enchants.recipes) do
     check(r.spellId<30000 and r.enchantId>0 and r.gearLevel>=1 and #r.reagents>0,"Validated recipe")
     for _,p in ipairs(r.reagents) do check(A.Data.Enchants.materials[p[1]] and p[2]>0,"Material metadata") end
@@ -183,7 +183,7 @@ for _,class in ipairs({"Mage","Priest","Warlock","Rogue","Hunter","Warrior","Pal
     end
 end
 local read=GetInventoryItemID; GetInventoryItemID=function() error("No live gear reads during preview") end
-ctx.mode="preview"; check(#E.Scan(ctx)==8 and #E.MaterialItems(ctx)==0,"Preview isolation")
+ctx.mode="preview"; check(#E.Scan(ctx)==9 and #E.MaterialItems(ctx)==0,"Preview isolation")
 GetInventoryItemID=read
 ctx.mode="live";ctx.level=60;ctx.characterClass="Mage"
 check(not E.Compatible({slot="Bracer",gearLevel=35},{status="checked",kind="Bracer",itemLevel=34}),"Minimum item level gate")

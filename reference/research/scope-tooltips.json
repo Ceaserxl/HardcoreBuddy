@@ -1,0 +1,229 @@
+{
+  "https://nether.wowhead.com/classic/tooltip/item/4405": {
+    "name": "Crude Scope",
+    "quality": 1,
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Crude Scope</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->12</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->5<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=3974/crude-scope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its damage by 1.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">1</span> <span class=\"moneycopper\">25</span></div><div class=\"whtt-extra whtt-droppedby\">Dropped by: Blastmaster Emi Shortfuse</div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/spell/3977": {
+    "name": "Crude Scope",
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><a class=\"whtt-name q1\" href=\"/classic/spell=3977/crude-scope\"><b class=\"whtt-name q1\">Crude Scope</b></a><br />8 sec cast</td></tr></table><table><tr><td>Tools:<br /><div class=\"indent q1\"><a href=\"/classic/item=6219/arclight-spanner\">Arclight Spanner</a></div>Reagents:<br /><div class=\"indent q1\"><a href=\"/classic/item=4361/copper-tube\">Copper Tube</a>, <a href=\"/classic/item=774/malachite\">Malachite</a>, <a href=\"/classic/item=4359/handful-of-copper-bolts\">Handful of Copper Bolts</a></div><br /><span class=\"q1\"><a href=\"/classic/item=4405/crude-scope\">Crude Scope</a></span><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->12</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--><br>Requires Level <!--rlvl-->5<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=3974/crude-scope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its damage by 1.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">1</span> <span class=\"moneycopper\">25</span></div><div class=\"whtt-extra whtt-droppedby\">Dropped by: Blastmaster Emi Shortfuse</div></td></tr></table>",
+    "tooltip2": "",
+    "buff": "",
+    "quality": 1,
+    "spells": {},
+    "buffspells": {},
+    "completion_category": 11
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/4361": {
+    "name": "Copper Tube",
+    "quality": 1,
+    "icon": "inv_gizmo_pipe_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Copper Tube</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->10</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 10</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">1</span> <span class=\"moneycopper\">20</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/774": {
+    "name": "Malachite",
+    "quality": 2,
+    "icon": "inv_misc_gem_emerald_03",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q2\">Malachite</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->7</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneycopper\">15</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/4359": {
+    "name": "Handful of Copper Bolts",
+    "quality": 1,
+    "icon": "inv_misc_gear_06",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Handful of Copper Bolts</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->8</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 10</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneycopper\">12</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/4406": {
+    "name": "Standard Scope",
+    "quality": 1,
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Standard Scope</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->22</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->10<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=3975/standard-scope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its damage by 2.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">6</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/spell/3978": {
+    "name": "Standard Scope",
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><a class=\"whtt-name q1\" href=\"/classic/spell=3978/standard-scope\"><b class=\"whtt-name q1\">Standard Scope</b></a><br />8 sec cast</td></tr></table><table><tr><td>Tools:<br /><div class=\"indent q1\"><a href=\"/classic/item=6219/arclight-spanner\">Arclight Spanner</a></div>Reagents:<br /><div class=\"indent q1\"><a href=\"/classic/item=4371/bronze-tube\">Bronze Tube</a>, <a href=\"/classic/item=1206/moss-agate\">Moss Agate</a></div><div class=\"q\">An improved scope that increases the damage done with your bow or gun.</div><br /><span class=\"q1\"><a href=\"/classic/item=4406/standard-scope\">Standard Scope</a></span><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->22</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--><br>Requires Level <!--rlvl-->10<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=3975/standard-scope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its damage by 2.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">6</span></div></td></tr></table>",
+    "tooltip2": "",
+    "buff": "",
+    "quality": 1,
+    "spells": {},
+    "buffspells": {},
+    "completion_category": 11
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/4371": {
+    "name": "Bronze Tube",
+    "quality": 1,
+    "icon": "inv_gizmo_pipe_01",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Bronze Tube</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->21</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 10</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">2</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/1206": {
+    "name": "Moss Agate",
+    "quality": 2,
+    "icon": "inv_misc_gem_emerald_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q2\">Moss Agate</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->25</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">4</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/4407": {
+    "name": "Accurate Scope",
+    "quality": 1,
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Accurate Scope</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->36</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->20<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=3976/accurate-scope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its damage by 3.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">12</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/spell/3979": {
+    "name": "Accurate Scope",
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><a class=\"whtt-name q1\" href=\"/classic/spell=3979/accurate-scope\"><b class=\"whtt-name q1\">Accurate Scope</b></a><br />25 sec cast</td></tr></table><table><tr><td>Tools:<br /><div class=\"indent q1\"><a href=\"/classic/item=6219/arclight-spanner\">Arclight Spanner</a>, <a href=\"/classic/item=10498/gyromatic-micro-adjustor\">Gyromatic Micro-Adjustor</a></div>Reagents:<br /><div class=\"indent q1\"><a href=\"/classic/item=4371/bronze-tube\">Bronze Tube</a>, <a href=\"/classic/item=1529/jade\">Jade</a>, <a href=\"/classic/item=3864/citrine\">Citrine</a></div><br /><span class=\"q1\"><a href=\"/classic/item=4407/accurate-scope\">Accurate Scope</a></span><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->36</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--><br>Requires Level <!--rlvl-->20<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=3976/accurate-scope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its damage by 3.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">12</span></div></td></tr></table>",
+    "tooltip2": "",
+    "buff": "",
+    "quality": 1,
+    "spells": {},
+    "buffspells": {},
+    "completion_category": 11
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/1529": {
+    "name": "Jade",
+    "quality": 2,
+    "icon": "inv_misc_gem_stone_01",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q2\">Jade</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->35</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">7</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/3864": {
+    "name": "Citrine",
+    "quality": 2,
+    "icon": "inv_misc_gem_opal_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q2\">Citrine</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->40</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">8</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/10546": {
+    "name": "Deadly Scope",
+    "quality": 1,
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Deadly Scope</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->42</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->30<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=12459/deadly-scope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its damage by 5.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">15</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/spell/12597": {
+    "name": "Deadly Scope",
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><a class=\"whtt-name q1\" href=\"/classic/spell=12597/deadly-scope\"><b class=\"whtt-name q1\">Deadly Scope</b></a><br />45 sec cast</td></tr></table><table><tr><td>Tools:<br /><div class=\"indent q1\"><a href=\"/classic/item=5956/blacksmith-hammer\">Blacksmith Hammer</a>, <a href=\"/classic/item=6219/arclight-spanner\">Arclight Spanner</a></div>Reagents:<br /><div class=\"indent q1\"><a href=\"/classic/item=10559/mithril-tube\">Mithril Tube</a>, <a href=\"/classic/item=7909/aquamarine\">Aquamarine</a>&nbsp;(2), <a href=\"/classic/item=4304/thick-leather\">Thick Leather</a>&nbsp;(2)</div><br /><span class=\"q1\"><a href=\"/classic/item=10546/deadly-scope\">Deadly Scope</a></span><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->42</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--><br>Requires Level <!--rlvl-->30<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=12459/deadly-scope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its damage by 5.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">15</span></div></td></tr></table>",
+    "tooltip2": "",
+    "buff": "",
+    "quality": 1,
+    "spells": {},
+    "buffspells": {},
+    "completion_category": 11
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/10559": {
+    "name": "Mithril Tube",
+    "quality": 1,
+    "icon": "inv_musket_01",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Mithril Tube</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->39</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 10</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">7</span> <span class=\"moneycopper\">50</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/7909": {
+    "name": "Aquamarine",
+    "quality": 2,
+    "icon": "inv_misc_gem_crystal_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q2\">Aquamarine</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->45</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">10</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/4304": {
+    "name": "Thick Leather",
+    "quality": 1,
+    "icon": "inv_misc_leatherscrap_08",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Thick Leather</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->40</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">3</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/10548": {
+    "name": "Sniper Scope",
+    "quality": 1,
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Sniper Scope</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->48</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->40<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=12460/sniper-scope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its damage by 7.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">25</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/spell/12620": {
+    "name": "Sniper Scope",
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><a class=\"whtt-name q1\" href=\"/classic/spell=12620/sniper-scope\"><b class=\"whtt-name q1\">Sniper Scope</b></a><br />45 sec cast</td></tr></table><table><tr><td>Tools:<br /><div class=\"indent q1\"><a href=\"/classic/item=5956/blacksmith-hammer\">Blacksmith Hammer</a>, <a href=\"/classic/item=6219/arclight-spanner\">Arclight Spanner</a></div>Reagents:<br /><div class=\"indent q1\"><a href=\"/classic/item=10559/mithril-tube\">Mithril Tube</a>, <a href=\"/classic/item=7910/star-ruby\">Star Ruby</a>, <a href=\"/classic/item=6037/truesilver-bar\">Truesilver Bar</a>&nbsp;(2)</div><br /><span class=\"q1\"><a href=\"/classic/item=10548/sniper-scope\">Sniper Scope</a></span><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->48</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--><br>Requires Level <!--rlvl-->40<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=12460/sniper-scope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its damage by 7.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">25</span></div></td></tr></table>",
+    "tooltip2": "",
+    "buff": "",
+    "quality": 1,
+    "spells": {},
+    "buffspells": {},
+    "completion_category": 11
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/7910": {
+    "name": "Star Ruby",
+    "quality": 2,
+    "icon": "inv_misc_gem_ruby_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q2\">Star Ruby</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->50</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">50</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/6037": {
+    "name": "Truesilver Bar",
+    "quality": 2,
+    "icon": "inv_ingot_08",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q2\">Truesilver Bar</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->50</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">12</span> <span class=\"moneycopper\">50</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/18283": {
+    "name": "Biznicks 247x128 Accurascope",
+    "quality": 3,
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q3\">Biznicks 247x128 Accurascope</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->60</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td>Requires Level <!--rlvl-->50<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=22779/biznicks-247x128-accurascope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its chance to hit by 3%.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneygold\">2</span> <span class=\"moneysilver\">50</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/spell/22793": {
+    "name": "Biznicks 247x128 Accurascope",
+    "icon": "inv_misc_spyglass_02",
+    "tooltip": "<table><tr><td><a class=\"whtt-name q3\" href=\"/classic/spell=22793/biznicks-247x128-accurascope\"><b class=\"whtt-name q3\">Biznicks 247x128 Accurascope</b></a><br />45 sec cast</td></tr></table><table><tr><td>Tools:<br /><div class=\"indent q1\"><a href=\"/classic/item=5956/blacksmith-hammer\">Blacksmith Hammer</a>, <a href=\"/classic/item=6219/arclight-spanner\">Arclight Spanner</a></div>Reagents:<br /><div class=\"indent q1\"><a href=\"/classic/item=17011/lava-core\">Lava Core</a>&nbsp;(2), <a href=\"/classic/item=7076/essence-of-earth\">Essence of Earth</a>&nbsp;(2), <a href=\"/classic/item=16006/delicate-arcanite-converter\">Delicate Arcanite Converter</a>&nbsp;(4), <a href=\"/classic/item=11371/dark-iron-bar\">Dark Iron Bar</a>&nbsp;(6), <a href=\"/classic/item=16000/thorium-tube\">Thorium Tube</a></div><br /><span class=\"q3\"><a href=\"/classic/item=18283/biznicks-247x128-accurascope\">Biznicks 247x128 Accurascope</a></span><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->60</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--><br>Requires Level <!--rlvl-->50<br><br><!--useText:0:1--><span id=\"useText1\" class=\"q2\">Use: <!--useEffect:0:1--><a href=\"/classic/spell=22779/biznicks-247x128-accurascope\" class=\"q2\">Attaches a permanent scope to a bow or gun that increases its chance to hit by 3%.</a><!--useEffect:1--></span><!--useText:1--><!--itemEffects:1--><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneygold\">2</span> <span class=\"moneysilver\">50</span></div></td></tr></table>",
+    "tooltip2": "",
+    "buff": "",
+    "quality": 3,
+    "spells": {},
+    "buffspells": {},
+    "completion_category": 11
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/17011": {
+    "name": "Lava Core",
+    "quality": 3,
+    "icon": "spell_nature_earthquake",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q3\">Lava Core</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->60</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 10</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">20</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/7076": {
+    "name": "Essence of Earth",
+    "quality": 2,
+    "icon": "spell_nature_strengthofearthtotem02",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q2\">Essence of Earth</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->55</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 10</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">4</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/16006": {
+    "name": "Delicate Arcanite Converter",
+    "quality": 1,
+    "icon": "inv_gizmo_07",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Delicate Arcanite Converter</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->58</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 10</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneygold\">1</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/11371": {
+    "name": "Dark Iron Bar",
+    "quality": 1,
+    "icon": "inv_ingot_mithril",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Dark Iron Bar</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->50</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">6</span></div></td></tr></table>",
+    "spells": []
+  },
+  "https://nether.wowhead.com/classic/tooltip/item/16000": {
+    "name": "Thorium Tube",
+    "quality": 1,
+    "icon": "inv_gizmo_pipe_04",
+    "tooltip": "<table><tr><td><!--nstart--><b class=\"q1\">Thorium Tube</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->39</span><!--bo--><!--ue--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-extra whtt-maxstack\">Max Stack: 10</div><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">37</span> <span class=\"moneycopper\">50</span></div></td></tr></table>",
+    "spells": []
+  }
+}

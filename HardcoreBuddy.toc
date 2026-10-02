@@ -19,6 +19,7 @@ Data\ProfessionProgression.lua
 Data\Crafting.lua
 Data\ArmorKits.lua
 Data\Enchants.lua
+Data\Scopes.lua
 Data\AdvisorGear.lua
 Data\AdvisorTalents.lua
 Data\MapNPCs.lua
