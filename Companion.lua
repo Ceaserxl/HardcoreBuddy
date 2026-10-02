@@ -199,6 +199,9 @@ local function bandageCards(context,state)
     end
     return cards
 end
+function C.TabLabel(tab)
+    return tab=="Gear" and "Gear Advisor" or tab=="Talents" and "Talent Advisor" or tab
+end
 local function professionCards(context,family)
     local profession=family=="bandage" and "First Aid" or "Cooking"
     local snapshot=context.professions or {}
@@ -450,7 +453,7 @@ function C.Build(context,state)
                 row("Shared cooldowns","Healing, mana and escape potions compete for a cooldown. Healthstones, mana gems, target dummies and Felwood healing plants share another cooldown. Do not plan to chain those as independent saves."),
                 row("Self Found","Trading, auction house and mail are unavailable. Check recipe access and obtain materials yourself. Item recommendations do not imply ownership or a known recipe.")})}))
             for index,tab in ipairs(C.Tabs(context)) do
-                if index>1 then table.insert(blocks,index+1,row(tab,tabDescriptions[tab],C.TabAction(tab))) end
+                if index>1 then table.insert(blocks,index+1,row(C.TabLabel(tab),tabDescriptions[tab],C.TabAction(tab))) end
             end
         end
         result.cards[1]=card(petTraining and "Pet training" or "Overview",

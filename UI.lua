@@ -1094,7 +1094,7 @@ function addon:Layout()
             f.filters[i]=b
         end
         local tabWidth=label=="Food & Drink" and 98 or label=="Emergency" and 94 or label=="All" and 44 or label=="Buffs" and 62 or 74
-        b.filter=label; b.label:SetText(label); b.label:SetFont(STANDARD_TEXT_FONT,instancePage and 11 or 12,""); b:Show(); b:ClearAllPoints()
+        b.filter=label; b.label:SetText(C.TabLabel(label)); b.label:SetFont(STANDARD_TEXT_FONT,instancePage and 11 or 12,""); b:Show(); b:ClearAllPoints()
         local iconPath=FILTER_ICONS[label] or "INV_Misc_Book_09"
         if not iconPath:find("\\",1,true) then iconPath="Interface\\Icons\\"..iconPath end
         b.navIcon:SetTexture(iconPath); b.navIcon:SetShown(sidebar)

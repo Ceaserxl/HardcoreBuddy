@@ -15,9 +15,11 @@ for _,class in ipairs({"DRUID","HUNTER","MAGE","PALADIN","PRIEST","ROGUE","SHAMA
     assert(A.document.cards[1].title=="Overview")
     for i,tab in ipairs(tabs) do
         assert(A.window.filters[i].filter==tab and A.window.filters[i]:IsVisible(),"Sidebar uses shared tab order")
+        local caption=tab=="Gear" and "Gear Advisor" or tab=="Talents" and "Talent Advisor" or tab
+        assert(A.window.filters[i].label:GetText()==caption,"Companion tabs use full advisor names")
         if i>1 then
             local row=rows[i+1]
-            assert(row.title==tab and row.action,"Overview mirrors the sidebar, without a self-link")
+            assert(row.title==caption and row.action,"Overview mirrors the sidebar, without a self-link")
             local overview=A.state
             A:Activate(row.action)
             if row.action.kind=="profession" then assert(A.state.detail.family==row.action.family)
