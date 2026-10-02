@@ -465,6 +465,7 @@ function U:Refresh()
                 ((row.weaponSet and row.priceLabel or kind)=="Bid" and (row.weaponSet and "Bid total" or "Bid") or "") or "")
             frame.action:SetText(row and (self.slot and (row.weaponSet and "View items >" or row.owned and "Equipped"
                 or self.scan and "Stop scan to buy" or row.buyout>0 and "Buyout >" or "No buyout") or "") or "")
+            self:LayoutRowText(frame)
             frame.accent:SetShown(row~=nil)
             frame.accent:SetVertexColor(unpack(row and changeColor(row) or Skin.colors.muted))
         end
@@ -487,6 +488,24 @@ function U:Refresh()
     end
 end
 
+function U:LayoutRowText(row)
+    local width=row:GetWidth()
+    local function center(text,x,y,height)
+        text:ClearAllPoints(); text:SetPoint("LEFT",row,"LEFT",x,y or 0)
+        text:SetHeight(height or 20); text:SetJustifyV("MIDDLE")
+    end
+    local function pair(first,second,x)
+        local both=(first:GetText() or "")~="" and (second:GetText() or "")~=""
+        center(first,x,both and 8 or 0,both and 16 or 20)
+        center(second,x,both and -8 or 0,both and 16 or 20)
+    end
+    pair(row.item,row.slot,48)
+    center(row.slotName,width-372)
+    pair(row.cost,row.priceKind,width-294)
+    center(row.percent,width-178)
+    pair(row.options,row.action,width-90)
+end
+
 function U:Layout()
     -- Fit the native auction content area. Enlarging AuctionFrame does not
     -- stretch its Classic artwork and leaves the panel outside the border.
@@ -503,11 +522,7 @@ function U:Layout()
         row.item:SetWidth(rowWidth-426); row.slot:SetWidth(rowWidth-426)
         row.percent:SetWidth(84); row.action:SetWidth(84); row.options:SetWidth(84)
         row.cost:SetWidth(110); row.priceKind:SetWidth(110)
-        for _,entry in ipairs({{row.item,48,0},{row.slot,48,-17},{row.slotName,rowWidth-372,-8},
-            {row.cost,rowWidth-294,0},{row.priceKind,rowWidth-294,-17},
-            {row.percent,rowWidth-178,0},{row.options,rowWidth-90,0},{row.action,rowWidth-90,-17}}) do
-            entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],entry[3])
-        end
+        self:LayoutRowText(row)
     end
     self.itemHeader:SetWidth(rowWidth-426); self.priceHeader:SetWidth(110)
     for _,entry in ipairs({{self.itemHeader,247},{self.slotHeader,199+rowWidth-372},
