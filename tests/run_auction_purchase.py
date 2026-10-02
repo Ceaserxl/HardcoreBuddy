@@ -38,8 +38,18 @@ assert(U.start:GetText()=='Scan Complete' and not U.start.active)
 U.scan={}; U:Refresh(); assert(not U.start.active and U.start:GetText():find('Scanning'))
 U.scan=nil; U:SelectSlot(nil)
 assert(U.heading:GetText()=='' and U.hint:GetText()=='')
-assert(U.panel:GetWidth()>790 and U.panel:GetHeight()>377)
+assert(AuctionFrame:GetWidth()==832 and AuctionFrame:GetHeight()==447,'Native auction frame size is preserved')
+assert(U.panel:GetWidth()==794 and U.panel:GetHeight()==377,'Panel fits inside auction border')
+for _,slot in ipairs({1,11,17}) do
+ U:SelectSlot(slot)
+ assert(AuctionFrame:GetWidth()==832 and AuctionFrame:GetHeight()==447,'Slot view never expands auction frame')
+ for _,r in ipairs(U.rows) do if r:IsShown() then
+  local _,bottom,_,height=r:GetRect(); local _,panelBottom=U.panel:GetRect()
+  assert(bottom>=panelBottom,'Visible rows stay within panel')
+ end end
+end
+U:SelectSlot(nil)
 local _,fillY=U.progressFill:GetRect(); local _,dividerY=U.divider:GetRect(); assert(fillY==dividerY)
-print('PASS: live buyout confirmation, stale/mismatched/price checks, preserved tab, scan states and expanded layout.')
+print('PASS: live buyout confirmation, stale/mismatched/price checks, preserved tab, scan states and native-sized layout.')
 ''')
-composite(lua.globals().MOCK.frames,a.AuctionUpgrades.panel).save(str(ROOT/'.release/auction-expanded.png'))
+composite(lua.globals().MOCK.frames,a.AuctionUpgrades.panel).save(str(ROOT/'.release/auction-fitted.png'))

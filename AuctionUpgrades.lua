@@ -463,9 +463,10 @@ function U:Refresh()
 end
 
 function U:Layout()
-    local width=math.max(790,math.min(1040,UIParent:GetWidth()-80))
-    local height=math.max(440,math.min(620,UIParent:GetHeight()-180))
-    if self.originalSize and self.panel:IsShown() then AuctionFrame:SetSize(width+42,height+70) end
+    -- Fit the native auction content area. Enlarging AuctionFrame does not
+    -- stretch its Classic artwork and leaves the panel outside the border.
+    local width=AuctionFrame:GetWidth()-38
+    local height=AuctionFrame:GetHeight()-70
     self.panel:SetSize(width,height)
     self.title:SetWidth(width-380); self.subtitle:SetWidth(390)
     local top=(self.slot or self.weaponsOnly) and 118 or 84
@@ -508,7 +509,8 @@ function U:Attach()
     PanelTemplates_TabResize(tab,0,nil,36)
     tab:SetScript("OnClick",function(self) AuctionFrameTab_OnClick(self) end)
     local panel=CreateFrame("Frame",nil,AuctionFrame,"BackdropTemplate"); self.panel=panel
-    panel:SetPoint("TOPLEFT",AuctionFrame,"TOPLEFT",19,-55); panel:SetSize(1040,590)
+    panel:SetPoint("TOPLEFT",AuctionFrame,"TOPLEFT",19,-55)
+    panel:SetSize(AuctionFrame:GetWidth()-38,AuctionFrame:GetHeight()-70)
     panel:SetFrameLevel(AuctionFrame:GetFrameLevel()+10); panel:EnableMouse(true)
     Skin.Paint(panel,"card"); panel:SetBackdropColor(0.025,0.031,0.037,1)
     self.title=label(panel,"HardcoreBuddy  /  Gear upgrades",16,-4,580,Skin.colors.gold,22)
@@ -631,11 +633,9 @@ function U:Attach()
     panel:Hide()
     panel:SetScript("OnHide",function()
         self:HideTooltip(); A.AuctionPurchase:Cancel()
-        if self.originalSize then AuctionFrame:SetSize(unpack(self.originalSize)); self.originalSize=nil end
         if self.scan then self:Stop("Scan stopped. Results are partial.") end
     end)
     hooksecurefunc("AuctionFrameTab_OnClick",function(selected)
-        if selected==tab and not self.originalSize then self.originalSize={AuctionFrame:GetWidth(),AuctionFrame:GetHeight()} end
         panel:SetShown(selected==tab)
         if selected==tab then
             if A.AuctionCache:Restore(self) then self.profileKey=profileKey(self.profile) end
