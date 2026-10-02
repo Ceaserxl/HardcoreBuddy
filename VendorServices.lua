@@ -32,19 +32,25 @@ function V:FindVendor(itemID)
     if not map then return end
     local faction=UnitFactionGroup and UnitFactionGroup("player")
     local friendly=faction=="Alliance" and "A" or faction=="Horde" and "H"
-    local best,nearest
-    local function consider(v)
+    local best,nearest,bestRank
+    local function consider(v,id,observed)
         if not v or not (v.faction=="AH" or v.faction==friendly) then return end
-        for _,xy in ipairs(v.locations and v.locations[map] or {}) do
-            local distance=x and y and ((x-xy[1])^2+(y-xy[2])^2) or nil
+        local canonical=A.Data.SupplyVendors[id]
+        local movement=canonical and canonical.movement or v.movement or "unknown"
+        local rank=movement=="stationary" and 0 or movement=="roaming" and 2 or 1
+        -- Prefer catalog coordinates to the player's location recorded at a shop.
+        local locations=canonical and canonical.locations or v.locations
+        for _,xy in ipairs(locations and locations[map] or {}) do
+            local distance=x and y and ((x-xy[1])^2+(y-xy[2])^2) or math.huge
             local city=map>=1453 and map<=1458
-            if (city or distance and distance<=100) and (not best or distance and (not nearest or distance<nearest)) then
-                best,nearest=v,distance
+            if (city or distance<=100) and (not best or rank<bestRank or rank==bestRank and distance<nearest) then
+                best={name=v.name,faction=v.faction,movement=movement,map=map,x=xy[1],y=xy[2],id=id,observed=observed}
+                nearest,bestRank=distance,rank
             end
         end
     end
-    for _,id in ipairs(A.Data.SupplySoldBy[itemID] or {}) do consider(A.Data.SupplyVendors[id]) end
-    for _,v in pairs(A.characterDB.vendorVisits or {}) do if v.items and v.items[itemID] then consider(v) end end
+    for _,id in ipairs(A.Data.SupplySoldBy[itemID] or {}) do consider(A.Data.SupplyVendors[id],id) end
+    for id,v in pairs(A.characterDB.vendorVisits or {}) do if v.items and v.items[itemID] then consider(v,id,true) end end
     return best
 end
 function V:Stock()

@@ -48,6 +48,7 @@ UI.lua
 Settings.lua
 Readiness.lua
 VendorServices.lua
+VendorMarker.lua
 Minimap.lua
 LowHealth.lua
 Data\CreatureAlertExclusions.lua

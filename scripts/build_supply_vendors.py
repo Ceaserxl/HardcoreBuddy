@@ -28,7 +28,10 @@ for item_id in sorted(ids):
             if npc[7][area]:
                 locations[map_id]=[[xy[1],xy[2]] for _,xy in npc[7][area].items() if 0<=xy[1]<=100 and 0<=xy[2]<=100]
         if not locations: continue
-        vendors[npc_id]={'name':npc[1],'faction':npc[13] or 'AH','locations':locations}
+        has_path=bool(npc[8] and any(True for _ in npc[8].items()))
+        points=sum(len(points) for points in locations.values())
+        movement='roaming' if has_path else 'stationary' if points==1 else 'unknown'
+        vendors[npc_id]={'name':npc[1],'faction':npc[13] or 'AH','locations':locations,'movement':movement}
         sold_by.setdefault(item_id,[]).append(npc_id)
 out=['-- Factual Classic vendors from Questie v10.0.0. See docs/vendor-services.md.','local _,A=...','A.Data.SupplyVendors={']
 for ident,data in sorted(vendors.items()): out.append(f'[{ident}]={lua(data)},')

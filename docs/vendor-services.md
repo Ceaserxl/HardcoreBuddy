@@ -1,7 +1,9 @@
 # Restocking and vendor services
 
 Missing Essentials shows a nearby friendly vendor when one is known. Click the
-item to target that exact vendor name within WoW's targeting range. The Review
+item to mark its vendor on the world map and minimap, and target that exact
+vendor name within WoW's targeting range. The panel stays open. Right-click
+either marker to clear it; selecting another item replaces the marker. The Review
 supplies button still opens Essentials. Target buttons hide during combat.
 
 The local catalogue contains 314 vendors for 59 of the 157 supply item IDs
@@ -9,9 +11,13 @@ examined. Relationships, names, factions and coordinates were extracted from
 [Questie v10.0.0 Classic item data](https://github.com/Questie/Questie/blob/v10.0.0/Database/Classic/classicItemDB.lua)
 and [NPC data](https://github.com/Questie/Questie/blob/v10.0.0/Database/Classic/classicNpcDB.lua).
 There is no in-game Questie dependency. Opening a merchant also remembers its
-observed items and location for that character. The nearest friendly vendor on
-the current map is used: any distance within a capital, or within ten map
-percentage points elsewhere. This is a proximity estimate, not pathfinding or
+observed items and location for that character. Friendly vendors on the current
+map qualify at any distance within a capital, or within ten map percentage
+points elsewhere. Vendors with a single recorded location and no patrol route
+are preferred, followed by those with unknown movement, then known roaming
+vendors. Distance breaks ties. Stationary status is inferred from source data;
+it is not a live movement check. Markers for roaming vendors show a recorded
+location, not live tracking. This is a proximity estimate, not pathfinding or
 an assertion that an inn vendor sells everything. Unknown sources are labeled
 honestly; crafted items and limited stock may require another source.
 
