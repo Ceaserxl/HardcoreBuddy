@@ -207,6 +207,7 @@ function T:Activate(a)
     end
     if a.command=="build" or a.command=="defaultBuild" then
         s.gearProfile=nil
+        if A.Readiness then A.Readiness:SuppliesChanged() end
         if A.AuctionUpgrades then A.AuctionUpgrades:Invalidate() end
         if A.GearIndicators then A.GearIndicators:Invalidate() end
     end

@@ -106,7 +106,12 @@ for _,weight in ipairs({"Cloth","Leather","Mail","Plate"}) do
 end
 gear[9].enchant=g.recommendation.enchantId
 check(slot(9).status=="ready" and #E.MaterialItems(ctx)==0,"Already applied excludes materials")
-gear[9].enchant=66 -- Stamina +1; shared effect IDs can originate from several slots.
+local lower
+for _,r in ipairs(E.Options(ctx,g,true)) do
+ if r.family==g.recommendation.family and E.Score(r,g.profile)<E.Score(g.recommendation,g.profile) then lower=r; break end
+end
+check(lower,"A lower rank of the recommended stat exists")
+gear[9].enchant=lower.enchantId
 check(slot(9).status=="upgrade" and slot(9).needed,"Older matching stat enchant upgrades")
 gear[9].enchant=99999
 check(slot(9).status=="enchanted" and not slot(9).needed,"Unknown permanent enhancement preserved")
@@ -137,7 +142,7 @@ end end
 check(armorRanks==1,"Lower armor kit ranks hidden from alternatives")
 check(slot(5).recommendation.armorKit~=true,"Useful chest enchant competes with kits")
 gear[10]={loc="INVTYPE_HAND"}
-check(slot(10).recommendation.armorKit,"Mage gloves can prefer armor kit over situational enchant")
+check(slot(10).recommendation.family=="Frost Power","Frost mage gloves prefer scored frost damage over armor kit")
 gear[10]=nil
 gear[7].level=14
 check(slot(7).recommendation.itemId==2313,"Armor kit item-level restriction")
@@ -209,9 +214,9 @@ check(material,"Recipe material rows have item tooltips")
 A.characterDB.enchantChoices={[8]="kit"}
 local feet
 for _,v in ipairs(E.Scan(A:GetContext())) do if v.slotId==8 then feet=v end end
-check(feet.recommendation.family=="Speed","Legacy saved kit choice cannot replace Minor Speed")
+check(feet.recommendation.family~="Speed" and feet.recommendation==feet.options[1],"Boots recommend highest stat score, with speed as a situational alternative")
 local feetCard=E.Card(A:GetContext()).blocks[6]
-check(feetCard.title=="Feet - Minor Speed" and feetCard.enchantStatus=="Not Enchanted","Overview shows automatic recommendation when missing")
+check(feetCard.enchantTooltip==feet.recommendation and feetCard.enchantStatus=="Not Enchanted","Overview shows automatic recommendation when missing")
 gear[8].enchant=1843
 feetCard=E.Card(A:GetContext()).blocks[6]
 check(feetCard.title=="Feet - Rugged Armor Kit" and feetCard.enchantStatus=="Alternative","Overview shows actually applied alternative")

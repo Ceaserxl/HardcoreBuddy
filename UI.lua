@@ -72,6 +72,10 @@ local function tooltip(self)
         local enchant=block.enchantTooltip
         GameTooltip:SetText(enchant.name,0.83,0.69,0.43,1,true)
         GameTooltip:AddLine(enchant.description,0.94,0.92,0.87,true)
+        if block.enchantProfile then
+            GameTooltip:AddLine(block.enchantScore~=nil and string.format("%s enchant score: %.2f",block.enchantProfile,block.enchantScore)
+                or "Situational effect: not included in stat scoring",0.72,0.73,0.75,true)
+        end
         if block.enchantStatus then GameTooltip:AddLine(block.enchantStatus,0.72,0.73,0.75,true) end
         GameTooltip:Show(); return
     end

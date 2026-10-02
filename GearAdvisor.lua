@@ -210,6 +210,7 @@ end
 
 function G:WeightsChanged()
     self.revision=self.revision+1
+    if A.Readiness then A.Readiness:SuppliesChanged() end
     if A.GearBagAdvisor then A.GearBagAdvisor:Changed() end
     self:RefreshTooltips()
     if A.AuctionUpgrades then A.AuctionUpgrades:Invalidate() end

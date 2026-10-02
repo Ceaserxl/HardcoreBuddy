@@ -9,9 +9,7 @@ local locations={[15]={INVTYPE_CLOAK=true},[5]={INVTYPE_CHEST=true,INVTYPE_ROBE=
     [10]={INVTYPE_HAND=true},[7]={INVTYPE_LEGS=true},[8]={INVTYPE_FEET=true},
     [16]={INVTYPE_WEAPON=true,INVTYPE_WEAPONMAINHAND=true,INVTYPE_2HWEAPON=true},
     [17]={INVTYPE_WEAPON=true,INVTYPE_WEAPONOFFHAND=true,INVTYPE_SHIELD=true}}
-local caster={Mage=true,Priest=true,Warlock=true}
 local mana={Mage=true,Priest=true,Warlock=true,Druid=true,Paladin=true,Shaman=true,Hunter=true}
-local melee={Warrior=true,Rogue=true,Paladin=true,Shaman=true}
 local byId,byEnchant={},{}
 local function family(r)
     return r.name:match(" %- (.*)$"):gsub("Minor ",""):gsub("Lesser ",""):gsub("Greater ","")
@@ -47,49 +45,89 @@ for _,item in ipairs(A.Data.ArmorKits.items) do
         D.materials[pair[1]]=D.materials[pair[1]] or {itemId=pair[1],name=pair[3]}
     end
 end
-local function points(r,class)
-    if r.armorKit then return r.defenseKit and 0 or r.power*.05 end
-    local f=r.family
-    local amount=tonumber(r.effect:match("(%d+)%s*$")) or 1
-    local weights={Health=.35,Stamina=4,Defense=.05,Deflection=1,Stats=10,
-        Agility=caster[class] and 0 or class=="Hunter" and 5 or 4,
-        Strength=(melee[class] or class=="Druid") and 3 or 0,
-        Intellect=mana[class] and (caster[class] and 5 or 3) or 0,
-        Spirit=mana[class] and 1.5 or 0,Mana=mana[class] and .16 or 0,
-        ["Mana Regeneration"]=mana[class] and 5 or 0,
-        ["Spell Power"]=caster[class] and 5 or 0,["Healing Power"]=0,
-        ["Winter's Might"]=class=="Mage" and 4 or 0,
-        Striking=melee[class] and 8 or 0,Impact=melee[class] and 8 or 0}
-    if f=="Speed" then return 100 end -- Movement speed is a survival choice.
-    local w=weights[f]
-    return type(w)=="number" and amount*w or 0
+function E.Profile(context)
+    local class=(context.characterClass or ""):upper()
+    local build=A.TalentAdvisor:Build(class,context.level)
+    local profile=A.GearAdvisor.Profile(class,context.level,nil,build and build.profile)
+    if profile then
+        profile=A.GearAdvisor:ApplyWeights(profile)
+        local source=A.Data.AdvisorGear[class][profile.id]
+        profile.weights.haste=source.stats.HASTE or 0
+    end
+    return profile
+end
+local function role(profile)
+    if not profile then return {} end
+    local c,id=profile.class,profile.id
+    local tank=c=="WARRIOR" and (id==3 or id==4) or c=="PALADIN" and id==2 or c=="DRUID" and id==3
+    local healer=c=="PRIEST" and id~=3 or c=="PALADIN" and id==1
+        or c=="DRUID" and id==4 or c=="SHAMAN" and id==3
+    local feral=c=="DRUID" and (id==2 or id==3)
+    local physical=c=="WARRIOR" or c=="ROGUE" or c=="PALADIN" and id~=1
+        or c=="SHAMAN" and id==2 or c=="HUNTER" and id==4
+    return {tank=tank,healer=healer,feral=feral,physical=physical}
+end
+local effectStats={Health="health",Mana="mana",Stamina="stamina",Strength="strength",Agility="agility",
+    Intellect="intellect",Spirit="spirit",Armor="armor",Defense="defense",Dodge="dodge",Blocking="block",
+    ["Healing Spells"]="healing",["Mana Regen"]="mp5",["Attack Speed"]="haste",
+    ["Frost Spell Damage"]="frost",["Frost Damage"]="frost",["Fire Damage"]="fire",["Shadow Damage"]="shadow"}
+-- Same weight sum as gear. No arbitrary score for procs, threat, movement,
+-- profession skill or weapon damage without a weapon-speed model.
+function E.Score(r,profile)
+    if not profile then return nil end
+    local w=profile.weights
+    if r.armorKit then return r.power*(w[r.defenseKit and "defense" or "armor"] or 0) end
+    local effect=r.effect
+    if type(effect)~="string" then return nil end
+    local amount=tonumber(effect:match("%d+"))
+    if not amount then return nil end
+    if effect:match("^All Stats") then
+        return amount*((w.strength or 0)+(w.agility or 0)+(w.stamina or 0)+(w.intellect or 0)+(w.spirit or 0))
+    end
+    if effect:match("^Spell Damage") then return amount*((w.spellPower or 0)+(w.healing or 0)) end
+    if effect:find("All Resistances",1,true) then
+        return amount*((w.fireResistance or 0)+(w.frostResistance or 0)+(w.natureResistance or 0)
+            +(w.shadowResistance or 0)+(w.arcaneResistance or 0))
+    end
+    local school=effect:match("(%a+) Resistance")
+    if school then return amount*(w[school:lower().."Resistance"] or 0) end
+    local matched,length
+    for prefix,key in pairs(effectStats) do
+        if effect:sub(1,#prefix)==prefix and (not length or #prefix>length) then matched,length=key,#prefix end
+    end
+    if matched then return amount*(w[matched] or 0) end
+    return nil
 end
 local professionBonuses={Mining="mining",Herbalism="herbalism",Skinning="skinning",Fishing="fishing"}
-local tankClasses={Warrior=true,Paladin=true,Druid=true,Shaman=true}
 local meleeEffects={Striking=true,Impact=true,Crusader=true,["Fiery Weapon"]=true,
     ["Icy Chill"]=true,Lifestealing=true,["Unholy Weapon"]=true,Demonslaying=true,
     Beastslayer=true,["Elemental Slayer"]=true,Haste=true}
-local function relevant(r,context)
+local function relevant(r,context,profile)
     local class=context.characterClass
+    profile=profile or E.Profile(context)
+    local roles=role(profile)
+    local w=profile and profile.weights or {}
     local f=r.family
     local profession=professionBonuses[f]
     if profession then
         local skills=context.professions and (context.professions.baseSkills or context.professions.skills)
         return context.mode~="preview" and skills and (skills[profession] or 0)>0
     end
-    if f=="Threat" then return tankClasses[class]==true end
-    if f=="Stealth" then return class=="Rogue" or class=="Druid" end
-    if meleeEffects[f] then return melee[class]==true end
+    if f=="Threat" then return roles.tank end
+    if f=="Subtlety" then return not roles.tank end
+    if f=="Stealth" then return class=="Rogue" or roles.feral end
+    if f=="Haste" then return roles.physical or roles.feral end
+    if meleeEffects[f] then return roles.physical end
     if f=="Intellect" or f=="Spirit" or f=="Mana" or f=="Mana Regeneration" then return mana[class] end
-    if f=="Winter's Might" or f=="Frost Power" then return class=="Mage" or class=="Shaman" end
-    if f=="Fire Power" then return class=="Mage" or class=="Warlock" or class=="Shaman" end
-    if f=="Shadow Power" then return class=="Priest" or class=="Warlock" end
+    if f=="Winter's Might" or f=="Frost Power" then return not roles.healer and (w.frost or 0)>0 end
+    if f=="Fire Power" then return not roles.healer and (w.fire or 0)>0 end
+    if f=="Shadow Power" then return not roles.healer and (w.shadow or 0)>0 end
     if f=="Spell Power" then
-        return caster[class] or class=="Druid" or class=="Shaman" or class=="Paladin"
+        return (w.spellPower or 0)>0 or roles.healer
     end
-    if f=="Healing Power" then return class=="Priest" or class=="Druid" or class=="Shaman" or class=="Paladin" end
-    if f=="Agility" then return not caster[class] end
-    if f=="Strength" then return melee[class] or class=="Druid" end
+    if f=="Healing Power" then return roles.healer end
+    if f=="Agility" then return roles.physical or roles.feral or class=="Hunter" end
+    if f=="Strength" then return roles.physical or roles.feral end
     return true -- General survival, resistance and movement bonuses.
 end
 function E.Compatible(r,gear)
@@ -125,6 +163,7 @@ local function rankKey(r)
 end
 function E.Options(context,g,showLesser)
     local out,best={},{}
+    local profile=E.Profile(context)
     local function add(r)
         if not E.Compatible(r,g) then return end
         if showLesser then out[#out+1]=r; return end
@@ -135,14 +174,14 @@ function E.Options(context,g,showLesser)
         if not old or amount>previous or amount==previous and r.skill>old.skill then best[key]=r end
     end
     for _,r in ipairs(D.recipes) do
-        if relevant(r,context) and withinRecommendationTier(r,context) then add(r) end
+        if relevant(r,context,profile) and withinRecommendationTier(r,context) then add(r) end
     end
     for _,r in ipairs(kits) do
         if r.level<=context.level then add(r) end
     end
     if not showLesser then for _,r in pairs(best) do out[#out+1]=r end end
     table.sort(out,function(a,b)
-        local av,bv=points(a,context.characterClass),points(b,context.characterClass)
+        local av,bv=E.Score(a,profile) or -1,E.Score(b,profile) or -1
         if av~=bv then return av>bv end
         if a.skill~=b.skill then return a.skill>b.skill end
         return a.spellId<b.spellId
@@ -151,6 +190,7 @@ function E.Options(context,g,showLesser)
 end
 function E.Scan(context)
     local result={}
+    local profile=E.Profile(context)
     for _,slot in ipairs(E.slots) do
         local g
         if context.mode=="preview" then
@@ -160,13 +200,15 @@ function E.Scan(context)
         g.options=E.Options(context,g)
         -- Browsing an alternative is temporary. Old saved choices must never
         -- replace the automatic recommendation or create material demand.
-        g.recommendation=g.options[1]
+        g.profile=profile
+        local first=g.options[1]
+        g.recommendation=first and (E.Score(first,profile) or 0)>0 and first or nil
         local r=g.recommendation
         if r and g.status=="checked" then
             if g.enchantId==0 then g.status="missing"; g.needed=true
             elseif g.enchantId==r.enchantId then g.status="ready"
             elseif g.current and g.current.family==r.family
-                and points(r,context.characterClass)>points(g.current,context.characterClass) then g.status="upgrade"; g.needed=true
+                and (E.Score(r,profile) or 0)>(E.Score(g.current,profile) or 0) then g.status="upgrade"; g.needed=true
             else g.status="enchanted" end
         end
         result[#result+1]=g
@@ -221,6 +263,8 @@ local function enchantBlock(g,r,action)
         r and r.description or labels[g.status],action,r and r.icon or "Trade_Engraving")
     b.enchantRow=true; b.enchantStatus=status; b.enchantTone=tone
     b.enchantTooltip=r
+    b.enchantScore=r and E.Score(r,g.profile)
+    b.enchantProfile=g.profile and g.profile.name
     return b
 end
 function E.Card(context)
@@ -244,7 +288,7 @@ function E.Detail(context,action)
     for _,v in ipairs(E.Scan(context)) do if v.slotId==action.slotId then g=v; break end end
     if not g then return {title="Enchants",blocks={}} end
     local selected=g.current or g.recommendation
-    local recommended=g.options[1]
+    local recommended=g.recommendation
     local options=E.Options(context,g,true)
     for _,option in ipairs(options) do if option.spellId==action.spellId then selected=option end end
     local blocks={}

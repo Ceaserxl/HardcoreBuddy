@@ -49,16 +49,26 @@ higher-rank enchants remain recognized when using level-appropriate mode.
 The slot menu initially shows the highest applicable rank of each effect.
 Show Lesser Ranks, opposite Back, expands the list to include lower compatible
 enchants and armor kits. The applied enchant remains available for comparison.
-Recommendations are class-based preparation suggestions, not simulated damage
-gains or live auction price estimates.
+Recommendations use the selected Talent Advisor build's Gear Advisor profile,
+including this character's edited stat weights. The highest positive stat-score
+candidate is recommended within the selected budget mode and gear restrictions.
+All Stats sums the five primary weights; generic spell power uses damage and
+healing weights; school damage, MP5, resistances, defense and armor kits use
+matching weights. Attack speed uses the profile's bundled haste weight.
+Tooltips display the profile and enchant score.
 
-Defaults favor stamina/health, useful primary stats, and movement speed on boots.
-Mana enchants are excluded for classes without mana. Spell/healing enchants are
-restricted to relevant classes; melee damage enchants are not Hunter defaults.
-Threat-increasing enchants are limited to tank-capable classes (Warrior,
-Paladin, Druid and Shaman). Melee-hit proc/damage enchants are limited to
-Warrior, Rogue, Paladin and Shaman; Hunters and pure casters do not receive
-strength enchants. Stealth enchants are shown for Rogues and Druids.
+Procs, movement speed, threat, profession bonuses and flat weapon damage without
+weapon-speed modeling have no fabricated numeric score. These remain relevant
+situational alternatives and cannot displace a scored recommendation. Thus
+highest stat score is not a claim of universally best DPS or survival.
+
+Specialization filters distinguish physical, Feral, tank and healer profiles.
+Threat increases appear only for Protection/FuryProt Warrior, Protection Paladin,
+and Feral Tank Druid. Healing-only enchants appear for healing profiles. Weapon
+procs are excluded for casters, healers, ranged Hunter profiles and Feral forms.
+Melee Hunter retains physical options. School bonuses require a positive weight
+for that school and a non-healer profile. Stealth is for Rogue/Feral profiles;
+threat reduction is excluded for tanks. Useful general survival bonuses remain.
 Mining, Herbalism, Skinning and Fishing bonuses require that profession to be
 learned. Unknown profession data and character previews hide these bonuses.
 This does not require Enchanting to receive ordinary enchants from an enchanter.
@@ -87,5 +97,5 @@ avoid planning two permanent enhancements on one item. Tools are listed separate
 and are not consumed. Recipe possession and the player's Enchanting skill are
 not assumed; Self Found players must learn and apply their own recipes.
 
-Offline checks: `tests/run_enchants.py` and `tests/run_armor_kits.py`. Live WoW
+Offline checks: `tests/run_enchants.py`, `tests/run_enchant_profiles.py`, and `tests/run_armor_kits.py`. Live WoW
 tooltips, inventory events and rendering still require an in-game check.
