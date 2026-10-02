@@ -78,7 +78,7 @@ local function tooltip(self)
             or block.groupSupply and "Bag count includes all listed ranks. Open to choose the rank you use."
             or "Counts include carried bags only. Carry targets are editable suggestions; they do not check profession or recipe requirements.",0.72,0.73,0.75,true)
     end
-    if block.action then GameTooltip:AddLine("Click for details", 0.83, 0.69, 0.43, true) end
+    if block.action then GameTooltip:AddLine(block.recommendation and "Click to Apply Talent" or "Click for details", 0.83, 0.69, 0.43, true) end
     GameTooltip:Show()
 end
 local function newBlock(parent)
