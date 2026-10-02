@@ -145,7 +145,10 @@ function S.PreferredItem(context, row)
     local selected=row
     local wanted=(context.supplyDefaults or {})[row.family]
     for _,item in ipairs(row.options or {}) do if item.itemId==wanted then selected=item; break end end
-    if not wanted and row.family=="recovery" and addon.VendorServices then
+    local inventory=context.inventory or {}
+    local count=inventory.available and inventory.counts and (inventory.counts[selected.itemId] or 0)
+    if not wanted and type(count)=="number" and count>=0 and count<5
+        and row.family=="recovery" and addon.VendorServices then
         local bestVendor
         local function localFood(item)
             if not item.vendorFood or item.level~=row.level then return end

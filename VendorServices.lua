@@ -55,9 +55,10 @@ function V:FindVendor(itemID)
 end
 -- Exact-item sources first; plain vendor recovery food can use an explicitly
 -- named equivalent. Never substitute buff food, recipes or reputation rewards.
-function V:FindSupplyVendor(itemID)
+function V:FindSupplyVendor(itemID,count)
     local exact=self:FindVendor(itemID)
     if exact then return exact end
+    if type(count)~="number" or not (count>=0 and count<5) then return end
     local source
     for _,item in ipairs(A.Data.Items.items) do if item.itemId==itemID then source=item; break end end
     if not source or not source.vendorFood then return end

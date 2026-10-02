@@ -145,7 +145,7 @@ function R:ShowPanel(missing,preview)
             local getIcon=C_Item and C_Item.GetItemIconByID or GetItemIcon
             row.icon:SetTexture(getIcon and getIcon(item.itemId) or "Interface\\Icons\\INV_Misc_Bag_08")
             row.name:SetText(item.name)
-            local vendor=not preview and A.VendorServices and A.VendorServices:FindSupplyVendor(item.itemId)
+            local vendor=not preview and A.VendorServices and A.VendorServices:FindSupplyVendor(item.itemId,item.count)
             row.vendorName=vendor and vendor.name or nil
             row.vendorLocation=vendor or nil
             row.vendor:SetText(vendor and (vendor.name..(vendor.alternativeName and " (equivalent food)" or "")) or "No known vendor in this zone")

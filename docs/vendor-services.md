@@ -28,9 +28,11 @@ All classes can choose the ordinary vendor foods and drinks. Food alternatives
 include bread, cheese, fish, fruit, fungus, meat and regional night elf foods at
 the usable recommended tier. Without an explicit saved food default, the supply
 recommendation prefers an equivalent sold by a local vendor using the same
-stationary-first and nearest-distance rules. Saved defaults are preserved.
+stationary-first and nearest-distance rules, only when fewer than five of the
+current item are owned. Saved defaults are preserved. Unknown stock does not
+trigger substitution.
 
-If a selected plain food has no vendor in the zone, Missing Essentials can mark
+If fewer than five are owned and a selected plain food has no vendor in the zone, Missing Essentials can mark
 a vendor selling an equivalent of the same tier. The row labels it as equivalent
 food; the tooltip and marker name the actual item. Select that item as the default
 in Supplies to track/restock it: vendor guidance never silently substitutes an

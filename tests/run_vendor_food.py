@@ -28,12 +28,20 @@ C_Map.GetPlayerMapPosition=function() return {GetXY=function() return .01,.01 en
 UnitFactionGroup=function() return 'Alliance' end
 A.characterDB.vendorVisits={}
 assert(not V:FindVendor(2287),'No invented Stormwind Haunch of Meat seller')
-local equivalent=V:FindSupplyVendor(2287)
+local equivalent=V:FindSupplyVendor(2287,4)
 assert(equivalent and equivalent.alternativeName and equivalent.map==1453,'Stormwind equivalent food seller')
+assert(not V:FindSupplyVendor(2287,5),'Five owned blocks alternative vendor suggestion')
+assert(not V:FindSupplyVendor(2287),'Unknown quantity never suggests a substitute')
+assert(V:FindSupplyVendor(equivalent.alternativeID,20),'Exact seller remains available regardless of stock')
 local food
 for _,row in ipairs(P.BuildList('Mage',5,'Alliance').rows) do if row.family=='recovery' then food=row end end
-local selected=A.Supplies.PreferredItem({characterClass='Mage',supplyDefaults={}},food)
+local context={characterClass='Mage',supplyDefaults={},inventory={available=true,counts={[2287]=4}}}
+local selected=A.Supplies.PreferredItem(context,food)
 assert(selected.itemId~=2287 and V:FindVendor(selected.itemId),'Recommend locally sold food')
+context.inventory.counts[2287]=5
+assert(A.Supplies.PreferredItem(context,food).itemId==2287,'Five owned preserves selected food')
+context.inventory.available=false
+assert(A.Supplies.PreferredItem(context,food).itemId==2287,'Unknown stock preserves selected food')
 local saved=A.Supplies.PreferredItem({characterClass='Mage',supplyDefaults={recovery=2287}},food)
 assert(saved.itemId==2287,'Keep explicit food choice')
 map=1429
