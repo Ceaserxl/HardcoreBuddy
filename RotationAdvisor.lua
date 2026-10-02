@@ -719,19 +719,23 @@ function R:StabilizeRecommendation(s,key,reason,optional,urgent)
         local spell=s.spells[plan.key]
         local sameCast=s.castToken==plan.token
         local handoff=not s.castToken and s.time>=plan.finish-.15 and s.time<=plan.finish+1
-        if not urgent and plan.target==s.targetGUID and spell and spell.id==plan.id
-            and (sameCast or handoff) and retainable(s,plan.key) then
+        if not urgent and plan.target==s.targetGUID and (sameCast or handoff) then
             if sameCast and s.castEnd then plan.finish=s.castEnd end -- Pushback can move the cast end.
-            return plan.key,plan.reason,plan.optional
+            if spell and spell.id==plan.id and retainable(s,plan.key) then
+                return plan.key,plan.reason,plan.optional
+            end
+            -- Do not replace a temporarily unavailable plan with a different
+            -- damage spell halfway through the cast. Hide it until valid again.
+            return nil,"",false
         end
         self.castPlan=nil
     end
     -- Commit to the next damage action, not to a transient numerical ranking.
     -- New casts start a new plan; emergency advice and invalid actions bypass it.
     local spell=key and s.spells[key]
-    if not urgent and not optional and spell and (A.Data.MageRotationSpells[spell.id] or key=="shoot")
-        and s.castToken and s.castEnd and s.targetGUID and retainable(s,key) then
-        self.castPlan={token=s.castToken,finish=s.castEnd,target=s.targetGUID,key=key,id=spell.id,reason=reason,optional=optional}
+    if not urgent and not optional and s.castToken and s.castEnd and s.targetGUID
+        and (spell and retainable(s,key) or not spell and s.castToken:sub(1,5)=="cast:") then
+        self.castPlan={token=s.castToken,finish=s.castEnd,target=s.targetGUID,key=key,id=spell and spell.id,reason=reason,optional=optional}
     end
     return key,reason,optional
 end

@@ -157,7 +157,7 @@ function M.Decide(s)
         and (s.maxPower or 0)-(s.power or 0)>=(s.spells.managem.restore or math.huge) then
         return "managem","Restore mana without wasting the gem's recovery.",false,true
     end
-    if not s.combat and not s.casting and not s.targetCombat and not s.moving and not s.mounted
+    if not s.combat and not s.casting and not s.targetCombat and not s.mounted
         and mp>80 and s.prepareGem and can(s.prepareGem,true)
         and (s.power or 0)-(s.spells[s.prepareGem].cost or math.huge)>=(s.maxPower or 0)*.3 then
         return choose(s.prepareGem,"Conjure a mana gem before the next pull.",true)

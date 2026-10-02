@@ -74,7 +74,7 @@ do
     decide(s,'ruby','Stationary preparation takes priority before pulling')
     local _,_,isOptional=R.Decide(s); check(isOptional,'Gem preparation retains optional glow')
     s.prepareGem=nil; decide(s,'frostbolt','Owned gem does not prompt reconjuring')
-    s.prepareGem='ruby'; s.moving=true; decide(s,'frostbolt','No conjuring while moving')
+    s.prepareGem='ruby'; s.moving=true; decide(s,'ruby','Movement preserves optional preparation preview')
     s.moving=false; s.spells.ruby.cost=4900; decide(s,'frostbolt','Preparation preserves combat mana reserve')
 end
 -- Every level and all three talent emphases can choose only a learned rank.

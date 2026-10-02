@@ -80,9 +80,10 @@ Flamestrike is not immediately overwritten. Ground placement remains manual.
 
 Gold uses Blizzard's spell-alert animation; red indicates optional upkeep.
 The general highlighting contract is one primary action plus any number of
-eligible optional actions. Optional buffs do not replace the primary. Stationary out-of-combat mana-gem
-preparation takes precedence over pulling and uses a red highlight; moving resumes
-damage advice. Place the conjure spell on the bar to see its highlight.
+eligible optional actions. Optional buffs do not replace the primary. Out-of-combat
+mana-gem preparation takes precedence over pulling and uses a red highlight,
+including while moving. This previews the action for when the player stops.
+Place the conjure spell on the bar to see its highlight.
 The companion page displays the primary first, or an optional action when there
 is no primary. Disabling the assistant clears both groups.
 The addon owns separate cosmetic overlays and leaves native proc alerts intact.
@@ -93,8 +94,11 @@ Normal casts and the GCD do not clear the next recommendation.
 Once a next damage spell is selected during a cast, it stays selected through
 completion and a one-second handoff, or until the next cast starts. Ordinary
 damage reranking cannot switch it just as the player presses the prepared spell.
-Urgent survival/interrupt advice, changed targets, crowd control, lost range,
-insufficient mana, immunity and unsafe AoE still invalidate that choice.
+Urgent survival/interrupt advice and changed targets can replace that choice.
+Crowd control, lost range, insufficient mana, immunity and unsafe AoE suppress
+an invalid choice without substituting a different damage spell during that
+cast. The original choice returns if valid again. Even an empty cast-start plan
+stays empty until the next cast or the end of the idle handoff.
 
 Mana and cooldown forecasts cover the remaining cast/GCD, with at least a
 one-second reaction lead.

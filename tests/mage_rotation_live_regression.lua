@@ -105,7 +105,7 @@ do
     GetSpellBonusDamage=function() return 0 end
 end
 do
-    local s=state({'frostbolt','fireball','fireblast','counterspell','iceblock'})
+    local s=state({'frostbolt','fireball','fireblast','scorch','counterspell','iceblock'})
     s.time=100; s.targetGUID='enemy'; s.castToken='cast:1'; s.castEnd=103
     local function choose(key,urgent)
         return R:StabilizeRecommendation(s,key,key..' reason',false,urgent)
@@ -114,34 +114,43 @@ do
     check(choose('frostbolt')=='frostbolt' and R.castPlan,'First next-cast recommendation creates a plan')
     s.time=102.9
     check(choose('fireblast')=='frostbolt','Changing damage scores cannot swap the highlight at the end of a cast')
+    check(choose('scorch')=='frostbolt','Late Scorch upkeep cannot replace planned Frostbolt')
+    s.spells.frostbolt.usable=false
+    check(choose('scorch')==nil,'Temporary power failure cannot substitute Scorch near completion')
+    s.spells.frostbolt.usable=true
+    check(choose('scorch')=='frostbolt','Original plan returns after transient power failure')
     s.castToken=nil; s.castEnd=nil; s.time=103.05
     check(choose('fireball')=='frostbolt','Cast completion retains the spell the player was preparing to press')
     s.time=104.1; check(choose('fireball')=='fireball' and not R.castPlan,'Idle handoff expires instead of holding stale advice forever')
     s.time=110; s.castToken='cast:2'; s.castEnd=113; choose('frostbolt')
     s.castToken='cast:3'; s.castEnd=115
     check(choose('fireball')=='fireball','Starting the next cast permits a fresh plan even for repeated spells')
+    R.castPlan=nil
+    R:StabilizeRecommendation(s,nil,'',false,false)
+    check(choose('scorch')==nil,'An empty cast-start plan does not introduce a late damage choice')
+    s.castToken='cast:3b'; check(choose('scorch')=='scorch','Next cast start can select Scorch')
     check(choose('counterspell',true)=='counterspell' and not R.castPlan,'Interrupt priority immediately overrides a damage plan')
     choose('frostbolt'); check(choose('iceblock',true)=='iceblock','Survival priority immediately overrides a damage plan')
     choose('frostbolt'); s.targetGUID='other'
     check(choose('fireball')=='fireball','Target changes cannot inherit the previous enemy plan')
     R.castPlan=nil; choose('frostbolt'); s.spells.frostbolt.immune=true
-    check(choose('fireball')=='fireball','New immunity invalidates the committed spell')
+    check(choose('fireball')==nil,'New immunity invalidates the committed spell without a late replacement')
     s.spells.frostbolt.immune=nil; R.castPlan=nil; choose('frostbolt'); s.spells.frostbolt.range=false
-    check(choose('fireball')=='fireball','Losing range invalidates the committed spell')
+    check(choose('fireball')==nil,'Losing range invalidates the committed spell without a late replacement')
     s.spells.frostbolt.range=true; R.castPlan=nil; choose('frostbolt'); s.spells.frostbolt.usable=false
-    check(choose('fireball')=='fireball','Insufficient mana does not preserve an impossible cast')
+    check(choose('fireball')==nil,'Insufficient mana does not preserve an impossible cast without a late replacement')
     s.spells.frostbolt.usable=true; R.castPlan=nil; choose('frostbolt'); s.controlled=true
     local key=R:StabilizeRecommendation(s,nil,'',false,false)
-    check(not key and not R.castPlan,'Crowd control immediately clears the plan')
+    check(not key and R.castPlan,'Crowd control suppresses the plan without late reranking')
     s.controlled=false; s.time=110; s.castToken='cast:4'; s.castEnd=113; choose('frostbolt')
     s.castEnd=114; choose('fireball'); check(R.castPlan.finish==114,'Pushback extends the existing plan without replacing it')
     s.castToken=nil; s.castEnd=nil; s.time=111
     check(choose('fireball')=='fireball','An early stop cancels the plan rather than waiting for the old cast end')
     s=state({'explosion','frostbolt'}); s.time=120; s.targetGUID='enemy'; s.castToken='cast:5'; s.castEnd=123
     s.targetClose=true; s.nearby=3; R.castPlan=nil; choose('explosion'); s.safeAOE=false
-    check(choose('frostbolt')=='frostbolt','New area danger overrides a committed AoE spell')
+    check(choose('frostbolt')==nil,'New area danger overrides a committed AoE spell without a late replacement')
     R.castPlan=nil; s.safeAOE=true; choose('explosion'); s.playerHealth=30
-    check(choose('frostbolt')=='frostbolt','Health dropping below area safety thresholds invalidates the area plan')
+    check(choose('frostbolt')==nil,'Health dropping below area safety thresholds invalidates the area plan without a late replacement')
     s=state({'frostbolt','counterspell'}); s.interrupt=true
     local _,_,_,urgent=R.Decide(s); check(urgent==true,'Actual interrupt decisions are marked urgent for the stabilizer')
     s.interrupt=false; _,_,_,urgent=R.Decide(s); check(not urgent,'Ordinary damage decisions can be stabilized')
@@ -197,7 +206,7 @@ end
 do
     local oldSnapshot,oldAction,oldView=R.Snapshot,GetActionInfo,R.RefreshView
     local s=state({'frostbolt','intellect','barrier','ruby'})
-    s.combat=false; s.moving=true; s.prepareGem='ruby'; s.spells.ruby.cost=1200
+    s.combat=false; s.moving=true; s.spells.ruby.cost=1200
     s.buffs.intellect=100; s.buffs.barrier=100; s.targetGUID='movement-test'; s.time=now
     R.Snapshot=function() return s end; R.RefreshView=function() end
     GetActionInfo=function(slot)
@@ -206,6 +215,8 @@ do
     R.castPlan=nil; R:Update()
     check(R.primary==s.spells.frostbolt and glow:IsShown(),'Moving keeps primary highlighted')
     local starts=glow.ProcStartAnim.plays
+    s.prepareGem='ruby'; R:Update()
+    check(R.current==s.spells.ruby and R.optional,'Gem preview stays available while moving')
     s.moving=false; R:Update()
     check(R.current==s.spells.ruby and R.optional and not glow:IsShown(),'Stopping restores stationary gem preparation even when off-bar')
     check(not R.primary,'Stationary gem preparation does not leave damage highlighted')
