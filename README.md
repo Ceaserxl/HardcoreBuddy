@@ -216,8 +216,9 @@ at the default 18-pixel size), and changing size recalculates the groups. Every
 point must be close to every other point; nearby chains cannot collapse an entire camp. Zooming
 in separates locations that are far enough apart on screen.
 Use **Browse all zones** under **Companion > Zone Advisor** to choose a zone, or **Use my current zone** to follow your location. Zone recommendations open a detail page titled with the zone name, with **Open Map** beside it. Its clickable NPC table shows level, name, type and location. Filter by All, Rares, Elites, World bosses or Dangerous without changing map-marker preferences. Settings and zone browsing stay on the overview.
-**Zone NPC list** adds up to four NPCs beneath Blizzard's zone announcement,
-with levels, types and an overflow count. It fades with the title, without chat
+**Zone NPC list** surrounds Blizzard's zone announcement with a HardcoreBuddy panel
+and a five-row NPC table showing names, levels and types. The final row shows any
+additional NPC count and opens that zone's advisor when clicked. It fades with the title, without chat
 messages or sound, and is enabled by default; existing opt-outs are preserved. Click a marker to
 open its NPC's 3D preview inside **Companion > Zone Advisor**. Clustered markers provide
 Previous/Next NPC controls. Drag to rotate, scroll to zoom, and use Back to return.

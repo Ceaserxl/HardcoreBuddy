@@ -369,7 +369,11 @@ function M:Changed()
 end
 
 function M:HideZoneNotice()
-    if self.zoneNotice then self.zoneNotice:SetText(""); self.zoneNotice:Hide() end
+    if self.zoneNotice then
+        self.zoneNotice:Hide(); self.zoneNotice.box:Hide()
+        self.zoneNotice.footer.zoneID=nil
+        for _,row in ipairs(self.zoneNotice.rows) do row.npcID=nil; row:Hide() end
+    end
     self.zoneNoticeMap=nil
     for _,saved in ipairs(self.zoneNoticeTimes or {}) do
         if saved.frame.holdTime==saved.extended then saved.frame.holdTime=saved.hold end
@@ -388,6 +392,75 @@ function M:LayoutZoneNotice()
     end
     self.zoneNotice:ClearAllPoints()
     self.zoneNotice:SetPoint("TOP",anchor,"BOTTOM",0,-8)
+    local frame=self.zoneNotice
+    local width=math.min(520,UIParent:GetWidth()*.8)
+    frame:SetWidth(width-32)
+    frame.box:ClearAllPoints(); frame.box:SetWidth(width)
+    frame.box:SetPoint("TOP",ZoneTextString,"TOP",0,16)
+    frame.box:SetPoint("BOTTOM",frame.note,"BOTTOM",0,-16)
+    local columns={8,frame:GetWidth()-172,frame:GetWidth()-112}
+    local widths={frame:GetWidth()-188,52,102}
+    local function place(cell,index)
+        cell:ClearAllPoints(); cell:SetPoint("LEFT",cell:GetParent(),"LEFT",columns[index],0)
+        cell:SetWidth(widths[index]); cell:SetJustifyH(index==2 and "CENTER" or "LEFT")
+    end
+    for i,cell in ipairs(frame.headers) do place(cell,i) end
+    for _,row in ipairs(frame.rows) do for i,cell in ipairs(row.cells) do place(cell,i) end end
+end
+
+function M:CreateZoneNotice()
+    if self.zoneNotice then return self.zoneNotice end
+    local skin=A.Skin
+    local frame=CreateFrame("Frame",nil,ZoneTextFrame,"BackdropTemplate"); self.zoneNotice=frame
+    frame:EnableMouse(false); frame:SetFrameLevel(ZoneTextFrame:GetFrameLevel()+1); skin.Paint(frame,"card")
+    -- Parent background regions sit behind both native title frames; a child
+    -- backdrop would otherwise cover the zone title at a higher frame level.
+    frame.box=skin.SectionBackdrop(ZoneTextFrame,0,1)
+    frame.box.sectionFill:SetVertexColor(.025,.030,.035,.96)
+    for _,edge in ipairs(frame.box.backgroundEdges) do edge:SetVertexColor(unpack(skin.colors.bronze)) end
+    local function text(parent,role)
+        local label=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
+        skin.TextStyle(label,role); label:SetJustifyV("MIDDLE"); label:SetWordWrap(false)
+        return label
+    end
+    frame.heading=CreateFrame("Frame",nil,frame); frame.heading:SetHeight(22)
+    frame.heading:SetPoint("TOPLEFT",1,-1); frame.heading:SetPoint("TOPRIGHT",-1,-1)
+    frame.headers={}
+    for i,title in ipairs({"NPC","LEVEL","TYPE"}) do
+        local cell=text(frame.heading,"column"); cell:SetText(title); frame.headers[i]=cell
+    end
+    local rule=skin.Divider(frame.heading); rule:SetPoint("BOTTOMLEFT"); rule:SetPoint("BOTTOMRIGHT")
+    frame.rows={}
+    for i=1,5 do
+        local row=CreateFrame("Frame",nil,frame,"BackdropTemplate"); frame.rows[i]=row
+        row:SetPoint("TOPLEFT",1,-23-(i-1)*26); row:SetPoint("TOPRIGHT",-1,-23-(i-1)*26); row:SetHeight(26)
+        row:EnableMouse(false); skin.Paint(row,"row")
+        if i%2==0 then row:SetBackdropColor(.025,.030,.035,1) end
+        row.cells={text(row,"body"),text(row,"subtitle"),text(row,"subtitle")}
+    end
+    local footer=CreateFrame("Button",nil,frame,"BackdropTemplate"); frame.footer=footer
+    skin.Paint(footer,"row"); skin.Hover(footer); footer:SetHeight(30)
+    footer.more=text(footer,"subtitle"); footer.more:SetPoint("LEFT",8,0)
+    footer.more:SetPoint("RIGHT",footer,"CENTER",12,0)
+    footer.link=text(footer,"field"); footer.link:SetText("Click to view zone >")
+    footer.link:SetPoint("LEFT",footer,"CENTER",20,0); footer.link:SetPoint("RIGHT",-8,0); footer.link:SetJustifyH("RIGHT")
+    local line=skin.Divider(footer); line:SetPoint("TOPLEFT"); line:SetPoint("TOPRIGHT")
+    footer:SetScript("OnClick",function(self)
+        local zoneID=self.zoneID
+        if not zoneID or not A.Data.MapZones[zoneID] then return end
+        M:HideZoneNotice()
+        if ZoneText_Clear then ZoneText_Clear() end
+        A:CreateWindow(); M:Activate({command="zone",id=zoneID}); A.window:Show()
+    end)
+    frame.note=text(frame,"subtitle"); frame.note:SetText("Recorded locations, not live sightings.")
+    frame.note:SetPoint("TOPLEFT",frame,"BOTTOMLEFT",0,-6); frame.note:SetPoint("TOPRIGHT",frame,"BOTTOMRIGHT",0,-6)
+    frame.note:SetHeight(16); frame.note:SetJustifyH("CENTER")
+    ZoneTextFrame:HookScript("OnHide",function() M:HideZoneNotice() end)
+    if hooksecurefunc then
+        if SetZoneText then hooksecurefunc("SetZoneText",function() M:LayoutZoneNotice() end) end
+        if ZoneText_Clear then hooksecurefunc("ZoneText_Clear",function() M:HideZoneNotice() end) end
+    end
+    return frame
 end
 
 function M:ShowZoneNotice(id,list)
@@ -402,29 +475,26 @@ function M:ShowZoneNotice(id,list)
     -- ZoneText_Clear may have suppressed the announcement for another central
     -- UI panel while our delayed map refresh was pending.
     if not ZoneTextString:GetText() or ZoneTextString:GetText()=="" then return false end
-    if not self.zoneNotice then
-        local text=ZoneTextFrame:CreateFontString(nil,"OVERLAY","GameFontHighlight")
-        self.zoneNotice=text
-        text:SetFont(STANDARD_TEXT_FONT,14,""); text:SetTextColor(1,.93,.76)
-        text:SetShadowColor(0,0,0,1); text:SetShadowOffset(1,-1)
-        text:SetJustifyH("CENTER"); text:SetWordWrap(true)
-        ZoneTextFrame:HookScript("OnHide",function() M:HideZoneNotice() end)
-        if hooksecurefunc then
-            if SetZoneText then hooksecurefunc("SetZoneText",function() M:LayoutZoneNotice() end) end
-            if ZoneText_Clear then hooksecurefunc("ZoneText_Clear",function() M:HideZoneNotice() end) end
+    local frame=self:CreateZoneNotice()
+    local shown=math.min(5,#list)
+    for i,row in ipairs(frame.rows) do
+        row:SetShown(i<=shown)
+        if i<=shown then
+            local record=list[i]; local npc=record.npc; row.npcID=record.id
+            row.cells[1]:SetText(npc.name)
+            local known=npc.min and npc.max and npc.min>0 and npc.max<=100
+            row.cells[2]:SetText(known and level(npc):gsub("^Level ","") or "??")
+            row.cells[3]:SetText(names[npc.kind]); row.cells[3]:SetTextColor(unpack(colors[npc.kind]))
         end
     end
-    local lines={"|cffffd36aKnown NPCs|r"}
-    local shown=math.min(4,#list)
-    for i=1,shown do
-        local npc=list[i].npc
-        lines[#lines+1]=npc.name.." |cffa6a695"..level(npc):gsub("^Level ","Lvl ").." "..names[npc.kind].."|r"
-    end
-    if #list>shown then lines[#lines+1]="|cffa6a695+"..(#list-shown).." more in Companion > Zone Advisor|r" end
-    lines[#lines+1]="|cffa6a695Recorded locations, not live sightings.|r"
+    local extra=#list-shown
+    frame.footer.more:SetText(extra>0 and (extra.." additional NPC"..(extra==1 and "" or "s")) or ("All "..shown.." NPC"..(shown==1 and "" or "s").." shown"))
+    frame.footer.zoneID=id
+    frame.footer:ClearAllPoints(); frame.footer:SetPoint("TOPLEFT",1,-23-shown*26)
+    frame.footer:SetPoint("TOPRIGHT",-1,-23-shown*26)
+    frame:SetHeight(23+shown*26+31)
     self.zoneNoticeMap=id
-    self.zoneNotice:SetWidth(math.min(512,UIParent:GetWidth()*.8))
-    self.zoneNotice:SetText(table.concat(lines,"\n")); self:LayoutZoneNotice()
+    self:LayoutZoneNotice()
     -- Allow time to read the list, then use the native fade. Restore each
     -- frame's previous duration when the list clears; leave other addons' edits.
     self.zoneNoticeTimes={}
@@ -433,7 +503,7 @@ function M:ShowZoneNotice(id,list)
         self.zoneNoticeTimes[#self.zoneNoticeTimes+1]={frame=frame,hold=hold,extended=extended}
         frame.holdTime=extended
     end
-    self.zoneNotice:Show()
+    frame:Show(); frame.box:Show()
     return true
 end
 

@@ -148,9 +148,16 @@ assert(notice and notice:GetParent()==ZoneTextFrame and notice:IsVisible(),"NPC 
 assert(ZoneTextString:GetText()=="Westfall" and PVPInfoTextString:GetText()=="Alliance Territory" and SubZoneTextString:GetText()=="Local subzone","Native zone, subzone and territory are preserved")
 assert(select(2,notice:GetPoint())==SubZoneTextString,"List follows the last native label")
 local records=M:Records(1436)
-for i=1,math.min(4,#records) do assert(notice:GetText():find(records[i].npc.name,1,true)) end
-assert(notice:GetText():find("Lvl ",1,true) and notice:GetText():find("not live sightings",1,true))
-if #records>4 then assert(notice:GetText():find("+"..(#records-4).." more",1,true) and not notice:GetText():find(records[5].npc.name,1,true)) end
+for i=1,math.min(5,#records) do
+    assert(notice.rows[i]:IsShown() and notice.rows[i].cells[1]:GetText()==records[i].npc.name)
+    assert(notice.rows[i].cells[2]:GetText()~="" and notice.rows[i].cells[3]:GetText()~="")
+end
+assert(#notice.rows==5 and notice.note:GetText():find("not live sightings",1,true))
+assert(notice.headers[1]:GetText()=="NPC" and notice.headers[2]:GetText()=="LEVEL" and notice.headers[3]:GetText()=="TYPE")
+assert(notice.footer.more:GetText()==(#records-5).." additional NPCs" and notice.footer.link:GetText()=="Click to view zone >")
+assert(notice.box:IsShown() and notice.box.sectionFill:GetParent()==ZoneTextFrame,"Box behind native title and table uses parent background regions")
+assert(select(2,notice.box:GetPoint(1))==ZoneTextString and select(2,notice.box:GetPoint(2))==notice.note,"Box encloses the whole announcement")
+assert(notice:GetFrameLevel()>ZoneTextFrame:GetFrameLevel() and notice.footer.highlight,"Table is above the box; clickable footer has hover feedback")
 assert(ZoneTextFrame.holdTime==6 and SubZoneTextFrame.holdTime==6,"Both native labels remain readable with the list")
 assert(nativeEvents==1 and #messages==0 and M.notified[1436]==now)
 M:NotifyZone(); assert(nativeEvents==1,"No repeat notice while staying in a zone")
@@ -174,7 +181,7 @@ PVPArenaTextString:SetText("Arena"); M:LayoutZoneNotice()
 assert(select(2,notice:GetPoint())==PVPArenaTextString)
 SetZoneText(); assert(select(2,notice:GetPoint())==SubZoneTextString,"Native updates reposition attached list")
 ZoneTextFrame:Hide()
-assert(not notice:IsShown() and notice:GetText()=="" and not M.zoneNoticeMap and nativeHides>0,"Native fade hides and clears the list; original OnHide remains")
+assert(not notice:IsShown() and not notice.box:IsShown() and not notice.footer.zoneID and not M.zoneNoticeMap and nativeHides>0,"Native fade clears table, box and click target; original OnHide remains")
 assert(ZoneTextFrame.holdTime==1 and SubZoneTextFrame.holdTime==1)
 ZoneTextFrame:Show(); assert(not notice:IsShown(),"Old NPCs do not return with a later native announcement")
 now=now+301; M.lastZone=nil; M:NotifyZone(); assert(notice:IsShown(),"Return after cooldown shows another list")
@@ -199,6 +206,25 @@ M.events.scripts.OnEvent(M.events,"ZONE_CHANGED_NEW_AREA")
 assert(not notice:IsShown(),"A zone transition removes the old list before the delayed refresh")
 now=now+301; M.lastZone=nil; ZoneText_Clear(); M:NotifyZone()
 assert(not notice:IsShown(),"Delayed refresh respects a native announcement cleared for another central UI")
+-- Five rows plus a compact footer; pooled rows cannot leak across zones.
+local fixture={}
+for i=1,8 do fixture[i]={id=i,npc={name="Example NPC "..i,min=i==1 and 999 or 40,max=i==1 and 999 or 42,kind=i==1 and "boss" or "elite"}} end
+ZoneTextFrame:Hide(); assert(M:ShowZoneNotice(current,fixture))
+assert(notice.rows[1].cells[2]:GetText()=="??","Sentinel boss levels are not printed as 999")
+assert(notice.rows[5].cells[1]:GetText()=="Example NPC 5" and notice.footer.more:GetText()=="3 additional NPCs")
+local fiveHeight=notice:GetHeight()
+fixture={fixture[1],fixture[2]}; M:ShowZoneNotice(current,fixture)
+assert(notice:GetHeight()==fiveHeight-3*26 and notice.footer.more:GetText()=="All 2 NPCs shown","Small lists shrink without blank table rows")
+for i=3,5 do assert(not notice.rows[i]:IsShown() and not notice.rows[i].npcID,"No stale pooled NPC rows") end
+local footer=notice.footer
+local clearCount=nativeClears
+A.window:Hide(); MOCK.Click(footer)
+assert(A.window:IsShown() and A.state.view=="training" and A.state.filter=="Zone Advisor" and A.state.mapZone==current,"Footer opens the announced zone from a closed HCB window")
+assert(A.document.cards[1].title==A.Data.MapZones[current].name and not A.state.zoneNPCFilter,"Zone opens with all NPCs")
+assert(not notice:IsShown() and not notice.box:IsShown() and nativeClears==clearCount+1,"Click dismisses the entire announcement")
+local opened=A.state; MOCK.Click(footer); assert(A.state==opened,"Dismissed footer has no stale click destination")
+ZoneTextFrame:Hide(); M:ShowZoneNotice(current,fixture); MOCK.Click(footer)
+assert(A.window:IsShown() and A.state.mapZone==current,"Footer never toggles an already open HCB window closed")
 assert(#messages==0 and soundCalls==0,"Zone notices never print or play sounds")
 A.Print=printOriginal
 

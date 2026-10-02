@@ -17,9 +17,11 @@ the selected zone's advisor, with **Open Map** beside the zone name.
   Native icons default to 18 pixels and keep their apparent size as the map zooms.
   Matching icons appear beside each filter and in marker tooltips.
 
-- **Zone NPC list** is on by default. Up to four known NPCs appear beneath
-  Blizzard's zone/subzone and territory text, with levels, types and an overflow
-  count. The list belongs to `ZoneTextFrame`, uses its native fade, and extends
+- **Zone NPC list** is on by default. A HardcoreBuddy panel encloses Blizzard's
+  zone/subzone and territory text plus a table of up to five NPCs, with separate
+  name, level and type columns. Its final row shows the additional NPC count and
+  **Click to view zone**, opening that zone's advisor. Smaller lists shrink to fit.
+  The panel belongs to `ZoneTextFrame`, uses its native fade, and extends
   the hold to six seconds while shown. Previous timings are restored on cleanup.
   It produces no chat message or sound. Disabling notices clears the list.
   Notices defer during combat, suppress dungeon/raid zones and throttle repeat
