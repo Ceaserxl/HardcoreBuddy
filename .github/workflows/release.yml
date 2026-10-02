@@ -51,6 +51,7 @@ jobs:
           python tests/run_auction_refill_plan.py
           python tests/run_vendor_food.py
           python tests/run_elune_macro.py
+          python tests/run_custom_builds.py
           python tests/run_enchants.py
       - name: Stage shipping manifest
         id: release

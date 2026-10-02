@@ -180,8 +180,8 @@ function G:CurrentProfile()
     return self:ApplyWeights(fallback)
 end
 
--- Overrides belong to this character and scoring profile. Builds sharing a
--- profile share these edits; the bundled defaults remain untouched.
+-- Custom builds own their weights; built-in profile overrides belong to the
+-- character. The bundled defaults remain untouched.
 G.WeightFields={
     {"strength","Strength"},{"agility","Agility"},{"stamina","Stamina"},{"intellect","Intellect"},{"spirit","Spirit"},
     {"armor","Armor"},{"health","Health"},{"mana","Mana"},{"attackPower","Attack power"},{"rangedAttackPower","Ranged attack power"},
@@ -197,7 +197,9 @@ G.WeightFields={
 function G:ApplyWeights(profile)
     if not profile then return end
     local saved=A.characterDB and A.characterDB.advisors
-    local weights=saved and saved.statWeights and saved.statWeights[profile.class..":"..profile.id]
+    local bundle=A.CustomBuilds and A.CustomBuilds:Get(profile.buildID,profile.class)
+    local weights=bundle and bundle.weights or (saved and saved.statWeights and saved.statWeights[profile.class..":"..profile.id])
+    if bundle then profile.customBuildID=bundle.id end
     if type(weights)=="table" then
         for key,value in pairs(weights) do
             if profile.weights[key]~=nil and number(value) and value<=1000000 then
@@ -221,6 +223,11 @@ function G:SetWeight(profile,key,value)
     if not profile or not A.characterDB or not number(value) or value>1000000 then return false end
     local defaults=self.Profile(profile.class,profile.level,nil,profile.id)
     if not defaults or defaults.weights[key]==nil then return false end
+    if profile.customBuildID and A.CustomBuilds then
+        local build=A.CustomBuilds:Get(profile.customBuildID,profile.class)
+        if not build then return false end
+        build.weights[key]=value; self:WeightsChanged(); return true
+    end
     A.characterDB.advisors=A.characterDB.advisors or {}
     local saved=A.characterDB.advisors
     saved.statWeights=saved.statWeights or {}
@@ -233,6 +240,11 @@ function G:SetWeight(profile,key,value)
 end
 
 function G:ResetWeights(profile)
+    if profile and profile.customBuildID and A.CustomBuilds then
+        local build=A.CustomBuilds:Get(profile.customBuildID,profile.class)
+        if build then build.weights=self.Profile(profile.class,profile.level,nil,profile.id).weights; self:WeightsChanged() end
+        return
+    end
     local saved=A.characterDB and A.characterDB.advisors
     if not profile or not saved or not saved.statWeights then return end
     saved.statWeights[profile.class..":"..profile.id]=nil

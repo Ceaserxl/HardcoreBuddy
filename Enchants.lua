@@ -54,6 +54,7 @@ function E.Profile(context)
     local build=A.TalentAdvisor:Build(class,context.level)
     local profile=A.GearAdvisor.Profile(class,context.level,nil,build and build.profile)
     if profile then
+        profile.buildID=build and build.id
         profile=A.GearAdvisor:ApplyWeights(profile)
         local source=A.Data.AdvisorGear[class][profile.id]
         profile.weights.haste=source.stats.HASTE or 0

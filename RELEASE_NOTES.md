@@ -1,3 +1,11 @@
+# Unreleased
+
+- Added account-wide custom talent builds bundled with stat weights, including
+  talent-tree editing, current-talent capture, selection, deletion, reviewed
+  export/import codes and in-game whisper links.
+- Custom weights feed gear, enchant and auction advice. Selecting or editing a
+  custom path pauses automatic talent spending until explicitly enabled again.
+
 # HardcoreBuddy v0.6.5
 
 - Compact, consistent layouts across Supplies, Companion, settings and Death Journal.

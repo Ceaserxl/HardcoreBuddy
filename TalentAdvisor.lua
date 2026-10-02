@@ -32,6 +32,19 @@ function T:Build(class,level)
     if not builds then return end
     local s=settings()
     local chosen=s and s.builds[class]
+    if A.CustomBuilds and chosen then
+        local custom=A.CustomBuilds:Get(chosen,class)
+        if custom then
+            s.customRevisions=s.customRevisions or {}
+            if s.customRevisions[class]~=custom.revision then
+                A.characterDB.autoApplyTalents=false; self.applying=nil
+                s.customRevisions[class]=custom.revision
+            end
+            return custom,true
+        elseif type(chosen)=="string" and chosen:match("^custom:") then
+            s.builds[class]=nil; A.characterDB.autoApplyTalents=false; self.applying=nil
+        end
+    end
     if chosen and builds[chosen] then return builds[chosen],true end
     return self:DefaultBuild(class,level),false
 end
@@ -199,7 +212,10 @@ function T:Activate(a)
     if a.command=="talentSettings" then A:OpenSettings("Talent Advisor"); return end
     local s=settings(); if not s then return end
     if a.command=="build" then
-        if D.AdvisorBuilds[a.class] and D.AdvisorBuilds[a.class][a.id] then s.builds[a.class]=a.id end
+        if D.AdvisorBuilds[a.class] and (D.AdvisorBuilds[a.class][a.id] or A.CustomBuilds and A.CustomBuilds:Get(a.id,a.class)) then
+            s.builds[a.class]=a.id
+            if type(a.id)=="string" then A.characterDB.autoApplyTalents=false; self.applying=nil end
+        end
     elseif a.command=="defaultBuild" then s.builds[a.class]=nil
     elseif a.command=="toggleGear" then A.GearAdvisor:SetEnabled(not A.GearAdvisor:IsEnabled())
     elseif a.command=="learn" then self:LearnNext(a.id,a.key,a.rank)

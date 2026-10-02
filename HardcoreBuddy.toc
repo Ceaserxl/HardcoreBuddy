@@ -59,6 +59,9 @@ HunterTooltips.lua
 GearAdvisor.lua
 AltAdvisor.lua
 TalentAdvisor.lua
+CustomBuilds.lua
+CustomBuildsUI.lua
+CustomBuildsSharing.lua
 TalentRanks.lua
 MapAdvisor.lua
 MapSettings.lua

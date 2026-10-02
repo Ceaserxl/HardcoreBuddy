@@ -1116,6 +1116,7 @@ function addon:Back()
     if self.state.view=="supplies" and (self.state.filter=="Enchants"
         or detail and (detail.kind=="enchantSlot" or detail.kind=="enchantRecipe")) then
         self.history={}; self.state={view="supplies",filter="Enchants",page=1}; self:Refresh(true)
+    elseif self.state.view=="settings" and self.state.customBuildPage then self.CustomBuildsUI:Back()
     elseif self.state.view=="settings" and self.state.gearPage then self.Settings:OpenGearPage(nil)
     elseif self.state.view=="settings" and self.state.mapIconKind then
         self.state.mapIconKind=nil; self.Settings.scroll:SetVerticalScroll(0); self:Refresh(true)
@@ -1133,6 +1134,7 @@ function addon:CanGoBack()
         or s.detail.kind=="enchantSlot" or s.detail.kind=="enchantRecipe") then return true end
     if s.view=="training" and s.detail and s.detail.kind=="profession" and s.detail.family=="dummy" then return false end
     return (self.history and #self.history>0) or (s.view=="petguide" and s.detail~=nil)
+        or (s.view=="settings" and s.customBuildPage==true)
         or (s.view=="settings" and s.gearPage~=nil)
         or (s.view=="settings" and s.mapIconKind~=nil)
         or (s.view=="deaths" and s.deathRecord~=nil)
@@ -1305,7 +1307,7 @@ local function layoutDocument(self)
         if not b then
             b=button(f,label,78,function(self)
                 addon:CommitInputs(); addon.window.classMenu:Hide()
-                addon.state.detail=nil; addon.state.deathRecord=nil; addon.state.gearPage=nil; addon.state.mapIconKind=nil; addon.state.talentPath=nil; addon.history={}; addon.state.page=1
+                addon.state.detail=nil; addon.state.deathRecord=nil; addon.state.gearPage=nil; addon.state.customBuildPage=nil; addon.state.mapIconKind=nil; addon.state.talentPath=nil; addon.history={}; addon.state.page=1
                 if addon.state.view=="instances" then
                     addon.state.filter=self.filter
                     addon.state.currentMap=nil; addon.state.currentName=nil; addon.state.unknownInstance=nil

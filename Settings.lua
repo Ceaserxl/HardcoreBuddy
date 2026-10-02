@@ -177,10 +177,11 @@ function S:Create(parent)
     end)
     scroll:SetScript("OnHide",function() self:CommitInputs() end)
     self.pages={}
-    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","NPC Alerts","Debug"}) do
+    for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","Custom Builds","NPC Alerts","Debug"}) do
         local page=CreateFrame("Frame",nil,content); page:SetAllPoints(content); page:Hide(); self.pages[name]=page
         page.title=label(page,name,22,0,0,700); page.title:SetTextColor(unpack(Skin.colors.gold))
     end
+    A.CustomBuildsUI:Create(self.pages["Custom Builds"])
     local general=self.pages.General
     general.resetAll=button(general,"Reset AddOn",0,function() A:ConfirmReset() end,140)
     general.resetAll:ClearAllPoints(); general.resetAll:SetPoint("TOPRIGHT",-12,0)
@@ -262,7 +263,7 @@ function S:Create(parent)
     A.DebugDump:Create(self.pages.Debug)
     local weightsPage=self.pages["Stat Weights"]
     weightsPage.profile=label(weightsPage,"",12,0,34,700)
-    weightsPage.description=label(weightsPage,"Saved for this character's scoring profile. Use 0 to ignore a stat. Enter to save; Escape to cancel.",12,0,60,700)
+    weightsPage.description=label(weightsPage,"Saved with your custom build, or per character for built-in profiles. Use 0 to ignore a stat. Enter to save; Escape to cancel.",12,0,60,700)
     gear.weightMessage=label(weightsPage,"",12,16,86,700)
     gear.weights={}
     gear.restore=button(weightsPage,"Restore Defaults",90,function()
@@ -330,6 +331,8 @@ function S:Create(parent)
         b:SetHeight(40); b.label:SetHeight(40); b.label:SetFont(STANDARD_TEXT_FONT,12,"")
         talent.builds[i]=b
     end
+    talent.manage=button(talent.paths,"Custom Builds & Stat Weights",4,function() A.CustomBuildsUI:Open() end,270)
+    talent.manage:ClearAllPoints(); talent.manage:SetPoint("TOPRIGHT",-16,-8)
     talent.contentHeight=276+maxBuilds*48
 
     local auction=self.pages["Auction House"]
@@ -373,6 +376,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
     local scale=math.min(1,width/760)
     local contentWidth=width/scale
     local pageName=section
+    if section=="Talent Advisor" and A.state.customBuildPage then pageName="Custom Builds" end
     if section=="Gear Advisor" and A.state.gearPage=="Stat Weights" then pageName=A.state.gearPage end
     local contentHeight=self.pages[pageName] and self.pages[pageName].contentHeight or 282
     if section=="Death Journal" then contentHeight=662 end
@@ -439,7 +443,15 @@ function S:Layout(parent,left,top,width,height,section,visible)
     talent.apply:SetEnabled(A.TalentAdvisor:IsEnabled() and live and live.unspent>0 and not A.TalentAdvisor.applying or false)
     talent.apply.label:SetText(A.TalentAdvisor.applying and "Applying talent points..." or "Apply unused points"..(live and (" ("..live.unspent..")") or ""))
     talent.auto:SetEnabled(context.mode~="preview")
-    local builds=A.Data.AdvisorBuilds[class] or {}
+    local builds={}
+    for _,b in ipairs(A.Data.AdvisorBuilds[class] or {}) do builds[#builds+1]=b end
+    for _,b in ipairs(A.CustomBuilds:List(class)) do builds[#builds+1]=b end
+    for i=#talent.builds+1,#builds do
+        local b=button(talent.paths,"",42+(i-1)*48,function(self)
+            A.TalentAdvisor:Activate({command=self.automatic and "defaultBuild" or "build",id=self.buildID,class=self.class})
+        end,700)
+        b:SetHeight(40); b.label:SetHeight(40); b.label:SetFont(STANDARD_TEXT_FONT,12,""); talent.builds[i]=b
+    end
     local selected,manual=A.TalentAdvisor:Build(class,context.level)
     local automatic=A.TalentAdvisor:DefaultBuild(class,context.level)
     talent.context:SetText(context.characterClass.." | Level "..context.level..(context.mode=="preview" and " | Planning another character" or " | Your character"))
@@ -497,6 +509,9 @@ function S:Layout(parent,left,top,width,height,section,visible)
     if section=="Death Journal" then
         A.Deaths:LayoutPage(content,0,0,contentWidth,contentHeight,{filter="Settings"})
         A.Deaths.host:Show()
+    end
+    if pageName=="Custom Builds" then
+        self.content:SetHeight(math.max(A.CustomBuildsUI:Layout(contentWidth),height/scale))
     end
     self:SyncDependencies()
     self.range=math.max(0,self.content:GetHeight()*scale-height)

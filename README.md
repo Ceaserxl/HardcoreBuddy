@@ -107,6 +107,34 @@ Open **Companion > Gear Advisor** or **Talent Advisor** in HardcoreBuddy, `/hcb 
 
 The gear percentage measures weighted item stats, not simulated damage or survival.
 Procs, active item effects and set bonuses are excluded. See [advisor details](docs/advisors.md).
+
+## Custom talent builds and stat weights
+
+Open **Settings > Talent Advisor > Custom Builds & Stat Weights**. Create a copy
+of the selected path, clear it to start from scratch, or copy your current talent
+ranks into a legal leveling order. Click talents to append points; use Undo Point
+or the ordered path list to remove points. Edit the build name, scoring
+specialization and individual stat weights, then Save Build. The editor checks
+rank caps, talent tiers, prerequisites and the 51-point limit.
+
+Custom builds are an account-wide library with a per-character selection. Choose
+**Use** to select a saved build. Its weights drive Gear Advisor, enchant advice,
+auction scoring and subsequent alternate-character equipment snapshots. Editing
+weights in Gear Advisor also updates the selected custom bundle. Built-in paths
+remain unchanged. Delete asks for a second click; deleting a selected custom path
+restores the automatic built-in path.
+
+**Share / Export** provides one copyable HCB1 code containing the ordered talents
+and all stat weights. Paste a code and click Review to inspect both before
+**Import as New**. Imports never overwrite, select, or apply a build automatically.
+You can also enter a player name (or Name-Realm) and send an in-game build link.
+The recipient needs a version of HardcoreBuddy supporting custom builds; clicking
+the received link opens the same review page. Codes are validated data, not Lua.
+
+Selecting or modifying a custom path disables automatic talent spending until
+you explicitly enable it again. Saving and importing never spend talent points.
+In-game links are session-local; export codes can be saved or shared on Discord.
+
 ## Leveling zones
 
 Open **Companion > Zone Advisor** for faction-specific Classic leveling recommendations.
