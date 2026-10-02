@@ -525,7 +525,11 @@ end
 
 function G:Comparisons(item,p,slotOnly,equipment)
     local function equippedAt(slot)
-        if equipment then return equipment[slot] or nil end
+        if equipment then
+            local item=equipment[slot]
+            if item and item.unavailable then return nil,"Cached equipment data unavailable" end
+            return item or nil
+        end
         return self:Equipped(slot)
     end
     local candidates={}

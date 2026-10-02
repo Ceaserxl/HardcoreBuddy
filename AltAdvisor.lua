@@ -7,21 +7,40 @@ local function copy(t)
     local out={}; for k,v in pairs(t) do out[k]=copy(v) end; return out
 end
 function Alt:Capture()
-    if not A.db or not UnitGUID or not GetRealmName then return end
+    if not A.db or not UnitGUID or not GetRealmName or not GetInventoryItemID or not GetInventoryItemLink then return end
     local guid=UnitGUID("player"); local profile=G:CurrentProfile()
     if not guid or not profile then return end
-    local equipment={}
+    local previous=A.db.altEquipment and A.db.altEquipment[guid]
+    local equipment,incomplete={},false
     for _,slot in ipairs(slots) do
+        local id,link=GetInventoryItemID("player",slot),GetInventoryItemLink("player",slot)
         local item,reason=G:Equipped(slot)
-        if reason and reason~="unsupported" then return end
-        equipment[slot]=item and copy(item) or false
+        local currentID,currentLink=GetInventoryItemID("player",slot),GetInventoryItemLink("player",slot)
+        local stable=id==currentID and link==currentLink
+        local old=previous and previous.equipment and previous.equipment[slot]
+        if stable and (not id or id==0) and not link then
+            equipment[slot]=false -- Only a confirmed empty slot is an empty baseline.
+        elseif stable and item and not reason and item.id==id and item.link==link then
+            equipment[slot]=copy(item)
+        else
+            -- A single loading tooltip must not discard updates to every other
+            -- slot, especially during PLAYER_LOGOUT when no retry can finish.
+            -- Reuse scored data only for the exact same item variant.
+            if stable and link and old and not old.unavailable and old.id==id and old.link==link then
+                equipment[slot]=copy(old)
+            else
+                equipment[slot]={id=currentID,link=currentLink,unavailable=true}
+            end
+            if not stable or reason~="unsupported" then incomplete=true end
+        end
     end
     profile=copy(profile); profile.cachedDualWield=G.CanDualWield(profile)
     A.db.altEquipment=A.db.altEquipment or {}
     A.db.altEquipment[guid]={schema=1,name=UnitName("player"),realm=GetRealmName(),
         faction=UnitFactionGroup("player"),profile=profile,equipment=equipment,
         updated=time and time() or 0}
-    return true
+    self.incomplete=incomplete
+    return not incomplete
 end
 local function clean(text) return (text or ""):gsub("|c%x%x%x%x%x%x%x%x",""):gsub("|r",""):match("^%s*(.-)%s*$") end
 function Alt:Transferable(tip,link)
@@ -173,8 +192,10 @@ local events=CreateFrame("Frame"); Alt.events=events
 for _,event in ipairs({"PLAYER_ENTERING_WORLD","PLAYER_EQUIPMENT_CHANGED","PLAYER_LEVEL_UP","PLAYER_TALENT_UPDATE",
     "CHARACTER_POINTS_CHANGED","SPELLS_CHANGED","PLAYER_LOGOUT","GET_ITEM_INFO_RECEIVED"}) do events:RegisterEvent(event) end
 events:SetScript("OnEvent",function(_,event)
-    if event=="PLAYER_LOGOUT" then Alt:Capture(); return end
-    if event~="GET_ITEM_INFO_RECEIVED" or Alt.pending then Alt.pending=.5; Alt.attempts=0 end
+    -- Logout, normal game exit and /reload flush current equipment immediately;
+    -- do not depend on an outstanding debounced OnUpdate running first.
+    if event=="PLAYER_LOGOUT" then Alt.pending=nil; Alt:Capture(); return end
+    if event~="GET_ITEM_INFO_RECEIVED" or Alt.pending or Alt.incomplete then Alt.pending=.5; Alt.attempts=0 end
 end)
 events:SetScript("OnUpdate",function(_,elapsed)
     if not Alt.pending then return end

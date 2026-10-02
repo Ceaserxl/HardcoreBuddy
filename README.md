@@ -111,6 +111,13 @@ Open **Companion > Gear Advisor** or **Talent Advisor** in HardcoreBuddy, `/hcb 
 The gear percentage measures weighted item stats, not simulated damage or survival.
 Procs, active item effects and set bonuses are excluded. See [advisor details](docs/advisors.md).
 
+**Alt Advisor** compares transferable bag/bank items against cached equipment for
+your other characters. Equipment refreshes during play and is captured again
+immediately on logout, normal game exit or `/reload`. Loading item data cannot
+leave newly occupied slots marked empty; uncertain slots are excluded from
+comparisons. To refresh an older character's cache, log into that character with
+HardcoreBuddy enabled and log out normally.
+
 ## Rotation Advisor proof of concept
 
 Open **Companion > Rotation Advisor** or `/hcb rotation`. In **Settings > Rotation

@@ -42,8 +42,9 @@ A.db.altEquipment['Player-second'].faction='Alliance'
 local old=G.Equipped
 G.Equipped=function() return nil,'Item data loading' end
 guid='Player-first'; assert(not Alt:Capture())
-assert(A.db.altEquipment[guid].equipment[11].stats.ITEM_MOD_INTELLECT_SHORT==5,'Loading never overwrites complete saved gear')
-G.Equipped=old; guid='Player-bank'
+assert(A.db.altEquipment[guid].equipment[11].unavailable,'A changed item cannot retain the old scored baseline while loading')
+assert(A.db.altEquipment[guid].equipment[12].stats.ITEM_MOD_INTELLECT_SHORT==10,'The exact unchanged item retains its scored data while loading')
+G.Equipped=old; assert(Alt:Capture()); guid='Player-bank'
 local info=C_Item.GetItemInfo
 local binding=2
 C_Item.GetItemInfo=function(link)
@@ -166,4 +167,97 @@ for i=1,GameTooltip:NumLines() do
  assert(region:IsShown() and region:GetText()~='', 'No hidden or empty reserved tooltip lines')
 end
 print('PASS: stable repeated refresh, independent Alt visibility and synchronous binding-safe native setter hooks.')
+
+-- Final capture cannot abort the whole character because one tooltip is loading.
+F.reset('MAGE',40,{0,0,31}); guid='Player-cache-logout'
+local worn=F.item('INVTYPE_FINGER',{ITEM_MOD_INTELLECT_SHORT=10},4,0)
+local head=F.item('INVTYPE_HEAD',{ITEM_MOD_INTELLECT_SHORT=5},4,1)
+F.equip(12,worn); assert(Alt:Capture())
+assert(A.db.altEquipment[guid].equipment[11]==false)
+F.equip(11,worn); F.equip(1,head); head.loading=true
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_EQUIPMENT_CHANGED',11)
+assert(Alt.pending,'Normal equipment reads are debounced')
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT') -- no OnUpdate before exit
+local cached=A.db.altEquipment[guid]
+assert(cached.equipment[11].id==worn.id and cached.equipment[12].id==worn.id,
+ 'Logout writes newly filled slots even with an unrelated loading head item')
+assert(cached.equipment[1].unavailable and cached.equipment[1].id==head.id,
+ 'Loading occupied equipment is recorded as unknown, never empty')
+assert(not Alt.pending,'Logout performs its final read synchronously')
+guid='Player-bank'
+for _,entry in ipairs(Alt:Upgrades(G:Read(candidate.link))) do
+ if entry.character.name=='Player-cache-logout' then
+  assert(entry.row.percent==100 and not entry.row.zeroBaseline,'Other characters compare against final worn rings')
+ end
+end
+-- Removing equipment at the last instant also replaces a stale occupied slot.
+guid='Player-cache-logout'; F.equip(11,nil)
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
+assert(A.db.altEquipment[guid].equipment[11]==false,'Final empty slot persists despite another loading item')
+F.equip(11,worn); worn.loading=true
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
+assert(A.db.altEquipment[guid].equipment[11].unavailable,'Fresh occupied slot replaces old false even before its item data arrives')
+local offline=G:Comparisons(G:Read(candidate.link),A.db.altEquipment[guid].profile,nil,A.db.altEquipment[guid].equipment)
+assert(offline[1].status=='unknown' and offline[2].percent==100,
+ 'Unknown occupied slot is excluded; unchanged same-link scored slot remains usable')
+-- Late item information must restart retries after the normal retry budget.
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_EQUIPMENT_CHANGED',11)
+for i=1,10 do Alt.events.scripts.OnUpdate(Alt.events,2) end
+assert(not Alt.pending and Alt.incomplete and Alt.attempts==10)
+worn.loading=false; head.loading=false
+Alt.events.scripts.OnEvent(Alt.events,'GET_ITEM_INFO_RECEIVED',worn.id,true)
+assert(Alt.pending,'Item data arrival restarts an exhausted incomplete capture')
+Alt.events.scripts.OnUpdate(Alt.events,1)
+assert(not Alt.incomplete and A.db.altEquipment[guid].equipment[11].stats,'Late data resolves unknown equipment')
+-- The item variant must match, not just its item ID (random suffixes differ).
+local variant={}
+for k,v in pairs(worn) do variant[k]=v end
+variant.link=worn.link:gsub(':-15:',':-16:'); variant.loading=true; F.alias(variant.link,variant); F.equip(11,variant)
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
+assert(A.db.altEquipment[guid].equipment[11].unavailable and A.db.altEquipment[guid].equipment[11].link==variant.link,
+ 'An unresolved same-ID different-suffix item never reuses old stats')
+-- Unknown dependent weapon slots must also suppress combined/unique comparisons.
+local p=A.db.altEquipment[guid].profile
+local unknown={id=999,unavailable=true}
+assert(G:Comparisons(two,p,nil,{[16]=unknown,[17]=false})[1].status=='unknown')
+assert(G:Comparisons(two,p,nil,{[16]=G:Read(worn.link),[17]=unknown})[1].status=='unknown')
+local uniqueCandidate=G:Read(candidate.link); uniqueCandidate.unique=true
+for _,row in ipairs(G:Comparisons(uniqueCandidate,p,nil,{[11]=false,[12]=unknown})) do
+ assert(row.status=='unknown','Unknown paired slot cannot establish unique-item eligibility')
+end
+-- Keep one incomplete character and one complete character for reload verification.
+guid='Player-cache-complete'; F.equip(11,worn)
+A.db.gearAdvisorActive=false; A.db.altAdvisorEnabled=false
+Alt.events.scripts.OnEvent(Alt.events,'PLAYER_LOGOUT')
+assert(A.db.altEquipment[guid].equipment[11].id==worn.id,'Disabling tooltip advice does not disable final equipment caching')
+ALT_RELOAD_CANDIDATE=G:Read(candidate.link)
+print('PASS: final logout reads, partial item loading, filled/emptied slots, variant identity, late retries and dependent slots.')
 ''')
+
+def plain(value):
+    if hasattr(value, 'items'):
+        return {k: plain(v) for k, v in value.items()}
+    return value
+
+account = plain(lua.globals().HardcoreBuddyDB)
+candidate = plain(lua.globals().ALT_RELOAD_CANDIDATE)
+fresh, _ = boot()
+fresh.globals().HardcoreBuddyDB = fresh.table_from(account, recursive=True)
+fresh.globals().AltReloadCandidate = fresh.table_from(candidate, recursive=True)
+fresh.execute('''
+TestAddon:Initialize()
+UnitGUID=function() return 'Player-bank' end
+GetRealmName=function() return 'Realm' end
+UnitFactionGroup=function() return 'Alliance' end
+local cache=TestAddon.db.altEquipment
+assert(cache['Player-cache-logout'].equipment[11].unavailable,'Unknown occupied slot survives SavedVariables round trip')
+assert(cache['Player-cache-complete'].equipment[11].stats,'Final scored gear survives SavedVariables round trip')
+local found=false
+for _,entry in ipairs(TestAddon.AltAdvisor:Upgrades(AltReloadCandidate)) do
+ if entry.character.name=='Player-cache-complete' then
+  found=true; assert(entry.row.percent==100 and not entry.row.zeroBaseline,'Fresh bank-character session uses final scored gear')
+ end
+end
+assert(found)
+''')
+print('PASS: final equipment and unknown occupied slots persist into a fresh bank-character runtime.')
