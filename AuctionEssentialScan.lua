@@ -36,26 +36,31 @@ function E:Listing(index,id)
         or owner==UnitName("player") then return nil,true end
     return {name=name,link=link,count=count,buyout=buyout,owner=owner,index=index,itemId=id},true
 end
+function E:AcceptPurchase(data)
+    if self.confirmation~=data or not self.open or not self.panel:IsShown() or self.scan then return end
+    local current,loaded=self:Listing(data.index,data.itemId)
+    if not loaded or not current or current.link~=data.link or current.count~=data.count
+        or current.buyout~=data.buyout or current.owner~=data.owner then
+        self:Stop("Listing changed. Click the item to check again."); return
+    end
+    if GetMoney()<data.buyout then self:Stop("Not enough money for this stack."); return end
+    self.confirmation=nil
+    self.awaitingBuy={listing=data,since=GetTime()}
+    PlaceAuctionBid("list",data.index,data.buyout)
+    self.results[data.itemId]=nil; self.complete=false
+    self.message="Waiting for the auction house to confirm the purchase."; self:Refresh()
+end
 function E:Confirm(listing)
+    if A.characterDB and A.characterDB.essentialSkipConfirmation==true then
+        self.scan=nil; self.confirmation=listing
+        self:AcceptPurchase(listing); return
+    end
     if not StaticPopupDialogs or not StaticPopupDialogs.BUYOUT_AUCTION then self:Stop("Buyout confirmation unavailable."); return end
     if not StaticPopupDialogs[popup] then
         local dialog={}; for k,v in pairs(StaticPopupDialogs.BUYOUT_AUCTION) do dialog[k]=v end
         dialog.text="Buy %s?"; dialog.OnShow=function(frame,data) MoneyFrame_Update(frame.MoneyFrame,data.buyout) end
         dialog.OnCancel=function() E:Stop("Purchase cancelled.") end
-        dialog.OnAccept=function(_,data)
-            if E.confirmation~=data or not E.open or not E.panel:IsShown() or E.scan then return end
-            local current,loaded=E:Listing(data.index,data.itemId)
-            if not loaded or not current or current.link~=data.link or current.count~=data.count
-                or current.buyout~=data.buyout or current.owner~=data.owner then
-                E:Stop("Listing changed. Click the item to check again."); return
-            end
-            if GetMoney()<data.buyout then E:Stop("Not enough money for this stack."); return end
-            E.confirmation=nil
-            E.awaitingBuy={listing=data,since=GetTime()}
-            PlaceAuctionBid("list",data.index,data.buyout)
-            E.results[data.itemId]=nil; E.complete=false
-            E.message="Waiting for the auction house to confirm the purchase."; E:Refresh()
-        end
+        dialog.OnAccept=function(_,data) E:AcceptPurchase(data) end
         StaticPopupDialogs[popup]=dialog
     end
     self.scan=nil; self.confirmation=listing
