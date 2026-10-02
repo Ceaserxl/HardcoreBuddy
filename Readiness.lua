@@ -8,6 +8,13 @@ local function text(parent,size,x,y,width,value)
     f:SetShadowColor(0,0,0,1); f:SetShadowOffset(1,-1)
     return f
 end
+local function button(parent,label,width,action)
+    local b=CreateFrame("Button",nil,parent,"BackdropTemplate")
+    b:SetSize(width,28); b.label=text(b,12,0,0,width,label)
+    b.label:SetAllPoints(); b.label:SetJustifyH("CENTER"); b.label:SetJustifyV("MIDDLE")
+    A.Skin.Button(b,"utility"); b:SetScript("OnClick",action)
+    return b
+end
 function R:LiveContext()
     local context=A:GetContext()
     local _,token=UnitClass("player")
@@ -29,6 +36,7 @@ function R:Missing(context)
     return rows
 end
 function R:Open()
+    self.previewUntil=nil; self.previewRows=nil; self.panel:Hide(); self.toast:Hide()
     A:CreateWindow(); A.db.profile.mode="live"
     A.state={view="supplies",filter="Essentials",page=1}; A.history={}
     A.window:Show(); A:Refresh(true)
@@ -36,7 +44,7 @@ end
 function R:BuildFrames()
     local f=CreateFrame("Button",nil,UIParent,"BackdropTemplate"); self.panel=f
     A.Skin.Hover(f)
-    f:SetSize(290,180); f:SetPoint("RIGHT",UIParent,"RIGHT",-36,35)
+    f:SetSize(330,240); f:SetPoint("RIGHT",UIParent,"RIGHT",-36,35)
     f:SetFrameStrata("MEDIUM"); f:SetClampedToScreen(true); A.Skin.Paint(f,"card")
     f:SetMovable(true); f:RegisterForDrag("LeftButton")
     local anchors={TOPLEFT=true,TOP=true,TOPRIGHT=true,LEFT=true,CENTER=true,RIGHT=true,BOTTOMLEFT=true,BOTTOM=true,BOTTOMRIGHT=true}
@@ -54,16 +62,39 @@ function R:BuildFrames()
     end
     f:SetScript("OnDragStart",function() self.dragging=true; f:StartMoving() end)
     f:SetScript("OnDragStop",stopDrag); f:SetScript("OnHide",stopDrag)
-    f.title=text(f,14,12,-12,244,"Missing essentials"); f.title:SetTextColor(unpack(A.Skin.colors.gold))
-    f.body=text(f,12,12,-38,264)
-    f.hint=text(f,10,12,-151,264,"Drag to move | Click to review supplies")
+    f.title=text(f,15,14,-12,270,"Missing essentials"); f.title:SetTextColor(unpack(A.Skin.colors.gold))
+    f.summary=text(f,11,14,-34,300); f.summary:SetTextColor(unpack(A.Skin.colors.muted))
+    f.rows={}
+    for i=1,4 do
+        local row=CreateFrame("Frame",nil,f,"BackdropTemplate"); f.rows[i]=row
+        row:SetPoint("TOPLEFT",12,-58-(i-1)*42); row:SetSize(306,38)
+        A.Skin.Paint(row,"edit"); row:SetBackdropBorderColor(0,0,0,0)
+        row.icon=row:CreateTexture(nil,"ARTWORK"); row.icon:SetSize(28,28); row.icon:SetPoint("TOPLEFT",5,-5)
+        row.icon:SetTexCoord(0.08,0.92,0.08,0.92)
+        row.name=text(row,12,42,-4,192); row.name:SetWordWrap(false); row.name:SetHeight(16)
+        row.stock=text(row,10,42,-22,192); row.stock:SetTextColor(unpack(A.Skin.colors.muted))
+        row.need=text(row,12,234,-10,64); row.need:SetJustifyH("RIGHT")
+    end
+    f.more=text(f,10,14,0,300); f.more:SetTextColor(unpack(A.Skin.colors.muted))
+    f.hint=text(f,10,14,0,136,"Drag to move"); f.hint:SetTextColor(unpack(A.Skin.colors.muted))
+    f.hint:ClearAllPoints(); f.hint:SetPoint("BOTTOMLEFT",14,18)
+    f.review=button(f,"Review supplies",144,function() self:Open() end)
+    f.review:SetPoint("BOTTOMRIGHT",-12,12)
+    f:SetScript("OnUpdate",function()
+        if self.previewUntil and not self.dragging and GetTime()>=self.previewUntil then
+            self.previewUntil=nil; self.previewRows=nil; self:Refresh()
+        end
+    end)
     f:SetScript("OnClick",function()
         if not self.dragging and (not self.ignoreClickUntil or GetTime()>self.ignoreClickUntil) then self:Open() end
     end)
     local close=CreateFrame("Button",nil,f,"BackdropTemplate"); f.close=close
     close:SetSize(22,22); close:SetPoint("TOPRIGHT",-6,-6); A.Skin.Button(close,"utility")
     close.label=text(close,12,5,-3,16,"x")
-    close:SetScript("OnClick",function() self.dismissed=true; f:Hide() end)
+    close:SetScript("OnClick",function()
+        if self.previewUntil then self.previewUntil=nil; self.previewRows=nil; f:Hide(); self:Refresh()
+        else self.dismissed=true; f:Hide() end
+    end)
     f:Hide()
     local toast=CreateFrame("Button",nil,UIParent); self.toast=toast
     A.Skin.Hover(toast)
@@ -79,6 +110,52 @@ function R:BuildFrames()
     end)
     toast:Hide()
 end
+function R:ShowPanel(missing,preview)
+    local f=self.panel; local count=math.min(4,#missing)
+    f:SetFrameStrata(preview and "DIALOG" or "MEDIUM")
+    A.Skin.Rebase(f,preview and ((A.window and A.window:GetFrameLevel() or 20)+20) or 10)
+    f.summary:SetText((preview and "Preview | " or "")..#missing.." supplies below target")
+    for i,row in ipairs(f.rows) do
+        local item=missing[i]; row:SetShown(i<=count)
+        if i<=count then
+            local getIcon=C_Item and C_Item.GetItemIconByID or GetItemIcon
+            row.icon:SetTexture(getIcon and getIcon(item.itemId) or "Interface\\Icons\\INV_Misc_Bag_08")
+            row.name:SetText(item.name)
+            row.stock:SetText("Have "..(item.count or 0).." / "..item.target)
+            row.need:SetText("Need "..item.missing)
+            row.need:SetTextColor(unpack(item.count==0 and A.Skin.colors.red or A.Skin.colors.amber))
+        end
+    end
+    local bottom=58+count*42
+    f.more:SetShown(#missing>count)
+    if #missing>count then
+        f.more:ClearAllPoints(); f.more:SetPoint("TOPLEFT",14,-bottom)
+        f.more:SetText("+ "..(#missing-count).." more in Essentials"); bottom=bottom+20
+    end
+    f:SetHeight(bottom+48); f:Show()
+end
+function R:ShowReminder(count,preview)
+    self.toast:SetFrameStrata(preview and "DIALOG" or "HIGH")
+    self.toast:SetFrameLevel(preview and ((A.window and A.window:GetFrameLevel() or 20)+20) or 10)
+    self.toast.title:SetText((preview and "Preview: " or "HardcoreBuddy: ")..count.." essentials below target")
+    self.toast.elapsed=0; self.toast:SetAlpha(1); self.toast:Show()
+end
+function R:Preview(kind)
+    if InCombatLockdown() then A:Print("Preview preparation reminders after combat."); return end
+    if kind=="reminder" then
+        self:ShowReminder(math.max(1,#self:Missing(self:LiveContext())),true)
+    else
+        -- Fixed examples make the layout preview useful even with full bags.
+        self.previewRows={
+            {itemId=117,name="Tough Jerky",count=6,target=20,missing=14},
+            {itemId=118,name="Minor Healing Potion",count=0,target=5,missing=5},
+            {itemId=1251,name="Linen Bandage",count=8,target=20,missing=12},
+        }
+        self.previewUntil=GetTime()+20
+        self:ShowPanel(self.previewRows,true)
+        self.panel.summary:SetText("Preview | Example supplies")
+    end
+end
 function R:Refresh()
     if not self.settings then return end
     local resting=IsResting and IsResting() and true or false
@@ -93,25 +170,20 @@ function R:Refresh()
     if resting or not self.settings.departure or (self.departure and now-self.departure>20) then self.departure=nil end
     if self.dragging and not unsafe then return end
     self.panel:Hide()
-    if unsafe then self.toast:Hide(); return end
-    if not self.settings.panel and not self.departure then return end
+    if unsafe then self.previewUntil=nil; self.previewRows=nil; self.toast:Hide(); return end
+    if self.previewUntil and now>=self.previewUntil then self.previewUntil=nil; self.previewRows=nil end
+    if not self.settings.panel and not self.departure and not self.previewUntil then return end
     local missing=self:Missing(self:LiveContext())
-    if resting and self.settings.panel and not self.dismissed and #missing>0 then
-        local lines={}
-        for i=1,math.min(4,#missing) do lines[#lines+1]=missing[i].name.."  -  need "..missing[i].missing end
-        if #missing>4 then lines[#lines+1]="+ "..(#missing-4).." more in Essentials" end
-        self.panel.body:SetText(table.concat(lines,"\n"))
-        local bodyHeight=self.panel.body:GetStringHeight()
-        self.panel.body:SetHeight(bodyHeight)
-        self.panel.hint:ClearAllPoints(); self.panel.hint:SetPoint("TOPLEFT",12,-48-bodyHeight)
-        self.panel:SetHeight(76+bodyHeight); self.panel:Show()
+    if self.previewUntil then
+        self:ShowPanel(self.previewRows,true); self.panel.summary:SetText("Preview | Example supplies")
+    elseif resting and self.settings.panel and not self.dismissed and #missing>0 then
+        self:ShowPanel(missing)
     end
     if self.departure then
         self.departure=nil -- One opportunity per departure, even with empty/unknown bags.
         if #missing>0 and (not self.lastReminder or now-self.lastReminder>=300) then
             self.lastReminder=now
-            self.toast.title:SetText("HardcoreBuddy: "..#missing.." essentials below target")
-            self.toast.elapsed=0; self.toast:SetAlpha(1); self.toast:Show()
+            self:ShowReminder(#missing)
         end
     end
 end
@@ -134,8 +206,12 @@ function R:LayoutSettings(parent,left,top,width,height,visible)
             end)
             f.checks[key]=check
         end
-        text(f,12,20,-224,690,"Essentials covers your core supplies. Advanced covers situational survival tools; other supplies start as Optional. Open an item to change its priority. Your choices follow that item's family as ranks improve.")
-        text(f,12,20,-296,690,"Set Carry to 0 to skip restocking. Unknown bag or profession data does not trigger a shortage. Reminders are silent, stay out of combat, and are limited to one every five minutes.")
+        f.previewPanel=button(f,"Preview missing essentials",210,function() self:Preview("panel") end)
+        f.previewPanel:SetPoint("TOPLEFT",20,-190)
+        f.previewReminder=button(f,"Preview reminder",174,function() self:Preview("reminder") end)
+        f.previewReminder:SetPoint("TOPLEFT",f.previewPanel,"TOPRIGHT",12,0)
+        text(f,12,20,-238,690,"Essentials covers your core supplies. Advanced covers situational survival tools; other supplies start as Optional. Open an item to change its priority. Your choices follow that item's family as ranks improve.")
+        text(f,12,20,-310,690,"Set Keep on hand to 0 to skip restocking. Unknown bag or profession data does not trigger a shortage. Reminders are silent, stay out of combat, and are limited to one every five minutes.")
     end
     local f=self.options; f:SetShown(visible)
     if not visible then return end

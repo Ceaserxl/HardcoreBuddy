@@ -81,7 +81,7 @@ function S:Create(parent)
     general.reset=button(access,"Recenter main window",112,function() A:HandleSlashCommand("reset") end)
     label(access,"Open settings with /hcb settings.",12,20,166,300)
     label(kit,"Manage Carry quantities and item priorities in Supplies. Find talent recommendations in Advisors.",12,20,118,300)
-    general.contentHeight=668
+    general.contentHeight=696
     local npc=self.pages["NPC Alerts"]
     label(npc,"Configure rare and elite warnings independently.",12,0,46,700)
     npc.contentHeight=646
@@ -277,7 +277,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
         A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],0,82,half,552,"Rares",true)
         A.CreatureAlerts:LayoutSettings(self.pages["NPC Alerts"],12+half,82,half,552,"Elites",true)
     else for _,page in pairs(A.CreatureAlerts.pages or {}) do page:Hide() end end
-    if section=="General" then A.Readiness:LayoutSettings(general,0,314,contentWidth-12,342,true)
+    if section=="General" then A.Readiness:LayoutSettings(general,0,314,contentWidth-12,370,true)
     elseif A.Readiness.options then A.Readiness.options:Hide() end
     A.MapAdvisor:LayoutSettings(content,0,0,contentWidth,section=="Zone Advisor")
     if section=="Death Journal" then
