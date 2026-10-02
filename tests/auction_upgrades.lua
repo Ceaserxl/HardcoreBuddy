@@ -128,7 +128,7 @@ check(#U.results[1]==3,"Only upgrades, with duplicates and unusable items remove
 check(U.results[1][1].link==best.link and U.results[1][1].buyout==5000,"Best percentage first; duplicate keeps cheapest buyout")
 check(U.results[1][1].auctions==2,"Duplicate listings counted once per item")
 check(U.results[1][1].percent==G:Comparisons(G:Read(best.link),G:CurrentProfile())[1].percent,"Exact advisor percentage reused")
-check(U.rows[1].priceKind:GetText()=="Buyout" and U.rows[1].action:GetText()==""
+check(U.rows[1].priceKind:GetText()=="" and U.rows[1].action:GetText()==""
     and U.rows[1].options:GetText()=="3 options >",
     "Overview separates the price type from the navigation action")
 check(U.results[1][3].link==good.link,"Cloth upgrade compared against equipped mail")

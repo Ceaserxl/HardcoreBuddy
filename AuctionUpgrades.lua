@@ -461,7 +461,8 @@ function U:Refresh()
             local value,kind
             if row then value,kind=price(row) end
             frame.cost:SetText(row and (row.owned and "No purchase" or money(value)) or "")
-            frame.priceKind:SetText(row and not row.owned and (row.weaponSet and (row.priceLabel.." total") or kind) or "")
+            frame.priceKind:SetText(row and not row.owned and
+                ((row.weaponSet and row.priceLabel or kind)=="Bid" and (row.weaponSet and "Bid total" or "Bid") or "") or "")
             frame.action:SetText(row and (self.slot and (row.weaponSet and "View items >" or row.owned and "Equipped"
                 or self.scan and "Stop scan to buy" or row.buyout>0 and "Buyout >" or "No buyout") or "") or "")
             frame.accent:SetShown(row~=nil)
@@ -493,7 +494,7 @@ function U:Layout()
     local height=AuctionFrame:GetHeight()-47
     self.panel:SetSize(width,height)
     self.title:SetWidth(width-380); self.subtitle:SetWidth(390)
-    local top=(self.slot or self.weaponsOnly) and 114 or 80
+    local top=(self.slot or self.weaponsOnly) and 109 or 75
     local rowWidth=width-213
     visibleRows=math.min(16,math.floor((height-top-16)/38))
     for i,row in ipairs(self.rows) do
