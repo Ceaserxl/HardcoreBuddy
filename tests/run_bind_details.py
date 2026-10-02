@@ -62,6 +62,29 @@ B.bindDetails.iconButton.scripts.OnLeave(B.bindDetails.iconButton)
 d:Hide(); assert(not B.bindDetails:IsShown() and not d.insertedFrame)
 StaticPopup_Show('EQUIP_BIND',nil,nil,1); assert(not B.bindDetails:IsShown(),'Manual prompt never reuses stale details')
 B:PrepareBindDetails({link=item.link,item=item},row); StaticPopup_Show('EQUIP_BIND',nil,nil,1)
-print('PASS: binding slot association, icon tooltip, score/stat details, no auto-accept, and cleanup on popup reuse.')
+-- Older Classic popups have global resize and lower-case text, no mixin methods.
+d:Hide()
+d.Resize=nil; d.SetupInsertedFrame=nil; d.SetupElementAnchoring=nil
+d.text=d.Text; d.Text=nil
+local legacyCalls=0
+StaticPopup_Resize=function(frame,which)
+ assert(frame==d and which=='EQUIP_BIND')
+ legacyCalls=legacyCalls+1
+ frame:SetHeight(16+frame.text:GetStringHeight()+(frame.insertedFrame and frame.insertedFrame:GetHeight() or 0)+9+24+16)
+ frame.ButtonContainer:ClearAllPoints(); frame.ButtonContainer:SetPoint('BOTTOM',frame,'BOTTOM',0,16)
+end
+StaticPopup_Show=function(which,_,_,slot) d.which=which; d.data=slot; d:Show(); StaticPopup_Resize(d,which); return d end
+B.bindHook=nil
+B:PrepareBindDetails({link=item.link,item=item},row)
+StaticPopup_Show('EQUIP_BIND',nil,nil,1)
+assert(legacyCalls==2 and d.insertedFrame==B.bindDetails and B.bindDetails:IsVisible())
+local dx,dy,dw,dh=d:GetRect(); local fx,fy,fw,fh=B.bindDetails:GetRect()
+local _,buttonY=d.ButtonContainer:GetRect()
+assert(fx>=dx and fx+fw<=dx+dw and fy>=dy and fy+fh<buttonY and buttonY+24<=dy+dh,'Legacy content stays inside native border above buttons')
+assert(d.accept:GetScript('OnClick')==acceptScript and d.cancel:GetScript('OnClick')==cancelScript)
+d:Hide(); assert(not B.bindDetails:IsShown())
+StaticPopup_Show('EQUIP_BIND',nil,nil,1); assert(not B.bindDetails:IsShown())
+B:PrepareBindDetails({link=item.link,item=item},row); StaticPopup_Show('EQUIP_BIND',nil,nil,1)
+print('PASS: modern and legacy native dialog insertion, binding slot association, icon tooltip, score/stat details, no auto-accept, and cleanup on popup reuse.')
 ''')
 composite(lua.globals().MOCK.frames,a.GearBagAdvisor.bindDetails.GetParent(a.GearBagAdvisor.bindDetails)).save(str(ROOT/'.release/bind-details.png'))

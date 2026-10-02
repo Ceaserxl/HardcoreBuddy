@@ -39,7 +39,10 @@ function B:PrepareBindDetails(candidate,row)
         local pending=B.pendingBind
         if not pending or GetTime()>pending.expires or slot~=pending.row.slot
             or (which~="EQUIP_BIND" and which~="EQUIP_BIND_REFUNDABLE" and which~="EQUIP_BIND_TRADEABLE") then return end
-        local dialog=StaticPopup_FindVisible and StaticPopup_FindVisible(which)
+        local dialog=StaticPopup_FindVisible and StaticPopup_FindVisible(which,slot)
+        if not dialog and StaticPopup_Visible then
+            local name,frame=StaticPopup_Visible(which); dialog=frame or name and _G[name]
+        end
         if not dialog then return end
         B.pendingBind=nil; B:ShowBindDetails(dialog,pending)
     end)
@@ -47,7 +50,9 @@ end
 
 function B:ShowBindDetails(dialog,pending)
     if dialog.insertedFrame and dialog.insertedFrame~=self.bindDetails then return end
-    if not dialog.Resize or not dialog.SetupInsertedFrame or not dialog.SetupElementAnchoring then return end
+    local modern=dialog.Resize and dialog.SetupInsertedFrame and dialog.SetupElementAnchoring
+    local nativeText=dialog.Text or dialog.text or dialog:GetName() and _G[dialog:GetName().."Text"]
+    if not modern and (not StaticPopup_Resize or not nativeText) then return end
     local f=self.bindDetails
     if not f then
         f=CreateFrame("Frame",nil,dialog); self.bindDetails=f
@@ -69,7 +74,12 @@ function B:ShowBindDetails(dialog,pending)
         f:SetScript("OnHide",function() GameTooltip:Hide() end)
     end
     dialog.insertedFrame=f
-    dialog:SetupInsertedFrame(f)
+    if modern then dialog:SetupInsertedFrame(f)
+    else
+        f:SetParent(dialog); f:ClearAllPoints()
+        local anchor=dialog.SubText and dialog.SubText:IsShown() and dialog.SubText or nativeText
+        f:SetPoint("TOP",anchor,"BOTTOM",0,0)
+    end
     f:SetFrameStrata(dialog:GetFrameStrata()); f:SetFrameLevel(dialog:GetFrameLevel()+2)
     f.link=pending.link
     local icon=itemAPI("GetItemIconByID") or GetItemIcon
@@ -86,8 +96,11 @@ function B:ShowBindDetails(dialog,pending)
     f:SetHeight(math.max(54,y+4))
     f:Show()
     -- Re-anchor the native elements after insertion, then expand its border.
-    dialog:SetupElementAnchoring()
-    dialog:Resize()
+    if modern then
+        dialog:SetupElementAnchoring(); dialog:Resize()
+    else
+        StaticPopup_Resize(dialog,dialog.which)
+    end
 end
 
 function B:Enabled()
