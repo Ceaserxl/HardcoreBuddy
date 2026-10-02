@@ -23,6 +23,8 @@ A.characterDB.auctionBank={counts={[900010]=2}}
 A.GetContext=function() return ctx end
 E.Refresh=function(self) self.items=self:Items(ctx) end
 E:Refresh()
+assert(not E.items[1].crafting and not E.selected[900001] and not E.selected[900010],"Craft and Buy default off")
+E.craftChoices[900001]=true; E.craftChoices[900002]=true; E:Refresh()
 assert(#E.items==5 and E.items[1].craftable and E.items[1].crafting)
 assert(not E.selected[900001] and not E.selected[900002] and E.selected[900010])
 assert(E.items[2].target==9 and E.items[2].missing==2,"Round crafts up for two-item output")
@@ -72,7 +74,7 @@ C_Container.GetContainerNumSlots=function() return 0 end
 E.craftingEvents.scripts.OnEvent(nil,"BANKFRAME_CLOSED")
 assert(A.characterDB.auctionBank==persisted,"Unavailable bank API preserves saved snapshot")
 learned=true; E.Refresh=refresh; E:Attach(); E.open=true
-E.craftChoices={}; E.materialOverrides={}; E:Refresh()
+E.craftChoices={[900001]=true,[900002]=true}; E.materialOverrides={}; E:Refresh()
 assert(E.rows[1].cells[1]:GetText():find("|cff62d79b(Craftable)|r",1,true),"Green inline Craftable label")
 assert(E.rows[1].craft:GetChecked() and not E.rows[1].buy:GetChecked(),"Craft checked, finished Buy unchecked")
 assert(E.rows[5].cells[7]:GetText()=="In Bags (4)" and not E.rows[5].buy:GetChecked(),"Covered material replaces price and remains unchecked")
@@ -81,5 +83,30 @@ assert(not E.rows[1].craft:GetChecked() and E.rows[1].buy:GetChecked() and not E
 ctx.inventory.counts[900010]=0; A.characterDB.auctionBank.counts[900010]=9
 E:ToggleCraft(E.items[1])
 assert(E.rows[2].cells[7]:GetText()=="In Bank (9)" and not E.rows[2].buy:GetChecked(),"Bank fully covers required amount")
+E.craftChoices={}; E.craftManual={}; E.selected={}; E.materialOverrides={}
+ctx.inventory.counts[900010]=0; A.characterDB.auctionBank.counts[900010]=0
+E.results={
+ [900001]={offers={{count=5,buyout=1000}}},
+ [900002]={offers={{count=4,buyout=1}}},
+ [900010]={offers={{count=20,buyout=100}}},
+}
+local co=coroutine.create(function() E:SelectCheaperCrafts() end)
+repeat local ok,err=coroutine.resume(co); assert(ok,err) until coroutine.status(co)=='dead'
+assert(E.craftChoices[900001] and not E.craftChoices[900002],"Auto craft only when strictly cheaper")
+assert(not E.selected[900001] and not E.selected[900002] and E.selected[900010],"Only chosen crafting materials auto select Buy")
+E:ToggleCraft(E.items[1]); assert(not E.selected[900001],"Unchecking Craft leaves Buy off")
+co=coroutine.create(function() E:SelectCheaperCrafts() end)
+repeat local ok,err=coroutine.resume(co); assert(ok,err) until coroutine.status(co)=='dead'
+assert(not E.craftChoices[900001],"Manual opt-out survives price comparison")
+E.craftManual={}; E.craftChoices={}; E.selected={}
+E.results[900001]={offers={{count=5,buyout=100}}}
+co=coroutine.create(function() E:SelectCheaperCrafts() end)
+repeat local ok,err=coroutine.resume(co); assert(ok,err) until coroutine.status(co)=='dead'
+assert(not E.craftChoices[900001],"Equal costs do not auto select craft")
+E.results[900001]={offers={{count=5,buyout=1000}}}; E.results[900010]=nil
+co=coroutine.create(function() E:SelectCheaperCrafts() end)
+repeat local ok,err=coroutine.resume(co); assert(ok,err) until coroutine.status(co)=='dead'
+assert(not E.craftChoices[900001],"Missing material prices do not auto select craft")
+
 print("PASS: recipe eligibility/cache, output rounding, shared stock, bank capture, linked selections, cost comparison and scan deduplication")
 ''')

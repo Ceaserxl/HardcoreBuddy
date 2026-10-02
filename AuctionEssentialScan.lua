@@ -72,7 +72,14 @@ function E:Tick()
     if not self.open or not self.panel:IsShown() then self:Stop(); return end
     if GetTime()-s.since>20 then self:Stop("Scan timed out. Rescan before buying."); return end
     local record=s.queue[s.item]
-    if s.phase=="planning" then
+    if s.phase=="craftPlanning" then
+        local ok=coroutine.resume(s.planner)
+        if not ok then self:Stop("Unable to compare crafting costs. Scan again."); return end
+        if coroutine.status(s.planner)~="dead" then s.since=GetTime(); return end
+        self.scan=nil; self.complete=true
+        self.message="Scan complete. Refills use the lowest total cost."..self:CraftNotice()
+        self:Refresh()
+    elseif s.phase=="planning" then
         local ok,calculated=coroutine.resume(s.planner)
         if not ok then self:Stop("Unable to calculate refill. Scan again."); return end
         if coroutine.status(s.planner)~="dead" then return end
@@ -88,7 +95,9 @@ function E:Tick()
             s.page=s.best.page; s.verify=true; s.phase="query"; s.since=GetTime(); self:Refresh(); return
         end
         s.item=s.item+1; s.page=0; s.best=nil; s.offers=nil; s.phase="query"; s.since=GetTime()
-        if s.item>#s.queue then self.scan=nil; self.complete=true; self.message="Scan complete. Refills use the lowest total cost."..self:CraftNotice()
+        if s.item>#s.queue then
+            s.phase="craftPlanning"; s.planner=coroutine.create(function() self:SelectCheaperCrafts() end)
+            self.message="Comparing crafting costs..."
         else self.message="Scanning "..s.item.." / "..#s.queue..": "..s.queue[s.item].name end
         self:Refresh()
     elseif s.phase=="query" then

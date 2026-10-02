@@ -2,7 +2,7 @@
 local _,A=...
 local E=A.AuctionEssentials
 local baseItems=E.Items
-E.craftChoices={}; E.materialOverrides={}; E.autoMaterials={}
+E.craftChoices={}; E.craftManual={}; E.materialOverrides={}; E.autoMaterials={}
 local function id(link) return type(link)=="string" and tonumber(link:match("item:(%d+)")) end
 local function db() return A.characterDB end
 function E:CaptureRecipes()
@@ -64,7 +64,6 @@ function E:Items(context)
     for _,parent in ipairs(parents) do
         local recipe=self:Recipe(parent.itemId)
         parent.craftable=recipe~=nil; parent.children={}
-        if recipe and self.craftChoices[parent.itemId]==nil then self.craftChoices[parent.itemId]=true; self.selected[parent.itemId]=nil end
         parent.crafting=recipe and self.craftChoices[parent.itemId]==true
         out[#out+1]=parent
         if recipe and (parent.missing or 0)>0 then
@@ -108,9 +107,10 @@ function E:Items(context)
 end
 function E:ToggleCraft(record)
     if not record or not record.craftable or self.scan or self.batch or self.confirmation or self.awaitingBuy then return end
+    self.craftManual[record.itemId]=true
     local enabled=not self.craftChoices[record.itemId]
     self.craftChoices[record.itemId]=enabled
-    self.selected[record.itemId]=not enabled or nil
+    self.selected[record.itemId]=nil
     for _,child in ipairs(record.children) do self.materialOverrides[child.itemId]=nil end
     self:Refresh()
 end
@@ -122,6 +122,7 @@ function E:Toggle(record)
         self.materialOverrides[record.itemId]=not self.selected[record.itemId]
         self:Refresh()
     else
+        if record.craftable then self.craftManual[record.itemId]=true end
         if record.craftable and not self.selected[record.itemId] then self.craftChoices[record.itemId]=false end
         toggle(self,record)
     end
@@ -179,6 +180,35 @@ function E:CraftCost(parent)
         end
     end
     return cost
+end
+-- Runs in the scan coroutine so larger whole-stack plans can yield.
+function E:SelectCheaperCrafts()
+    local context=A:GetContext()
+    for id in pairs(self.craftChoices) do if not self.craftManual[id] then self.craftChoices[id]=nil end end
+    local function plan(id,need)
+        local result=self.results[id]
+        if not result then return end
+        result.plans=result.plans or {}
+        if not result.plans[need] then result.plans[need]=self:RefillPlan(result.offers or {},need,nil,true) end
+        return result.plans[need]
+    end
+    self.items=self:Items(context)
+    local candidates={}
+    for _,r in ipairs(self.items) do
+        if r.craftable and not self.craftManual[r.itemId] and not self.selected[r.itemId] and (r.missing or 0)>0 then candidates[#candidates+1]=r.itemId end
+    end
+    for _,id in ipairs(candidates) do
+        self.craftChoices[id]=true
+        self.items=self:Items(context)
+        local parent
+        for _,r in ipairs(self.items) do if r.itemId==id and not r.craftParent then parent=r; break end end
+        local buy=plan(id,parent.missing)
+        for _,child in ipairs(parent.children) do if child.missing and child.missing>0 then plan(child.itemId,child.missing) end end
+        local cost=self:CraftCost(parent)
+        if not buy or buy.units<parent.missing or not cost or cost>=buy.cost then self.craftChoices[id]=nil end
+    end
+    self.items=self:Items(context)
+    for _,r in ipairs(self:PurchaseRecords()) do if r.missing and r.missing>0 then plan(r.itemId,r.missing) end end
 end
 function E:CraftNotice()
     local bags,bank,craftable=false,false,false
