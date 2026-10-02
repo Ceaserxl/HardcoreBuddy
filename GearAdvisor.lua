@@ -270,7 +270,10 @@ function G:Scan(link,inventorySlot,captureLines)
             local region=_G["HardcoreBuddyGearScanText"..side..i]
             if region and region:IsShown() then
                 local r,g,b=region:GetTextColor()
-                if r and g and b and r>0.8 and g<0.25 and b<0.25 and (region:GetText() or "")~="" then result.restricted=true end
+                if r and g and b and r>0.8 and g<0.25 and b<0.25 and (region:GetText() or "")~="" then
+                    result.restricted=true
+                    if side=="Right" and i<=5 then result.typeRestricted=true else result.otherRestricted=true end
+                end
             end
         end
         local line=_G["HardcoreBuddyGearScanTextLeft"..i]
@@ -370,6 +373,7 @@ function G:Read(link,inventorySlot,allowUnscored)
     end
     return {id=id,link=link,name=name,required=required or 0,equip=equip,classID=classID,subclassID=subclassID,
         stats=merged,dps=scanned.dps or stats.ITEM_MOD_DAMAGE_PER_SECOND_SHORT,restricted=scanned.restricted,unique=scanned.unique,
+        typeRestricted=scanned.typeRestricted,otherRestricted=scanned.otherRestricted,
         spellEffectsComplete=scanned.spellEffectsComplete,useOrSetEffect=scanned.useOrSetEffect,
         blockValueComplete=blockComplete}
 end

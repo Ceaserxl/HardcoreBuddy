@@ -1,5 +1,5 @@
 local _,A=...
-local C={schema=2}; A.AuctionCache=C
+local C={schema=3}; A.AuctionCache=C
 local slots={1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18}
 
 local function copy(value)
@@ -14,6 +14,14 @@ function C:Signature(profile)
     local parts={profile.class,profile.level,profile.id or profile.name,tostring(profile.manual),
         tostring(A.characterDB and A.characterDB.auctionHighestArmorOnly==true),tostring(A.GearAdvisor.CanDualWield(profile))}
     parts[#parts+1]=tostring(A.AuctionUpgrades:LevelRange())
+    if GetNumSkillLines and GetSkillLineInfo then
+        local learned={}
+        for i=1,GetNumSkillLines() do
+            local name,header=GetSkillLineInfo(i)
+            if name and not header then learned[#learned+1]=name end
+        end
+        table.sort(learned); parts[#parts+1]=table.concat(learned,",")
+    end
     local keys={}; for key in pairs(profile.weights) do keys[#keys+1]=key end; table.sort(keys)
     for _,key in ipairs(keys) do parts[#parts+1]=key.."="..profile.weights[key] end
     for _,slot in ipairs(slots) do

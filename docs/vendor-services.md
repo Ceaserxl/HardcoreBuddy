@@ -102,6 +102,14 @@ choice. Existing explicit choices remain unchanged.
 
 ## Auction vendor protection
 
+Ranged upgrade searches include untrained weapon types the character's class can
+learn, rather than matching the currently equipped weapon. Only the ranged query
+disables Blizzard's usable-only filter; class, level and other requirements still
+apply locally. Missing weapon training appears in the result row and tooltip as
+`Train Guns to use` (or the corresponding skill). Only an isolated red weapon-type
+label is relaxed for scoring; unrelated red requirements remain disqualifying.
+Learning a skill invalidates the saved scan signature. Rescan after training.
+
 HardcoreBuddy buyouts are blocked for standard unlimited-stock throwing knives
 and axes, including Heavy Throwing Dagger, and other items observed as purchasable
 with unlimited stock at a friendly merchant. The message names the vendor (or

@@ -28,6 +28,33 @@ local armorSubclasses={[2]={0},[11]={0},[12]={0},[16]={1},[14]={6},[23]={0}}
 local bodySubclasses={0,1,2,3,4}
 local oneHandSubclasses={0,4,7,13,15}
 local rangedSubclasses={2,3,18,19}
+local rangedSkills={[2]="Bows",[3]="Guns",[18]="Crossbows",[19]="Wands",[16]="Thrown"}
+function U:PrepareRanged(item,usable)
+    if item.classID~=2 or not rangedSkills[item.subclassID]
+        or (item.equip~="INVTYPE_RANGED" and item.equip~="INVTYPE_RANGEDRIGHT" and item.equip~="INVTYPE_THROWN") then
+        return usable~=false and item or nil
+    end
+    local skill=(GetItemSubClassInfo and GetItemSubClassInfo(2,item.subclassID)) or rangedSkills[item.subclassID]
+    local trained
+    if GetNumSkillLines and GetSkillLineInfo then
+        trained=false
+        for i=1,GetNumSkillLines() do
+            local name,header=GetSkillLineInfo(i)
+            if not header and name==skill then trained=true; break end
+        end
+    end
+    local missing=trained==false or item.typeRestricted and trained~=true
+    if usable==false and not missing then return end
+    if missing then
+        local copy={}; for key,value in pairs(item) do copy[key]=value end
+        -- Only the red weapon-type label may be relaxed. Level, reputation,
+        -- profession and class restrictions still pass through Allowed below.
+        if copy.typeRestricted and not copy.otherRestricted then copy.restricted=false end
+        copy.trainingNotice="Train "..skill.." to use"
+        return copy
+    end
+    return item
+end
 local weaponSubclasses={
     [13]=oneHandSubclasses,[21]=oneHandSubclasses,[22]=oneHandSubclasses,
     [17]={1,5,6,8,10,20},[15]=rangedSubclasses,[25]={16},[26]=rangedSubclasses,
@@ -91,6 +118,7 @@ function U:TooltipLines(tip,link)
     local item=entry and (self.slot and entry or entry.best)
     if not item or item.link~=link then return end
     local lines={}
+    if item.trainingNotice then lines[#lines+1]={item.trainingNotice,"",Skin.colors.gold} end
     if item.weaponSet then
         lines[#lines+1]={"Complete setup vs equipped: "..change(item),"",changeColor(item)}
         for _,part in ipairs(item.components) do
@@ -195,7 +223,7 @@ function U:Add(item,rows,link,icon,buyout,bid,count)
             local list=self.results[comparison.slot] or {}; self.results[comparison.slot]=list
             local record={key=key,link=link,name=item.name,icon=icon,percent=comparison.percent,
                 score=G.Score(item,self.profile,comparison.slot) or 0,label=comparison.label,
-                buyout=buyout,bid=bid,count=count,auctions=1,zeroBaseline=comparison.zeroBaseline}
+                buyout=buyout,bid=bid,count=count,auctions=1,zeroBaseline=comparison.zeroBaseline,trainingNotice=item.trainingNotice}
             local found
             for i,old in ipairs(list) do
                 if old.key==key then
@@ -213,7 +241,8 @@ end
 function U:ReadAuction(index)
     local scan=self.scan
     local name,icon,count,_,usable,_,_,minimum,increment,buyout,bid=GetAuctionItemInfo("list",index)
-    if usable==false then return true end
+    local search=scan.queue and scan.queue[scan.search]
+    if usable==false and (not search or search.name~="Ranged") then return true end
     local link=GetAuctionItemLink("list",index)
     local function unavailable(stage,reason,item,slot)
         return false,{stage=stage,reason=reason,name=name,link=link,item=item,comparisonSlot=slot,
@@ -232,6 +261,8 @@ function U:ReadAuction(index)
         local item,reason=G:Read(link)
         if reason=="unsupported" then scan.cache[link]=false; return true end
         if not item then return unavailable("item data",reason or "Item reader returned no data") end
+        item=self:PrepareRanged(item,usable)
+        if not item then scan.cache[link]=false; return true end
         if not G.Allowed(item,self.profile) then scan.cache[link]=false; return true end
         if scan.highestArmor and armorSlots[item.equip] and item.subclassID~=scan.highestArmor then
             scan.cache[link]=false; return true
@@ -269,7 +300,7 @@ function U:Tick()
         self.message=string.format("Scanning %s (%d/%d) | page %d | %d auctions checked",search.name,scan.search,#scan.queue,scan.page+1,scan.seen)
         self:Refresh()
         self.sending=true
-        QueryAuctionItems("",math.max(0,self.profile.level-self:LevelRange()),self.profile.level,scan.page,true,nil,false,false,search.filters)
+        QueryAuctionItems("",math.max(0,self.profile.level-self:LevelRange()),self.profile.level,scan.page,search.name~="Ranged",nil,false,false,search.filters)
         self.sending=false
     elseif scan.phase=="waiting" then
         if now()-scan.since>20 then self:Stop("Auction response timed out. Results are partial; scan again.") end
@@ -480,7 +511,8 @@ function U:Refresh()
                 or (entry.total..(entry.total==1 and " option >" or " options >"))) or "0")
             frame.options:SetTextColor(unpack(not self.slot and Skin.colors.gold or Skin.colors.white))
             local detail=""
-            if pair then detail="Off hand: "..row.components[2].name
+            if row and row.trainingNotice then detail=row.trainingNotice
+            elseif pair then detail="Off hand: "..row.components[2].name
             elseif not row then detail=checked and "No upgrade found" or self.scan and "Waiting for this slot" or "Slot not scanned"
             end
             frame.slot:SetText(detail)

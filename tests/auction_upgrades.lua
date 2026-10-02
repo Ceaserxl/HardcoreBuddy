@@ -95,6 +95,26 @@ end
 check(navigationCount==17 and U.weaponButton:IsShown(),"All slots and weapon navigation remain available")
 
 F.reset("HUNTER",40,{31,0,0})
+do
+ local countSkills,skillInfo,subclassInfo=GetNumSkillLines,GetSkillLineInfo,GetItemSubClassInfo
+ GetNumSkillLines=function() return 1 end
+ GetSkillLineInfo=function() return "Bows",false end
+ GetItemSubClassInfo=function(_,id) return ({[2]="Bows",[3]="Guns",[19]="Wands"})[id] end
+ local gun=F.item("INVTYPE_RANGEDRIGHT",{},2,3,{{"Ranged","Gun",rightRed=true},{"(10 damage per second)"}})
+ local raw=G:Read(gun.link)
+ check(raw.restricted and raw.typeRestricted and not raw.otherRestricted,"Native red weapon type is tracked separately")
+ local prepared=U:PrepareRanged(raw,false)
+ check(prepared and prepared.trainingNotice=="Train Guns to use" and not prepared.restricted,"Untrained guns receive a training notice")
+ check(G.Allowed(prepared,{class="HUNTER",level=40}),"Hunter can evaluate a trainable gun")
+ check(not G.Allowed(prepared,{class="MAGE",level=40}),"Class-ineligible ranged types still excluded")
+ raw.otherRestricted=true
+ check(U:PrepareRanged(raw,false).restricted,"Other red requirements are never bypassed")
+ GetNumSkillLines=function() return 2 end
+ GetSkillLineInfo=function(i) return i==1 and "Bows" or "Guns",false end
+ raw.restricted=nil; raw.typeRestricted=nil; raw.otherRestricted=nil
+ check(not U:PrepareRanged(raw,true).trainingNotice,"Trained weapon needs no notice")
+ GetNumSkillLines,GetSkillLineInfo,GetItemSubClassInfo=countSkills,skillInfo,subclassInfo
+end
 local old=F.item("INVTYPE_HEAD",{ITEM_MOD_AGILITY_SHORT=10},4,3)
 F.equip(1,old)
 local good=F.item("INVTYPE_HEAD",{ITEM_MOD_AGILITY_SHORT=15},4,1)
@@ -116,7 +136,10 @@ ready=true; finish()
 check(U.complete and #queries==17,"Scans sixteen slot groups and every server page")
 check(queries[1].filters[1].inventoryType==1 and queries[2].page==1 and queries[3].filters[1].inventoryType==2,
     "Finishes every head page before starting neck, with no broad armor query")
-for _,q in ipairs(queries) do check(q.min==30 and q.max==40 and q.usable and not q.all,"Usable listings within ten levels below the player, no full-dump query") end
+for _,q in ipairs(queries) do
+ local ranged=q.filters and q.filters[1] and q.filters[1].inventoryType==15
+ check(q.min==30 and q.max==40 and q.usable==not ranged and not q.all,"Only ranged queries include untrained weapon skills, within the level window")
+end
 for _,q in ipairs(queries) do
     for _,filter in ipairs(q.filters) do
         check(type(filter.classID)=="number" and type(filter.subClassID)=="number" and type(filter.inventoryType)=="number",
