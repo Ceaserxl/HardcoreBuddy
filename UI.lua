@@ -1214,7 +1214,7 @@ function addon:Layout()
         local labelWidth=math.ceil(f.searchLabel:GetStringWidth())+6
         local rowHeight=math.max(28,math.ceil(f.searchLabel:GetStringHeight())+8)
         local extraWidth=extra and not zonePage and extraButton:GetWidth()+SPACE.columnGap or 0
-        local searchLeft=left+(zonePage and (backRow and 108 or 0) or 108)
+        local searchLeft=left+((zonePage or spellPage) and (backRow and 108 or 0) or 108)
         local rightInset=zonePage and 54 or (spellPage or instancePage) and 52 or 40
         local searchWidth=width-rightInset-searchLeft-labelWidth-8-f.clear:GetWidth()-SPACE.columnGap-extraWidth
         local wrapExtra=extra and not zonePage and searchWidth<80
