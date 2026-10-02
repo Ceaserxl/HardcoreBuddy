@@ -62,8 +62,8 @@ local function locate(text)
  end
 end
 local header,summary,total,foreign=locate("HardcoreBuddy"),locate("Complete setup vs equipped"),locate("Total:"),locate("Other addon section")
-assert(header and summary and total and foreign and header<summary and summary<total and total<foreign,
- "Advisor, setup and total stay together before later addon hooks")
+assert(header and summary and total and foreign and foreign<header and header<summary and summary<total,
+ "Advisor, setup and total stay together after native tooltip construction")
 local count=GameTooltip:NumLines(); item.buyout=120000; G:Add(GameTooltip)
 assert(GameTooltip:NumLines()==count and locate("Other addon section")==foreign,"Refresh preserves other addon lines")
 assert(_G[GameTooltip:GetName().."TextLeft"..total]:GetText():find("12g",1,true),"Auction total updates in the same block")

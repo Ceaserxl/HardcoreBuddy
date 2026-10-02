@@ -62,11 +62,12 @@ local vendorLine=GameTooltip:NumLines()
 bagAdvice(); assert(GameTooltip.hardcoreBuddyAlt)
 local gear=GameTooltip.hardcoreBuddyGear
 local prefix=GameTooltip:GetName()..'TextLeft'
-assert(_G[prefix..gear.altStart]:GetText():find('SurvivorShield.tga',1,true),'Alt title includes shield icon')
-assert(gear.altStart<vendorLine and _G[prefix..vendorLine]:GetText()=='Vendor prices','Alt advice stays before vendor text')
-assert(_G[prefix..(gear.altStart+6)]:GetText()==' ','Alt section ends with a gap')
+local altStart=vendorLine+1
+assert(_G[prefix..altStart]:GetText():find('SurvivorShield.tga',1,true),'Alt title includes shield icon')
+assert(_G[prefix..vendorLine]:GetText()=='Vendor prices','Existing vendor text preserved')
+assert(_G[prefix..(altStart+6)]:GetText()==' ','Alt section ends with a gap')
 G:Add(GameTooltip)
-assert(_G[prefix..gear.altStart]:GetText():find('Alt Advisor',1,true),'Gear refresh preserves Alt section')
+assert(_G[prefix..altStart]:GetText():find('Alt Advisor',1,true),'Gear refresh preserves Alt section')
 local count=GameTooltip:NumLines(); bagAdvice(); assert(GameTooltip:NumLines()==count,'No duplicate Alt section')
 GameTooltip:ClearLines(); GameTooltip:SetHyperlink(candidate.link); GameTooltip:AddLine('Soulbound')
 assert(not Alt:Transferable(GameTooltip,candidate.link)); bagAdvice()
@@ -152,16 +153,17 @@ for _,labels in ipairs({{'Ring 1','Ring 2'},{'Trinket 1','Trinket 2'},{'Main han
  GameTooltip:ClearLines(); hyperlink(GameTooltip,candidate.link)
  local state=GameTooltip.hardcoreBuddyGear
  local prefix=GameTooltip:GetName()..'TextLeft'
- assert(_G[prefix..(state.start+5)]:GetText()==' ' and _G[prefix..(state.start+6)]:GetText()==labels[2],
+ assert(_G[prefix..(state.start+3)]:GetText()==' ' and _G[prefix..(state.start+4)]:GetText()==labels[2],
   'Paired comparisons remain separated without stat losses')
- assert(_G[prefix..(state.start+9)]:GetText()==' ','Final comparison ends with spacing')
+ assert(_G[prefix..(state.start+5)]:GetText()==' ','Final comparison ends with spacing')
 end
 G.Report=report
 GameTooltip:ClearLines(); hyperlink(GameTooltip,candidate.link)
-local state=GameTooltip.hardcoreBuddyGear
-local region=GameTooltip:GetName()..'TextLeft'..state.altStart
-local savedRegion=_G[region]; _G[region]=nil
-bagAdvice(); assert(GameTooltip.hardcoreBuddyAlt,'Unavailable reserved regions safely fall back without a hover error')
-_G[region]=savedRegion
+local before=GameTooltip:NumLines()
+bagAdvice(); assert(GameTooltip.hardcoreBuddyAlt and GameTooltip:NumLines()>before,'Only actual Alt lines are appended')
+for i=1,GameTooltip:NumLines() do
+ local region=_G[GameTooltip:GetName()..'TextLeft'..i]
+ assert(region:IsShown() and region:GetText()~='', 'No hidden or empty reserved tooltip lines')
+end
 print('PASS: stable repeated refresh, independent Alt visibility and synchronous binding-safe native setter hooks.')
 ''')

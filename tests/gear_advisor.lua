@@ -63,6 +63,7 @@ local function nativeTooltip(tip)
                 1,entry.rightRed and 0.1 or 1,entry.rightRed and 0.1 or 1)
         end
         if self.scripts.OnTooltipSetItem then self.scripts.OnTooltipSetItem(self) end
+        if G.tooltips[self] then self.hardcoreBuddyGearPending=nil; G:Add(self) end
     end
     function tip:SetInventoryItem(unit,slot)
         assert(unit=="player")
@@ -360,8 +361,8 @@ local reads=#readLinks
 G:Add(GameTooltip)
 check(GameTooltip:NumLines()==lineCount and #readLinks==reads,"No duplicate rows or repeated scans")
 equipment[10]=scorpid; MOCK.FireAll("PLAYER_EQUIPMENT_CHANGED",10)
-check(GameTooltip:NumLines()==lineCount and GameTooltip.hardcoreBuddyGear.report.rows[1].percent==0,"Visible advice refreshes without new rows")
-check(adviceLine(3):GetText()=="" and adviceLine(4):GetText()=="","Refresh clears obsolete gains and losses")
+check(GameTooltip:NumLines()==lineCount and GameTooltip.hardcoreBuddyGear.report.rows[1].percent~=0,"Structural changes wait for a native rebuild without hiding lines")
+check(adviceLine(3):GetText()=="Stats gained" and adviceLine(4):GetText()=="Stats lost","Existing hover remains structurally stable")
 check(adviceLine(5):GetText()==" ","Refresh preserves comparison spacing when losses disappear")
 A.db.gearAdvisorEnabled=false; G:RefreshTooltips(); check(not GameTooltip:IsShown(),"Disable hides stale visible advice")
 A.db.gearAdvisorEnabled=true

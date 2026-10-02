@@ -606,22 +606,26 @@ function G:Add(tip)
         local title="|TInterface\\AddOns\\HardcoreBuddy\\Media\\SurvivorShield.tga:16:16:0:0|t HardcoreBuddy  |  Gear Advisor"
         -- WoW collapses empty text; a space preserves the native blank line.
         local lines={{" ","",colors.equal},{title,"",colors.gold}}
-        for i=1,2 do
-            local row=report.rows[i]
-            -- Reserve the same fields on refresh; empty text collapses in the
-            -- native tooltip and avoids moving other addons' appended lines.
-            lines[#lines+1]={row and row.label or "",row and row.text or "",colors[row and row.status or "equal"]}
-            lines[#lines+1]={row and row.gains and "Stats gained" or "",row and row.gains or "",colors.up}
-            lines[#lines+1]={row and row.losses and "Stats lost" or "",row and row.losses or "",colors.down}
-            lines[#lines+1]={row and " " or "","",colors.equal}
+        for _,row in ipairs(report.rows) do
+            lines[#lines+1]={row.label,row.text,colors[row.status]}
+            if row.gains then lines[#lines+1]={"Stats gained",row.gains,colors.up} end
+            if row.losses then lines[#lines+1]={"Stats lost",row.losses,colors.down} end
+            lines[#lines+1]={" ","",colors.equal}
         end
         local auctionLines=A.AuctionUpgrades and A.AuctionUpgrades:TooltipLines(tip,link)
-        for _,line in ipairs(auctionLines or {}) do lines[#lines+1]=line end
+        for _,line in ipairs(auctionLines or {}) do
+            if line[1]~="" or line[2]~="" then lines[#lines+1]=line end
+        end
         if auctionLines then lines[#lines+1]={" ","",colors.equal} end
         local state=tip.hardcoreBuddyGear
         local name=tip.GetName and tip:GetName()
         local header=state and name and _G[name.."TextLeft"..(state.start+1)]
         local reuse=state and state.link==link and header and header:GetText()==title
+        -- A structural change waits for the next native tooltip build. Never
+        -- hide spare FontStrings or overwrite lines belonging to other addons.
+        if reuse then
+            if state.lineCount~=#lines then self.busy=false; return end
+        end
         local changed=not reuse
         local start=reuse and state.start or tip:NumLines()+1
         for i,line in ipairs(lines) do
@@ -634,30 +638,14 @@ function G:Add(tip)
                 left:SetText(line[1]); left:SetTextColor(unpack(leftColor)); left:Show()
                 right:SetText(line[2]); right:SetTextColor(unpack(color)); right:SetShown(line[2]~="")
             elseif not reuse then
-                if tip.AddDoubleLine then
-                    -- Native tooltips may skip empty AddDoubleLine calls entirely.
-                    -- Allocate the line first, then collapse unused fields.
-                    tip:AddDoubleLine(line[1]~="" and line[1] or " ",line[2],leftColor[1],leftColor[2],leftColor[3],color[1],color[2],color[3])
-                    local allocated=name and _G[name.."TextLeft"..(start+i-1)]
-                    if line[1]=="" and allocated then allocated:SetText(""); allocated:Hide() end
+                if tip.AddDoubleLine then tip:AddDoubleLine(line[1],line[2],leftColor[1],leftColor[2],leftColor[3],color[1],color[2],color[3])
                 else tip:AddLine(line[1]..(line[2]~="" and ("  "..line[2]) or ""),unpack(color)) end
             end
         end
         local cacheable=true
         for _,row in ipairs(report.rows) do if row.status=="unknown" then cacheable=false end end
-        -- Reserve collapsed lines beside Gear advice before other tooltip hooks
-        -- append vendor text. Alt advice fills these after binding is finalized.
-        local altStart=reuse and state.altStart or start+#lines
-        local altCount=reuse and state.altCount or (A.AltAdvisor and A.AltAdvisor:LineCapacity() or 0)
-        if not reuse then
-            for i=1,altCount do
-                tip:AddDoubleLine(" ","")
-                local left=name and _G[name.."TextLeft"..(altStart+i-1)]
-                if left then left:SetText(""); left:Hide() end
-            end
-        end
         tip.hardcoreBuddyGear={link=link,start=start,revision=self.revision,report=cacheable and report or nil,
-            altStart=altStart,altCount=altCount}
+            lineCount=#lines}
         if changed and tip.Show then tip:Show() end
     end
     self.busy=false
@@ -681,14 +669,26 @@ function G:RegisterTooltip(tip)
     G.tooltips[tip]=true
     if A.AltAdvisor then A.AltAdvisor.RegisterTooltip(tip) end
     if not tip.HasScript or tip:HasScript("OnTooltipSetItem") then
-        tip:HookScript("OnTooltipSetItem",function(frame) G:Add(frame) end)
+        tip:HookScript("OnTooltipSetItem",function(frame) frame.hardcoreBuddyGearPending=true end)
     end
-    tip:HookScript("OnTooltipCleared",function(frame) frame.hardcoreBuddyGear=nil end)
+    if hooksecurefunc then
+        for _,method in ipairs({"SetBagItem","SetInventoryItem","SetHyperlink","SetMerchantItem","SetAuctionItem",
+            "SetAuctionSellItem","SetLootItem","SetQuestItem","SetQuestLogItem","SetTradeSkillItem"}) do
+            if type(tip[method])=="function" then hooksecurefunc(tip,method,function(frame)
+                frame.hardcoreBuddyGearPending=nil; G:Add(frame)
+            end) end
+        end
+    end
+    tip:HookScript("OnUpdate",function(frame)
+        if frame.hardcoreBuddyGearPending then frame.hardcoreBuddyGearPending=nil; G:Add(frame) end
+    end)
+    tip:HookScript("OnTooltipCleared",function(frame) frame.hardcoreBuddyGear=nil; frame.hardcoreBuddyGearPending=nil end)
+    tip:HookScript("OnHide",function(frame) frame.hardcoreBuddyGearPending=nil end)
 end
 G:RegisterTooltip(GameTooltip); G:RegisterTooltip(ItemRefTooltip)
 if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall and Enum and Enum.TooltipDataType then
     TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item,function(tip)
-        if G.tooltips[tip] then G:Add(tip) end
+        if G.tooltips[tip] then tip.hardcoreBuddyGearPending=true end
     end)
 end
 local events=CreateFrame("Frame"); G.events=events

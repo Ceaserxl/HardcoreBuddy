@@ -96,17 +96,6 @@ function Alt:Upgrades(item)
     end)
     return result
 end
-function Alt:LineCapacity()
-    if not A.db or A.db.altAdvisorEnabled==false then return 0 end
-    local count=0
-    local guid=UnitGUID and UnitGUID("player")
-    local realm=GetRealmName and GetRealmName()
-    local faction=UnitFactionGroup and UnitFactionGroup("player")
-    for id,c in pairs(A.db.altEquipment or {}) do
-        if id~=guid and c.schema==1 and c.realm==realm and c.faction==faction then count=count+1 end
-    end
-    return count>0 and 1+count*3 or 0
-end
 function Alt:IsStoredItem(tip,link)
     local location=tip.hardcoreBuddyAltLocation
     if not location then return false end
@@ -137,27 +126,11 @@ function Alt:Add(tip)
             lines[#lines+1]={row.label.." | "..c.profile.name,"",{.65,.65,.65}}
             lines[#lines+1]={" ","",{.65,.65,.65}}
         end
-        local gear=tip.hardcoreBuddyGear
-        local reserved=gear and gear.altStart and (gear.altCount or 0)>=#lines
-        local prefix=tip:GetName()
-        if reserved then
-            for i=1,#lines do
-                if not _G[prefix.."TextLeft"..(gear.altStart+i-1)] or not _G[prefix.."TextRight"..(gear.altStart+i-1)] then
-                    reserved=false; break
-                end
-            end
-        end
-        if not reserved then tip:AddLine(" ") end
-        for i,line in ipairs(lines) do
+        G:Add(tip)
+        if not tip.hardcoreBuddyGear then tip:AddLine(" ") end
+        for _,line in ipairs(lines) do
             local leftColor,rightColor=line[3],line[4] or line[3]
-            if reserved then
-                local left=_G[prefix.."TextLeft"..(gear.altStart+i-1)]
-                local right=_G[prefix.."TextRight"..(gear.altStart+i-1)]
-                left:SetText(line[1]); left:SetTextColor(unpack(leftColor)); left:Show()
-                right:SetText(line[2]); right:SetTextColor(unpack(rightColor)); right:SetShown(line[2]~="")
-            else
-                tip:AddDoubleLine(line[1],line[2],leftColor[1],leftColor[2],leftColor[3],rightColor[1],rightColor[2],rightColor[3])
-            end
+            tip:AddDoubleLine(line[1],line[2],leftColor[1],leftColor[2],leftColor[3],rightColor[1],rightColor[2],rightColor[3])
         end
         tip.hardcoreBuddyAlt=true; tip:Show()
     end)
