@@ -21,7 +21,7 @@ local function cards()
             if not data.itemLayout then
                 local tx,ty=c.title:GetRect(); local _,size=c.title:GetFont()
                 check(near(x,tx) and near(y,ty),"No extra inset before section titles")
-                check(size==(i==1 and not data.supplyTable and 22 or 15),"Shared heading hierarchy")
+                check(size==(i==1 and (not data.supplyTable or data.allSupplyTable) and 22 or 15),"Shared heading hierarchy")
                 if data.note and data.note~="" then
                     local _,ny=c.note:GetRect(); local _,_,_,th=c.title:GetRect()
                     local _,ns=c.note:GetFont()

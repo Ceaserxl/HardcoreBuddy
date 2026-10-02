@@ -184,6 +184,14 @@ local function placeNPCCell(label,text,index,width,y)
     measure(label,text,usable*(npcColumnEnds[index]-npcColumnStarts[index]),12+usable*npcColumnStarts[index],y)
     label:SetWordWrap(false); label:SetHeight(18)
 end
+local supplyStarts={0,0.32,0.60,0.75,0.87}
+local supplyEnds={0.31,0.59,0.74,0.86,1}
+local function placeSupplyCell(label,text,index,width,y,header)
+    local usable=width-24
+    local inset=index==1 and not header and 36 or 0
+    measure(label,text,usable*(supplyEnds[index]-supplyStarts[index])-inset,12+usable*supplyStarts[index]+inset,y)
+    label:SetWordWrap(false); label:SetHeight(18)
+end
 local function renderBlock(frame, block, width)
     frame.block = block; frame:SetWidth(width); frame:Show()
     frame.priority:SetShown(block.supply and block.priority~=nil)
@@ -198,6 +206,7 @@ local function renderBlock(frame, block, width)
     frame.stock:SetJustifyH("LEFT")
     if frame.recommendationName then frame.recommendationName:Hide(); frame.recommendationDetail:Hide() end
     if frame.carryLabel then frame.carryLabel:Hide() end
+    if frame.category then frame.category:Hide() end
     for _,cell in ipairs(frame.npcCells or {}) do cell:Hide() end
     for _,cell in ipairs(frame.talentCells or {}) do cell:Hide() end
     for _,cell in ipairs(frame.spellCells or {}) do cell:Hide() end
@@ -309,6 +318,25 @@ local function renderBlock(frame, block, width)
         if getIcon and block.itemId then local ok,value=pcall(getIcon,block.itemId); if ok then native=value end end
         native=native or (texture and ("Interface\\Icons\\" .. texture)) or "Interface\\Icons\\INV_Misc_QuestionMark"
         if not frame.icon:SetTexture(native) then frame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark") end
+    end
+    if block.supplyColumns then
+        Skin.Paint(frame,"note")
+        frame.meta:Hide(); frame.chevron:Hide(); frame.stockTrack:Hide(); frame.stockFill:Hide()
+        frame.choose:Hide(); frame.count:Hide(); frame.quantity:Hide()
+        for _,edge in ipairs(frame.statusBorder) do edge:Hide() end
+        frame.category=frame.category or font(frame,12,MUTED)
+        frame.category:Show(); frame.priority:Show(); frame.stock:Show()
+        frame.title:SetFont(STANDARD_TEXT_FONT,13,""); frame.title:SetTextColor(unpack(WHITE))
+        frame.body:SetFont(STANDARD_TEXT_FONT,12,""); frame.priority:SetFont(STANDARD_TEXT_FONT,12,"")
+        frame.priority:SetJustifyH("LEFT"); frame.stock:SetJustifyH("LEFT")
+        local stock=block.count==nil and (block.status=="choose" and "Choose rank" or "Unknown")
+            or block.count==0 and "Missing" or ("("..block.count.."/"..(block.target or "?")..")")
+        frame.stock:SetTextColor(unpack(STOCK_COLORS[block.count==0 and "missing" or block.status] or MUTED))
+        for i,cell in ipairs({frame.title,frame.body,frame.category,frame.priority,frame.stock}) do
+            placeSupplyCell(cell,({block.title,block.body or "",block.category or "",block.priority or "",stock})[i],i,width,9)
+        end
+        frame.icon:SetSize(28,28); frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",12,-4)
+        frame:SetHeight(36); return 36
     end
     local x = block.textInset or (icon and 52 or 12) + (block.child and 8 or 0)
     local available, y = width-x-(block.supply and 210 or block.action and 32 or 14), block.plain and 0 or block.supply and 8 or 12
@@ -470,7 +498,7 @@ renderBlocks = function(parent, blocks, width)
             height=math.max(height,pending:GetHeight()); pending:SetHeight(height); frame:SetHeight(height)
             y=y+height+SPACE.sectionGap; pending=nil
         elseif paired and index<#blocks then pending=frame
-        else y=y+height+((block.talentColumns or block.spellColumns) and 1 or (block.supply and not paired or block.npcColumns) and 4 or SPACE.sectionGap) end
+        else y=y+height+((block.talentColumns or block.spellColumns or block.supplyColumns) and 1 or (block.supply and not paired or block.npcColumns) and 4 or SPACE.sectionGap) end
         if block.supply then
             local shade=index%2==0 and 0.075 or 0.045
             frame:SetBackdropColor(shade,shade+0.009,shade+0.014,1)
@@ -480,7 +508,7 @@ renderBlocks = function(parent, blocks, width)
         end
     end
     for index=#blocks+1,#parent.blocks do parent.blocks[index]:Hide() end
-    return math.max(1,y-(blocks[#blocks] and ((blocks[#blocks].talentColumns or blocks[#blocks].spellColumns) and 1 or (blocks[#blocks].supply and not parent.supplyGrid or blocks[#blocks].npcColumns) and 4 or SPACE.sectionGap) or 0))
+    return math.max(1,y-(blocks[#blocks] and ((blocks[#blocks].talentColumns or blocks[#blocks].spellColumns or blocks[#blocks].supplyColumns) and 1 or (blocks[#blocks].supply and not parent.supplyGrid or blocks[#blocks].npcColumns) and 4 or SPACE.sectionGap) or 0))
 end
 local function renderCard(frame, data, width)
     frame:Show(); frame:SetWidth(width)
@@ -490,7 +518,7 @@ local function renderCard(frame, data, width)
     if frame.defaultChoice then frame.defaultChoice:Hide() end
     if frame.itemHeading then frame.itemHeading:Hide() end
     Skin.Paint(frame,"note")
-    local pageTitle=frame.firstCard and not data.supplyTable
+    local pageTitle=frame.firstCard and (not data.supplyTable or data.allSupplyTable)
     Skin.TextStyle(frame.title,pageTitle and "page" or "section")
     Skin.TextStyle(frame.note,"subtitle")
     frame.title:Show(); frame.note:Show()
@@ -537,6 +565,16 @@ local function renderCard(frame, data, width)
     for _,label in ipairs(frame.npcHeaders or {}) do label:Hide() end
     for _,label in ipairs(frame.talentHeaders or {}) do label:Hide() end
     for _,label in ipairs(frame.spellHeaders or {}) do label:Hide() end
+    for _,label in ipairs(frame.supplyHeaders or {}) do label:Hide() end
+    if data.allSupplyTable then
+        frame.supplyHeaders=frame.supplyHeaders or {}
+        for i,text in ipairs({"ITEM","DESCRIPTION","CATEGORY","PRIORITY","STOCK"}) do
+            local label=frame.supplyHeaders[i]
+            if not label then label=font(frame,10,MUTED); frame.supplyHeaders[i]=label end
+            label:Show(); placeSupplyCell(label,text,i,width-12,y,true)
+        end
+        y=y+SPACE.tableHeaderHeight
+    end
     if data.spellTable then
         frame.spellHeaders=frame.spellHeaders or {}
         for i,text in ipairs({"SPELL","RANK","COST","TRAINING"}) do

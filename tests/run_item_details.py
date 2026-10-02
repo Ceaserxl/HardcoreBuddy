@@ -47,7 +47,7 @@ A:Navigate("supplies")
 assert(A.characterDB.targets[item.itemId]==13,"Navigation commits the separate editor")
 assert(not A.window.cards[1].detailQuantity:IsVisible(),"Separate editor hidden on supply list")
 for _,c in ipairs(A.window.cards) do if c:IsShown() then for _,r in ipairs(c.content.blocks) do
-    if r:IsShown() and r.block.supply then assert(r:GetHeight()==56 and not r.quantity:IsShown()) end
+    if r:IsShown() and r.block.supply then assert(r:GetHeight()==(r.block.supplyColumns and 36 or 56) and not r.quantity:IsShown()) end
 end end end
 print("PASS: Item/details columns, compact rows, external quantity editor, borderless Alternatives and detail return paths.")
 ''')

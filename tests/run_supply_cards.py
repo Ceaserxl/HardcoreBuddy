@@ -8,6 +8,7 @@ lua, addon = boot()
 lua.execute('''
 local A=TestAddon
 A:Navigate("supplies")
+A.state.filter="Food & Drink"; A:Refresh(true)
 local function first() return A.window.cards[1].content.blocks[1] end
 local function find(id)
     for _,card in ipairs(A.window.cards) do
