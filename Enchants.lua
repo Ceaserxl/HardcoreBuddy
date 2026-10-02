@@ -194,7 +194,7 @@ function E.Detail(context,action)
     for _,option in ipairs(g.options) do if option~=g.recommendation then
         blocks[#blocks+1]=enchantBlock(g,option,{kind="enchantRecipe",slotId=g.slotId,spellId=option.spellId})
     end end
-    heading("Materials",true,selected and selected.name or "No compatible enchant selected")
+    heading("Materials",true,not selected and "No compatible enchant selected" or nil)
     if selected then
         if selected~=g.recommendation and context.mode~="preview" then
             local b=row("Use this enchant","Track materials for this alternative",{kind="enchantChoose",slotId=g.slotId,spellId=selected.spellId})
@@ -203,15 +203,13 @@ function E.Detail(context,action)
         for _,pair in ipairs(selected.reagents) do
             local m=D.materials[pair[1]]; local inv=context.inventory or {}
             local count=inv.available and inv.counts and (inv.counts[m.itemId] or 0) or nil
-            local b=row(m.name,"Required: "..pair[2],nil,m.icon)
+            local b=row(m.name,nil,nil,m.icon)
             b.itemId=m.itemId; b.supply=true; b.rightColumn=true
-            b.count=count; b.target=pair[2]; b.readOnlyTarget=true
+            b.count=count; b.target=pair[2]; b.readOnlyTarget=true; b.materialCount=true
             b.status=count==nil and "unknown" or count>=pair[2] and "ready" or count==0 and "missing" or "low"
             blocks[#blocks+1]=b
         end
-        local b=row("Requirements","Enchanting "..selected.skill.." | "..selected.tool..
-            "\nFor one application. Materials are consumed; the rod is reusable."..
-            (g.enchantId and g.enchantId>0 and "\nApplying a different enchant replaces the current enhancement." or ""))
+        local b=row("Requirements","Enchanting "..selected.skill)
         b.rightColumn=true; blocks[#blocks+1]=b
     end
     return {title=g.name.." enchants",blocks=blocks,itemLayout=true,fullWidth=true}

@@ -56,6 +56,7 @@ local function supplyRow(record)
     b.title=record.name
     b.body=record.quantityNote or record.item.short
     b.supply=true
+    b.materialCount=record.item.enchantMaterial==true
     b.category=record.category
     b.priority=record.priority
     b.count,b.target,b.targetKey=record.count,record.target,record.targetKey
