@@ -447,13 +447,11 @@ function U:Refresh()
             local pair=row and row.weaponSet and #row.components==2
             frame.item:SetText(row and (pair and row.components[1].name or row.name) or names[entry.slot])
             frame.item:SetTextColor(unpack(row and Skin.colors.white or Skin.colors.muted))
-            local detail=self.setup and entry.label or self.slot and (row and row.owned and "Currently equipped" or "Option "..(self.offset+index))
-                or names[entry.slot]
+            frame.slotName:SetText(self.setup and entry.label or names[self.slot or entry.slot] or "")
+            frame.options:SetText(row and (self.setup and "" or self.slot and tostring(self.offset+index) or tostring(entry.total)) or "0")
+            local detail=""
             if pair then detail="Off hand: "..row.components[2].name
             elseif not row then detail=checked and "No upgrade found" or self.scan and "Waiting for this slot" or "Slot not scanned"
-            elseif not self.slot then
-                local noun=row.weaponSet and "setup" or "upgrade"
-                detail=detail.." | "..entry.total.." "..noun..(entry.total==1 and "" or "s")
             end
             frame.slot:SetText(detail)
             frame.percent:SetText(row and change(row) or "--")
@@ -498,13 +496,19 @@ function U:Layout()
     visibleRows=math.min(16,math.floor((height-top-16)/38))
     for i,row in ipairs(self.rows) do
         row:ClearAllPoints(); row:SetPoint("TOPLEFT",199,-top-(i-1)*38); row:SetWidth(rowWidth)
-        row.item:SetWidth(rowWidth-294); row.slot:SetWidth(rowWidth-294)
-        for _,entry in ipairs({{row.percent,rowWidth-240,0},{row.action,rowWidth-240,-17},
-            {row.cost,rowWidth-132,0},{row.priceKind,rowWidth-102,-17}}) do
+        row.icon:ClearAllPoints(); row.icon:SetPoint("LEFT",86,0)
+        row.item:SetWidth(rowWidth-426); row.slot:SetWidth(rowWidth-426)
+        row.percent:SetWidth(84); row.action:SetWidth(84); row.options:SetWidth(84)
+        row.cost:SetWidth(110); row.priceKind:SetWidth(110)
+        for _,entry in ipairs({{row.slotName,8,-8},{row.item,120,0},{row.slot,120,-17},
+            {row.percent,rowWidth-300,0},{row.options,rowWidth-90,0},{row.action,rowWidth-90,-17},
+            {row.cost,rowWidth-210,0},{row.priceKind,rowWidth-210,-17}}) do
             entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],entry[3])
         end
     end
-    for _,entry in ipairs({{self.itemHeader,247},{self.scoreHeader,width-254},{self.priceHeader,width-136}}) do
+    self.itemHeader:SetWidth(rowWidth-426); self.priceHeader:SetWidth(110)
+    for _,entry in ipairs({{self.slotHeader,207},{self.itemHeader,319},{self.scoreHeader,199+rowWidth-300},
+        {self.priceHeader,199+rowWidth-210},{self.optionsHeader,199+rowWidth-90}}) do
         entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],-top+21)
     end
     self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPRIGHT",0,-top); self.scroll:SetHeight(visibleRows*38-2)
@@ -579,7 +583,9 @@ function U:Attach()
         U.offset=0; U:Refresh()
     end)
     Skin.PlaceBackButton(self.back,panel,60,204,24)
-    self.itemHeader=label(panel,"ITEM / SLOT",252,-117,260,Skin.colors.muted,9)
+    self.slotHeader=label(panel,"SLOT",207,-117,72,Skin.colors.muted,9)
+    self.itemHeader=label(panel,"ITEM",319,-117,180,Skin.colors.muted,9)
+    self.optionsHeader=label(panel,"OPTIONS",710,-117,84,Skin.colors.muted,9)
     self.scoreHeader=label(panel,"SCORE CHANGE",526,-117,95,Skin.colors.muted,9)
     local priceHeader=label(panel,"LISTING PRICE",640,-117,120,Skin.colors.muted,9); priceHeader:SetJustifyH("RIGHT"); self.priceHeader=priceHeader
     self.empty=CreateFrame("Frame",nil,panel); self.empty:SetPoint("TOPLEFT",204,-155); self.empty:SetSize(558,150)
@@ -598,6 +604,8 @@ function U:Attach()
         row.accent=row:CreateTexture(nil,"ARTWORK"); row.accent:SetTexture("Interface\\Buttons\\WHITE8x8")
         row.accent:SetPoint("TOPLEFT",0,-4); row.accent:SetSize(2,28)
         row.slot=label(row,"",48,-17,268,Skin.colors.muted,10)
+        row.slotName=label(row,"",8,-8,72,Skin.colors.muted,10)
+        row.options=label(row,"",510,0,84,Skin.colors.white,11)
         row.icon=row:CreateTexture(nil,"ARTWORK"); row.icon:SetSize(28,28); row.icon:SetPoint("LEFT",9,0)
         row.icon:SetTexCoord(0.07,0.93,0.07,0.93)
         row.item=label(row,"",48,0,268,Skin.colors.white,12)
