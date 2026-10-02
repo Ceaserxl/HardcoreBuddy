@@ -18,6 +18,20 @@ for _,class in ipairs({"DRUID","HUNTER","MAGE","PALADIN","PRIEST","ROGUE","SHAMA
       categoryIndex=categoryIndex+1
       local _,size=card.title:GetFont(); assert(size==15,"All category headings have the same size")
       assert(#card.supplyHeaders==5)
+      if section.title=="Enchants" then
+        assert(not section.headerAction and (not card.headerButton or not card.headerButton:IsShown()),"No Choose enchants button")
+        local expected=A.Enchants.Card(A:GetContext()).blocks
+        assert(#section.blocks==#expected,"All shows enchant slots instead of materials")
+        for i,block in ipairs(section.blocks) do
+          assert(block.title==expected[i].title and block.enchantStatus==expected[i].enchantStatus and block.action.kind=="enchantSlot","Enchant rows match main menu and open slot details")
+        end
+        local _,titleY,_,titleH=card.title:GetRect()
+        local _,headerY=card.supplyHeaders[1]:GetRect()
+        local reference=A.window.cards[1]
+        local _,otherY,_,otherH=reference.title:GetRect()
+        local _,otherHeaderY=reference.supplyHeaders[1]:GetRect()
+        assert(headerY-titleY-titleH==otherHeaderY-otherY-otherH,"Enchants title-to-table spacing matches other sections")
+      end
       local previous
       for i,block in ipairs(section.blocks) do
         total=total+1
@@ -27,10 +41,10 @@ for _,class in ipairs({"DRUID","HUNTER","MAGE","PALADIN","PRIEST","ROGUE","SHAMA
         assert(h==36 and w==card.content:GetWidth(),"All rows use the full table width")
         if previous then assert(y==previous+1,"Continuous table rows have a one-pixel gap") end
         previous=y+h
-        assert(row.category:GetText()==block.category and row.priority:GetText()==block.priority)
+        assert(row.category:GetText()==block.category and row.priority:GetText()==(block.priority or ""))
         assert(not row.quantity:IsShown() and not row.stockTrack:IsShown(),"Quantity editing stays in details")
         for _,edge in ipairs(row.statusBorder) do assert(not edge:IsShown(),"Table rows have no tile outlines") end
-        local wanted=block.count==nil and (block.status=="choose" and "Choose rank" or "Unknown")
+        local wanted=block.enchantRow and block.enchantStatus or block.count==nil and (block.status=="choose" and "Choose rank" or "Unknown")
             or "("..block.count.."/"..(block.target or "?")..")"
         assert(row.stock:GetText()==wanted,"Table preserves supply stock states")
         if block.action and block.action.kind=="item" then clickable=clickable or row end

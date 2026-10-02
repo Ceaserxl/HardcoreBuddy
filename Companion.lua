@@ -411,12 +411,15 @@ function C.Build(context,state)
                 for _,b in ipairs(rows) do
                     if b.category==category then b.supplyColumns=true; group[#group+1]=b end
                 end
+                if category=="Enchants" then
+                    result.total=result.total-#group
+                    group=A.Enchants.Card(context).blocks
+                    for _,b in ipairs(group) do b.supplyColumns=true; b.category=category end
+                    result.total=result.total+#group
+                end
                 local section=card(category,#group==0 and "No matching items in this category." or nil,group)
                 section.supplyTable=true; section.allSupplyTable=true; section.fullWidth=true
                 result.cards[#result.cards+1]=section
-                if category=="Enchants" then
-                    section.headerAction={label="Choose enchants",action={view="supplies",filter="Enchants"}}
-                end
                 if category=="Class" and context.characterClass=="Hunter" and A.HunterTraining then
                     result.cards[#result.cards+1]=A.HunterTraining.Card(context)
                 end

@@ -335,7 +335,7 @@ local function renderBlock(frame, block, width)
         frame.meta:Hide(); frame.chevron:Hide()
         frame:SetHeight(56); return 56
     end
-    if block.enchantRow then
+    if block.enchantRow and not block.supplyColumns then
         Skin.Paint(frame,"row"); frame.chevron:Hide(); frame.meta:Hide()
         frame.stock:SetShown(block.enchantStatus~=""); frame.stock:SetJustifyH("RIGHT")
         local color=STOCK_COLORS[block.enchantTone] or MUTED
@@ -359,9 +359,9 @@ local function renderBlock(frame, block, width)
         frame.title:SetFont(STANDARD_TEXT_FONT,13,""); frame.title:SetTextColor(unpack(WHITE))
         frame.body:SetFont(STANDARD_TEXT_FONT,12,""); frame.priority:SetFont(STANDARD_TEXT_FONT,12,"")
         frame.priority:SetJustifyH("LEFT"); frame.stock:SetJustifyH("LEFT")
-        local stock=block.count==nil and (block.status=="choose" and "Choose rank" or "Unknown")
+        local stock=block.enchantRow and block.enchantStatus or block.count==nil and (block.status=="choose" and "Choose rank" or "Unknown")
             or ("("..block.count.."/"..(block.target or "?")..")")
-        frame.stock:SetTextColor(unpack(STOCK_COLORS[block.count==0 and "missing" or block.status] or MUTED))
+        frame.stock:SetTextColor(unpack(STOCK_COLORS[block.enchantTone or (block.count==0 and "missing" or block.status)] or MUTED))
         for i,cell in ipairs({frame.title,frame.body,frame.category,frame.priority,frame.stock}) do
             placeSupplyCell(cell,({block.title,block.body or "",block.category or "",block.priority or "",stock})[i],i,width,9)
         end
