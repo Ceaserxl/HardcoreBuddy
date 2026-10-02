@@ -706,7 +706,7 @@ local function renderCard(frame, data, width)
     end
     frame.content:ClearAllPoints(); frame.content:SetPoint("TOPLEFT",0,-y); frame.content:SetWidth(width-12)
     frame.content.supplyGrid=data.supplyTable
-    frame.content.gridStart=data.supplyTable and 1 or frame.gridStart
+    frame.content.gridStart=data.gridStart or (data.supplyTable and 1 or frame.gridStart)
     if data.fullWidth then frame.content.gridStart=nil end
     if data.itemLayout then
         -- Each detail model chooses its columns explicitly.
@@ -1066,6 +1066,7 @@ function addon:OpenCurrentInstance()
     self:Refresh(true)
 end
 function addon:Activate(action)
+    if action.kind=="rotationHelperToggle" then self.RotationHelper:SetEnabled(not self.RotationHelper:Enabled()); self:Refresh(); return end
     if action.kind=="eluneMacro" then self.Companion.EluneMacroAction(action.drag); return end
     if action.kind=="questLink" then
         StaticPopupDialogs.HARDCOREBUDDY_QUEST_LINK={
@@ -1175,6 +1176,7 @@ function addon:Refresh(resetScroll)
     if not ok then error(err,0) end
 end
 local FILTER_ICONS={
+    ["Rotation Helper"]="Spell_Frost_FrostBolt02",
     General="Trade_Engineering",["Gear Advisor"]="INV_Chest_Chain",["Auction House"]="INV_Misc_Coin_01",
     ["Death Journal"]="INV_Misc_Book_09",["NPC Alerts"]="Ability_Warrior_BattleShout",
     Gear="INV_Chest_Chain",Talents="Ability_Marksmanship",Map="INV_Misc_Map_01",["Talent Advisor"]="INV_Misc_Book_11",
@@ -1317,7 +1319,7 @@ local function layoutDocument(self)
                 end
                 if addon.state.view=="training" then
                     if self.filter=="Pet Guide" then addon:Navigate("petguide"); return end
-                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Pet Training" or self.filter=="Spells" or self.filter=="Gear" or self.filter=="Talents" or self.filter=="First Aid" or self.filter=="Cooking") and self.filter or nil
+                    addon.state.filter=(self.filter=="Zone Advisor" or self.filter=="Rotation Helper" or self.filter=="Pet Training" or self.filter=="Spells" or self.filter=="Gear" or self.filter=="Talents" or self.filter=="First Aid" or self.filter=="Cooking") and self.filter or nil
                     addon.state.query=nil; addon.state.mapNPCs=nil; addon.state.mapZonePicker=nil; addon.state.mapZone=nil; addon.state.mapCurrent=nil
                     local family=({Engineering="dummy"})[self.filter]
                     if family then addon:Activate({kind="profession",family=family}); return end

@@ -48,6 +48,8 @@ jobs:
         run: python tests/run_talent_advisor.py
       - name: Verify retired rotation cleanup
         run: python tests/run_rotation_removed.py
+      - name: Test shared rotation engine and Mage assistant
+        run: python tests/run_rotation_helper.py
       - name: Test essential purchasing, crafting and supply changes
         run: |
           python tests/run_auction_essentials.py

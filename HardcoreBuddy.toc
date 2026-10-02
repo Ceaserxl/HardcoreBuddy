@@ -63,6 +63,12 @@ CustomBuilds.lua
 CustomBuildsUI.lua
 CustomBuildsSharing.lua
 TalentRanks.lua
+RotationHelper\Engine.lua
+RotationHelper\Mage.lua
+RotationHelper\Runtime.lua
+RotationHelper\Supplies.lua
+RotationHelper\Glow.lua
+RotationHelper\UI.lua
 MapAdvisor.lua
 MapSettings.lua
 MapNPCViewer.lua

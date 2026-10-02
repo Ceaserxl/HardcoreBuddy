@@ -19,6 +19,12 @@ All nine Classic Era classes are included; What's Training? is not required.
 Hunter pet abilities include trainer ranks and taming sources. Warlock demon
 grimoires have separate sections, with the matching demon listed for each book.
 
+**Companion > Rotation Helper** enables a Mage assistant for solo Hardcore
+leveling and conservative group support. A gold Blizzard-style glow identifies
+one stable next attack; separate colors show defensive, offensive and preparation
+options. Uses learned ranks, talents and spell macros. Disabled by default, with
+no automatic casting or combat logging. See [rules and validation](docs/rotation-helper.md).
+
 ## Settings
 
 Open the **Settings** tab or use `/hcb settings`. The sidebar groups General,

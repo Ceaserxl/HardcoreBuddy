@@ -1,4 +1,4 @@
-"""Retired rotation code stays unloaded and its saved traces are discarded."""
+"""Retired prototype stays unloaded; its saved traces cannot enable the new helper."""
 from pathlib import Path
 import sys
 
@@ -38,5 +38,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from package_release import manifest
 
 _, files = manifest()
-assert not any("rotation" in name.lower() or name == "ConsumableBuffs.lua" for name in files)
-print("PASS: rotation removal, saved-trace cleanup, navigation and shipping manifest")
+assert "RotationHelper/Engine.lua" in files
+assert not any(name.startswith("Rotation/") or name in ("RotationAdvisorUI.lua", "ConsumableBuffs.lua") for name in files)
+print("PASS: legacy rotation cleanup and fresh helper shipping manifest")
