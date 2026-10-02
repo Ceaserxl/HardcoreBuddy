@@ -88,7 +88,7 @@ function S:Create(parent)
     self.pages={}
     for _,name in ipairs({"General","Gear Advisor","Talent Advisor","Auction House","Stat Weights","NPC Alerts","Debug"}) do
         local page=CreateFrame("Frame",nil,content); page:SetAllPoints(content); page:Hide(); self.pages[name]=page
-        label(page,name,22,0,0,700):SetTextColor(unpack(Skin.colors.gold))
+        page.title=label(page,name,22,0,0,700); page.title:SetTextColor(unpack(Skin.colors.gold))
     end
     local general=self.pages.General
     label(general,"Window, access and field kit notifications.",12,0,34,700)
@@ -109,13 +109,14 @@ function S:Create(parent)
     npc.contentHeight=526
 
     local gear=self.pages["Gear Advisor"]
-    gear.toggle=button(gear,"",18,function() A.GearAdvisor:SetEnabled(not A.GearAdvisor:IsEnabled()) end,200)
-    gear.toggle:ClearAllPoints(); gear.toggle:SetPoint("TOPLEFT",520,-18)
+    gear.toggle=button(gear,"",0,function() A.GearAdvisor:SetEnabled(not A.GearAdvisor:IsEnabled()) end,200)
+    gear.toggle:ClearAllPoints(); gear.toggle:SetPoint("TOPRIGHT",-12,0)
+    gear.toggle:SetHeight(28); gear.toggle.label:SetHeight(28); gear.toggle.label:SetJustifyH("CENTER")
     gear.profile=label(gear,"",12,0,34,700)
-    label(gear,"Choose how upgrades are shown and scored. Scoring follows your Talent Advisor build and compares all usable armor types by stats.",12,0,58,700)
-    local display=Skin.Section(gear,"Display & notifications",102,172,1)
-    local equip=Skin.Section(gear,"Automatic equipment",102,172,2)
-    local scoring=Skin.Section(gear,"Scoring weights",286,84)
+    gear.description=label(gear,"Choose how upgrades are shown and scored. Scoring follows your Talent Advisor build and compares all usable armor types by stats.",12,0,54,700)
+    local display=Skin.Section(gear,"Display & notifications",96,172,1)
+    local equip=Skin.Section(gear,"Automatic equipment",96,172,2)
+    local scoring=Skin.Section(gear,"Scoring weights",280,84)
     gear.enabled=check(display,"Show gear advice in item tooltips",46,function() return A.db.gearAdvisorEnabled~=false end,function(value)
         A.db.gearAdvisorEnabled=value; A.GearAdvisor:RefreshTooltips()
     end)
@@ -132,7 +133,7 @@ function S:Create(parent)
     label(equip,"Waits until you are out of combat. Equipped quest items, including off-hand items, stay under your control.",12,20,90,300)
     gear.openWeights=button(scoring,"Stat Weights",42,function() self:OpenGearPage("Stat Weights") end)
     label(scoring,"Adjust individual stats or restore your build's defaults.",12,320,46,370)
-    gear.contentHeight=382
+    gear.contentHeight=376
     A.DebugDump:Create(self.pages.Debug)
     local weightsPage=self.pages["Stat Weights"]
     weightsPage.profile=label(weightsPage,"",12,0,34,700)
@@ -181,21 +182,22 @@ function S:Create(parent)
     Skin.SectionBackdrop(weightsPage,132,weightsPage.contentHeight-144)
 
     local talent=self.pages["Talent Advisor"]
-    talent.toggle=button(talent,"",18,function() A.TalentAdvisor:SetEnabled(not A.TalentAdvisor:IsEnabled()) end,200)
-    talent.toggle:ClearAllPoints(); talent.toggle:SetPoint("TOPLEFT",520,-18)
+    talent.toggle=button(talent,"",0,function() A.TalentAdvisor:SetEnabled(not A.TalentAdvisor:IsEnabled()) end,200)
+    talent.toggle:ClearAllPoints(); talent.toggle:SetPoint("TOPRIGHT",-12,0)
+    talent.toggle:SetHeight(28); talent.toggle.label:SetHeight(28); talent.toggle.label:SetJustifyH("CENTER")
     talent.context=label(talent,"",12,0,34,700)
-    label(talent,"Choose your talent path here. Its scoring profile also controls gear advice, auction upgrades and item markers. Review your path before enabling automatic application.",12,0,60,700)
+    talent.description=label(talent,"Choose your talent path here. Its scoring profile also controls gear advice, auction upgrades and item markers. Review your path before enabling automatic application.",12,0,54,700)
     talent.builds={}
     local maxBuilds=0
     for _,builds in pairs(A.Data.AdvisorBuilds) do maxBuilds=math.max(maxBuilds,#builds) end
-    talent.spending=Skin.Section(talent,"Apply talent points",112,124)
+    talent.spending=Skin.Section(talent,"Apply talent points",100,124)
     talent.apply=button(talent.spending,"Apply unused points",42,function() A.TalentAdvisor:ApplyUnused(false) end,280)
     talent.auto=check(talent.spending,"Automatically apply unused points",84,function() return A.characterDB.autoApplyTalents==true end,function(value)
         A.characterDB.autoApplyTalents=value
         if value then A.TalentAdvisor:ApplyUnused(true) else A.TalentAdvisor.applying=nil end
     end)
     label(talent.spending,"Uses your selected path. Stops if your learned talents do not match. Points cannot be undone without a respec.",12,340,42,350)
-    talent.paths=Skin.Section(talent,"Talent paths",248,48+(maxBuilds+1)*46)
+    talent.paths=Skin.Section(talent,"Talent paths",236,48+(maxBuilds+1)*46)
     for i=1,maxBuilds+1 do
         local b=button(talent.paths,"",42+(i-1)*46,function(self)
             A.TalentAdvisor:Activate({command=self.buildID and "build" or "defaultBuild",id=self.buildID,class=self.class})
@@ -203,7 +205,7 @@ function S:Create(parent)
         b:SetHeight(40); b.label:SetHeight(40); b.label:SetFont(STANDARD_TEXT_FONT,12,"")
         talent.builds[i]=b
     end
-    talent.contentHeight=308+(maxBuilds+1)*46
+    talent.contentHeight=296+(maxBuilds+1)*46
 
     local auction=self.pages["Auction House"]
     label(auction,"Filters and saved scans for the auction house Upgrades tab.",12,0,34,700)
@@ -244,6 +246,11 @@ function S:Layout(parent,left,top,width,height,section,visible)
     self.content:SetScale(scale); self.content:SetSize(contentWidth,math.max(contentHeight,height/scale))
     Skin.Paint(self.content,"note")
     for _,page in pairs(self.pages) do Skin.LayoutSections(page,contentWidth) end
+    for _,name in ipairs({"Gear Advisor","Talent Advisor"}) do
+        local page=self.pages[name]
+        page.title:SetWidth(contentWidth-236)
+        page.description:SetWidth(contentWidth-12)
+    end
     for name,page in pairs(self.pages) do page:SetShown(name==pageName) end
     local general=self.pages.General; general.minimap:Sync(); general.kit:Sync()
     local gear=self.pages["Gear Advisor"]; gear.enabled:Sync(); gear.markers:Sync(); gear.notify:Sync(); gear.autoEquip:Sync()
@@ -283,7 +290,7 @@ function S:Layout(parent,left,top,width,height,section,visible)
         Skin.ButtonState(b,b.selected,nil,false)
     end
     talent.paths:SetHeight(48+(#builds+1)*46)
-    talent.contentHeight=308+(#builds+1)*46
+    talent.contentHeight=296+(#builds+1)*46
     if pageName=="Talent Advisor" then self.content:SetHeight(math.max(talent.contentHeight,height/scale)) end
     local auction=self.pages["Auction House"]; auction.armor:Sync()
     local armor=profile and ({"Cloth","Leather","Mail","Plate"})[A.GearAdvisor.HighestArmorSubclass(profile)] or "..."
