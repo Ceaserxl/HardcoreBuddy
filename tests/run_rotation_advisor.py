@@ -168,9 +168,22 @@ check(R:SpellState(R.spells.frostbolt,"target").ready,'Learned filler supplies G
 ready[837]={startTime=99,duration=8,isEnabled=true}; ready[61304]={startTime=100,duration=1.5,isEnabled=true}
 check(not R:SpellState(R.spells.frostbolt,'target').ready,'Long intrinsic cooldown remains blocked during GCD')
 ready[837]={startTime=92.5,duration=8,isEnabled=true}
-check(not R:SpellState(R.spells.frostbolt,'target').ready,'Real cooldown remains blocked even when it ends before the GCD')
+check(R:SpellState(R.spells.frostbolt,'target').ready,'Long cooldown previews its final half-second even during GCD')
 ready[837]={startTime=92.01,duration=8,isEnabled=true}
-check(not R:SpellState(R.spells.frostbolt,'target').ready,'Real cooldown is not highlighted early in its final milliseconds')
+check(R:SpellState(R.spells.frostbolt,'target').ready,'Long cooldown stays eligible in its final milliseconds')
+ready[61304]=nil
+ready[837]={startTime=93.01,duration=8,isEnabled=true}
+check(not R:SpellState(R.spells.frostbolt,'target').ready,'More than one second remaining stays blocked without an active GCD')
+ready[837].startTime=93
+check(R:SpellState(R.spells.frostbolt,'target').ready,'Exactly one second remaining starts the preview without an active GCD')
+ready[837].isEnabled=false
+check(not R:SpellState(R.spells.frostbolt,'target').ready,'Disabled spell cannot preview its final second')
+ready[837]=nil; ready[2136]={startTime=99.5,duration=1,isEnabled=true}
+check(not R:SpellState(R.spells.fireblast,'target').ready,'Non-GCD cooldown shorter than the class GCD receives no early preview')
+local previewClass=R.class; R.class='ROGUE'
+ready[2136]={startTime=99.7,duration=1.3,isEnabled=true}
+check(R:SpellState(R.spells.fireblast,'target').ready,'Rogue uses its one-second GCD when evaluating a longer cooldown')
+R.class=previewClass; ready[2136]=nil
 ready[837]={startTime=99.9,duration=5,isEnabled=true}; ready[61304]=nil
 check(not R:SpellState(R.spells.frostbolt,'target').ready,'Long school lockout cannot be used as fallback GCD')
 ready[837]={startTime=100,duration=1,isEnabled=true}; ready[61304]={startTime=100,duration=1,isEnabled=true}
@@ -469,8 +482,17 @@ range[1752]=false; range[2764]=true; units.target.x=18; action.action=4; R:Updat
 check(R.current.id==2764 and R.optional and glow:IsShown() and glow.style=='optional','Fleeing enemy in throwing range restores blue Throw advice')
 ready[2764]={startTime=now,duration=3,isEnabled=true}; R:Update()
 check(not R.current and not glow:IsShown(),'Throw on an actual cooldown is not highlighted against a fleeing enemy')
+ready[2764].startTime=now-1.99; R:Update()
+check(not R.current and not glow:IsShown(),'Throw stays dark just outside the final-second preview')
+ready[2764].startTime=now-2; R:Update()
+check(R.current.id==2764 and glow:IsShown() and glow.style=='optional','Throw gets its blue preview exactly one second before cooldown completion')
+local previewStarts=glow.ProcStartAnim.plays
+range[2764]=false; R:Update()
+check(not R.current and not glow:IsShown(),'Early cooldown preview still requires actual spell range')
+range[2764]=true; R:Update(); previewStarts=glow.ProcStartAnim.plays
 ready[2764]=nil; R:Update()
 check(R.current.id==2764 and glow:IsShown(),'Another Throw is suggested when its actual cooldown expires')
+check(glow.ProcStartAnim.plays==previewStarts,'Cooldown completion does not restart the early highlight')
 combat=false; targetCombat=false
 equippedRanged=nil; R:Update(); check(not R.current and not glow:IsShown(),'Removing ranged weapon clears the optional highlight')
 equippedRanged=33333; R:Update(); check(not R.current,'A gun cannot produce a Throw suggestion')

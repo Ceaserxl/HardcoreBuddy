@@ -196,8 +196,11 @@ function R:SpellState(spell,unit)
     end
     local onGCD=activeGCD() and type(start)=="number" and type(duration)=="number"
         and math.abs(start-gcdStart)<.05 and duration<=gcdDuration+.05
+    local gcdLength=activeGCD() and gcdDuration or (self.class=="ROGUE" and 1 or 1.5)
+    -- Preview the next action during the final second of a longer cooldown.
+    -- GCD-only spells remain eligible throughout the global cooldown.
     local ready=enabled~=false and type(start)=="number" and type(duration)=="number"
-        and (start+duration<=now or onGCD)
+        and (start+duration<=now or onGCD or duration>gcdLength and start+duration-now<=1)
     local range
     if unit then
         range=spellRange(spell,unit)
