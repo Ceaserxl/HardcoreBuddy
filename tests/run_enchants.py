@@ -111,6 +111,7 @@ ctx.mode="live";ctx.level=60;ctx.characterClass="Mage"
 check(not E.Compatible({slot="Bracer",gearLevel=35},{status="checked",kind="Bracer",itemLevel=34}),"Minimum item level gate")
 MOCK.class="MAGE";MOCK.level=60;A.db.profile.mode="live";A:Navigate("supplies"); A.state.filter="Enchants"; A:Refresh()
 check(A.document.cards[1].title=="Enchants","Enchants root")
+for _,block in ipairs(A.document.cards[1].blocks) do check(block.action.slotId~=17,"Main enchants menu excludes off hand") end
 check(#A.document.cards==1,"Kits integrated in comparison rows, no duplicate kit section")
 local action=A.document.cards[1].blocks[3].action; A:Activate(action)
 check(A:CanGoBack() and A.document.cards[1].title=="Wrists enchants","Slot detail and Back")

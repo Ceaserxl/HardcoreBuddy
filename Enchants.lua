@@ -195,7 +195,7 @@ function E.Card(context)
         local b=enchantBlock(g,shown,{kind="enchantSlot",slotId=g.slotId})
         if b.enchantStatus=="Missing" and g.recommendation then b.enchantStatus="Recommended"
         elseif alternative then b.enchantStatus="Alternative" end
-        blocks[#blocks+1]=b
+        if g.slotId~=17 then blocks[#blocks+1]=b end
     end
     return {title="Enchants",note="Class and level recommendations. Choose a slot for alternatives and materials.",blocks=blocks,supplyTable=true}
 end
