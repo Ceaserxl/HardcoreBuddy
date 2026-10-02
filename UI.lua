@@ -303,7 +303,7 @@ local function renderBlock(frame, block, width)
         end
         frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPLEFT",width-86,-8)
     end
-    y=block.supply and 46 or (math.max(block.action and 40 or icon and 42 or 0, y)+9)
+    y=block.supply and 46 or (math.max(block.action and 40 or icon and 42 or 0, y)+(block.plain and -3 or 9))
     frame:SetHeight(y)
     frame.icon:ClearAllPoints()
     if block.supply then
@@ -483,7 +483,7 @@ local function renderCard(frame, data, width)
             row.supplyTile=false; row:ClearAllPoints()
             row:SetPoint("TOPLEFT",details and leftWidth+16 or 0,-(details and rightHeight or leftHeight))
             local height=renderBlock(row,block,details and rightWidth or leftWidth)
-            if details then rightHeight=rightHeight+height+12 else leftHeight=leftHeight+height+12 end
+            if details then rightHeight=rightHeight+height+12 else leftHeight=leftHeight+height+(block.plain and 6 or 12) end
             if i==1 and data.quantityRecord then
                 if not frame.detailQuantity then frame.detailQuantity=newBlock(addon.window) end
                 local editor=frame.detailQuantity
