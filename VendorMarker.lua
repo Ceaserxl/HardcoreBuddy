@@ -1,6 +1,7 @@
 -- One selected supply vendor, independent of Blizzard guard POIs and other addons.
 local _,A=...
 local M={}; A.VendorMarker=M
+local MARKER_SIZE=14
 local function world(map,x,y)
     if not C_Map or not C_Map.GetWorldPosFromMapPos or not CreateVector2D then return end
     return C_Map.GetWorldPosFromMapPos(map,CreateVector2D(x,y))
@@ -13,7 +14,7 @@ function M:Clear()
 end
 function M:Pin(parent)
     local pin=CreateFrame("Button",nil,parent)
-    pin:SetSize(20,20); pin:SetFrameLevel(parent:GetFrameLevel()+30)
+    pin:SetSize(MARKER_SIZE,MARKER_SIZE); pin:SetFrameLevel(parent:GetFrameLevel()+30)
     pin:RegisterForClicks("RightButtonUp")
     local icon=pin:CreateTexture(nil,"OVERLAY"); icon:SetAllPoints()
     local coords=C_Minimap and C_Minimap.GetPOITextureCoords or GetPOITextureCoords
@@ -48,7 +49,7 @@ function M:Update()
         local pin=self.mapPin; pin:SetParent(canvas)
         pin:SetFrameLevel(math.max(2100,canvas:GetFrameLevel()+30))
         local scale=map.GetCanvasScale and map:GetCanvasScale() or 1
-        pin:SetSize(20/math.max(.1,scale),20/math.max(.1,scale))
+        pin:SetSize(MARKER_SIZE/math.max(.1,scale),MARKER_SIZE/math.max(.1,scale))
         pin:ClearAllPoints(); pin:SetPoint("CENTER",canvas,"TOPLEFT",t.x*canvas:GetWidth(),-t.y*canvas:GetHeight()); pin:Show()
     elseif self.mapPin then self.mapPin:Hide() end
     if not Minimap or not C_Map or not C_Map.GetBestMapForUnit or not C_Map.GetPlayerMapPosition then return end

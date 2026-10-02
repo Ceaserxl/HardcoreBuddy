@@ -5,9 +5,14 @@ item to mark its vendor on the world map and minimap, and target that exact
 vendor name within WoW's targeting range. The panel stays open. Right-click
 either marker to clear it; selecting another item replaces the marker. The Review
 supplies button still opens Essentials. Target buttons hide during combat.
-Both markers use Blizzard's red guard-destination flag. They clear automatically
+Both markers use Blizzard's red guard-destination flag at 14px. They clear automatically
 within five yards of the marked coordinates. Arrival uses the recorded location;
 roaming vendors are not tracked live.
+
+Classic's [GossipInfo API](https://github.com/Gethe/wow-ui-source/blob/classic/Interface/AddOns/Blizzard_APIDocumentationGenerated/GossipInfoDocumentation.lua)
+provides `GetPoiForUiMapID` and `GetPoiInfo`, but no setter for custom guard
+destinations. HCB therefore keeps its own map/minimap pins; it does not replace
+Blizzard's gossip provider or alter actual guard directions.
 
 The local catalogue contains 335 vendors for 96 of the 194 supply item IDs
 examined. Relationships, names, factions and coordinates were extracted from
