@@ -33,7 +33,11 @@ local ix=card.content.blocks[1].title:GetRect()
 local backX=A.window.back:GetRect()
 assert(hx==backX and ox==ix,"Heading aligns with Back; item text retains consistent padding")
 assert(card.content.blocks[1]:GetRect()==backX and option:GetRect()==backX)
-assert(card.detailQuantity.title:GetRect()==backX and card.defaultChoice:GetRect()==backX)
+local qx,qy,qw=card.detailQuantity:GetRect()
+local bx,by,bw=card.defaultChoice:GetRect()
+local px,py=A.window.priorityChoice:GetRect()
+assert(qy==by and by==py and qx+qw+8==bx and bx+bw+8==px,
+    "Keep on hand and default button sit directly left of Priority")
 for _,r in ipairs(card.content.blocks) do if r:IsShown() then
     if r.block.title=="Next" then assert(r.title:GetRect()==backX) end
     if r.block.fields then

@@ -186,8 +186,8 @@ local function renderBlock(frame, block, width)
         measure(frame.title,"Keep on hand",110,0,8)
         frame.quantity.targetKey=block.targetKey
         if not frame.quantity:HasFocus() then frame.quantity:SetText(tostring(block.target or "")) end
-        frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",120,-2); frame.quantity:SetSize(48,28)
-        frame:SetHeight(34); return 34
+        frame.quantity:ClearAllPoints(); frame.quantity:SetPoint("TOPLEFT",120,0); frame.quantity:SetSize(48,28)
+        frame:SetHeight(28); return 28
     end
     if block.npcColumns then
         frame.title:Hide(); frame.body:Hide(); frame.meta:Hide()
@@ -485,22 +485,24 @@ local function renderCard(frame, data, width)
             local height=renderBlock(row,block,details and rightWidth or leftWidth)
             if details then rightHeight=rightHeight+height+12 else leftHeight=leftHeight+height+12 end
             if i==1 and data.quantityRecord then
-                if not frame.detailQuantity then frame.detailQuantity=newBlock(frame.content) end
+                if not frame.detailQuantity then frame.detailQuantity=newBlock(addon.window) end
                 local editor=frame.detailQuantity
-                editor:ClearAllPoints(); editor:SetPoint("TOPLEFT",0,-leftHeight)
-                leftHeight=leftHeight+renderBlock(editor,data.quantityRecord,leftWidth)+12
+                renderBlock(editor,data.quantityRecord,168)
             end
             if i==1 and data.defaultItem then
                 if not frame.defaultChoice then
-                    frame.defaultChoice=button(frame.content,"",150,function(self)
+                    frame.defaultChoice=button(addon.window,"",130,function(self)
                         addon:Activate({kind="supplyDefault",item=self.item})
                     end)
                 end
                 local choice=frame.defaultChoice
                 choice.item=data.defaultItem; choice.label:SetText(data.isDefault and "Default item" or "Set as default")
                 choice:SetEnabled(not data.isDefault); choice:Show(); choice:ClearAllPoints()
-                choice:SetPoint("TOPLEFT",0,-leftHeight)
-                leftHeight=leftHeight+choice:GetHeight()+12
+                choice:SetPoint("TOPRIGHT",addon.window.priorityChoice,"TOPLEFT",-8,0)
+            end
+            if i==1 and data.quantityRecord then
+                frame.detailQuantity:ClearAllPoints()
+                frame.detailQuantity:SetPoint("TOPRIGHT",data.defaultItem and frame.defaultChoice or addon.window.priorityChoice,"TOPLEFT",-8,0)
             end
         end
         for i=#data.blocks+1,#frame.content.blocks do frame.content.blocks[i]:Hide() end
@@ -826,6 +828,13 @@ local FILTER_ICONS={
 function addon:Layout()
     local f,doc=self.window,self.document
     if not f or not doc then return end
+    for i,card in ipairs(f.cards or {}) do
+        local data=doc.cards[i]
+        if card.detailQuantity and not (data and data.quantityRecord) then
+            card.detailQuantity.quantity:ClearFocus(); card.detailQuantity:Hide()
+        end
+        if card.defaultChoice and not (data and data.defaultItem) then card.defaultChoice:Hide() end
+    end
     local context,width,height=doc.context,f:GetWidth(),f:GetHeight()
     local compact=width<740 or height<500
     local short=height<500
@@ -991,17 +1000,23 @@ function addon:Layout()
         for _,item in ipairs(self.Data.Items.items) do if item.itemId==id then priorityItem=item; break end end
     end
     f.priorityChoice:SetShown(priorityItem and true or false)
+    local toolbarWrap=false
     if priorityItem then
         f.priorityChoice.item=priorityItem
         f.priorityChoice.label:SetText("Priority: "..self.Supplies.Priority(context,priorityItem))
         local inset=doc.cards[1] and doc.cards[1].itemLayout and 12 or 0
-        f.priorityChoice:ClearAllPoints(); f.priorityChoice:SetPoint("TOPRIGHT",-40-inset,-y)
+        local data=doc.cards[1]
+        local controlsWidth=190+(data and data.quantityRecord and 176 or 0)+(data and data.defaultItem and 138 or 0)
+        local leftControls=customDetail and 230 or backRow and 104 or 0
+        toolbarWrap=bodyWidth-inset<controlsWidth+leftControls
+        f.priorityChoice:ClearAllPoints(); f.priorityChoice:SetPoint("TOPRIGHT",-40-inset,-y-(toolbarWrap and 34 or 0))
     end
     f.userRemove:SetShown(customDetail and true or false)
     if customDetail then
         f.userRemove:ClearAllPoints(); f.userRemove:SetPoint("TOPLEFT",left+108,-y)
     end
     if backRow or priorityItem or customDetail then y=y+34 end
+    if toolbarWrap then y=y+34 end
     local userPage=doc.view=="supplies" and self.state.filter=="User" and not doc.isDetail
     f.userEntry:SetShown(userPage)
     if userPage then

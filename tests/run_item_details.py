@@ -26,7 +26,7 @@ local x,y,w,h=itemRow:GetRect(); local dx,dy=details:GetRect()
 assert(h==56 and dx>x+w and dy==y,"Item and details share a top edge in separate columns")
 assert(not itemRow.quantity:IsShown() and card.detailQuantity:IsShown())
 local ex,ey,ew,eh=card.detailQuantity:GetRect()
-assert(ex==x and ey>y+h,"Quantity control is outside and below the item border")
+assert(ey+eh<y,"Quantity control is above the item border")
 local alternativeHeader,alternative
 for _,r in ipairs(rows) do if r:IsShown() then
     if r.block.title=="Alternatives" then alternativeHeader=r end
