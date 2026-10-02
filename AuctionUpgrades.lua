@@ -493,22 +493,22 @@ function U:Layout()
     local height=AuctionFrame:GetHeight()-47
     self.panel:SetSize(width,height)
     self.title:SetWidth(width-380); self.subtitle:SetWidth(390)
-    local top=(self.slot or self.weaponsOnly) and 118 or 84
-    local rowWidth=width-232
+    local top=(self.slot or self.weaponsOnly) and 116 or 82
+    local rowWidth=width-229
     visibleRows=math.min(16,math.floor((height-top-16)/38))
     for i,row in ipairs(self.rows) do
-        row:ClearAllPoints(); row:SetPoint("TOPLEFT",204,-top-(i-1)*38); row:SetWidth(rowWidth)
+        row:ClearAllPoints(); row:SetPoint("TOPLEFT",202,-top-(i-1)*38); row:SetWidth(rowWidth)
         row.item:SetWidth(rowWidth-294); row.slot:SetWidth(rowWidth-294)
         for _,entry in ipairs({{row.percent,rowWidth-240,0},{row.action,rowWidth-240,-17},
             {row.cost,rowWidth-132,0},{row.priceKind,rowWidth-102,-17}}) do
             entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],entry[3])
         end
     end
-    for _,entry in ipairs({{self.itemHeader,252},{self.scoreHeader,width-268},{self.priceHeader,width-150}}) do
+    for _,entry in ipairs({{self.itemHeader,250},{self.scoreHeader,width-267},{self.priceHeader,width-149}}) do
         entry[1]:ClearAllPoints(); entry[1]:SetPoint("TOPLEFT",entry[2],-top+21)
     end
-    self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPRIGHT",-14,-top); self.scroll:SetHeight(visibleRows*38-2)
-    self.empty:ClearAllPoints(); self.empty:SetPoint("TOPLEFT",204,-top); self.empty:SetWidth(rowWidth)
+    self.scroll:ClearAllPoints(); self.scroll:SetPoint("TOPRIGHT",-13,-top); self.scroll:SetHeight(visibleRows*38-2)
+    self.empty:ClearAllPoints(); self.empty:SetPoint("TOPLEFT",202,-top); self.empty:SetWidth(rowWidth)
     self.divider:SetWidth(width-28)
     for _,texture in ipairs({self.progressTrack,self.progressFill}) do
         texture:ClearAllPoints(); texture:SetPoint("TOPLEFT",14,-54)
