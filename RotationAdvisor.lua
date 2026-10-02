@@ -208,6 +208,50 @@ function R:SpellState(spell,unit)
     return {id=spell.id,name=spell.name,icon=spell.icon,rank=spell.rank,ready=not not ready,usable=usable==true or usable==1,
         lowPower=not not lowPower,range=range,requiresRange=unit~=nil}
 end
+function R:ApproachingMelee(s)
+    local guid=UnitGUID and UnitGUID("target")
+    if s.class~="ROGUE" or not s.validTarget or s.targetPlayer or s.controlled or s.dead or s.mounted
+        or s.targetClose~=false or not guid then self.approach=nil; return false end
+    local now=s.time
+    local previous=self.approach
+    if previous and previous.guid==guid and now>=previous.time and now-previous.time<.05 then return previous.preview end
+    local sample={guid=guid,time=now,preview=false,throwRange=s.spells.throw and s.spells.throw.range}
+    if UnitPosition then
+        sample.px,sample.py,sample.pz,sample.map=UnitPosition("player")
+        sample.x,sample.y,sample.z,sample.targetMap=UnitPosition("target")
+    end
+    self.approach=sample
+    if not previous or previous.guid~=guid then return false end
+    local dt=now-previous.time
+    if dt<.05 or dt>.6 then return false end
+    local function positioned(v)
+        return type(v.x)=="number" and type(v.y)=="number" and type(v.z)=="number"
+            and type(v.px)=="number" and type(v.py)=="number" and type(v.pz)=="number"
+            and v.map~=nil and v.map==v.targetMap
+    end
+    if positioned(sample) and positioned(previous) then
+        if sample.map~=previous.map then return false end
+        local dx,dy,dz=sample.x-sample.px,sample.y-sample.py,sample.z-sample.pz
+        local distance=math.sqrt(dx*dx+dy*dy+dz*dz)
+        local ox,oy,oz=previous.x-previous.px,previous.y-previous.py,previous.z-previous.pz
+        local closing=(math.sqrt(ox*ox+oy*oy+oz*oz)-distance)/dt
+        -- Require the enemy itself to approach, not just the player running at it.
+        local enemyClosing=distance>0 and -((sample.x-previous.x)*dx+(sample.y-previous.y)*dy+(sample.z-previous.z)*dz)/(distance*dt) or 0
+        sample.preview=distance<=7 and math.abs(dz)<=3 and closing>.5 and closing<=20
+            and enemyClosing>.5 and enemyClosing<=20 and distance-closing*.5<=5
+    else
+        -- Classic may withhold enemy coordinates. A recent Throw-range exit
+        -- inside duel distance establishes the inner edge, not the far edge.
+        local towardPlayer=UnitIsUnit and UnitIsUnit("targettarget","player")
+        local moving=GetUnitSpeed and (GetUnitSpeed("target") or 0)>.5
+        local near=CheckInteractDistance and CheckInteractDistance("target",3)
+        if towardPlayer and moving and not s.moving and near and sample.throwRange==false then
+            sample.innerEdge=previous.throwRange==true and now or previous.innerEdge
+            sample.preview=sample.innerEdge~=nil and now-sample.innerEdge<=.5
+        end
+    end
+    return sample.preview
+end
 function R:Snapshot()
     if self.dirty then self:RefreshSpells() end
     local s={class=self.class,spells={},buffs={},combat=combat(),validTarget=hostile("target"),time=clock()}
@@ -248,27 +292,33 @@ function R:Snapshot()
         local selfSpell=key=="barrier" or key=="shield" or key=="evocation" or key=="evasion" or key=="flurry" or key=="slice" or key=="nova" or key=="explosion"
         s.spells[key]=self:SpellState(spell,not selfSpell and "target" or nil)
     end
+    s.approachingMelee=self:ApproachingMelee(s)
     return s
 end
 -- Pure priorities make the prototype replayable without protected API calls.
 function R.Decide(s)
     if not R.supported[s.class] then return nil,"This proof of concept supports Rogue and Mage." end
     if s.dead or s.mounted then return nil,s.dead and "You are dead." or "Dismount to use the advisor." end
-    local function can(key) local a=s.spells[key]; return a and a.ready and a.usable and (a.range==true or not a.requiresRange and a.range~=false) end
-    local function choose(key,reason) return key,reason end
+    local melee={strike=true,hemorrhage=true,eviscerate=true,kick=true,riposte=true,cheapshot=true}
+    local function can(key)
+        local a=s.spells[key]
+        return a and a.ready and a.usable and (a.range==true or not a.requiresRange and a.range~=false
+            or s.approachingMelee and melee[key] and a.range==false)
+    end
+    local function choose(key,reason) return key,s.approachingMelee and "" or reason end
     if s.class=="MAGE" and not s.combat and s.powerPercent and s.powerPercent<25 and can("evocation") then return choose("evocation","Recover mana between pulls.") end
     if not s.validTarget then return nil,"Select a living enemy." end
     if s.targetPlayer then return nil,"PvE prototype: player targets are not supported." end
     if s.controlled then return nil,"Target is crowd controlled. Avoid breaking it." end
     local hp,thp,mp=s.playerHealth,s.targetHealth,s.powerPercent
     if s.class=="ROGUE" then
-        if (s.combat or s.targetCombat==false) and not s.stealthed and not s.casting
+        if not s.approachingMelee and (s.combat or s.targetCombat==false) and not s.stealthed and not s.casting
             and s.targetClose==false and s.thrownEquipped and can("throw") and s.spells.throw.range==true then
             return "throw","",true
         end
         -- Range alone covers approaching and fleeing enemies. Leave the gap
         -- between throwing and melee range quiet, without movement prompts.
-        if s.targetClose==false then return nil,"" end
+        if s.targetClose==false and not s.approachingMelee then return nil,"" end
         if s.combat and hp and hp<=35 and s.attackingPlayer and s.targetClose and not s.buffs.evasion and can("evasion") then return choose("evasion","Low health while taking melee attacks.") end
         if s.interrupt and can("kick") then return choose("kick","Interrupt the target's cast.") end
         if s.stealthed and can("cheapshot") then return choose("cheapshot","Open from stealth with a stun.") end
@@ -280,7 +330,7 @@ function R.Decide(s)
         if s.combat and s.nearby>=2 and s.safeAOE and thp and thp>30 and not s.buffs.flurry and can("flurry") then return choose("flurry","Multiple engaged enemies verified nearby.") end
         if can("hemorrhage") then return choose("hemorrhage","Build combo points with your learned Hemorrhage talent.") end
         if can("strike") then return choose("strike","Build combo points.") end
-        return nil,"Wait for energy, cooldowns, or move into melee range."
+        return nil,s.approachingMelee and "" or "Wait for energy, cooldowns, or move into melee range."
     end
     if s.interrupt and can("counterspell") then return choose("counterspell","Interrupt the target's cast.") end
     if s.combat and hp and hp<=60 and not s.buffs.barrier and can("barrier") then return choose("barrier","Protect yourself at low health.") end
@@ -367,6 +417,7 @@ end
 function R:Update()
     if not A.characterDB then return end
     if self.suspended or self:Mode()=="disabled" then
+        self.approach=nil
         self.current=nil; self.optional=nil; self.snapshot=nil; self.reason=self.suspended and "Loading character..." or "Enable Assistant Mode in Settings."; self:Highlight(nil)
     else
         self.snapshot=self:Snapshot()
@@ -379,6 +430,7 @@ end
 local events=CreateFrame("Frame"); R.events=events
 for _,event in ipairs({"PLAYER_LOGIN","PLAYER_ENTERING_WORLD","PLAYER_LEAVING_WORLD","SPELLS_CHANGED","SPELL_DATA_LOAD_RESULT","PLAYER_TALENT_UPDATE","PLAYER_REGEN_ENABLED","ACTIONBAR_SLOT_CHANGED","ACTIONBAR_PAGE_CHANGED","PLAYER_TARGET_CHANGED","START_AUTOREPEAT_SPELL","STOP_AUTOREPEAT_SPELL"}) do events:RegisterEvent(event) end
 events:SetScript("OnEvent",function(_,event)
+    if event=="PLAYER_TARGET_CHANGED" or event=="PLAYER_LEAVING_WORLD" or event=="PLAYER_ENTERING_WORLD" then R.approach=nil end
     if event=="PLAYER_LEAVING_WORLD" then R.suspended=true; R.autoRepeat=nil; R:Highlight(nil); return end
     if event=="PLAYER_ENTERING_WORLD" then R.suspended=nil end
     if R.suspended then return end

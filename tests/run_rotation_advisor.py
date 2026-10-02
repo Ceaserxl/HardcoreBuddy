@@ -537,6 +537,68 @@ IsActionInRange=function() end
 R:Update(); check(not R.current and not glow:IsShown(),'Unknown targeted-spell range is not treated as in range')
 C_Spell.IsSpellInRange,IsSpellInRange,IsActionInRange,C_ActionBar=oldSpellRange,oldLegacyRange,oldActionRange,oldActionAPI
 GetUnitSpeed=oldSpeed; range[2136]=nil; range[5019]=1; R:Update()
+do
+    local savedNow,savedX,savedClass,savedSlot=now,units.target.x,MOCK.class,action.action
+    local savedPosition,savedSpeed,savedSame,savedInteract=UnitPosition,GetUnitSpeed,UnitIsUnit,CheckInteractDistance
+    local targetSpeed,toward,near=7,true,true
+    GetUnitSpeed=function(u) return u=='target' and targetSpeed or 0 end
+    UnitIsUnit=function(a,b) return a==b or toward and a=='targettarget' and b=='player' end
+    CheckInteractDistance=function() return near end
+    GetActionInfo=function(slot) if slot==5 then return 'spell',1752 end; return oldActionInfo(slot) end
+    MOCK.class='ROGUE'; combat=true; action.action=5; range[1752]=false; range[2764]=false
+    R.dirty=true; R.approach=nil; units.target.x=8; R:Update()
+    check(not R.snapshot.approachingMelee and not glow:IsShown(),'First distance sample cannot predict an approach')
+    now=now+.2; units.target.x=6.8; R:Update()
+    check(R.snapshot.approachingMelee and R.current.id==1752 and glow:IsShown() and glow.style=='primary','Closing enemy gets the gold melee spell just before range')
+    check(R.current.range==false and R.view.next.reason:GetText()=='','Prediction preserves actual range and adds no instruction text')
+    R.snapshot.spells.strike.ready=false
+    local predictedKey,predictedReason=R.Decide(R.snapshot)
+    check(not predictedKey and predictedReason=='','Approach prediction cannot bypass a long cooldown or add a waiting prompt')
+    R.snapshot.spells.strike.ready=true; R.snapshot.spells.strike.usable=false
+    check(R.Decide(R.snapshot)==nil,'Approach prediction still requires enough resources and a usable spell')
+    local before=glow.ProcStartAnim.plays
+    R:Update(); check(glow:IsShown() and glow.ProcStartAnim.plays==before,'Repeated same-frame reads preserve the approach preview')
+    now=now+.2; units.target.x=5.5; R:Update()
+    now=now+.2; units.target.x=4.5; range[1752]=true; R:Update()
+    check(R.current.id==1752 and glow.ProcStartAnim.plays==before,'Preview continues smoothly into confirmed melee range')
+    range[1752]=false; now=now+.2; units.target.x=6; R:Update()
+    now=now+.2; units.target.x=7; R:Update()
+    check(not R.snapshot.approachingMelee and not glow:IsShown(),'Fleeing enemy never gets a predicted melee glow')
+    now=now+.2; units.target.x=6; R:Update()
+    now=now+.2; R:Update()
+    check(not R.snapshot.approachingMelee and not glow:IsShown(),'Stopping outside melee cancels the early highlight')
+    now=now+.2; units.player.x=1; R:Update()
+    check(not R.snapshot.approachingMelee,'Player movement alone cannot label a stationary enemy as approaching')
+    units.player.x=0; now=now+1; units.target.x=5.8; R:Update()
+    check(not R.snapshot.approachingMelee,'Stale position samples cannot predict an approach')
+    now=now+.2; units.target.guid='different-enemy'; units.target.x=5.2; R:Update()
+    check(not R.snapshot.approachingMelee,'A different target cannot inherit closing velocity')
+    units.target.guid='enemy1'
+    -- Coordinate-free Classic fallback: observed outer-to-inner Throw boundary.
+    UnitPosition=function() end; R.approach=nil
+    local band={class='ROGUE',validTarget=true,targetClose=false,spells={throw={range=true}},time=now}
+    check(not R:ApproachingMelee(band),'First range band cannot predict an approach')
+    band.time=band.time+.2; band.spells.throw.range=false
+    check(R:ApproachingMelee(band),'Moving target attacking player crossing the inner Throw boundary permits a short preview')
+    band.time=band.time+.2; targetSpeed=0
+    check(not R:ApproachingMelee(band),'Stopped target cancels coordinate-free prediction')
+    targetSpeed=7; R.approach=nil; band.spells.throw.range=true; band.time=band.time+.2; R:ApproachingMelee(band)
+    band.spells.throw.range=false; near=false; band.time=band.time+.2
+    check(not R:ApproachingMelee(band),'Exiting the far edge of Throw range cannot trigger melee prediction')
+    near=true; R.approach=nil; band.spells.throw.range=true; band.time=band.time+.2; R:ApproachingMelee(band)
+    band.spells.throw.range=false; toward=false; band.time=band.time+.2
+    check(not R:ApproachingMelee(band),'Unknown approach direction cannot trigger band prediction')
+    toward=true; R.approach=nil; band.spells.throw.range=true; band.time=band.time+.2; R:ApproachingMelee(band)
+    band.spells.throw.range=false; band.time=band.time+.2; R:ApproachingMelee(band)
+    band.time=band.time+.3; R:ApproachingMelee(band); band.time=band.time+.3
+    check(not R:ApproachingMelee(band),'Range-band prediction expires rather than staying lit indefinitely')
+    R.approach={guid='enemy1',time=now,preview=true}
+    R.events.scripts.OnEvent(R.events,'PLAYER_TARGET_CHANGED')
+    check(not R.snapshot.approachingMelee,'Target-change event discards previous prediction')
+    UnitPosition,GetUnitSpeed,UnitIsUnit,CheckInteractDistance=savedPosition,savedSpeed,savedSame,savedInteract
+    now,units.target.x,MOCK.class,action.action=savedNow,savedX,savedClass,savedSlot
+    GetActionInfo=oldActionInfo; combat=false; R.approach=nil; R.dirty=true; R:Update()
+end
 MOCK.RotationChecks=count
 print("PASS: "..count.." rotation checks: priorities, live reads, rank changes, conservative AoE, mode state, UI and highlight lifecycle.")
 ''')
