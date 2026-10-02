@@ -1,33 +1,41 @@
-# NPC research checkpoint
+﻿# NPC research checkpoint
 
-Previous pass: 122 usable pages added, stopped at NPC 5915 with HTTP 403 and
-637 remaining.
+This pass added 482 usable Wowhead Classic NPC pages, bringing the verified
+individual-page count from 560 to 1,042. Four Dragons of Nightmare use the
+separate portal guide. Requests now use a two-second delay by default, also
+recorded in the saved resume command. The first three pages of this pass were
+saved before the delay was changed from five seconds to two.
 
-This pass cached 121 additional Wowhead Classic NPC pages with usable map
-coordinates, bringing the verified individual-page count to 560. Four Dragons
-of Nightmare use the separate portal guide. The generated catalogue still
-supplements missing locations with Questie data; a cached page does not mean
-every spawn location is Wowhead-sourced.
+The retrieval queue completed without access errors; no retry was needed.
+**34 NPC records remain** without usable individual Wowhead page coordinates.
+All 34 pages loaded but had no usable Classic zone coordinates; zero records
+are awaiting their first successful retrieval attempt. Their IDs remain in
+`pagesWithoutCoordinates` and are skipped by the normal resume script.
 
-Stopped at NPC 8207 with HTTP 403, waited 30 seconds, and retried once. The retry
-also returned HTTP 403, so requests stopped. **516 NPC records remain** without
-usable individual Wowhead page coordinates: 485 awaiting retrieval and 31 pages
-that loaded but had no usable Classic zone coordinates. No challenge bypass was
-attempted. All 518 pre-existing cache files were preserved byte-for-byte.
-
-The offline rebuild covers 46 zones and 1,080 NPCs. Records without any mapped
-coordinates decreased from 108 to 102. Questie fallback remains where needed.
+All 639 pre-existing cache files were preserved byte-for-byte. The offline
+rebuild covers 46 zones and 1,080 NPCs. Records without any mapped coordinates
+decreased from 102 to zero. Questie fallback remains where needed: a cached
+Wowhead page does not mean every spawn location is Wowhead-sourced.
 
 Progress is in `docs/map-research-progress.json`; HTML caches are under
-`.release/map-research`. Run `python scripts/resume_map_research.py` to retry the
-remaining queue (starting at 8207), then `python scripts/build_map_data.py` to
-incorporate successful pages. Known pages without coordinates are skipped by
-default; their IDs remain in `pagesWithoutCoordinates` for separate review.
+`.release/map-research`. The normal resume command is:
+
+`python scripts/resume_map_research.py --delay 2`
+
+It currently has no unprocessed requests. The remaining 34 records need
+separate review of the pages without coordinates, rather than repeated runs
+of the unchanged queue. Rebuild with `python scripts/build_map_data.py` after
+adding any verified coordinates.
+
+Validation passed: request pacing/cache/error-stop tests, map advisor tests,
+zone table tests, leveling-zone tests, cache hashes, catalogue identity and
+progress-count checks. These are offline checks, not in-game visual testing.
 
 Paste back:
 
-> Resume HardcoreBuddy Wowhead NPC research using docs/map-research-progress.json
-> and scripts/resume_map_research.py. Last blocked: NPC 8207, HTTP 403. 516 remain,
-> including 31 pages without usable coordinates. Preserve caches, pause for 30
-> seconds on access errors and retry once; if it fails again stop. Rebuild,
-> validate, commit, and report remaining counts.
+> Resume HardcoreBuddy NPC research from docs/map-research-progress.json.
+> The normal retrieval queue is complete: 1,042 usable individual Wowhead pages,
+> 34 pages without usable coordinates remain for separate review. Preserve
+> caches and Questie fallback. Use a two-second delay between requests; on
+> access errors wait 30 seconds and retry once, then stop if it fails again.
+> Rebuild, validate, commit, and report remaining counts.

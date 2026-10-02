@@ -123,7 +123,10 @@ pages; it does not retry blocked NPC pages. These scripts never run in WoW.
 
 To resume individual pages, run `scripts/resume_map_research.py` first. It stops
 at the first access/network error, caches successful pages and records its queue
-in `docs/map-research-progress.json`. Then rebuild with `scripts/build_map_data.py`.
+in `docs/map-research-progress.json`. Requests are spaced by two seconds by
+default; `--delay SECONDS` changes that interval. The saved resume command retains
+the chosen delay. This pacing reduces request frequency but cannot guarantee
+that access will remain available. Then rebuild with `scripts/build_map_data.py`.
 See `docs/map-research-resume.md` for the latest pass and continuation instructions.
 
 `tests/run_map_advisor.py` verifies data relationships, core danger records,

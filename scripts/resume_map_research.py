@@ -2,6 +2,7 @@
 import argparse
 from datetime import datetime, timezone
 import json
+import math
 import re
 import time
 import urllib.error
@@ -25,7 +26,10 @@ def coordinates(page):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--limit', type=int, default=10000)
+    parser.add_argument('--delay', type=float, default=2, help='Seconds between requests (default: 2).')
     args = parser.parse_args()
+    if not math.isfinite(args.delay) or args.delay < 0:
+        parser.error('--delay must be a finite, non-negative number')
     audit = json.loads((ROOT/'docs/map-data-audit.json').read_text())
     state = json.loads(PROGRESS.read_text()) if PROGRESS.exists() else {}
     no_map = set(state.get('pagesWithoutCoordinates', []))
@@ -35,13 +39,16 @@ def main():
         return [i for i in candidates if not (CACHE/f'npc-{i}.html').exists()
                 or not coordinates((CACHE/f'npc-{i}.html').read_text(encoding='utf-8'))]
     state.update(updatedAt=datetime.now(timezone.utc).isoformat(), fetchedThisRun=[], stopReason='Completed queue', blockedNPC=None)
+    state.pop('accessRetry', None)
+    state['requestDelaySeconds'] = args.delay
     queue = [i for i in pending() if i not in no_map]
     def save():
         state['pagesWithoutCoordinates'] = sorted(no_map)
         state['pendingNPCs'] = pending()
         state['remaining'] = len(state['pendingNPCs'])
         state['verifiedNPCPages'] = len(candidates)-state['remaining']
-        state['resumeCommand'] = 'python scripts/resume_map_research.py'
+        state['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        state['resumeCommand'] = f'python scripts/resume_map_research.py --delay {args.delay:g}'
         PROGRESS.write_text(json.dumps(state, indent=2)+'\n', encoding='utf-8')
     for i, ident in enumerate(queue):
         if i >= args.limit:
@@ -63,7 +70,7 @@ def main():
         except (urllib.error.URLError, TimeoutError, RuntimeError, ValueError) as exc:
             state['stopReason'] = str(exc); state['blockedNPC'] = ident; break
         save()
-        time.sleep(1)
+        time.sleep(args.delay)
     save()
     print(json.dumps({k:state[k] for k in ('stopReason','blockedNPC','remaining','verifiedNPCPages','fetchedThisRun')}, indent=2), flush=True)
 
