@@ -29,11 +29,12 @@ end
 context.maxHealth=640
 local d=doc(); local rows,count=ids(d)
 assert(count==2 and rows[6451] and rows[14530])
-assert(d.cards[2].title=="Recommended Based on Health" and d.cards[3].title=="Highest Rank Available")
+assert(d.cards[1].title=="Recommended Based on Health - Maximum Health: 640" and d.cards[2].title=="Highest Rank Available")
+for _,c in ipairs(d.cards) do assert(c.title~="Bandages","No redundant Bandages heading") end
 assert(not rows[6451].readOnlyTarget and rows[6451].editTarget,"Recommended lower rank remains editable")
 context.maxHealth=641; assert(ids(doc())[8544],"Next healing tier after boundary")
 context.maxHealth=2000; d=doc(); rows,count=ids(d)
-assert(count==1 and rows[14530] and #d.cards==2,"Same rank hides Highest section")
+assert(count==1 and rows[14530] and #d.cards==1,"Same rank hides Highest section")
 context.maxHealth=4000; assert(select(2,ids(doc()))==1,"Health above all ranks uses strongest")
 context.maxHealth=700
 for i=5,#recipes do context.professions.known[recipes[i].spellId]=false end
@@ -45,6 +46,7 @@ state.showAllBandages=true
 assert(select(2,ids(doc()))==10,"Show all includes every remaining rank once")
 state.showAllBandages=nil; context.maxHealth=nil
 assert(ids(doc())[3530],"Unknown health uses actual craftable rank")
+assert(doc().cards[1].title=="Recommended Based on Health - Maximum Health: Unavailable")
 context.professions.skills.bandage=0
 assert(select(2,ids(doc()))==0,"Unlearned profession never claims a craftable rank")
 context.maxHealth=640; context.professions.skills.bandage=300
@@ -57,7 +59,7 @@ assert(state.showAllBandages and select(2,ids(A.document))==10)
 for _,c in ipairs(A.document.cards) do assert(c.title~="First Aid training","Completed First Aid has no empty training heading") end
 MOCK.Click(A.window.cards[1].headerButton)
 assert(not state.showAllBandages and select(2,ids(A.document))==2 and A.state==original)
-local header=A.window.cards[2].content.blocks[1]
+local header=A.window.cards[1].content.blocks[1]
 MOCK.Click(header)
 assert(A.document.isDetail and A.window.cards[1].detailQuantity.quantity:IsShown(),"Recommended lower rank opens editable details")
 A:Back(); assert(A.state==original)

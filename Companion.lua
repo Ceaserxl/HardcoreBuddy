@@ -161,21 +161,22 @@ local function bandageCards(context,state)
         displayed[id]=true
         return block
     end
-    local note=context.maxHealth and ("Maximum health: "..math.floor(context.maxHealth).." | Lowest rank that covers your full health.")
+    local note=context.maxHealth and "Lowest rank that covers your full health."
         or "Maximum health unavailable. Showing your highest craftable rank."
-    if context.mode=="preview" then note=note.." Uses your current character's health and First Aid." end
-    local cards={card("Bandages",note,{})}
+    local health=context.maxHealth and tostring(math.floor(context.maxHealth)) or "Unavailable"
+    local cards={card("Recommended Based on Health - Maximum Health: "..health,note,{})}
     cards[1].headerAction={label=state.showAllBandages and "Show fewer" or "Show all",action={kind="bandageRanks"}}
     local recommended=plan.recommended
     if recommended and plan.canMake then
-        local note=recommended.healing<context.maxHealth and "No bandage covers your full health; this is the strongest Classic rank."
+        cards[1].note=recommended.healing<context.maxHealth and "No bandage covers your full health; this is the strongest Classic rank."
             or "You know this recipe and have the First Aid skill to make it."
-        local section=card("Recommended Based on Health",note,{bandage(recommended.itemId)})
-        section.supplyTable=true; section.fullWidth=true; cards[#cards+1]=section
+        cards[1].blocks={bandage(recommended.itemId)}
+        cards[1].supplyTable=true; cards[1].fullWidth=true
     elseif recommended then
         cards[1].note=cards[1].note.."\n"..items[recommended.itemId].name.." is the health-based recommendation; "..
             (plan.highest.status=="unknown" and "First Aid or recipe data is unavailable." or "you cannot make it yet.")
     end
+    if context.mode=="preview" then cards[1].note=cards[1].note.." Uses your current character's health and First Aid." end
     local highest=plan.highest
     if highest.itemId and (not plan.canMake or highest.itemId~=recommended.itemId) then
         local section=card("Highest Rank Available",highest.note,{bandage(highest.itemId)})
