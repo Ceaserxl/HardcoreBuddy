@@ -114,14 +114,14 @@ print("PASS: "..count.." centralized settings assertions; routing, saved prefere
 
 -- The destructive reset requires confirmation; cancellation preserves roots.
 StaticPopupDialogs={}
-local shown,reloaded
+local shown,reloaded,resetClicked
 StaticPopup_Show=function(id) shown=id end
-ReloadUI=function() reloaded=true end
+ReloadUI=function() check(resetClicked,"Reset reload remains in click context"); reloaded=true end
 local account,character=HardcoreBuddyDB,HardcoreBuddyCharacterDB
 MOCK.Click(S.pages.General.resetAll)
 check(shown=="HARDCOREBUDDY_RESET" and not reloaded,"Reset waits for confirmation")
 check(HardcoreBuddyDB==account and HardcoreBuddyCharacterDB==character,"No data cleared before confirmation")
-StaticPopupDialogs[shown].OnAccept()
+resetClicked=true; StaticPopupDialogs[shown].OnAccept(); resetClicked=false
 check(reloaded and HardcoreBuddyDB==nil and HardcoreBuddyCharacterDB==nil,"Reset clears both saved roots and reloads")
 A.db.lateCache={}; A.characterDB.lateCache={}
 check(HardcoreBuddyDB==nil and HardcoreBuddyCharacterDB==nil,"Old references cannot repopulate reset saved roots")

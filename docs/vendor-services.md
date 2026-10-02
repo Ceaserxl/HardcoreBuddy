@@ -33,9 +33,12 @@ choice. Existing explicit choices remain unchanged.
 ## Debug exports
 
 Settings > Debug > Capture data retains the full incremental dump and progress
-animation without creating an output EditBox. Reload after dump completes is
-off by default. When enabled, a successful capture waits until out of combat
-before reloading. Failed captures preserve the last good dump and do not reload.
+animation without creating an output EditBox. Prompt to reload after dump is
+off by default. When enabled, a successful capture offers Reload Now / Later.
+Reload happens directly from the confirmation click; the asynchronous worker
+never attempts the hardware-event-restricted reload. Failed captures preserve
+the last good dump and do not prompt. Reset AddOn separately clears saved data
+and reloads immediately from its Reset & Reload confirmation click.
 
 Reload or log out to write the cached dump to disk. Open:
 

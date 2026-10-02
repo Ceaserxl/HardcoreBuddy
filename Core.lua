@@ -244,10 +244,11 @@ end
 function addon:ConfirmReset()
     StaticPopupDialogs.HARDCOREBUDDY_RESET={
         text="Reset HardcoreBuddy? This deletes all account-wide settings and cached data, plus this character's saved data, and reloads the UI. Other characters' character-specific data cannot be cleared from this character.",
-        button1="Reset AddOn",button2=CANCEL or "Cancel",timeout=0,whileDead=true,hideOnEscape=true,
+        button1="Reset & Reload",button2=CANCEL or "Cancel",timeout=0,whileDead=true,hideOnEscape=true,
         OnAccept=function()
             -- Detach the saved roots. Logout callbacks retain only the old,
             -- unsaved tables, so they cannot restore caches during ReloadUI.
+            -- Keep ReloadUI in this click callback, not a timer or OnUpdate.
             HardcoreBuddyDB=nil; HardcoreBuddyCharacterDB=nil
             ReloadUI()
         end,

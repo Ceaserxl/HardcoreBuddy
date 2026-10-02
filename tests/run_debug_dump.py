@@ -40,15 +40,18 @@ assert(not data.character.debugDump,"Previous dump is excluded")
 A:OpenSettings("Debug")
 assert(not p.edit and not p.copy and not p.scroll)
 assert(p.savedPath:GetText():find("SavedVariables/HardcoreBuddy.lua",1,true))
-assert(not A.characterDB.debugAutoReload and not D.reloadAt)
-local reloads=0; ReloadUI=function() reloads=reloads+1 end
+assert(not A.characterDB.debugAutoReload)
+local reloads,clicked,prompt=0,false,nil
+StaticPopupDialogs={}
+StaticPopup_Show=function(id) prompt=id end
+ReloadUI=function() assert(clicked,"Reload must run inside a user click"); reloads=reloads+1 end
 A.characterDB.debugAutoReload=true
-D:Start(); finish(); assert(D.reloadAt and reloads==0)
-MOCK.time=MOCK.time+1
-InCombatLockdown=function() return true end
-D:Step(.016); assert(reloads==0 and D.reloadAt)
-InCombatLockdown=function() return false end
-D:Step(.016); assert(reloads==1 and not D.reloadAt)
+D:Start(); finish()
+assert(prompt=="HARDCOREBUDDY_DUMP_RELOAD" and reloads==0,"Completion prompts without a background reload")
+for i=1,10 do D:Step(.016) end
+assert(reloads==0,"Worker never attempts a protected reload")
+clicked=true; StaticPopupDialogs[prompt].OnAccept(); clicked=false
+assert(reloads==1,"User confirmation reloads immediately")
 D:Step(.016); assert(reloads==1)
 saved=A.characterDB.debugDump
 A.characterDB.debugAutoReload=false
@@ -61,7 +64,7 @@ D:Start(); finish()
 assert(#A.characterDB.debugDump.text<#saved.text*1.1,"Repeated dumps do not recursively include the cache")
 DEBUG_SAVED_TEXT=A.characterDB.debugDump.text
 DEBUG_SAVED_AT=A.characterDB.debugDump.capturedAt
-print("PASS: incremental comprehensive dump, animation, cycles, addon isolation, saved-file export and deferred reload and failure recovery.")
+print("PASS: incremental comprehensive dump, animation, cycles, addon isolation, saved-file export and click-confirmed reload and failure recovery.")
 ''')
 offline = LuaRuntime(unpack_returned_tuples=True)
 offline.execute(lua.globals().DEBUG_SAVED_TEXT)

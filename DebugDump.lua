@@ -124,8 +124,18 @@ function D:Collect()
     return {schema=self.schema,capturedAt=out.capturedAt,text=table.concat(chunks)}
 end
 
+function D:PromptReload()
+    StaticPopupDialogs.HARDCOREBUDDY_DUMP_RELOAD={
+        text="HardcoreBuddy's data dump is ready. Reload now to save it to disk?",
+        button1="Reload Now",button2="Later",timeout=0,whileDead=true,hideOnEscape=true,
+        -- Reload requires a hardware event. Never call it from the dump worker.
+        OnAccept=function() ReloadUI() end,
+    }
+    StaticPopup_Show("HARDCOREBUDDY_DUMP_RELOAD")
+end
+
 function D:Start()
-    if self.job or self.reloadAt or not A.characterDB then return end
+    if self.job or not A.characterDB then return end
     self.nodes=0; self.omitted=0; self.progress=0; self.displayProgress=0; self.phase="Starting dump"; self.error=nil
     self.reloadAfter=A.characterDB.debugAutoReload==true
     self.job=coroutine.create(function() return self:Collect() end)
@@ -134,10 +144,6 @@ function D:Start()
 end
 
 function D:Step(elapsed)
-    if self.reloadAt then
-        if GetTime()>=self.reloadAt and not InCombatLockdown() then self.reloadAt=nil; ReloadUI() end
-        return
-    end
     if not self.job then self.worker:Hide(); return end
     local started=debugprofilestop and debugprofilestop()
     for _=1,8 do
@@ -148,7 +154,10 @@ function D:Step(elapsed)
             A.characterDB.debugDump=result; self.job=nil; self.progress=1
             self.phase="Dump complete and cached. Reload or log out to save it to disk."
             A:Print(self.phase.." Find debugDump in "..self:SavedPath())
-            if self.reloadAfter then self.reloadAt=GetTime()+0.3; self.phase="Dump complete. Reloading when out of combat..." end
+            if self.reloadAfter then
+                self.phase="Dump complete. Click Reload Now to save it to disk."
+                self:PromptReload()
+            end
             break
         end
         if started and debugprofilestop()-started>=3 then break end
@@ -162,7 +171,7 @@ end
 function D:Refresh()
     local p=self.page; if not p then return end
     local saved=A.characterDB and A.characterDB.debugDump
-    p.dump:SetEnabled(not self.job and not self.reloadAt)
+    p.dump:SetEnabled(not self.job)
     p.dump.label:SetText(self.job and "Dumping..." or "Dump Data")
     p.cached:SetText(saved and ((date and date("%b %d %H:%M",saved.capturedAt) or tostring(saved.capturedAt)).." | "..math.ceil(#saved.text/1024).." KB cached") or "")
     p.status:SetText(self.error and (self.phase.." "..self.error) or self.phase or (saved and "Full dump cached. Reload or log out to save it to disk." or "No dump cached yet."))
@@ -190,7 +199,7 @@ function D:Create(page)
     local check=CreateFrame("CheckButton",nil,page,"BackdropTemplate"); page.autoReload=check
     check:SetSize(24,24); check:SetPoint("TOPLEFT",176,-96); Skin.Paint(check,"edit")
     check.mark=label(check,"",0,0,24); check.mark:SetAllPoints(); check.mark:SetJustifyH("CENTER")
-    check.caption=label(check,"Reload after dump completes",32,4,480)
+    check.caption=label(check,"Prompt to reload after dump",32,4,480)
     check:SetScript("OnClick",function() A.characterDB.debugAutoReload=not not check:GetChecked(); self:Refresh() end)
     page.status=label(page,"",16,150,700); page.status:SetHeight(36)
     local track=CreateFrame("Frame",nil,page,"BackdropTemplate"); page.track=track
