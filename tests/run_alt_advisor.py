@@ -62,10 +62,10 @@ local vendorLine=GameTooltip:NumLines()
 bagAdvice(); assert(GameTooltip.hardcoreBuddyAlt)
 local gear=GameTooltip.hardcoreBuddyGear
 local prefix=GameTooltip:GetName()..'TextLeft'
-local altStart=vendorLine+1
+local altStart=vendorLine+2
 assert(_G[prefix..altStart]:GetText():find('SurvivorShield.tga',1,true),'Alt title includes shield icon')
 assert(_G[prefix..vendorLine]:GetText()=='Vendor prices','Existing vendor text preserved')
-assert(_G[prefix..(altStart+6)]:GetText()==' ','Alt section ends with a gap')
+assert(GameTooltip:NumLines()==altStart+5 and _G[prefix..(altStart+5)]:GetText()~=' ','Alt section ends on its final detail, without a blank line')
 G:Add(GameTooltip)
 assert(_G[prefix..altStart]:GetText():find('Alt Advisor',1,true),'Gear refresh preserves Alt section')
 local count=GameTooltip:NumLines(); bagAdvice(); assert(GameTooltip:NumLines()==count,'No duplicate Alt section')
@@ -155,7 +155,7 @@ for _,labels in ipairs({{'Ring 1','Ring 2'},{'Trinket 1','Trinket 2'},{'Main han
  local prefix=GameTooltip:GetName()..'TextLeft'
  assert(_G[prefix..(state.start+3)]:GetText()==' ' and _G[prefix..(state.start+4)]:GetText()==labels[2],
   'Paired comparisons remain separated without stat losses')
- assert(_G[prefix..(state.start+5)]:GetText()==' ','Final comparison ends with spacing')
+ assert(GameTooltip:NumLines()==state.start+4,'No blank line after the final comparison')
 end
 G.Report=report
 GameTooltip:ClearLines(); hyperlink(GameTooltip,candidate.link)

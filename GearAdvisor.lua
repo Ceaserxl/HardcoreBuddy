@@ -616,7 +616,8 @@ function G:Add(tip)
         for _,line in ipairs(auctionLines or {}) do
             if line[1]~="" or line[2]~="" then lines[#lines+1]=line end
         end
-        if auctionLines then lines[#lines+1]={" ","",colors.equal} end
+        -- Separators belong between visible sections, never below the last row.
+        while lines[#lines] and lines[#lines][1]==" " and lines[#lines][2]=="" do table.remove(lines) end
         local state=tip.hardcoreBuddyGear
         local name=tip.GetName and tip:GetName()
         local header=state and name and _G[name.."TextLeft"..(state.start+1)]

@@ -356,14 +356,14 @@ check(adviceLine(3):GetText()=="Stats gained" and gainsLine:GetText()==state.rep
     "Gains and losses have labels beside their values")
 local gr,gg=gainsLine:GetTextColor(); local lr,lg=lossesLine:GetTextColor()
 check(gg>gr and lr>lg,"Gains are green and losses are red")
-check(adviceLine(5):GetText()==" ","Blank line after Stats lost")
+check(GameTooltip:NumLines()==state.start+4,"No trailing blank line after Stats lost")
 local reads=#readLinks
 G:Add(GameTooltip)
 check(GameTooltip:NumLines()==lineCount and #readLinks==reads,"No duplicate rows or repeated scans")
 equipment[10]=scorpid; MOCK.FireAll("PLAYER_EQUIPMENT_CHANGED",10)
 check(GameTooltip:NumLines()==lineCount and GameTooltip.hardcoreBuddyGear.report.rows[1].percent~=0,"Structural changes wait for a native rebuild without hiding lines")
 check(adviceLine(3):GetText()=="Stats gained" and adviceLine(4):GetText()=="Stats lost","Existing hover remains structurally stable")
-check(adviceLine(5):GetText()==" ","Refresh preserves comparison spacing when losses disappear")
+check(GameTooltip:NumLines()==state.start+4,"Refresh does not append trailing blank lines")
 A.db.gearAdvisorEnabled=false; G:RefreshTooltips(); check(not GameTooltip:IsShown(),"Disable hides stale visible advice")
 A.db.gearAdvisorEnabled=true
 GameTooltip:SetHyperlink(scorpid.link); G:SetEnabled(false)

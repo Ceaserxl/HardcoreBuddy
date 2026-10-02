@@ -119,15 +119,15 @@ function Alt:Add(tip)
         local item=self:Candidate(link); if not item then return end
         local upgrades=self:Upgrades(item); if #upgrades==0 then return end
         local lines={{"|TInterface\\AddOns\\HardcoreBuddy\\Media\\SurvivorShield.tga:16:16:0:0|t HardcoreBuddy  |  Alt Advisor","",{1,.8,.3}}}
-        for _,entry in ipairs(upgrades) do
+        for index,entry in ipairs(upgrades) do
+            if index>1 then lines[#lines+1]={" ","",{.65,.65,.65}} end
             local c,row=entry.character,entry.row
             lines[#lines+1]={c.name.." - Level "..c.profile.level,
                 row.percent and string.format("+%.2f%%",row.percent) or (row.zeroBaseline and "Zero baseline" or "Empty slot"),{1,.82,.4},{.38,.84,.6}}
             lines[#lines+1]={row.label.." | "..c.profile.name,"",{.65,.65,.65}}
-            lines[#lines+1]={" ","",{.65,.65,.65}}
         end
         G:Add(tip)
-        if not tip.hardcoreBuddyGear then tip:AddLine(" ") end
+        tip:AddLine(" ")
         for _,line in ipairs(lines) do
             local leftColor,rightColor=line[3],line[4] or line[3]
             tip:AddDoubleLine(line[1],line[2],leftColor[1],leftColor[2],leftColor[3],rightColor[1],rightColor[2],rightColor[3])
