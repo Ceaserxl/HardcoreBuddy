@@ -57,12 +57,18 @@ gear[16].loc="INVTYPE_RANGEDRIGHT"; check(#slot(16).options==0,"Wands excluded")
 gear={ [9]={loc="INVTYPE_WRIST"}, [5]={loc="INVTYPE_ROBE"}, [7]={loc="INVTYPE_LEGS"}, [8]={loc="INVTYPE_FEET"} }
 local legs=slot(7)
 check(legs.recommendation.armorKit and legs.recommendation.itemId==15564,"Legs recommend the highest compatible armor kit")
+local armorRanks=0
+for _,r in ipairs(legs.options) do if r.armorKit and not r.defenseKit then
+    armorRanks=armorRanks+1; check(r.itemId==15564,"Only highest applicable armor kit offered")
+end end
+check(armorRanks==1,"Lower armor kit ranks hidden from alternatives")
 check(slot(5).recommendation.armorKit~=true,"Useful chest enchant competes with kits")
 gear[10]={loc="INVTYPE_HAND"}
 check(slot(10).recommendation.armorKit,"Mage gloves can prefer armor kit over situational enchant")
 gear[10]=nil
 gear[7].level=14
 check(slot(7).recommendation.itemId==2313,"Armor kit item-level restriction")
+for _,r in ipairs(slot(7).options) do if r.armorKit then check(r.itemId==2313,"Highest compatible kit replaces unavailable higher ranks") end end
 gear[7].level=50; gear[7].enchant=1843
 check(slot(7).status=="ready" and not slot(7).needed,"Applied recommended armor kit recognized")
 gear[7].enchant=15

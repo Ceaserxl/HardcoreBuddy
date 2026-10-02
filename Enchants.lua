@@ -91,9 +91,16 @@ function E.Options(context,g)
     for _,r in ipairs(D.recipes) do
         if r.level<=context.level and relevant(r,context.characterClass) and E.Compatible(r,g) then out[#out+1]=r end
     end
+    local bestKits={}
     for _,r in ipairs(kits) do
-        if r.level<=context.level and E.Compatible(r,g) then out[#out+1]=r end
+        if r.level<=context.level and E.Compatible(r,g) then
+            local current=bestKits[r.family]
+            if not current or r.power>current.power then bestKits[r.family]=r end
+        end
     end
+    -- Core adds defense, not armor: keep it as a separate type, not a higher
+    -- rank of Rugged. Superseded armor ranks do not clutter alternatives.
+    for _,r in pairs(bestKits) do out[#out+1]=r end
     table.sort(out,function(a,b)
         local av,bv=points(a,context.characterClass),points(b,context.characterClass)
         if av~=bv then return av>bv end
