@@ -409,12 +409,7 @@ local function renderBlock(frame, block, width)
         measure(frame.stock,block.enchantStatus,100,width-108,7)
         frame.stock:SetTextColor(unpack(color))
         for _,edge in ipairs(frame.statusBorder) do edge:SetShown(not block.enchantAlternative); edge:SetVertexColor(color[1],color[2],color[3],0.7) end
-        frame.title:SetFont(STANDARD_TEXT_FONT,14,""); frame.title:SetTextColor(unpack(WHITE))
-        local titleHeight=measure(frame.title,block.title,width-164,52,7)
-        local bodyHeight=measure(frame.body,block.body,width-64,52,9+titleHeight)
-        frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-11)
-        local h=math.max(56,17+titleHeight+bodyHeight)
-        frame:SetHeight(h); Skin.RowArtwork(frame); return h
+        return sizeSupplyDetail(frame,block,width,100)
     end
     if block.supplyColumns then
         Skin.Paint(frame,"note")

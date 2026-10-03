@@ -61,6 +61,7 @@ end
 context.supplyDefaults={bandage=14530}
 assert(A.Supplies.Selection(context,"bandage")==14530,"Explicit highest-rank default overrides recommendation")
 assert(doc().cards[1].blocks[1].itemId==14530,"Saved default becomes selected item")
+assert(doc().cards[1].itemSectionTitle=="Selected Alternative","Saved bandage uses standard alternative heading")
 A.GetContext=function() return context end
 A.state=state; A:Refresh(true)
 local original=A.state

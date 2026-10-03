@@ -22,6 +22,8 @@ function G.SupplySubtitle(item,context)
         :gsub("^Regenerate (%d+) health every 5 sec","+%1 health / 5 sec")
         :gsub(" for "," / "):gsub(" hours?"," hr")
     if item.family=="dummy" then effect="Taunts nearby enemies" end
+    if item.name=="Restorative Potion" then effect="Removes magic, curse, poison or disease / 5 sec for 30 sec" end
+    if item.name=="Flask of Petrification" then effect="Immune to damage; cannot act / 1 min" end
     if item.family=="bandage" then effect=effect:gsub(" damage"," health") end
     effect=effect:match("^(.-)%.%s") or effect
     effect=effect:gsub("%s+$",""):gsub("%.$","")

@@ -253,7 +253,7 @@ local function bandageCards(context,state)
             elseif block.itemId~=selected then
                 remaining[#remaining+1]=block
             elseif block.supply then
-                out.itemSectionTitle=section.title
+                out.itemSectionTitle=recommended and selected~=recommended.itemId and "Selected Alternative" or "Recommended"
                 if recommended and selected==recommended.itemId and not plan.canMake then out.blocks[1].body=block.body end
             end
         end
@@ -373,6 +373,11 @@ function C.Detail(context, action)
         if family=="bandage" then
             local plan=A.Professions.BandagePlan(context)
             recommended=plan.recommended and {itemId=plan.recommended.itemId} or recommended
+        elseif family then
+            local best=A.Professions.Best(context.professions,family)
+            for _,candidate in ipairs(D.Items.items) do
+                if candidate.itemId==best.itemId then recommended=candidate; break end
+            end
         end
         if defaults then
             local copy={}; for k,v in pairs(item) do copy[k]=v end; item=copy
@@ -389,6 +394,12 @@ function C.Detail(context, action)
         heading("Materials",false,note)
         for _,block in ipairs(materials) do blocks[#blocks+1]=block end
         local alternatives=item.options or (family and item.progression) or {}
+        if family and family~="bandage" then
+            alternatives={}
+            for _,candidate in ipairs(D.Items.items) do
+                if candidate.family==family then alternatives[#alternatives+1]=candidate end
+            end
+        end
         local choices={}
         if recommended and recommended.itemId~=item.itemId and family~="bandage" then choices[1]=recommended end
         for _,other in ipairs(alternatives) do
@@ -457,13 +468,18 @@ function C.Detail(context, action)
         return out
     end
     if kind=="supplyFamily" then
-        local blocks=professionBlocks(context,action.family)
-        for _,b in ipairs(supplyRows(context,{},action.family)) do b.editTarget=true; blocks[#blocks+1]=b end
-        local _,automatic=S.Selection(context,action.family)
-        local note=automatic and (automatic.note..". Your character's learned recipes determine the rank; materials are not checked.")
-            or "Select one rank for your list. Check its skill requirement; other ranks stay optional."
-        local out=card(groupNames[action.family],note,blocks)
-        out.supplyTable=true; return out
+        -- Keep an opened rank stable while recipe updates arrive or quantities are edited.
+        if action.item then return C.Detail(context,{kind="item",item=action.item}) end
+        local selected=S.Selection(context,action.family)
+        local fallback
+        for _,item in ipairs(D.Items.items) do
+            if item.family==action.family then
+                fallback=fallback or item
+                if item.itemId==selected then action.item=item; return C.Detail(context,{kind="item",item=item}) end
+            end
+        end
+        if fallback then action.item=fallback; return C.Detail(context,{kind="item",item=fallback}) end
+        return card(groupNames[action.family],nil,{})
     end
     if kind=="profession" then
         local title=action.family=="cooking" and "Cooking" or action.family=="dummy" and "Engineering" or "First Aid"

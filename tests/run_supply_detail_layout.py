@@ -45,6 +45,22 @@ for _,c in ipairs(supplyDoc.cards) do for _,b in ipairs(c.blocks or {}) do
     if b.itemId==8951 then assert(b.body==A.Guide.SupplySubtitle(items[8951],ctx),"Main tabs use compact effects") end
 end end
 assert(A.Guide.NextSupply(items[1251],ctx).itemId==2581)
+for _,family in ipairs({"dummy","antivenom"}) do
+    local page=A.Companion.Detail(ctx,{kind="supplyFamily",family=family})
+    assert(page.itemLayout and page.quantityRecord and page.itemSectionTitle=="Recommended","Profession supplies use standard details")
+    local materials,alternatives,nextSection
+    for _,b in ipairs(page.blocks) do
+        if b.title=="Materials" then materials=b end
+        if b.title=="Alternatives" then alternatives=b end
+        if b.title=="Next" then nextSection=b end
+    end
+    assert(materials and not materials.rightColumn and alternatives.rightColumn and nextSection.rightColumn)
+end
+for _,item in pairs(items) do
+    if item.name=="Restorative Potion" or item.name=="Flask of Petrification" then
+        assert(#A.Guide.SupplySubtitle(item,ctx)<80,"Special consumable descriptions are compact")
+    end
+end
 A.GetContext=function() return ctx end
 A:Navigate("supplies")
 A:Activate({kind="item",item=items[21217]})
