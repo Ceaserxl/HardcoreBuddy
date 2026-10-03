@@ -9,13 +9,13 @@ function H:Document(context)
         headerAction=supported and {label=enabled and "Disable" or "Enable",action={kind="rotationHelperToggle"}} or nil,blocks={
             {title="|cffffd126Main|r",body="One next attack. Planned when your cast starts and held through its finish."},
             {title="|cffff3020Defensive|r",body="Interrupts, control and survival. May appear alongside your next attack."},
-            {title="|cffd958ffOffensive|r",body="Optional damage cooldowns, mana recovery and attacks waiting on cooldown. Gold prefers an attack ready for your next cast."},
+            {title="|cffd958ffOffensive|r",body="Ready damage cooldowns and mana recovery. Use when the encounter warrants them."},
             {title="|cff33a6ffPreparation|r",body="Missing or expiring buffs, food, water and mana gems between fights."},
         }}
     if self.Glow.unavailable then card.blocks[#card.blocks+1]={title="Spell glow unavailable",body="This client did not provide Blizzard's spell alert template. Reload after enabling your action bars."} end
     return {context=context,view="training",continuous=true,page=1,pages=1,cards={card,
         {title="Shared rules",fullWidth=true,blocks={
             {title="Your action bars",body="Highlights learned spells and carried items already on your bars, including spell macros. Enable separately on each Mage."},
-            {title="Timing & safety",body="Plans mana up to 2 seconds ahead. Cooldowns do not suppress highlights. Respects range, crowd control and learned talents. Group attacks require an engaged target."},
+            {title="Timing & safety",body="Plans your next attack up to 2 seconds ahead or for cast completion. Other highlights require ready cooldowns. Ignores the GCD; respects range, crowd control and learned talents."},
         }}}}
 end

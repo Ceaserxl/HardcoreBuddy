@@ -101,6 +101,10 @@ C_Spell=nil
 GetSpellPowerCost=function(id) return {{type=0,cost=x.byID[id]=="shoot" and 0 or x.costs[x.byID[id]] or x.defaultCost}} end
 GetSpellCooldown=function(id)
     local duration=x.cooldowns[x.byID[id]] or cooldownAbilities[x.byID[id]] and x.allCooldowns or 0
+    if type(duration)=="table" then
+        return duration.start or x.time,duration.duration or 0,duration.enabled==nil and 1 or duration.enabled
+    end
+    if duration==0 and x.gcdSpells then duration=x.gcd or 0 end
     if id==61304 then duration=x.gcd or 0 end
     return duration>0 and x.time or 0,duration,1
 end
@@ -140,7 +144,7 @@ end}
 C_NamePlate=nil
 GetItemCount=function(id) return x.inventory[id] or 0 end
 C_Item.GetItemCount=GetItemCount
-GetItemCooldown=function() return x.time,x.itemCooldown or 0,1 end
+GetItemCooldown=function() return x.time,x.itemCooldown or 0,x.itemEnabled==nil and 1 or x.itemEnabled end
 GetInventoryItemLink=function() return x.wand~=false and x.level>=5 and "item:11287" end
 GetItemInfoInstant=function() return 11287,nil,nil,"INVTYPE_RANGEDRIGHT" end
 A.TalentAdvisor.ReadCurrent=function() return {ranks=x.talents} end

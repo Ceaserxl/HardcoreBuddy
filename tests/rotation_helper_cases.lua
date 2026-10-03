@@ -76,8 +76,8 @@ X.learned[205]=nil; X.learned[7322]=nil; rebuild()
 
 X.gcd=true; p=evaluate(); check(main(p)=="frostbolt","GCD must not hide the next action")
 X.gcd=false; X.cooldowns[116]={100,2}; p=evaluate(); check(main(p)=="frostbolt","Short cooldown does not gate Main")
-X.cooldowns[116]={100,60}; p=evaluate(); check(main(p)=="fireball" and find(p,"frostbolt").category=="offensive","Long cooldown remains a hint beside a usable Main")
-X.cooldowns[116]={100,60,0}; p=evaluate(); check(main(p)=="fireball" and find(p,"frostbolt"),"Disabled cooldown state does not suppress the hint or usable Main")
+X.cooldowns[116]={100,60}; p=evaluate(); check(main(p)=="fireball" and not find(p,"frostbolt"),"Long cooldown is gated so a usable Main is selected")
+X.cooldowns[116]={100,60,0}; p=evaluate(); check(main(p)=="fireball" and not find(p,"frostbolt"),"Disabled cooldown state is gated")
 X.cooldowns[116]=nil
 X.power=30; X.regen=10; p,c=evaluate(); check(main(p)=="frostbolt" and c.futurePower==50,"Forecast confirmed casting regen")
 X.regen=0; p=evaluate(); check(main(p)==nil,"Cannot spend unknown future mana")
@@ -251,13 +251,13 @@ C_Spell={GetSpellInfo=function(id) local name,_,icon,cast=legacyInfo(id); return
 X.gcd=true; p=evaluate(); check(main(p)=="frostbolt","Modern C_Spell API path respects GCD and boolean range")
 X.range=nil; p=evaluate(); check(not main(p),"Modern unknown range is rejected")
 C_Spell=nil; X.range=true; X.gcd=false
--- The shared change applies to every lane and to item actions, not just Main.
+-- The cooldown gate applies to every lane and to item actions, not just Main.
 local gateContext=H:Snapshot()
 for _,category in ipairs({"main","defensive","offensive","preparation"}) do
     for _,kind in ipairs({"spell","item"}) do
         gateContext.spells.probe={id=999,kind=kind,known=true,cost=0,cooldown=math.huge,range=true}
         local picks=H.Select(gateContext,{rules={{spell="probe",category=category,when=function() return "Needed" end}}},{})
-        check(find(picks,"probe"),category.." "..kind.." highlight ignores cooldown duration")
+        check(not find(picks,"probe"),category.." "..kind.." highlight rejects disabled cooldowns")
     end
 end
 local action=GetActionInfo

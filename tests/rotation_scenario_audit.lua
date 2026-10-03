@@ -53,27 +53,26 @@ scenario("Drinking",{combat=false,target=false,power=200,names={[430]="Drink"},p
 scenario("Emergency Ice Block",{health=150,attacked=true,talents=frost},"Ice Block",function(p) return F.find(p,"iceblock") end)
 scenario("Curse on player",{cursed=true},"Remove Lesser Curse",function(p) return F.find(p,"decurse") end)
 
--- These expected outcomes describe actionable advice, distinct from merely
--- showing an intent. They expose the consequences of removing cooldown gates.
+-- Unavailable options cannot hide a ready action in the same group.
 scenario("Unavailable Ice Block masks ready Cold Snap",{health=150,attacked=true,talents=frost,cooldowns={iceblock=120}},
     "Ready Cold Snap is visible as an emergency option",function(p) return F.find(p,"coldsnap") end,"high")
 scenario("Unavailable Barrier masks ready Mana Shield",{health=300,attacked=true,talents=frost,cooldowns={barrier=20}},
     "Ready Mana Shield is visible as an emergency option",function(p) return F.find(p,"manashield") end,"high")
 scenario("Unavailable Fire Blast replaces usable main",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=7}},
     "Main is a usable filler or there is a separately visible usable fallback",function(p) return F.main(p)~="fireblast" end,"high")
-scenario("Cooling-down finisher remains an optional hint",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=7}},
-    "Gold Frostbolt and violet Fire Blast",function(p) return F.main(p)=="frostbolt" and F.find(p,"fireblast").category=="offensive" end)
+scenario("Cooling-down finisher is hidden",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=7}},
+    "Gold Frostbolt without unavailable Fire Blast",function(p) return F.main(p)=="frostbolt" and not F.find(p,"fireblast") end)
 scenario("Finisher ready within two-second lead",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=1.5}},
     "Main Fire Blast",function(p) return F.main(p)=="fireblast" end)
 scenario("Finisher ready by cast completion",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=2.5},cast={id=116,start=100,finish=103}},
     "Main Fire Blast at the start of the current cast",function(p) return F.main(p)=="fireblast" end)
-scenario("Ready emergency options coexist with cooldown hints",{health=150,attacked=true,talents=frost,cooldowns={iceblock=120,barrier=20}},
-    "Ice Block, Cold Snap, Barrier and Mana Shield all remain visible",function(p)
-        return F.find(p,"iceblock") and F.find(p,"coldsnap") and F.find(p,"barrier") and F.find(p,"manashield") end)
+scenario("Ready emergency options replace unavailable choices",{health=150,attacked=true,talents=frost,cooldowns={iceblock=120,barrier=20}},
+    "Cold Snap and Mana Shield without unavailable Ice Block or Barrier",function(p)
+        return not F.find(p,"iceblock") and F.find(p,"coldsnap") and not F.find(p,"barrier") and F.find(p,"manashield") end)
 scenario("Ready Barrier keeps shield priority",{health=300,attacked=true,talents=frost},
     "Barrier without redundant Mana Shield",function(p) return F.find(p,"barrier") and not F.find(p,"manashield") end)
-scenario("Unready emergency group keeps its first hint",{health=150,attacked=true,talents=frost,cooldowns={iceblock=120,coldsnap=60}},
-    "Ice Block remains visible without a second unavailable survival hint",function(p) return F.find(p,"iceblock") and not F.find(p,"coldsnap") end)
+scenario("Unready emergency group is hidden",{health=150,attacked=true,talents=frost,cooldowns={iceblock=120,coldsnap=60}},
+    "Neither unavailable survival action glows",function(p) return not F.find(p,"iceblock") and not F.find(p,"coldsnap") end)
 
 local x=F.reset({power=120,maxPower=200,wand=false,defaultCost=50,cast={id=116,start=100,finish=103}})
 local p=F.evaluate(); record("Cast start chooses affordable next attack","Main Frostbolt",F.main(p)=="frostbolt",F.describe(p))
@@ -87,10 +86,10 @@ record("Next same-spell cast reserves mana again","Previous success cannot make 
 
 x=F.reset({targetHealth=140,distance=15,wand=false,cooldowns={fireblast=7},cast={id=116,start=100,finish=103}})
 F.evaluate(); x.cooldowns.fireblast=0; x.time=102.9; p=F.evaluate()
-record("Cooldown readiness cannot replace a committed Main","Frostbolt remains Main, Fire Blast stays optional",
-    F.main(p)=="frostbolt" and F.find(p,"fireblast").category=="offensive",F.describe(p))
+record("Cooldown readiness cannot replace a committed Main","Frostbolt remains Main without a late Fire Blast suggestion",
+    F.main(p)=="frostbolt" and not F.find(p,"fireblast"),F.describe(p))
 x.distance=50; p=F.evaluate()
-record("Range loss hides both committed attacks","No out-of-range Main or offensive fallback hint",not F.main(p) and not F.find(p,"fireblast"),F.describe(p))
+record("Range loss hides committed attacks","No out-of-range attack",not F.main(p) and not F.find(p,"fireblast"),F.describe(p))
 
 x=F.reset({targetHealth=140,distance=15,wand=false,cast={id=116,start=100,finish=103}})
 F.evaluate(); x.time=101; x.targetHealth=1000
@@ -185,12 +184,13 @@ for _,cd in ipairs({0,5}) do
         local spell=c.spells[pick.key]
         if pick.category=="main" then mains=mains+1; if spell.cooldown>0 then unavailableMain=unavailableMain+1 end end
         local unique=pick.kind..":"..pick.id
-        if seen[unique] or not spell.known or spell.enemy and spell.range~=true then violations=violations+1 end
+        local lead=pick.category=="main" and math.max(H.lead,c.cast and c.cast.remaining or 0) or 0
+        if seen[unique] or not spell.known or spell.enemy and spell.range~=true or spell.cooldown>lead then violations=violations+1 end
         seen[unique]=true
     end
     if mains>1 then violations=violations+1 end
     combinations=combinations+1
 end end end end end end end end
-record("Structural scenario matrix","No duplicate actions, multiple Mains, unknown spells, or out-of-range enemy advice",violations==0,
+record("Structural scenario matrix","No duplicate actions, multiple Mains, unknown spells, out-of-range enemy advice, or cooldown-gate violations",violations==0,
     combinations.." combinations; "..violations.." invariant violations; "..unavailableMain.." Main suggestions on cooldown")
 return {cases=results,findings=findings,namedCount=count,matrixCount=combinations,matrixViolations=violations,cooldownMainCount=unavailableMain}

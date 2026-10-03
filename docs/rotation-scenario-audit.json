@@ -3,6 +3,7 @@
   "matrixCount": 3888,
   "matrixViolations": 0,
   "cooldownMainCount": 0,
+  "suite": "audit",
   "cases": [
     {
       "name": "Level 1 starter",
@@ -225,27 +226,27 @@
       "priority": "high",
       "expected": "Ready Cold Snap is visible as an emergency option",
       "passed": true,
-      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier, defensive:coldsnap"
+      "actual": "main:frostbolt, defensive:barrier, defensive:coldsnap"
     },
     {
       "name": "Unavailable Barrier masks ready Mana Shield",
       "priority": "high",
       "expected": "Ready Mana Shield is visible as an emergency option",
       "passed": true,
-      "actual": "main:frostbolt, defensive:barrier, defensive:manashield"
+      "actual": "main:frostbolt, defensive:manashield"
     },
     {
       "name": "Unavailable Fire Blast replaces usable main",
       "priority": "high",
       "expected": "Main is a usable filler or there is a separately visible usable fallback",
       "passed": true,
-      "actual": "main:frostbolt, offensive:fireblast"
+      "actual": "main:frostbolt"
     },
     {
-      "name": "Cooling-down finisher remains an optional hint",
-      "expected": "Gold Frostbolt and violet Fire Blast",
+      "name": "Cooling-down finisher is hidden",
+      "expected": "Gold Frostbolt without unavailable Fire Blast",
       "passed": true,
-      "actual": "main:frostbolt, offensive:fireblast"
+      "actual": "main:frostbolt"
     },
     {
       "name": "Finisher ready within two-second lead",
@@ -260,10 +261,10 @@
       "actual": "main:fireblast"
     },
     {
-      "name": "Ready emergency options coexist with cooldown hints",
-      "expected": "Ice Block, Cold Snap, Barrier and Mana Shield all remain visible",
+      "name": "Ready emergency options replace unavailable choices",
+      "expected": "Cold Snap and Mana Shield without unavailable Ice Block or Barrier",
       "passed": true,
-      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier, defensive:manashield, defensive:coldsnap"
+      "actual": "main:frostbolt, defensive:manashield, defensive:coldsnap"
     },
     {
       "name": "Ready Barrier keeps shield priority",
@@ -272,10 +273,10 @@
       "actual": "main:frostbolt, defensive:barrier"
     },
     {
-      "name": "Unready emergency group keeps its first hint",
-      "expected": "Ice Block remains visible without a second unavailable survival hint",
+      "name": "Unready emergency group is hidden",
+      "expected": "Neither unavailable survival action glows",
       "passed": true,
-      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier"
+      "actual": "main:frostbolt, defensive:barrier"
     },
     {
       "name": "Cast start chooses affordable next attack",
@@ -304,13 +305,13 @@
     },
     {
       "name": "Cooldown readiness cannot replace a committed Main",
-      "expected": "Frostbolt remains Main, Fire Blast stays optional",
+      "expected": "Frostbolt remains Main without a late Fire Blast suggestion",
       "passed": true,
-      "actual": "main:frostbolt, offensive:fireblast"
+      "actual": "main:frostbolt"
     },
     {
-      "name": "Range loss hides both committed attacks",
-      "expected": "No out-of-range Main or offensive fallback hint",
+      "name": "Range loss hides committed attacks",
+      "expected": "No out-of-range attack",
       "passed": true,
       "actual": "none"
     },
@@ -458,7 +459,7 @@
     },
     {
       "name": "Structural scenario matrix",
-      "expected": "No duplicate actions, multiple Mains, unknown spells, or out-of-range enemy advice",
+      "expected": "No duplicate actions, multiple Mains, unknown spells, out-of-range enemy advice, or cooldown-gate violations",
       "passed": true,
       "actual": "3888 combinations; 0 invariant violations; 0 Main suggestions on cooldown"
     }

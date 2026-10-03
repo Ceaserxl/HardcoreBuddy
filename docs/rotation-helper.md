@@ -11,7 +11,7 @@ There is no combat-history recorder or saved diagnostic log.
 | --- | --- | --- |
 | Gold | Main: the next attack | One at a time |
 | Red | Defensive: interrupts, roots, shields, dispels, emergency immunity | Separate from Main |
-| Violet | Offensive: optional cooldowns, a carried mana gem, or a preferred attack waiting on cooldown | Separate from Main |
+| Violet | Offensive: ready optional damage abilities or a carried mana gem | Separate from Main |
 | Blue | Preparation: buffs, food, water, conjuring a mana gem | Several may appear together out of combat |
 
 All use a private copy of Blizzard's native spell-alert animation. The loop
@@ -36,13 +36,13 @@ trigger a missing-spell notice. Items do not trigger these spell notices.
 - Only learned spells and carried recovery items are eligible. Rank changes and
   talent changes refresh the available actions. Actual player data is used even
   if the field kit is previewing another character.
-- Cooldowns do not remove otherwise eligible hints. If the preferred attack
-  will still be cooling down after the planning window, gold prefers an attack
-  that will be ready and violet retains the original hint. The window is two
-  seconds or the remaining cast time, whichever is longer. If no alternative is
-  ready, the preferred Main remains visible. A cooling-down defensive hint can
-  coexist with a ready option in the same group, such as Ice Block with Cold Snap
-  or Barrier with Mana Shield. A ready first choice keeps its normal priority.
+- The shared cooldown gate applies to spells and items in all four categories.
+  Main attacks may be highlighted up to two seconds before becoming ready, or
+  when they will be ready at the current cast's completion, whichever is later.
+  Other categories require a ready cooldown now. The GCD is ignored for spells.
+  Unavailable choices are hidden, allowing the next eligible action in their
+  group to appear, such as Cold Snap instead of Ice Block or Mana Shield instead
+  of Barrier. No extra violet hint is shown for a cooling-down Main attack.
   Main plans mana up to two seconds ahead.
   At cast start it plans for that cast's completion, reserving its mana
   cost and crediting only reported casting regeneration. It does not predict
@@ -133,7 +133,7 @@ damage formulas. No retired rotation implementation was restored.
 ## Verification
 
 `tests/run_rotation_helper.py` checks scenario sequences rather than isolated
-spell priorities: late target-health changes, committed mana, cooldown-independent
+spell priorities: late target-health changes, committed mana, cooldown-filtered
 highlights, range changes, macros, roots versus immunity, stronger buffs, recovery,
 disabled state, unsupported classes and native-glow ownership. The legacy
 cleanup test still verifies that old saved traces are discarded.
@@ -147,3 +147,8 @@ Nova, a Fire Mage with Improved Scorch, and a level-40+ Mage with Ice Barrier.
 and event-order cases, including unavailable emergency choices, mana charging,
 matching versus unrelated cast endings, channels and partial Scorch ranks. The
 latest results are recorded in `docs/rotation-scenario-audit.md` and its JSON file.
+
+`tests/run_rotation_scenarios.py --suite cooldown --strict` runs exactly 50
+cooldown scenarios: GCD normalization, readiness boundaries, emergency fallbacks,
+damage abilities, mana gems, food/water, cast transitions, previous audit fixes,
+and missing-action chat. Results are in `docs/rotation-cooldown-scenarios.json`.
