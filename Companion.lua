@@ -361,6 +361,13 @@ function C.Detail(context, action)
         local family=P.grouped[item.family] and item.family or nil
         local defaults=S.DefaultGroup(context,item)
         local recommended=defaults
+        if item.group=="Scrolls" then
+            for _,candidate in ipairs(D.Scrolls.items) do
+                if candidate.family==item.family and candidate.level<=context.level
+                    and P.MatchesClass(candidate,context.characterClass)
+                    and (not recommended or candidate.level>recommended.level) then recommended=candidate end
+            end
+        end
         if not recommended and item.family and not item.userItem then
             local plan=P.BuildList(context.characterClass,context.level,P.ContextFaction(context))
             for _,section in ipairs({plan.rows,plan.specialist,plan.backups,plan.advanced}) do
@@ -395,6 +402,15 @@ function C.Detail(context, action)
         for _,block in ipairs(materials) do blocks[#blocks+1]=block end
         if item.itemId~=5816 and not item.userItem then
             local alternatives=item.options or (family and item.progression) or {}
+            if item.group=="Scrolls" then
+                alternatives={}
+                for _,candidate in ipairs(D.Scrolls.items) do
+                    if candidate.family==item.family and candidate.level<(recommended or item).level then
+                        alternatives[#alternatives+1]=candidate
+                    end
+                end
+                table.sort(alternatives,function(a,b) return a.level>b.level end)
+            end
             if family and family~="bandage" then
                 alternatives={}
                 for _,candidate in ipairs(D.Items.items) do
