@@ -57,6 +57,17 @@ local function measure(label, text, width, x, y)
     label:SetHeight(height)
     return height
 end
+local function sizeSupplyDetail(frame,block,width,stockWidth)
+    frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
+    frame.title:SetTextColor(unpack(WHITE))
+    frame.body:SetFont(STANDARD_TEXT_FONT,12,"")
+    local titleHeight=measure(frame.title,block.title,width-66-(stockWidth or 84),52,7)
+    local bodyHeight=measure(frame.body,block.body,width-64,52,9+titleHeight)
+    frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-11)
+    local height=math.max(56,21+titleHeight+bodyHeight)
+    frame:SetHeight(height); Skin.RowArtwork(frame)
+    return height
+end
 local function showNativeTooltip(block)
     if block.recommendation and block.action then
         GameTooltip:AddLine("Click to Apply Talent",0.83,0.69,0.43,true)
@@ -380,6 +391,10 @@ local function renderBlock(frame, block, width)
         frame.meta:Hide(); frame.chevron:Hide()
         frame:SetHeight(56); return 56
     end
+    if block.supplyDetail and not block.supply then
+        Skin.Paint(frame,"row"); frame.meta:Hide()
+        return sizeSupplyDetail(frame,block,width)
+    end
     if block.enchantRow and not block.supplyColumns then
         Skin.Paint(frame,"row"); frame.chevron:Hide(); frame.meta:Hide()
         frame.stock:SetShown(block.enchantStatus~=""); frame.stock:SetJustifyH("RIGHT")
@@ -522,10 +537,7 @@ local function renderBlock(frame, block, width)
         frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("BOTTOMRIGHT",-8,7)
         if block.supplyDetail then
             frame.priority:Hide()
-            local titleHeight=measure(frame.title,block.title,width-66-stockWidth,52,7)
-            local bodyHeight=measure(frame.body,block.body,width-64,52,9+titleHeight)
-            frame.title:SetWordWrap(true); frame.body:SetWordWrap(true)
-            y=math.max(56,21+titleHeight+bodyHeight); frame:SetHeight(y)
+            y=sizeSupplyDetail(frame,block,width,stockWidth)
             frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-7)
         end
         Skin.RowArtwork(frame)

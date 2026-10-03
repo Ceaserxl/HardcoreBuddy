@@ -384,13 +384,13 @@ function C.Detail(context, action)
         for _,other in ipairs(alternatives) do if other.itemId~=item.itemId then choices[#choices+1]=other end end
         heading("Alternatives",true,#choices==0 and "No alternatives listed." or nil)
         for _,other in ipairs(choices) do
-            local block=itemRow(other); block.body=G.SupplySubtitle(other,context); block.rightColumn=true; block.plain=true
+            local block=itemRow(other); block.body=G.SupplySubtitle(other,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
             blocks[#blocks+1]=block
         end
         local nextItem=G.NextSupply(item,context)
         heading("Next",true,not nextItem and "No higher rank listed." or nil)
         if nextItem then
-            local block=itemRow(nextItem); block.body=G.SupplySubtitle(nextItem,context); block.rightColumn=true; block.plain=true
+            local block=itemRow(nextItem); block.body=G.SupplySubtitle(nextItem,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
             blocks[#blocks+1]=block
         end
         if family then blocks[#blocks+1]=row("Profession training","Next recipes, skill books and training routes",{kind="profession",family=family}) end

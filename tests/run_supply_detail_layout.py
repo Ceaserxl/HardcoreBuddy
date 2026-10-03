@@ -54,6 +54,12 @@ local mx,my=materials:GetRect()
 local ax,ay=alternatives:GetRect()
 assert(mx==sx and my>sy and ax>sx+sw,"Materials below selected; alternatives right")
 assert(selected:GetHeight()>=56 and selected.body:GetHeight()>0)
+for _,frame in ipairs(card.content.blocks) do if frame:IsShown() and frame.block.rightColumn and frame.block.itemId then
+    assert(frame.block.supplyDetail and frame:GetHeight()==selected:GetHeight(),"Short alternative and Next rows match selected height")
+    local x,y=frame:GetRect(); local ix,iy=frame.icon:GetRect(); local tx,ty=frame.title:GetRect()
+    assert(ix-x==8 and iy-y==11 and tx-x==52 and ty-y==7,"Shared icon and title insets")
+    assert(frame.title.fontSize==selected.title.fontSize and frame.body.fontSize==selected.body.fontSize)
+end end
 -- Enchant future ranks can be inspected without changing the recommendation.
 GetInventoryItemID=function(_,slot) if slot==9 then return 10009 end end
 GetInventoryItemLink=function(_,slot) if slot==9 then return "item:10009:0:0:0" end end
