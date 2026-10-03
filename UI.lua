@@ -2,6 +2,7 @@ local _, addon = ...
 local P, C, Skin = addon.Planner, addon.Companion, addon.Skin
 local GOLD, WHITE, MUTED = Skin.colors.gold, Skin.colors.white, Skin.colors.muted
 local SPACE=Skin.layout
+local SUPPLY_ROW_HEIGHT=56
 local STOCK_COLORS={ready={0.42,0.83,0.60},low={1,0.76,0.32},missing={0.96,0.48,0.39},unknown=MUTED,choose=GOLD,off=MUTED}
 
 function addon:InsertUserItemLink(link)
@@ -61,10 +62,12 @@ local function sizeSupplyDetail(frame,block,width,stockWidth)
     frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
     frame.title:SetTextColor(unpack(WHITE))
     frame.body:SetFont(STANDARD_TEXT_FONT,12,"")
-    local titleHeight=measure(frame.title,block.title,width-66-(stockWidth or 84),52,7)
-    local bodyHeight=measure(frame.body,block.body,width-64,52,9+titleHeight)
+    measure(frame.title,block.title,width-66-(stockWidth or 84),52,7)
+    frame.title:SetWordWrap(false); frame.title:SetHeight(18)
+    measure(frame.body,block.body,width-64,52,25)
+    frame.body:SetHeight(28)
     frame.icon:ClearAllPoints(); frame.icon:SetPoint("TOPLEFT",8,-11)
-    local height=math.max(56,21+titleHeight+bodyHeight)
+    local height=SUPPLY_ROW_HEIGHT
     frame:SetHeight(height); Skin.RowArtwork(frame)
     return height
 end
@@ -390,7 +393,7 @@ local function renderBlock(frame, block, width)
         measure(frame.title,block.title,width-24,12,8)
         measure(frame.body,block.body,width-24,12,30)
         frame.meta:Hide(); frame.chevron:Hide()
-        frame:SetHeight(56); return 56
+        frame:SetHeight(SUPPLY_ROW_HEIGHT); return SUPPLY_ROW_HEIGHT
     end
     if block.supplyDetail and not block.supply then
         Skin.Paint(frame,"row"); frame.meta:Hide()
@@ -525,7 +528,7 @@ local function renderBlock(frame, block, width)
     if block.supply then
         -- Classification and stock share a right-hand column. Quantity editing
         -- is available only after opening the item or its rank details.
-        frame:SetHeight(56); y=56
+        frame:SetHeight(SUPPLY_ROW_HEIGHT); y=SUPPLY_ROW_HEIGHT
         local stockWidth=math.max(84,frame.stock:GetStringWidth()+4)
         frame.title:SetFont(STANDARD_TEXT_FONT,14,"")
         measure(frame.title,block.title,width-66-stockWidth,52,8); frame.title:SetHeight(18); frame.title:SetWordWrap(false)
@@ -541,6 +544,7 @@ local function renderBlock(frame, block, width)
             frame.priority:Hide()
             y=sizeSupplyDetail(frame,block,width,stockWidth)
             frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-7)
+            frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("BOTTOMRIGHT",-8,0)
         end
         Skin.RowArtwork(frame)
     elseif frame.carryLabel then frame.carryLabel:Hide() end
