@@ -3,6 +3,9 @@ local _, addon = ...
 local P, D = addon.Planner, addon.Data
 local G = {}
 addon.Guide = G
+function G.MaximumSkillRow()
+    return {title="Maximum Skill Reached",disabled=true,compactRow=true,rightColumn=true}
+end
 -- Shared compact copy for selected supplies, alternatives and future ranks.
 function G.SupplySubtitle(item,context)
     local effect=(item.detail or item.short or ""):gsub("^Use: *","")

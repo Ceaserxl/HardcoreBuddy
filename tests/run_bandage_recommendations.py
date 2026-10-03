@@ -66,6 +66,12 @@ for i,b in ipairs(A.document.cards[1].blocks) do
 end
 assert(nextIndex and alternativeIndex>nextIndex,"Alternatives follow Next")
 assert(select(2,ids(A.document))==10,"All ten ranks visible once without toggling")
+local maximum
+for _,frame in ipairs(A.window.cards[1].content.blocks) do
+    if frame:IsShown() and frame.block.title=="Maximum Skill Reached" then maximum=frame end
+end
+assert(maximum and not maximum:IsEnabled() and not maximum.iconHit:IsEnabled(),"Maximum rank is a disabled row")
+assert(maximum:GetHeight()==56 and maximum:GetAlpha()==0.45,"Maximum row is compact and muted")
 local target
 for _,b in ipairs(A.window.cards[1].content.blocks) do if b.block and b.block.itemId==6451 then target=b end end
 assert(target); MOCK.Click(target)

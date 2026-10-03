@@ -378,10 +378,12 @@ function E.Detail(context,action)
             end
         end
     end
-    heading("Next",true,not nextRank and "No higher compatible rank listed." or nil)
+    heading("Next",true)
     if nextRank then
         local b=enchantBlock(g,nextRank,{kind="enchantRecipe",slotId=g.slotId,spellId=nextRank.spellId})
         b.enchantAlternative=true; b.rightColumn=true; blocks[#blocks+1]=b
+    else
+        blocks[#blocks+1]=A.Guide.MaximumSkillRow()
     end
     return {title=g.name.." enchants",blocks=blocks,itemLayout=true,fullWidth=true}
 end
