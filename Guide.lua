@@ -34,16 +34,17 @@ end
 function G.NextSupply(item,context)
     if item.next and item.next.itemId~=item.itemId then return item.next end
     local grouped=addon.Planner.grouped[item.family]
+    local cookedFood=item.family=="wellfed" or item.family=="manafood"
     local function rank(i)
         local info=addon.Crafting.GetInfo(i,context)
-        return grouped and (info.skill or i.power or 0) or addon.Planner.AvailableAt(i)
+        return grouped and (info.skill or i.power or 0) or cookedFood and i.level or addon.Planner.AvailableAt(i)
     end
     local minimum=rank(item)
-    if not grouped then minimum=math.max(minimum,context.level or 1) end
+    if not grouped and not cookedFood then minimum=math.max(minimum,context.level or 1) end
     local nextItem
     for _,catalog in ipairs({addon.Data.Items.items,addon.Data.Scrolls.items}) do
         for _,other in ipairs(catalog) do
-            if other.family==item.family and other.itemId~=item.itemId and not other.alternative
+            if other.family==item.family and other.itemId~=item.itemId and (cookedFood or not other.alternative)
                 and addon.Planner.MatchesClass(other,context.characterClass)
                 and addon.Planner.MatchesFaction(other,addon.Planner.ContextFaction(context)) and rank(other)>minimum
                 and (not nextItem or rank(other)<rank(nextItem)) then nextItem=other end

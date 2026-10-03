@@ -53,6 +53,15 @@ for _,c in ipairs(supplyDoc.cards) do for _,b in ipairs(c.blocks or {}) do
     if b.itemId==8951 then assert(b.body==A.Guide.SupplySubtitle(items[8951],ctx),"Main tabs use compact effects") end
 end end
 assert(A.Guide.NextSupply(items[1251],ctx).itemId==2581)
+for _,level in ipairs({35,40,60}) do
+    local foodContext={characterClass="Mage",level=level,faction="Alliance"}
+    local nextFood=A.Guide.NextSupply(items[17222],foodContext)
+    assert(nextFood and nextFood.level==40,"Level 35 food advances to level 40 even when the character already qualifies")
+    local page=A.Companion.Detail(foodContext,{kind="item",item=items[17222]})
+    for i,b in ipairs(page.blocks) do
+        if b.title=="Next" then assert(page.blocks[i+1].itemId==nextFood.itemId,"Next renders higher cooked food") end
+    end
+end
 for _,family in ipairs({"dummy","antivenom"}) do
     local page=A.Companion.Detail(ctx,{kind="supplyFamily",family=family})
     assert(page.itemLayout and page.quantityRecord and page.itemSectionTitle=="Recommended","Profession supplies use standard details")
