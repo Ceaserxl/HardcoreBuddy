@@ -78,7 +78,11 @@ end end
 print("PASS: "..checks.." current full-TOC supply records across 540 class/level contexts.")
 """)
 for rel, expected in json.loads((ROOT/'reference/manifest.json').read_text()).items():
-    assert hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()==expected,rel
+    data=(ROOT/rel).read_bytes()
+    # The archived hashes used Windows CRLF. Git checks these text fixtures out
+    # as LF on Linux; only normalize line endings, never JSON content or spacing.
+    canonical=data.replace(b'\r\n',b'\n').replace(b'\n',b'\r\n')
+    assert expected in (hashlib.sha256(data).hexdigest(),hashlib.sha256(canonical).hexdigest()),rel
 toc=(ROOT/'HardcoreBuddy.toc').read_text()
 assert 'Dependencies:' not in toc and 'OptionalDeps:' not in toc
 for line in toc.splitlines():

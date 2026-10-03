@@ -48,4 +48,5 @@ StaticPopup1=nil; StaticPopup_Visible=function(which) return nil,d.which==which 
 prepare(); d.which='EQUIP_BIND'; d:Show(); tick(); verify()
 print('PASS: delayed popup/event ordering, all three bind types, missing APIs/slot data, repeated accept/cancel cycles, tooltip and timeout cleanup.')
 ''')
+(ROOT/'.release').mkdir(exist_ok=True)
 composite(lua.globals().MOCK.frames,a.GearBagAdvisor.bindDetails).save(str(ROOT/'.release/bind-details.png'))
