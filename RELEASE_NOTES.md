@@ -5,6 +5,16 @@
 - Removed its Companion tab, overview entry and enable controls. Previously
   enabled characters are disabled on login; helper modules are not loaded or packaged.
 - Supplies, Gear Advisor, Talent Advisor and other addon features remain available.
+- Standardized supply detail layouts, compact rows, Next/Alternatives ordering,
+  bandage recommendations and lower-rank defaults. Removed per-craft subtitles.
+- Unified build-weight recommendations, fixed User-item priority/stock refresh,
+  and excluded unusable supplies from automatic restocking.
+- Added missing elixirs, protection potions and recipe materials; corrected
+  gear stat explanations, cached-alt weapon eligibility and unknown NPC levels.
+- AH Essentials uses per-row Buy buttons, optional Craft > Buy and Show All
+  Essentials filters, plus a configurable per-unit price limit. AH Upgrades
+  offers per-row buyouts from saved listings with normal confirmation.
+- Expanded release validation and packaged-addon checks.
 
 # HardcoreBuddy v0.7.0
 
