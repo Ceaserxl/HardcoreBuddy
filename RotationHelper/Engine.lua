@@ -3,6 +3,14 @@ local _,A=...
 local H={classes={},lead=2,colors={main={1,0.82,0.15},defensive={1,0.18,0.12},offensive={0.85,0.35,1},preparation={0.2,0.65,1}}}
 A.RotationHelper=H
 
+function H.PreparationAllowed(c,key)
+    if not c.preparationBlocked and not c.recovering then return true end
+    local s=c.spells[key]
+    -- Consuming a meal does not remove other needed supplies from the bar.
+    -- Actual casts/channels still keep their existing preparation gate.
+    return s and s.kind=="item" and c.resting and not c.cast or false
+end
+
 function H.Eligible(c,key,immediate,forecast)
     local s=c.spells[key]
     if not s or not s.known or s.blocked or c.dead or c.taxi then return false end
@@ -45,7 +53,7 @@ function H.Select(c,module,state)
     for _,rule in ipairs(rules) do
         local main=rule.category=="main"
         local preparing=rule.category=="preparation"
-        if (not preparing or not c.preparationBlocked) and H.Eligible(c,rule.spell,not main,main) then
+        if (not preparing or H.PreparationAllowed(c,rule.spell)) and H.Eligible(c,rule.spell,not main,main) then
             local reason=rule.when(main and planned or c)
             if reason then
                 local pick={key=rule.spell,id=c.spells[rule.spell].id,kind=c.spells[rule.spell].kind or "spell",

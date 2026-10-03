@@ -131,7 +131,7 @@ X.auras.player={{spellId=11396,expirationTime=400}}; p=evaluate(); check(not fin
 X.inventory={[159]=5,[117]=5}; H.supplyItems=nil; X.power=100; X.health=700; p=evaluate()
 check(find(p,"water") and find(p,"food"),"Shared recovery suggests carried food and drink")
 X.auras.player={{spellId=430,name="Spell430",expirationTime=130}}; p=evaluate()
-check(#p==0,"Do not interrupt drinking with preparation or another drink")
+check(find(p,"food") and find(p,"water") and not find(p,"intellect") and not find(p,"frostarmor"),"Food and drink markers stay visible while drinking; spell preparation still waits")
 X.auras.player={}; X.combat=true; p=evaluate(); check(not find(p,"water") and not find(p,"food"),"Recovery items are out-of-combat only")
 X.dead=true; p=evaluate(); check(#p==0,"Death clears all advice")
 X.dead=false; X.taxi=true; p=evaluate(); check(#p==0,"Flight clears all advice")

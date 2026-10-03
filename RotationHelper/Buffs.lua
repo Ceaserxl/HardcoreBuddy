@@ -27,15 +27,9 @@ function B:Used(id,t)
         if aura.group then groups[aura.group]=true end
         for group in pairs(aura.effects or {}) do groups[group]=true end
     end
-    for _,meta in pairs(D.items) do if meta.eating==id then groups[meta.group]=true end end
+    -- Starting a meal is not its buff being applied. Keep its reminder until
+    -- the actual food buff arrives instead of blinking off when eating starts.
     for group in pairs(groups) do H.recent["buff:"..group]=t end
-end
-local function itemCooldown(id,t)
-    local get=C_Container and C_Container.GetItemCooldown or GetItemCooldown
-    if not get then return 0 end
-    local start,duration,enabled=get(id)
-    if enabled==0 or enabled==false then return math.huge end
-    return math.max(0,(start or 0)+(duration or 0)-t)
 end
 local function power(c,meta,id,aura)
     local value=meta.power
@@ -104,7 +98,7 @@ function B:Add(c)
         local meta=D.items[id]
         local key="buffItem:"..id
         local used=H.recent["buff:"..meta.group]
-        local s={id=id,known=true,kind="item",cost=0,range=true,cooldown=itemCooldown(id,c.now),
+        local s={id=id,known=true,kind="item",cost=0,range=true,cooldown=H.PreparationItemCooldown(id,c),
             blocked=used and c.now-used<1.5 or false}
         c.spells[key]=s
         consider(key,s,meta)
@@ -117,10 +111,10 @@ function B:Add(c)
             local ready=not used or c.now-used>=1.5
             c.buffRules[#c.buffRules+1]={spell=candidate.key,category="preparation",group="buff:"..group,
                 when=function(view)
-                    return ready and not view.combat and not view.recovering
+                    return ready and not view.combat and H.PreparationAllowed(view,candidate.key)
                         and "Apply or refresh your strongest available "..group.." buff"
                 end}
-            if group=="food" and ready and not c.combat and not c.recovering and not c.preparationBlocked
+            if group=="food" and ready and not c.combat and H.PreparationAllowed(c,candidate.key)
                 and H.Eligible(c,candidate.key,true) then c.buffFoodPending=true end
         end
     end

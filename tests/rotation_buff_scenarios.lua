@@ -67,10 +67,40 @@ scenario("Well Fed refresh starts at five minutes",{inventory={[21217]=2},player
 scenario("Stronger mana food prevents a downgrade near expiry",{inventory={[21217]=2},playerAuras={{spellId=18194,expirationTime=150}}},nil,{"buffItem:21217"})
 scenario("Higher stat food suppresses a weaker meal",{inventory={[17222]=2},playerAuras={{spellId=25661,expirationTime=400}}},nil,{"buffItem:17222"},"WARRIOR")
 scenario("Buff meal takes precedence over a second recovery meal",{health=300,inventory={[21217]=2,[117]=5}},"buffItem:21217",{"food"})
-scenario("Brain Food eating aura suppresses all preparation",{inventory={[21217]=2,[9179]=2,[159]=3},power=300,playerAuras={{spellId=25691,expirationTime=120}}},nil,{"buffItem:21217","buffItem:9179","water","intellect"})
+scenario("Brain Food keeps needed food highlighted while eating",{inventory={[21217]=2,[9179]=2,[159]=3},power=300,playerAuras={{spellId=25691,expirationTime=120}}},"buffItem:21217",{"intellect","icearmor"})
+scenario("Elixir stays highlighted while drinking",{inventory={[9179]=2},names={[430]="Drink"},playerAuras={{spellId=430,name="Drink",expirationTime=120}}},"buffItem:9179",{"intellect","icearmor"})
+scenario("Scroll stays highlighted while eating",{inventory={[4422]=2},names={[433]="Food"},playerAuras={{spellId=433,name="Food",expirationTime=120}}},"buffItem:4422",{"intellect","icearmor"})
+scenario("Recovery food stays highlighted while eating",{health=500,inventory={[117]=2},names={[433]="Food"},playerAuras={{spellId=433,name="Food",expirationTime=120}}},"food",{"intellect","icearmor"})
+scenario("Water stays highlighted while drinking",{power=300,inventory={[159]=2},names={[430]="Drink"},playerAuras={{spellId=430,name="Drink",expirationTime=120}}},"water",{"intellect","icearmor"})
+scenario("Buff meal still replaces plain food while eating",{health=500,inventory={[21217]=2,[117]=2},playerAuras={{spellId=25691,expirationTime=120}}},"buffItem:21217",{"food"})
+scenario("Elixir ignores matching GCD",{inventory={[9179]=2},gcd=1.5,itemCooldown=1.5},"buffItem:9179")
+scenario("Scroll ignores matching GCD",{inventory={[4422]=2},gcd=1.5,itemCooldown=1.5},"buffItem:4422")
+scenario("Buff food ignores matching GCD",{inventory={[21217]=2},gcd=1.5,itemCooldown=1.5},"buffItem:21217")
+scenario("Recovery food ignores matching GCD",{health=500,inventory={[117]=2},gcd=1.5,itemCooldown=1.5},"food")
+scenario("Water ignores matching GCD",{power=300,inventory={[159]=2},gcd=1.5,itemCooldown=1.5},"water")
+scenario("Longer actual item cooldown still blocks elixir",{inventory={[9179]=2},gcd=1.5,itemCooldown=3},nil,{"buffItem:9179"})
+scenario("Same duration with different start remains a real cooldown",{inventory={[4422]=2},gcd=1.5,itemCooldown=1.5,itemStart=99.8},nil,{"buffItem:4422"})
+scenario("Short item cooldown without a GCD remains blocked",{inventory={[21217]=2},itemCooldown=1.5},nil,{"buffItem:21217"})
+scenario("Disabled item is not enabled by GCD exception",{inventory={[9179]=2},gcd=1.5,itemCooldown=1.5,itemEnabled=false},nil,{"buffItem:9179"})
+scenario("Eating does not bypass an actual scroll cooldown",{inventory={[4422]=2},itemCooldown=10,playerAuras={{spellId=25691,expirationTime=120}}},nil,{"buffItem:4422"})
+scenario("Evocation still blocks consumable preparation",{inventory={[9179]=2,[21217]=2,[4422]=2,[159]=2},power=300,channel={id=12051,start=100,finish=108}},nil,{"buffItem:9179","buffItem:21217","buffItem:4422","water"})
+scenario("A recovery aura does not bypass an active cast",{inventory={[9179]=2,[21217]=2,[4422]=2},playerAuras={{spellId=25691,expirationTime=120}},cast={id=8690,start=100,finish=110}},nil,{"buffItem:9179","buffItem:21217","buffItem:4422"})
 scenario("Recovery potions are not routine buff markers",{inventory={[1710]=2}},nil,{"buffItem:1710"})
 
-local x=setup({inventory={[9179]=2}})
+local x=setup({inventory={[21217]=2}})
+F.event("UNIT_SPELLCAST_SUCCEEDED","player","start-meal",25691)
+record("Starting buff food does not blink off the needed food marker","Keep food until its buff is applied",item(H.picks,21217)~=nil,H.picks)
+x.playerAuras={{spellId=25691,expirationTime=120},{spellId=25941,expirationTime=1000}}
+F.event("UNIT_AURA","player")
+record("Satisfied food buff clears the marker even while eating","No repeat buff meal",not item(H.picks,21217),H.picks)
+
+local legacy=GetItemCooldown
+local containerCooldown=C_Container.GetItemCooldown
+C_Container.GetItemCooldown=legacy; GetItemCooldown=nil
+scenario("Container cooldown API also ignores matching GCD",{inventory={[9179]=2},gcd=1.5,itemCooldown=1.5},"buffItem:9179")
+C_Container.GetItemCooldown=containerCooldown; GetItemCooldown=legacy
+
+x=setup({inventory={[9179]=2}})
 F.event("UNIT_SPELLCAST_SUCCEEDED","player","consume-intellect",11396)
 record("Successful use hides the marker before aura propagation","No repeat dose or weaker spell",not item(H.picks,9179) and not F.find(H.picks,"intellect"),H.picks)
 x.inventory[9179]=nil; x.playerAuras={{spellId=11396,expirationTime=3700}}
@@ -101,7 +131,7 @@ CreateFrame=function(kind,name,parent,template)
     function frame:GetSize() return self:GetWidth(),self:GetHeight() end
     if template=="ActionButtonSpellAlertTemplate" then
         local loop={playing=false}
-        function loop:Play() self.playing=true end
+        function loop:Play() self.playing=true; self.starts=(self.starts or 0)+1 end
         function loop:Stop() self.playing=false end
         function loop:IsPlaying() return self.playing end
         frame.ProcLoop=loop; frame.ProcStartFlipbook=frame:CreateTexture(); frame.ProcLoopFlipbook=frame:CreateTexture()
@@ -126,6 +156,11 @@ local macro=H.Glow.seen[buttons[2]]
 local spell=H.Glow.seen[buttons[3]]
 record("Chosen consumable gets the actual native item glow","Direct item and macro glow; conflicting spell stays dark",
     direct.glow:IsShown() and direct.glow.ProcLoop:IsPlaying() and macro.glow:IsShown() and not spell.glow:IsShown(),p)
+x.gcd=1.5; x.itemCooldown=1.5
+x.playerAuras={{spellId=430,name="Spell430",expirationTime=120}}
+F.event("UNIT_AURA","player")
+record("Item and macro glows stay continuous during drinking and GCD","Both loops stay visible without restarting",
+    direct.glow:IsShown() and macro.glow:IsShown() and direct.glow.ProcLoop.starts==1 and macro.glow.ProcLoop.starts==1,H.picks)
 x.playerAuras={{spellId=11396,expirationTime=3700}}
 F.event("UNIT_AURA","player")
 record("Aura event immediately clears both item and macro markers","Both consumable glows stop; weaker spell stays dark",
@@ -136,6 +171,11 @@ local full={}
 for id in pairs(D.items) do full[id]=2 end
 local violations=0
 for _,class in ipairs({"WARRIOR","PALADIN","HUNTER","ROGUE","PRIEST","SHAMAN","MAGE","WARLOCK","DRUID"}) do
+    setup({level=40,gcd=1.5,itemCooldown=1.5,inventory={[8951]=2,[4422]=2,[21217]=2,[17222]=2},playerAuras={{spellId=25691,expirationTime=120}}},class)
+    local resting=F.evaluate()
+    local food=(class=="MAGE" or class=="PRIEST" or class=="WARLOCK") and 21217 or 17222
+    record(class.." keeps Food Scroll and Elixir markers during eating and GCD","All three needed consumables remain visible",
+        item(resting,8951) and item(resting,4422) and item(resting,food),resting)
     local pass=true
     for level=1,60 do
         setup({level=level,inventory=full},class)

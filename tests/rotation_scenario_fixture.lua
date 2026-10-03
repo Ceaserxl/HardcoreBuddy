@@ -154,7 +154,7 @@ end}
 C_NamePlate=nil
 GetItemCount=function(id) return x.inventory[id] or 0 end
 C_Item.GetItemCount=GetItemCount
-GetItemCooldown=function() return x.time,x.itemCooldown or 0,x.itemEnabled==nil and 1 or x.itemEnabled end
+GetItemCooldown=function() return x.itemStart or x.time,x.itemCooldown or 0,x.itemEnabled==nil and 1 or x.itemEnabled end
 GetInventoryItemLink=function() return x.wand~=false and x.level>=5 and "item:11287" end
 GetItemInfoInstant=function() return 11287,nil,nil,"INVTYPE_RANGEDRIGHT" end
 A.TalentAdvisor.ReadCurrent=function() return {ranks=x.talents} end

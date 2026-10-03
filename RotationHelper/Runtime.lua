@@ -33,6 +33,14 @@ local function cooldown(id,item,t)
     if enabled==0 or enabled==false then return math.huge,0,0 end
     return math.max(0,(start or 0)+(duration or 0)-t),start or 0,duration or 0
 end
+function H.PreparationItemCooldown(id,c)
+    local remaining,start,duration=cooldown(id,true,c.now)
+    -- A matching global cooldown is not the consumable's own cooldown.
+    -- Preserve disabled items and real item cooldowns, including short ones.
+    if remaining~=math.huge and (c.gcdDuration or 0)>0
+        and math.abs(duration-c.gcdDuration)<0.05 and math.abs(start-c.gcdStart)<0.05 then return 0 end
+    return remaining
+end
 local function cost(id,powerType)
     local f=C_Spell and C_Spell.GetSpellPowerCost or GetSpellPowerCost
     local costs=f and f(id)
@@ -233,6 +241,7 @@ function H:Snapshot()
     end
     c.casting=c.cast and self.byID[c.cast.id]
     local gcd,gcdStart,gcdDuration=cooldown(61304,false,t)
+    c.gcdStart,c.gcdDuration=gcdStart,gcdDuration
     c.actionDelay=math.max(c.cast and c.cast.remaining or 0,gcd==math.huge and 0 or gcd)
     local pending=c.cast and not c.cast.paid and not c.cast.channel and c.cast.id and cost(c.cast.id,c.powerType) or 0
     local regen=0
@@ -265,8 +274,9 @@ function H:Snapshot()
     end
     for _,id in ipairs(self.module.pauseAuras or {}) do if c.auras.player[id] then c.paused=true end end
     local foodName=info(433); local drinkName=info(430)
-    for _,a in pairs(c.auras.player) do if a.name==foodName or a.name==drinkName then c.recovering=true end end
-    if self.Buffs and self.Buffs:IsEating(c) then c.recovering=true end
+    for _,a in pairs(c.auras.player) do if a.name==foodName or a.name==drinkName then c.resting=true end end
+    if self.Buffs and self.Buffs:IsEating(c) then c.resting=true end
+    c.recovering=c.resting
     for _,id in ipairs(self.module.recoveryChannels or {}) do
         if c.cast and c.cast.channel and c.cast.id==id then c.recovering=true end
     end

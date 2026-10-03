@@ -40,7 +40,8 @@ trigger a missing-spell notice. Items do not trigger these spell notices.
 - The shared cooldown gate applies to spells and items in all four categories.
   Main attacks must be ready now, or by the end of the current cast or GCD.
   A cooldown inside two seconds does not displace a ready attack while idle.
-  Other categories require a ready cooldown now. The GCD is ignored for spells.
+  Other categories require a ready cooldown now. The GCD is ignored for spells
+  and preparation consumables; actual item cooldowns and disabled items still wait.
   Unavailable choices are hidden, allowing the next eligible action in their
   group to appear, such as Cold Snap instead of Ice Block or Mana Shield instead
   of Barrier. No extra violet hint is shown for a cooling-down Main attack.
@@ -91,15 +92,16 @@ trigger a missing-spell notice. Items do not trigger these spell notices.
   source in each conflict group is highlighted; free class spells win ties.
   Stronger active buffs are never downgraded, even inside the refresh window.
   Items on cooldown wait without prompting a weaker consumable.
-  Preparation pauses
-  while eating, drinking, channeling Evocation, casting an attack, or casting a
-  spell the helper does not model. Carried, usable water takes precedence over
+  Spell preparation pauses while eating or drinking. Needed food, water,
+  scrolls and elixirs remain highlighted during eating, drinking and the GCD.
+  Preparation still pauses while channeling Evocation, casting an attack, or
+  casting a spell the helper does not model. Carried, usable water takes precedence over
   Evocation; food and water can still appear together.
 - Buff food has its own missing/expiring buff check and can be suggested at full
   health. Mage/Priest/Warlock prefer carried mana food; other classes use the
   supplies catalog's stat-food preference. All consumables respect catalog class
   and use-level filters. Buff meals take precedence over another recovery meal.
-  Eating a meal suppresses further preparation until eating ends.
+  Starting a meal keeps its food-buff marker until the buff is satisfied.
   See [shared buff coverage and verified identities](consumable-buffs.md).
 
 ## Mage policy

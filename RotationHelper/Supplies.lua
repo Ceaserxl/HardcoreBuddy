@@ -27,19 +27,15 @@ function H:AddSupplies(c)
     end
     for _,key in ipairs({"food","water"}) do
         local item=self.supplyItems[key]
-        local cd=0
-        if item then
-            local f=C_Container and C_Container.GetItemCooldown or GetItemCooldown
-            if f then local start,duration,enabled=f(item.itemId); cd=(enabled==0 or enabled==false) and math.huge or math.max(0,(start or 0)+(duration or 0)-c.now) end
-        end
+        local cd=item and self.PreparationItemCooldown(item.itemId,c) or 0
         c.spells[key]={known=item~=nil,id=item and item.itemId,kind="item",cost=0,cooldown=cd,range=true}
     end
 end
 H.sharedRules={
     {spell="food",category="preparation",when=function(c)
-        return not c.combat and not c.recovering and not c.cast and not c.buffFoodPending and c.health<0.85 and "Recover health before pulling"
+        return not c.combat and H.PreparationAllowed(c,"food") and not c.cast and not c.buffFoodPending and c.health<0.85 and "Recover health before pulling"
     end},
     {spell="water",category="preparation",when=function(c)
-        return not c.combat and not c.recovering and not c.cast and c.powerType==0 and c.mana<0.65 and "Recover mana before pulling"
+        return not c.combat and H.PreparationAllowed(c,"water") and not c.cast and c.powerType==0 and c.mana<0.65 and "Recover mana before pulling"
     end},
 }

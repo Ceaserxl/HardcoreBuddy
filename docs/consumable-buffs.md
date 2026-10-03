@@ -65,19 +65,25 @@ and [12 Stamina/Spirit Well Fed](https://nether.wowhead.com/classic/tooltip/spel
 
 Only carried bag items qualify; bank stock is excluded. The bag cache refreshes
 after bag changes and when class/use level changes. An unavailable inventory
-read is retried. Successful use briefly suppresses repeat prompts while aura and
-bag events catch up. UNIT_AURA clears satisfied markers immediately.
+read is retried. Successful buff application briefly suppresses repeat prompts
+while aura and bag events catch up. Starting a meal does not suppress its still
+needed food-buff marker. UNIT_AURA clears satisfied markers immediately.
 
 Direct item buttons and item macros use the existing native proc-style glow.
 No new frame or bar geometry is added. Food buff checks also run at full health
-and mana, but preparation never interrupts eating, drinking or combat casts.
+and mana. Needed food, water, scroll and elixir markers stay visible through
+eating, drinking and matching global cooldowns. Real item cooldowns, disabled
+items, combat and active-cast preparation gates still apply. Spell preparation
+continues to wait while eating or drinking.
 
 ## Offline verification
 
-58 focused cases pass, plus 540 class/level combinations without duplicate
+88 focused cases pass, plus 540 class/level combinations without duplicate
 conflicting groups. Tests cover stronger items versus spells in both directions,
 five-minute refreshes, received class buffs, class/use-level filtering, compound
 buff recognition, inventory changes and actual direct-item/macro glow application.
+They also cover eating/drinking and GCD persistence on all nine classes, both
+item-cooldown API paths, true cooldown rejection, and uninterrupted glow loops.
 
 The existing 200-case, 64-choice, 41-handoff, 22-prediction, 75-audit and 115-check
 suites also pass; the audit matrix retains zero violations across 3,888 inputs.
