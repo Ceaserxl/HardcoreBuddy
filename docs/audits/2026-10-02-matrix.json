@@ -1,0 +1,282 @@
+{
+  "unknownEnchantCard": {
+    "ok": true
+  },
+  "observations": {
+    "craftableWithoutMaterials": {
+      "count": 5,
+      "samples": [
+        {
+          "id": 5530,
+          "name": "Blinding Powder"
+        },
+        {
+          "id": 5514,
+          "name": "Mana Agate"
+        },
+        {
+          "id": 5513,
+          "name": "Mana Jade"
+        },
+        {
+          "id": 8007,
+          "name": "Mana Citrine"
+        },
+        {
+          "id": 8008,
+          "name": "Mana Ruby"
+        }
+      ]
+    },
+    "duplicateCatalogID": {
+      "count": 1,
+      "samples": [
+        {
+          "id": 17056,
+          "name": "Light Feather",
+          "other": "Light Feather"
+        }
+      ]
+    },
+    "recommendedBandageUnusable": {
+      "count": 1080,
+      "samples": [
+        {
+          "name": "Linen Bandage",
+          "faction": "Alliance",
+          "id": 1251,
+          "class": "Druid",
+          "skill": 0,
+          "level": 1
+        },
+        {
+          "name": "Heavy Linen Bandage",
+          "faction": "Alliance",
+          "id": 2581,
+          "class": "Druid",
+          "skill": 0,
+          "level": 2
+        },
+        {
+          "name": "Heavy Wool Bandage",
+          "faction": "Alliance",
+          "id": 3531,
+          "class": "Druid",
+          "skill": 0,
+          "level": 3
+        },
+        {
+          "name": "Heavy Wool Bandage",
+          "faction": "Alliance",
+          "id": 3531,
+          "class": "Druid",
+          "skill": 0,
+          "level": 4
+        },
+        {
+          "name": "Heavy Wool Bandage",
+          "faction": "Alliance",
+          "id": 3531,
+          "class": "Druid",
+          "skill": 0,
+          "level": 5
+        },
+        {
+          "name": "Silk Bandage",
+          "faction": "Alliance",
+          "id": 6450,
+          "class": "Druid",
+          "skill": 0,
+          "level": 6
+        },
+        {
+          "name": "Silk Bandage",
+          "faction": "Alliance",
+          "id": 6450,
+          "class": "Druid",
+          "skill": 0,
+          "level": 7
+        },
+        {
+          "name": "Heavy Silk Bandage",
+          "faction": "Alliance",
+          "id": 6451,
+          "class": "Druid",
+          "skill": 0,
+          "level": 8
+        },
+        {
+          "name": "Heavy Silk Bandage",
+          "faction": "Alliance",
+          "id": 6451,
+          "class": "Druid",
+          "skill": 0,
+          "level": 9
+        },
+        {
+          "name": "Heavy Silk Bandage",
+          "faction": "Alliance",
+          "id": 6451,
+          "class": "Druid",
+          "skill": 0,
+          "level": 10
+        },
+        {
+          "name": "Heavy Silk Bandage",
+          "faction": "Alliance",
+          "id": 6451,
+          "class": "Druid",
+          "skill": 0,
+          "level": 11
+        },
+        {
+          "name": "Mageweave Bandage",
+          "faction": "Alliance",
+          "id": 8544,
+          "class": "Druid",
+          "skill": 0,
+          "level": 12
+        }
+      ]
+    },
+    "duplicateRightColumnItem": {
+      "count": 10484,
+      "samples": [
+        {
+          "name": "Anti-Venom",
+          "duplicate": 6453,
+          "id": 6452,
+          "class": "Druid",
+          "level": 1
+        },
+        {
+          "name": "Strong Anti-Venom",
+          "duplicate": 19440,
+          "id": 6453,
+          "class": "Druid",
+          "level": 1
+        },
+        {
+          "name": "Target Dummy",
+          "duplicate": 4392,
+          "id": 4366,
+          "class": "Druid",
+          "level": 1
+        },
+        {
+          "name": "Advanced Target Dummy",
+          "duplicate": 16023,
+          "id": 4392,
+          "class": "Druid",
+          "level": 1
+        },
+        {
+          "name": "Anti-Venom",
+          "duplicate": 6453,
+          "id": 6452,
+          "class": "Druid",
+          "level": 1
+        },
+        {
+          "name": "Strong Anti-Venom",
+          "duplicate": 19440,
+          "id": 6453,
+          "class": "Druid",
+          "level": 1
+        },
+        {
+          "name": "Target Dummy",
+          "duplicate": 4392,
+          "id": 4366,
+          "class": "Druid",
+          "level": 1
+        },
+        {
+          "name": "Advanced Target Dummy",
+          "duplicate": 16023,
+          "id": 4392,
+          "class": "Druid",
+          "level": 1
+        },
+        {
+          "name": "Anti-Venom",
+          "duplicate": 6453,
+          "id": 6452,
+          "class": "Druid",
+          "level": 2
+        },
+        {
+          "name": "Strong Anti-Venom",
+          "duplicate": 19440,
+          "id": 6453,
+          "class": "Druid",
+          "level": 2
+        },
+        {
+          "name": "Target Dummy",
+          "duplicate": 4392,
+          "id": 4366,
+          "class": "Druid",
+          "level": 2
+        },
+        {
+          "name": "Advanced Target Dummy",
+          "duplicate": 16023,
+          "id": 4392,
+          "class": "Druid",
+          "level": 2
+        }
+      ]
+    }
+  },
+  "counts": {
+    "supplyDetailPages": 84064,
+    "supplyRecords": 86224,
+    "supplyContexts": 2160,
+    "catalogRows": 186
+  },
+  "buffFoodProfiles": [
+    {
+      "foods": [
+        {
+          "name": "Spider Sausage",
+          "priority": "Optional"
+        },
+        {
+          "name": "Sagefish Delight",
+          "priority": "Essentials"
+        }
+      ],
+      "weights": {
+        "stamina": 100,
+        "spirit": 100,
+        "mp5": 0
+      }
+    },
+    {
+      "foods": [
+        {
+          "name": "Sagefish Delight",
+          "priority": "Essentials"
+        },
+        {
+          "name": "Spider Sausage",
+          "priority": "Optional"
+        }
+      ],
+      "weights": {
+        "stamina": 0,
+        "spirit": 0,
+        "mp5": 100
+      }
+    }
+  ],
+  "refillOracle": {
+    "cases": 1200,
+    "failures": []
+  },
+  "approximateTextFit": {
+    "uniqueRegions": 0,
+    "samples": []
+  }
+}
