@@ -31,7 +31,7 @@ function W.New(profile,equipped)
     return setmetatable({profile=profile,equipped=equipped,baseline=base,catalog={},results={twoHand={},paired={}}},W)
 end
 
-function W:Add(item,icon,buyout,bid,count)
+function W:Add(item,icon,buyout,bid,count,listing)
     if not roles(item,self.profile) or not G.Allowed(item,self.profile) then return true end
     local key=variant(item)
     local record=self.catalog[key]
@@ -42,7 +42,7 @@ function W:Add(item,icon,buyout,bid,count)
         self.catalog[key]=record
     end
     record.auctions=record.auctions+1
-    record.offers[#record.offers+1]={buyout=buyout,bid=bid,count=count,link=item.link}
+    record.offers[#record.offers+1]={buyout=buyout,bid=bid,count=count,link=item.link,listing=listing}
     table.sort(record.offers,cheaper)
     -- Two physical listings are enough for a legal duplicate-weapon pair.
     -- Retain the second actual price instead of charging the cheapest twice.
@@ -56,7 +56,7 @@ local function component(record,slot,offerIndex)
     return {key=record.key,link=offer and offer.link or record.item.link,name=record.item.name,item=record.item,
         icon=record.icon,label=slot==16 and "Main hand" or "Off hand",owned=record.owned,
         buyout=offer and offer.buyout or 0,bid=offer and offer.bid or 0,count=offer and offer.count or 1,
-        auctions=record.auctions or 0,part=true}
+        listing=offer and offer.listing,auctions=record.auctions or 0,part=true}
 end
 
 function W:Pair(main,off)

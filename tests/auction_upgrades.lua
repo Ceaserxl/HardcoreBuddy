@@ -73,7 +73,7 @@ end
 function GetNumAuctionItems() return #auctions,total end
 function GetAuctionItemInfo(_,index)
     local v=auctions[index]
-    return v.item.name,123,v.count or 1,2,v.usable~=false,1,nil,v.minimum or 100,10,v.buyout or 0,v.bid or 0
+    return v.item.name,123,v.count or 1,2,v.usable~=false,1,nil,v.minimum or 100,10,v.buyout or 0,v.bid or 0,nil,nil,"Seller"
 end
 function GetAuctionItemLink(_,index) local v=auctions[index]; return not v.noLink and v.item.link or nil end
 local function tick(delta)
@@ -161,6 +161,8 @@ end
 check(U.message:find("61 auctions checked",1,true),"Each auction is checked once across the complete scan")
 check(#U.results[1]==3,"Only upgrades, with duplicates and unusable items removed")
 check(U.results[1][1].link==best.link and U.results[1][1].buyout==5000,"Best percentage first; duplicate keeps cheapest buyout")
+check(U.results[1][1].listing.index==2 and U.results[1][1].listing.query.page==0
+    and U.results[1][1].listing.query.filters[1].inventoryType==1,"Cheapest offer retains its original query and page")
 check(U.results[1][1].auctions==2,"Duplicate listings counted once per item")
 check(U.results[1][1].percent==G:Comparisons(G:Read(best.link),G:CurrentProfile())[1].percent,"Exact advisor percentage reused")
 check(U.rows[1].priceKind:GetText()=="" and U.rows[1].action:GetText()==""
@@ -178,7 +180,8 @@ local _,backParent,backAnchor,backX,backY=U.back:GetPoint()
 check(backParent==U.panel and backAnchor=="TOPLEFT" and backX==204 and backY==-60,"Auction Back is above the left edge of results")
 local bx,by,bw,bh=U.back:GetRect(); local hx=U.heading:GetRect()
 check(hx>=bx+bw,"Auction heading stays clear of Back")
-check(U.rows[1].action:GetText()=="Buyout >","Candidate offers a confirmed buyout")
+check(U.optionsHeader:GetText()=="BUY" and U.rows[1].buy:IsShown() and U.rows[1].buy:GetText()=="Buy"
+    and U.rows[1].options:GetText()=="" and U.rows[1].action:GetText()=="","Item options show a Buy button in the last column")
 MOCK.Click(U.back); MOCK.Click(U.slotButtons[12])
 check(U.slot==12 and U.slotButtons[12].active,"Persistent slot picker opens Ring 2 with a selected highlight")
 MOCK.Click(U.slotButtons[18])
@@ -283,7 +286,9 @@ local searches=0
 function AuctionFrameBrowse_Search() searches=searches+1 end
 local chosen=U.rows[1].entry
 MOCK.Click(U.rows[1])
-check(A.AuctionPurchase.request.row==chosen,"Clicking alternative starts live buyout verification")
+check(not A.AuctionPurchase.request and not A.AuctionPurchase.confirmation,"Item row does not submit an accidental purchase")
+MOCK.Click(U.rows[1].buy)
+check(A.AuctionPurchase.request.row==chosen,"Buy button verifies the saved offer")
 check(U.panel:IsShown() and not AuctionFrameBrowse:IsShown(),"Buyout remains in Upgrades")
 AuctionFrameTab_OnClick(U.tab); U:Start(); MOCK.FireAll("AUCTION_HOUSE_CLOSED")
 check(not U.scan and not U.open,"Auction close cancels pending work")
@@ -312,8 +317,9 @@ MOCK.Click(U.rows[2]); MOCK.Click(U.rows[1])
 check(U.setup and #U.display==2 and U.rows[1].entry.label=="Main hand" and U.rows[2].entry.label=="Off hand","Setup opens both components")
 check(U.rows[2].percent:GetText()=="Included","A component does not get a fabricated independent percentage")
 U.rows[1].scripts.OnEnter(U.rows[1]); U.rows[1].scripts.OnLeave(U.rows[1])
-MOCK.Click(U.rows[2])
+MOCK.Click(U.rows[2].buy)
 check(A.AuctionPurchase.request.row.link==held.link,"Each component can request its own buyout")
+check(A.AuctionPurchase.request.query==U.rows[2].entry.listing.query,"Weapon component retains its saved listing location")
 AuctionFrameTab_OnClick(U.tab); MOCK.Click(U.back); MOCK.Click(U.back)
 check(U.weaponsOnly and not U.slot and not U.setup,"Back returns from setup to alternatives to style comparison")
 MOCK.Click(U.rows[1])
@@ -449,14 +455,14 @@ armorToggle:SetChecked(false); MOCK.Click(armorToggle)
 
 -- Hover after head results arrive, then continue querying the remaining slots.
 F.reset("HUNTER",40,{31,0,0}); F.equip(1,old)
-U.weaponsOnly=false; pages[4]={{item=best},{item=good}}; pages[2]={}
+U.weaponsOnly=false; pages[4]={{item=best,buyout=500},{item=good,buyout=100}}; pages[2]={}
 U:Start(); tick(); pending=false; MOCK.FireAll("AUCTION_ITEM_LIST_UPDATE"); tick()
 check(U.scan and U.scan.search==2,"Head results arrive before later slot queries")
 local activeScan=U.scan
 MOCK.Click(U.slotButtons[18])
 check(U.scan==activeScan and U.emptyTitle:GetText()=="Waiting for this slot","Direct slot navigation preserves the active scan and explains pending results")
 MOCK.Click(U.slotButtons[1])
-check(U.rows[1].action:GetText()=="Stop scan to buy","Purchase search action explains why it is unavailable while scanning")
+check(U.rows[1].buy:IsShown() and not U.rows[1].buy:IsEnabled(),"Buy stays disabled while scanning")
 MOCK.Click(U.overview)
 hovered=U.rows[1]; shift=true; hovered.scripts.OnEnter(hovered)
 local setsBefore=tooltipSets

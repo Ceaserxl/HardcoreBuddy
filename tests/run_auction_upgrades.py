@@ -38,7 +38,10 @@ local U={}
 assert(OfflineAddon.AuctionCache:Restore(U))
 assert(U.cached and U.stale and not U.complete)
 assert(U.results[1][1].link==SavedAuctionData.scan.results[1][1].link)
+assert(U.results[1][1].listing.query.page==SavedAuctionData.scan.results[1][1].listing.query.page)
+assert(U.results[1][1].listing.owner=='Seller')
 assert(U.results.twoHand[1].components[1].link==SavedAuctionData.scan.results.twoHand[1].components[1].link)
+assert(U.results.twoHand[1].components[1].listing.query.filters[1].classID==2)
 assert(U.savedScanAt==SavedAuctionData.scan.recordedAt)
 U.results[1][1].buyout=999999999
 assert(SavedAuctionData.scan.results[1][1].buyout~=999999999)

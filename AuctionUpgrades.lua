@@ -202,7 +202,7 @@ function U:Start()
     self.message="Waiting for the auction house..."; self:Refresh()
 end
 
-function U:Add(item,rows,link,icon,buyout,bid,count)
+function U:Add(item,rows,link,icon,buyout,bid,count,listing)
     -- A unique ring/trinket can fill only one of the paired slots. Keep its
     -- strongest eligible comparison; an empty/zero-score baseline takes
     -- precedence over a finite percentage, with lower slot ID breaking ties.
@@ -225,7 +225,7 @@ function U:Add(item,rows,link,icon,buyout,bid,count)
             local list=self.results[comparison.slot] or {}; self.results[comparison.slot]=list
             local record={key=key,link=link,name=item.name,icon=icon,percent=comparison.percent,
                 score=G.Score(item,self.profile,comparison.slot) or 0,label=comparison.label,
-                buyout=buyout,bid=bid,count=count,auctions=1,zeroBaseline=comparison.zeroBaseline,trainingNotice=item.trainingNotice}
+                buyout=buyout,bid=bid,count=count,listing=listing,auctions=1,zeroBaseline=comparison.zeroBaseline,trainingNotice=item.trainingNotice}
             local found
             for i,old in ipairs(list) do
                 if old.key==key then
@@ -242,7 +242,7 @@ end
 
 function U:ReadAuction(index)
     local scan=self.scan
-    local name,icon,count,_,usable,_,_,minimum,increment,buyout,bid=GetAuctionItemInfo("list",index)
+    local name,icon,count,_,usable,_,_,minimum,increment,buyout,bid,_,_,owner=GetAuctionItemInfo("list",index)
     local search=scan.queue and scan.queue[scan.search]
     if usable==false and (not search or search.name~="Ranged") then return true end
     local link=GetAuctionItemLink("list",index)
@@ -280,10 +280,11 @@ function U:ReadAuction(index)
         cached={item=item,rows=rows}; scan.cache[link]=cached
     end
     local nextBid=(bid or 0)>0 and bid+(increment or 0) or minimum
-    if not scan.weapons:Add(cached.item,icon,buyout,nextBid,count) then
+    local listing={query=scan.query,index=index,owner=owner}
+    if not scan.weapons:Add(cached.item,icon,buyout,nextBid,count,listing) then
         return unavailable("weapon score","Main-hand or off-hand stat score is incomplete",cached.item)
     end
-    self:Add(cached.item,cached.rows,link,icon,buyout,nextBid,count)
+    self:Add(cached.item,cached.rows,link,icon,buyout,nextBid,count,listing)
     return true
 end
 
@@ -302,7 +303,10 @@ function U:Tick()
         self.message=string.format("Scanning %s (%d/%d) | page %d | %d auctions checked",search.name,scan.search,#scan.queue,scan.page+1,scan.seen)
         self:Refresh()
         self.sending=true
-        QueryAuctionItems("",math.max(0,self.profile.level-self:LevelRange()),self.profile.level,scan.page,search.name~="Ranged",nil,false,false,search.filters)
+        scan.query={name="",minimum=math.max(0,self.profile.level-self:LevelRange()),maximum=self.profile.level,
+            page=scan.page,usable=search.name~="Ranged",exact=false,filters=search.filters}
+        local q=scan.query
+        QueryAuctionItems(q.name,q.minimum,q.maximum,q.page,q.usable,nil,false,q.exact,q.filters)
         self.sending=false
     elseif scan.phase=="waiting" then
         if now()-scan.since>20 then self:Stop("Auction response timed out. Results are partial; scan again.") end
@@ -462,6 +466,8 @@ function U:Refresh()
     self.subtitle:SetText(p and (p.name.."  |  Level "..p.level.."  |  "..
         (self.cached and ("Saved scan: "..(self.savedScanAt or "unknown time")) or "Compared with equipped gear")) or "Waiting for character data")
     local weaponView=self.slot=="paired" or self.slot=="twoHand"
+    local itemOptions=self.slot and (self.setup~=nil or not weaponView)
+    self.optionsHeader:SetText(itemOptions and "BUY" or "OPTIONS")
     self.heading:SetText(self.setup and "Items in this setup" or self.slot and names[self.slot]
         or self.weaponsOnly and "Compare weapon setups" or "")
     local bestTwo=self.results.twoHand and self.results.twoHand[1]
@@ -507,7 +513,7 @@ function U:Refresh()
             frame.item:SetTextColor(unpack(row and Skin.colors.white or Skin.colors.muted))
             local slotText=self.setup and entry.label or names[self.slot or entry.slot] or ""
             frame.slotName:SetText((slotText:gsub("[Oo]ff hand","OH")))
-            frame.options:SetText(row and (self.setup and "" or self.slot and tostring(self.offset+index)
+            frame.options:SetText(itemOptions and "" or row and (self.slot and tostring(self.offset+index)
                 or (entry.total..(entry.total==1 and " option >" or " options >"))) or "0")
             frame.options:SetTextColor(unpack(not self.slot and Skin.colors.gold or Skin.colors.white))
             local detail=""
@@ -523,8 +529,12 @@ function U:Refresh()
             frame.cost:SetText(row and (row.owned and "No purchase" or money(value)) or "")
             frame.priceKind:SetText(row and not row.owned and
                 ((row.weaponSet and row.priceLabel or kind)=="Bid" and (row.weaponSet and "Bid total" or "Bid") or "") or "")
-            frame.action:SetText(row and (self.slot and (row.weaponSet and "View items >" or row.owned and "Equipped"
-                or self.scan and "Stop scan to buy" or row.buyout>0 and "Buyout >" or "No buyout") or "") or "")
+            local buy=itemOptions and row and not row.weaponSet and not row.owned and row.buyout>0
+            frame.buy:SetShown(not not buy)
+            frame.buy:SetEnabled(not not (buy and enabled and self.open and not self.scan and not self.stale
+                and not A.AuctionPurchase.request and not A.AuctionPurchase.confirmation))
+            frame.action:SetText(row and self.slot and (row.weaponSet and "View items >" or row.owned and "Equipped"
+                or row.buyout<=0 and "No buyout" or "") or "")
             self:LayoutRowText(frame)
             frame.accent:SetShown(row~=nil)
             frame.accent:SetVertexColor(unpack(row and changeColor(row) or Skin.colors.muted))
@@ -564,6 +574,7 @@ function U:LayoutRowText(row)
     pair(row.cost,row.priceKind,width-294)
     center(row.percent,width-178)
     pair(row.options,row.action,width-90)
+    row.buy:ClearAllPoints(); row.buy:SetPoint("LEFT",row,"LEFT",width-90,0)
 end
 
 function U:Layout()
@@ -690,6 +701,11 @@ function U:Attach()
         row.cost=label(row,"",426,0,122,Skin.colors.white,11); row.cost:SetJustifyH("RIGHT")
         row.action=label(row,"",322,-17,130,Skin.colors.gold,9)
         row.priceKind=label(row,"",456,-17,92,Skin.colors.muted,9); row.priceKind:SetJustifyH("RIGHT")
+        row.buy=button(row,"Buy",76,function()
+            U:HideTooltip(row)
+            if U.slot and row.entry and not row.entry.weaponSet then U:Find(row.entry) end
+        end)
+        row.buy:SetHeight(24); row.buy:Hide()
         Skin.Hover(row)
         row:SetScript("OnEnter",function(self)
             U:HideTooltip()
@@ -706,8 +722,7 @@ function U:Attach()
             if not self.entry then return end
             U:HideTooltip(self)
             if self.entry.weaponSet then U.setup=self.entry; U.offset=0; U:Refresh()
-            elseif U.slot then U:Find(self.entry)
-            else U.slot=self.entry.slot; U.offset=0; U:Refresh() end
+            elseif not U.slot then U.slot=self.entry.slot; U.offset=0; U:Refresh() end
         end)
     end
     self.scroll=CreateFrame("Slider",nil,panel,"BackdropTemplate"); Skin.Paint(self.scroll,"edit")
@@ -747,7 +762,11 @@ function U:Attach()
         end
     end)
     hooksecurefunc("QueryAuctionItems",function()
-        if not A.AuctionPurchase.sending then A.AuctionPurchase:Cancel() end
+        if not A.AuctionPurchase.sending then
+            local pending=A.AuctionPurchase.request or A.AuctionPurchase.confirmation
+            A.AuctionPurchase:Cancel()
+            if pending then self:Refresh() end
+        end
         if self.scan and not self.sending then self:Stop("Another auction search started. Results are partial; scan again.") end
     end)
     self:Refresh()
