@@ -164,9 +164,22 @@ check(dg.glow:IsShown() and mg.glow:IsShown(),"Direct spell and resolved macro b
 for i=1,50 do H.Glow:Apply(pick) end
 check(dg.glow.ProcLoop.starts==1 and mg.glow.ProcLoop.starts==1,"Stable recommendation does not restart animation")
 check(direct.SpellActivationAlert.native,"Native proc ownership is untouched")
+for _,category in ipairs({"main","defensive","offensive","preparation"}) do
+    pick[1].category=category; H.Glow:Apply(pick)
+    check(dg.boost:IsShown() and dg.boost.ProcLoop:IsPlaying(),category.." has a running intensity pass")
+    check(dg.boost:GetAlpha()==0.65 and dg.boost.ProcLoopFlipbook.blendMode=="ADD",category.." uses added light")
+    check(dg.glow:GetWidth()==dg.boost:GetWidth() and dg.glow:GetHeight()==dg.boost:GetHeight(),category.." retains identical glow bounds")
+    local color=dg.boost.ProcLoopFlipbook.vertexColor
+    check(color[1]==H.colors[category][1] and color[2]==H.colors[category][2] and color[3]==H.colors[category][3],category.." keeps its own color")
+end
+pick[1].category="main"; H.Glow:Apply(pick)
+check(dg.glow.ProcLoop.starts==1 and dg.boost.ProcLoop.starts==1,"Both intensity passes stay continuous through repeated/category updates")
 X.macro=133; H.Glow:Apply(pick); check(not mg.glow:IsShown(),"Modifier macro changing spells clears stale glow")
+check(not mg.boost:IsShown() and not mg.boost.ProcLoop:IsPlaying(),"Modifier changes also clear the intensity pass")
 direct:Hide(); check(not dg.glow:IsShown(),"Hidden bar cannot leave an orphan glow")
+check(not dg.boost:IsShown() and not dg.boost.ProcLoop:IsPlaying(),"Hidden bar clears both passes")
 direct:Show(); H.Glow:Apply(pick); check(dg.glow:IsShown(),"Shown bar regains recommendation")
+check(dg.boost:IsShown(),"Shown bar regains intensity pass")
 local newcomer=CreateFrame("Button",nil,UIParent); X.lockdown=true; H.Glow:Register(newcomer)
 check(not H.Glow.seen[newcomer],"Do not create children on protected buttons in combat")
 X.lockdown=false; H.Glow:Register(newcomer); check(H.Glow.seen[newcomer],"Can register additional action bars out of combat")
@@ -181,6 +194,42 @@ check(#H.picks==0,"Late world events cannot revive cleared glows")
 H.frame.scripts.OnEvent(H.frame,"PLAYER_ENTERING_WORLD")
 check(H:Enabled() and H.frame.scripts.OnUpdate,"Entering world restores saved enabled preference")
 H:SetEnabled(false); check(not H.frame.scripts.OnUpdate and not dg.glow:IsShown(),"Disable stops updates and clears only our glows")
+check(not dg.boost:IsShown() and not dg.boost.ProcLoop:IsPlaying(),"Disable also clears intensity pass")
+
+-- Missing spells: local notices only, exact ranks, all lanes, and paged/macros.
+local savedPrint,savedActions,savedMacro=A.Print,GetActionInfo,GetMacroSpell
+local notices,slots={},{}
+A.Print=function(_,message) notices[#notices+1]=message end
+GetActionInfo=function(slot) local a=slots[slot]; if a then return unpack(a) end end
+GetMacroSpell=function(id) return id==77 and 116 end
+H.Glow.warnedMissing={}
+H.Glow:NotifyMissing(pick)
+check(#notices==1 and notices[1]:find("Spell116",1,true) and notices[1]:find("missing from your action bars",1,true),"Missing spell is named in local chat")
+for i=1,100 do H.Glow:NotifyMissing(pick) end
+H.Glow:NotifyMissing({}); H.Glow:NotifyMissing(pick)
+check(#notices==1,"Missing spell warns once across repeated ticks and recommendation changes")
+H.Glow.warnedMissing={}; notices={}; slots[120]={"spell",116}
+H.Glow:NotifyMissing(pick); check(#notices==0,"Unregistered hidden/paged spell slot is still present")
+slots[120]={"macro",77}; H.Glow:NotifyMissing(pick)
+check(#notices==0,"Legacy resolved spell macro prevents false missing notice")
+slots[120]={"macro",116,"spell"}; H.Glow:NotifyMissing(pick)
+check(#notices==0,"Modern resolved macro prevents false missing notice")
+slots[120]={"spell",205}; H.Glow:NotifyMissing(pick)
+check(#notices==1,"A different spell rank does not falsely match the recommended rank")
+H.Glow.warnedMissing={}; notices={}; slots={}
+for i,category in ipairs({"main","defensive","offensive","preparation"}) do
+    H.Glow:NotifyMissing({{id=10000+i,kind="spell",category=category}})
+    check(#notices==i,category.." warns about a missing recommended spell")
+end
+H.Glow:NotifyMissing({{id=159,kind="item",category="preparation"}})
+check(#notices==4,"Item advice does not generate a missing-spell warning")
+reset(); rebuild(); H.Glow.warnedMissing={}; notices={}
+H:SetEnabled(true)
+check(#notices==1 and notices[1]:find("Spell116",1,true),"Enabled runtime sends missing-spell notices")
+H:Tick(); H:SetEnabled(false); H:Tick()
+check(#notices==1,"Runtime repeats and disabling do not spam notices")
+A.Print,GetActionInfo,GetMacroSpell=savedPrint,savedActions,savedMacro
+H.Glow.warnedMissing={}
 reset(); X.learned[122]=true; X.learned[865]=true
 local has=H.Glow.HasSpell
 H.Glow.HasSpell=function(_,id) return id==865 end

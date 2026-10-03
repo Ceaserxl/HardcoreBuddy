@@ -253,7 +253,10 @@ end
 function H:Tick()
     if not self:Enabled() then self:Clear(); return end
     local c=self:Snapshot()
-    if c then self.picks,self.state=self.Select(c,self.module,self.state); self.Glow:Apply(self.picks) end
+    if c then
+        self.picks,self.state=self.Select(c,self.module,self.state)
+        self.Glow:Apply(self.picks); self.Glow:NotifyMissing(self.picks)
+    end
 end
 function H:Wake()
     self.elapsed=0

@@ -16,12 +16,20 @@ There is no combat-history recorder or saved diagnostic log.
 
 All use a private copy of Blizzard's native spell-alert animation. The loop
 starts directly, so there is no oversized birth animation or repeating restart.
+An additive second pass makes all four colors brighter at the same size and
+animation speed. Both passes stop together when the recommendation clears.
 Native procs and other addons keep ownership of their own glows. Standard action
 bars and discovered Bartender, Dominos and ElvUI action-slot buttons are supported;
 other action-bar addons can register buttons with `RotationHelper.Glow:Register`.
 Macro matching uses the client's currently resolved spell or item, including
 conditional spell macros. A macro that only runs arbitrary Lua has no resolved
 spell to highlight. The ability must be on a visible action bar.
+
+If a recommended spell is absent from the action bars, a local chat notice names
+it and asks you to add the recommended rank or a matching spell macro. Each
+missing spell rank is reported once per session (until reload/login), across all
+four categories. Hidden and paged action slots count as present; they do not
+trigger a missing-spell notice. Items do not trigger these spell notices.
 
 ## Shared rules
 

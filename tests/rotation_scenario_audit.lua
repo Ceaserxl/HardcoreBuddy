@@ -87,8 +87,13 @@ record("Mana restored during an initially unaffordable cast","Fill an empty next
 
 x=F.reset({actionSlots={[1]={"spell",133}}})
 x.actionSlots[1][2]=H.definitions.fireball.id
-p=F.evaluate(); local best=p[1]; local kind,id=H.Glow.Action({action=1})
-record("Preferred spell absent from action bars","Usable fallback or a visible missing-action notice",not best or best.kind==kind and best.id==id,F.describe(p).."; only Fireball is on bar","medium")
+local printMessage=TestAddon.Print; local notices={}
+TestAddon.Print=function(_,message) notices[#notices+1]=message end
+F.event("ACTIONBAR_SLOT_CHANGED")
+TestAddon.Print=printMessage; p=H.picks
+record("Preferred spell absent from action bars","Usable fallback or a visible missing-action notice",
+    #notices==1 and notices[1]:find(H.SpellInfo(H.definitions.frostbolt.id),1,true),
+    F.describe(p).."; only Fireball is on bar; chat: "..table.concat(notices," / "),"medium")
 
 -- Context enumeration is a structural/safety smoke test, not an optimal-DPS
 -- claim. Named tests above assess specific policy outcomes.

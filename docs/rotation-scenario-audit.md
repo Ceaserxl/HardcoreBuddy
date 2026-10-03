@@ -1,13 +1,14 @@
 # Mage rotation scenario audit
 
-Audited implementation: `a1eff0d` (cooldown eligibility gate removed).
+Original audited implementation: `a1eff0d` (cooldown eligibility gate removed).
+Follow-up: missing action-bar chat notices and brighter four-category glows.
 Date: 2026-10-02.
 
 **Result: more work is needed before calling the recommendations reliable.**
-The existing 81 regression checks pass. The expanded audit meets 39 of 47 named
-expectations and passes structural checks across 3,888 combinations. Eight
-targeted cases expose policy or event-handling gaps. No production behavior was
-changed by this audit.
+All 115 regression checks pass. The expanded audit now meets 40 of 47 named
+expectations and passes structural checks across 3,888 combinations. Seven
+targeted cases still expose policy or event-handling gaps. The original audit
+reported eight; the missing-action-bar case now passes with a local chat notice.
 
 ## Coverage and limits
 
@@ -42,7 +43,7 @@ live testing.
 | Medium | Interruption event arrives before the casting API clears | The interrupted cast's old Main remains locked until its original finish time plus 0.25 seconds. | Invalidate the matching interrupted cast immediately. |
 | Medium | Four Fire Vulnerability stacks with 1/3 Improved Scorch while casting Scorch | The planner assumes the fifth stack and switches to Fireball. | Account for a failed stack application when talent rank is below 3/3. |
 | Medium | A cast begins with insufficient mana for a next action, then mana recovers | The empty plan stays locked for the rest of the cast. | Allow an empty plan to gain an action without replacing an existing committed Main. |
-| Medium | Frostbolt is preferred but only Fireball is on the action bar | The selected Main has no matching button, so there is no Main glow or missing-action notice. | Give a visible missing-action indication or select an appropriate available fallback. |
+| Resolved | Frostbolt is preferred but only Fireball is on the action bar | Local chat identifies the missing Frostbolt rank once per session. | Add the spell or a matching macro; hidden/paged slots are also checked. |
 
 The first three cases are consequences of deliberately removing the cooldown
 gate, rather than failures to implement that request. Cooldown suggestions can
@@ -59,7 +60,7 @@ Vulnerability; the pending cast cannot guarantee another stack.
    cooldown hints.
 2. Fix cast-success mana accounting and interrupted-cast invalidation.
 3. Correct partial Improved Scorch prediction and allow empty plans to fill.
-4. Add missing-action-bar feedback, then exercise the fixes in live solo and
+4. Exercise the missing-action-bar feedback and brighter glows in live solo and
    group encounters.
 
 ## Reproduce

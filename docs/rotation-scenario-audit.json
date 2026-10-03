@@ -285,8 +285,8 @@
       "name": "Preferred spell absent from action bars",
       "priority": "medium",
       "expected": "Usable fallback or a visible missing-action notice",
-      "passed": false,
-      "actual": "main:frostbolt; only Fireball is on bar"
+      "passed": true,
+      "actual": "main:frostbolt; only Fireball is on bar; chat: Rotation Helper: frostbolt is missing from your action bars. Add the recommended rank or a macro that casts it."
     },
     {
       "name": "Structural scenario matrix",
@@ -344,14 +344,7 @@
       "expected": "Fill an empty next-action plan after mana recovery",
       "passed": false,
       "actual": "none"
-    },
-    {
-      "name": "Preferred spell absent from action bars",
-      "priority": "medium",
-      "expected": "Usable fallback or a visible missing-action notice",
-      "passed": false,
-      "actual": "main:frostbolt; only Fireball is on bar"
     }
   ],
-  "passed": 39
+  "passed": 40
 }
