@@ -393,39 +393,41 @@ function C.Detail(context, action)
         local materials,note=A.Crafting.MaterialBlocks(item,context)
         heading("Materials",false,note)
         for _,block in ipairs(materials) do blocks[#blocks+1]=block end
-        local alternatives=item.options or (family and item.progression) or {}
-        if family and family~="bandage" then
-            alternatives={}
-            for _,candidate in ipairs(D.Items.items) do
-                if candidate.family==family then alternatives[#alternatives+1]=candidate end
+        if item.itemId~=5816 then
+            local alternatives=item.options or (family and item.progression) or {}
+            if family and family~="bandage" then
+                alternatives={}
+                for _,candidate in ipairs(D.Items.items) do
+                    if candidate.family==family then alternatives[#alternatives+1]=candidate end
+                end
             end
-        end
-        local choices={}
-        if recommended and recommended.itemId~=item.itemId and family~="bandage" then choices[1]=recommended end
-        for _,other in ipairs(alternatives) do
-            if other.itemId~=item.itemId and (not recommended or other.itemId~=recommended.itemId) then choices[#choices+1]=other end
-        end
-        if family~="bandage" then heading("Alternatives",true,#choices==0 and "No alternatives listed." or nil) end
-        for _,other in ipairs(family=="bandage" and {} or choices) do
-            local block=itemRow(other); block.body=G.SupplySubtitle(other,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
-            block.recommendedAlternative=recommended and other.itemId==recommended.itemId
-            blocks[#blocks+1]=block
-        end
-        local nextItem=G.NextSupply(item,context)
-        heading("Next",true)
-        if nextItem then
-            local block=itemRow(nextItem); block.body=G.SupplySubtitle(nextItem,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
-            blocks[#blocks+1]=block
-        else
-            blocks[#blocks+1]=G.MaximumSkillRow()
-        end
-        if family=="bandage" then
-            heading("Alternatives",true)
-            for _,other in ipairs(D.Items.items) do
-                if other.family=="bandage" and other.itemId~=item.itemId and (not nextItem or other.itemId~=nextItem.itemId) then
-                    local block=itemRow(other); block.body=G.SupplySubtitle(other,context)
-                    block.rightColumn=true; block.plain=true; block.supplyDetail=true
-                    blocks[#blocks+1]=block
+            local choices={}
+            if recommended and recommended.itemId~=item.itemId and family~="bandage" then choices[1]=recommended end
+            for _,other in ipairs(alternatives) do
+                if other.itemId~=item.itemId and (not recommended or other.itemId~=recommended.itemId) then choices[#choices+1]=other end
+            end
+            if family~="bandage" then heading("Alternatives",true,#choices==0 and "No alternatives listed." or nil) end
+            for _,other in ipairs(family=="bandage" and {} or choices) do
+                local block=itemRow(other); block.body=G.SupplySubtitle(other,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
+                block.recommendedAlternative=recommended and other.itemId==recommended.itemId
+                blocks[#blocks+1]=block
+            end
+            local nextItem=G.NextSupply(item,context)
+            heading("Next",true)
+            if nextItem then
+                local block=itemRow(nextItem); block.body=G.SupplySubtitle(nextItem,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
+                blocks[#blocks+1]=block
+            else
+                blocks[#blocks+1]=G.MaximumSkillRow()
+            end
+            if family=="bandage" then
+                heading("Alternatives",true)
+                for _,other in ipairs(D.Items.items) do
+                    if other.family=="bandage" and other.itemId~=item.itemId and (not nextItem or other.itemId~=nextItem.itemId) then
+                        local block=itemRow(other); block.body=G.SupplySubtitle(other,context)
+                        block.rightColumn=true; block.plain=true; block.supplyDetail=true
+                        blocks[#blocks+1]=block
+                    end
                 end
             end
         end

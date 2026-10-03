@@ -40,6 +40,13 @@ for _,i in ipairs(A.Data.Items.items) do if i.itemId==5816 then item=i end end
 local ctx={characterClass='Mage',level=40,faction='Alliance',inventory={available=true,counts={}}}
 local function controls()
  local card=C.Detail(ctx,{kind='item',item=item})
+ local obtain,macro
+ for _,b in ipairs(card.blocks) do
+  assert(b.title~='Alternatives' and b.title~='Next' and b.title~='Maximum Skill Reached','Elune has no generic rank sections')
+  if b.title=='How to Obtain' then obtain=true end
+  if b.title=='Create Elune Macro' then macro=true end
+ end
+ assert(obtain and macro,'Elune quest and macro sections are preserved')
  local control,drag
  for _,b in ipairs(card.blocks) do if b.macroControl then control=b end; if b.macroDrag then drag=b end end
  return control,drag
