@@ -94,14 +94,10 @@ end
 local function professionBlocks(context,family)
     return A.Professions.Guidance and A.Professions.Guidance(context,family) or {}
 end
-local function upgradeHint(context,family)
-    local nextRecipe=A.Professions.NextRecipe and A.Professions.NextRecipe(context,family)
-    if nextRecipe then return "Next recipe: "..nextRecipe.name.." | Click for training" end
-end
-local function supplyRow(record)
+local function supplyRow(record,context)
     local b=itemRow(record.item)
     b.title=record.name
-    b.body=record.quantityNote or record.item.short
+    b.body=G.SupplySubtitle(record.item,context)
     b.supply=true
     b.materialCount=record.item.enchantMaterial==true
     b.category=record.category
@@ -173,9 +169,10 @@ local function supplyRows(context,state,onlyFamily)
                 if group.block.count and r.count then group.block.count=group.block.count+r.count end
                 if group.selectedId==r.itemId then group.selected=r end
             else
-                local b=supplyRow(r)
+                local b=supplyRow(r,context)
                 if onlyFamily then
                     if rankState(b,r,context) then track(r) end
+                    b.body=G.SupplySubtitle(r.item,context)
                 else track(r) end
                 if include(r) then blocks[#blocks+1]=b end
             end
@@ -184,10 +181,8 @@ local function supplyRows(context,state,onlyFamily)
     for family,group in pairs(groups) do
         local r=group.selected
         if r then
-            local b=supplyRow(r); b.action={kind="supplyFamily",family=family}
+            local b=supplyRow(r,context); b.action={kind="supplyFamily",family=family}
             b.autoRank=group.automatic~=nil and not group.automatic.manual
-            b.body=group.automatic and (group.automatic.manual and group.automatic.note or upgradeHint(context,family) or group.automatic.note)
-                or (r.quantityNote or "").." | Change rank"
             b.omit=not include(r); blocks[group.index]=b; track(r)
         else
             if not group.automatic then summary.unset=summary.unset+1 end
@@ -205,7 +200,7 @@ local function bandageCards(context,state)
     local function bandage(id)
         local item=items[id]; if not item then return end
         local record=S.Record(context,item,"bandage")
-        local block=supplyRow(record); rankState(block,record,context)
+        local block=supplyRow(record,context); rankState(block,record,context)
         block.editTarget=true; block.body=G.SupplySubtitle(item,context); block.supplyDetail=true
         return block
     end
@@ -427,7 +422,7 @@ function C.Detail(context, action)
         local out=card(item.displayName or item.name,nil,blocks)
         out.supplyTable=true
         local r=S.Record(context,item,family)
-        table.insert(out.blocks,1,supplyRow(r)); out.blocks[1].action=nil; out.blocks[1].editTarget=not r.oneTime
+        table.insert(out.blocks,1,supplyRow(r,context)); out.blocks[1].action=nil; out.blocks[1].editTarget=not r.oneTime
         if family then rankState(out.blocks[1],r,context) end
         out.blocks[1].body=G.SupplySubtitle(item,context)
         out.blocks[1].supplyDetail=true

@@ -38,6 +38,12 @@ ctx.inventory.available=false
 assert(A.Crafting.MaterialBlocks(items[2581],ctx)[1].count==nil,"Unknown bags stay unknown")
 assert(A.Guide.SupplySubtitle(items[1251],ctx):find("health",1,true))
 assert(A.Guide.SupplySubtitle(items[8951],ctx):find("+250 armor",1,true))
+assert(A.Guide.SupplySubtitle(items[6372],ctx):find("+100%% swim speed"),"Percent stays beside amount")
+assert(A.Guide.SupplySubtitle(A.Data.Scrolls.items[1],ctx)=="+5 Agility / 30 min","Scroll effect is concise")
+local supplyDoc=A.Companion.Build(ctx,{view="supplies",filter="All"})
+for _,c in ipairs(supplyDoc.cards) do for _,b in ipairs(c.blocks or {}) do
+    if b.itemId==8951 then assert(b.body==A.Guide.SupplySubtitle(items[8951],ctx),"Main tabs use compact effects") end
+end end
 assert(A.Guide.NextSupply(items[1251],ctx).itemId==2581)
 A.GetContext=function() return ctx end
 A:Navigate("supplies")

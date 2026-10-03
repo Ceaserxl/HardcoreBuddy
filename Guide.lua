@@ -10,11 +10,18 @@ end
 function G.SupplySubtitle(item,context)
     local effect=(item.detail or item.short or ""):gsub("^Use: *","")
     if item.family=="wellfed" or item.family=="manafood" then effect=item.short or effect end
+    effect=effect:gsub("the target's ",""):gsub("the player's maximum ","")
     effect=effect:gsub("Must remain seated while %a+%.",""):gsub("%s*%([^)]*[Cc]ooldown%)","")
         :gsub("^Restores ","+"):gsub("^Instantly restores ","+"):gsub("^Heals ","+")
         :gsub("(%d+) to (%d+)","%1–%2"):gsub(" over "," / ")
-        :gsub("^Increases your (.-) by ([%d%.]+)","+%2 %1")
-        :gsub("^Increases (.-) by ([%d%.]+)","+%2 %1")
+        :gsub("^Increases your (.-) by ([%d%.]+%%?)","+%2 %1")
+        :gsub("^Increases (.-) by ([%d%.]+%%?)","+%2 %1")
+        :gsub("^Target is cured of poisons up to level ","Cures poison up to Lvl ")
+        :gsub("^Gives the imbiber invisibility","Invisibility")
+        :gsub("^Makes you immune to Stun and Movement Impairing effects for the next ","Stun & slow immunity / ")
+        :gsub("^Regenerate (%d+) health every 5 sec","+%1 health / 5 sec")
+        :gsub(" for "," / "):gsub(" hours?"," hr")
+    if item.family=="dummy" then effect="Taunts nearby enemies" end
     if item.family=="bandage" then effect=effect:gsub(" damage"," health") end
     effect=effect:match("^(.-)%.%s") or effect
     effect=effect:gsub("%s+$",""):gsub("%.$","")
