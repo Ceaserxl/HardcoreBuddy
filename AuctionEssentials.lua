@@ -25,7 +25,7 @@ function E:Items(context)
     local out={}
     local showAll=self:ShowAllEssentials()
     for _,record in ipairs(A.Supplies.Build(context,{filter="Essentials"})) do
-        if record.tracking and (showAll or record.refillNeeded) and record.item.binding~=true and not self:VendorItem(record.item) then
+        if record.usableNow~=false and record.tracking and (showAll or record.refillNeeded) and record.item.binding~=true and not self:VendorItem(record.item) then
             local r={}; for k,v in pairs(record) do r[k]=v end
             local bank=A.characterDB and A.characterDB.auctionBank
             r.bagCount=record.count; r.bankCount=bank and bank.counts[record.itemId] or 0
@@ -124,6 +124,7 @@ function E:Refresh()
                 local craft=self:CraftCost(record)
                 price="Craft: "..cash(craft)
             end
+            if not record.crafting and plan and plan.priceLimited and plan.units==0 then price="Price limit" end
             local values={record.name..(record.craftable and " |cff62d79b(Craftable)|r" or ""),record.count==nil and "?" or tostring(record.count),tostring(record.target),
                 record.missing==nil and "?" or tostring(record.missing),not record.crafting and plan and plan.units>0 and tostring(plan.units) or "—",price}
             for column,cell in ipairs(row.cells) do
@@ -238,7 +239,10 @@ function E:Attach()
                     local plan=E:RowPlan(r)
                     if plan and not r.crafting and plan.units>0 then
                         GameTooltip:AddLine("Refill: "..plan.units.." items in "..#plan.offers.." auction stacks.",1,0.8,0.4,true)
-                        if plan.units<r.missing then GameTooltip:AddLine("Only a partial refill is available at reasonable prices.",1,0.8,0.4,true) end
+                        if plan.units<r.missing then GameTooltip:AddLine("Only a partial refill is available within your price limits.",1,0.8,0.4,true) end
+                    end
+                    if plan and (plan.excluded or 0)>0 then
+                        GameTooltip:AddLine(plan.excluded.." listings excluded by the per-item budget or the 5x cheapest-price limit.",1,0.8,0.4,true)
                     end
                     GameTooltip:Show()
                 end

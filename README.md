@@ -3,6 +3,13 @@
 A standalone companion for **WoW Classic Era / official Hardcore, levels 1–60**.
 No libraries, other addons, website or network connection are required.
 
+Developer validation from a source checkout: install `lupa` and `Pillow`, then run
+`python tests/run_all.py`. CI runs this same required offline suite. Coordinate
+provenance checks explicitly skip when the optional research HTML cache is absent;
+shipping map data still receives normal validation. Build and boot a local package
+with `scripts/package_release.py --output .release` and `tests/run_release.py`.
+Offline mocks do not replace live WoW visual and protected-action checks.
+
 ## Open your field kit
 
 Use `/hcb` or `/hardcorebuddy`, or click the skull-and-shield minimap emblem.
@@ -12,8 +19,8 @@ centers it; `/hcb help` lists commands.
 All lists use continuous scrolling, including the Pet Guide and Death Journal.
 Use the mouse wheel or scrollbar to browse the full list.
 
-**Companion > Spells** shows the next spell-training level for your class.
-Choose **Show all future spells** to browse later levels, with spell icons,
+**Companion > Spells** lists untrained spells available now, with future levels shown by default.
+Use **Hide future spells** to focus on currently available training, with spell icons,
 ranks, reference training costs and talent requirements. Hover for spell details.
 All nine Classic Era classes are included; What's Training? is not required.
 Hunter pet abilities include trainer ranks and taming sources. Warlock demon
@@ -32,12 +39,12 @@ Zone Advisor, Gear Advisor, Talent Advisor, Auction House, Death Journal, Low He
 NPC Alerts and Debug. Long pages scroll. Existing saved preferences are kept.
 Pages use the Zone Advisor settings layout: clear headings, bordered sections and paired
 cards for related controls. Companion and Advisor overviews use matching cards;
-Supplies, Spells and Zone Advisor use two-column cards. Death reports keep full-width rows. Alert sliders
+Supplies categories use compact cards; All Supplies, Spells, Zone Advisor and Death Journal use tables. Alert sliders
 show their percentage inside the control.
 General includes the minimap button, field kit upgrade notices, recentering and
 Preparation reminders. Death Journal includes alerts, banner appearance, history import and report retention; NPC Alerts
 contains separate rare and elite controls on the same scrolling page.
-Carry quantities and item priorities remain in Supplies; talent paths are selected in
+Auto-buy amounts, Refill amounts and item priorities remain in Supplies; talent paths are selected in
 Settings > Talent Advisor. `/hcb health` and `/hcb deaths settings` open their Settings sections.
 Nested pages share **< Back** above the upper-left of the content. It stays
 in place while scrolling; the auction upgrades window uses the same placement.
@@ -55,8 +62,10 @@ See [enchant coverage and requirements](docs/enchants.md).
 **Supplies > Essentials** collects core food, drink, buff food, bandages, healing,
 movement potions and relevant ammunition. Items still live in their usual tabs.
 Each row shows Essentials, Advanced or Optional; open its details to cycle the
-priority. Priority choices follow the item family as ranks improve. Carry targets
-are per item and character; set 0 to skip restocking.
+priority. Priority choices follow the item family as ranks improve. Auto-buy amounts
+are per item and character; set 0 to skip restocking. Refill amount is the inclusive
+threshold for reminders and purchases. Unusable future recommendations remain
+inspectable but do not enter active refill lists.
 
 **Supplies > Class** tracks arrows for bows/crossbows, bullets for guns, or your
 equipped thrown weapon stack. It uses selected ammunition when available and
@@ -65,7 +74,7 @@ ammo selector. Wands do not produce ammo recommendations.
 
 **Settings > General > Preparation reminders** has two controls, both on by default: a compact
 missing-essentials panel while resting in a city/inn, and a silent reminder when
-leaving. Reminders use the real character, respect Carry 0, suppress unknown stock,
+leaving. Reminders use the real character, respect an Auto-buy amount of 0, suppress unknown stock,
 stay out of combat, and have a five-minute cooldown. Dismiss the panel for the
 current visit with its close button. An unowned Light of Elune has no default
 restock requirement.
@@ -77,12 +86,23 @@ sessions; its View Essentials button opens your supplies. Item rows mark a vendo
 Armor kits are included in **Enchants** alongside permanent enchant recommendations.
 
 **AH > Essentials** scans non-vendor essentials and materials for learned recipes.
-Craft and Buy start unchecked; a completed scan selects Craft only when cheaper.
+**Show All Essentials** includes usable items above their refill threshold that
+still need stock. **Craft > Buy** compares the cost of crafting with finished items;
+when crafting is cheaper, buy materials from their indented rows. Each row has its
+own Buy button. A purchase uses the cached listings and normal Blizzard confirmation.
 Bag stock, bank snapshots saved on close, and confirmed purchases in mail reduce
-refill and material requirements. Fulfilled rows are hidden. Hover **In Mail** to
-see cached purchases; collecting attachments updates their location. The cache
-persists per character across reloads. Click Buy once and confirm each queued
-stack. Cancel stops the queue.
+requirements. Fulfilled rows disappear; collecting mail updates the purchase cache.
+Settings > Auction House includes a maximum gold per item (10 by default; 0 removes
+this budget). Offers above the budget or five times the cheapest unit price are
+excluded. This is a budget guard, not an estimate of fair market value.
+
+Supply details use **Recommended** or **Selected Alternative** above the selected
+item, with **Materials** below. **Next**, then **Alternatives**, share the right
+column. All item rows use the same compact height. Materials specify one craft
+and its output. Empty sections distinguish unavailable alternatives, noncraftable
+items, reagent-free abilities and unknown recipes. Bandages use the health recommendation;
+a usable rank can be explicitly set as default. Light of Elune keeps its quest/macro
+page; custom User items omit Next and Alternatives.
 
 ## Gear and talent advisors
 
@@ -96,7 +116,8 @@ Open **Companion > Gear Advisor** or **Talent Advisor** in HardcoreBuddy, `/hcb 
 - Shows both ring/trinket slots, handles two-handed replacements and lists stat losses.
 - Excludes applied enchants and armor kits from both scores.
 - Hardcore talent paths for all nine classes, with current ranks, next-point advice,
-  explicit respec guidance and a Point-by-point path button opening a continuous list.
+  explicit respec guidance and a continuous Point-by-point table below Next Talent.
+  Learned points are hidden until Show Learned is enabled.
 - **Apply unused points** spends available points along your selected path.
   **Automatically apply unused points** is optional and off by default, saved per character.
   Both require your live character, a matching path and no combat; each point waits
@@ -111,8 +132,8 @@ Open **Companion > Gear Advisor** or **Talent Advisor** in HardcoreBuddy, `/hcb 
   scoring profile, waits out combat and preserves equipped quest gear, including
   an off-hand that a two-handed weapon would remove. Quest items are never
   automatically equipped. Normal earned quest rewards remain eligible.
-- Click **Learn** to spend a single recommended point, or browse other classes
-  using **Edit Character**. Points are never spent automatically.
+- Click **Next Talent** to spend a single recommended point, or browse other classes
+  using **Edit Character**. Automatic spending remains off unless explicitly enabled.
 
 The gear percentage measures weighted item stats, not simulated damage or survival.
 Procs, active item effects and set bonuses are excluded. See [advisor details](docs/advisors.md).
@@ -168,14 +189,12 @@ Use **Settings > Debug > Dump Data** to capture HardcoreBuddy settings, saved
 history, caches, runtime state and reference data, plus available character,
 equipment, talents, bags/bank, quests, spells, skills, pet and aura information.
 An animated progress bar tracks work spread across frames. The completed dump
-is cached in full per character and fills one editable, scrollable textbox.
-There is no Copy button or automatic text selection. Click the textbox, select
-text manually (Ctrl+A selects all), then press **Ctrl+C** as the label indicates.
-`/reload` or log out writes the complete cache to the character's
-`SavedVariables/HardcoreBuddy.lua` file. Opening Debug restores the last dump
-without recapturing. Text edits persist while the addon is open; a new dump or
-reload restores the captured data. Editing does not change the original cache.
-Unavailable APIs are labelled; bank information depends on the bank being open.
+is cached per character; the page shows its saved-file location instead of rendering
+the full dump. Reload or log out to write it to disk. **Auto reload after dump** is
+off by default. The character file is under
+`WTF/Account/<account>/<realm>/<character>/SavedVariables/HardcoreBuddy.lua`.
+Opening Debug restores the last capture status. Unavailable APIs are labelled;
+bank data uses available live information and persisted snapshots.
 The dump includes only HardcoreBuddy-owned data and player APIs, not other
 addons. UI objects and functions are represented by markers. Shared tables and
 cycles use `$ref` paths. Existing gear snapshots remain part of the dump.
@@ -216,8 +235,11 @@ the native auction-tab style and works without any other auction addon.
   without filling the overview with slots that have no upgrades.
 - A persistent slot picker opens all alternatives directly, including empty
   slots. Results scroll continuously, with no paging controls.
-- Clear item cards separate score changes, listing prices, buyouts and bids.
-  **Find auctions** opens the normal Browse search; it does not buy the item.
+- The table separates Item, Slot, Price, Score and Options. Opening a slot changes
+  Options to **Buy**, with a button for each available buyout.
+- Buy uses the saved offer, loading its original auction page if needed, and opens
+  Blizzard's normal confirmation. It does not start a new full scan. Changed or
+  unavailable offers require a fresh scan.
 - Hover an upgrade to see currently equipped items automatically, without
   holding Shift or changing your global tooltip settings.
 - **Compare weapons** compares both complete weapon setups, with their combined
@@ -229,20 +251,23 @@ the native auction-tab style and works without any other auction addon.
 - Searches one equipment slot at a time, finishing its pages before moving on.
 - **Settings > Auction House > Best Armor** restricts body armor to your class's
   highest armor type for its level (for example, **Best Armor: Mail** for hunters
-  at level 40+). Off by default and saved per character. Jewelry, cloaks, shields,
+  at level 40+). On by default and saved per character. Jewelry, cloaks, shields,
   held off-hands and weapons remain eligible. Changing it requires a fresh scan.
-  The same checkbox is also available beneath **Scan upgrades** in the AH window.
+  The same checkbox is also available to the left of **Scan upgrades**.
 - Shows listing prices, merges duplicate item variants using their cheapest
   buyout (or next bid), and keeps different random suffixes separate.
-- Click an alternative to search for its auctions in the normal Browse tab.
-  Confirm the exact item variant and current price there before purchasing.
+- The default minimum required level is your level minus 10, configurable in
+  **Settings > Auction House**. Cloaks use the cloth search category. Ranged
+  searches include weapon types your class can train and label missing training.
+- Rings and trinkets share their searches. A unique item is assigned to the slot
+  with the greatest gain; it cannot fill both slots at once.
 
 Use **Compare weapons** to compare **Two-handed** against **1H + off hand**. Both
 percentages use the total score of your currently equipped hands. The paired
 view considers replacing either item, replacing both, or reusing equipped gear;
 it includes shields, caster off-hands and dual-wield weapons where usable.
 Each candidate is shown with its best legal partner. Open a setup to see both
-items and search for either purchase. The total price includes every required
+items and buy either component. The total price includes every required
 listing. Your equipped setup remains available as a zero-change option, and
 lower-scoring alternatives appear in red. These are weighted gear scores, not
 simulated damage or survival estimates.
@@ -254,7 +279,7 @@ changes require a new scan. Prices are for the full listing, not per item.
 Empty slots show **Empty slot** instead of an invented percentage. Weapon setups
 compare both hands together; other slots are compared independently.
 
-If listings cannot be read, click **Scan details** or use **`/hcb auction debug`**.
+If listings cannot be read, use **`/hcb auction debug`**.
 The copyable report includes the item link, failure reason, search slot/page,
 retry timing, item stats and native tooltip text. The latest failed scan is saved
 per character across reloads, limited to 25 skipped listings. A successful scan
@@ -314,14 +339,15 @@ The setting applies to new alerts and previews and survives login.
 Sound is enabled by default; an existing saved sound choice is preserved.
 **Supplies > User**, after Optional, lets you add personal items by dragging them
 from your bags anywhere onto the content page. Drops add immediately. Set their
-Carry quantities and track bag counts. Click a user item to open its details,
+Auto-buy amount and Refill amount, and track bag counts. Click a user item to open its details,
 then choose Remove item to remove it from your list. The list
 is saved per character. Uncached items display their ID until their name loads.
 
 **Supplies > Scrolls** lists the highest usable rank of Agility, Strength,
 Stamina, Intellect, Spirit and Protection scrolls. Recommendations follow your class and
-live or planned level, with exact-item bag counts, editable carry quantities
-and item details. The catalog covers all 24 Classic Era ranks.
+live or planned level and build, with exact-item bag counts and editable refill
+quantities. Lower eligible ranks can be set as the default. The catalog covers
+all 24 Classic Era ranks.
 
 **Settings > Low Health** (`/hcb health`) controls a flashing red **LOW HEALTH!** warning
 with an air horn. It defaults to below 40% health, matching the existing aura;
@@ -375,37 +401,38 @@ Use the mouse wheel or scrollbar for longer lists. There is no resize grip.
 
 ## Supplies and item details
 
-Open Bandages for **Recommended Based on Health**: the lowest rank whose full
-channel heals your maximum health, or the strongest Classic rank when none covers
-it. Only craftable recommendations appear. **Highest Rank Available** shows your
-best learned recipe when it differs, or serves as the fallback. **Show all** reveals
-the remaining ranks and First Aid training. Planning uses your current character's
-health and profession; cloth inventory is not a crafting gate.
+Open Bandages for **Recommended**: the lowest rank whose full channel heals your
+maximum health, or the strongest Classic rank when none covers it. An unlearned
+recommendation remains visible with **Cannot craft**; hover for its requirements.
+**Highest Rank Available** identifies your strongest learned recipe when it differs.
+An eligible alternative takes over only after you set it as the default. Unusable
+bandages remain inspectable but do not trigger automatic restocking. Planning uses
+your current character's health and profession; cloth inventory is not a crafting gate.
 
 Companion spell costs use trainer-style gold, silver and copper icons.
 
-Supplies opens to All. Each card shows its classification at the upper right and
-**(owned/target)** with a stock bar at the lower right. Zero owned shows **Missing**.
-Healing/mana potions are under Emergency; elixirs are under Buffs.
-All combines Food & drink, Buffs, Emergency and Optional into one scrolling list
-with category headings and no pages. Supplies has no search, Missing-only button
-or stock-summary strip, so the item list starts directly below navigation.
+Supplies opens to All, a table separated by category headings. Individual category
+pages use compact rows with classification at the upper right and **(owned/target)**
+with a stock bar at the lower right. Zero stock keeps that quantity format and a
+solid red bar. Enchants instead show their applied status. Food & Drink, Elixirs,
+Scrolls, Potions, Emergency and Enchants retain their own pages.
 The category sidebar stays visible on item, profession and pet detail pages;
 choose a category there to return directly to its list.
 
-Click an item, edit **Keep on hand** in its details, and press Enter. Zero disables that target;
-clearing it restores the suggestion. Bag counts exclude bank stock and update
+Click an item to edit **Auto-buy amount** and **Refill amount**. The first is the
+desired total; the second triggers restocking at or below that amount. Zero disables
+restocking. Only Essentials trigger reminders and purchases. Bag counts exclude bank stock and update
 when items are looted, bought, used or moved. Unavailable counts stay Unknown.
 
 Hover an item row or icon for its native tooltip, with an embedded-description
-fallback for uncached items. Click for acquisition, requirements and alternatives;
-Back sits above the right content area and restores the previous category.
-The quantity field has its own editing
-help. Sources buttons, URL export and runtime research metadata are removed.
-Item details use labeled fields for effects, crafting profession and skill,
-profession rank and its character-level gate, recipe acquisition, Auction House
-eligibility, materials and use requirements. Recipe and finished-item trading
-are distinguished. Recipe eligibility does not mean the character knows it.
+fallback for uncached items. Details place **Recommended** or **Selected Alternative**
+at the left with Materials below it; **Next**, then **Alternatives**, occupy the
+right column. Enchants also show Requirements. All item rows share the same height.
+Empty sections explain whether an item is not crafted, has no materials, lacks
+recipe data or has no next comparable upgrade. Materials are per craft and identify
+multi-item output. Knowing the profession skill does not imply knowing the recipe.
+Back returns to the current Supplies category root. Light of Elune retains its
+quest and macro sections; User items retain their custom-item layout.
 
 ## Your character and planning
 
@@ -421,9 +448,10 @@ pet is explicitly assumed to match the planned level; live pet level is detected
 
 ## Profession upgrades
 
-Bandages, anti-venom and target dummies automatically track the strongest recipe
-you know and can craft at your First Aid or Engineering skill. Recipe/skill changes
-update that choice. Old manual pins are ignored; exact-item Carry targets persist.
+Anti-venom and target dummies automatically track the strongest recipe you know
+and can craft at your First Aid or Engineering skill. Bandages use the health-based
+recommendation described above. Recipe/skill changes refresh these choices;
+eligible explicit defaults and exact-item quantities persist.
 
 Click a profession row for its next upgrade, required skill, acquisition and
 recipe-item AH eligibility. Guidance prefers the strongest missing recipe you
@@ -435,7 +463,8 @@ Companion includes First Aid, Engineering and Cooking progression. These cover
 skill-cap trainers, Expert books, faction-specific Triage routes and Clamlette
 Surprise requirements/ingredients. Optional introductory quests are distinguished
 from required training. Recipe/manual rows have their own native item tooltips.
-Crafting materials/tools, auction listings and quest objectives are not tracked.
+Supply details list recipe materials and bag counts; AH Essentials can compare
+finished-item and material costs. Companion training guidance does not track quest objectives.
 Unknown skill/recipe information is labeled. Crafting and use requirements remain
 separate; training always uses the actual character, including while planning.
 
@@ -461,8 +490,10 @@ logos and full articles are never loaded by the game.
 
 `HardcoreBuddyDB` saves planning choices, mode, position, visibility and minimap
 angle, plus death history and preferences under `deaths`.
-`HardcoreBuddyCharacterDB` saves each character's Carry targets. Actual
-character data is read fresh. The field kit and death journal stay closed until
+`HardcoreBuddyCharacterDB` saves each character's quantities, refill thresholds,
+priorities and advisor preferences. Live character data is refreshed from the client;
+bank and alt equipment snapshots persist with their own update and freshness rules.
+The field kit and death journal stay closed until
 opened; the compact death feed is visible by default.
 
 The field kit uses a campsite banner filling the header, a larger vertically

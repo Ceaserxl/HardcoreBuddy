@@ -87,8 +87,10 @@ for _,screen in ipairs({{1920,1080},{1024,768},{640,480}}) do
     check(near(tableY-statY-statH,8),"Reports follow summary cards by 8px")
     A:Navigate("supplies"); MOCK.Click(A.window.cards[1].content.blocks[1])
     local rows=A.window.cards[1].content.blocks
-    local x,y,w=rows[1]:GetRect(); local dx,dy=rows[2]:GetRect()
-    check(near(y,dy) and near(dx-x-w,8),"Selected item and details align with the shared column gap")
+    local nextRow
+    for _,r in ipairs(rows) do if r:IsShown() and r.block.rightColumn and r.block.action then nextRow=r; break end end
+    local x,y,w=rows[1]:GetRect(); local dx,dy=nextRow:GetRect()
+    check(near(y,dy) and near(dx-x-w,8),"Selected and Next items align with the shared column gap")
 end
 print("PASS: "..count.." compact section, typography, item alignment and journal toolbar checks.")
 ''')

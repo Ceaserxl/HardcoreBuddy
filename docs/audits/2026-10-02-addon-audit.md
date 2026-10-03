@@ -2,6 +2,9 @@
 
 Audit date: 2026-10-02. Runtime examined: `5d1a47d` (v0.7.0 working tree). This audit adds evidence and tooling only; it does not change runtime behavior, saved character data, research caches, or a published release.
 
+Follow-up: [fixes and replacement validation evidence](2026-10-02-audit-fixes.md).
+The findings and baseline below are retained as the historical audit.
+
 ## Assessment
 
 **The addon has substantial working functionality, but it is not yet consistent enough to call every recommendation and page correct.** The largest problem is that different screens make the same decision independently. Supply ordering, default selection, Essential classification, preparation highlights, gear eligibility, and explanatory text do not all consume the same resolved result.

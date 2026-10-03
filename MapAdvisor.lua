@@ -210,10 +210,15 @@ function M:Clusters(id)
     return clusters
 end
 
-local function level(npc)
-    if not npc.min or not npc.max then return "Level unknown" end
+function M:KnownLevel(npc)
+    return type(npc.min)=="number" and type(npc.max)=="number"
+        and npc.min>0 and npc.min<=npc.max and npc.max<=100
+end
+function M:LevelText(npc)
+    if not self:KnownLevel(npc) then return "Level ??" end
     return "Level "..npc.min..(npc.max~=npc.min and ("-"..npc.max) or "")
 end
+local function level(npc) return M:LevelText(npc) end
 
 function M:Tooltip(pin)
     if not pin.cluster or not GameTooltip then return end
@@ -483,8 +488,7 @@ function M:ShowZoneNotice(id,list)
         if i<=shown then
             local record=list[i]; local npc=record.npc; row.npcID=record.id
             row.cells[1]:SetText(npc.name)
-            local known=npc.min and npc.max and npc.min>0 and npc.max<=100
-            row.cells[2]:SetText(known and level(npc):gsub("^Level ","") or "??")
+            row.cells[2]:SetText(level(npc):gsub("^Level ",""))
             row.cells[3]:SetText(names[npc.kind]); row.cells[3]:SetTextColor(unpack(colors[npc.kind]))
         end
     end
@@ -569,9 +573,9 @@ function M:Document(context,state)
         local blocks={}
         local records=self:Records(id,true)
         table.sort(records,function(a,b)
-            local amin,bmin=a.npc.min or math.huge,b.npc.min or math.huge
+            local amin,bmin=self:KnownLevel(a.npc) and a.npc.min or math.huge,self:KnownLevel(b.npc) and b.npc.min or math.huge
             if amin~=bmin then return amin<bmin end
-            local amax,bmax=a.npc.max or amin,b.npc.max or bmin
+            local amax,bmax=self:KnownLevel(a.npc) and a.npc.max or amin,self:KnownLevel(b.npc) and b.npc.max or bmin
             if amax~=bmax then return amax<bmax end
             if a.npc.name~=b.npc.name then return a.npc.name<b.npc.name end
             return a.id<b.id

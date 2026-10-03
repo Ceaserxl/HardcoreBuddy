@@ -6,6 +6,9 @@ from lupa.lua51 import LuaRuntime
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 import build_map_data as build
 runtime=LuaRuntime()
+if not (build.CACHE/'source-questie.html').is_file():
+    print('SKIP: coordinate provenance needs the optional ignored research HTML cache; shipping data is checked by run_map_advisor.')
+    raise SystemExit(0)
 source=(build.CACHE/'source-questie.html').read_text(encoding='utf-8')
 def cached(kind,ident,url):
     return (build.CACHE/f'{kind}-{ident}.html').read_text(encoding='utf-8')

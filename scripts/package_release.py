@@ -30,7 +30,7 @@ def manifest():
         'docs/PROVENANCE.md', 'docs/advisors.md', 'docs/ADVISOR_DATA_LICENSE.txt',
         'docs/map-data.md', 'docs/map-data-audit.json', 'docs/leveling-zones.md',
         'docs/vendor-services.md', 'docs/rotation-helper.md', 'docs/consumable-buffs.md',
-        'docs/enchants.md',
+        'docs/enchants.md', 'docs/supply-catalog.md',
         'docs/class-spells.md', 'docs/WHATS_TRAINING_LICENSE.txt',
     })
     for volume in range(10, 101, 10):

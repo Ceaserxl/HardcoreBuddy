@@ -67,6 +67,7 @@ end
 function S:CommitInputs()
     local auction=self.pages and self.pages["Auction House"]
     if auction and auction.levelRange then auction.levelRange:ClearFocus() end
+    if auction and auction.unitLimit then auction.unitLimit:ClearFocus() end
     local gear=self.pages and self.pages["Gear Advisor"]
     if gear then
         for _,edit in ipairs(gear.weights) do edit:ClearFocus() end
@@ -353,7 +354,7 @@ function S:Create(parent)
     talent.contentHeight=276+maxBuilds*48
 
     local auction=self.pages["Auction House"]
-    auction.subtitle=label(auction,"Filters and saved scans for the auction house Upgrades tab.",12,0,34,700)
+    auction.subtitle=label(auction,"Upgrade scan filters, saved scans and Essentials purchase limits.",12,0,34,700)
     local filters=Skin.Section(auction,"Scan filters",Skin.layout.headerBottom,230,1)
     local scans=Skin.Section(auction,"Saved scans",Skin.layout.headerBottom,176,2)
     auction.armor=check(filters,"",56,function() return A.characterDB.auctionHighestArmorOnly==true end,function(value)
@@ -374,7 +375,23 @@ function S:Create(parent)
     label(filters,"Required level: your level minus this value, up to your current level. Default: 10 (range 0–60).",12,16,186,300)
     auction.cache=label(scans,"",12,16,56,300)
     auction.diagnostics=button(scans,"View scan diagnostics",132,function() A.AuctionDiagnostics:Show() end)
-    auction.contentHeight=292
+    local budgetTop=Skin.layout.headerBottom+filters:GetHeight()+Skin.layout.sectionGap
+    local budget=Skin.Section(auction,"Essentials purchase limit",budgetTop,132)
+    label(budget,"Maximum gold per item",12,16,48,250)
+    auction.unitLimit=CreateFrame("EditBox",nil,budget,"BackdropTemplate")
+    local limit=auction.unitLimit
+    limit:SetSize(84,28); limit:SetPoint("TOPRIGHT",-16,-40)
+    limit:SetFont(STANDARD_TEXT_FONT,13,""); limit:SetAutoFocus(false); limit:SetMaxLetters(8)
+    limit:SetJustifyH("CENTER"); Skin.Paint(limit,"edit")
+    local function resetLimit(e)
+        local value=A.AuctionEssentials:UnitPriceLimit()
+        e:SetText(value==math.huge and "0" or tostring(value/10000))
+    end
+    limit:SetScript("OnEditFocusLost",function(e) A.AuctionEssentials:SetUnitPriceLimit(e:GetText()); resetLimit(e) end)
+    limit:SetScript("OnEnterPressed",function(e) e:ClearFocus() end)
+    limit:SetScript("OnEscapePressed",function(e) resetLimit(e); e:ClearFocus() end)
+    label(budget,"Default: 10g per unit. 0 removes this limit. Listings above 5x the cheapest offer are also excluded. These are spending limits, not market-value estimates.",12,16,80,680)
+    auction.contentHeight=budgetTop+132+Skin.layout.sectionGap
 end
 
 function S:Layout(parent,left,top,width,height,section,visible)
@@ -490,6 +507,12 @@ function S:Layout(parent,left,top,width,height,section,visible)
     if pageName=="Talent Advisor" then self.content:SetHeight(math.max(talent.contentHeight,height/scale)) end
     local auction=self.pages["Auction House"]; auction.armor:Sync()
     if not auction.levelRange:HasFocus() then auction.levelRange:SetText(tostring(A.AuctionUpgrades:LevelRange())) end
+    if not auction.unitLimit:HasFocus() then
+        local limit=A.AuctionEssentials:UnitPriceLimit()
+        auction.unitLimit:SetText(limit==math.huge and "0" or tostring(limit/10000))
+    end
+    auction.unitLimit:SetEnabled(not A.AuctionEssentials:Busy())
+    auction.unitLimit:SetAlpha(A.AuctionEssentials:Busy() and 0.5 or 1)
     local armor=profile and ({"Cloth","Leather","Mail","Plate"})[A.GearAdvisor.HighestArmorSubclass(profile)] or "..."
     auction.armor.label:SetText("Best Armor: "..armor)
     local saved=A.characterDB.auctionLastScan

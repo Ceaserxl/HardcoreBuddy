@@ -1,6 +1,6 @@
 # Gear and talent advisors
 
-Open **Advisors** in the main window. The sidebar offers **Gear** and **Talents**.
+Open **Companion** in the main window. Choose **Gear Advisor** or **Talent Advisor**.
 Choose builds in **Settings > Talent Advisor**. `/hcb gear` and `/hcb talents`
 open the advice pages.
 
@@ -12,7 +12,7 @@ without any points retain the normal display. The original rank border widens
 to fit the numbers; no overlay badges, textures or additional labels are created.
 Talent clicks are unchanged. Pet and inspection views do not
 show player recommendations. There is no separate attached panel; the complete
-scrollable path remains in **Advisors > Talents**.
+scrollable path remains in **Companion > Talent Advisor**.
 
 Both Settings pages have independent enable/disable buttons. Disabling Gear
 Advisor removes tooltip advice and upgrade markers and stops auction upgrade
@@ -67,8 +67,8 @@ older saved snapshots retain their original scores and model identifier.
 **Settings > Debug > Dump Data** now captures gear alongside the rest of
 HardcoreBuddy's diagnostic data. It retains intrinsic item scores, raw item
 stats, native tooltip lines and talent information. The full dump is cached per
-character and shown in one full editable textbox. Select text manually and use
-Ctrl+C; no Copy action automatically selects the report. The former
+character and written to its SavedVariables file on reload or logout. Debug shows
+the saved location; it has no dump textbox. The former
 standalone Gear Snapshot page has been removed; saved gear snapshots remain
 available in diagnostic data. Stat Weights stays under Gear Advisor settings.
 
@@ -97,7 +97,7 @@ and [quest UI source](https://github.com/Gethe/wow-ui-source/blob/classic_era/In
 
 ## Auction weapon setups
 
-The auction house's **Upgrades > Weapon setups** compares complete configurations.
+The auction house's **Upgrades > Compare weapons** compares complete configurations.
 The baseline is the sum of the equipped main-hand and off-hand scores. A candidate
 two-hander supplies one score; a one-handed weapon and its off-hand supply two.
 Both percentages use the same formula and rounding as the gear advisor. Ordinary
@@ -119,7 +119,8 @@ storing every possible combination. Work yields between frames, with a bounded
 visible row pool. Equipped setups remain as zero-change options and negative
 alternatives are retained for comparison. Items in bags are not searched.
 Combined prices include all required purchases and identify bid-only or mixed
-bid/buyout setups. Open a setup to inspect and search for each component.
+bid/buyout setups. Open a setup to inspect each component. Its Buy button checks
+the saved listing and opens normal confirmation without rescanning every slot.
 
 This remains a weighted-stat comparison, not a combat simulation: attack speed,
 dual-wield combat penalties, shield utility and effects are not independently
@@ -129,18 +130,21 @@ items before changing weapon styles.
 ## Talent advice
 
 Sixteen Hardcore paths cover levels 10-60 across all nine Classic classes.
-Levels 1-9 show that talents are locked. The Point-by-point path button opens a
-separate page with the shared upper-left Back button. The list has continuous scrolling,
-current ranks and a next-point highlight. Edit Character can preview any class.
+Levels 1-9 show that talents are locked. The point-by-point table sits below the
+full-width **Next Talent** row on the main Talent Advisor page. It uses the page's
+scrollbar, includes icons, current ranks and next-point status, and hides learned
+steps until **Show Learned** is selected. Edit Character can preview any class.
 Default paths change phases for Druid, Rogue, Shaman and Warrior; incompatible
 existing points produce explicit respec guidance. Selecting another path never
 spends points or resets talents.
 
-**Learn** spends exactly one point on click, after re-reading the live class,
+**Next Talent** spends exactly one point on click, after re-reading the live class,
 level, build, talent ranks and free points. A changed recommendation, combat,
 missing data or incompatible build prevents spending. Native talent coordinates
 identify localized talents; ranks, tier gates and prerequisites are checked.
-There is no automatic allocation or background combat calculation.
+**Settings > Talent Advisor > Apply talent points** can apply unused points or
+opt into automatic allocation. Allocation follows the selected path, waits for
+acknowledgment of each point and stops on a mismatch; it never respecs for you.
 
 ## Reference and differences
 
@@ -165,8 +169,8 @@ Deliberate differences from that reference:
   when an off-hand would be removed, rather than presenting only the main-hand gain.
 - The Frost single-target path moves its third Frost Channeling point ahead of
   Ice Barrier, making Ice Barrier legal at level 40 instead of the source's 39.
-- Automatic equipping is opt-in under Gear Advisor settings; talent points are
-  still spent one at a time only when requested.
+- Automatic equipping and automatic talent allocation are separate opt-ins.
+  Talent points are spent one at a time with acknowledgment, using the selected path.
 
 Classic talent coordinates, rank limits, spell IDs and prerequisites come from
 the pinned [WoWSims Classic talent trees](https://github.com/wowsims/classic/tree/7779ebbf79dc7f1341e6ab939b28a3402c9a730a/ui/core/talents/trees).
@@ -213,3 +217,5 @@ spending must still be checked in WoW; the tests do not constitute a live sessio
 
 The current talent API shape was also checked against the
 [Classic Era Blizzard UI API definitions](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_APIDocumentationGenerated/SpecializationInfoDocumentation.lua).
+
+Cached alt eligibility includes learned dual wield and the Shaman Two-Handed Axes and Maces talent. Unknown old capabilities do not borrow the current character's abilities; log into the alt to refresh them. Full stat explanations include every supported editable stat, including resistance and weapon DPS changes.

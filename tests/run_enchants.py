@@ -202,7 +202,12 @@ local detail=A.document.cards[1]
 check(detail.blocks[1].title=="Selected Alternative" and detail.blocks[2].enchantTooltip.spellId==recipe.spellId,"Selected alternative replaces recommendation display")
 check(detail.blocks[3].title=="Next" and detail.blocks[5].title=="Alternatives" and detail.blocks[5].rightColumn,"Alternatives in right column")
 check(detail.blocks[2].body:find("Enchanting",1,true),"Requirements integrated into enchant subtitle")
-check(detail.blocks[6].enchantStatus=="|cff62d79bRecommended|r" and not detail.blocks[6].title:find("(Recommended)",1,true),"Recommended enchant first in alternatives with green top-right label")
+local marked
+for _,b in ipairs(detail.blocks) do if b.rightColumn and b.enchantStatus=="|cff62d79bRecommended|r" then
+    check(not marked,"Recommended appears only once across Next and Alternatives")
+    marked=b; check(not b.title:find("(Recommended)",1,true),"Recommended is a top-right label")
+end end
+check(marked,"Recommended enchant remains identified when it is the Next item")
 local selectedReagents={}
 for _,pair in ipairs(E.byId[recipe.spellId].reagents) do selectedReagents[pair[1]]=pair[2] end
 for _,b in ipairs(detail.blocks) do

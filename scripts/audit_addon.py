@@ -66,7 +66,7 @@ def main():
 
     jobs = [(path.stem, [str(path.relative_to(snapshot))])
             for path in sorted((snapshot / "tests").glob("run*.py"))
-            if path.name != "run_release.py"]
+            if path.name not in ("run_release.py", "run_all.py")]
     jobs.append(("release_workflow", ["tests/release_workflow.py"]))
     for suite in ("cooldown", "hundred", "two_hundred", "clarity", "handoff", "prediction", "buffs"):
         jobs.append(("rotation_" + suite, ["tests/run_rotation_scenarios.py", "--strict", "--suite", suite]))

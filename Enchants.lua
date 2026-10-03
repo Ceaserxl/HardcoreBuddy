@@ -51,8 +51,8 @@ for _,item in ipairs(A.Data.ArmorKits.items) do
 end
 function E.Profile(context)
     local class=(context.characterClass or ""):upper()
-    local build=A.TalentAdvisor:Build(class,context.level)
-    local profile=A.GearAdvisor.Profile(class,context.level,nil,build and build.profile)
+    local build=A.TalentAdvisor:Build(class,context.level or 1)
+    local profile=A.GearAdvisor.Profile(class,context.level or 1,nil,build and build.profile)
     if profile then
         profile.buildID=build and build.id
         profile=A.GearAdvisor:ApplyWeights(profile)
@@ -344,12 +344,12 @@ function E.Detail(context,action)
     local nextRank,nextLevel,nextScore
     if selected then
         local profile=E.Profile(context)
-        local selectedScore=E.Score(selected,profile) or 0
+        local selectedScore=E.Score(selected,profile)
         local future={}; for key,value in pairs(context) do future[key]=value end
         for _,catalog in ipairs({D.recipes,kits}) do
             for _,candidate in ipairs(catalog) do
                 local score=E.Score(candidate,profile)
-                if candidate~=selected and score and score>selectedScore and E.Compatible(candidate,g) then
+                if candidate~=selected and selectedScore and score and score>selectedScore and E.Compatible(candidate,g) then
                     -- Find the next recommendation tier across BOTH enhancement types.
                     -- Enchanting and Leatherworking skill numbers are not comparable ranks.
                     for level=context.level,60 do
@@ -371,14 +371,20 @@ function E.Detail(context,action)
     heading("Next",true)
     if nextRank then
         local b=enchantBlock(g,nextRank,{kind="enchantRecipe",slotId=g.slotId,spellId=nextRank.spellId})
+        if nextRank==recommended then b.enchantStatus="|cff62d79bRecommended|r" end
         b.enchantAlternative=true; b.rightColumn=true; blocks[#blocks+1]=b
     else
-        blocks[#blocks+1]=A.Guide.EmptySupplyRow("Next",selected,"enchant")
+        local empty=A.Guide.EmptySupplyRow("Next",selected,"enchant")
+        if selected and E.Score(selected,E.Profile(context))==nil then
+            empty.title="No Directly Comparable Upgrade"
+            empty.body="Utility effect; compare alternatives"
+        end
+        blocks[#blocks+1]=empty
     end
     heading("Alternatives",true)
     local listed={}
     local function alternative(option)
-        if not option or option==selected or listed[option.spellId] then return end
+        if not option or option==selected or option==nextRank or listed[option.spellId] then return end
         listed[option.spellId]=true
         local b=enchantBlock(g,option,{kind="enchantRecipe",slotId=g.slotId,spellId=option.spellId})
         b.enchantAlternative=true

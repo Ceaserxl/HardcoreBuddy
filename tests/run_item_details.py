@@ -21,12 +21,13 @@ if not item then
 end
 A:Activate({kind="item",item=item})
 local card=A.window.cards[1]; local rows=card.content.blocks
-local itemRow,details=rows[1],rows[2]
-local x,y,w,h=itemRow:GetRect(); local dx,dy=details:GetRect()
+local itemRow=rows[1]; local nextRow
+for _,r in ipairs(rows) do if r:IsShown() and r.block.rightColumn and r.block.action then nextRow=r; break end end
+local x,y,w,h=itemRow:GetRect(); local dx,dy=nextRow:GetRect()
 local heading=card.itemHeading
 local hx,hy,hw,hh=heading:GetRect()
-assert(h==56 and dx>x+w and dy==y and y>=hy+hh,"Item Details aligns with the selected item below its section heading")
-assert(heading:GetText()==A.Supplies.GenericTitle(item),"Generic label is the item section heading")
+assert(h==56 and dx>x+w and dy==y and y>=hy+hh,"Selected and Next rows share the compact two-column origin")
+assert(heading:GetText()=="Recommended" or heading:GetText()=="Selected Alternative","Resolved selection heading")
 assert(not itemRow.quantity:IsShown() and card.detailQuantity:IsShown())
 local ex,ey,ew,eh=card.detailQuantity:GetRect()
 assert(ey+eh<y,"Quantity control is above the item border")
@@ -37,10 +38,11 @@ for _,r in ipairs(rows) do if r:IsShown() then
 end end
 assert(alternativeHeader and alternativeHeader.skinKind=="note","Alternatives heading has no card border")
 local ax,ay=alternativeHeader:GetRect(); local bx,by,bw,bh=alternative:GetRect()
-assert(ax==x and bx==x and ay>ey+eh and by>=ay+alternativeHeader:GetHeight(),"Alternatives stay below the item in the left column")
+assert(ax==dx and bx==dx and ay>y and by>=ay+alternativeHeader:GetHeight(),"Alternatives follow Next in the right column")
 local old=A.state; local id=alternative.block.action.item.itemId
 MOCK.Click(alternative); assert(A.state.detail.item.itemId==id)
-A:Back(); assert(A.state==old,"Back restores the original item")
+A:Back(); assert(not A.state.detail and A.state.view=="supplies","Back returns to the supplies tab root")
+A:Activate({kind="item",item=item})
 local q=A.window.cards[1].detailQuantity.quantity
 q:SetFocus(); q:SetText("13")
 A:Navigate("supplies")

@@ -31,7 +31,8 @@ for _,b in ipairs(MOCK.frames) do
         if b==A.AuctionUpgrades.tab then
             assert(b.template=="AuctionTabTemplate","Auction tab retains Blizzard native highlight template")
         end
-        if (not block or block.action) and b~=A.AuctionUpgrades.tab then
+        -- Native templates supply hover in WoW; the frame mock does not load XML.
+        if (not block or block.action) and b~=A.AuctionUpgrades.tab and b.template~="UICheckButtonTemplate" then
             assert(b.skinButton or b.highlight,"Interactive button has no hover: "..tostring(b.name or b.label and b.label:GetText()))
             if b.skinButton and b:IsEnabled() then
                 assert(b.scripts.OnEnter and b.scripts.OnLeave,"Styled button is missing mouse handlers")

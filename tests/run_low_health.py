@@ -56,6 +56,7 @@ PlaySoundFile=function(path,channel) assert(path:find("AirHorn30.wav",1,true)); 
 H:Preview(); assert(sounds==before+1 and H.settings.volume==30)
 print("PASS: Low health thresholds, player-only events, single alarm, recovery/death, invalid health, toggles, preview expiry and settings navigation.")
 ''')
-composite(lua.globals().MOCK['frames'], addon['window']).convert('RGB').save(ROOT/'docs/layout-previews/hardcorebuddy-health-options.png')
-addon['LowHealth']['Preview'](addon['LowHealth'])
-composite(lua.globals().MOCK['frames'], addon['LowHealth']['warning']).convert('RGB').save(ROOT/'docs/layout-previews/hardcorebuddy-low-health.png')
+if '--render' in sys.argv:
+    composite(lua.globals().MOCK['frames'], addon['window']).convert('RGB').save(ROOT/'docs/layout-previews/hardcorebuddy-health-options.png')
+    addon['LowHealth']['Preview'](addon['LowHealth'])
+    composite(lua.globals().MOCK['frames'], addon['LowHealth']['warning']).convert('RGB').save(ROOT/'docs/layout-previews/hardcorebuddy-low-health.png')

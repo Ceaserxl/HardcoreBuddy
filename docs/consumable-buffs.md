@@ -1,13 +1,13 @@
 # Shared consumable and class-buff preparation
 
-Verified October 2, 2026. Blue action-bar markers now include the 64 routine
-elixirs, scrolls and buff foods in the existing supplies catalogs. Preparation
+Verified October 2, 2026. Blue action-bar markers now include routine
+elixirs, scrolls and buff foods in the supplies catalogs. Preparation
 works on all nine Classic classes; combat rotation advice remains Mage-only.
 Each character enables the assistant in Companion > Rotation Helper.
 
 ## Choosing a buff
 
-- Compare the actual stat amount, not item level or the catalog's ranking score.
+- Compare actual effects with the same active build weights as Supplies. Do not use item level as a proxy for buff strength.
 - Choose one carried/learned source per conflicting buff group. Prefer the free
   class spell on an equal amount. Do not recommend an item above its use level
   or outside the supplies catalog's class filter.
@@ -24,11 +24,11 @@ Each character enables the assistant in Companion > Rotation Helper.
   Battle/Guardian-elixir exclusivity rule.
 
 The scalar conflict groups are Intellect, Stamina, Spirit, Strength, Agility,
-consumable armor, flat health and Troll's Blood regeneration. Food chooses one
-meal using the existing class preference: mana food for Mage/Priest/Warlock,
-stat food for other classes. It compares ranks within that preference. Unknown
-special food effects and the extra crit on active Mongoose are preserved.
-Sages and Brute Force are recognized as active compound stat buffs.
+consumable armor, flat health, spell damage, Fire damage and Troll's Blood regeneration.
+Food compares Stamina + Spirit against MP5 using the active build weights. Compound
+Mongoose compares both Agility and crit. Equal effects prefer a free learned spell.
+Unknown special food effects are preserved. Sages and Brute Force are recognized
+as active compound stat buffs. See [catalog scope](supply-catalog.md).
 
 This is a preparation policy over the shipped supply catalog, not an exhaustive
 model of every Classic temporary/world buff or a combined-stat DPS simulator.

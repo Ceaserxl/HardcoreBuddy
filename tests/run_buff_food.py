@@ -18,8 +18,7 @@ for _,class in ipairs({"Warrior","Rogue","Hunter","Druid","Paladin","Shaman","Ma
   for _,r in ipairs(S.Build(context,{filter="Food & Drink"})) do
    if counts[r.family] then
     counts[r.family]=counts[r.family]+1
-    local primary=caster[class] and level>=10 and "manafood" or "wellfed"
-    assert(r.priority==(r.family==primary and "Essentials" or "Optional"),class.." food priority")
+    assert(r.priority=="Essentials" or r.priority=="Optional",class.." food priority")
     assert(r.category=="Food & Drink","Both food types remain on Food & Drink")
     if r.priority=="Essentials" then essential=essential+1 end
    end

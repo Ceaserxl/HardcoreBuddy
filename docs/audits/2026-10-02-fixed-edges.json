@@ -1,0 +1,479 @@
+{
+  "scrollDefault": {
+    "root": "Scroll of Intellect",
+    "selected": "Scroll of Intellect",
+    "defaultControl": true,
+    "heading": "Selected Alternative"
+  },
+  "professionOracle": {
+    "cases": 313040,
+    "failures": 0
+  },
+  "catalog": {
+    "items": 172,
+    "elixirs": [
+      "Weak Troll's Blood Potion",
+      "Strong Troll's Blood Potion",
+      "Mighty Troll's Blood Potion",
+      "Major Troll's Blood Potion",
+      "Elixir of Minor Defense",
+      "Elixir of Defense",
+      "Elixir of Greater Defense",
+      "Elixir of Superior Defense",
+      "Elixir of Minor Fortitude",
+      "Elixir of Fortitude",
+      "Elixir of Minor Agility",
+      "Elixir of Lesser Agility",
+      "Elixir of Agility",
+      "Elixir of Greater Agility",
+      "Elixir of Lion's Strength",
+      "Elixir of Ogre's Strength",
+      "Elixir of Giants",
+      "Elixir of Wisdom",
+      "Elixir of Greater Intellect",
+      "Elixir of the Mongoose",
+      "Arcane Elixir",
+      "Greater Arcane Elixir",
+      "Elixir of Firepower",
+      "Elixir of Greater Firepower",
+      "Elixir of Poison Resistance"
+    ],
+    "enchants": 138,
+    "missing": [
+      {
+        "inSupplies": true,
+        "id": 13452,
+        "buffIdentity": true,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 13454,
+        "buffIdentity": true,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 21546,
+        "buffIdentity": true,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 13445,
+        "buffIdentity": true,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 3386,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 9030,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 6048,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 6049,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 6050,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 6051,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 6052,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 13457,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 13456,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 13458,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 13459,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": true,
+        "id": 13461,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": false,
+        "id": 13928,
+        "buffIdentity": false,
+        "auctionRecipe": true,
+        "crafting": true
+      },
+      {
+        "inSupplies": false,
+        "id": 19300,
+        "buffIdentity": false,
+        "auctionRecipe": false,
+        "crafting": false
+      },
+      {
+        "inSupplies": false,
+        "id": 21023,
+        "buffIdentity": true,
+        "auctionRecipe": true,
+        "crafting": true
+      }
+    ],
+    "scrolls": 24,
+    "armorKits": 6
+  },
+  "shamanTwoHand": [
+    {
+      "allowed": false,
+      "level": 1
+    },
+    {
+      "allowed": false,
+      "level": 10
+    },
+    {
+      "allowed": false,
+      "level": 19
+    },
+    {
+      "allowed": false,
+      "level": 20
+    },
+    {
+      "allowed": false,
+      "level": 60
+    }
+  ],
+  "singleExpensiveAuction": {
+    "units": 0,
+    "excluded": 1,
+    "ceiling": 100000,
+    "cost": 0
+  },
+  "unmakeableBandage": "+800 health / 8 sec | Cannot craft",
+  "crafting": [
+    {
+      "id": 5514,
+      "note": "No Materials Required",
+      "name": "Mana Agate",
+      "kind": "classSpell"
+    },
+    {
+      "id": 5513,
+      "note": "No Materials Required",
+      "name": "Mana Jade",
+      "kind": "classSpell"
+    },
+    {
+      "id": 8007,
+      "note": "No Materials Required",
+      "name": "Mana Citrine",
+      "kind": "classSpell"
+    },
+    {
+      "id": 8008,
+      "note": "No Materials Required",
+      "name": "Mana Ruby",
+      "kind": "classSpell"
+    }
+  ],
+  "userItemInvalidation": {
+    "removed": true,
+    "refreshes": 0,
+    "added": true,
+    "invalidations": 2
+  },
+  "bandageLayouts": {
+    "direct": [
+      {
+        "id": 8545,
+        "status": "",
+        "supply": false,
+        "body": "+1104 health / 8 sec - First Aid 240"
+      },
+      {
+        "id": 14530,
+        "status": "",
+        "supply": false,
+        "body": "+2000 health / 8 sec - First Aid 290"
+      },
+      {
+        "id": 14529,
+        "status": "",
+        "supply": false,
+        "body": "+1360 health / 8 sec - First Aid 260"
+      },
+      {
+        "id": 6451,
+        "status": "",
+        "supply": false,
+        "body": "+640 health / 8 sec - First Aid 180"
+      },
+      {
+        "id": 6450,
+        "status": "",
+        "supply": false,
+        "body": "+400 health / 8 sec - First Aid 150"
+      },
+      {
+        "id": 3531,
+        "status": "",
+        "supply": false,
+        "body": "+301 health / 7 sec - First Aid 115"
+      },
+      {
+        "id": 3530,
+        "status": "",
+        "supply": false,
+        "body": "+161 health / 7 sec - First Aid 80"
+      },
+      {
+        "id": 2581,
+        "status": "",
+        "supply": false,
+        "body": "+114 health / 6 sec - First Aid 40"
+      },
+      {
+        "id": 1251,
+        "status": "",
+        "supply": false,
+        "body": "+66 health / 6 sec - First Aid 1"
+      }
+    ],
+    "family": [
+      {
+        "id": 8545,
+        "status": "",
+        "supply": false,
+        "body": "+1104 health / 8 sec - First Aid 240"
+      },
+      {
+        "id": 14530,
+        "status": "",
+        "supply": false,
+        "body": "+2000 health / 8 sec - First Aid 290"
+      },
+      {
+        "id": 14529,
+        "status": "",
+        "supply": false,
+        "body": "+1360 health / 8 sec - First Aid 260"
+      },
+      {
+        "id": 6451,
+        "status": "",
+        "supply": false,
+        "body": "+640 health / 8 sec - First Aid 180"
+      },
+      {
+        "id": 6450,
+        "status": "",
+        "supply": false,
+        "body": "+400 health / 8 sec - First Aid 150"
+      },
+      {
+        "id": 3531,
+        "status": "",
+        "supply": false,
+        "body": "+301 health / 7 sec - First Aid 115"
+      },
+      {
+        "id": 3530,
+        "status": "",
+        "supply": false,
+        "body": "+161 health / 7 sec - First Aid 80"
+      },
+      {
+        "id": 2581,
+        "status": "",
+        "supply": false,
+        "body": "+114 health / 6 sec - First Aid 40"
+      },
+      {
+        "id": 1251,
+        "status": "",
+        "supply": false,
+        "body": "+66 health / 6 sec - First Aid 1"
+      }
+    ]
+  },
+  "resistance": {
+    "gear": 1000,
+    "gains": "+10 Fire resistance",
+    "losses": "-10 Fire resistance",
+    "enchant": 1000
+  },
+  "customDuplicate": {
+    "userRows": 1,
+    "all": {
+      "family": "armor",
+      "priority": "Essentials",
+      "category": "Elixirs"
+    },
+    "essentials": {
+      "family": "armor",
+      "priority": "Essentials",
+      "category": "Elixirs"
+    }
+  },
+  "pages": [
+    "supplies-all",
+    "elixirs",
+    "scroll-detail",
+    "bandages",
+    "spells",
+    "talents",
+    "gear",
+    "instances",
+    "journal",
+    "settings-general",
+    "settings-zone-advisor",
+    "settings-gear-advisor",
+    "settings-talent-advisor",
+    "settings-auction-house",
+    "settings-death-journal",
+    "settings-low-health",
+    "settings-npc-alerts",
+    "settings-debug",
+    "unmakeable-bandage"
+  ],
+  "missingHoverCandidates": [
+    {
+      "path": "CheckButton / Frame / Frame / UIParent",
+      "template": "UICheckButtonTemplate",
+      "shown": false,
+      "height": 24,
+      "width": 24
+    },
+    {
+      "path": "CheckButton / Frame / Frame / UIParent",
+      "template": "UICheckButtonTemplate",
+      "shown": false,
+      "height": 24,
+      "width": 24
+    },
+    {
+      "path": "CheckButton / Frame / Frame / UIParent",
+      "template": "UICheckButtonTemplate",
+      "shown": false,
+      "height": 24,
+      "width": 24
+    },
+    {
+      "path": "CheckButton / Frame / Frame / UIParent",
+      "template": "UICheckButtonTemplate",
+      "shown": false,
+      "height": 24,
+      "width": 24
+    }
+  ],
+  "npcLevelSentinels": [
+    {
+      "min": 9999,
+      "name": "Azuregos",
+      "id": 6109,
+      "tooltip": [
+        "HardcoreBuddy: known danger area",
+        "Azuregos | Level ?? | |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:18:18:0:0|t World boss",
+        "Recorded spawn areas; creatures may roam or be absent.",
+        "Click to view NPC appearances in HardcoreBuddy."
+      ],
+      "tableLevel": "??",
+      "max": 9999
+    },
+    {
+      "min": 9999,
+      "name": "Anachronos",
+      "id": 15192,
+      "tooltip": [
+        "HardcoreBuddy: known danger area",
+        "Anachronos | Level ?? | |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:18:18:0:0|t World boss",
+        "Recorded spawn areas; creatures may roam or be absent.",
+        "Click to view NPC appearances in HardcoreBuddy."
+      ],
+      "tableLevel": "??",
+      "max": 9999
+    },
+    {
+      "min": 9999,
+      "name": "Spirit of Azuregos",
+      "id": 15481,
+      "tooltip": [
+        "HardcoreBuddy: known danger area",
+        "Spirit of Azuregos | Level ?? | |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:18:18:0:0|t World boss",
+        "Recorded spawn areas; creatures may roam or be absent.",
+        "Click to view NPC appearances in HardcoreBuddy."
+      ],
+      "tableLevel": "??",
+      "max": 9999
+    },
+    {
+      "min": 9999,
+      "name": "Qiraji Lieutenant General",
+      "id": 15757,
+      "tooltip": [
+        "HardcoreBuddy: known danger area",
+        "Qiraji Lieutenant General | Level ?? | |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:18:18:0:0|t World boss",
+        "Recorded spawn areas; creatures may roam or be absent.",
+        "Click to view NPC appearances in HardcoreBuddy."
+      ],
+      "tableLevel": false,
+      "max": 9999
+    }
+  ]
+}

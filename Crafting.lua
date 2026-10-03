@@ -28,11 +28,10 @@ function C.MaterialBlocks(item,context)
     end
     local note
     if #blocks==0 then
-        note=info.craftKind=="classSpell" and info.className=="Mage" and "No materials required."
-            or info.craftable and "Recipe materials unavailable."
-            or info.craftable==false and "Not crafted; no materials required." or "No recipe materials listed."
+        note=info.craftKind=="classSpell" and info.className=="Mage" and "No Materials Required"
+            or info.craftable==false and "Not Crafted" or "Recipe Materials Unknown"
     end
-    return blocks,note
+    return blocks,note,recipe and recipe.output or 1
 end
 
 local ranks = {
@@ -81,7 +80,10 @@ function C.GetInfo(item,context)
     item=item or {};context=context or {}
     local catalog=addon.Data.Crafting
     local row=(catalog and catalog.items and catalog.items[item.itemId]) or item.crafting
-    if not row then return {craftable=nil,craftingText="Crafting information unavailable."} end
+    if not row then
+        if item.group=="Scrolls" or item.vendorFood then return {craftable=false,craftingText="Not crafted."} end
+        return {craftable=nil,craftingText="Crafting information unavailable."}
+    end
     local result={}
     for key,value in pairs(row) do result[key]=value end
     result.tradeNote="AH listings are not checked. Self Found cannot use the Auction House or player trading."

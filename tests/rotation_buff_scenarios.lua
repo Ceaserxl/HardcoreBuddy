@@ -60,8 +60,14 @@ scenario("Mage physical armor does not conflict with armor elixirs",{inventory={
 scenario("Rogue receives no Intellect consumable marker",{inventory={[9179]=2,[4419]=2}},nil,{"buffItem:9179","buffItem:4419"},"ROGUE")
 scenario("Mage receives no Agility consumable marker",{inventory={[9187]=2}},nil,{"buffItem:9187"})
 scenario("Buff food is suggested even at full health and mana",{inventory={[21217]=2}},"buffItem:21217")
-scenario("Caster food preference selects carried mana food",{inventory={[21217]=2,[17222]=2}},"buffItem:21217",{"buffItem:17222"})
+scenario("Mage's default build values the carried Stamina/Spirit food higher",{inventory={[21217]=2,[17222]=2}},"buffItem:17222",{"buffItem:21217"})
 scenario("Rogue food preference selects stat food",{inventory={[21217]=2,[17222]=2}},"buffItem:17222",{"buffItem:21217"},"ROGUE")
+local originalProfile=A.Enchants.Profile
+A.Enchants.Profile=function() return {weights={stamina=0,spirit=0,mp5=100}} end
+scenario("Custom MP5 weights prefer mana food",{inventory={[21217]=2,[17222]=2}},"buffItem:21217",{"buffItem:17222"})
+A.Enchants.Profile=function() return {weights={stamina=100,spirit=100,mp5=0}} end
+scenario("Custom survival weights prefer stat food",{inventory={[21217]=2,[17222]=2}},"buffItem:17222",{"buffItem:21217"})
+A.Enchants.Profile=originalProfile
 scenario("Healthy Well Fed prevents another meal",{inventory={[21217]=2},playerAuras={{spellId=25941,expirationTime=401}}},nil,{"buffItem:21217"})
 scenario("Well Fed refresh starts at five minutes",{inventory={[21217]=2},playerAuras={{spellId=25941,expirationTime=400}}},"buffItem:21217")
 scenario("Stronger mana food prevents a downgrade near expiry",{inventory={[21217]=2},playerAuras={{spellId=18194,expirationTime=150}}},nil,{"buffItem:21217"})
@@ -173,7 +179,9 @@ local violations=0
 for _,class in ipairs({"WARRIOR","PALADIN","HUNTER","ROGUE","PRIEST","SHAMAN","MAGE","WARLOCK","DRUID"}) do
     setup({level=40,gcd=1.5,itemCooldown=1.5,inventory={[8951]=2,[4422]=2,[21217]=2,[17222]=2},playerAuras={{spellId=25691,expirationTime=120}}},class)
     local resting=F.evaluate()
-    local food=(class=="MAGE" or class=="PRIEST" or class=="WARLOCK") and 21217 or 17222
+    local profile=A.Enchants.Profile({characterClass=class:sub(1,1)..class:sub(2):lower(),level=40,mode="live"})
+    local weights=profile.weights
+    local food=class~="WARRIOR" and class~="ROGUE" and 6*(weights.mp5 or 0)>12*((weights.stamina or 0)+(weights.spirit or 0)) and 21217 or 17222
     record(class.." keeps Food Scroll and Elixir markers during eating and GCD","All three needed consumables remain visible",
         item(resting,8951) and item(resting,4422) and item(resting,food),resting)
     local pass=true

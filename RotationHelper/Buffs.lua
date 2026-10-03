@@ -5,8 +5,7 @@ local D=A.Data.ConsumableBuffs
 local B={}; H.Buffs=B; A.ConsumableBuffs=B
 local names={WARRIOR="Warrior",PALADIN="Paladin",HUNTER="Hunter",ROGUE="Rogue",PRIEST="Priest",
     SHAMAN="Shaman",MAGE="Mage",WARLOCK="Warlock",DRUID="Druid"}
-local manaFood={MAGE=true,PRIEST=true,WARLOCK=true}
-local order={"intellect","stamina","spirit","strength","agility","armor","health","trollsblood","food"}
+local order={"intellect","stamina","spirit","strength","agility","armor","health","trollsblood","spellPower","fire","food"}
 local items={}
 for _,catalog in ipairs({A.Data.Items.items,A.Data.Scrolls.items}) do
     for _,item in ipairs(catalog) do if D.items[item.itemId] then items[#items+1]=item end end
@@ -34,8 +33,7 @@ end
 local function power(c,meta,id,aura)
     local value=meta.power
     if meta.group=="food" then
-        local preferred=manaFood[c.class] and "manafood" or "wellfed"
-        return value+(meta.foodType==preferred and 1000 or 0)
+        return A.Supplies.BuffScore(meta,c.supplyProfile)
     end
     -- Modern aura data can include the actual value after talents.
     local actual=aura and aura.points and tonumber(aura.points[1])
@@ -58,21 +56,25 @@ local function due(c,candidate)
         local left=remaining(c,aura)
         if amount and left>0 then
             -- Never advertise a downgrade, even when the stronger buff expires soon.
-            if meta.keep or amount>candidate.power or amount==candidate.power and left>300 then return false end
+            local rating=meta.group==candidate.group and A.Supplies.BuffScore(meta,c.supplyProfile)
+            if meta.keep or amount>candidate.power
+                or amount==candidate.power and (rating and rating>candidate.rating or left>300 and (not rating or rating>=candidate.rating)) then return false end
         end
     end
     return true
 end
 local function better(a,b)
+    if b and a.rating~=b.rating then return a.rating>b.rating end
     if not b or a.power~=b.power then return not b or a.power>b.power end
     if a.kind~=b.kind then return a.kind=="spell" end -- Save consumables on equal strength.
     return a.id<b.id
 end
 
 function B:Add(c)
+    c.supplyProfile=A.Supplies.Profile({characterClass=names[c.class],level=c.level,mode="live"})
     local best={}
     local function consider(key,s,meta)
-        local candidate={key=key,id=s.id,kind=s.kind,group=meta.group,power=power(c,meta,s.id)}
+        local candidate={key=key,id=s.id,kind=s.kind,group=meta.group,power=power(c,meta,s.id),rating=A.Supplies.BuffScore(meta,c.supplyProfile)}
         if better(candidate,best[candidate.group]) then best[candidate.group]=candidate end
     end
     for key in pairs(D.classSpells[c.class] or {}) do

@@ -20,7 +20,7 @@ local state={view="supplies",detail={kind="supplyFamily",family="bandage"}}
 local function doc() return A.Companion.Build(context,state) end
 local function ids(d)
     local ids={}; local count=0
-    for _,c in ipairs(d.cards) do for _,b in ipairs(c.blocks) do if b.supply and not b.materialCount then
+    for _,c in ipairs(d.cards) do for _,b in ipairs(c.blocks) do if b.itemId and (b.supply or b.action) and not b.materialCount then
         assert(not ids[b.itemId],"No duplicate bandage rows")
         ids[b.itemId]=b; count=count+1
     end end end
@@ -31,7 +31,7 @@ local d=doc(); local rows,count=ids(d)
 assert(count==10 and rows[6451] and rows[14530])
 assert(d.cards[1].itemLayout and d.cards[1].quantityRecord, "Standard supply details layout and controls")
 assert(d.cards[1].itemSectionTitle=="Recommended")
-assert(not rows[6451].rightColumn and rows[14530].rightColumn,"Other ranks right, selected bandage left")
+assert(not rows[6451].rightColumn and rows[14530].highestAvailable,"Selected bandage left; strongest learned rank identified")
 for _,c in ipairs(d.cards) do assert(c.title~="Bandages","No redundant Bandages heading") end
 assert(not rows[6451].readOnlyTarget and rows[6451].editTarget,"Recommended lower rank remains editable")
 context.maxHealth=641; assert(ids(doc())[8544],"Next healing tier after boundary")
@@ -42,7 +42,7 @@ context.maxHealth=700
 for i=5,#recipes do context.professions.known[recipes[i].spellId]=false end
 d=doc(); rows,count=ids(d)
 assert(count==10 and rows[3531] and rows[8544],"Uncraftable recommendation is a real item row")
-assert(rows[8544].body:find("cannot make it yet",1,true),"Requirement subtext and clickable details")
+assert(rows[8544].body:find("Cannot craft",1,true) and rows[8544].selectionReason:find("learned recipe",1,true),"Compact requirement with full tooltip explanation")
 context.professions.skills.bandage=80
 assert(ids(doc())[3530],"Crafting skill gates known recipes")
 state.showAllBandages=true

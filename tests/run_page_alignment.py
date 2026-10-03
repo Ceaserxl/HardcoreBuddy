@@ -24,7 +24,10 @@ A:Navigate("supplies"); MOCK.Click(f.cards[1].content.blocks[1])
 local top=aligned(f.scroll)
 local _,headingTop=f.cards[1].itemHeading:GetRect()
 local _,itemTop=f.cards[1].content.blocks[1]:GetRect()
-local _,detailsTop=f.cards[1].content.blocks[2]:GetRect()
+local detailsTop
+for _,row in ipairs(f.cards[1].content.blocks) do
+ if row:IsShown() and row.block.rightColumn and row.block.action then _,detailsTop=row:GetRect(); break end
+end
 assert(headingTop==top and itemTop==detailsTop,"Item section starts at scroll origin; both item columns align below it")
 MOCK.Click(f.back); aligned(f.scroll)
 A:Navigate("training"); A.state.filter="Spells"; A:Refresh(true); aligned(f.scroll)

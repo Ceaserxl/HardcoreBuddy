@@ -1,7 +1,7 @@
 # Supplies: Enchants
 
 Enchants follows Scrolls. It contains equipped-slot recommendations, armor kits,
-and an exact-item material shopping list. Open a slot to browse alternatives,
+and ranged scopes. Open a slot to browse alternatives,
 then open an alternative to inspect its effect, requirements and bag counts.
 Browsing alternatives is temporary; old saved enchant choices are ignored.
 Missing slots always display the automatic recommendation. Applied alternatives
@@ -13,7 +13,7 @@ upper right. Missing enchants show Not Enchanted with red borders; the recommend
 enchant applied shows Enchanted and another applied enhancement shows Alternative,
 both green on the overview.
 Hover shows the enchant effect rather than its crafting recipe. Details place
-the selected enhancement and tracked reagents on the left and alternatives on the right.
+the selected enhancement and tracked reagents on the left, with Next followed by Alternatives on the right.
 Armor-kit subtitles also retain the use-level and target-item restrictions.
 Armor kits participate in these same comparisons for chest, gloves, legs and boots,
 respecting the kit's required use level and the target item's level.
@@ -23,7 +23,7 @@ Kit details show Leatherworking requirements and their crafting materials.
 The bundled catalog contains 132 Classic Era Enchanting profession recipes and
 58 consumed material types, plus the existing six armor kits. It excludes Season
 of Discovery recipes. Quest/reputation head, leg and shoulder augments and
-Engineering scopes are not part of the Enchanting profession catalog.
+Engineering scopes are included separately for compatible ranged weapons. See the explicit inclusion boundaries in [catalog scope](supply-catalog.md).
 
 Source: [Wowhead Classic Enchanting spells](https://www.wowhead.com/classic/spells/professions/enchanting?filter=16;1;0).
 Each spell's tooltip, enchant effect ID, required skill, reusable rod and consumed
@@ -48,9 +48,8 @@ required of the enchanter; actual gear restrictions still apply in both modes.
 Armor kits retain their required use level and minimum item level. Applied
 higher-rank enchants remain recognized when using level-appropriate mode.
 
-The slot menu initially shows the highest applicable rank of each effect.
-Show Lesser Ranks, opposite Back, expands the list to include lower compatible
-enchants and armor kits. The applied enchant remains available for comparison.
+The slot menu lists all compatible alternatives, including lower ranks, sorted by
+build score. Next appears once and is not repeated in Alternatives.
 Recommendations use the selected Talent Advisor build's Gear Advisor profile,
 including this character's edited stat weights. The highest positive stat-score
 candidate is recommended within the selected budget mode and gear restrictions.
@@ -61,7 +60,9 @@ Tooltips display the profile and enchant score.
 
 Procs, movement speed, threat, profession bonuses and flat weapon damage without
 weapon-speed modeling have no fabricated numeric score. These remain relevant
-situational alternatives and cannot displace a scored recommendation. Thus
+situational alternatives. They cannot displace a scored recommendation and are not numerical zeroes.
+Selecting an incomparable utility effect shows No Directly Comparable Upgrade
+instead of claiming a stat enchant is strictly better. Thus
 highest stat score is not a claim of universally best DPS or survival.
 
 Specialization filters distinguish physical, Feral, tank and healer profiles.
@@ -74,7 +75,7 @@ threat reduction is excluded for tanks. Useful general survival bonuses remain.
 Mining, Herbalism, Skinning and Fishing bonuses require that profession to be
 learned. Unknown profession data and character previews hide these bonuses.
 This does not require Enchanting to receive ordinary enchants from an enchanter.
-Both recommendation modes and the lesser-ranks list use these filters.
+Both recommendation modes and all alternatives use these filters.
 There is no dependency on another addon's scoring or data at runtime.
 
 ## Gear and material checks

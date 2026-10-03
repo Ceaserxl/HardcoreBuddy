@@ -2,6 +2,24 @@
 -- Cap quantity states at the target; retain actual quantity for overbuy tie-breaks.
 local _,A=...
 local E=A.AuctionEssentials
+function E:UnitPriceLimit()
+    local value=tonumber(A.characterDB and A.characterDB.auctionEssentialUnitGold)
+    if not value or value~=value or value<0 or value>100000 then value=10 end
+    return value==0 and math.huge or math.floor(value*10000)
+end
+function E:SetUnitPriceLimit(value)
+    value=tonumber(value)
+    if not A.characterDB or not value or value~=value or value<0 or value>100000 then return false end
+    if self:Busy() then return false end
+    local copper=value==0 and math.huge or math.max(1,math.floor(value*10000))
+    if copper==self:UnitPriceLimit() then return true end
+    value=copper==math.huge and 0 or copper/10000
+    A.characterDB.auctionEssentialUnitGold=value
+    -- Existing plans used a different ceiling. Require a fresh price plan.
+    self.results={}; self.complete=nil
+    self:Refresh()
+    return true
+end
 function E:RefillPlan(offers,need,ceiling,yieldWork)
     need=math.max(0,math.ceil(need or 0))
     local floorPrice
@@ -11,7 +29,8 @@ function E:RefillPlan(offers,need,ceiling,yieldWork)
     end
     -- Conservative listing-relative guard. Carry the original ceiling through
     -- a purchase batch so disappearing cheap stacks cannot raise its budget.
-    ceiling=math.min(ceiling or math.huge,(floorPrice or 0)*5)
+    local budget=self:UnitPriceLimit()
+    ceiling=math.min(ceiling or math.huge,(floorPrice or 0)*5,budget)
     local states,work={[0]={cost=0,units=0}},0
     local excluded=0
     for _,offer in ipairs(offers) do
@@ -39,7 +58,8 @@ function E:RefillPlan(offers,need,ceiling,yieldWork)
         for q in pairs(states) do if q>highest then highest=q end end
         best=states[highest]
     end
-    local plan={cost=best.cost,units=best.units,need=need,offers={},ceiling=ceiling,excluded=excluded}
+    local plan={cost=best.cost,units=best.units,need=need,offers={},ceiling=ceiling,excluded=excluded,
+        priceLimited=excluded>0 and best.units<need,unitBudget=budget}
     while best.offer do table.insert(plan.offers,1,best.offer); best=best.previous end
     table.sort(plan.offers,function(a,b)
         if a.buyout*b.count~=b.buyout*a.count then return a.buyout*b.count<b.buyout*a.count end

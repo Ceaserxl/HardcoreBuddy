@@ -402,6 +402,9 @@ function G.Allowed(item,p)
         local allowed=false
         for _,id in ipairs(weaponTypes[p.class] or {}) do if id==item.subclassID then allowed=true end end
         if not allowed then return false,"Not usable by your class" end
+        if p.class=="SHAMAN" and (item.subclassID==1 or item.subclassID==5) then
+            if not G.CanUseTwoHandAxesMaces(p) then return false,"Requires Talent: Two-Handed Axes and Maces" end
+        end
     else
         local max=G.HighestArmorSubclass(p)
         if item.subclassID==6 then
@@ -458,25 +461,35 @@ function G.Score(item,p,slot)
     return score
 end
 
-local lossStats={
-    {"strength","Str"},{"agility","Agi"},{"stamina","Sta"},{"intellect","Int"},{"spirit","Spi"},
-    {"crit","Crit","%"},{"hit","Hit","%"},{"spellCrit","Spell crit","%"},{"spellHit","Spell hit","%"},
-    {"attackPower","AP"},{"rangedAttackPower","RAP"},{"spellPower","Spell power"},{"healing","Healing"},
-    {"mp5","MP5"},{"defense","Defense"},{"dodge","Dodge","%"},{"parry","Parry","%"},
-    {"block","Block","%"},{"blockValue","Block value"},{"health","Health"},{"mana","Mana"},
-    {"frost","Frost"},{"fire","Fire"},{"shadow","Shadow"},{"nature","Nature"},{"arcane","Arcane"},{"holy","Holy"},
-    {"armor","Armor"},
-}
+local shortStat={strength="Str",agility="Agi",stamina="Sta",intellect="Int",spirit="Spi",
+    frost="Frost",fire="Fire",shadow="Shadow",nature="Nature",arcane="Arcane",holy="Holy",
+    attackPower="AP",rangedAttackPower="RAP",mp5="MP5",healing="Healing",hit="Hit",crit="Crit",
+    spellHit="Spell hit",spellCrit="Spell crit",dodge="Dodge",parry="Parry",block="Block"}
+local percentStat={hit=true,crit=true,spellHit=true,spellCrit=true,dodge=true,parry=true,block=true}
+local lossStats={}
+for _,field in ipairs(G.WeightFields) do
+    if statKeys[field[1]] or field[1]:find("DPS",1,true) then
+        lossStats[#lossStats+1]={field[1],shortStat[field[1]] or field[2],percentStat[field[1]] and "%" or ""}
+    end
+end
 local function statChangeSummary(item,p,replacedItems,allStats,compact,gains)
     local losses={}
+    local function value(item,key)
+        if not key:find("DPS",1,true) then return G.StatValue(item,p,key) end
+        if not item or item.classID~=2 then return 0 end
+        local dpsKey=item.subclassID==19 and "wandDPS"
+            or (item.equip=="INVTYPE_RANGED" or item.equip=="INVTYPE_RANGEDRIGHT" or item.equip=="INVTYPE_THROWN") and "rangedDPS" or "meleeDPS"
+        if key==dpsKey then return item.dps end
+        return 0
+    end
     for i,entry in ipairs(lossStats) do
         local key=entry[1]
         if allStats or i<=5 or (p.weights[key] or 0)>0 then
-            local candidate=G.StatValue(item,p,key)
+            local candidate=value(item,key)
             if candidate==nil then return end
             local previous=0
             for _,old in ipairs(replacedItems) do
-                local amount=G.StatValue(old,p,key)
+                local amount=value(old,key)
                 if amount==nil then return end
                 previous=previous+amount
             end
@@ -510,9 +523,22 @@ end
 
 function G.CanDualWield(p)
     if p.cachedDualWield~=nil then return p.cachedDualWield end
+    if p.cachedCapabilities then return false end
     local dual=(p.class=="ROGUE" and p.level>=10) or ((p.class=="WARRIOR" or p.class=="HUNTER") and p.level>=20)
     if dual and IsSpellKnown then dual=IsSpellKnown(674) end
     return dual
+end
+
+function G.CanUseTwoHandAxesMaces(p)
+    if p.class~="SHAMAN" then return true end
+    if p.level<20 then return false end
+    if p.cachedTwoHandAxesMaces~=nil then return p.cachedTwoHandAxesMaces==true end
+    -- Old snapshots must not borrow the bank character's learned abilities.
+    if p.cachedCapabilities then return false end
+    local _,class=UnitClass("player")
+    if class~="SHAMAN" then return false end
+    local known=IsPlayerSpell or IsSpellKnown
+    return known and (known(16269) or known(197) and known(199))==true or false
 end
 
 function G.LossSummary(item,p,replacedItems,allStats,compact)

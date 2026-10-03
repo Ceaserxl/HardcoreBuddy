@@ -112,7 +112,10 @@ local function tooltip(self)
     end
     if block.itemId then
         local ok=pcall(GameTooltip.SetHyperlink,GameTooltip,"item:"..block.itemId)
-        if ok and GameTooltip:NumLines()>0 then GameTooltip:Show(); return end
+        if ok and GameTooltip:NumLines()>0 then
+            if block.selectionReason then GameTooltip:AddLine(block.selectionReason,0.72,0.73,0.75,true) end
+            GameTooltip:Show(); return
+        end
         GameTooltip:ClearLines()
     end
     GameTooltip:SetText(block.title or "Reference", 0.83, 0.69, 0.43, 1, true)
@@ -122,9 +125,9 @@ local function tooltip(self)
     elseif block.body then GameTooltip:AddLine(block.body, 0.94, 0.92, 0.87, true) end
     if block.meta then GameTooltip:AddLine(block.meta, 0.72, 0.73, 0.75, true) end
     if block.supply then
-        GameTooltip:AddLine(block.autoRank and "The best learned recipe is selected automatically from your character's profession skill. Materials are not checked."
+        GameTooltip:AddLine(block.selectionReason or block.autoRank and "The best learned recipe is selected automatically from your character's profession skill. Materials are not checked."
             or block.groupSupply and "Bag count includes all listed ranks. Open to choose the rank you use."
-            or "Counts include carried bags only. Carry targets are editable suggestions; they do not check profession or recipe requirements.",0.72,0.73,0.75,true)
+            or "Bag quantities. Auto-buy amount and Refill amount are editable; purchasing requires the item to be usable.",0.72,0.73,0.75,true)
     end
     if block.action then GameTooltip:AddLine(block.recommendation and "Click to Apply Talent" or "Click for details", 0.83, 0.69, 0.43, true) end
     GameTooltip:Show()
@@ -1134,7 +1137,7 @@ end
 function addon:Back()
     self:CommitInputs(); self.window.classMenu:Hide()
     local detail=self.state.detail
-    if self.state.view=="supplies" then
+    if self.state.view=="supplies" and detail then
         local main
         for _,previous in ipairs(self.history or {}) do
             if previous.view=="supplies" and previous.filter==self.state.filter and not previous.detail then main=previous; break end

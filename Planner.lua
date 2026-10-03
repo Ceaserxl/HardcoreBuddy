@@ -85,7 +85,9 @@ local function strength(a, b)
     if (a.preference or 0) ~= (b.preference or 0) then return (a.preference or 0) < (b.preference or 0) end
     return P.ByEase(a, b)
 end
-function P.BuildList(class, level, faction)
+function P.BuildList(class, level, faction, context)
+    context=context or {characterClass=class,level=level,faction=faction,mode="preview"}
+    local profile=addon.Supplies and addon.Supplies.Profile(context)
     local items = D.Items.items
     if faction~=nil then
         items={}
@@ -109,7 +111,8 @@ function P.BuildList(class, level, faction)
         local candidates = filter(options, function(item)
             return not item.alternative and ((family ~= "wellfed" and family ~= "manafood") or item.ease <= 2)
         end)
-        candidates = sorted(candidates, grouped[family] and function(a, b) return a.power < b.power end or strength)
+        candidates = sorted(candidates, grouped[family] and function(a, b) return a.power < b.power end
+            or addon.Supplies and function(a,b) return addon.Supplies.Better(a,b,context,profile) end or strength)
         local item = candidates[1]
         if item then
             local row = copy(item)

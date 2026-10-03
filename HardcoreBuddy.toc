@@ -19,6 +19,7 @@ Data\FactionRules.lua
 Data\ProfessionProgression.lua
 Data\Crafting.lua
 Data\AuctionRecipes.lua
+Data\SupplyExtensions.lua
 Data\ArmorKits.lua
 Data\Enchants.lua
 Data\Scopes.lua

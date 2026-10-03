@@ -1,0 +1,1 @@
+PASS: all 3267 published pins use documented spawns/patrols or reviewed dragon portals; nested routes, unknown coordinates and zone memberships validated.

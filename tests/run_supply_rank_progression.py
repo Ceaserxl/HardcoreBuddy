@@ -10,14 +10,15 @@ local originalProfile=A.Enchants.Profile
 local weights={agility=10,intellect=1}
 A.Enchants.Profile=function() return {weights=weights} end
 local choices={{itemId=3012,level=10},{itemId=955,level=5}}
-A.Guide.SortSupplyItems(choices,{})
+A.Guide.SortSupplyItems(choices,{characterClass="Mage",level=60})
 assert(choices[1].itemId==3012,"Agility build puts agility first")
 weights={agility=1,intellect=10}
-A.Guide.SortSupplyItems(choices,{})
+A.Guide.SortSupplyItems(choices,{characterClass="Mage",level=60})
 assert(choices[1].itemId==955,"Build weight changes reorder alternatives")
 A.Enchants.Profile=originalProfile
 local chains={{3382,3388,3826,20004},{5997,3389,8951,13445},{2458,3825},
-    {2457,3390,8949,9187},{2454,3391,9206},{3383,9179}}
+    {2457,3390,8949,9187,13452},{2454,3391,9206},{3383,9179},
+    {9155,13454},{6373,21546},{3386}}
 local items={}; local audited={}; local checks=0
 for _,item in ipairs(A.Data.Items.items) do items[item.itemId]=item end
 for _,chain in ipairs(chains) do for index,id in ipairs(chain) do
@@ -59,9 +60,9 @@ for _,item in ipairs(A.Data.Scrolls.items) do
         if inAlternatives and b.itemId then alternatives[b.itemId]=b end
     end
     for _,other in ipairs(A.Data.Scrolls.items) do if other.family==item.family and other.itemId~=item.itemId then
-        assert(alternatives[other.itemId],"Other scroll ranks remain accessible")
+        assert(alternatives[other.itemId] or other==nextRank,"Other scroll ranks remain accessible without duplicating Next")
     end end
-    if item~=highest then assert(alternatives[highest.itemId].recommendedAlternative) end
+    if item~=highest and highest~=nextRank then assert(alternatives[highest.itemId].recommendedAlternative) end
     checks=checks+1
 end
 print("PASS: "..checks.." elixir/scroll rank and detail-page cases; all catalog elixirs covered.")

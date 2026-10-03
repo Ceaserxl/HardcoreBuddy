@@ -1,0 +1,826 @@
+{
+  "sourceCommit": "fa4c5f5ef37f639dcacc106873720a805c91ffd4",
+  "workingTree": "M  .github/workflows/release.yml\nM  AltAdvisor.lua\nM  AuctionEssentials.lua\nM  AuctionRefillPlan.lua\nM  Companion.lua\nM  Core.lua\nM  Crafting.lua\nA  Data/SupplyExtensions.lua\nM  Enchants.lua\nM  GearAdvisor.lua\nM  Guide.lua\nM  HardcoreBuddy.toc\nM  MapAdvisor.lua\nM  MapNPCViewer.lua\nM  Planner.lua\nM  README.md\nM  Readiness.lua\nM  RotationHelper/Buffs.lua\nM  Settings.lua\nM  Supplies.lua\nM  UI.lua\nM  docs/advisors.md\nM  docs/audits/2026-10-02-addon-audit.md\nA  docs/audits/2026-10-02-audit-fixes.md\nA  docs/audits/2026-10-02-fixed-ci-validation.txt\nA  docs/audits/2026-10-02-fixed-coordinate-check.txt\nA  docs/audits/2026-10-02-fixed-edges.json\nA  docs/audits/2026-10-02-fixed-matrix.json\nA  docs/audits/2026-10-02-fixed-suite-results.json\nA  docs/audits/images/2026-10-02-fixed-ah-settings.png\nA  docs/audits/images/2026-10-02-fixed-bandage.png\nM  docs/consumable-buffs.md\nM  docs/enchants.md\nA  docs/supply-catalog.md\nM  docs/vendor-services.md\nM  scripts/audit_addon.py\nM  scripts/package_release.py\nM  tests/__pycache__/render_layout.cpython-313.pyc\nM  tests/rotation_buff_scenarios.lua\nM  tests/run.py\nA  tests/run_all.py\nA  tests/run_audit_regressions.py\nM  tests/run_bandage_recommendations.py\nM  tests/run_buff_food.py\nM  tests/run_button_hover.py\nM  tests/run_crafted_ammo.py\nM  tests/run_enchant_next_augment.py\nM  tests/run_enchants.py\nM  tests/run_global_layout.py\nM  tests/run_item_details.py\nM  tests/run_low_health.py\nM  tests/run_map_coordinates.py\nM  tests/run_page_alignment.py\nM  tests/run_preparation.py\nM  tests/run_rotation_removed.py\nM  tests/run_scrolls.py\nM  tests/run_supply_rank_progression.py\n",
+  "python": "3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
+  "scope": "Offline Lua 5.1 mocks; no live WoW or external services",
+  "results": [
+    {
+      "name": "package_release",
+      "command": [
+        "scripts/package_release.py",
+        "--output",
+        ".release/audit/package"
+      ],
+      "exitCode": 0,
+      "seconds": 1.332,
+      "output": "PASS: 233 files; TOC paths, version, ZIP CRC and byte-for-byte contents verified.\n.release\\audit\\package\\HardcoreBuddy-0.7.0.zip (10.23 MiB)\n"
+    },
+    {
+      "name": "release_workflow",
+      "command": [
+        "tests/release_workflow.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.43,
+      "output": "PASS: Numeric release labels, build naming and tag validation.\n"
+    },
+    {
+      "name": "rotation_buffs",
+      "command": [
+        "tests/run_rotation_scenarios.py",
+        "--strict",
+        "--suite",
+        "buffs"
+      ],
+      "exitCode": 0,
+      "seconds": 1.029,
+      "output": "BUFFS: 90/90 named expectations met\nMATRIX: 540 combinations; 0 invariant violations\n"
+    },
+    {
+      "name": "rotation_clarity",
+      "command": [
+        "tests/run_rotation_scenarios.py",
+        "--strict",
+        "--suite",
+        "clarity"
+      ],
+      "exitCode": 0,
+      "seconds": 0.644,
+      "output": "CLARITY: 64/64 named expectations met\n"
+    },
+    {
+      "name": "rotation_cooldown",
+      "command": [
+        "tests/run_rotation_scenarios.py",
+        "--strict",
+        "--suite",
+        "cooldown"
+      ],
+      "exitCode": 0,
+      "seconds": 0.488,
+      "output": "COOLDOWN: 50/50 named expectations met\n"
+    },
+    {
+      "name": "rotation_handoff",
+      "command": [
+        "tests/run_rotation_scenarios.py",
+        "--strict",
+        "--suite",
+        "handoff"
+      ],
+      "exitCode": 0,
+      "seconds": 0.7,
+      "output": "HANDOFF: 41/41 named expectations met\n"
+    },
+    {
+      "name": "rotation_hundred",
+      "command": [
+        "tests/run_rotation_scenarios.py",
+        "--strict",
+        "--suite",
+        "hundred"
+      ],
+      "exitCode": 0,
+      "seconds": 0.549,
+      "output": "HUNDRED: 100/100 named expectations met\n"
+    },
+    {
+      "name": "rotation_prediction",
+      "command": [
+        "tests/run_rotation_scenarios.py",
+        "--strict",
+        "--suite",
+        "prediction"
+      ],
+      "exitCode": 0,
+      "seconds": 0.42,
+      "output": "PREDICTION: 22/22 named expectations met\n"
+    },
+    {
+      "name": "rotation_two_hundred",
+      "command": [
+        "tests/run_rotation_scenarios.py",
+        "--strict",
+        "--suite",
+        "two_hundred"
+      ],
+      "exitCode": 0,
+      "seconds": 0.728,
+      "output": "TWO_HUNDRED: 200/200 named expectations met\n"
+    },
+    {
+      "name": "run",
+      "command": [
+        "tests\\run.py"
+      ],
+      "exitCode": 0,
+      "seconds": 2.742,
+      "output": "PASS: All 60 Hunter, Warlock and quiver plans match full website fixtures.\nPASS: 1,830 independent Hunter/pet level pairs and 60 unknown-pet cases respect both gates.\nPASS: Archived reference checksums and standalone full TOC.\nPASS: Character quantities persist into a fresh full-TOC runtime.\nPASS: Profile normalization, unsupported live classes, migration and independent new-character targets.\nPASS: 23802 current full-TOC supply records across 540 class/level contexts.\nPASS: 28 supply and inventory checks cover carried stacks, bank exclusion, unknown state, targets, rank counts and emergency potions.\nPASS: 77 profession checks cover exact craft thresholds, learned recipes, localized skills, collapsed headers, reentry and unknown APIs.\nPASS: 69 profession progression checks cover faction routes, recipe books, AH eligibility, unknown knowledge and actual skill/level training gates.\n"
+    },
+    {
+      "name": "run_alt_advisor",
+      "command": [
+        "tests\\run_alt_advisor.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.913,
+      "output": "PASS: final equipment and unknown occupied slots persist into a fresh bank-character runtime.\nPASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: cached profiles/equipment, best-slot ranking, faction/realm identity, binding, tooltip deduplication and disable setting.\nPASS: stable repeated refresh, independent Alt visibility and synchronous binding-safe native setter hooks.\nPASS: final logout reads, partial item loading, filled/emptied slots, variant identity, late retries and dependent slots.\nPASS: complete/partial inventory teardown, invalid legacy snapshots, real shoulders, genuine unequips and cache repair.\nPASS: fresh empty-slot upgrades, age boundaries, stale/invalid dates, cache retention and editable settings dependencies.\n"
+    },
+    {
+      "name": "run_ammo_capacity",
+      "command": [
+        "tests\\run_ammo_capacity.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.538,
+      "output": "PASS: capacity defaults, larger/smaller containers, zero/manual targets, weapon swaps and new ammo ranks.\n"
+    },
+    {
+      "name": "run_armor_kits",
+      "command": [
+        "tests\\run_armor_kits.py"
+      ],
+      "exitCode": 0,
+      "seconds": 7.759,
+      "output": "PASS: 27358 armor-kit checks: all slots, character/item levels, existing enhancements, unknown data, stock, preview, crafting and live refresh.\n"
+    },
+    {
+      "name": "run_auction_crafting",
+      "command": [
+        "tests\\run_auction_crafting.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.534,
+      "output": "PASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: 397 auction upgrade assertions\nPASS: global craft preference, material-only purchases, recipe yields, shared stock, cached plans and bank persistence\n"
+    },
+    {
+      "name": "run_auction_essential_queue",
+      "command": [
+        "tests\\run_auction_essential_queue.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.405,
+      "output": "PASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: 397 auction upgrade assertions\nPASS: saved multi-stack queue, both event orders, stale pages, long throttles, own-auction skip, mail accounting and timeouts\n"
+    },
+    {
+      "name": "run_auction_essentials",
+      "command": [
+        "tests\\run_auction_essentials.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.581,
+      "output": "PASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: 397 auction upgrade assertions\nPASS: Essentials Show All filter, refill gate, user items, Upgrades table style, per-row Buy, cached plans, native confirmation and stale-listing protection\n"
+    },
+    {
+      "name": "run_auction_mail",
+      "command": [
+        "tests\\run_auction_mail.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.75,
+      "output": "PASS: mail stock restored from character SavedVariables in fresh Lua runtime\nPASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: 397 auction upgrade assertions\nPASS: 39 auction mail assertions, receipts, persistence, collection order, incomplete inboxes and refill filtering\n"
+    },
+    {
+      "name": "run_auction_purchase",
+      "command": [
+        "tests\\run_auction_purchase.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.61,
+      "output": "PASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: 397 auction upgrade assertions\nPASS: cached-page buyouts without rescanning, exact seller/price/variant checks, native confirmation, row buttons and table layout.\n"
+    },
+    {
+      "name": "run_auction_refill_plan",
+      "command": [
+        "tests\\run_auction_refill_plan.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.698,
+      "output": "PASS: 400 exhaustive comparisons, exact/overbuy/tie/outlier/shortfall cases and cooperative planning\n"
+    },
+    {
+      "name": "run_auction_upgrades",
+      "command": [
+        "tests\\run_auction_upgrades.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.299,
+      "output": "PASS: Saved auction diagnostics reloaded without live item, auction or tooltip APIs.\nPASS: Saved scan and weapon setups round-trip through a fresh Lua runtime; unknown equipment stays stale.\nPASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: 397 auction upgrade assertions\nPASS: 243 weapon setup assertions\nPASS: Auction and Gear Advisor tooltip grouping, refresh and owner isolation.\n"
+    },
+    {
+      "name": "run_audit_regressions",
+      "command": [
+        "tests\\run_audit_regressions.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.788,
+      "output": "PASS: 782 focused cross-consumer audit regressions.\n"
+    },
+    {
+      "name": "run_back_navigation",
+      "command": [
+        "tests\\run_back_navigation.py"
+      ],
+      "exitCode": 0,
+      "seconds": 12.986,
+      "output": "PASS: fixed shared Back position, hit testing, scrolling and nested return paths.\nPASS: 36124 redesign assertions across 144 fixed-window screen/mode/view combinations and two font metrics; fixed 1040x660 geometry, uniform screen fitting, planning/search text bounds and real clicks, complete supply rows, banner bounds, removed Sources, native backdrop hooks, immediate bevel resizing and non-overlapping class dropdown.\n"
+    },
+    {
+      "name": "run_bandage_recommendations",
+      "command": [
+        "tests\\run_bandage_recommendations.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.499,
+      "output": "PASS: Full-health boundaries, craft/recipe gates, fallback, duplicate suppression, all ranks, editable recommendations and trainer coin formatting.\n"
+    },
+    {
+      "name": "run_bind_details",
+      "command": [
+        "tests\\run_bind_details.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.691,
+      "output": "PASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: delayed popup/event ordering, all three bind types, missing APIs/slot data, repeated accept/cancel cycles, tooltip and timeout cleanup.\n"
+    },
+    {
+      "name": "run_blizzard_settings",
+      "command": [
+        "tests\\run_blizzard_settings.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.669,
+      "output": "PASS: Modern addon options registration, duplicate guard and Open Settings button.\nPASS: Legacy addon options registration, duplicate guard and Open Settings button.\n"
+    },
+    {
+      "name": "run_buff_food",
+      "command": [
+        "tests\\run_buff_food.py"
+      ],
+      "exitCode": 0,
+      "seconds": 5.037,
+      "output": "PASS: 540 class/level combinations, food deduplication, priorities, manual overrides and renamed navigation.\n"
+    },
+    {
+      "name": "run_button_hover",
+      "command": [
+        "tests\\run_button_hover.py"
+      ],
+      "exitCode": 0,
+      "seconds": 3.72,
+      "output": "PASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: 397 auction upgrade assertions\nPASS: 393 interactive controls audited, including hidden controls; hover survives refresh.\nPASS: 542 interactive controls audited, including hidden controls; hover survives refresh.\n"
+    },
+    {
+      "name": "run_class_spells",
+      "command": [
+        "tests\\run_class_spells.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.939,
+      "output": "PASS: 109 Hunter pet ranks with trainer/taming sources and 59 unique Warlock grimoires; separate next-level/all-future pet sections.\nPASS: live untrained/current trainer selection, higher-rank suppression, talent eligibility, future append and refresh across nine classes.\nPASS: 1324 spell entries; all 9 classes across levels 1-60; faction/race/talent labels; search, planning, navigation and lazy loading.\n"
+    },
+    {
+      "name": "run_companion_navigation",
+      "command": [
+        "tests\\run_companion_navigation.py"
+      ],
+      "exitCode": 0,
+      "seconds": 2.522,
+      "output": "PASS: Overview links for all 9 classes match sidebar order and return correctly; 166 visible styled buttons have matching hover states.\n"
+    },
+    {
+      "name": "run_crafted_ammo",
+      "command": [
+        "tests\\run_crafted_ammo.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.51,
+      "output": "PASS: crafted ammo tiers, Thorium arrow exchange, hunter Essentials default and aligned alternatives.\n"
+    },
+    {
+      "name": "run_creature_alerts",
+      "command": [
+        "tests\\run_creature_alerts.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.557,
+      "output": "PASS: all 30 sound variants exist and have valid WAV headers.\nPASS: creature detection, cooldowns, settings, secure targeting, three distinct sounds, volume selection and mute.\nPASS: four flash pulses, neutral elite exclusion, and rare flash inclusion.\nPASS: dungeons and raids suppress elites while preserving hostile/neutral rares; outdoor elite alerts remain active.\nPASS: Instance transitions clear existing ordinary elite warnings and preserve rare warnings.\n"
+    },
+    {
+      "name": "run_creature_exclusions",
+      "command": [
+        "tests\\run_creature_exclusions.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.446,
+      "output": "PASS: All 226 exclusions, both factions/unknown faction, localized names, no alert/marker, pending checks, rare preservation and unrelated elite detection.\n"
+    },
+    {
+      "name": "run_creature_noise",
+      "command": [
+        "tests\\run_creature_noise.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.495,
+      "output": "PASS: taxi/death suppression, pack grouping, audio gap, priority, sustained visibility, rearming, marker preservation and raid permissions.\n"
+    },
+    {
+      "name": "run_custom_builds",
+      "command": [
+        "tests\\run_custom_builds.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.947,
+      "output": "PASS: custom path, selected build and bundled weights restored in fresh Lua runtime\nPASS: 770 custom build assertions across all classes, bundle isolation, validation, editor, selection and sharing\n"
+    },
+    {
+      "name": "run_custom_builds_layout",
+      "command": [
+        "tests\\run_custom_builds_layout.py"
+      ],
+      "exitCode": 0,
+      "seconds": 4.915,
+      "output": "PASS: 3515 custom-build panel geometry and navigation checks across nine classes and three screen sizes.\n"
+    },
+    {
+      "name": "run_death_channel",
+      "command": [
+        "tests\\run_death_channel.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.624,
+      "output": "PASS: Delayed official-channel auto-join, existing membership, bounded retries, lost membership, non-Hardcore guard, independent settings and missing APIs.\nPASS: Localized official channel matches auto-join and receipt handling.\n"
+    },
+    {
+      "name": "run_deaths",
+      "command": [
+        "tests\\run_deaths.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.852,
+      "output": "PASS: Original native warning restored once; later explicit sound choices survive reload.\nPASS: Full TOC boot, relog persistence, unsupported event fallback, standalone fallback; 123 Lua files compile under Lua 5.1.\nPASS: 102 embedded death-module assertions\nPASS: Shared entry points, single receiver, duplicate suppression, original text, tooltip, late legacy migration and unchanged legacy data.\nPASS: Embedded journal navigation, options/details/back, visibility, sidebar filters and small-screen bounds.\nPASS: Journal continuous scrolling, bounded row pool, search, level filtering, empty state, row details/back and class-change continuity.\nPASS: All 5,000 imported reports are reachable with a bounded row pool; fractional offsets and shrinking histories are handled.\nPASS: Watching removed; real-record preview prefers current realm, falls back across realms, preserves history and uses samples only for empty history.\nPASS: Duration defaults, bounds, commit/cancel, exact hold/fade timing, removed Verified tab and redesigned live/planning bounds.\nPASS: Separate columns, clean causes, concise alerts, sound defaults/preferences, dedicated banner and responsive overlay width.\nPASS: Symmetric centered banner typography, long-text fitting and font reset between alerts.\nPASS: Redesigned compact feed geometry, latest reports, row bounds, journal/details links, hide behavior and empty/unavailable states.\nPASS: New symmetrical artwork, equal end caps and all text centered across the full banner.\nPASS: Death alert checkbox disables automatic banner/sound, preserves recording/feed, and re-enables alerts.\nPASS: Original native warning, custom bell and five Deathlog sounds, all volume steps, mute, selector clicks, wrapping and invalid-setting recovery.\n"
+    },
+    {
+      "name": "run_debug_dump",
+      "command": [
+        "tests\\run_debug_dump.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.133,
+      "output": "PASS: dump parses offline and cached text restores in a fresh addon runtime.\nPASS: incremental comprehensive dump, animation, cycles, addon isolation, saved-file export and click-confirmed reload and failure recovery.\n"
+    },
+    {
+      "name": "run_elune_macro",
+      "command": [
+        "tests\\run_elune_macro.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.365,
+      "output": "PASS: Elune macro creation, exact body validation, repair, combat guard, drag and page state\n"
+    },
+    {
+      "name": "run_enchant_next_augment",
+      "command": [
+        "tests\\run_enchant_next_augment.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.419,
+      "output": "PASS: Selected/applied kits and enchants cross families, respect weights and earliest tier, and exclude downgrades.\n"
+    },
+    {
+      "name": "run_enchant_profiles",
+      "command": [
+        "tests\\run_enchant_profiles.py"
+      ],
+      "exitCode": 0,
+      "seconds": 13.658,
+      "output": "PASS: 1072626 enchant assertions; 30 profiles across all nine classes, levels 1-60, both modes, roles, custom weights and saved builds.\n"
+    },
+    {
+      "name": "run_enchants",
+      "command": [
+        "tests\\run_enchants.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.675,
+      "output": "Enchant checks passed: 9602\n"
+    },
+    {
+      "name": "run_gear_advisor",
+      "command": [
+        "tests\\run_gear_advisor.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.613,
+      "output": "PASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\n"
+    },
+    {
+      "name": "run_gear_bags",
+      "command": [
+        "tests\\run_gear_bags.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.518,
+      "output": "PASS: both bag preferences survive fresh-runtime initialization.\nPASS: opt-in controls, deduplicated notices, best upgrades, worn quest gear, both hands, rings, combat/cursor/locks, master disable and stale candidates.\n"
+    },
+    {
+      "name": "run_gear_indicators",
+      "command": [
+        "tests\\run_gear_indicators.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.74,
+      "output": "PASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: 63 gear indicator checks; native/replacement bags, queued rendering, pooled buttons, cache invalidation, equipment and quest choices.\n"
+    },
+    {
+      "name": "run_gear_snapshot",
+      "command": [
+        "tests\\run_gear_snapshot.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.658,
+      "output": "PASS: SavedVariables fixture reloaded and inspected offline with no WoW APIs.\nPASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: 30 snapshot checks; gear collection, unenchanted scores, immutable data, partial data and offline persistence.\n"
+    },
+    {
+      "name": "run_gear_weights",
+      "command": [
+        "tests\\run_gear_weights.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.879,
+      "output": "PASS: Custom weights survive a fresh-runtime SavedVariables reload.\nPASS: 41112 gear assertions; 257 cross-material comparisons; reference scores and native tooltip lifecycle.\nPASS: 101 stat-weight checks; complete editor, decimals, invalid input, scoring/marker/cache updates, profile isolation and defaults.\n"
+    },
+    {
+      "name": "run_global_layout",
+      "command": [
+        "tests\\run_global_layout.py"
+      ],
+      "exitCode": 0,
+      "seconds": 5.602,
+      "output": "PASS: 2142 compact section, typography, item alignment and journal toolbar checks.\n"
+    },
+    {
+      "name": "run_hunter_tooltips",
+      "command": [
+        "tests\\run_hunter_tooltips.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.528,
+      "output": "PASS: 1222 catalog tooltips, exact skill ranks, duplicate suppression, class gating, unknown IDs, players and controlled units.\n"
+    },
+    {
+      "name": "run_hunter_training",
+      "command": [
+        "tests\\run_hunter_training.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.947,
+      "output": "PASS: Separate Hunter Overview and Pet Training pages, navigation highlights, guide return and profession tabs.\nPASS: Actual/localized pet ranks, upgrades, tame sources, trainer skills, separate level gates, unknown/max ranks, preview, Class/All and pet-event refresh.\n"
+    },
+    {
+      "name": "run_instances",
+      "command": [
+        "tests\\run_instances.py"
+      ],
+      "exitCode": 0,
+      "seconds": 6.745,
+      "output": "PASS: 1620 instance assertions; 35 compact packing lists, current routing, search, navigation, inventory and pooled layout.\n"
+    },
+    {
+      "name": "run_item_details",
+      "command": [
+        "tests\\run_item_details.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.494,
+      "output": "PASS: Item/details columns, compact rows, external quantity editor, borderless Alternatives and detail return paths.\n"
+    },
+    {
+      "name": "run_kit_alerts",
+      "command": [
+        "tests\\run_kit_alerts.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.494,
+      "output": "PASS: 59 level transitions, unchanged levels, duplicate/XP suppression, preview isolation, fade and click-to-open.\n"
+    },
+    {
+      "name": "run_leveling_zones",
+      "command": [
+        "tests\\run_leveling_zones.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.607,
+      "output": "PASS: Zones navigation, all levels 1-60 for both factions, exact filter edges, search, Show all, zone detail links, map button, Back and planned levels.\n"
+    },
+    {
+      "name": "run_low_health",
+      "command": [
+        "tests\\run_low_health.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.534,
+      "output": "PASS: Low health thresholds, player-only events, single alarm, recovery/death, invalid health, toggles, preview expiry and settings navigation.\n"
+    },
+    {
+      "name": "run_map_advisor",
+      "command": [
+        "tests\\run_map_advisor.py"
+      ],
+      "exitCode": 0,
+      "seconds": 2.029,
+      "output": "PASS: map data, exploration ownership, map transitions, filters, notices and controls.\n"
+    },
+    {
+      "name": "run_map_coordinates",
+      "command": [
+        "tests\\run_map_coordinates.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.343,
+      "output": "SKIP: coordinate provenance needs the optional ignored research HTML cache; shipping data is checked by run_map_advisor.\n"
+    },
+    {
+      "name": "run_map_research",
+      "command": [
+        "tests\\run_map_research.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.394,
+      "output": "PASS: two-second pacing, cache reuse, blocked-request stop, saved progress and delay validation.\n"
+    },
+    {
+      "name": "run_model_bounds",
+      "command": [
+        "tests\\run_model_bounds.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.389,
+      "output": "PASS: Exact reported Classic bounds, vector compatibility, 730-frame regression, invalid/uncached bounds, bounded retries, camera failure and recovery.\n"
+    },
+    {
+      "name": "run_page_alignment",
+      "command": [
+        "tests\\run_page_alignment.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.957,
+      "output": "PASS: Common scroll origins across roots, details, search pages, Settings and journal; headings/items start at the content top.\n"
+    },
+    {
+      "name": "run_preparation",
+      "command": [
+        "tests\\run_preparation.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.071,
+      "output": "PASS: supply priorities and overrides, ammo/weapon routing and counts, restock boundaries, quiet notifications, death styles and movable preview.\nPASS: Fresh-runtime restoration of priorities, ammo targets, preparation settings and death appearance/position.\n"
+    },
+    {
+      "name": "run_preparation_previews",
+      "command": [
+        "tests\\run_preparation_previews.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.582,
+      "output": "PASS: Preview controls, layout rows, sample labeling, layering, expiry, cooldown isolation, combat and Review navigation.\n"
+    },
+    {
+      "name": "run_profession_pages",
+      "command": [
+        "tests\\run_profession_pages.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.029,
+      "output": "PASS: First Aid/Cooking root navigation, recommendations, unknown/unlearned/intermediate/max skills, faction routes and real-level training gates.\n"
+    },
+    {
+      "name": "run_refill_thresholds",
+      "command": [
+        "tests\\run_refill_thresholds.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.525,
+      "output": "PASS: low-stock boundaries, per-item controls, ammo defaults, unknown counts and full multi-stack refills.\n"
+    },
+    {
+      "name": "run_release",
+      "command": [
+        "tests/run_release.py",
+        "C:\\World of Warcraft\\_classic_era_\\Interface\\AddOns\\HardcoreBuddy\\.release\\audit-fixed-verified\\snapshot\\.release\\audit\\package\\HardcoreBuddy-0.7.0.zip"
+      ],
+      "exitCode": 0,
+      "seconds": 0.471,
+      "output": "PASS: Release ZIP boots under Lua 5.1; menus, death sounds, custom textures, TGA/WAV decoding and version title verified (233 files).\n"
+    },
+    {
+      "name": "run_requested_controls",
+      "command": [
+        "tests\\run_requested_controls.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.477,
+      "output": "PASS: Nine-class acknowledged talent batches, default-off automation, preview/combat/disable guards, opt-out, divergence and timeout.\nPASS: Retention boundaries and validation, persisted edits, journal settings link, no sidebar, confirmed clear and import cancellation.\nPASS: Large off-center model bounds, rotation-safe centering, fitted viewport, two-column grids, editable supplies and background layering.\n"
+    },
+    {
+      "name": "run_rotation_helper",
+      "command": [
+        "tests\\run_rotation_helper.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.513,
+      "output": "PASS: class isolation; no casting, bar mutation, movement filters or combat logging\nPASS: 115 rotation scenario, cast-commitment, macro, lifecycle and native-glow checks\n"
+    },
+    {
+      "name": "run_rotation_removed",
+      "command": [
+        "tests\\run_rotation_removed.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.497,
+      "output": "PASS: legacy rotation cleanup and fresh helper shipping manifest\n"
+    },
+    {
+      "name": "run_rotation_scenarios",
+      "command": [
+        "tests\\run_rotation_scenarios.py"
+      ],
+      "exitCode": 0,
+      "seconds": 3.329,
+      "output": "AUDIT: 75/75 named expectations met\nMATRIX: 3888 combinations; 0 invariant violations\n"
+    },
+    {
+      "name": "run_scope_enchants",
+      "command": [
+        "tests\\run_scope_enchants.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.529,
+      "output": "PASS: 35 ranged/off-hand enchant checks\n"
+    },
+    {
+      "name": "run_scrolls",
+      "command": [
+        "tests\\run_scrolls.py"
+      ],
+      "exitCode": 0,
+      "seconds": 2.376,
+      "output": "PASS: 24 scroll ranks, all 60 level boundaries, exact-rank stock/targets, Scrolls navigation and item details/back.\n"
+    },
+    {
+      "name": "run_section_layout",
+      "command": [
+        "tests\\run_section_layout.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.976,
+      "output": "PASS: 120 section/control bounds at three screen sizes; nine-class paired navigation and inline slider values.\n"
+    },
+    {
+      "name": "run_settings",
+      "command": [
+        "tests\\run_settings.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.772,
+      "output": "PASS: 184 centralized settings assertions; routing, saved preferences, controls, focus and viewport bounds.\nPASS: confirmed full saved-data reset and late-write isolation.\n"
+    },
+    {
+      "name": "run_settings_controls",
+      "command": [
+        "tests\\run_settings_controls.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.005,
+      "output": "PASS: 204 dependency, header, automatic path, viewport and icon catalog checks.\n"
+    },
+    {
+      "name": "run_settings_layout",
+      "command": [
+        "tests\\run_settings_layout.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.395,
+      "output": "PASS: 753 settings geometry checks across three screen sizes, including nested pages and scroll endpoints.\n"
+    },
+    {
+      "name": "run_supplies_all_table",
+      "command": [
+        "tests\\run_supplies_all_table.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.593,
+      "output": "PASS: All-only full-width supply table for nine classes; stock states, item navigation and unchanged category tiles.\n"
+    },
+    {
+      "name": "run_supply_cards",
+      "command": [
+        "tests\\run_supply_cards.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.877,
+      "output": "PASS: Supply labels, stock placement, zero/unknown/surplus, details editing, Enter/Escape/Back and optional target dummies.\n"
+    },
+    {
+      "name": "run_supply_defaults",
+      "command": [
+        "tests\\run_supply_defaults.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.848,
+      "output": "PASS: Alternative alignment, default switching/restoration, character persistence, availability and pooled controls.\n"
+    },
+    {
+      "name": "run_supply_detail_layout",
+      "command": [
+        "tests\\run_supply_detail_layout.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.982,
+      "output": "PASS: Shared layout, effects, recipe quantities, unknown stock and rank progression.\nC:\\World of Warcraft\\_classic_era_\\Interface\\AddOns\\HardcoreBuddy\\.release\\audit-fixed-verified\\snapshot\\.release\\supply-detail-standardized.png\n"
+    },
+    {
+      "name": "run_supply_rank_progression",
+      "command": [
+        "tests\\run_supply_rank_progression.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.604,
+      "output": "PASS: 708 elixir/scroll rank and detail-page cases; all catalog elixirs covered.\n"
+    },
+    {
+      "name": "run_supply_row_heights",
+      "command": [
+        "tests\\run_supply_row_heights.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.93,
+      "output": "PASS: 1141 supply card rows have fixed 56px height; single/two-line, materials, enchants and empty rows included.\n"
+    },
+    {
+      "name": "run_talent_advisor",
+      "command": [
+        "tests\\run_talent_advisor.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.375,
+      "output": "PASS: Saved advisor disable flags survive initialization independently of tooltip preference.\nPASS: 4228 talent assertions; 16 legal paths / 683 points; live spending, preview isolation and advisor navigation.\n"
+    },
+    {
+      "name": "run_ui_lifecycle",
+      "command": [
+        "tests\\run_ui_lifecycle.py"
+      ],
+      "exitCode": 0,
+      "seconds": 24.559,
+      "output": "PASS: 303 lifecycle checks; 27 class/page cycles, stable scroll ownership and deferred UI callbacks.\n"
+    },
+    {
+      "name": "run_user_items",
+      "command": [
+        "tests\\run_user_items.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.892,
+      "output": "PASS: User add/link parsing, invalid input, duplicates, uncached resolution, bag counts, carry targets, remove, persistence, details/back and distinct Emergency icon.\n"
+    },
+    {
+      "name": "run_vendor_food",
+      "command": [
+        "tests\\run_vendor_food.py"
+      ],
+      "exitCode": 0,
+      "seconds": 1.234,
+      "output": "PASS: every class, all vendor food families, drink access, Stormwind equivalents, saved defaults and zone-wide nearest vendors.\n"
+    },
+    {
+      "name": "run_vendor_marker",
+      "command": [
+        "tests\\run_vendor_marker.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.36,
+      "output": "PASS: stationary-first vendors, roaming fallback, map/minimap geometry, rotation, edge clamp, clear and essentials click.\n"
+    },
+    {
+      "name": "run_vendor_services",
+      "command": [
+        "tests\\run_vendor_services.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.571,
+      "output": "PASS: prompt consent, opt-in automation, receipts, stock/bundle/money/bag limits, repair, interruption and vendor faction/location.\n"
+    },
+    {
+      "name": "run_zone_table",
+      "command": [
+        "tests\\run_zone_table.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.573,
+      "output": "PASS: Zone title, single table, all five category filters, marker independence, row hit tests, model Back and pooled controls.\n"
+    }
+  ],
+  "passed": 88,
+  "failed": 0
+}

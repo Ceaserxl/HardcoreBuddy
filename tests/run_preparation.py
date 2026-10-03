@@ -16,9 +16,10 @@ local c=A:GetContext()
 c.level=60; c.characterClass="Hunter"; c.mode="preview"; c.previewAmmo="arrows"
 local seen={}
 for _,r in ipairs(S.Build(c)) do seen[r.family]=r end
-for _,family in ipairs({"recovery","drink","healing","wellfed","Swiftness Potion","Swim Speed Potion","ammunition"}) do
+for _,family in ipairs({"recovery","drink","healing","Swiftness Potion","Swim Speed Potion","ammunition"}) do
     assert(seen[family] and seen[family].priority=="Essentials",family)
 end
+assert((seen.wellfed.priority=="Essentials")~=(seen.manafood.priority=="Essentials"),"Exactly one build-weighted buff-food family is Essential")
 for _,family in ipairs({"Flask of Petrification","Free Action Potion","Limited Invulnerability Potion","Restorative Potion"}) do
     assert(seen[family] and seen[family].priority=="Advanced",family)
 end

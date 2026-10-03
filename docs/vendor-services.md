@@ -52,13 +52,14 @@ The six ordinary vendor drink tiers were already present; they now allow every
 class. Reputation rewards and unavailable later-expansion drinks are not treated
 as ordinary vendor water.
 
-Every supply's details, including user-added items and other profession ranks,
+Ordinary supply details, including user-added items and other profession ranks,
 has **Auto-buy amount** (the total to carry, not the number
 to buy each visit) and **Refill amount**. Notifications and purchase prompts only
 start at or below the refill amount. Food at 19/20 stays quiet with a threshold of
 5; food at 5/20 or less triggers restocking. Defaults are 5 for ordinary supplies,
 200 for arrows/bullets, and 20 for thrown weapons, capped at the carry target.
-Zero disables that item's refill notifications/purchases. Once a refill starts,
+Zero disables that item's refill notifications/purchases. Light of Elune instead
+tracks bags out of one and has no refill controls. Once a refill starts,
 it continues toward the target even after crossing the threshold. Merchant pack
 sizes are still respected without buying over the target.
 
@@ -89,7 +90,7 @@ Opening a merchant offers only low-stock Essentials that its live stock can sell
 Buy confirms that visit. Auto Buy Next Time saves the opt-in; it can also be
 changed under Settings > General > Vendor purchases. Automatic purchases print
 chat receipts after bag contents confirm delivery. Purchases recheck stock,
-money, capacity and Keep on hand targets after each transaction. Whole vendor
+money, capacity and Auto-buy amount targets after each transaction. Whole vendor
 bundles only; no overshooting targets, special-currency purchases, or retries of
 unconfirmed purchases. Closing the merchant or entering combat cancels buying.
 

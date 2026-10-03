@@ -127,7 +127,11 @@ function addon:EditUserItem(text,remove)
     local items=self.characterDB.userItems
     for index,item in ipairs(items) do
         if item.itemId==id then
-            if remove then table.remove(items,index); self:Refresh(); return true,"Item removed." end
+            if remove then
+                table.remove(items,index)
+                if self.Readiness then self.Readiness:SuppliesChanged() end
+                self:Refresh(); return true,"Item removed."
+            end
             return false,"That item is already in your User list."
         end
     end
@@ -136,8 +140,9 @@ function addon:EditUserItem(text,remove)
         group="User",classes={"All"},ease=0,userItem=true,short="Custom item",route="Added to your personal supply list."}
     self:UpdateUserItem(item)
     items[#items+1]=item
+    if self.Readiness then self.Readiness:SuppliesChanged() end
     self:Refresh()
-    return true,"Item added. Set its Carry quantity below."
+    return true,"Item added. Open it to set Auto-buy amount and Refill amount."
 end
 
 function addon:GetContext()
@@ -228,6 +233,11 @@ function addon:CyclePriority(item)
     local current=self.Supplies.Priority(self:GetContext(),item)
     -- Tier upgrades retain the family's preference; custom items have unique families.
     local key=item.family or item.itemId
+    -- A personal override for an existing item is the same preference on every
+    -- screen. Cycling the built-in row must not be shadowed by its User copy.
+    for _,user in ipairs(self.characterDB.userItems or {}) do
+        if user.itemId==item.itemId then key=user.family; break end
+    end
     for i,value in ipairs(values) do
         if current==value then self.characterDB.priorities[key]=values[i%#values+1]; break end
     end

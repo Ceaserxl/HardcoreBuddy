@@ -32,7 +32,7 @@ function R:Missing(context,allBelowTarget)
     local rows={}
     if not context then return rows end
     for _,record in ipairs(A.Supplies.Build(context,{filter="Essentials"})) do
-        if record.tracking and record.missing and record.missing>0 and (allBelowTarget or record.refillNeeded) then rows[#rows+1]=record end
+        if record.usableNow~=false and record.tracking and record.missing and record.missing>0 and (allBelowTarget or record.refillNeeded) then rows[#rows+1]=record end
     end
     return rows
 end

@@ -34,7 +34,7 @@ for class,count in pairs(expected) do
     end
 end
 A:Navigate("supplies")
-MOCK.Click(A.window.filters[8])
+for _,button in ipairs(A.window.filters) do if button.label:GetText()=="Scrolls" then MOCK.Click(button); break end end
 assert(A.state.filter=="Scrolls" and A.document.total==5)
 local block=A.document.cards[1].blocks[1]
 A:Activate(block.action)
@@ -44,4 +44,5 @@ A:SetCarryTarget(1477,9); A:Refresh()
 assert(A.characterDB.targets[1477]==9)
 print("PASS: 24 scroll ranks, all 60 level boundaries, exact-rank stock/targets, Scrolls navigation and item details/back.")
 ''')
-composite(lua.globals().MOCK['frames'],a['window']).convert('RGB').save(ROOT/'docs/layout-previews/hardcorebuddy-scrolls.png')
+if '--render' in sys.argv:
+    composite(lua.globals().MOCK['frames'],a['window']).convert('RGB').save(ROOT/'docs/layout-previews/hardcorebuddy-scrolls.png')

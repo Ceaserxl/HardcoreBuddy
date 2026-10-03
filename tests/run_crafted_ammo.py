@@ -29,9 +29,9 @@ A:Activate({kind='item',item=food})
 local card=A.window.cards[1]; local _,headingY=card.itemHeading:GetRect()
 local alternatives
 for _,row in ipairs(card.content.blocks) do
- if row:IsShown() and row.block.title=='Alternatives' then alternatives=row end
+ if row:IsShown() and row.block.title=='Next' then alternatives=row end
 end
-assert(alternatives,'Food alternatives are visible')
+assert(alternatives,'Food progression is visible above alternatives')
 local _,y,_,h=alternatives:GetRect(); local _,hy,_,hh=card.itemHeading:GetRect()
 assert(math.abs((y+h)-(hy+hh))<1,'Alternatives section starts at the food section top')
 print('PASS: crafted ammo tiers, Thorium arrow exchange, hunter Essentials default and aligned alternatives.')

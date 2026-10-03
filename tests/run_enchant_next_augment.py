@@ -37,5 +37,17 @@ assert(not none and row.disabled,"No lower-scoring sidegrade at the top")
 ctx.level=1; weights={armor=1,stamina=20}; current=15
 local future=nextAugment({slotId=8})
 assert(future and future.spellId==2165,"Next eligible tier is preferred over a distant max-level upgrade")
+ctx.level=60
+local comparable,empty=nextAugment({slotId=8,spellId=13890})
+assert(not comparable and empty.disabled and empty.title=="No Directly Comparable Upgrade","Minor Speed is not treated as numeric zero")
+for _,id in ipairs({13890,19058,7863}) do
+ local seen={}
+ for _,b in ipairs(E.Detail(ctx,{slotId=8,spellId=id}).blocks) do
+  if b.rightColumn and b.enchantTooltip then
+   local key=b.enchantTooltip.spellId
+   assert(not seen[key],"No duplicate augment across Next and Alternatives"); seen[key]=true
+  end
+ end
+end
 print("PASS: Selected/applied kits and enchants cross families, respect weights and earliest tier, and exclude downgrades.")
 ''')

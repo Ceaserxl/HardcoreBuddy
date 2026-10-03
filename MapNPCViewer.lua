@@ -224,7 +224,7 @@ function M:LayoutViewer(parent,width,visible,height)
     local index=math.max(1,math.min(#ids,A.state.mapNPCPage or 1)); A.state.mapNPCPage=index
     local id=ids[index]; local npc=A.Data.MapNPCs[id]
     f.title:SetText(npc.name)
-    f.details:SetText("Level "..(npc.min or "?")..(npc.max and npc.max~=npc.min and ("-"..npc.max) or "").." | "..self:IconLabel(npc.kind))
+    f.details:SetText(self:LevelText(npc).." | "..self:IconLabel(npc.kind))
     f.note:SetText(npc.note or "Recorded spawn area; this is a model preview, not a live sighting.")
     f.paging:SetText("NPC "..index.." of "..#ids)
     -- Fit the text to its content instead of reserving large empty text boxes.

@@ -8,7 +8,8 @@ from render_layout import boot
 lua, addon = boot()
 lua.execute('''
 local A=TestAddon
-assert(not A.RotationAdvisor and not A.MageRotation and not A.ConsumableBuffs)
+assert(not A.RotationAdvisor and not A.MageRotation)
+assert(A.ConsumableBuffs==A.RotationHelper.Buffs,"Shared preparation is part of the current helper")
 local targets=A.characterDB.targets
 A.characterDB.rotationMode="assistant"
 A.characterDB.rotationDiagnostics={count=1,entries={{old=true}}}

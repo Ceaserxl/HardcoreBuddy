@@ -112,6 +112,7 @@ local function rankState(block,record,context)
     block.rankFamily=record.groupFamily
     if automatic then
         block.autoRank=not automatic.manual
+        block.selectionReason=automatic.note
         block.readOnlyTarget=selected~=record.itemId
         if record.groupFamily=="bandage" then
             local plan=A.Professions.BandagePlan(context)
@@ -192,97 +193,6 @@ local function supplyRows(context,state,onlyFamily)
     local visible={}
     for _,b in ipairs(blocks) do if not b.omit then visible[#visible+1]=b end end
     return visible,summary
-end
-local function bandageCards(context,state)
-    local plan=A.Professions.BandagePlan(context)
-    local items,rankedItems={},{}
-    for _,item in ipairs(D.Items.items) do if item.family=="bandage" then items[item.itemId]=item; rankedItems[#rankedItems+1]=item end end
-    G.SortSupplyItems(rankedItems,context)
-    local function bandage(id)
-        local item=items[id]; if not item then return end
-        local record=S.Record(context,item,"bandage")
-        local block=supplyRow(record,context); rankState(block,record,context)
-        block.editTarget=true; block.body=G.SupplySubtitle(item,context); block.supplyDetail=true
-        return block
-    end
-    local cards={card("Recommended",nil,{})}
-    local recommended=plan.recommended
-    if recommended and plan.canMake then
-        cards[1].blocks={bandage(recommended.itemId)}
-        cards[1].supplyTable=true; cards[1].fullWidth=true
-    elseif recommended then
-        local block=bandage(recommended.itemId)
-        block.body=block.body.."\n"..(plan.highest.status=="unknown" and "First Aid or recipe data is unavailable."
-            or "You cannot make it yet.").." Requires First Aid "..recommended.craftSkill.." and the learned recipe."
-        cards[1].blocks={block}
-        cards[1].supplyTable=true; cards[1].fullWidth=true
-    end
-    local highest=plan.highest
-    if highest.itemId and (not plan.canMake or highest.itemId~=recommended.itemId) then
-        local section=card("Highest Rank Available",nil,{bandage(highest.itemId)})
-        section.supplyTable=true; section.fullWidth=true; cards[#cards+1]=section
-    elseif not highest.itemId and not plan.canMake then
-        cards[#cards+1]=card("Highest Rank Available",nil,{row("No confirmed craftable rank","Learn First Aid and the recipe to unlock a recommendation.")})
-    end
-    -- Reuse the ordinary supply details layout and toolbar. Keep the other
-    -- health/recipe ranks in the right column, without duplicating the selected item.
-    local selected=S.Selection(context,"bandage")
-        or (recommended and recommended.itemId) or highest.itemId
-    if not selected or not items[selected] then
-        local alternatives={}
-        for _,recipe in ipairs(A.Professions.recipes.bandage) do alternatives[#alternatives+1]=bandage(recipe.itemId) end
-        cards[#cards+1]=card("Next",nil,{G.EmptySupplyRow("Next",{family="bandage"})})
-        cards[#cards+1]=card("Alternatives",nil,alternatives)
-        return cards
-    end
-    local out=C.Detail(context,{kind="item",item=items[selected]})
-    local blocks,nextBlocks={},{}
-    local inNext=false
-    for _,block in ipairs(out.blocks) do
-        if not block.rightColumn then blocks[#blocks+1]=block end
-        if block.rightColumn and block.title=="Alternatives" then inNext=false end
-        if block.rightColumn and block.title=="Next" then inNext=true end
-        if inNext and block.rightColumn then nextBlocks[#nextBlocks+1]=block end
-    end
-    local nextId=nextBlocks[2] and nextBlocks[2].itemId
-    if nextId then nextBlocks[2]=bandage(nextId); nextBlocks[2].rightColumn=true end
-    local rankSections={}
-    for _,section in ipairs(cards) do
-        local remaining={}
-        for _,block in ipairs(section.blocks) do
-            if block.itemId==nextId and block.itemId~=selected then
-                block.rightColumn=true; nextBlocks[2]=block
-            elseif block.itemId~=selected then
-                remaining[#remaining+1]=block
-            elseif block.supply then
-                out.itemSectionTitle=recommended and selected~=recommended.itemId and "Selected Alternative" or "Recommended"
-                if recommended and selected==recommended.itemId and not plan.canMake then out.blocks[1].body=block.body end
-            end
-        end
-        if #remaining>0 then
-            local heading=row(section.title,section.note)
-            heading.plain=true; heading.textInset=0; heading.rightColumn=true
-            rankSections[#rankSections+1]=heading
-            for _,block in ipairs(remaining) do block.rightColumn=true; rankSections[#rankSections+1]=block end
-        end
-    end
-    if nextBlocks[1] then nextBlocks[1].body=nil end
-    for _,block in ipairs(nextBlocks) do blocks[#blocks+1]=block end
-    local used={}
-    for _,block in ipairs(blocks) do if block.itemId then used[block.itemId]=true end end
-    for _,block in ipairs(rankSections) do if block.itemId then used[block.itemId]=true end end
-    local heading=row("Alternatives")
-    heading.plain=true; heading.textInset=0; heading.rightColumn=true
-    blocks[#blocks+1]=heading
-    for _,item in ipairs(rankedItems) do
-        if not used[item.itemId] then
-            local block=bandage(item.itemId); block.rightColumn=true
-            blocks[#blocks+1]=block
-        end
-    end
-    for _,block in ipairs(rankSections) do blocks[#blocks+1]=block end
-    out.blocks=blocks
-    return {out}
 end
 function C.TabLabel(tab)
     return tab=="Gear" and "Gear Advisor" or tab=="Talents" and "Talent Advisor" or tab
@@ -373,7 +283,7 @@ function C.Detail(context, action)
             end
         end
         if not recommended and item.family and not item.userItem then
-            local plan=P.BuildList(context.characterClass,context.level,P.ContextFaction(context))
+            local plan=P.BuildList(context.characterClass,context.level,P.ContextFaction(context),context)
             for _,section in ipairs({plan.rows,plan.specialist,plan.backups,plan.advanced}) do
                 for _,candidate in ipairs(section or {}) do
                     if candidate.family==item.family then recommended=candidate; break end
@@ -401,9 +311,12 @@ function C.Detail(context, action)
         local function heading(title,right,body)
             blocks[#blocks+1]={title=title,body=body,plain=true,textInset=0,rightColumn=right or false}
         end
-        local materials,note=A.Crafting.MaterialBlocks(item,context)
-        heading("Materials",false,note)
+        local materials,note,output=A.Crafting.MaterialBlocks(item,context)
+        heading("Materials",false,item.itemId==5816 and note or #materials>0 and (output and output>1 and ("Per craft: "..output.." items") or "Per craft") or nil)
         for _,block in ipairs(materials) do blocks[#blocks+1]=block end
+        if #materials==0 and item.itemId~=5816 then
+            blocks[#blocks+1]={title=note,disabled=true,compactRow=true,emptySection="Materials"}
+        end
         if item.itemId~=5816 and not item.userItem then
             local alternatives=item.options or (family and item.progression) or {}
             if item.group=="Scrolls" then
@@ -428,9 +341,21 @@ function C.Detail(context, action)
             end
             G.SortSupplyItems(choices,context)
             local nextItem=G.NextSupply(item,context)
+            local bandagePlan=family=="bandage" and A.Professions.BandagePlan(context)
+            local highest=bandagePlan and bandagePlan.highest.itemId
+            local separateHighest=highest and highest~=item.itemId and (not nextItem or highest~=nextItem.itemId)
+            if separateHighest then
+                for _,other in ipairs(D.Items.items) do if other.itemId==highest then
+                    heading("Highest Rank Available",false)
+                    local b=itemRow(other); b.body=G.SupplySubtitle(other,context); b.plain=true; b.supplyDetail=true
+                    blocks[#blocks+1]=b
+                end end
+            end
+            for i=#choices,1,-1 do if nextItem and choices[i].itemId==nextItem.itemId then table.remove(choices,i) end end
             heading("Next",true)
             if nextItem then
                 local block=itemRow(nextItem); block.body=G.SupplySubtitle(nextItem,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
+                block.recommendedAlternative=recommended and nextItem.itemId==recommended.itemId and item.itemId~=recommended.itemId
                 blocks[#blocks+1]=block
             else
                 blocks[#blocks+1]=G.EmptySupplyRow("Next",item)
@@ -450,7 +375,8 @@ function C.Detail(context, action)
                 for _,other in ipairs(D.Items.items) do if other.family=="bandage" then ranks[#ranks+1]=other end end
                 G.SortSupplyItems(ranks,context)
                 for _,other in ipairs(ranks) do
-                    if other.family=="bandage" and other.itemId~=item.itemId and (not nextItem or other.itemId~=nextItem.itemId) then
+                    if other.family=="bandage" and other.itemId~=item.itemId and (not nextItem or other.itemId~=nextItem.itemId)
+                        and (not separateHighest or other.itemId~=highest) then
                         local block=itemRow(other); block.body=G.SupplySubtitle(other,context)
                         block.rightColumn=true; block.plain=true; block.supplyDetail=true
                         blocks[#blocks+1]=block
@@ -465,6 +391,23 @@ function C.Detail(context, action)
         table.insert(out.blocks,1,supplyRow(r,context)); out.blocks[1].action=nil; out.blocks[1].editTarget=not r.oneTime
         if family then rankState(out.blocks[1],r,context) end
         out.blocks[1].body=G.SupplySubtitle(item,context)
+        if family=="bandage" then
+            local plan=A.Professions.BandagePlan(context)
+            if plan.recommended and plan.recommended.itemId==item.itemId and not plan.canMake then
+                out.blocks[1].body="+"..plan.recommended.healing.." health / 8 sec | Cannot craft"
+                out.blocks[1].selectionReason="Health recommendation. Requires First Aid "..plan.recommended.craftSkill.." and the learned recipe to craft."
+            end
+            local highest=plan.highest.itemId
+            if highest and highest~=item.itemId then
+                -- Annotate the existing row, so the same item cannot appear twice.
+                for _,b in ipairs(out.blocks) do
+                    if b.itemId==highest and not b.materialCount then
+                        b.selectionReason="Highest Rank Available: your best learned First Aid recipe."
+                        b.highestAvailable=true
+                    end
+                end
+            end
+        end
         out.blocks[1].supplyDetail=true
         out.itemLayout=true
         out.itemSectionTitle=recommended and recommended.itemId~=item.itemId and "Selected Alternative" or "Recommended"
@@ -498,7 +441,7 @@ function C.Detail(context, action)
     end
     if kind=="supplyFamily" then
         -- Keep an opened rank stable while recipe updates arrive or quantities are edited.
-        if action.item then return C.Detail(context,{kind="item",item=action.item}) end
+        if action.item and action.family~="bandage" then return C.Detail(context,{kind="item",item=action.item}) end
         local selected=S.Selection(context,action.family)
         local fallback
         for _,item in ipairs(D.Items.items) do
@@ -584,8 +527,7 @@ function C.Build(context,state)
     if profession then
         result.cards=professionCards(context,profession); result.professionPage=true
     elseif state.detail then
-        if state.detail.kind=="supplyFamily" and state.detail.family=="bandage" then result.cards=bandageCards(context,state)
-        else result.cards[1]=C.Detail(context,state.detail) end
+        result.cards[1]=C.Detail(context,state.detail)
         result.isDetail=true
     elseif view=="supplies" then
         if state.filter=="Buffs" then state.filter="Elixirs" end

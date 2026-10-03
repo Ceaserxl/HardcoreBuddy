@@ -3,6 +3,10 @@ local _, addon = ...
 local P = addon.Planner
 local S = {}
 addon.Supplies = S
+local knownItems={}
+for _,catalog in ipairs({addon.Data.Items.items,addon.Data.Scrolls.items}) do
+    for _,item in ipairs(catalog) do knownItems[item.itemId]=item end
+end
 S.categories = {"All", "Food & Drink", "Elixirs", "Scrolls", "Potions", "Emergency", "Class", "Enchants", "Optional", "User"}
 S.filters={"All","Essentials"}
 for i=2,#S.categories do S.filters[#S.filters+1]=S.categories[i] end
@@ -11,21 +15,55 @@ local essentials={recovery=true,drink=true,wellfed=true,manafood=true,bandage=tr
     ammunition=true,["Swiftness Potion"]=true,["Swim Speed Potion"]=true}
 local advanced={["Flask of Petrification"]=true,["Limited Invulnerability Potion"]=true,
     ["Free Action Potion"]=true,["Restorative Potion"]=true,["Living Action Potion"]=true,["Light of Elune"]=true}
-local casterFood={Mage=true,Priest=true,Warlock=true}
+function S.Profile(context)
+    if context.supplyProfile then return context.supplyProfile end
+    if not context.characterClass then return nil end
+    return addon.Enchants and addon.Enchants.Profile(context)
+end
+function S.BuffScore(meta,profile)
+    local w=profile and profile.weights or {}
+    if meta.effects then
+        local total=0
+        for key,value in pairs(meta.effects) do total=total+value*(w[key] or 0) end
+        return total
+    end
+    if meta.group=="food" then
+        return meta.power*(meta.foodType=="manafood" and (w.mp5 or 0) or (w.stamina or 0)+(w.spirit or 0))
+    end
+    return meta.power*(w[meta.group=="trollsblood" and "healthRegen" or meta.group] or 0)
+end
+function S.Score(item,context,profile)
+    local meta=addon.Data.ConsumableBuffs and addon.Data.ConsumableBuffs.items[item.itemId]
+    if meta then return S.BuffScore(meta,profile or S.Profile(context)) end
+    return item.ammoDPS or item.power or tonumber((item.detail or ""):match("(%d+%.?%d*)")) or item.level or 0
+end
+function S.Better(a,b,context,profile)
+    if not b then return true end
+    local av,bv=S.Score(a,context,profile),S.Score(b,context,profile)
+    if av~=bv then return av>bv end
+    if (a.level or 0)~=(b.level or 0) then return (a.level or 0)>(b.level or 0) end
+    if (a.ease or 0)~=(b.ease or 0) then return (a.ease or 0)<(b.ease or 0) end
+    if (a.preference or 0)~=(b.preference or 0) then return (a.preference or 0)<(b.preference or 0) end
+    return a.itemId<b.itemId
+end
 local function primaryBuffFood(context)
-    if casterFood[context.characterClass] then
-        for _,food in ipairs(addon.Data.Items.items) do
-            if food.family=="manafood" and P.AvailableAt(food)<=context.level
-                and P.MatchesClass(food,context.characterClass) and P.MatchesFaction(food,P.ContextFaction(context)) then
-                return "manafood"
-            end
+    local best,profile=nil,S.Profile(context)
+    for _,food in ipairs(addon.Data.Items.items) do
+        if (food.family=="manafood" or food.family=="wellfed") and not food.alternative and food.ease<=2
+            and P.AvailableAt(food)<=(context.level or 1)
+            and P.MatchesClass(food,context.characterClass) and P.MatchesFaction(food,P.ContextFaction(context))
+            and S.Better(food,best,context,profile) then
+            best=food
         end
     end
-    return "wellfed"
+    return best and best.family or "wellfed"
 end
 function S.Priority(context,item)
     local saved=context.priorities or {}
     local choice=saved[item.family] or saved[item.itemId] or saved[tostring(item.itemId)]
+    for _,user in ipairs(context.userItems or {}) do
+        if user.itemId==item.itemId and saved[user.family] then choice=saved[user.family]; break end
+    end
     for _,value in ipairs(S.priorities) do if choice==value then return value end end
     if item.family=="wellfed" or item.family=="manafood" then
         return item.family==primaryBuffFood(context) and "Essentials" or "Optional"
@@ -94,7 +132,12 @@ function S.DefaultTarget(item)
     if item.itemId==5816 then return 1 end
     if item.armorKit or item.enchantMaterial then return item.recommendedTarget or 1 end
     if item.ammoKind then return item.ammoKind=="thrown" and 100 or 1000 end
-    if item.userItem then return 1 end
+    if item.userItem then
+        for _,catalog in ipairs({addon.Data.Items.items,addon.Data.Scrolls.items}) do
+            for _,known in ipairs(catalog) do if known.itemId==item.itemId then return S.DefaultTarget(known) end end
+        end
+        return 1
+    end
     local family = item.family
     if family == "recovery" or family == "drink" or family == "bandage" then return 20 end
     if family == "healthstone" or family == "managem" or defaultCategory(item) == "Optional" then return 1 end
@@ -133,6 +176,7 @@ function S.Record(context, item, groupFamily)
     local status = count == nil and "unknown" or missing == 0 and "ready" or count == 0 and "missing" or "low"
     local note = item.useSkill and ("Requires " .. item.useSkill.name .. " " .. item.useSkill.value)
         or groupFamily == "antivenom" and ("Poisons up to level "..item.power) or nil
+    local usable,requirement=S.Usable(context,item)
     return {
         item=item, itemId=id, name=item.name..(obtainable and " |cff66ee99(Obtainable)|r" or ""), displayName=item.name, icon=item.icon,
         oneTime=oneTime,
@@ -140,9 +184,21 @@ function S.Record(context, item, groupFamily)
         count=count, target=target, targetKey=id, status=status, missing=missing,
         owned=count ~= nil and count > 0 or false, available=count ~= nil,
         quantityNote=note, defaultTarget=suggested,
+        usableNow=usable,eligibilityReason=requirement,
         refillThreshold=oneTime and 0 or threshold,refillNeeded=not oneTime and threshold>0 and count~=nil and count<target and count<=threshold,
         optional=S.Category(item) == "Optional", tracking=target > 0,
     }
+end
+
+function S.Usable(context,item)
+    if item.userItem and knownItems[item.itemId] then item=knownItems[item.itemId] end
+    if (item.level or 1)>(context.level or 1) then return false,"Requires Lvl "..item.level end
+    if item.useSkill then
+        local key=({["First Aid"]="bandage",Engineering="dummy",Cooking="cooking"})[item.useSkill.name]
+        local skill=key and context.professions and context.professions.skills and context.professions.skills[key]
+        if not skill or skill<item.useSkill.value then return false,"Requires "..item.useSkill.name.." "..item.useSkill.value end
+    end
+    return true
 end
 
 local function matches(item, category, query)
@@ -204,7 +260,22 @@ end
 
 function S.DefaultGroup(context, item)
     if not item or item.userItem or P.grouped[item.family] then return end
-    for _,row in ipairs(P.BuildList(context.characterClass,context.level,P.ContextFaction(context)).rows) do
+    if item.group=="Scrolls" then
+        local candidates={}
+        for _,other in ipairs(addon.Data.Scrolls.items) do
+            if other.family==item.family and other.level<=context.level and P.MatchesClass(other,context.characterClass) then candidates[#candidates+1]=other end
+        end
+        local profile=S.Profile(context)
+        table.sort(candidates,function(a,b) return S.Better(a,b,context,profile) end)
+        if #candidates<1 then return end
+        local found=false
+        for _,other in ipairs(candidates) do if other.itemId==item.itemId then found=true end end
+        if not found then return end
+        local row={}; for k,v in pairs(candidates[1]) do row[k]=v end
+        row.options={}; for i=2,#candidates do row.options[#row.options+1]=candidates[i] end
+        return row
+    end
+    for _,row in ipairs(P.BuildList(context.characterClass,context.level,P.ContextFaction(context),context).rows) do
         if row.family==item.family and #(row.options or {})>0 then
             if row.itemId==item.itemId then return row end
             for _,other in ipairs(row.options) do if other.itemId==item.itemId then return row end end
@@ -218,18 +289,18 @@ function S.Build(context, state)
     if category=="Buffs" then category="Elixirs" end
     if category == "Recovery" or category == "Food & drink" then category = "Food & Drink" end
     local stock = state.stock or "All"
-    local plan = P.BuildList(context.characterClass, context.level, P.ContextFaction(context))
+    local plan = P.BuildList(context.characterClass, context.level, P.ContextFaction(context),context)
     local rows, seen = {}, {}
 
     local function add(item, groupFamily)
         local id = item.itemId
         if seen[id] or not matches(item, category, state.query) then return end
-        seen[id] = true
         local record = S.Record(context, item, groupFamily)
         if category=="Essentials" and (record.priority~="Essentials"
             or groupFamily and S.Selection(context,groupFamily)~=id) then return end
         if stock == "Missing" and (record.missing == nil or record.missing == 0) then return end
         if stock == "Ready" and record.status ~= "ready" then return end
+        seen[id] = true
         rows[#rows + 1] = record
     end
 
@@ -255,7 +326,10 @@ function S.Build(context, state)
             if not best[item.family] or item.level>best[item.family].level then best[item.family]=item end
         end
     end
-    for _,family in ipairs(order) do add(best[family]) end
+    for _,family in ipairs(order) do
+        local row=S.DefaultGroup(context,best[family]) or best[family]
+        add(S.PreferredItem(context,row))
+    end
     if addon.Ammunition then local ammo=addon.Ammunition.Recommend(context); if ammo then add(ammo) end end
     if addon.ArmorKits then for _,item in ipairs(addon.ArmorKits.Recommendations(context)) do add(item) end end
     if addon.Enchants then for _,item in ipairs(addon.Enchants.MaterialItems(context)) do add(item) end end

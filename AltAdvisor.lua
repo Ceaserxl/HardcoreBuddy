@@ -85,6 +85,8 @@ function Alt:Capture(final)
         end
     end
     profile=copy(profile); profile.cachedDualWield=G.CanDualWield(profile)
+    profile.cachedTwoHandAxesMaces=G.CanUseTwoHandAxesMaces(profile)
+    profile.cachedCapabilities=true
     A.db.altEquipment=A.db.altEquipment or {}
     A.db.altEquipment[guid]={schema=2,name=UnitName("player"),realm=GetRealmName(),
         faction=UnitFactionGroup("player"),profile=profile,equipment=equipment,
@@ -149,10 +151,12 @@ function Alt:Upgrades(item)
     local realm=GetRealmName and GetRealmName()
     local faction=UnitFactionGroup and UnitFactionGroup("player")
     for id,character in pairs(A.db.altEquipment or {}) do
+        local profile=type(character.profile)=="table" and copy(character.profile) or {}
+        profile.cachedCapabilities=true
         if id~=guid and usableSnapshot(character) and self:IsFresh(character) and character.realm==realm and character.faction==faction
-            and G.Allowed(item,character.profile) then
+            and G.Allowed(item,profile) then
             local best
-            for _,row in ipairs(G:Comparisons(item,character.profile,nil,character.equipment)) do
+            for _,row in ipairs(G:Comparisons(item,profile,nil,character.equipment)) do
                 if row.status=="up" and (not best or (row.percent or math.huge)>(best.percent or math.huge)) then best=row end
             end
             if best then result[#result+1]={character=character,row=best} end
