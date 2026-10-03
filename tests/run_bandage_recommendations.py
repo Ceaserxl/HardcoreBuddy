@@ -76,7 +76,7 @@ assert(nextIndex and alternativeIndex>nextIndex,"Alternatives follow Next")
 assert(select(2,ids(A.document))==10,"All ten ranks visible once without toggling")
 local maximum
 for _,frame in ipairs(A.window.cards[1].content.blocks) do
-    if frame:IsShown() and frame.block.title=="Maximum Skill Reached" then maximum=frame end
+    if frame:IsShown() and frame.block.emptySection=="Next" then maximum=frame end
 end
 assert(maximum and not maximum:IsEnabled() and not maximum.iconHit:IsEnabled(),"Maximum rank is a disabled row")
 assert(maximum:GetHeight()==56 and maximum:GetAlpha()==0.45,"Maximum row is compact and muted")

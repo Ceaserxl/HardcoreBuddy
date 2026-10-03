@@ -3,8 +3,21 @@ local _, addon = ...
 local P, D = addon.Planner, addon.Data
 local G = {}
 addon.Guide = G
-function G.MaximumSkillRow()
-    return {title="Maximum Skill Reached",disabled=true,compactRow=true,rightColumn=true}
+function G.EmptySupplyRow(section,item,kind)
+    local title
+    if kind=="enchant" then
+        title=section=="Next" and "No Higher Compatible Enchant" or "No Compatible Alternatives"
+    elseif section=="Alternatives" then
+        title="No Alternatives Available"
+    else
+        local label=item and addon.Supplies.GenericTitle(item)
+        if item and (item.name or ""):find("Potion",1,true) then label="Potion" end
+        local ranks={Food="Food Tier",Drink="Drink Tier",Bandage="Bandage Rank",Elixir="Elixir Rank",
+            Potion="Potion Rank",Scroll="Scroll Rank",Dummy="Target Dummy Rank",Antivenom="Anti-Venom Rank",
+            Armor="Armor Kit",Ammo="Ammo Tier",Arrows="Arrow Tier",Bullets="Bullet Tier"}
+        title="No Higher "..(ranks[label] or "Rank").." Available"
+    end
+    return {title=title,disabled=true,compactRow=true,rightColumn=true,emptySection=section}
 end
 -- Shared compact copy for selected supplies, alternatives and future ranks.
 function G.SupplySubtitle(item,context)

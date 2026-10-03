@@ -356,6 +356,7 @@ function E.Detail(context,action)
     alternative(recommended)
     if g.current and (g.current.armorKit or relevant(g.current,context)) then alternative(g.current) end
     for _,option in ipairs(A.state and A.state.showLesserEnchants and options or g.options) do alternative(option) end
+    if not next(listed) then blocks[#blocks+1]=A.Guide.EmptySupplyRow("Alternatives",selected,"enchant") end
     heading("Materials",false,not selected and "No compatible enchant selected" or nil)
     if selected then
         for _,pair in ipairs(selected.reagents) do
@@ -383,7 +384,7 @@ function E.Detail(context,action)
         local b=enchantBlock(g,nextRank,{kind="enchantRecipe",slotId=g.slotId,spellId=nextRank.spellId})
         b.enchantAlternative=true; b.rightColumn=true; blocks[#blocks+1]=b
     else
-        blocks[#blocks+1]=A.Guide.MaximumSkillRow()
+        blocks[#blocks+1]=A.Guide.EmptySupplyRow("Next",selected,"enchant")
     end
     return {title=g.name.." enchants",blocks=blocks,itemLayout=true,fullWidth=true}
 end

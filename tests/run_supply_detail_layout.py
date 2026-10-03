@@ -11,6 +11,17 @@ local ctx=A:GetContext()
 ctx.inventory={available=true,counts={[2589]=1}}
 local items={}
 for _,item in ipairs(A.Data.Items.items) do items[item.itemId]=item end
+for _,case in ipairs({{items[18045],"No Higher Food Tier Available"},
+    {items[8766],"No Higher Drink Tier Available"},{items[13445],"No Higher Elixir Rank Available"},
+    {items[14530],"No Higher Bandage Rank Available"}}) do
+    local empty=A.Guide.EmptySupplyRow("Next",case[1])
+    assert(empty.title==case[2] and empty.disabled and empty.compactRow and not empty.action)
+end
+local firstScroll=A.Data.Scrolls.items[1]
+local scrollPage=A.Companion.Detail({characterClass="Hunter",level=firstScroll.level,faction="Alliance"},{kind="item",item=firstScroll})
+local emptyAlternatives
+for i,b in ipairs(scrollPage.blocks) do if b.title=="Alternatives" then emptyAlternatives=scrollPage.blocks[i+1] end end
+assert(emptyAlternatives and emptyAlternatives.title=="No Alternatives Available" and emptyAlternatives.disabled and emptyAlternatives.compactRow)
 local custom={}
 for key,value in pairs(items[118]) do custom[key]=value end
 custom.userItem=true

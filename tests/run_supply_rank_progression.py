@@ -23,7 +23,7 @@ for _,chain in ipairs(chains) do for index,id in ipairs(chain) do
             for i,b in ipairs(page.blocks) do if b.title=="Next" then
                 local nextRow=page.blocks[i+1]
                 assert(chain[index+1] and nextRow.itemId==chain[index+1]
-                    or not chain[index+1] and nextRow.disabled and nextRow.title=="Maximum Skill Reached")
+                    or not chain[index+1] and nextRow.disabled and nextRow.emptySection=="Next")
             end end
             checks=checks+1
         end

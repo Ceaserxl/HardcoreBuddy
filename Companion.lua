@@ -230,7 +230,7 @@ local function bandageCards(context,state)
     if not selected or not items[selected] then
         local alternatives={}
         for _,recipe in ipairs(A.Professions.recipes.bandage) do alternatives[#alternatives+1]=bandage(recipe.itemId) end
-        cards[#cards+1]=card("Next",nil,{G.MaximumSkillRow()})
+        cards[#cards+1]=card("Next",nil,{G.EmptySupplyRow("Next",{family="bandage"})})
         cards[#cards+1]=card("Alternatives",nil,alternatives)
         return cards
     end
@@ -422,7 +422,10 @@ function C.Detail(context, action)
             for _,other in ipairs(alternatives) do
                 if other.itemId~=item.itemId and (not recommended or other.itemId~=recommended.itemId) then choices[#choices+1]=other end
             end
-            if family~="bandage" then heading("Alternatives",true,#choices==0 and "No alternatives listed." or nil) end
+            if family~="bandage" then
+                heading("Alternatives",true)
+                if #choices==0 then blocks[#blocks+1]=G.EmptySupplyRow("Alternatives",item) end
+            end
             for _,other in ipairs(family=="bandage" and {} or choices) do
                 local block=itemRow(other); block.body=G.SupplySubtitle(other,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
                 block.recommendedAlternative=recommended and other.itemId==recommended.itemId
@@ -434,7 +437,7 @@ function C.Detail(context, action)
                 local block=itemRow(nextItem); block.body=G.SupplySubtitle(nextItem,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
                 blocks[#blocks+1]=block
             else
-                blocks[#blocks+1]=G.MaximumSkillRow()
+                blocks[#blocks+1]=G.EmptySupplyRow("Next",item)
             end
             if family=="bandage" then
                 heading("Alternatives",true)
