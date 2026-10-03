@@ -11,6 +11,14 @@ local ctx=A:GetContext()
 ctx.inventory={available=true,counts={[2589]=1}}
 local items={}
 for _,item in ipairs(A.Data.Items.items) do items[item.itemId]=item end
+local custom={}
+for key,value in pairs(items[118]) do custom[key]=value end
+custom.userItem=true
+local customPage=A.Companion.Detail(ctx,{kind="item",item=custom})
+assert(customPage.quantityRecord and customPage.blocks[1].itemId==118,"Custom item and quantity controls remain")
+for _,block in ipairs(customPage.blocks) do
+    assert(block.title~="Alternatives" and block.title~="Next" and block.title~="Maximum Skill Reached","Custom items have no rank sections")
+end
 for _,id in ipairs({117,159,118,8951,21217,1251,2581}) do
     local item=assert(items[id],"Fixture exists: "..id)
     local detail=A.Companion.Detail(ctx,{kind="item",item=item})

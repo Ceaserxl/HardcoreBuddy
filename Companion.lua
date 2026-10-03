@@ -393,7 +393,7 @@ function C.Detail(context, action)
         local materials,note=A.Crafting.MaterialBlocks(item,context)
         heading("Materials",false,note)
         for _,block in ipairs(materials) do blocks[#blocks+1]=block end
-        if item.itemId~=5816 then
+        if item.itemId~=5816 and not item.userItem then
             local alternatives=item.options or (family and item.progression) or {}
             if family and family~="bandage" then
                 alternatives={}
