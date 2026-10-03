@@ -1,0 +1,357 @@
+{
+  "namedCount": 47,
+  "matrixCount": 3888,
+  "matrixViolations": 0,
+  "cooldownMainCount": 0,
+  "cases": [
+    {
+      "name": "Level 1 starter",
+      "expected": "Main Fireball",
+      "passed": true,
+      "actual": "main:fireball"
+    },
+    {
+      "name": "Level 4 Frostbolt learned",
+      "expected": "Main Frostbolt",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Frost solo leveling",
+      "expected": "Main Frostbolt",
+      "passed": true,
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "name": "Fire group fight",
+      "expected": "Main Fireball",
+      "passed": true,
+      "actual": "main:fireball, offensive:combustion"
+    },
+    {
+      "name": "Arcane leveling fallback",
+      "expected": "Main Frostbolt",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Fire solo opener",
+      "expected": "Main Pyroblast",
+      "passed": true,
+      "actual": "main:pyroblast, offensive:combustion, preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "name": "Fire solo slowed target",
+      "expected": "Main Fireball",
+      "passed": true,
+      "actual": "main:fireball, offensive:combustion"
+    },
+    {
+      "name": "Improved Scorch on elite",
+      "expected": "Main Scorch",
+      "passed": true,
+      "actual": "main:scorch, offensive:combustion"
+    },
+    {
+      "name": "No Scorch ramp on normal mob",
+      "expected": "Main Fireball",
+      "passed": true,
+      "actual": "main:fireball, offensive:combustion"
+    },
+    {
+      "name": "Scorch already stacked",
+      "expected": "Main Fireball",
+      "passed": true,
+      "actual": "main:fireball, offensive:combustion"
+    },
+    {
+      "name": "Scorch expiring",
+      "expected": "Main Scorch",
+      "passed": true,
+      "actual": "main:scorch, offensive:combustion"
+    },
+    {
+      "name": "Low mana with wand",
+      "expected": "Main Shoot",
+      "passed": true,
+      "actual": "main:shoot"
+    },
+    {
+      "name": "No mana and no wand",
+      "expected": "No Main",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Close attacker",
+      "expected": "Nova beside Main",
+      "passed": true,
+      "actual": "main:frostbolt, defensive:nova"
+    },
+    {
+      "name": "Root already active",
+      "expected": "No repeat Nova; Main remains",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Interruptible target",
+      "expected": "Counterspell beside Main",
+      "passed": true,
+      "actual": "main:frostbolt, defensive:counterspell"
+    },
+    {
+      "name": "Uninterruptible target",
+      "expected": "No Counterspell",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Unengaged group target",
+      "expected": "No Main",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Polymorphed target",
+      "expected": "No Main",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Unknown range",
+      "expected": "No Main",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Outside all spell ranges",
+      "expected": "No Main",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Friendly target",
+      "expected": "No Main",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "PvP target",
+      "expected": "No Main",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Tapped by another player",
+      "expected": "No Main",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Player dead",
+      "expected": "No highlights",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Player on taxi",
+      "expected": "No highlights",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Player in Ice Block",
+      "expected": "No highlights",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Missing self buffs",
+      "expected": "Intellect and armor",
+      "passed": true,
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "name": "Healthy long buffs",
+      "expected": "No Intellect or armor refresh",
+      "passed": true,
+      "actual": "preparation:conjureGem"
+    },
+    {
+      "name": "Buffs expire in five minutes",
+      "expected": "Intellect and armor refresh",
+      "passed": true,
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "name": "Stronger intellect elixir",
+      "expected": "No weaker Intellect",
+      "passed": true,
+      "actual": "preparation:frostarmor"
+    },
+    {
+      "name": "Carried recovery supplies",
+      "expected": "Food and water",
+      "passed": true,
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem, preparation:food, preparation:water"
+    },
+    {
+      "name": "Bank-only supplies",
+      "expected": "No unowned food/water",
+      "passed": true,
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "name": "Drinking",
+      "expected": "No preparation interruptions",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Emergency Ice Block",
+      "expected": "Ice Block",
+      "passed": true,
+      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier"
+    },
+    {
+      "name": "Curse on player",
+      "expected": "Remove Lesser Curse",
+      "passed": true,
+      "actual": "main:frostbolt, defensive:decurse"
+    },
+    {
+      "name": "Unavailable Ice Block masks ready Cold Snap",
+      "priority": "high",
+      "expected": "Ready Cold Snap is visible as an emergency option",
+      "passed": false,
+      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier"
+    },
+    {
+      "name": "Unavailable Barrier masks ready Mana Shield",
+      "priority": "high",
+      "expected": "Ready Mana Shield is visible as an emergency option",
+      "passed": false,
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "name": "Unavailable Fire Blast replaces usable main",
+      "priority": "high",
+      "expected": "Main is a usable filler or there is a separately visible usable fallback",
+      "passed": false,
+      "actual": "main:fireblast"
+    },
+    {
+      "name": "Cast start chooses affordable next attack",
+      "expected": "Main Frostbolt",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Mana charged before casting API clears",
+      "priority": "high",
+      "expected": "Committed Main stays visible with 70 mana for a 50-mana spell",
+      "passed": false,
+      "actual": "none"
+    },
+    {
+      "name": "Casting API catches up after success",
+      "expected": "Main returns",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Interrupt event precedes API clear",
+      "priority": "medium",
+      "expected": "Immediately choose Frostbolt for the changed situation",
+      "passed": false,
+      "actual": "main:fireblast"
+    },
+    {
+      "name": "Partial Improved Scorch talent",
+      "priority": "medium",
+      "expected": "Do not assume the next Scorch guarantees stack five",
+      "passed": false,
+      "actual": "main:fireball"
+    },
+    {
+      "name": "Mana restored during an initially unaffordable cast",
+      "priority": "medium",
+      "expected": "Fill an empty next-action plan after mana recovery",
+      "passed": false,
+      "actual": "none"
+    },
+    {
+      "name": "Preferred spell absent from action bars",
+      "priority": "medium",
+      "expected": "Usable fallback or a visible missing-action notice",
+      "passed": false,
+      "actual": "main:frostbolt; only Fireball is on bar"
+    },
+    {
+      "name": "Structural scenario matrix",
+      "expected": "No duplicate actions, multiple Mains, unknown spells, or out-of-range enemy advice",
+      "passed": true,
+      "actual": "3888 combinations; 0 invariant violations; 0 Main suggestions on cooldown"
+    }
+  ],
+  "findings": [
+    {
+      "name": "Unavailable Ice Block masks ready Cold Snap",
+      "priority": "high",
+      "expected": "Ready Cold Snap is visible as an emergency option",
+      "passed": false,
+      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier"
+    },
+    {
+      "name": "Unavailable Barrier masks ready Mana Shield",
+      "priority": "high",
+      "expected": "Ready Mana Shield is visible as an emergency option",
+      "passed": false,
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "name": "Unavailable Fire Blast replaces usable main",
+      "priority": "high",
+      "expected": "Main is a usable filler or there is a separately visible usable fallback",
+      "passed": false,
+      "actual": "main:fireblast"
+    },
+    {
+      "name": "Mana charged before casting API clears",
+      "priority": "high",
+      "expected": "Committed Main stays visible with 70 mana for a 50-mana spell",
+      "passed": false,
+      "actual": "none"
+    },
+    {
+      "name": "Interrupt event precedes API clear",
+      "priority": "medium",
+      "expected": "Immediately choose Frostbolt for the changed situation",
+      "passed": false,
+      "actual": "main:fireblast"
+    },
+    {
+      "name": "Partial Improved Scorch talent",
+      "priority": "medium",
+      "expected": "Do not assume the next Scorch guarantees stack five",
+      "passed": false,
+      "actual": "main:fireball"
+    },
+    {
+      "name": "Mana restored during an initially unaffordable cast",
+      "priority": "medium",
+      "expected": "Fill an empty next-action plan after mana recovery",
+      "passed": false,
+      "actual": "none"
+    },
+    {
+      "name": "Preferred spell absent from action bars",
+      "priority": "medium",
+      "expected": "Usable fallback or a visible missing-action notice",
+      "passed": false,
+      "actual": "main:frostbolt; only Fireball is on bar"
+    }
+  ],
+  "passed": 39
+}
