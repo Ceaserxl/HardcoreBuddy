@@ -25,8 +25,9 @@ exactly 100 cases execute.
    100.5/103.5, and lower the target to 14% health within Fire Blast range.
 3. Expected: the existing Frostbolt recommendation remains committed.
 4. Before the fix: Main changed to Fire Blast before the current cast finished.
-5. After the fix: Main remains Frostbolt and the commitment window follows the
-   revised finish time.
+5. After the fix: Main remains Frostbolt and observed cast timing follows the
+   revised finish time. The later [handoff fix](rotation-handoff-fix.md) also
+   prevents completion from expiring that next-action choice.
 
 The old token included the mutable start time. The runtime now uses the API cast
 ID independently of timing, preserving START-event GUIDs for channels and

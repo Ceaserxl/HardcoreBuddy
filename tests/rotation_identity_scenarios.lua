@@ -41,10 +41,10 @@ for _,outcome in ipairs(outcomes) do
         x.targetHealth=140
         p,c=F.evaluate()
         stable=stable and F.main(p)=="frostbolt" and H.state.token==before
-            and math.abs(H.state.holdUntil-(x[key].finish+0.25))<0.0001
+            and c.cast and math.abs(c.cast.finish-x[key].finish)<0.0001
     end
     local pass=initial and stable
-    local expected="Keep Main and cast identity, update the completion window"
+    local expected="Keep Main and cast identity, update observed cast timing"
     if outcome=="paid" then
         x.time=x[key].finish; x.power=70
         F.event("UNIT_SPELLCAST_SUCCEEDED","player","original-cast",mode.id)
@@ -52,7 +52,7 @@ for _,outcome in ipairs(outcomes) do
         expected="Success retains the plan and does not reserve paid mana again"
         pass=pass and F.main(p)=="frostbolt" and c.futurePower==70 and H.state.token==before
     elseif outcome=="interrupted" then
-        F.event(mode.channel and "UNIT_SPELLCAST_CHANNEL_STOP" or "UNIT_SPELLCAST_INTERRUPTED","player","original-cast",mode.id)
+        F.event(mode.channel and "UNIT_SPELLCAST_CHANNEL_STOP" or "UNIT_SPELLCAST_INTERRUPTED","player","original-cast",mode.id,"Player-A")
         p,c=F.evaluate()
         expected="Matching end event releases the plan despite revised API timing"
         pass=pass and F.main(p)=="fireblast" and c.cast==nil

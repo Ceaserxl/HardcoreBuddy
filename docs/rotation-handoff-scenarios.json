@@ -1,0 +1,257 @@
+{
+  "namedCount": 41,
+  "matrixCount": 0,
+  "matrixViolations": 0,
+  "cooldownMainCount": 0,
+  "suite": "handoff",
+  "cases": [
+    {
+      "passed": true,
+      "expected": "Keep advertised Frostbolt until the next action starts",
+      "name": "Completion gap 0 seconds",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Now plan Fire Blast for after the new cast",
+      "name": "Next START after gap 0",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Keep advertised Frostbolt until the next action starts",
+      "name": "Completion gap 0.1 seconds",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Now plan Fire Blast for after the new cast",
+      "name": "Next START after gap 0.1",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Keep advertised Frostbolt until the next action starts",
+      "name": "Completion gap 0.25 seconds",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Now plan Fire Blast for after the new cast",
+      "name": "Next START after gap 0.25",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Keep advertised Frostbolt until the next action starts",
+      "name": "Completion gap 0.3 seconds",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Now plan Fire Blast for after the new cast",
+      "name": "Next START after gap 0.3",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Keep advertised Frostbolt until the next action starts",
+      "name": "Completion gap 0.5 seconds",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Now plan Fire Blast for after the new cast",
+      "name": "Next START after gap 0.5",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Keep advertised Frostbolt until the next action starts",
+      "name": "Completion gap 1 seconds",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Now plan Fire Blast for after the new cast",
+      "name": "Next START after gap 1",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Keep advertised Frostbolt until the next action starts",
+      "name": "Completion gap 3 seconds",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Now plan Fire Blast for after the new cast",
+      "name": "Next START after gap 3",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the same Main across refresh events",
+      "name": "SPELLS_CHANGED during late cast",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the same Main across refresh events",
+      "name": "SPELLS_CHANGED during after completion",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the same Main across refresh events",
+      "name": "PLAYER_TALENT_UPDATE during late cast",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the same Main across refresh events",
+      "name": "PLAYER_TALENT_UPDATE during after completion",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the same Main across refresh events",
+      "name": "ACTIONBAR_SLOT_CHANGED during late cast",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the same Main across refresh events",
+      "name": "ACTIONBAR_SLOT_CHANGED during after completion",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the same Main across refresh events",
+      "name": "UPDATE_MACROS during late cast",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the same Main across refresh events",
+      "name": "UPDATE_MACROS during after completion",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the same Main across refresh events",
+      "name": "PLAYER_REGEN_ENABLED during late cast",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the same Main across refresh events",
+      "name": "PLAYER_REGEN_ENABLED during after completion",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep Frostbolt",
+      "name": "Casting API temporarily disappears before completion",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep Frostbolt",
+      "name": "API gap outlasts the former quarter-second timer",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the next Frostbolt even without a START GUID",
+      "name": "Completed hard cast is not mistaken for a consumed instant",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep Frostbolt",
+      "name": "Natural channel completion keeps the next spell",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Fire Blast",
+      "name": "An early channel cancellation permits a new decision",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Keep Frostbolt",
+      "name": "Failed extra press during the completion gap cannot release Main",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Fire Blast",
+      "name": "A matched interruption still permits a new decision",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Main Fire Blast",
+      "name": "Changing target still permits a new decision",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "No Main",
+      "name": "Invalid range hides the held attack without a replacement",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt",
+      "name": "Returning to range restores the same held spell",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "No Main",
+      "name": "A dead target never retains a visible held attack",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt",
+      "name": "Using the held instant consumes it even after a long handoff",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt and START-event identity",
+      "name": "START before numeric API preserves identity through a late timing change",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep Frostbolt without reserving paid mana twice",
+      "name": "Deferred START also matches the later success",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt; no active cast",
+      "name": "Natural channel stop with stale API hides the ended channel, not its plan",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "The event identity survives the following snapshot",
+      "name": "Deferred identity first observed by UNIT_SPELLCAST_SUCCEEDED",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "The event identity survives the following snapshot",
+      "name": "Deferred identity first observed by UNIT_SPELLCAST_INTERRUPTED",
+      "actual": "main:frostbolt"
+    }
+  ],
+  "findings": [],
+  "passed": 41
+}

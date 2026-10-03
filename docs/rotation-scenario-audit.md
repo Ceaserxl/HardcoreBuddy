@@ -13,6 +13,8 @@ committed recommendation. The [200-scenario follow-up](rotation-200-scenarios.md
 passes all cases, including 100 timing and lifecycle combinations.
 The later [choice review](rotation-clarity-review.md) adds 64 cases and revises
 the idle-cooldown, recovery, talent and finisher priorities.
+The subsequent [handoff fix](rotation-handoff-fix.md) removes completion expiry
+and preserves the selected Main through spellbook and talent refreshes.
 All 50 focused cooldown scenarios, 115 regression checks, and 75 named audit
 expectations pass, with zero
 structural violations across 3,888 combinations. The expanded audit includes

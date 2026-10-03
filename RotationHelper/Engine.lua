@@ -23,7 +23,7 @@ function H.Select(c,module,state)
         return {},state
     end
     if c.targetGUID~=state.target then
-        state.lock=nil; state.token=nil; state.holdUntil=0; state.lastMain=nil
+        state.lock=nil; state.token=nil; state.lastMain=nil
     end
     c.previousMain=state.lastMain
     local primary,anticipated,extras,groups=nil,nil,{},{}
@@ -49,18 +49,18 @@ function H.Select(c,module,state)
     end
     -- Lead resource recovery only when no attack is already affordable.
     primary=primary or anticipated
-    -- Commit an existing next action; an empty plan may fill after resources
-    -- recover. Recheck cooldowns without substituting a late recommendation.
+    -- Once advertised during a cast, the next action belongs to the player.
+    -- Completion and elapsed time must not replace it before they can use it.
+    -- A new cast identity, explicit cancellation, or target change can replan.
     local token=c.cast and c.cast.token
     state.target=c.targetGUID
     if token then
         if token~=state.token or not state.lock then state.lock=primary; state.token=token end
-        state.holdUntil=(c.cast.finish or c.now+c.cast.remaining)+0.25
         primary=state.lock
-    elseif state.token and c.now<(state.holdUntil or 0) then
+    elseif state.token then
         if not state.lock then state.lock=primary end
         primary=state.lock
-    else state.lock=nil; state.token=nil end
+    end
     -- Invalid targets/range hide a committed action, never replace it mid-cast.
     if primary and (not H.Eligible(c,primary.key,false,primary.forecast)
         or module.canAttack and not module.canAttack(c)) then primary=nil end

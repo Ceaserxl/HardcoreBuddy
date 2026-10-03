@@ -553,9 +553,9 @@
     },
     {
       "passed": true,
-      "expected": "Reconsider finisher after the handoff",
-      "name": "Cast handoff expires normally",
-      "actual": "main:fireblast"
+      "expected": "Keep Frostbolt through the handoff",
+      "name": "Cast completion does not expire the advertised next action",
+      "actual": "main:frostbolt"
     },
     {
       "passed": true,

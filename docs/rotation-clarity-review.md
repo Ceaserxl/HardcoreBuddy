@@ -2,6 +2,8 @@
 
 October 2, 2026. Reviewed the choices and transitions after the user reported
 incorrect recommendations despite passing the earlier rule-consistency tests.
+Follow-up: the [cast-handoff fix](rotation-handoff-fix.md) addresses remaining
+end-of-cast switches that this review did not cover.
 
 ## Changes
 

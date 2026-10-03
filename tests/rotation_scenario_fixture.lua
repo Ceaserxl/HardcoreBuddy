@@ -69,7 +69,7 @@ function F.reset(options)
     MOCK.class="MAGE"; MOCK.level=x.level
     A.characterDB.rotationHelperEnabled=false
     H.state={}; H.recent={}; H.immunities={}; H.supplyItems=nil; H.suspended=nil
-    H.lastCast=nil; H.finishedCast=nil
+    H.lastCast=nil; H.finishedCast=nil; H.pendingCastStart=nil
     H.Glow.warnedMissing={}
     H:Rebuild()
     return x
@@ -96,7 +96,11 @@ GetTime=function() return x.time end
 UnitLevel=function() return x.level end
 IsPlayerSpell=function(id) return x.known[id]==true end
 IsSpellKnown=IsPlayerSpell
-GetSpellInfo=function(id) return x.names[id] or x.byID[id] or "Spell"..id,"Rank",135846,3000 end
+GetSpellInfo=function(id)
+    local key=x.byID[id]
+    local instant=key=="fireblast" or key=="nova" or key=="counterspell"
+    return x.names[id] or key or "Spell"..id,"Rank",135846,instant and 0 or 3000
+end
 C_Spell=nil
 GetSpellPowerCost=function(id) return {{type=0,cost=x.byID[id]=="shoot" and 0 or x.costs[x.byID[id]] or x.defaultCost}} end
 GetSpellCooldown=function(id)

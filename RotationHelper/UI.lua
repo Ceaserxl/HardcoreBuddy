@@ -7,7 +7,7 @@ function H:Document(context)
     local card={title="Rotation Helper",note=supported and ("Mage | Assistant "..(enabled and "enabled" or "disabled").." | Solo Hardcore leveling and conservative group support.")
         or "Mage support is available. Other classes will use the same shared rules when added.",gridStart=1,
         headerAction=supported and {label=enabled and "Disable" or "Enable",action={kind="rotationHelperToggle"}} or nil,blocks={
-            {title="|cffffd126Main|r",body="One next attack. Prefers usable spells and keeps the plan stable through each cast."},
+            {title="|cffffd126Main|r",body="One next attack. Chosen at cast start and held through completion until you start the next action."},
             {title="|cffff3020Defensive|r",body="Interrupts, control and survival. May appear alongside your next attack."},
             {title="|cffd958ffOffensive|r",body="Ready damage boosts for your next attack and mana gems. Optional alongside Main."},
             {title="|cff33a6ffPreparation|r",body="Missing or expiring buffs, food, water and mana gems between fights."},

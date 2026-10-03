@@ -9,7 +9,7 @@ local function reset()
         learned={[116]=true,[133]=true,[2136]=true,[1459]=true,[168]=true},costs={[116]=50,[133]=60,[2136]=40},
         cooldowns={},auras={player={},target={}},inventory={},talents={},macro=116}
     H.state={}; H.recent={}; H.immunities={}; H.supplyItems=nil
-    H.lastCast=nil; H.finishedCast=nil
+    H.lastCast=nil; H.finishedCast=nil; H.pendingCastStart=nil
 end
 reset()
 GetTime=function() return X.time end

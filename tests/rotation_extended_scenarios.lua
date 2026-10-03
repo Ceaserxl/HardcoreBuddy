@@ -77,7 +77,7 @@ record("Target switch releases old target's plan","Choose finisher for the new t
 
 x=F.reset({cast={id=116,start=100,finish=103},distance=15})
 F.evaluate(); x.cast=nil; x.time=103.3; x.targetHealth=140; p=F.evaluate()
-record("Cast handoff expires normally","Reconsider finisher after the handoff",F.main(p)=="fireblast",p)
+record("Cast completion does not expire the advertised next action","Keep Frostbolt through the handoff",F.main(p)=="frostbolt",p)
 
 x=F.reset({cast={id=116,token="same-cast",start=100,finish=103},distance=15})
 F.evaluate(); x.time=101; x.cast.start=100.5; x.cast.finish=103.5; x.targetHealth=140; p=F.evaluate()

@@ -48,15 +48,17 @@ trigger a missing-spell notice. Items do not trigger these spell notices.
   At cast start it plans for completion, reserving that cast's mana cost and
   crediting only reported casting regeneration. It does not predict random
   procs, damage, or uncertain future resource gains.
-- The next Main action is committed at cast start and survives a short completion
-  handoff. An empty plan may fill when mana recovers; once filled, it stays
+- The next Main action is committed at cast start and remains held after
+  completion until a new cast starts or the held instant is used. There is no
+  timed handoff expiry. An empty plan may fill when mana recovers; once filled, it stays
   committed. Success events prevent reserving an already-paid cast cost again.
-  Matching interruptions, failures and channel endings release the old plan even
-  if the casting API has not cleared it yet. Cast identities keep failed extra
+  Matching interruptions and failures release the old plan even if the casting
+  API has not cleared it yet. A channel ending normally preserves the plan;
+  CHANNEL_STOP requires explicit interruption evidence to release it. Cast identities keep failed extra
   keypresses and late events from cancelling a different cast. Target changes
   also permit a new plan. Range loss or breakable crowd control hides a committed
   action without substituting another spell near the end of the cast.
-  Action-bar updates and macro edits preserve the plan. Using a held instant
+  Action-bar, macro, spellbook and talent refreshes preserve the plan. Using a held instant
   attack clears that handoff; a brief success guard prevents repeat advice
   before cooldown data catches up. Group pull safety and recovery still apply
   to an existing plan.
@@ -180,7 +182,7 @@ cases with 50 additional safety, resource, timing and action-bar scenarios. See
 `tests/run_rotation_scenarios.py --suite two_hundred --strict` adds 100 cast
 identity combinations: four API forms, five timing changes, and five lifecycle
 outcomes. The runtime uses a stable API cast ID or START-event GUID; timing
-revisions update the completion window without selecting a new Main action.
+revisions update the observed cast timing without selecting a new Main action.
 Channels and casts without an API ID retain their START-event identity while
 their observed intervals overlap. A new START replaces that identity, including
 when a channel is clipped. Without either identifier, the fallback uses spell
@@ -190,3 +192,9 @@ and start time. Results and limitations are in `docs/rotation-200-scenarios.md`.
 choice and transition cases, including readiness, mana ticks, instant spell
 handoffs, recovery, buff choices, and action-bar changes during a cast. See
 `docs/rotation-clarity-review.md` for the revised priorities and validation.
+
+`tests/run_rotation_scenarios.py --suite handoff --strict` checks 41 cast-boundary
+cases. It reproduces late spellbook/talent refreshes, completion gaps up to three
+seconds, natural versus interrupted channel endings, and a START event arriving
+before the casting API. See `docs/rotation-handoff-fix.md` for the reproduced
+failures and the revised completion contract.

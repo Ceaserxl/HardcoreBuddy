@@ -553,9 +553,9 @@
     },
     {
       "passed": true,
-      "expected": "Reconsider finisher after the handoff",
-      "name": "Cast handoff expires normally",
-      "actual": "main:fireblast"
+      "expected": "Keep Frostbolt through the handoff",
+      "name": "Cast completion does not expire the advertised next action",
+      "actual": "main:frostbolt"
     },
     {
       "passed": true,
@@ -607,7 +607,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "API GUID / finish delayed / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -637,7 +637,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "API GUID / half-second timing shift / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -667,7 +667,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "API GUID / one-second timing shift / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -697,7 +697,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "API GUID / timing shortened / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -727,7 +727,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "API GUID / repeated timing shifts / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -757,7 +757,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "Numeric API ID plus START GUID / finish delayed / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -787,7 +787,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "Numeric API ID plus START GUID / half-second timing shift / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -817,7 +817,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "Numeric API ID plus START GUID / one-second timing shift / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -847,7 +847,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "Numeric API ID plus START GUID / timing shortened / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -877,7 +877,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "Numeric API ID plus START GUID / repeated timing shifts / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -907,7 +907,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "Channel plus START GUID / finish delayed / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -937,7 +937,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "Channel plus START GUID / half-second timing shift / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -967,7 +967,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "Channel plus START GUID / one-second timing shift / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -997,7 +997,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "Channel plus START GUID / timing shortened / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -1027,7 +1027,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "Channel plus START GUID / repeated timing shifts / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -1057,7 +1057,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "No API ID plus START GUID / finish delayed / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -1087,7 +1087,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "No API ID plus START GUID / half-second timing shift / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -1117,7 +1117,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "No API ID plus START GUID / one-second timing shift / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -1147,7 +1147,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "No API ID plus START GUID / timing shortened / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },
@@ -1177,7 +1177,7 @@
     },
     {
       "passed": true,
-      "expected": "Keep Main and cast identity, update the completion window",
+      "expected": "Keep Main and cast identity, update observed cast timing",
       "name": "No API ID plus START GUID / repeated timing shifts / committed",
       "actual": "main:frostbolt; initial=true; stable during timing revision=true"
     },

@@ -127,7 +127,7 @@ F.event("UNIT_SPELLCAST_CHANNEL_START","player","channel-A",5143)
 local _,channelContext=F.evaluate()
 record("Channel cost is already paid","Channel snapshots do not reserve mana again",channelContext.futurePower==80,tostring(channelContext.futurePower))
 x.time=101; x.targetHealth=140; x.distance=15
-F.event("UNIT_SPELLCAST_CHANNEL_STOP","player","channel-A",5143)
+F.event("UNIT_SPELLCAST_CHANNEL_STOP","player","channel-A",5143,"Player-A")
 record("Channel stop before API clear","Ended channel releases the previous Main",F.main(H.picks)=="fireblast",F.describe(H.picks))
 
 x=F.reset({level=25,talents=F.build(2,25),grouped=true,classification="elite",cast={id=2948,start=100,finish=101.5},targetAuras={{spellId=22959,applications=4,expirationTime=125}}})

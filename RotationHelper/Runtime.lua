@@ -68,29 +68,47 @@ function H:PlayerCast()
             current.token=previous.token
         end
     end
+    local pending=self.pendingCastStart
+    if current and pending and current.id==pending.id
+        and (type(current.apiID)~="string" or current.apiID==pending.guid) then
+        current.guid=pending.guid; current.token="cast:"..pending.guid
+        self.pendingCastStart=nil
+    end
+    if current then self.lastCast=current end
     return current
 end
 local function matchesCast(value,guid,id)
     return value and value.id==id and (not guid or value.guid and value.guid==guid)
 end
-function H:CastEvent(event,guid,id)
+function H:CastEvent(event,guid,id,interruptedBy)
     local current=self:PlayerCast()
     if event=="UNIT_SPELLCAST_START" or event=="UNIT_SPELLCAST_CHANNEL_START" then
         if current and current.id==id and (type(current.apiID)~="string" or current.apiID==guid) then
             current.guid=guid
             if guid then current.token="cast:"..guid end
             self.lastCast=current
+            self.pendingCastStart=nil
+        elseif guid then
+            -- START can arrive before the casting API publishes the new cast.
+            self.pendingCastStart={guid=guid,id=id}
         end
         return
     end
     -- A successful instant can consume the held next action after the previous
     -- cast has ended. It has no casting API entry to match against lastCast.
-    if event=="UNIT_SPELLCAST_SUCCEEDED" and not current and self.state.lock
+    local _,_,castMS=info(id)
+    if event=="UNIT_SPELLCAST_SUCCEEDED" and castMS==0 and not current and self.state.lock
         and self.state.lock.id==id and not matchesCast(self.lastCast,guid,id) then self.state={} end
+    if matchesCast(self.pendingCastStart,guid,id) then self.pendingCastStart=nil end
     -- Never match a failed extra press by spell alone.
     local ended=current or self.lastCast
     if not matchesCast(ended,guid,id) then return end
-    self.finishedCast={token=ended.token,interrupted=event~="UNIT_SPELLCAST_SUCCEEDED"}
+    local channelStopped=event=="UNIT_SPELLCAST_CHANNEL_STOP"
+    local interrupted=event=="UNIT_SPELLCAST_INTERRUPTED" or event=="UNIT_SPELLCAST_FAILED"
+        or channelStopped and type(interruptedBy)=="string" and interruptedBy~=""
+    -- CHANNEL_STOP alone is also sent on normal completion; it is not evidence
+    -- that the player cancelled the plan. Explicit interruption still releases it.
+    self.finishedCast={token=ended.token,interrupted=interrupted,ended=channelStopped}
     if self.finishedCast.interrupted then self.state={} end
 end
 local function auraList(unit,filter)
@@ -199,9 +217,8 @@ function H:Snapshot()
     c.mana=(UnitPower and UnitPower("player",0) or 0)/math.max(1,UnitPowerMax and UnitPowerMax("player",0) or 0)
     c.cast=self:PlayerCast()
     if c.cast then
-        self.lastCast=c.cast
         if self.finishedCast and self.finishedCast.token==c.cast.token then
-            if self.finishedCast.interrupted then c.cast=nil
+            if self.finishedCast.interrupted or self.finishedCast.ended then c.cast=nil
             else c.cast.paid=true end
         end
     end
@@ -309,7 +326,7 @@ function H:SetEnabled(value)
 end
 function H:Clear()
     self.state={}; self.picks={}
-    self.lastCast=nil; self.finishedCast=nil
+    self.lastCast=nil; self.finishedCast=nil; self.pendingCastStart=nil
     if self.Glow then self.Glow:Apply({}) end
 end
 function H:Tick()
@@ -338,13 +355,15 @@ for _,event in ipairs({"PLAYER_ENTERING_WORLD","PLAYER_LEAVING_WORLD","PLAYER_RE
     "ACTIONBAR_SLOT_CHANGED","UPDATE_MACROS","ACTIONBAR_PAGE_CHANGED","MODIFIER_STATE_CHANGED","UPDATE_SHAPESHIFT_FORM",
     "UNIT_SPELLCAST_START","UNIT_SPELLCAST_CHANNEL_START","UNIT_SPELLCAST_CHANNEL_STOP",
     "UNIT_SPELLCAST_SUCCEEDED","UNIT_SPELLCAST_INTERRUPTED","UNIT_SPELLCAST_FAILED","BAG_UPDATE_DELAYED"}) do H.frame:RegisterEvent(event) end
-H.frame:SetScript("OnEvent",function(_,event,unit,castGUID,spellID)
+H.frame:SetScript("OnEvent",function(_,event,unit,castGUID,spellID,interruptedBy)
     if event=="PLAYER_LEAVING_WORLD" then
         H.suspended=true; H.frame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED"); H.frame:SetScript("OnUpdate",nil); H:Clear(); return
     end
     if event=="PLAYER_ENTERING_WORLD" or event=="PLAYER_TALENT_UPDATE" or event=="SPELLS_CHANGED" then
-        if event=="PLAYER_ENTERING_WORLD" then H.suspended=nil; H.recent={}; H.immunities={}; H.lastCast=nil; H.finishedCast=nil end
-        H.supplyItems=nil; H:Rebuild(); H:Wake(); return
+        if event=="PLAYER_ENTERING_WORLD" then
+            H.suspended=nil; H.recent={}; H.immunities={}; H.lastCast=nil; H.finishedCast=nil; H.pendingCastStart=nil
+        end
+        H.supplyItems=nil; H:Rebuild(event~="PLAYER_ENTERING_WORLD"); H:Wake(); return
     end
     if not H:Enabled() then return end
     if event:find("^UNIT_") and unit~="player" then return end
@@ -360,7 +379,7 @@ H.frame:SetScript("OnEvent",function(_,event,unit,castGUID,spellID)
         return
     end
     if event=="UNIT_SPELLCAST_START" or event=="UNIT_SPELLCAST_CHANNEL_START" or event=="UNIT_SPELLCAST_CHANNEL_STOP" then
-        H:CastEvent(event,castGUID,spellID)
+        H:CastEvent(event,castGUID,spellID,interruptedBy)
     elseif event=="UNIT_SPELLCAST_SUCCEEDED" then
         local key=H.byID[spellID]; if key then H.recent[key]=now() end
         H:CastEvent(event,castGUID,spellID)

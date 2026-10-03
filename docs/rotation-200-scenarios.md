@@ -4,12 +4,14 @@ Date: 2026-10-02. **200/200 scenario expectations pass.** The cast identity fix
 resolves the timing finding from the previous 100-scenario run.
 Policy expectations now include the subsequent [choice review](rotation-clarity-review.md),
 which adds 64 separate checks. The two-hundred suite retains exactly 200 cases.
+The [handoff fix](rotation-handoff-fix.md) removes timed completion expiry and
+adds 41 boundary checks; the old handoff-expiry expectation was corrected.
 
 ## Fix
 
 Changing a cast's start or finish time no longer changes its identity when an
 API cast ID or matching START-event GUID is available. Main remains committed;
-the completion window follows the revised finish time. Matching success and
+observed cast timing follows the revised finish time. Matching success and
 interruption events still handle mana charging and release correctly. A real
 new START gets a new plan, including overlapping replacement casts and channels.
 
@@ -39,7 +41,8 @@ The 100 new combinations cross:
 
 Each combination starts with a Frostbolt recommendation, lowers the target into
 Fire Blast finisher range, and checks that timing changes cannot trigger a late
-switch. It also checks that the hold window follows the updated finish time.
+switch. It also checks that the adapter reads the updated finish time without
+changing the cast identity.
 
 Additional validation: **115 existing regression checks**, **75 named audit
 expectations**, and **3,888 matrix combinations with zero invariant violations**.
