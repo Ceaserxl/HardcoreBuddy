@@ -102,9 +102,10 @@ for _,size in ipairs({{750,420},{832,447},{900,500}}) do
     local cx,cy=E.preferCraft:GetRect()
     assert(x+w<cx and math.abs(y-cy)<1,'Show All sits left of Craft > Buy on the same baseline')
     x,y,w=E.preferCraft.label:GetRect()
-    assert(x+w<select(1,E.status:GetRect()),'Filters do not collide with scan status')
+    local sx,sy,sw,sh=E.start:GetRect()
+    assert(math.abs(sx-(x+w)-12)<1 and math.abs(y+9-(sy+sh/2))<1,'Craft > Buy is directly left of Scan and vertically centered')
     x,y,w=E.title:GetRect()
-    assert(x+w<select(1,E.start:GetRect()),'Full title stays clear of the scan button')
+    assert(x+w<select(1,E.showAll:GetRect()),'Title stays clear of both filters and Scan')
     local row=E.rows[1]
     x,y,w=row.cells[6]:GetRect()
     assert(x+w<select(1,row.buy:GetRect()),'Cost stays clear of Buy at native and resized widths')

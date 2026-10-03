@@ -68,7 +68,9 @@ function E:Refresh()
     -- Share the exact Upgrades content bounds, including native AH resizing.
     local width,height=AuctionFrame:GetWidth()-18,AuctionFrame:GetHeight()-47
     self.panel:SetSize(width,height)
-    self.title:SetWidth(width-198)
+    local controlsWidth=self.start:GetWidth()+self.showAll:GetWidth()+self.showAll.label:GetWidth()
+        +self.preferCraft:GetWidth()+self.preferCraft.label:GetWidth()+36
+    self.title:SetWidth(width-controlsWidth-42)
     self.items=self:Items(A:GetContext())
     local shown=math.max(1,math.min(#self.rows,math.floor((height-108)/38)))
     self.offset=math.max(0,math.min(self.offset,math.max(0,#self.items-shown)))
@@ -171,12 +173,10 @@ function E:Attach()
     Skin.TextStyle(self.title,"page"); self.title:SetHeight(26); self.title:SetWordWrap(false)
     self.start=button(panel,"Scan Essentials",156,function() if E.scan then E:Stop("Scan stopped. Results may be incomplete.") else E:Start() end end)
     self.start:SetPoint("TOPRIGHT",-14,-8)
-    -- Keep both filters together on the subtitle line so the title never overlaps
-    -- them at the native auction window's compact width.
     self.showAll=checkbox(panel,"Show All Essentials",function(value) E:SetShowAllEssentials(value) end)
-    self.showAll:SetPoint("TOPLEFT",16,-31)
     self.preferCraft=checkbox(panel,"Craft > Buy",function(value) E:SetPreferCraft(value) end)
-    self.preferCraft:SetPoint("LEFT",self.showAll.label,"RIGHT",14,0)
+    self.preferCraft:SetPoint("RIGHT",self.start,"LEFT",-self.preferCraft.label:GetWidth()-18,0)
+    self.showAll:SetPoint("RIGHT",self.preferCraft,"LEFT",-self.showAll.label:GetWidth()-18,0)
     self.status=CreateFrame("Frame",nil,panel); self.status:SetPoint("TOPLEFT",346,-31); self.status:SetSize(400,18)
     self.status:EnableMouse(true)
     self.status:SetScript("OnEnter",function(frame)
