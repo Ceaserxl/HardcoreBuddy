@@ -1,7 +1,7 @@
 local addonName, addon = ...
 
 addon.name = addonName
-addon.version = "0.7.0"
+addon.version = "0.7.2"
 local P = addon.Planner
 local classNames = {}
 for _, name in ipairs(P.classes) do classNames[name:upper()] = name end
@@ -290,6 +290,7 @@ function addon:Initialize()
     if self.db.talentAdvisorEnabled==nil then self.db.talentAdvisorEnabled=true end
     if type(HardcoreBuddyCharacterDB)~="table" then HardcoreBuddyCharacterDB={} end
     self.characterDB=HardcoreBuddyCharacterDB
+    self.characterDB.rotationHelperEnabled=false
     -- Retired rotation prototype: discard its settings and retained traces.
     self.characterDB.rotationMode=nil
     self.characterDB.rotationDiagnostics=nil

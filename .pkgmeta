@@ -9,7 +9,8 @@ manual-changelog:
 ignore:
   - .github
   - tests
+  - RotationHelper
+  - docs/rotation-helper.md
   - reference
   - .gitignore
   - .release
-

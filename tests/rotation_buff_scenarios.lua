@@ -201,8 +201,8 @@ for _,class in ipairs({"WARRIOR","PALADIN","HUNTER","ROGUE","PRIEST","SHAMAN","M
     local accessible=false
     for _,tab in ipairs(A.Companion.Tabs({characterClass=H.module.name})) do if tab=="Rotation Helper" then accessible=true end end
     local page=H:Document({})
-    pass=pass and accessible and page.cards[1].headerAction~=nil
+    pass=pass and not accessible and page.cards[1].headerAction~=nil
         and (class=="MAGE" or page.cards[1].note:find("Buff preparation",1,true)~=nil)
-    record(class.." has shared buffs without conflicts from level 1 to 60","One source per group; accessible enable page; only Mage has combat advice",pass,{})
+    record(class.." has shared buffs without conflicts from level 1 to 60","Archived policy: one source per group; live tab hidden; only Mage has combat advice",pass,{})
 end
 return {cases=results,findings=findings,namedCount=#results,matrixCount=540,matrixViolations=violations}

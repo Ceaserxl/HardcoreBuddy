@@ -1,3 +1,11 @@
+# HardcoreBuddy v0.7.2
+
+- Disabled all Rotation Helper behavior, including combat and preparation
+  highlights, spell recommendations and missing-action-bar messages.
+- Removed its Companion tab, overview entry and enable controls. Previously
+  enabled characters are disabled on login; helper modules are not loaded or packaged.
+- Supplies, Gear Advisor, Talent Advisor and other addon features remain available.
+
 # HardcoreBuddy v0.7.0
 
 - Removed the Rotation Advisor prototype, its highlights and automatic diagnostic

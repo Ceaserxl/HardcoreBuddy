@@ -1,6 +1,10 @@
 # Shared consumable and class-buff preparation
 
-Verified October 2, 2026. Blue action-bar markers now include routine
+Rotation Helper and all preparation highlights are disabled in v0.7.2. The shared
+consumable metadata remains active for Supplies scoring. The description below
+documents the archived highlighting implementation and its offline tests.
+
+Verified October 2, 2026. Blue action-bar markers included routine
 elixirs, scrolls and buff foods in the supplies catalogs. Preparation
 works on all nine Classic classes; combat rotation advice remains Mage-only.
 Each character enables the assistant in Companion > Rotation Helper.

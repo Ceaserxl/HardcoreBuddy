@@ -6,7 +6,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tests"))
-from render_layout import boot
+from rotation_archive_fixture import boot
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--strict", action="store_true")

@@ -1,6 +1,9 @@
 # Rotation Helper: shared rules, Mage policy
 
-Enable it in **Companion > Rotation Helper**. It starts disabled per character.
+Disabled and hidden as of v0.7.2. The source is retained for offline development
+only and is not loaded or packaged. The following describes the archived design.
+
+Previously enabled in **Companion > Rotation Helper**, disabled by default per character.
 Shared buff and consumable preparation supports all nine Classic classes;
 combat rotation advice currently supports Mage. This assistant is independent of the retired prototype. It
 highlights actions; it never casts, edits a macro, or changes an action slot.

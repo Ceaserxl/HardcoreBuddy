@@ -4,7 +4,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tests"))
-from render_layout import boot
+from rotation_archive_fixture import boot
 
 lua, addon = boot()
 lua.execute((ROOT / "tests/rotation_helper_cases.lua").read_text(encoding="utf-8"))
