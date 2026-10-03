@@ -97,7 +97,7 @@ assert(editor():HasFocus() and editor():GetText()=="7","All-item controls preser
 editor():ClearFocus()
 assert(A.characterDB.targets[recipes[1].itemId]==7,"Recipe upgrade saves the old item's focused target")
 assert(A.window.cards[1].detailQuantity:IsShown(),"Old recipe retains controls like every supply item")
-A:Back(); MOCK.Click(find(recipes[2].itemId))
+A:Back(); A:Activate({kind="supplyFamily",family="dummy"}); MOCK.Click(find(recipes[2].itemId))
 assert(editor():IsVisible(),"Current recipe has a separate editor")
 A.GetContext=original
 A:Navigate("advisors")

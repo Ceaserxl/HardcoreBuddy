@@ -83,7 +83,7 @@ local target
 for _,b in ipairs(A.window.cards[1].content.blocks) do if b.block and b.block.itemId==6451 then target=b end end
 assert(target); MOCK.Click(target)
 assert(A.document.isDetail and A.window.cards[1].detailQuantity.quantity:IsShown(),"Recommended lower rank opens editable details")
-A:Back(); assert(A.state==original)
+A:Back(); assert(A.state.view=="supplies" and not A.state.detail and #A.history==0)
 
 local saved=A.Data.ClassSpells.Mage
 A.Data.ClassSpells.Mage={[2]={{id=100,cost=12345},{id=101,cost=0}}}

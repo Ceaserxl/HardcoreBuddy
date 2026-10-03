@@ -1141,9 +1141,13 @@ end
 function addon:Back()
     self:CommitInputs(); self.window.classMenu:Hide()
     local detail=self.state.detail
-    if self.state.view=="supplies" and (self.state.filter=="Enchants"
-        or detail and (detail.kind=="enchantSlot" or detail.kind=="enchantRecipe")) then
-        self.history={}; self.state={view="supplies",filter="Enchants",page=1}; self:Refresh(true)
+    if self.state.view=="supplies" then
+        local main
+        for _,previous in ipairs(self.history or {}) do
+            if previous.view=="supplies" and previous.filter==self.state.filter and not previous.detail then main=previous; break end
+        end
+        self.state=main or {view="supplies",filter=self.state.filter or "All",query=self.state.query,page=1}
+        self.history={}; self:Refresh(true)
     elseif self.state.view=="settings" and self.state.customBuildPage then self.CustomBuildsUI:Back()
     elseif self.state.view=="settings" and self.state.gearPage then self.Settings:OpenGearPage(nil)
     elseif self.state.view=="settings" and self.state.mapIconKind then
@@ -1158,8 +1162,7 @@ function addon:Back()
 end
 function addon:CanGoBack()
     local s=self.state or {}
-    if s.view=="supplies" and s.detail and (s.filter=="Enchants"
-        or s.detail.kind=="enchantSlot" or s.detail.kind=="enchantRecipe") then return true end
+    if s.view=="supplies" and s.detail then return true end
     if s.view=="training" and s.detail and s.detail.kind=="profession" and s.detail.family=="dummy" then return false end
     return (self.history and #self.history>0) or (s.view=="petguide" and s.detail~=nil)
         or (s.view=="settings" and s.customBuildPage==true)

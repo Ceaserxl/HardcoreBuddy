@@ -63,11 +63,21 @@ assert(not card.defaultChoice:IsShown(),"Button hides immediately after setting 
 local selected=listed(alternative.itemId)
 assert(selected and not listed(group.itemId),"Preference replaces the primary row")
 assert(selected.category==S.Category(group),"Alternative keeps the original supply category")
-A:Back(); assert(A.state==original and A.window.cards[1].defaultChoice:IsShown() and A.window.cards[1].defaultChoice:IsEnabled())
+A:Back(); assert(A.state.view=="supplies" and not A.state.detail and #A.history==0,"Back skips nested alternatives")
+A:Activate({kind="item",item=group})
+assert(A.window.cards[1].defaultChoice:IsShown() and A.window.cards[1].defaultChoice:IsEnabled())
 MOCK.Click(A.window.cards[1].defaultChoice)
 assert(listed(group.itemId) and not listed(alternative.itemId),"Original choice can be restored")
 A:Activate({kind="supplyDefault",item=alternative})
 local saved=A.characterDB.supplyDefaults
+for _,filter in ipairs(S.filters) do
+    local root={view="supplies",filter=filter,query="",page=1}
+    A.state={view="supplies",filter=filter,detail={kind="item",item=group}}
+    A.history={root,{view="supplies",filter=filter,detail={kind="item",item=alternative}}}
+    A:Back()
+    assert(A.state==root and #A.history==0 and not A:CanGoBack(),"Back returns directly to "..filter)
+end
+A:Navigate("supplies")
 assert(A:GetContext().supplyDefaults==saved,"Preference comes from character SavedVariables")
 local future=A:GetContext(); future.level=60
 local fallback
@@ -95,7 +105,7 @@ local selectedBandage
 for _,card in ipairs(A.document.cards) do for _,block in ipairs(card.blocks) do
     if block.action and block.action.family=="bandage" then selectedBandage=block end
 end end
-assert(selectedBandage and selectedBandage.itemId==1251 and selectedBandage.body=="Your default bandage",
+assert(selectedBandage and selectedBandage.itemId==1251 and selectedBandage.body==A.Guide.SupplySubtitle(bandage,A:GetContext()),
     "The supplies list uses the saved bandage instead of the automatic rank")
 local noSkill=A:GetContext(); noSkill.professions={skills={bandage=0},known={}}
 assert(S.Selection(noSkill,"bandage")~=1251,"Unusable saved bandage falls back to live profession selection")
