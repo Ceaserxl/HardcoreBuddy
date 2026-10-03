@@ -49,24 +49,41 @@ local function cast(unit,t)
     if not name and UnitChannelInfo then
         name,_,_,start,finish,_,notInterruptible,id=UnitChannelInfo(unit); channel=not not name
     end
-    if name and start and finish then return {id=id,name=name,token=tostring(token or id or name)..":"..start,
-        guid=type(token)=="string" and token or nil,finish=finish/1000,
+    if name and start and finish then return {id=id,name=name,apiID=token,
+        token=token~=nil and "cast:"..tostring(token) or "time:"..tostring(id or name)..":"..start,
+        guid=type(token)=="string" and token or nil,start=start/1000,finish=finish/1000,
         remaining=math.max(0,finish/1000-t),channel=channel,interruptible=not notInterruptible} end
+end
+function H:PlayerCast()
+    local current=cast("player",now())
+    local previous=self.lastCast
+    if current and previous and current.id==previous.id and current.channel==previous.channel then
+        local sameID=current.apiID~=nil and current.apiID==previous.apiID
+        -- Channels and clients without an API cast ID use the START-event GUID
+        -- while the observed cast intervals overlap. A new START overrides it.
+        local sameInterval=current.apiID==nil and previous.apiID==nil and previous.guid
+            and current.start<previous.finish and current.finish>previous.start
+        if sameID or sameInterval then
+            current.guid=current.guid or previous.guid
+            current.token=previous.token
+        end
+    end
+    return current
 end
 local function matchesCast(value,guid,id)
     return value and value.id==id and (not guid or value.guid and value.guid==guid)
 end
 function H:CastEvent(event,guid,id)
-    local current=cast("player",now())
+    local current=self:PlayerCast()
     if event=="UNIT_SPELLCAST_START" or event=="UNIT_SPELLCAST_CHANNEL_START" then
-        if current and current.id==id and (not current.guid or current.guid==guid) then
-            current.guid=guid; self.lastCast=current
+        if current and current.id==id and (type(current.apiID)~="string" or current.apiID==guid) then
+            current.guid=guid
+            if guid then current.token="cast:"..guid end
+            self.lastCast=current
         end
         return
     end
-    -- Retain a START-event GUID for clients whose casting API returns a numeric
-    -- cast ID, and for channels. Never match a failed extra press by spell alone.
-    if current and self.lastCast and current.token==self.lastCast.token then current.guid=current.guid or self.lastCast.guid end
+    -- Never match a failed extra press by spell alone.
     local ended=current or self.lastCast
     if not matchesCast(ended,guid,id) then return end
     self.finishedCast={token=ended.token,interrupted=event~="UNIT_SPELLCAST_SUCCEEDED"}
@@ -175,9 +192,8 @@ function H:Snapshot()
     c.maxPower=UnitPowerMax and UnitPowerMax("player",c.powerType) or 0
     c.powerFraction=c.power/math.max(1,c.maxPower)
     c.mana=(UnitPower and UnitPower("player",0) or 0)/math.max(1,UnitPowerMax and UnitPowerMax("player",0) or 0)
-    c.cast=cast("player",t)
+    c.cast=self:PlayerCast()
     if c.cast then
-        if self.lastCast and c.cast.token==self.lastCast.token then c.cast.guid=c.cast.guid or self.lastCast.guid end
         self.lastCast=c.cast
         if self.finishedCast and self.finishedCast.token==c.cast.token then
             if self.finishedCast.interrupted then c.cast=nil

@@ -10,7 +10,7 @@ from render_layout import boot
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--strict", action="store_true")
-parser.add_argument("--suite", choices=("audit", "cooldown", "hundred"), default="audit")
+parser.add_argument("--suite", choices=("audit", "cooldown", "hundred", "two_hundred"), default="audit")
 parser.add_argument("--output", type=Path)
 args = parser.parse_args()
 lua, addon = boot()
@@ -22,6 +22,7 @@ case_files = {
     "audit": ("rotation_scenario_audit.lua",),
     "cooldown": ("rotation_cooldown_scenarios.lua",),
     "hundred": ("rotation_cooldown_scenarios.lua", "rotation_extended_scenarios.lua"),
+    "two_hundred": ("rotation_cooldown_scenarios.lua", "rotation_extended_scenarios.lua", "rotation_identity_scenarios.lua"),
 }[args.suite]
 report = dict.fromkeys(("namedCount", "matrixCount", "matrixViolations", "cooldownMainCount"), 0)
 report.update(suite=args.suite, cases=[], findings=[])
@@ -32,8 +33,9 @@ for case_file in case_files:
     report["cases"].extend(rows(audit.cases))
     report["findings"].extend(rows(audit.findings))
 assert len({case["name"] for case in report["cases"]}) == report["namedCount"], "Scenario names must be unique"
-if args.suite == "hundred":
-    assert report["namedCount"] == 100, "The requested suite must execute exactly 100 scenarios"
+expected_count = {"hundred": 100, "two_hundred": 200}.get(args.suite)
+if expected_count:
+    assert report["namedCount"] == expected_count, f"The requested suite must execute exactly {expected_count} scenarios"
 report["passed"] = report["namedCount"] - len(report["findings"])
 print(f"{args.suite.upper()}: {report['passed']}/{report['namedCount']} named expectations met")
 if report["matrixCount"]:

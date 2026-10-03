@@ -558,10 +558,10 @@
       "actual": "main:fireblast"
     },
     {
-      "passed": false,
+      "passed": true,
       "expected": "Keep Frostbolt when timing changes without a new cast",
       "name": "Same cast GUID with revised timing",
-      "actual": "main:fireblast"
+      "actual": "main:frostbolt"
     },
     {
       "passed": true,
@@ -606,13 +606,6 @@
       "actual": "none"
     }
   ],
-  "findings": [
-    {
-      "passed": false,
-      "expected": "Keep Frostbolt when timing changes without a new cast",
-      "name": "Same cast GUID with revised timing",
-      "actual": "main:fireblast"
-    }
-  ],
-  "passed": 99
+  "findings": [],
+  "passed": 100
 }

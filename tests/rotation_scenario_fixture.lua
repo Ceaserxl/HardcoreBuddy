@@ -131,7 +131,11 @@ end
 CheckInteractDistance=function() return x.distance<10 end
 UnitCastingInfo=function(u)
     local c=u=="player" and x.cast or u=="target" and x.targetCast
-    if c then return x.byID[c.id] or "Cast",nil,nil,c.start*1000,c.finish*1000,false,c.token or "cast-A",c.uninterruptible,c.id end
+    if c then
+        local token=c.token or "cast-A"
+        if c.noID then token=nil end
+        return x.byID[c.id] or "Cast",nil,nil,c.start*1000,c.finish*1000,false,token,c.uninterruptible,c.id
+    end
 end
 UnitChannelInfo=function(u)
     local c=u=="player" and x.channel

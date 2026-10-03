@@ -155,4 +155,13 @@ and missing-action chat. Results are in `docs/rotation-cooldown-scenarios.json`.
 
 `tests/run_rotation_scenarios.py --suite hundred --strict` combines those 50
 cases with 50 additional safety, resource, timing and action-bar scenarios. See
-`docs/rotation-100-scenarios.md` for the current result and outstanding finding.
+`docs/rotation-100-scenarios.md` for the results and resolved timing finding.
+
+`tests/run_rotation_scenarios.py --suite two_hundred --strict` adds 100 cast
+identity combinations: four API forms, five timing changes, and five lifecycle
+outcomes. The runtime uses a stable API cast ID or START-event GUID; timing
+revisions update the completion window without selecting a new Main action.
+Channels and casts without an API ID retain their START-event identity while
+their observed intervals overlap. A new START replaces that identity, including
+when a channel is clipped. Without either identifier, the fallback uses spell
+and start time. Results and limitations are in `docs/rotation-200-scenarios.md`.
