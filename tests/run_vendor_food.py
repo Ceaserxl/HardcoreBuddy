@@ -7,6 +7,8 @@ lua,A=boot()
 lua.execute('''
 local A=TestAddon; local P,V=A.Planner,A.VendorServices
 local noMana={Rogue=true,Warrior=true}
+local removed={[13928]=true,[19300]=true,[21023]=true}
+for _,item in ipairs(A.Data.Items.items) do assert(not removed[item.itemId],"Seasonal and reputation foods excluded") end
 for _,class in ipairs(P.classes) do
     local drink
     for _,row in ipairs(P.BuildList(class,60,'Alliance').rows) do if row.family=='drink' then drink=row end end
@@ -14,7 +16,7 @@ for _,class in ipairs(P.classes) do
     else
         local ids={[drink.itemId]=true}
         for _,item in ipairs(drink.options) do ids[item.itemId]=true end
-        for _,id in ipairs({159,1179,1205,1708,1645,8766,19300}) do assert(ids[id],'Vendor drink alternative '..id) end
+        for _,id in ipairs({159,1179,1205,1708,1645,8766}) do assert(ids[id],'Vendor drink alternative '..id) end
     end
 end
 local elune

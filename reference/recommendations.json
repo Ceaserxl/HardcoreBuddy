@@ -934,37 +934,6 @@
       "alternative": true
     },
     {
-      "id": "item-101",
-      "name": "Dirge's Kickin' Chimaerok Chops",
-      "itemId": 21023,
-      "level": 55,
-      "detail": "Use: Restores 2550 health over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 25 Stamina for 15 min.",
-      "icon": "/images/hcclassic/inv_misc_food_65.jpg",
-      "reference": "https://www.wowhead.com/classic/item=21023",
-      "verifiedOn": "2026-09-26",
-      "family": "wellfed",
-      "group": "Food & drink",
-      "ease": 4,
-      "route": "Recipe belongs to the Scepter of the Shifting Sands quest chain; uses Chimaerok Tenderloin and other costly materials.",
-      "short": "+25 Stamina",
-      "caution": "Choose one food buff; allow the eating time stated in its tooltip. Recipe access and farming are much harder than the item use level suggests.",
-      "classes": [
-        "All"
-      ],
-      "binding": false,
-      "ingredients": "Hot Spices , Goblin Rocket Fuel , Deeprock Salt , Chimaerok Tenderloin",
-      "craftSkill": {
-        "name": "Cooking",
-        "value": 300
-      },
-      "recipeSource": "https://www.wowhead.com/classic/item=21025",
-      "spellSource": "https://www.wowhead.com/classic/spell=25659",
-      "acquisitionSource": "https://classicdb.ch/?item=21023",
-      "power": 25,
-      "preference": 17,
-      "alternative": true
-    },
-    {
       "id": "item-95",
       "name": "Smoked Sagefish",
       "itemId": 21072,
@@ -1068,38 +1037,6 @@
       "spellSource": "https://www.wowhead.com/classic/spell=18243",
       "acquisitionSource": "https://classicdb.ch/?item=13931",
       "power": 8
-    },
-    {
-      "id": "item-98",
-      "name": "Grilled Squid",
-      "itemId": 13928,
-      "level": 35,
-      "detail": "Use: Restores 874.8 health over 27 sec. Must remain seated while eating. If you eat for 10 seconds will also increase your Agility by 10 for 10 min.",
-      "icon": "/images/hcclassic/inv_misc_fish_13.jpg",
-      "reference": "https://www.wowhead.com/classic/item=13928",
-      "verifiedOn": "2026-09-26",
-      "family": "specialfood-Grilled Squid",
-      "group": "Food & drink",
-      "ease": 4,
-      "route": "Gikkix, Steamwheedle Port, sells the recipe. Winter Squid is seasonal; stored fish or trading may be needed outside its season.",
-      "short": "+10 Agility · seasonal",
-      "caution": "A specialist food alternative, not a routine leveling requirement. Item use level does not mean you can safely acquire it at that level.",
-      "classes": [
-        "Hunter",
-        "Rogue",
-        "Druid",
-        "Warrior"
-      ],
-      "binding": false,
-      "ingredients": "Winter Squid , Soothing Spices",
-      "craftSkill": {
-        "name": "Cooking",
-        "value": 240
-      },
-      "recipeSource": "https://www.wowhead.com/classic/item=13942",
-      "spellSource": "https://www.wowhead.com/classic/spell=18240",
-      "acquisitionSource": "https://classicdb.ch/?item=13928",
-      "alternative": true
     },
     {
       "id": "item-99",
@@ -4234,28 +4171,6 @@
       "route": "Buy from a food vendor that stocks this item.",
       "caution": "Recovery food has no Well Fed buff. Eat after reaching safety.",
       "reference": "https://www.wowhead.com/classic/item=21033",
-      "verifiedOn": "2026-10-02"
-    },
-    {
-      "id": "classic-bottled-winterspring-water",
-      "itemId": 19300,
-      "name": "Bottled Winterspring Water",
-      "level": 35,
-      "classes": [
-        "All"
-      ],
-      "family": "drink",
-      "group": "Food & drink",
-      "alternative": true,
-      "vendorFood": true,
-      "binding": false,
-      "ease": 0,
-      "short": "Mana between fights",
-      "detail": "Use: Restores 1992 mana over 30 sec.  Must remain seated while drinking.",
-      "route": "Buy from Winterspring food and drink vendors.",
-      "caution": "",
-      "icon": "/images/hcclassic/inv_drink_18.jpg",
-      "reference": "https://www.wowhead.com/classic/item=19300",
       "verifiedOn": "2026-10-02"
     }
   ]
