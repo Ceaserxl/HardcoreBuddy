@@ -76,6 +76,7 @@ end
 function F.reset()
     E:Stop(); E.purchaseReceipt=nil; E.loadedPage=nil; E.results={}; E.ownSellers=nil; E.complete=false
     A.characterDB.auctionMail=nil; A.characterDB.auctionBank=nil; A.characterDB.auctionEssentialsPreferCraft=false
+    A.characterDB.auctionEssentialsShowAll=false
     F.stock={}; F.auctions={}; F.queries={}; F.purchases={}; F.ready=true; F.money=nil
     F.displayed=nil; F.wanted=nil; F.bags={}; E.message=nil
 end

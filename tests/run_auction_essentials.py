@@ -23,13 +23,32 @@ assert(E.panel:GetWidth()==A.AuctionUpgrades.panel:GetWidth() and E.panel:GetHei
 assert(#E.headers==7 and E.headers[2]:GetText()=='OWNED' and E.headers[7]:GetText()=='BUY')
 assert(not E.buy and not E.total and not E.rows[1].craft,'No basket footer or Craft column')
 assert(E.rows[1].buy.label:GetText()=='Buy' and not E.rows[1].buy:IsEnabled(),'Unscanned Buy is disabled')
-assert(select(5,E.rows[1]:GetPoint())==-72 and select(5,E.headers[1]:GetPoint())==-50,'Table moved up ten pixels')
+assert(select(5,E.rows[1]:GetPoint())==-80 and select(5,E.headers[1]:GetPoint())==-59,'Table and headings align with the Upgrades overview')
+assert(E.rows[1].icon:GetWidth()==28 and E.rows[1].buy:GetWidth()==76 and E.showAll:GetWidth()==18 and E.preferCraft:GetWidth()==18)
+assert(E.rows[1].buy.skinButton.kind=='utility' and E.start.skinButton.kind=='utility','Same button styles as Upgrades')
+assert(not E:ShowAllEssentials() and not E.showAll:GetChecked(),'Show All defaults off')
+E.showAll:SetChecked(true); MOCK.Click(E.showAll)
+assert(E:ShowAllEssentials() and A.characterDB.auctionEssentialsShowAll and #E.items==5 and #F.queries==0,'Saved filter includes above-threshold and stocked Essentials without scanning')
+local full
+for i,r in ipairs(E.items) do
+    assert(r.itemId~=117 and r.itemId~=2512 and r.itemId~=999903,'Show All preserves AH vendor and binding exclusions')
+    if r.itemId==999905 then full=r; assert(E.rows[i].cells[6]:GetText()=='Stocked' and not E.rows[i].buy:IsEnabled()) end
+end
+assert(full and full.missing==0)
+E:BuyRow(full); assert(not E.batch and not E.confirmation and #F.queries==0,'Fully stocked Essentials cannot be purchased')
+local queue=E:ScanItems(); assert(#queue==4,'Show All scans only unfinished targets')
+for _,r in ipairs(queue) do assert(r.itemId~=999905) end
+E.showAll:SetChecked(false); MOCK.Click(E.showAll)
+assert(not E:ShowAllEssentials() and #E.items==2 and #F.queries==0,'Turning the filter off restores refill eligibility')
 F.auctions={
  [10513]={[0]={{count=1,price=100},{count=200,price=1,owner='Player'}},[1]={{count=10,price=500}},total=51},
  [999901]={[0]={}},
 }
 F.ready=false; E:Start(); F.tick(); assert(#F.queries==0,'Respect throttle')
+assert(not E.showAll:IsEnabled() and not E.preferCraft:IsEnabled(),'Filters lock during a scan')
+E:SetShowAllEssentials(true); assert(not E:ShowAllEssentials(),'Active scan cannot change the filter through the backend')
 F.ready=true; F.finish()
+assert(E.showAll:IsEnabled() and E.preferCraft:IsEnabled(),'Filters unlock after scanning')
 assert(E.complete and #F.queries==3,'Scan each needed item and every price page exactly once')
 assert(E:RowPlan(E.items[1]).cost==600 and E:RowPlan(E.items[1]).units==11,'Cheapest available whole stacks, excluding player auctions')
 assert(E.rows[1].cells[5]:GetText()=='11','Quantity covers the complete saved plan')
@@ -77,5 +96,21 @@ assert(not E.panel:IsShown() and A.AuctionUpgrades.panel:IsShown() and not E.sca
 E.open=false; calls=#F.queries; E:BuyRow(old); E:Start(); assert(#F.queries==calls)
 AuctionFrame:SetSize(900,500); A.AuctionUpgrades:Layout(); E:Refresh()
 assert(E.panel:GetWidth()==A.AuctionUpgrades.panel:GetWidth() and E.panel:GetHeight()==A.AuctionUpgrades.panel:GetHeight(),'Resize remains aligned with Upgrades')
-print('PASS: Essentials refill gate, user items, table layout, per-row Buy, cached plans, native confirmation and stale-listing protection')
+for _,size in ipairs({{750,420},{832,447},{900,500}}) do
+    AuctionFrame:SetSize(unpack(size)); E:Refresh()
+    local x,y,w,h=E.showAll.label:GetRect()
+    local cx,cy=E.preferCraft:GetRect()
+    assert(x+w<cx and math.abs(y-cy)<1,'Show All sits left of Craft > Buy on the same baseline')
+    x,y,w=E.preferCraft.label:GetRect()
+    assert(x+w<select(1,E.status:GetRect()),'Filters do not collide with scan status')
+    x,y,w=E.title:GetRect()
+    assert(x+w<select(1,E.start:GetRect()),'Full title stays clear of the scan button')
+    local row=E.rows[1]
+    x,y,w=row.cells[6]:GetRect()
+    assert(x+w<select(1,row.buy:GetRect()),'Cost stays clear of Buy at native and resized widths')
+    E.message='Scan complete. Refills use the lowest total cost. Open and close your bank once to save stored materials.'
+    E:Refresh()
+    assert(E.notice:GetStringWidth()<=E.notice:GetWidth() and E.status.message==E.message,'Long status fits the header and retains full tooltip text')
+end
+print('PASS: Essentials Show All filter, refill gate, user items, Upgrades table style, per-row Buy, cached plans, native confirmation and stale-listing protection')
 ''')

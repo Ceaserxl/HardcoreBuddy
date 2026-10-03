@@ -15,7 +15,7 @@ function E:BuyRow(record)
     for _,r in ipairs(self:Items(A:GetContext())) do
         if r.itemId==record.itemId and r.craftParent==record.craftParent then current=r; break end
     end
-    if not current or current.crafting then self:Refresh(); return end
+    if not current or current.crafting or (current.missing or 0)<=0 then self:Refresh(); return end
     if current.missing~=record.missing then self:Replan("Stock changed. Review the updated refill before buying."); return end
     local plan=self:RowPlan(current)
     if not plan or plan.units<=0 then self.message="Scan Essentials to find a refill for this item."; self:Refresh(); return end

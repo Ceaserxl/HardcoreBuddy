@@ -102,7 +102,7 @@ function E:Items(context)
         for _,child in ipairs(parent.children) do
             if child.missing~=0 then parent.readyToCraft=false end
         end
-        if not parent.readyToCraft then
+        if not parent.readyToCraft or self:ShowAllEssentials() then
             out[#out+1]=parent
             for _,child in ipairs(parent.children) do
                 if parent.crafting and (child.missing==nil or child.missing>0) then out[#out+1]=child end
@@ -125,10 +125,12 @@ function E:ScanItems()
     self.items=self:Items(A:GetContext())
     local out,seen,candidates={},{},{}
     for _,r in ipairs(self.items) do
-        candidates[#candidates+1]=r
-        -- Hidden, owned reagents can still be shared by several recipes. Keep
-        -- their prices available when the combined crafting demand exceeds stock.
-        for _,child in ipairs(r.children or {}) do candidates[#candidates+1]=child end
+        if (r.missing or 0)>0 and not r.readyToCraft then
+            candidates[#candidates+1]=r
+            -- Hidden, owned reagents can still be shared by several recipes. Keep
+            -- their prices available when the combined crafting demand exceeds stock.
+            for _,child in ipairs(r.children or {}) do candidates[#candidates+1]=child end
+        end
     end
     for _,r in ipairs(candidates) do
         if not seen[r.itemId] then

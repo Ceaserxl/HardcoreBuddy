@@ -44,6 +44,12 @@ assert(#E.items==2 and E.items[1].itemId==900002 and E.items[2].missing==8,'Read
 assert(E.rows[2].buy:IsEnabled(),'Other recipe can use remaining saved offers without rescan')
 MOCK.Click(E.rows[2].buy); F.finish(); F.accept(); F.ack(true); F.finish()
 assert(#E.items==0 and E:MailCount(900010)==10,'Last reagent purchase removes completed parent and material rows')
+local beforeAll=#F.queries
+E:SetShowAllEssentials(true); F.finish()
+assert(#E.items==2 and E.items[1].readyToCraft and E.items[2].readyToCraft,'Show All retains crafts whose materials are covered')
+assert(E.rows[1].cells[6]:GetText()=='Ready to craft' and not E.rows[1].buy:IsShown(),'Ready crafts have a clear status and no Buy button')
+assert(#F.queries==beforeAll and #E:ScanItems()==0,'Showing ready crafts neither rescans nor schedules unnecessary purchases')
+E:SetShowAllEssentials(false); F.finish(); assert(#E.items==0,'Low-stock view still hides covered crafts')
 E:SetPreferCraft(false); F.finish()
 assert(#E.items==2 and E.rows[1].buy:IsShown() and E.rows[2].buy:IsShown(),'Unchecked preference restores finished-item buying')
 learned=false; E:Refresh(); assert(not E.items[1].craftable and #E.items==2,'Unlearned recipes never marked craftable')

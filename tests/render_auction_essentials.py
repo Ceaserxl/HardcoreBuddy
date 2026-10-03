@@ -36,6 +36,8 @@ for name, action in (
     ('buy', ''),
     ('craft', 'E:SetPreferCraft(true); ESSENTIAL_FIXTURE.finish(); E.message=nil; E:Refresh()'),
     ('compact-craft', 'AuctionFrame:SetSize(750,420); E:Refresh()'),
+    ('all-essentials', "ESSENTIAL_FIXTURE.stock[999901]={name='Stocked Essential',target=20,count=20,refillNeeded=false}; ESSENTIAL_FIXTURE.stock[999902]={name='Above Refill Amount',target=20,count=10,refillNeeded=false}; E:SetShowAllEssentials(true); ESSENTIAL_FIXTURE.finish(); E.message=nil; E:Refresh()"),
+    ('all-essentials-bottom', 'E.offset=100; E:Refresh()'),
 ):
     lua.execute('local E=TestAddon.AuctionEssentials; ' + action)
     composite(lua.globals().MOCK.frames, addon.AuctionEssentials.panel).save(output / (name + '.png'))

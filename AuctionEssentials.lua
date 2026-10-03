@@ -12,17 +12,27 @@ function E:VendorItem(item)
     if ammo and not ammo.ingredients then return true end
     return A.VendorServices:UnlimitedSource("item:"..item.itemId)~=nil
 end
+function E:ShowAllEssentials()
+    return A.characterDB and A.characterDB.auctionEssentialsShowAll==true or false
+end
+function E:SetShowAllEssentials(enabled)
+    if self:Busy() or not A.characterDB then self:Refresh(); return end
+    A.characterDB.auctionEssentialsShowAll=enabled==true
+    self.offset=0
+    self:Replan(self:ShowAllEssentials() and "Showing all AH Essentials." or "Showing Essentials at their refill amount.")
+end
 function E:Items(context)
     local out={}
+    local showAll=self:ShowAllEssentials()
     for _,record in ipairs(A.Supplies.Build(context,{filter="Essentials"})) do
-        if record.tracking and record.refillNeeded and record.item.binding~=true and not self:VendorItem(record.item) then
+        if record.tracking and (showAll or record.refillNeeded) and record.item.binding~=true and not self:VendorItem(record.item) then
             local r={}; for k,v in pairs(record) do r[k]=v end
             local bank=A.characterDB and A.characterDB.auctionBank
             r.bagCount=record.count; r.bankCount=bank and bank.counts[record.itemId] or 0
             r.mailCount=self:MailCount(record.itemId)
             r.count=r.bagCount and (r.bagCount+r.bankCount+r.mailCount)
             r.missing=r.count and math.max(0,r.target-r.count)
-            if r.missing and r.missing>0 then out[#out+1]=r end
+            if showAll or r.missing and r.missing>0 then out[#out+1]=r end
         end
     end
     table.sort(out,function(a,b)
@@ -32,46 +42,79 @@ function E:Items(context)
     end)
     return out
 end
-local function label(parent,text,x,y,width)
-    local f=parent:CreateFontString(nil,"OVERLAY","GameFontNormal")
-    f:SetPoint("TOPLEFT",x,y); f:SetSize(width,22); f:SetJustifyH("LEFT"); f:SetText(text)
-    return f
+local function label(parent,text,x,y,width,color,size)
+    local f=parent:CreateFontString(nil,"OVERLAY","GameFontHighlight")
+    f:SetFont(STANDARD_TEXT_FONT,size or 12,""); f:SetTextColor(unpack(color or Skin.colors.white))
+    f:SetPoint("TOPLEFT",x,y); f:SetSize(width,20); f:SetJustifyH("LEFT"); f:SetJustifyV("MIDDLE")
+    f:SetWordWrap(false); f:SetText(text); return f
+end
+local function button(parent,text,width,callback)
+    local b=CreateFrame("Button",nil,parent,"BackdropTemplate"); b:SetSize(width,24)
+    b.caption=label(b,text,6,-2,width-12,Skin.colors.white,11)
+    b.caption:SetJustifyH("CENTER"); b.label=b.caption
+    Skin.Button(b,"utility"); b:SetScript("OnClick",callback); return b
+end
+local function checkbox(parent,text,callback)
+    local b=CreateFrame("CheckButton",nil,parent,"BackdropTemplate"); b:SetSize(18,18)
+    Skin.Paint(b,"edit")
+    b.mark=label(b,"",0,0,18,Skin.colors.gold,11); b.mark:SetHeight(18); b.mark:SetJustifyH("CENTER")
+    b.label=label(b,text,24,0,180,Skin.colors.muted,11); b.label:SetHeight(18)
+    b.label:SetWidth(math.ceil(b.label:GetStringWidth())+2)
+    b:SetScript("OnClick",function(self) callback(self:GetChecked()) end)
+    return b
 end
 function E:Refresh()
     if not self.panel then return end
     -- Share the exact Upgrades content bounds, including native AH resizing.
     local width,height=AuctionFrame:GetWidth()-18,AuctionFrame:GetHeight()-47
     self.panel:SetSize(width,height)
-    self.title:SetWidth(math.max(160,width-320))
+    self.title:SetWidth(width-198)
     self.items=self:Items(A:GetContext())
     local shown=math.max(1,math.min(#self.rows,math.floor((height-108)/38)))
     self.offset=math.max(0,math.min(self.offset,math.max(0,#self.items-shown)))
     self.scroll:SetMinMaxValues(0,math.max(0,#self.items-shown)); self.scroll:SetValue(self.offset)
-    self.scroll:SetHeight(shown*38); self.scroll:SetShown(#self.items>shown)
-    local positions={40,width-448,width-390,width-332,width-280,width-218,width-94}
-    local widths={width-500,54,54,48,58,116,64}
+    self.scroll:SetHeight(shown*38-2); self.scroll:SetShown(#self.items>shown)
+    local rowWidth=width-28
+    local positions={48,rowWidth-422,rowWidth-364,rowWidth-306,rowWidth-248,rowWidth-206,rowWidth-90}
+    local widths={rowWidth-482,54,54,54,38,110,84}
     for i,header in ipairs(self.headers) do
-        header:ClearAllPoints(); header:SetPoint("TOPLEFT",14+positions[i],-50); header:SetWidth(widths[i])
+        header:ClearAllPoints(); header:SetPoint("TOPLEFT",14+positions[i],-59); header:SetWidth(widths[i])
     end
     self.start.caption:SetText(self.batch and "Buying..." or self.scan and "Stop scan" or self.complete and "Scan Complete" or "Scan Essentials")
-    self.start.caption:SetTextColor(unpack(self.scan and Skin.colors.gold or Skin.colors.white))
     self.start:SetEnabled(not self.batch and not self.confirmation and not self.awaitingBuy and not self.purchaseReceipt)
+    Skin.ButtonState(self.start,false,nil,false)
+    if self.scan then self.start:SetBackdropColor(0.22,0.17,0.035,1) end
+    self.start.caption:SetTextColor(unpack(not self.start:IsEnabled() and Skin.colors.muted or self.scan and Skin.colors.gold or Skin.colors.white))
     self.preferCraft:SetChecked(self:PreferCraft())
-    self.preferCraft:SetEnabled(not self:Busy())
-    self.preferCraft.label:SetTextColor(unpack(self:Busy() and Skin.colors.muted or Skin.colors.white))
+    self.showAll:SetChecked(self:ShowAllEssentials())
+    for _,control in ipairs({self.showAll,self.preferCraft}) do
+        control.mark:SetText(control:GetChecked() and "X" or "")
+        control:SetEnabled(not self:Busy()); control:SetAlpha(self:Busy() and 0.5 or 1)
+    end
+    local progress=self.scan and self.scan.queue and (self.scan.item-1)/math.max(1,#self.scan.queue) or self.complete and 1 or 0
+    self.progressTrack:SetWidth(rowWidth)
+    self.progressFill:SetWidth(math.max(1,rowWidth*progress))
+    self.progressFill:SetVertexColor(unpack(self.scan and Skin.colors.gold or Skin.colors.green))
+    self.progressFill:SetShown(progress>0 or self.scan~=nil)
     for i,row in ipairs(self.rows) do
         local record=i<=shown and self.items[i+self.offset]
         row:SetShown(record~=nil); row.record=record
         if record then
-            row:SetWidth(width-28)
+            row:SetWidth(rowWidth)
             local plan=self:RowPlan(record)
             row.buy:SetShown(not record.crafting)
-            row.buy:SetEnabled(not self:Busy() and plan~=nil and plan.units>0)
+            Skin.ControlEnabled(row.buy,not self:Busy() and (record.missing or 0)>0 and plan~=nil and plan.units>0)
             row.buy:ClearAllPoints(); row.buy:SetPoint("LEFT",row,"LEFT",positions[7],0)
             local result=self.results[record.itemId]
             local function cash(n) return n and (GetCoinTextureString and GetCoinTextureString(n) or n.."c") or "?" end
             local price=plan and (plan.units>0 and cash(plan.cost) or "None listed") or result and "Update needed" or "Not scanned"
-            if record.craftParent and record.missing==0 then
+            if not record.craftParent and record.missing==0 then
+                price="Stocked"
+            elseif record.readyToCraft then
+                price="Ready to craft"
+            elseif record.missing==nil then
+                price="Stock unknown"
+            elseif record.craftParent and record.missing==0 then
                 price=record.bagUsed>0 and ("In Bags ("..record.bagUsed..")") or ""
                 if record.bankUsed>0 then price=price..(price~="" and " / " or "").."In Bank ("..record.bankUsed..")" end
                 if record.mailUsed>0 then price=price..(price~="" and " / " or "").."In Mail" end
@@ -86,15 +129,27 @@ function E:Refresh()
                 cell:ClearAllPoints(); cell:SetPoint("LEFT",row,"LEFT",positions[column]+indent,0)
                 cell:SetWidth(widths[column]-indent); cell:SetHeight(30); cell:SetText(values[column])
             end
-            row.icon:ClearAllPoints(); row.icon:SetPoint("LEFT",record.craftParent and 20 or 6,0)
+            local stocked=record.missing==0 or record.readyToCraft
+            row.accent:SetVertexColor(unpack(stocked and Skin.colors.green or record.missing and Skin.colors.gold or Skin.colors.muted))
+            row.cells[6]:SetTextColor(unpack(stocked and Skin.colors.green or Skin.colors.white))
+            row.icon:ClearAllPoints(); row.icon:SetPoint("LEFT",record.craftParent and 23 or 9,0)
             local icon=C_Item and C_Item.GetItemIconByID and C_Item.GetItemIconByID(record.itemId)
             row.icon:SetTexture(icon or "Interface\\Icons\\INV_Misc_QuestionMark")
         end
     end
     local _,inMail=self:MailStock()
     self.mailStatus:SetShown(inMail>0); self.mailStatus.label:SetText("Items in Mail")
-    self.notice:SetWidth(width-28-(inMail>0 and 166 or 0))
-    self.notice:SetText(self.message or (#self.items==0 and "No Essentials have reached their refill amount." or "Scan prices, then Buy beside an item to refill it."))
+    self.status:SetWidth(width-360)
+    self.notice:SetWidth(width-360)
+    self.status.message=self.message or (#self.items==0 and (self:ShowAllEssentials() and "No AH Essentials to show." or "No Essentials have reached their refill amount.") or "Scan prices, then Buy beside an item to refill it.")
+    local short=self.status.message
+    self.notice:SetText(short)
+    while self.notice:GetStringWidth()>self.notice:GetWidth() do
+        short=short:match("^(.*)%s+%S+$")
+        if not short then self.notice:SetText("..."); break end
+        self.notice:SetText(short.."...")
+    end
+    self.notice:SetTextColor(unpack(self.scan and Skin.colors.gold or self.complete and Skin.colors.green or Skin.colors.muted))
     if MoneyFrame_Update then MoneyFrame_Update("HardcoreBuddyEssentialsMoneyFrame",GetMoney()) end
 end
 function E:Attach()
@@ -114,21 +169,31 @@ function E:Attach()
     Skin.Paint(panel,"card"); panel:SetBackdropColor(0.025,0.031,0.037,1)
     self.title=label(panel,"HardcoreBuddy  /  Essentials",16,-4,450)
     Skin.TextStyle(self.title,"page"); self.title:SetHeight(26); self.title:SetWordWrap(false)
-    self.start=CreateFrame("Button",nil,panel,"BackdropTemplate"); self.start:SetSize(156,24)
-    self.start:SetPoint("TOPRIGHT",-14,-8); self.start.caption=label(self.start,"Scan Essentials",4,0,148)
-    self.start.label=self.start.caption; self.start.caption:SetJustifyH("CENTER")
-    Skin.Button(self.start,"category")
-    self.start:SetScript("OnClick",function() if E.scan then E:Stop("Scan stopped. Results may be incomplete.") else E:Start() end end)
-    self.preferCraft=CreateFrame("CheckButton",nil,panel,"UICheckButtonTemplate"); self.preferCraft:SetSize(24,24)
-    self.preferCraft:SetPoint("RIGHT",self.start,"LEFT",-100,0)
-    self.preferCraft.label=label(self.preferCraft,"Craft > Buy",0,0,94)
-    self.preferCraft.label:ClearAllPoints(); self.preferCraft.label:SetPoint("LEFT",self.preferCraft,"RIGHT",0,0)
-    self.preferCraft:SetScript("OnClick",function(button) E:SetPreferCraft(button:GetChecked()) end)
-    self.notice=label(panel,"",16,-31,560); Skin.TextStyle(self.notice,"subtitle")
-    self.notice:SetHeight(18); self.notice:SetWordWrap(false)
+    self.start=button(panel,"Scan Essentials",156,function() if E.scan then E:Stop("Scan stopped. Results may be incomplete.") else E:Start() end end)
+    self.start:SetPoint("TOPRIGHT",-14,-8)
+    -- Keep both filters together on the subtitle line so the title never overlaps
+    -- them at the native auction window's compact width.
+    self.showAll=checkbox(panel,"Show All Essentials",function(value) E:SetShowAllEssentials(value) end)
+    self.showAll:SetPoint("TOPLEFT",16,-31)
+    self.preferCraft=checkbox(panel,"Craft > Buy",function(value) E:SetPreferCraft(value) end)
+    self.preferCraft:SetPoint("LEFT",self.showAll.label,"RIGHT",14,0)
+    self.status=CreateFrame("Frame",nil,panel); self.status:SetPoint("TOPLEFT",346,-31); self.status:SetSize(400,18)
+    self.status:EnableMouse(true)
+    self.status:SetScript("OnEnter",function(frame)
+        if not frame.message then return end
+        GameTooltip:SetOwner(frame,"ANCHOR_RIGHT"); GameTooltip:SetText("AH Essentials")
+        GameTooltip:AddLine(frame.message,1,1,1,true); GameTooltip:Show()
+    end)
+    self.status:SetScript("OnLeave",function() GameTooltip:Hide() end)
+    self.notice=label(self.status,"",0,0,400,Skin.colors.muted,10)
+    self.notice:SetJustifyH("RIGHT"); self.notice:SetHeight(18)
+    self.progressTrack=panel:CreateTexture(nil,"ARTWORK"); self.progressTrack:SetColorTexture(0.20,0.25,0.29,1)
+    self.progressTrack:SetPoint("TOPLEFT",14,-54); self.progressTrack:SetHeight(1)
+    self.progressFill=panel:CreateTexture(nil,"OVERLAY"); self.progressFill:SetTexture("Interface\\Buttons\\WHITE8x8")
+    self.progressFill:SetPoint("TOPLEFT",14,-54); self.progressFill:SetHeight(3)
     self.mailStatus=CreateFrame("Frame",nil,panel); self.mailStatus:SetSize(156,22)
-    self.mailStatus:SetPoint("TOPRIGHT",-14,-31); self.mailStatus:EnableMouse(true)
-    self.mailStatus.label=label(self.mailStatus,"",0,0,156); self.mailStatus.label:SetJustifyH("RIGHT")
+    self.mailStatus:SetPoint("BOTTOMRIGHT",-14,8); self.mailStatus:EnableMouse(true)
+    self.mailStatus.label=label(self.mailStatus,"",0,0,156,Skin.colors.muted,11); self.mailStatus.label:SetJustifyH("RIGHT")
     self.mailStatus:SetScript("OnEnter",function(frame)
         GameTooltip:SetOwner(frame,"ANCHOR_RIGHT"); GameTooltip:SetText("Essentials in Mail")
         for _,r in ipairs(E:MailStock()) do GameTooltip:AddLine(r.name,1,1,1) end
@@ -136,22 +201,25 @@ function E:Attach()
     end)
     self.mailStatus:SetScript("OnLeave",function() GameTooltip:Hide() end)
     self.headers={}
-    for i,title in ipairs({"ITEM","OWNED","TARGET","NEED","QTY","COST","BUY"}) do self.headers[i]=label(panel,title,0,-50,80) end
+    for i,title in ipairs({"ITEM","OWNED","TARGET","NEED","QTY","COST","BUY"}) do self.headers[i]=label(panel,title,0,-59,80,Skin.colors.muted,9) end
+    self.headers[6]:SetJustifyH("RIGHT")
     self.rows={}
     for i=1,20 do
         local row=CreateFrame("Button",nil,panel,"BackdropTemplate"); self.rows[i]=row
-        row:SetPoint("TOPLEFT",14,-72-(i-1)*38); row:SetHeight(36)
-        Skin.Paint(row,"row"); Skin.Hover(row,true)
-        row.icon=row:CreateTexture(nil,"ARTWORK"); row.icon:SetSize(26,26); row.icon:SetPoint("LEFT",6,0)
+        row:SetPoint("TOPLEFT",14,-80-(i-1)*38); row:SetHeight(36)
+        Skin.Paint(row,"row"); row:SetBackdropColor(i%2==0 and 0.055 or 0.04,i%2==0 and 0.075 or 0.055,i%2==0 and 0.09 or 0.07,1)
+        row.accent=row:CreateTexture(nil,"ARTWORK"); row.accent:SetTexture("Interface\\Buttons\\WHITE8x8")
+        row.accent:SetPoint("TOPLEFT",0,-4); row.accent:SetSize(2,28)
+        row.icon=row:CreateTexture(nil,"ARTWORK"); row.icon:SetSize(28,28); row.icon:SetPoint("LEFT",9,0)
+        row.icon:SetTexCoord(0.07,0.93,0.07,0.93)
         row.cells={}
         for column=1,6 do
-            row.cells[column]=label(row,"",0,0,80); row.cells[column]:SetJustifyV("MIDDLE")
+            row.cells[column]=label(row,"",0,0,80,Skin.colors.white,column==1 and 12 or 11)
         end
-        row.cells[6]:SetFont(STANDARD_TEXT_FONT,10,"")
-        row.buy=CreateFrame("Button",nil,row,"BackdropTemplate"); row.buy:SetSize(64,24)
-        row.buy.label=label(row.buy,"Buy",0,0,64); row.buy.label:SetJustifyH("CENTER")
-        Skin.Button(row.buy,"category")
-        row.buy:SetScript("OnClick",function() E:BuyRow(row.record) end)
+        row.cells[1]:SetWordWrap(true)
+        row.cells[6]:SetJustifyH("RIGHT")
+        row.buy=button(row,"Buy",76,function() E:BuyRow(row.record) end)
+        Skin.Hover(row)
         row:SetScript("OnEnter",function(self)
                 if self.record then
                     local r=self.record
@@ -178,9 +246,11 @@ function E:Attach()
         row:SetScript("OnLeave",function() GameTooltip:Hide() end)
     end
     self.scroll=CreateFrame("Slider",nil,panel,"BackdropTemplate")
-    self.scroll:SetOrientation("VERTICAL"); self.scroll:SetSize(8,200); self.scroll:SetPoint("TOPRIGHT",0,-72)
+    self.scroll:SetOrientation("VERTICAL"); self.scroll:SetSize(8,200); self.scroll:SetPoint("TOPRIGHT",0,-80)
+    Skin.Paint(self.scroll,"edit")
     self.scroll:SetThumbTexture("Interface\\Buttons\\WHITE8x8"); self.scroll:GetThumbTexture():SetSize(6,28)
-    self.scroll:SetValueStep(1)
+    self.scroll:GetThumbTexture():SetVertexColor(0.42,0.48,0.53,1)
+    self.scroll:SetValueStep(1); self.scroll:SetObeyStepOnDrag(true)
     self.scroll:SetScript("OnValueChanged",function(_,value)
         local offset=math.floor(value+0.5); if offset~=E.offset then E.offset=offset; E:Refresh() end
     end)
