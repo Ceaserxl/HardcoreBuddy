@@ -11,7 +11,7 @@ There is no combat-history recorder or saved diagnostic log.
 | --- | --- | --- |
 | Gold | Main: the next attack | One at a time |
 | Red | Defensive: interrupts, roots, shields, dispels, emergency immunity | Separate from Main |
-| Violet | Offensive: optional cooldowns or a carried mana gem | Separate from Main |
+| Violet | Offensive: optional cooldowns, a carried mana gem, or a preferred attack waiting on cooldown | Separate from Main |
 | Blue | Preparation: buffs, food, water, conjuring a mana gem | Several may appear together out of combat |
 
 All use a private copy of Blizzard's native spell-alert animation. The loop
@@ -36,15 +36,24 @@ trigger a missing-spell notice. Items do not trigger these spell notices.
 - Only learned spells and carried recovery items are eligible. Rank changes and
   talent changes refresh the available actions. Actual player data is used even
   if the field kit is previewing another character.
-- Cooldowns do not gate highlights in any category, including item highlights.
-  Cooldown information still informs class rules such as whether Cold Snap can
-  reset an unavailable survival spell. Main plans mana up to two seconds ahead.
+- Cooldowns do not remove otherwise eligible hints. If the preferred attack
+  will still be cooling down after the planning window, gold prefers an attack
+  that will be ready and violet retains the original hint. The window is two
+  seconds or the remaining cast time, whichever is longer. If no alternative is
+  ready, the preferred Main remains visible. A cooling-down defensive hint can
+  coexist with a ready option in the same group, such as Ice Block with Cold Snap
+  or Barrier with Mana Shield. A ready first choice keeps its normal priority.
+  Main plans mana up to two seconds ahead.
   At cast start it plans for that cast's completion, reserving its mana
   cost and crediting only reported casting regeneration. It does not predict
   random procs, damage, or uncertain future resource gains.
-- The next Main action is committed at cast start, including an empty plan.
-  It survives a short completion handoff. Target changes or an interrupted cast
-  permit a new plan. Range loss or breakable crowd control hides a committed
+- The next Main action is committed at cast start and survives a short completion
+  handoff. An empty plan may fill when mana recovers; once filled, it stays
+  committed. Success events prevent reserving an already-paid cast cost again.
+  Matching interruptions, failures and channel endings release the old plan even
+  if the casting API has not cleared it yet. Cast identities keep failed extra
+  keypresses and late events from cancelling a different cast. Target changes
+  also permit a new plan. Range loss or breakable crowd control hides a committed
   action without substituting another spell near the end of the cast.
 - Defensive and preparation advice updates independently. There is no movement
   sampling, movement gate, or mounted gate. Death, flight and an active
@@ -67,7 +76,8 @@ Frostbolt is the safe single-target baseline as soon as learned; Fireball covers
 the opening levels and unavailable Frost damage. Fire investments favor
 Fireball after establishing a solo slow, and directly on engaged group targets.
 Pyroblast is a Fire opener. Improved Scorch is reserved for durable targets and
-accounts for the stack being cast. Wanding conserves low mana; Fire Blast is a
+only anticipates a pending stack or refresh at 3/3 talent rank. Lower ranks keep
+planning from confirmed stacks and expiration times. Wanding conserves low mana; Fire Blast is a
 low-health finishing option. Neither finisher claims a guaranteed killing blow.
 
 Counterspell, Nova, shields, Remove Lesser Curse, Ice Block and Cold Snap are
@@ -112,6 +122,10 @@ Reviewed October 2, 2026:
 - [Blizzard Classic Era spell-alert source](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_ActionBar/Shared/ActionButtonSpellAlerts.lua)
   and [native template](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_ActionBar/Shared/ActionButtonSpellAlerts.xml):
   animation ownership, sizing and loop behavior.
+- [Blizzard cast API and events](https://github.com/Gethe/wow-ui-source/blob/classic_era/Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitDocumentation.lua):
+  cast identifiers, success/interruption payloads, and channel events.
+- [Improved Scorch](https://www.wowhead.com/classic/spell=11095/improved-scorch):
+  partial talent ranks do not guarantee a vulnerability stack.
 
 The rules and thresholds above are implementation decisions, not copied optimal
 damage formulas. No retired rotation implementation was restored.
@@ -128,3 +142,8 @@ Offline mocks establish logic and layout behavior. Live WoW must still verify
 the animation, action-bar addon compatibility, actual client aura/range returns,
 and queued casts under latency. Useful first checks: level 1, a Frost Mage with
 Nova, a Fire Mage with Improved Scorch, and a level-40+ Mage with Ice Barrier.
+
+`tests/run_rotation_scenarios.py --strict` adds legal talent/level combinations
+and event-order cases, including unavailable emergency choices, mana charging,
+matching versus unrelated cast endings, channels and partial Scorch ranks. The
+latest results are recorded in `docs/rotation-scenario-audit.md` and its JSON file.

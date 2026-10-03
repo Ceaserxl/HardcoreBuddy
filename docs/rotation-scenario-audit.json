@@ -1,5 +1,5 @@
 {
-  "namedCount": 47,
+  "namedCount": 75,
   "matrixCount": 3888,
   "matrixViolations": 0,
   "cooldownMainCount": 0,
@@ -224,22 +224,58 @@
       "name": "Unavailable Ice Block masks ready Cold Snap",
       "priority": "high",
       "expected": "Ready Cold Snap is visible as an emergency option",
-      "passed": false,
-      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier"
+      "passed": true,
+      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier, defensive:coldsnap"
     },
     {
       "name": "Unavailable Barrier masks ready Mana Shield",
       "priority": "high",
       "expected": "Ready Mana Shield is visible as an emergency option",
-      "passed": false,
-      "actual": "main:frostbolt, defensive:barrier"
+      "passed": true,
+      "actual": "main:frostbolt, defensive:barrier, defensive:manashield"
     },
     {
       "name": "Unavailable Fire Blast replaces usable main",
       "priority": "high",
       "expected": "Main is a usable filler or there is a separately visible usable fallback",
-      "passed": false,
+      "passed": true,
+      "actual": "main:frostbolt, offensive:fireblast"
+    },
+    {
+      "name": "Cooling-down finisher remains an optional hint",
+      "expected": "Gold Frostbolt and violet Fire Blast",
+      "passed": true,
+      "actual": "main:frostbolt, offensive:fireblast"
+    },
+    {
+      "name": "Finisher ready within two-second lead",
+      "expected": "Main Fire Blast",
+      "passed": true,
       "actual": "main:fireblast"
+    },
+    {
+      "name": "Finisher ready by cast completion",
+      "expected": "Main Fire Blast at the start of the current cast",
+      "passed": true,
+      "actual": "main:fireblast"
+    },
+    {
+      "name": "Ready emergency options coexist with cooldown hints",
+      "expected": "Ice Block, Cold Snap, Barrier and Mana Shield all remain visible",
+      "passed": true,
+      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier, defensive:manashield, defensive:coldsnap"
+    },
+    {
+      "name": "Ready Barrier keeps shield priority",
+      "expected": "Barrier without redundant Mana Shield",
+      "passed": true,
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "name": "Unready emergency group keeps its first hint",
+      "expected": "Ice Block remains visible without a second unavailable survival hint",
+      "passed": true,
+      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier"
     },
     {
       "name": "Cast start chooses affordable next attack",
@@ -251,8 +287,8 @@
       "name": "Mana charged before casting API clears",
       "priority": "high",
       "expected": "Committed Main stays visible with 70 mana for a 50-mana spell",
-      "passed": false,
-      "actual": "none"
+      "passed": true,
+      "actual": "main:frostbolt"
     },
     {
       "name": "Casting API catches up after success",
@@ -261,25 +297,157 @@
       "actual": "main:frostbolt"
     },
     {
+      "name": "Next same-spell cast reserves mana again",
+      "expected": "Previous success cannot make a new cast free",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Cooldown readiness cannot replace a committed Main",
+      "expected": "Frostbolt remains Main, Fire Blast stays optional",
+      "passed": true,
+      "actual": "main:frostbolt, offensive:fireblast"
+    },
+    {
+      "name": "Range loss hides both committed attacks",
+      "expected": "No out-of-range Main or offensive fallback hint",
+      "passed": true,
+      "actual": "none"
+    },
+    {
+      "name": "Interrupted API value is ignored immediately",
+      "expected": "New plan is visible even before the API clears",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
       "name": "Interrupt event precedes API clear",
       "priority": "medium",
       "expected": "Immediately choose Frostbolt for the changed situation",
-      "passed": false,
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "UNIT_SPELLCAST_INTERRUPTED for another same-spell cast",
+      "expected": "A different cast GUID cannot replace the committed finisher",
+      "passed": true,
+      "actual": "main:fireblast"
+    },
+    {
+      "name": "UNIT_SPELLCAST_INTERRUPTED after API clear",
+      "expected": "The matching last observed cast releases its plan",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "UNIT_SPELLCAST_FAILED for another same-spell cast",
+      "expected": "A different cast GUID cannot replace the committed finisher",
+      "passed": true,
+      "actual": "main:fireblast"
+    },
+    {
+      "name": "UNIT_SPELLCAST_FAILED after API clear",
+      "expected": "The matching last observed cast releases its plan",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Numeric casting API with START GUID",
+      "expected": "Matched interruption clears the plan on legacy casting IDs",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Numeric casting API success",
+      "expected": "A matched START GUID prevents double mana reservation",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Late interruption from an earlier cast",
+      "expected": "Old GUID cannot cancel a new same-spell cast",
+      "passed": true,
+      "actual": "main:fireblast"
+    },
+    {
+      "name": "Channel cost is already paid",
+      "expected": "Channel snapshots do not reserve mana again",
+      "passed": true,
+      "actual": "80"
+    },
+    {
+      "name": "Channel stop before API clear",
+      "expected": "Ended channel releases the previous Main",
+      "passed": true,
       "actual": "main:fireblast"
     },
     {
       "name": "Partial Improved Scorch talent",
       "priority": "medium",
       "expected": "Do not assume the next Scorch guarantees stack five",
-      "passed": false,
+      "passed": true,
+      "actual": "main:scorch"
+    },
+    {
+      "name": "Scorch refresh at rank 1 with 4 stacks",
+      "expected": "Main scorch",
+      "passed": true,
+      "actual": "main:scorch"
+    },
+    {
+      "name": "Scorch refresh at rank 1 with 5 stacks",
+      "expected": "Main scorch",
+      "passed": true,
+      "actual": "main:scorch"
+    },
+    {
+      "name": "Scorch refresh at rank 2 with 4 stacks",
+      "expected": "Main scorch",
+      "passed": true,
+      "actual": "main:scorch"
+    },
+    {
+      "name": "Scorch refresh at rank 2 with 5 stacks",
+      "expected": "Main scorch",
+      "passed": true,
+      "actual": "main:scorch"
+    },
+    {
+      "name": "Scorch refresh at rank 3 with 4 stacks",
+      "expected": "Main fireball",
+      "passed": true,
+      "actual": "main:fireball"
+    },
+    {
+      "name": "Scorch refresh at rank 3 with 5 stacks",
+      "expected": "Main fireball",
+      "passed": true,
       "actual": "main:fireball"
     },
     {
       "name": "Mana restored during an initially unaffordable cast",
       "priority": "medium",
       "expected": "Fill an empty next-action plan after mana recovery",
-      "passed": false,
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Recovered plan commits once populated",
+      "expected": "Late finisher cannot replace newly committed Frostbolt",
+      "passed": true,
+      "actual": "main:frostbolt"
+    },
+    {
+      "name": "Mana lost after a plan fills",
+      "expected": "Unaffordable committed spell is hidden",
+      "passed": true,
       "actual": "none"
+    },
+    {
+      "name": "Mana restored to an existing plan",
+      "expected": "The same committed Frostbolt returns",
+      "passed": true,
+      "actual": "main:frostbolt"
     },
     {
       "name": "Preferred spell absent from action bars",
@@ -295,56 +463,6 @@
       "actual": "3888 combinations; 0 invariant violations; 0 Main suggestions on cooldown"
     }
   ],
-  "findings": [
-    {
-      "name": "Unavailable Ice Block masks ready Cold Snap",
-      "priority": "high",
-      "expected": "Ready Cold Snap is visible as an emergency option",
-      "passed": false,
-      "actual": "main:frostbolt, defensive:iceblock, defensive:barrier"
-    },
-    {
-      "name": "Unavailable Barrier masks ready Mana Shield",
-      "priority": "high",
-      "expected": "Ready Mana Shield is visible as an emergency option",
-      "passed": false,
-      "actual": "main:frostbolt, defensive:barrier"
-    },
-    {
-      "name": "Unavailable Fire Blast replaces usable main",
-      "priority": "high",
-      "expected": "Main is a usable filler or there is a separately visible usable fallback",
-      "passed": false,
-      "actual": "main:fireblast"
-    },
-    {
-      "name": "Mana charged before casting API clears",
-      "priority": "high",
-      "expected": "Committed Main stays visible with 70 mana for a 50-mana spell",
-      "passed": false,
-      "actual": "none"
-    },
-    {
-      "name": "Interrupt event precedes API clear",
-      "priority": "medium",
-      "expected": "Immediately choose Frostbolt for the changed situation",
-      "passed": false,
-      "actual": "main:fireblast"
-    },
-    {
-      "name": "Partial Improved Scorch talent",
-      "priority": "medium",
-      "expected": "Do not assume the next Scorch guarantees stack five",
-      "passed": false,
-      "actual": "main:fireball"
-    },
-    {
-      "name": "Mana restored during an initially unaffordable cast",
-      "priority": "medium",
-      "expected": "Fill an empty next-action plan after mana recovery",
-      "passed": false,
-      "actual": "none"
-    }
-  ],
-  "passed": 40
+  "findings": [],
+  "passed": 75
 }

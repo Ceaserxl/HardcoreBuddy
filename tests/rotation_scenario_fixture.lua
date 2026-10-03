@@ -69,6 +69,7 @@ function F.reset(options)
     MOCK.class="MAGE"; MOCK.level=x.level
     A.characterDB.rotationHelperEnabled=false
     H.state={}; H.recent={}; H.immunities={}; H.supplyItems=nil; H.suspended=nil
+    H.lastCast=nil; H.finishedCast=nil
     H.Glow.warnedMissing={}
     H:Rebuild()
     return x

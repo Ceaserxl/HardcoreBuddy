@@ -61,6 +61,19 @@ scenario("Unavailable Barrier masks ready Mana Shield",{health=300,attacked=true
     "Ready Mana Shield is visible as an emergency option",function(p) return F.find(p,"manashield") end,"high")
 scenario("Unavailable Fire Blast replaces usable main",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=7}},
     "Main is a usable filler or there is a separately visible usable fallback",function(p) return F.main(p)~="fireblast" end,"high")
+scenario("Cooling-down finisher remains an optional hint",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=7}},
+    "Gold Frostbolt and violet Fire Blast",function(p) return F.main(p)=="frostbolt" and F.find(p,"fireblast").category=="offensive" end)
+scenario("Finisher ready within two-second lead",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=1.5}},
+    "Main Fire Blast",function(p) return F.main(p)=="fireblast" end)
+scenario("Finisher ready by cast completion",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=2.5},cast={id=116,start=100,finish=103}},
+    "Main Fire Blast at the start of the current cast",function(p) return F.main(p)=="fireblast" end)
+scenario("Ready emergency options coexist with cooldown hints",{health=150,attacked=true,talents=frost,cooldowns={iceblock=120,barrier=20}},
+    "Ice Block, Cold Snap, Barrier and Mana Shield all remain visible",function(p)
+        return F.find(p,"iceblock") and F.find(p,"coldsnap") and F.find(p,"barrier") and F.find(p,"manashield") end)
+scenario("Ready Barrier keeps shield priority",{health=300,attacked=true,talents=frost},
+    "Barrier without redundant Mana Shield",function(p) return F.find(p,"barrier") and not F.find(p,"manashield") end)
+scenario("Unready emergency group keeps its first hint",{health=150,attacked=true,talents=frost,cooldowns={iceblock=120,coldsnap=60}},
+    "Ice Block remains visible without a second unavailable survival hint",function(p) return F.find(p,"iceblock") and not F.find(p,"coldsnap") end)
 
 local x=F.reset({power=120,maxPower=200,wand=false,defaultCost=50,cast={id=116,start=100,finish=103}})
 local p=F.evaluate(); record("Cast start chooses affordable next attack","Main Frostbolt",F.main(p)=="frostbolt",F.describe(p))
@@ -69,21 +82,79 @@ F.event("UNIT_SPELLCAST_SUCCEEDED","player","cast-A",116)
 record("Mana charged before casting API clears","Committed Main stays visible with 70 mana for a 50-mana spell",F.main(H.picks)=="frostbolt",F.describe(H.picks),"high")
 x.cast=nil; x.time=103.05; p=F.evaluate()
 record("Casting API catches up after success","Main returns",F.main(p)=="frostbolt",F.describe(p))
+x.cast={id=116,token="cast-B",start=103.1,finish=106.1}; x.time=103.1; p=F.evaluate()
+record("Next same-spell cast reserves mana again","Previous success cannot make a new cast free",not F.main(p),F.describe(p))
+
+x=F.reset({targetHealth=140,distance=15,wand=false,cooldowns={fireblast=7},cast={id=116,start=100,finish=103}})
+F.evaluate(); x.cooldowns.fireblast=0; x.time=102.9; p=F.evaluate()
+record("Cooldown readiness cannot replace a committed Main","Frostbolt remains Main, Fire Blast stays optional",
+    F.main(p)=="frostbolt" and F.find(p,"fireblast").category=="offensive",F.describe(p))
+x.distance=50; p=F.evaluate()
+record("Range loss hides both committed attacks","No out-of-range Main or offensive fallback hint",not F.main(p) and not F.find(p,"fireblast"),F.describe(p))
 
 x=F.reset({targetHealth=140,distance=15,wand=false,cast={id=116,start=100,finish=103}})
 F.evaluate(); x.time=101; x.targetHealth=1000
 F.event("UNIT_SPELLCAST_INTERRUPTED","player","cast-A",116) -- Event before API clears.
+record("Interrupted API value is ignored immediately","New plan is visible even before the API clears",F.main(H.picks)=="frostbolt",F.describe(H.picks))
 x.cast=nil; x.time=101.1; p=F.evaluate()
 record("Interrupt event precedes API clear","Immediately choose Frostbolt for the changed situation",F.main(p)=="frostbolt",F.describe(p),"medium")
+
+for _,event in ipairs({"UNIT_SPELLCAST_INTERRUPTED","UNIT_SPELLCAST_FAILED"}) do
+    x=F.reset({targetHealth=140,distance=15,wand=false,cast={id=116,start=100,finish=103}})
+    F.evaluate(); x.time=101; x.targetHealth=1000
+    F.event(event,"player","extra-press",116)
+    record(event.." for another same-spell cast","A different cast GUID cannot replace the committed finisher",F.main(H.picks)=="fireblast",F.describe(H.picks))
+    x.cast=nil; F.evaluate(); F.event(event,"player","cast-A",116)
+    record(event.." after API clear","The matching last observed cast releases its plan",F.main(H.picks)=="frostbolt",F.describe(H.picks))
+end
+
+x=F.reset({targetHealth=140,distance=15,wand=false,cast={id=116,token=41,start=100,finish=103}})
+F.event("UNIT_SPELLCAST_START","player","numeric-cast",116)
+x.time=101; x.targetHealth=1000; F.event("UNIT_SPELLCAST_INTERRUPTED","player","numeric-cast",116)
+record("Numeric casting API with START GUID","Matched interruption clears the plan on legacy casting IDs",F.main(H.picks)=="frostbolt",F.describe(H.picks))
+
+x=F.reset({power=120,maxPower=200,wand=false,defaultCost=50,cast={id=116,token=42,start=100,finish=103}})
+F.event("UNIT_SPELLCAST_START","player","numeric-success",116)
+x.time=103; x.power=70; F.event("UNIT_SPELLCAST_SUCCEEDED","player","numeric-success",116)
+record("Numeric casting API success","A matched START GUID prevents double mana reservation",F.main(H.picks)=="frostbolt",F.describe(H.picks))
+
+x=F.reset({targetHealth=140,distance=15,wand=false,cast={id=116,token="old-cast",start=100,finish=103}})
+F.evaluate(); x.time=103.1; x.cast={id=116,token="new-cast",start=103.1,finish=106.1}; F.evaluate()
+x.targetHealth=1000; F.event("UNIT_SPELLCAST_INTERRUPTED","player","old-cast",116)
+record("Late interruption from an earlier cast","Old GUID cannot cancel a new same-spell cast",F.main(H.picks)=="fireblast",F.describe(H.picks))
+
+x=F.reset({power=80,maxPower=200,wand=false,defaultCost=50,channel={id=5143,start=100,finish=105}})
+F.event("UNIT_SPELLCAST_CHANNEL_START","player","channel-A",5143)
+local _,channelContext=F.evaluate()
+record("Channel cost is already paid","Channel snapshots do not reserve mana again",channelContext.futurePower==80,tostring(channelContext.futurePower))
+x.time=101; x.targetHealth=140; x.distance=15
+F.event("UNIT_SPELLCAST_CHANNEL_STOP","player","channel-A",5143)
+record("Channel stop before API clear","Ended channel releases the previous Main",F.main(H.picks)=="fireblast",F.describe(H.picks))
 
 x=F.reset({level=25,talents=F.build(2,25),grouped=true,classification="elite",cast={id=2948,start=100,finish=101.5},targetAuras={{spellId=22959,applications=4,expirationTime=125}}})
 assert(x.talents.improvedScorch==1,"Partial Scorch scenario needs exactly one talent rank")
 p=F.evaluate()
 record("Partial Improved Scorch talent","Do not assume the next Scorch guarantees stack five",F.main(p)=="scorch",F.describe(p),"medium")
+for _,rank in ipairs({1,2,3}) do
+    for _,stacks in ipairs({4,5}) do
+        x=F.reset({level=24+rank,talents=F.build(2,24+rank),grouped=true,classification="elite",cast={id=2948,start=100,finish=101.5},
+            targetAuras={{spellId=22959,applications=stacks,expirationTime=103}}})
+        assert(x.talents.improvedScorch==rank,"Scorch fixture must have the specified legal rank")
+        p=F.evaluate()
+        local expected=rank==3 and "fireball" or "scorch"
+        record("Scorch refresh at rank "..rank.." with "..stacks.." stacks","Main "..expected,F.main(p)==expected,F.describe(p))
+    end
+end
 
 x=F.reset({defaultCost=50,power=50,wand=false,cast={id=116,start=100,finish=103}})
 F.evaluate(); x.power=500; x.time=101.5; p=F.evaluate()
 record("Mana restored during an initially unaffordable cast","Fill an empty next-action plan after mana recovery",F.main(p)~=nil,F.describe(p),"medium")
+x.targetHealth=140; x.distance=15; x.time=102.9; p=F.evaluate()
+record("Recovered plan commits once populated","Late finisher cannot replace newly committed Frostbolt",F.main(p)=="frostbolt",F.describe(p))
+x.power=50; p=F.evaluate()
+record("Mana lost after a plan fills","Unaffordable committed spell is hidden",not F.main(p),F.describe(p))
+x.power=500; p=F.evaluate()
+record("Mana restored to an existing plan","The same committed Frostbolt returns",F.main(p)=="frostbolt",F.describe(p))
 
 x=F.reset({actionSlots={[1]={"spell",133}}})
 x.actionSlots[1][2]=H.definitions.fireball.id

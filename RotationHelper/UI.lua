@@ -9,7 +9,7 @@ function H:Document(context)
         headerAction=supported and {label=enabled and "Disable" or "Enable",action={kind="rotationHelperToggle"}} or nil,blocks={
             {title="|cffffd126Main|r",body="One next attack. Planned when your cast starts and held through its finish."},
             {title="|cffff3020Defensive|r",body="Interrupts, control and survival. May appear alongside your next attack."},
-            {title="|cffd958ffOffensive|r",body="Optional damage cooldowns and mana recovery. Use when the encounter warrants them."},
+            {title="|cffd958ffOffensive|r",body="Optional damage cooldowns, mana recovery and attacks waiting on cooldown. Gold prefers an attack ready for your next cast."},
             {title="|cff33a6ffPreparation|r",body="Missing or expiring buffs, food, water and mana gems between fights."},
         }}
     if self.Glow.unavailable then card.blocks[#card.blocks+1]={title="Spell glow unavailable",body="This client did not provide Blizzard's spell alert template. Reload after enabling your action bars."} end

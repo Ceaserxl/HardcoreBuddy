@@ -50,7 +50,27 @@ local function cast(unit,t)
         name,_,_,start,finish,_,notInterruptible,id=UnitChannelInfo(unit); channel=not not name
     end
     if name and start and finish then return {id=id,name=name,token=tostring(token or id or name)..":"..start,
+        guid=type(token)=="string" and token or nil,finish=finish/1000,
         remaining=math.max(0,finish/1000-t),channel=channel,interruptible=not notInterruptible} end
+end
+local function matchesCast(value,guid,id)
+    return value and value.id==id and (not guid or value.guid and value.guid==guid)
+end
+function H:CastEvent(event,guid,id)
+    local current=cast("player",now())
+    if event=="UNIT_SPELLCAST_START" or event=="UNIT_SPELLCAST_CHANNEL_START" then
+        if current and current.id==id and (not current.guid or current.guid==guid) then
+            current.guid=guid; self.lastCast=current
+        end
+        return
+    end
+    -- Retain a START-event GUID for clients whose casting API returns a numeric
+    -- cast ID, and for channels. Never match a failed extra press by spell alone.
+    if current and self.lastCast and current.token==self.lastCast.token then current.guid=current.guid or self.lastCast.guid end
+    local ended=current or self.lastCast
+    if not matchesCast(ended,guid,id) then return end
+    self.finishedCast={token=ended.token,interrupted=event~="UNIT_SPELLCAST_SUCCEEDED"}
+    if self.finishedCast.interrupted then self.state={} end
 end
 local function auraList(unit,filter)
     local result={}
@@ -155,8 +175,17 @@ function H:Snapshot()
     c.maxPower=UnitPowerMax and UnitPowerMax("player",c.powerType) or 0
     c.powerFraction=c.power/math.max(1,c.maxPower)
     c.mana=(UnitPower and UnitPower("player",0) or 0)/math.max(1,UnitPowerMax and UnitPowerMax("player",0) or 0)
-    c.cast=cast("player",t); c.casting=c.cast and self.byID[c.cast.id]
-    local pending=c.cast and not c.cast.channel and c.cast.id and cost(c.cast.id,c.powerType) or 0
+    c.cast=cast("player",t)
+    if c.cast then
+        if self.lastCast and c.cast.token==self.lastCast.token then c.cast.guid=c.cast.guid or self.lastCast.guid end
+        self.lastCast=c.cast
+        if self.finishedCast and self.finishedCast.token==c.cast.token then
+            if self.finishedCast.interrupted then c.cast=nil
+            else c.cast.paid=true end
+        end
+    end
+    c.casting=c.cast and self.byID[c.cast.id]
+    local pending=c.cast and not c.cast.paid and not c.cast.channel and c.cast.id and cost(c.cast.id,c.powerType) or 0
     local regen=0
     if c.powerType==0 and GetManaRegen then local _; _,regen=GetManaRegen()
     elseif c.powerType~=0 and GetPowerRegen then regen=GetPowerRegen() end
@@ -248,6 +277,7 @@ function H:SetEnabled(value)
 end
 function H:Clear()
     self.state={}; self.picks={}
+    self.lastCast=nil; self.finishedCast=nil
     if self.Glow then self.Glow:Apply({}) end
 end
 function H:Tick()
@@ -274,13 +304,14 @@ end
 H.frame=CreateFrame("Frame")
 for _,event in ipairs({"PLAYER_ENTERING_WORLD","PLAYER_LEAVING_WORLD","PLAYER_REGEN_ENABLED","PLAYER_TALENT_UPDATE","SPELLS_CHANGED",
     "ACTIONBAR_SLOT_CHANGED","UPDATE_MACROS","ACTIONBAR_PAGE_CHANGED","MODIFIER_STATE_CHANGED","UPDATE_SHAPESHIFT_FORM",
+    "UNIT_SPELLCAST_START","UNIT_SPELLCAST_CHANNEL_START","UNIT_SPELLCAST_CHANNEL_STOP",
     "UNIT_SPELLCAST_SUCCEEDED","UNIT_SPELLCAST_INTERRUPTED","UNIT_SPELLCAST_FAILED","BAG_UPDATE_DELAYED"}) do H.frame:RegisterEvent(event) end
-H.frame:SetScript("OnEvent",function(_,event,unit,_,spellID)
+H.frame:SetScript("OnEvent",function(_,event,unit,castGUID,spellID)
     if event=="PLAYER_LEAVING_WORLD" then
         H.suspended=true; H.frame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED"); H.frame:SetScript("OnUpdate",nil); H:Clear(); return
     end
     if event=="PLAYER_ENTERING_WORLD" or event=="PLAYER_TALENT_UPDATE" or event=="SPELLS_CHANGED" then
-        if event=="PLAYER_ENTERING_WORLD" then H.suspended=nil; H.recent={}; H.immunities={} end
+        if event=="PLAYER_ENTERING_WORLD" then H.suspended=nil; H.recent={}; H.immunities={}; H.lastCast=nil; H.finishedCast=nil end
         H.supplyItems=nil; H:Rebuild(); H:Wake(); return
     end
     if not H:Enabled() then return end
@@ -296,11 +327,13 @@ H.frame:SetScript("OnEvent",function(_,event,unit,_,spellID)
         end
         return
     end
-    if event=="UNIT_SPELLCAST_SUCCEEDED" and unit=="player" then
+    if event=="UNIT_SPELLCAST_START" or event=="UNIT_SPELLCAST_CHANNEL_START" or event=="UNIT_SPELLCAST_CHANNEL_STOP" then
+        H:CastEvent(event,castGUID,spellID)
+    elseif event=="UNIT_SPELLCAST_SUCCEEDED" then
         local key=H.byID[spellID]; if key then H.recent[key]=now() end
+        H:CastEvent(event,castGUID,spellID)
     elseif event=="UNIT_SPELLCAST_INTERRUPTED" or event=="UNIT_SPELLCAST_FAILED" then
-        -- A failed key press while another cast continues must not re-plan it.
-        if not cast("player",now()) then H.state={} end
+        H:CastEvent(event,castGUID,spellID)
     elseif event=="BAG_UPDATE_DELAYED" then H.supplyItems=nil
     elseif event=="PLAYER_REGEN_ENABLED" or event=="ACTIONBAR_SLOT_CHANGED" or event=="UPDATE_MACROS" then H:Rebuild(); H.Glow:Discover() end
     H:Tick()

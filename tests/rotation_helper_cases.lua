@@ -9,6 +9,7 @@ local function reset()
         learned={[116]=true,[133]=true,[2136]=true,[1459]=true,[168]=true},costs={[116]=50,[133]=60,[2136]=40},
         cooldowns={},auras={player={},target={}},inventory={},talents={},macro=116}
     H.state={}; H.recent={}; H.immunities={}; H.supplyItems=nil
+    H.lastCast=nil; H.finishedCast=nil
 end
 reset()
 GetTime=function() return X.time end
@@ -75,8 +76,8 @@ X.learned[205]=nil; X.learned[7322]=nil; rebuild()
 
 X.gcd=true; p=evaluate(); check(main(p)=="frostbolt","GCD must not hide the next action")
 X.gcd=false; X.cooldowns[116]={100,2}; p=evaluate(); check(main(p)=="frostbolt","Short cooldown does not gate Main")
-X.cooldowns[116]={100,60}; p=evaluate(); check(main(p)=="frostbolt","Long cooldown does not replace Main with a fallback")
-X.cooldowns[116]={100,60,0}; p=evaluate(); check(main(p)=="frostbolt","Disabled cooldown state does not gate Main")
+X.cooldowns[116]={100,60}; p=evaluate(); check(main(p)=="fireball" and find(p,"frostbolt").category=="offensive","Long cooldown remains a hint beside a usable Main")
+X.cooldowns[116]={100,60,0}; p=evaluate(); check(main(p)=="fireball" and find(p,"frostbolt"),"Disabled cooldown state does not suppress the hint or usable Main")
 X.cooldowns[116]=nil
 X.power=30; X.regen=10; p,c=evaluate(); check(main(p)=="frostbolt" and c.futurePower==50,"Forecast confirmed casting regen")
 X.regen=0; p=evaluate(); check(main(p)==nil,"Cannot spend unknown future mana")

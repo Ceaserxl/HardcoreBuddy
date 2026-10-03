@@ -68,9 +68,10 @@ M.rules={
         return fire(c) and combat(c) and not c.combat and not c.targetCombat and not c.cast and "Open with Pyroblast"
     end),
     rule("scorch","main",nil,function(c)
+        local pendingStack=c.casting=="scorch" and (c.talents.improvedScorch or 0)>=3
         return fire(c) and combat(c) and c.tough and (c.talents.improvedScorch or 0)>0
-            and (c:stacks("scorch","target")+(c.casting=="scorch" and 1 or 0)<5
-                or c:remaining("scorch","target")<5 and c.casting~="scorch") and "Build or refresh Fire Vulnerability on a durable target"
+            and (c:stacks("scorch","target")+(pendingStack and 1 or 0)<5
+                or c:remaining("scorch","target")<5 and not pendingStack) and "Build or refresh Fire Vulnerability on a durable target"
     end),
     rule("fireblast","main",nil,function(c)
         return combat(c) and not c.tough and c.targetHealth<0.15 and c.mana>0.25 and "Finish a low-health target"
