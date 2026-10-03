@@ -311,8 +311,8 @@ function C.Detail(context, action)
         local function heading(title,right,body)
             blocks[#blocks+1]={title=title,body=body,plain=true,textInset=0,rightColumn=right or false}
         end
-        local materials,note,output=A.Crafting.MaterialBlocks(item,context)
-        heading("Materials",false,item.itemId==5816 and note or #materials>0 and (output and output>1 and ("Per craft: "..output.." items") or "Per craft") or nil)
+        local materials,note=A.Crafting.MaterialBlocks(item,context)
+        heading("Materials",false,item.itemId==5816 and note or nil)
         for _,block in ipairs(materials) do blocks[#blocks+1]=block end
         if #materials==0 and item.itemId~=5816 then
             blocks[#blocks+1]={title=note,disabled=true,compactRow=true,emptySection="Materials"}

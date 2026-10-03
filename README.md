@@ -98,8 +98,8 @@ excluded. This is a budget guard, not an estimate of fair market value.
 
 Supply details use **Recommended** or **Selected Alternative** above the selected
 item, with **Materials** below. **Next**, then **Alternatives**, share the right
-column. All item rows use the same compact height. Materials specify one craft
-and its output. Empty sections distinguish unavailable alternatives, noncraftable
+column. All item rows use the same compact height. Materials use a title without
+a crafting subtitle. Empty sections distinguish unavailable alternatives, noncraftable
 items, reagent-free abilities and unknown recipes. Bandages use the health recommendation;
 a usable rank can be explicitly set as default. Light of Elune keeps its quest/macro
 page; custom User items omit Next and Alternatives.
@@ -429,8 +429,8 @@ fallback for uncached items. Details place **Recommended** or **Selected Alterna
 at the left with Materials below it; **Next**, then **Alternatives**, occupy the
 right column. Enchants also show Requirements. All item rows share the same height.
 Empty sections explain whether an item is not crafted, has no materials, lacks
-recipe data or has no next comparable upgrade. Materials are per craft and identify
-multi-item output. Knowing the profession skill does not imply knowing the recipe.
+recipe data or has no next comparable upgrade. Material quantities are per craft.
+Knowing the profession skill does not imply knowing the recipe.
 Back returns to the current Supplies category root. Light of Elune retains its
 quest and macro sections; User items retain their custom-item layout.
 
