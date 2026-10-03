@@ -365,6 +365,20 @@ function C.Detail(context, action)
         if item.enchantMaterial then item=A.Enchants.DetailMaterial(context,item) end
         local family=P.grouped[item.family] and item.family or nil
         local defaults=S.DefaultGroup(context,item)
+        local recommended=defaults
+        if not recommended and item.family and not item.userItem then
+            local plan=P.BuildList(context.characterClass,context.level,P.ContextFaction(context))
+            for _,section in ipairs({plan.rows,plan.specialist,plan.backups,plan.advanced}) do
+                for _,candidate in ipairs(section or {}) do
+                    if candidate.family==item.family then recommended=candidate; break end
+                end
+                if recommended then break end
+            end
+        end
+        if family=="bandage" then
+            local plan=A.Professions.BandagePlan(context)
+            recommended=plan.recommended and {itemId=plan.recommended.itemId} or recommended
+        end
         if defaults then
             local copy={}; for k,v in pairs(item) do copy[k]=v end; item=copy
             item.options={defaults}
@@ -381,10 +395,14 @@ function C.Detail(context, action)
         for _,block in ipairs(materials) do blocks[#blocks+1]=block end
         local alternatives=item.options or (family and item.progression) or {}
         local choices={}
-        for _,other in ipairs(alternatives) do if other.itemId~=item.itemId then choices[#choices+1]=other end end
+        if recommended and recommended.itemId~=item.itemId and family~="bandage" then choices[1]=recommended end
+        for _,other in ipairs(alternatives) do
+            if other.itemId~=item.itemId and (not recommended or other.itemId~=recommended.itemId) then choices[#choices+1]=other end
+        end
         if family~="bandage" then heading("Alternatives",true,#choices==0 and "No alternatives listed." or nil) end
         for _,other in ipairs(family=="bandage" and {} or choices) do
             local block=itemRow(other); block.body=G.SupplySubtitle(other,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
+            block.recommendedAlternative=recommended and other.itemId==recommended.itemId
             blocks[#blocks+1]=block
         end
         local nextItem=G.NextSupply(item,context)
@@ -414,7 +432,7 @@ function C.Detail(context, action)
         out.blocks[1].body=G.SupplySubtitle(item,context)
         out.blocks[1].supplyDetail=true
         out.itemLayout=true
-        out.itemSectionTitle=S.GenericTitle(item)
+        out.itemSectionTitle=recommended and recommended.itemId~=item.itemId and "Selected Alternative" or "Recommended"
         if defaults then
             out.defaultItem=item
             out.isDefault=S.PreferredItem(context,defaults).itemId==item.itemId

@@ -21,6 +21,7 @@ end
 A:Activate({kind="item",item=group})
 local original=A.state
 local card=A.window.cards[1]
+assert(A.document.cards[1].itemSectionTitle=="Recommended","Default recommendation heading")
 assert(not card.defaultChoice:IsShown(),"Default items hide Set as default")
 local header,option
 for _,r in ipairs(card.content.blocks) do if r:IsShown() then
@@ -45,6 +46,12 @@ for _,r in ipairs(card.content.blocks) do if r:IsShown() then
 end end
 MOCK.Click(option)
 card=A.window.cards[1]
+assert(A.document.cards[1].itemSectionTitle=="Selected Alternative","Alternative heading matches enchants")
+local recommendedRow
+for _,b in ipairs(A.document.cards[1].blocks) do
+    if b.rightColumn and b.itemId then recommendedRow=b; break end
+end
+assert(recommendedRow.itemId==group.itemId and recommendedRow.recommendedAlternative,"Recommended item is first and marked")
 assert(card.defaultChoice:IsShown() and card.defaultChoice:IsEnabled() and card.defaultChoice.label:GetText()=="Set as default")
 local bx,by,bw=A.window.back:GetRect(); local dx,dy=card.defaultChoice:GetRect()
 assert(dx==bx+bw+8 and dy==by,"Set as default sits immediately right of Back")

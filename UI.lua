@@ -394,7 +394,13 @@ local function renderBlock(frame, block, width)
     end
     if block.supplyDetail and not block.supply then
         Skin.Paint(frame,"row"); frame.meta:Hide()
-        return sizeSupplyDetail(frame,block,width)
+        if block.recommendedAlternative then
+            frame.stock:Show(); frame.stock:SetJustifyH("RIGHT")
+            frame.stock:SetTextColor(0.38,0.84,0.61)
+            measure(frame.stock,"Recommended",100,width-108,7)
+            frame.chevron:Hide()
+        end
+        return sizeSupplyDetail(frame,block,width,block.recommendedAlternative and 100 or nil)
     end
     if block.enchantRow and not block.supplyColumns then
         Skin.Paint(frame,"row"); frame.chevron:Hide(); frame.meta:Hide()
