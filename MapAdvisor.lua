@@ -377,6 +377,7 @@ function M:HideZoneNotice()
     self.zoneNoticeMap=nil
     for _,saved in ipairs(self.zoneNoticeTimes or {}) do
         if saved.frame.holdTime==saved.extended then saved.frame.holdTime=saved.hold end
+        if saved.frame.fadeOutTime==saved.shortened then saved.frame.fadeOutTime=saved.fadeOut end
     end
     self.zoneNoticeTimes=nil
 end
@@ -495,13 +496,14 @@ function M:ShowZoneNotice(id,list)
     frame:SetHeight(23+shown*26+31)
     self.zoneNoticeMap=id
     self:LayoutZoneNotice()
-    -- Allow time to read the list, then use the native fade. Restore each
-    -- frame's previous duration when the list clears; leave other addons' edits.
+    -- Allow time to read the list, then shorten the native fade slightly.
+    -- Restore previous timings when the list clears; leave other addons' edits.
     self.zoneNoticeTimes={}
     for _,frame in ipairs({ZoneTextFrame,SubZoneTextFrame}) do
         local hold=frame.holdTime; local extended=math.max(hold or 1,6)
-        self.zoneNoticeTimes[#self.zoneNoticeTimes+1]={frame=frame,hold=hold,extended=extended}
-        frame.holdTime=extended
+        local fadeOut=frame.fadeOutTime; local shortened=math.min(fadeOut or 2,1.5)
+        self.zoneNoticeTimes[#self.zoneNoticeTimes+1]={frame=frame,hold=hold,extended=extended,fadeOut=fadeOut,shortened=shortened}
+        frame.holdTime=extended; frame.fadeOutTime=shortened
     end
     frame:Show(); frame.box:Show()
     return true
