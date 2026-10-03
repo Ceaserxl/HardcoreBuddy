@@ -223,15 +223,15 @@ local function bandageCards(context,state)
     end
     local highest=plan.highest
     if highest.itemId and (not plan.canMake or highest.itemId~=recommended.itemId) then
-        local section=card("Highest Rank Available",highest.note,{bandage(highest.itemId)})
+        local section=card("Highest Rank Available",nil,{bandage(highest.itemId)})
         section.supplyTable=true; section.fullWidth=true; cards[#cards+1]=section
     elseif not highest.itemId and not plan.canMake then
-        cards[#cards+1]=card("Highest Rank Available",highest.note,{row("No confirmed craftable rank","Learn First Aid and the recipe to unlock a recommendation.")})
+        cards[#cards+1]=card("Highest Rank Available",nil,{row("No confirmed craftable rank","Learn First Aid and the recipe to unlock a recommendation.")})
     end
     -- Reuse the ordinary supply details layout and toolbar. Keep the other
     -- health/recipe ranks in the right column, without duplicating the selected item.
     local selected=S.Selection(context,"bandage")
-        or (plan.canMake and recommended.itemId) or highest.itemId or (recommended and recommended.itemId)
+        or (recommended and recommended.itemId) or highest.itemId
     if not selected or not items[selected] then
         local alternatives={}
         for _,recipe in ipairs(A.Professions.recipes.bandage) do alternatives[#alternatives+1]=bandage(recipe.itemId) end

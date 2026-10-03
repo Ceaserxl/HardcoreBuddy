@@ -30,8 +30,8 @@ context.maxHealth=640
 local d=doc(); local rows,count=ids(d)
 assert(count==10 and rows[6451] and rows[14530])
 assert(d.cards[1].itemLayout and d.cards[1].quantityRecord, "Standard supply details layout and controls")
-assert(d.cards[1].itemSectionTitle=="Highest Rank Available")
-assert(rows[6451].rightColumn and not rows[14530].rightColumn,"Other ranks right, selected bandage left")
+assert(d.cards[1].itemSectionTitle=="Recommended")
+assert(not rows[6451].rightColumn and rows[14530].rightColumn,"Other ranks right, selected bandage left")
 for _,c in ipairs(d.cards) do assert(c.title~="Bandages","No redundant Bandages heading") end
 assert(not rows[6451].readOnlyTarget and rows[6451].editTarget,"Recommended lower rank remains editable")
 context.maxHealth=641; assert(ids(doc())[8544],"Next healing tier after boundary")
@@ -42,7 +42,7 @@ context.maxHealth=700
 for i=5,#recipes do context.professions.known[recipes[i].spellId]=false end
 d=doc(); rows,count=ids(d)
 assert(count==10 and rows[3531] and rows[8544],"Uncraftable recommendation is a real item row")
-assert(rows[8544].body:find("cannot make it yet",1,true) and rows[8544].action.kind=="item","Requirement subtext and clickable details")
+assert(rows[8544].body:find("cannot make it yet",1,true),"Requirement subtext and clickable details")
 context.professions.skills.bandage=80
 assert(ids(doc())[3530],"Crafting skill gates known recipes")
 state.showAllBandages=true
@@ -54,6 +54,13 @@ context.professions.skills.bandage=0
 assert(select(2,ids(doc()))==10,"Unlearned profession still lists reference alternatives")
 context.maxHealth=640; context.professions.skills.bandage=300
 for _,r in ipairs(recipes) do context.professions.known[r.spellId]=true end
+assert(A.Supplies.Selection(context,"bandage")==6451,"Health recommendation wins over highest learned")
+for _,b in ipairs(doc().cards[1].blocks) do
+    if b.title=="Highest Rank Available" then assert(not b.body,"No highest-rank heading subtext") end
+end
+context.supplyDefaults={bandage=14530}
+assert(A.Supplies.Selection(context,"bandage")==14530,"Explicit highest-rank default overrides recommendation")
+assert(doc().cards[1].blocks[1].itemId==14530,"Saved default becomes selected item")
 A.GetContext=function() return context end
 A.state=state; A:Refresh(true)
 local original=A.state

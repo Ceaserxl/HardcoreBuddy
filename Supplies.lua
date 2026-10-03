@@ -50,6 +50,11 @@ function S.Selection(context, family)
         if id and S.CanDefaultBandage(context,{family="bandage",itemId=id}) then
             return id,{status="selected",itemId=id,note="Your default bandage",manual=true}
         end
+        local plan=addon.Professions.BandagePlan(context)
+        if plan.recommended then
+            return plan.recommended.itemId,{status="recommended",itemId=plan.recommended.itemId,
+                note="Recommended for your health"}
+        end
     end
     if addon.Professions.autoFamilies[family] then
         local result=addon.Professions.Best(context.professions,family)
