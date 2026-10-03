@@ -1,0 +1,263 @@
+{
+  "scope": "Installed source with synthetic APIs; not live WoW or DPS benchmarking",
+  "checks": [
+    {
+      "matched": true,
+      "expected": "10181",
+      "name": "Frost only knows rank one; returns hardcoded higher rank for name matching",
+      "actual": "10181"
+    },
+    {
+      "matched": true,
+      "expected": "10181",
+      "name": "Classic usability ignores API unusable result and zero mana",
+      "actual": "10181"
+    },
+    {
+      "matched": true,
+      "expected": "10181",
+      "name": "Frost single target does not gate target range",
+      "actual": "10181"
+    },
+    {
+      "matched": true,
+      "expected": "10181",
+      "name": "Frost single target does not respond to critical player health",
+      "actual": "10181"
+    },
+    {
+      "matched": true,
+      "expected": "10207",
+      "name": "Fire requests Scorch with no Improved Scorch talent",
+      "actual": "10207"
+    },
+    {
+      "matched": true,
+      "expected": "10207",
+      "name": "Five Fire Vulnerability stacks still request Scorch under talent-ID lookup",
+      "actual": "10207"
+    },
+    {
+      "matched": true,
+      "expected": "10216",
+      "name": "Frost AoE prioritizes Flamestrike even while its effect is healthy",
+      "actual": "10216"
+    },
+    {
+      "matched": true,
+      "expected": "nil",
+      "name": "Two-target branch can return nothing despite a known ranged Frostbolt",
+      "actual": "nil"
+    },
+    {
+      "matched": true,
+      "expected": "false",
+      "name": "Cooldown ignores a three-second cast look-ahead",
+      "actual": "false"
+    },
+    {
+      "matched": true,
+      "expected": "true",
+      "name": "Cooldown compares against full GCD duration rather than remaining GCD",
+      "actual": "true"
+    },
+    {
+      "matched": true,
+      "expected": "true",
+      "name": "Cooldown accepts the final half second without a running GCD",
+      "actual": "true"
+    },
+    {
+      "matched": true,
+      "expected": "true",
+      "name": "Classic cooldown ignores disabled flag when timing reports zero",
+      "actual": "true"
+    },
+    {
+      "matched": true,
+      "expected": "12051",
+      "name": "Arcane prioritizes Evocation at 35 percent mana even with low health",
+      "actual": "12051"
+    },
+    {
+      "matched": true,
+      "expected": "true",
+      "name": "Classic spell-name glow lights multiple ranks",
+      "actual": "true"
+    },
+    {
+      "matched": true,
+      "expected": "10207 -> 11129",
+      "name": "Repeated core invocation replaces Main while the same cast is active",
+      "actual": "10207 -> 11129"
+    }
+  ],
+  "source_sha256": {
+    "MaxDps/MaxDps.toc": "3a52cf38cfd95c6a12136350e2b97ad1bd73e12347a6f7269b3bdc16af96b223",
+    "MaxDps/Cooldowns.lua": "e7c58243457ec840608f55b5da55571f981a29d14d89b41f1442f5b6878688d2",
+    "MaxDps/SpellData.lua": "81d7c28ac740a85b9ff37cfd654d48e856e3f7242753af6577336a7be896f2bc",
+    "MaxDps/spell_durations.lua": "e553f34ca49f63e9adfd301b860b68215cb5ce6b58f0996411b7399f5a6ab77c",
+    "MaxDps/Core.lua": "9a72b30a80178a1af03adc9c84c2e6d8e9ca4f330716e08789e034fb9544c6be",
+    "MaxDps/Tier.lua": "3980729f57ac8a602c302f70ca610ccf3c5036f908f6a137113795cbcc5cb067",
+    "MaxDps/Options.lua": "c31c78e68d48bd17cbdccc2fa1eaf68fa2a46b34971ee67c96359055cc179438",
+    "MaxDps/Buttons.lua": "b09fb51b1281c4723ba16d6769cd802125e14211c7a994ba08518056cff4b423",
+    "MaxDps/Helper.lua": "91ed0913dfa65c89823b7546e478932e6319b59fb937263d2788acd839925c94",
+    "MaxDps/TimeToDie.lua": "a1c65ad929bbc72a926a5bfa115c8ebecc82cceb95728b2aa89eb227476f1ca1",
+    "MaxDps/Modules/Custom.lua": "17bc09a15ba27fa88d51bb95e67885760b3f9b9df0ac1bf5a2e7c0c550762124",
+    "MaxDps/Modules/Window.lua": "96db5427a519a7023cedc0540664dfa457d2499a62667137f167e3b864840de7",
+    "MaxDps/Modules/Profiler.lua": "66a9454d706bc657e370d081ac46999996a8c2758a7286f8170ebd007febd4ff",
+    "MaxDps/Modules/SpellIDToolTip.lua": "acefd6a9d8fa52b2696b919f7e4c89948b0235dd5044fa1762cf5972e4296904",
+    "MaxDps/SpellFrame.lua": "212cc63e522d114a3f087c4c29f79607ae9dd8d91ffa287b5cc7119c6fa453cf",
+    "MaxDps/SwingTimer.lua": "e1df156c953dd1b26df62831f6c1f40ce45964b60bdc96e32fabf9b461c71140",
+    "MaxDps_Druid/MaxDps_Druid.toc": "85f1aaa7a32eb3837ec238e453724657439bcdbc6392a04c5aa606d4187a39fa",
+    "MaxDps_Druid/Main.lua": "b076bdf93f4e7c121a53539f5d317d704577efced20b2489ac235b03a1cb2a85",
+    "MaxDps_Druid/Specialization/Classic/Balance.lua": "a53517753c63edc4dd91d560cbc48d9866e821f1c55468fd2e502310811ca9a4",
+    "MaxDps_Druid/Specialization/Classic/Feral.lua": "bb4507c36e3a18ea55586a6c0890be14ba48336a0f16ba135421aa25c8fcc8de",
+    "MaxDps_Druid/Specialization/Classic/Guardian.lua": "fb4eef9fd0e32a8c740af09afda60d9820009e08b0c6870b593a254c8e0be312",
+    "MaxDps_Hunter/MaxDps_Hunter.toc": "c6e02dce34d70e7258823b2317f47a55391c21f9aaae34c710e04ada77e68424",
+    "MaxDps_Hunter/Main.lua": "3df168c174c71369093a1027e9d409de92315531679ec2e406fd22b7baf9ec31",
+    "MaxDps_Hunter/Specialization/Classic/Beastmastery.lua": "51ed39028b64bc274b9563ad32e7aefdd1d1d73303f4d33aed42e2e6103897e0",
+    "MaxDps_Hunter/Specialization/Classic/Survival.lua": "5cdffab086006d977b334d603398e6f1644f110cd5e25c3f4f828464b808af54",
+    "MaxDps_Hunter/Specialization/Classic/Marksmanship.lua": "de41aaf7970d99b2ee5c861188f09f5b44ea75d2b0eebee7202fc3cd6d4bd886",
+    "MaxDps_Mage/MaxDps_Mage.toc": "63f57bdc0dbd66b4d1bbaa4766e37fc90b68d4fae3feaa430141992a57b0c7ae",
+    "MaxDps_Mage/Main.lua": "2091455366f3aa08fb599f927f132612f220dea7fafc506f8db12f7b00cd1931",
+    "MaxDps_Mage/Specialization/Classic/Arcane.lua": "4c300c9ec868595a51945676858a5746993ea2c275e95d84a2f854be5d83d6da",
+    "MaxDps_Mage/Specialization/Classic/Frost.lua": "28ff0df5246609c6e5ce2577355cd3059839e8e08e453656607cb45d428428da",
+    "MaxDps_Mage/Specialization/Classic/Fire.lua": "3420370bd67a72c89a79acb53159fb45f253e2073ef8fea972df30cc7e0e2bba",
+    "MaxDps_Paladin/MaxDps_Paladin.toc": "21fa73790d73619475a1caab246b74ec488324f841efbd21b0d3135503ba8bf0",
+    "MaxDps_Paladin/Main.lua": "fdb32a847715e0c340448800ec59c2ee155ebc33aba64d732b7e0f297481ac33",
+    "MaxDps_Paladin/Specialization/Holy.lua": "1435913711d7f1f16f47c7fbd81c2db8b4a3af2fda24097424bc8c82e7d4e255",
+    "MaxDps_Paladin/Specialization/Classic/Retribution.lua": "867cc94bff2ddf99bb1c7c01615ccfbfa59a3d69e3226175098b0a9cf8c3e671",
+    "MaxDps_Priest/MaxDps_Priest.toc": "97162783171343fc84d8aea487b957c5ca2d253697ef018c08310bbd5f36a054",
+    "MaxDps_Priest/Main.lua": "e6e0ade42e7bf160ebe4daf2e335554107f028726640b36289c74f0ffcb3433a",
+    "MaxDps_Priest/Specialization/Classic/Discipline.lua": "4e468df5f4e9272cf47869b62cbafcc041e99ed9e5855e3ec10ae2e402d318ad",
+    "MaxDps_Priest/Specialization/Classic/Holy.lua": "af84c43460c6a81b383d94ec808a617d6e0b583dfd50ccea9221034227ffed89",
+    "MaxDps_Priest/Specialization/Classic/Shadow.lua": "ca44aa88d2972541321f97cab873b82272ad14f5af8da9ae8cb4f30cd207461c",
+    "MaxDps_Rogue/MaxDps_Rogue.toc": "97989cd72788ecf3f7d2c819c302e31f5f1cc02546ce9440cafcf96eb92fc1bb",
+    "MaxDps_Rogue/Main.lua": "d86d5340518568d56f8e43e98e4b090836a7bdae2c0eec24d956408850dcb121",
+    "MaxDps_Rogue/Specialization/Classic/Assassination.lua": "19cfafbe168fd0df74b3ec45db2473de3c6fed76df2ee8415105e4298fd3e0f6",
+    "MaxDps_Rogue/Specialization/Classic/Combat.lua": "167b3441e813c6ee85819dfaf83ae22287ac35adfd9bc8c2003f4f5d17d0dd1c",
+    "MaxDps_Rogue/Specialization/Classic/Subtlety.lua": "c8b0e0f5fa40afeafa21501256e4ceb53b5086c494beef42eee47ed61ef70519",
+    "MaxDps_Shaman/MaxDps_Shaman.toc": "4736551a4ea5dc8dbc4b77b0e2339bbee9acfc2c6bd5c4881331eb0875a0c6dd",
+    "MaxDps_Shaman/Main.lua": "32da79ab8f76264f5a26be881574f5f724f4eb92d488963d6e4d7bb27d2dfc8d",
+    "MaxDps_Shaman/Specialization/Classic/Elemental.lua": "3695f653364799d0f8dc6988fac870af533e11abb9f58466768d9d988ff0c1f9",
+    "MaxDps_Shaman/Specialization/Classic/Enhancement.lua": "ac0c1674bc3f0f6a612a738e7b1b3c7225f4d67bad0ebb791a4977522cd2e465",
+    "MaxDps_Warlock/MaxDps_Warlock.toc": "cb051831e5bc18edbbd4f1013753bfbc686ff00213cd5fd8940a4e43b6d028b3",
+    "MaxDps_Warlock/Main.lua": "37a52ae2d49ab188c1b77a1903e1c1cd22aa0f3ff8f372e6af37f906bb7d59e1",
+    "MaxDps_Warlock/Specialization/Classic/DPS.lua": "49006d91222a9426d8eb66a9678c6c5b85db35eea6747736f4f505bd2fb9439d",
+    "MaxDps_Warrior/MaxDps_Warrior.toc": "0fe5a2d049ddb12c424d854f870b38ddc7f0831240ed4fbfe0687322d71a031a",
+    "MaxDps_Warrior/Main.lua": "1d734ef30f51401d58d344a0d5a026fa4e1767734591ae477b388a38281383a2",
+    "MaxDps_Warrior/Specialization/Classic/DPS.lua": "90e86772fdbe8fb4ef87babb6e7ce5ebd7eba9e2b2b90d440151ea9a37079b59",
+    "MaxDps_Warrior/Specialization/Classic/Protection.lua": "54f5833cc99e029fbdb17a55bc44308a1ed4633d0ba3850bdd5970a1e7b91b6e"
+  },
+  "inventory": [
+    {
+      "addon": "MaxDps",
+      "version": "v11.3.49",
+      "syntax_checked_files": [
+        "MaxDps/Cooldowns.lua",
+        "MaxDps/SpellData.lua",
+        "MaxDps/spell_durations.lua",
+        "MaxDps/Core.lua",
+        "MaxDps/Tier.lua",
+        "MaxDps/Options.lua",
+        "MaxDps/Buttons.lua",
+        "MaxDps/Helper.lua",
+        "MaxDps/TimeToDie.lua",
+        "MaxDps/Modules/Custom.lua",
+        "MaxDps/Modules/Window.lua",
+        "MaxDps/Modules/Profiler.lua",
+        "MaxDps/Modules/SpellIDToolTip.lua",
+        "MaxDps/SpellFrame.lua",
+        "MaxDps/SwingTimer.lua"
+      ]
+    },
+    {
+      "addon": "MaxDps_Druid",
+      "version": "v11.2.11",
+      "syntax_checked_files": [
+        "MaxDps_Druid/Main.lua",
+        "MaxDps_Druid/Specialization/Classic/Balance.lua",
+        "MaxDps_Druid/Specialization/Classic/Feral.lua",
+        "MaxDps_Druid/Specialization/Classic/Guardian.lua"
+      ]
+    },
+    {
+      "addon": "MaxDps_Hunter",
+      "version": "v11.2.15",
+      "syntax_checked_files": [
+        "MaxDps_Hunter/Main.lua",
+        "MaxDps_Hunter/Specialization/Classic/Beastmastery.lua",
+        "MaxDps_Hunter/Specialization/Classic/Survival.lua",
+        "MaxDps_Hunter/Specialization/Classic/Marksmanship.lua"
+      ]
+    },
+    {
+      "addon": "MaxDps_Mage",
+      "version": "v11.2.9",
+      "syntax_checked_files": [
+        "MaxDps_Mage/Main.lua",
+        "MaxDps_Mage/Specialization/Classic/Arcane.lua",
+        "MaxDps_Mage/Specialization/Classic/Frost.lua",
+        "MaxDps_Mage/Specialization/Classic/Fire.lua"
+      ]
+    },
+    {
+      "addon": "MaxDps_Paladin",
+      "version": "v11.2.12",
+      "syntax_checked_files": [
+        "MaxDps_Paladin/Main.lua",
+        "MaxDps_Paladin/Specialization/Holy.lua",
+        "MaxDps_Paladin/Specialization/Classic/Retribution.lua"
+      ]
+    },
+    {
+      "addon": "MaxDps_Priest",
+      "version": "v11.2.9",
+      "syntax_checked_files": [
+        "MaxDps_Priest/Main.lua",
+        "MaxDps_Priest/Specialization/Classic/Discipline.lua",
+        "MaxDps_Priest/Specialization/Classic/Holy.lua",
+        "MaxDps_Priest/Specialization/Classic/Shadow.lua"
+      ]
+    },
+    {
+      "addon": "MaxDps_Rogue",
+      "version": "v11.2.11",
+      "syntax_checked_files": [
+        "MaxDps_Rogue/Main.lua",
+        "MaxDps_Rogue/Specialization/Classic/Assassination.lua",
+        "MaxDps_Rogue/Specialization/Classic/Combat.lua",
+        "MaxDps_Rogue/Specialization/Classic/Subtlety.lua"
+      ]
+    },
+    {
+      "addon": "MaxDps_Shaman",
+      "version": "v11.2.10",
+      "syntax_checked_files": [
+        "MaxDps_Shaman/Main.lua",
+        "MaxDps_Shaman/Specialization/Classic/Elemental.lua",
+        "MaxDps_Shaman/Specialization/Classic/Enhancement.lua"
+      ]
+    },
+    {
+      "addon": "MaxDps_Warlock",
+      "version": "v11.2.10",
+      "syntax_checked_files": [
+        "MaxDps_Warlock/Main.lua",
+        "MaxDps_Warlock/Specialization/Classic/DPS.lua"
+      ]
+    },
+    {
+      "addon": "MaxDps_Warrior",
+      "version": "v11.2.11",
+      "syntax_checked_files": [
+        "MaxDps_Warrior/Main.lua",
+        "MaxDps_Warrior/Specialization/Classic/DPS.lua",
+        "MaxDps_Warrior/Specialization/Classic/Protection.lua"
+      ]
+    }
+  ],
+  "matched": 15,
+  "count": 15
+}
