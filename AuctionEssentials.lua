@@ -74,14 +74,13 @@ function E:Refresh()
             if record.craftParent and record.missing==0 then
                 price=record.bagUsed>0 and ("In Bags ("..record.bagUsed..")") or ""
                 if record.bankUsed>0 then price=price..(price~="" and " / " or "").."In Bank ("..record.bankUsed..")" end
-                if record.mailUsed>0 then price=price..(price~="" and " / " or "").."In Mail ("..record.mailUsed..")" end
+                if record.mailUsed>0 then price=price..(price~="" and " / " or "").."In Mail" end
             elseif record.crafting then
                 local craft=self:CraftCost(record)
                 price="Craft: "..cash(craft)
             end
             local values={record.name..(record.craftable and " |cff62d79b(Craftable)|r" or ""),record.count==nil and "?" or tostring(record.count),tostring(record.target),
                 record.missing==nil and "?" or tostring(record.missing),not record.crafting and plan and plan.units>0 and tostring(plan.units) or "—",price}
-            if (record.mailCount or 0)>0 then values[2]=values[2].."\nMail "..record.mailCount end
             for column,cell in ipairs(row.cells) do
                 local indent=column==1 and record.craftParent and 14 or 0
                 cell:ClearAllPoints(); cell:SetPoint("LEFT",row,"LEFT",positions[column]+indent,0)
@@ -93,7 +92,7 @@ function E:Refresh()
         end
     end
     local _,inMail=self:MailStock()
-    self.mailStatus:SetShown(inMail>0); self.mailStatus.label:SetText("In Mail: "..inMail)
+    self.mailStatus:SetShown(inMail>0); self.mailStatus.label:SetText("Items in Mail")
     self.notice:SetWidth(width-28-(inMail>0 and 166 or 0))
     self.notice:SetText(self.message or (#self.items==0 and "No Essentials have reached their refill amount." or "Scan prices, then Buy beside an item to refill it."))
     if MoneyFrame_Update then MoneyFrame_Update("HardcoreBuddyEssentialsMoneyFrame",GetMoney()) end
@@ -132,7 +131,7 @@ function E:Attach()
     self.mailStatus.label=label(self.mailStatus,"",0,0,156); self.mailStatus.label:SetJustifyH("RIGHT")
     self.mailStatus:SetScript("OnEnter",function(frame)
         GameTooltip:SetOwner(frame,"ANCHOR_RIGHT"); GameTooltip:SetText("Essentials in Mail")
-        for _,r in ipairs(E:MailStock()) do GameTooltip:AddDoubleLine(r.name,tostring(r.count),1,1,1,1,0.8,0.4) end
+        for _,r in ipairs(E:MailStock()) do GameTooltip:AddLine(r.name,1,1,1) end
         GameTooltip:AddLine("Collect these items from your mailbox. They already count toward AH refill targets.",1,0.8,0.4,true); GameTooltip:Show()
     end)
     self.mailStatus:SetScript("OnLeave",function() GameTooltip:Hide() end)
@@ -158,13 +157,13 @@ function E:Attach()
                     local r=self.record
                     GameTooltip:SetOwner(self,"ANCHOR_RIGHT"); GameTooltip:SetHyperlink("item:"..r.itemId)
                     if (r.bankCount or 0)>0 then GameTooltip:AddLine("In Bank ("..r.bankCount..")",1,0.8,0.4) end
-                    if (r.mailCount or 0)>0 then GameTooltip:AddLine("In Mail ("..r.mailCount..")",1,0.8,0.4) end
+                    if (r.mailCount or 0)>0 then GameTooltip:AddLine("In Mail",1,0.8,0.4) end
                     for _,child in ipairs(r.children or {}) do
                         if child.missing==0 then
                             local locations={}
                             if child.bagUsed>0 then locations[#locations+1]="Bags "..child.bagUsed end
                             if child.bankUsed>0 then locations[#locations+1]="Bank "..child.bankUsed end
-                            if child.mailUsed>0 then locations[#locations+1]="Mail "..child.mailUsed end
+                            if child.mailUsed>0 then locations[#locations+1]="Mail" end
                             GameTooltip:AddLine(child.name..": "..table.concat(locations,", "),0.4,0.85,0.6,true)
                         end
                     end

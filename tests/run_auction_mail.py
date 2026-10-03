@@ -37,8 +37,8 @@ E:PurchaseSucceeded(); check(E:MailCount(900001)==8,'Duplicate success cannot co
 bags[900001]=3; A.characterDB.auctionBank={counts={[900001]=4}}
 E:Refresh()
 check(E.items[1].count==15 and E.items[1].missing==5,'Bags, bank and pending mail cover refill')
-check(E.rows[1].cells[2]:GetText()=='15\nMail 8','Partial refill visibly notes mail stock')
-check(E.mailStatus:IsShown() and E.mailStatus.label:GetText()=='In Mail: 8','Mail summary visible')
+check(E.rows[1].cells[2]:GetText()=='15','Owned stock includes mail without an extra mail quantity')
+check(E.mailStatus:IsShown() and E.mailStatus.label:GetText()=='Items in Mail','Mail reminder has no quantity')
 receipt(900001,5)
 check(#E.items==0 and not E.rows[1]:IsShown(),'Fulfilled purchase row disappears immediately')
 check(E.mailStatus:IsShown(),'Mail notice remains when all refill rows are hidden')
