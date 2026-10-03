@@ -500,7 +500,7 @@ function M:ShowZoneNotice(id,list)
     -- Restore previous timings when the list clears; leave other addons' edits.
     self.zoneNoticeTimes={}
     for _,frame in ipairs({ZoneTextFrame,SubZoneTextFrame}) do
-        local hold=frame.holdTime; local extended=math.max(hold or 1,6)
+        local hold=frame.holdTime; local extended=math.max(hold or 1,5)
         local fadeOut=frame.fadeOutTime; local shortened=math.min(fadeOut or 2,1.5)
         self.zoneNoticeTimes[#self.zoneNoticeTimes+1]={frame=frame,hold=hold,extended=extended,fadeOut=fadeOut,shortened=shortened}
         frame.holdTime=extended; frame.fadeOutTime=shortened

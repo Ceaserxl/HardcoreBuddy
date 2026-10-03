@@ -174,7 +174,7 @@ assert(notice.footer.more:GetText()==(#records-5).." additional NPCs" and notice
 assert(notice.box:IsShown() and notice.box.sectionFill:GetParent()==ZoneTextFrame,"Box behind native title and table uses parent background regions")
 assert(select(2,notice.box:GetPoint(1))==ZoneTextString and select(2,notice.box:GetPoint(2))==notice.note,"Box encloses the whole announcement")
 assert(notice:GetFrameLevel()>ZoneTextFrame:GetFrameLevel() and notice.footer.highlight,"Table is above the box; clickable footer has hover feedback")
-assert(ZoneTextFrame.holdTime==6 and SubZoneTextFrame.holdTime==6,"Both native labels remain readable with the list")
+assert(ZoneTextFrame.holdTime==5 and SubZoneTextFrame.holdTime==5,"Both native labels remain readable with the list")
 assert(nativeEvents==1 and #messages==0 and M.notified[1436]==now)
 M:NotifyZone(); assert(nativeEvents==1,"No repeat notice while staying in a zone")
 current=1421; combat=true; M:NotifyZone()
