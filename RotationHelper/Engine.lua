@@ -16,6 +16,16 @@ function H.Eligible(c,key,immediate,forecast)
     return s.cost<=power
 end
 
+function H.PlanContext(c)
+    -- Main describes the action AFTER the cast/GCD already in progress.
+    -- Use its reserved resources and aura expiration time from the outset;
+    -- keep the live snapshot intact for immediate survival advice.
+    local power=c.nextPower or c.power
+    local fraction=power/math.max(1,c.maxPower or 0)
+    return setmetatable({now=c.now+(c.actionDelay or 0),power=power,
+        powerFraction=fraction,mana=c.powerType==0 and fraction or c.mana}, {__index=c})
+end
+
 function H.Select(c,module,state)
     state=state or {}
     if c.dead or c.taxi or c.paused or not module then
@@ -26,6 +36,7 @@ function H.Select(c,module,state)
         state.lock=nil; state.token=nil; state.lastMain=nil
     end
     c.previousMain=state.lastMain
+    local planned=H.PlanContext(c)
     local primary,anticipated,extras,groups=nil,nil,{},{}
     local rules={}
     for _,rule in ipairs(module.rules) do rules[#rules+1]=rule end
@@ -34,7 +45,7 @@ function H.Select(c,module,state)
         local main=rule.category=="main"
         local preparing=rule.category=="preparation"
         if (not preparing or not c.preparationBlocked) and H.Eligible(c,rule.spell,not main,main) then
-            local reason=rule.when(c)
+            local reason=rule.when(main and planned or c)
             if reason then
                 local pick={key=rule.spell,id=c.spells[rule.spell].id,kind=c.spells[rule.spell].kind or "spell",
                     category=rule.category,reason=reason,supportsMain=rule.supportsMain}

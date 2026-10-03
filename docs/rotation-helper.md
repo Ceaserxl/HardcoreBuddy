@@ -48,6 +48,16 @@ trigger a missing-spell notice. Items do not trigger these spell notices.
   At cast start it plans for completion, reserving that cast's mana cost and
   crediting only reported casting regeneration. It does not predict random
   procs, damage, or uncertain future resource gains.
+- Main rule conditions use that same projected mana and aura time, rather than
+  choosing from pre-cast thresholds and then locking a stale decision. Wand
+  conservation and debuff refreshes can therefore be advertised at START.
+  A carried, ready mana gem is also suggested before the cast crosses its mana
+  threshold. Immediate defensive checks continue using live health/resources.
+- If a confirmed START arrives before the casting API, the adapter uses the
+  spell's reported cast time to publish the next glow in that event. When the
+  casting API arrives, it updates timing under the same identity without
+  changing the advertised action. Channels with no reported duration wait for
+  their actual channel data; no duration is invented.
 - The next Main action is committed at cast start and remains held after
   completion until a new cast starts or the held instant is used. There is no
   timed handoff expiry. An empty plan may fill when mana recovers; once filled, it stays
@@ -86,8 +96,9 @@ the opening levels and unavailable Frost damage. Fire investments favor
 Fireball after establishing a solo slow, and directly on engaged group targets.
 This compares learned damage-focused talents in each school; utility/range/AoE
 points alone do not change the filler. It is a policy heuristic, not a DPS score.
-Solo Fire renews a slow that would expire before the next action, with a minimum
-two-second refresh window.
+Solo Fire renews a slow that would have at most two seconds left at the next
+action. Scorch's refresh threshold likewise uses its remaining duration after
+the current cast/GCD.
 Pyroblast is a Fire opener. Improved Scorch is reserved for durable targets and
 only anticipates a pending stack or refresh at 3/3 talent rank. Lower ranks keep
 planning from confirmed stacks and expiration times. Scorch does not start or
@@ -198,3 +209,7 @@ cases. It reproduces late spellbook/talent refreshes, completion gaps up to thre
 seconds, natural versus interrupted channel endings, and a START event arriving
 before the casting API. See `docs/rotation-handoff-fix.md` for the reproduced
 failures and the revised completion contract.
+
+`tests/run_rotation_scenarios.py --suite prediction --strict` checks 22 early
+prediction cases, including the value sent to the glow during START before the
+casting API appears. See `docs/rotation-prediction-timing.md`.

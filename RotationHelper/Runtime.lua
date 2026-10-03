@@ -56,6 +56,16 @@ local function cast(unit,t)
 end
 function H:PlayerCast()
     local current=cast("player",now())
+    -- A confirmed START can precede UnitCastingInfo. Plan on that event rather
+    -- than showing the previous action until the next polling tick.
+    local pending=self.pendingCastStart
+    if not current and pending and pending.cast and now()<pending.cast.finish then
+        local observed={}
+        for key,value in pairs(pending.cast) do observed[key]=value end
+        observed.remaining=math.max(0,observed.finish-now())
+        self.lastCast=observed
+        return observed
+    end
     local previous=self.lastCast
     if current and previous and current.id==previous.id and current.channel==previous.channel then
         local sameID=current.apiID~=nil and current.apiID==previous.apiID
@@ -68,7 +78,6 @@ function H:PlayerCast()
             current.token=previous.token
         end
     end
-    local pending=self.pendingCastStart
     if current and pending and current.id==pending.id
         and (type(current.apiID)~="string" or current.apiID==pending.guid) then
         current.guid=pending.guid; current.token="cast:"..pending.guid
@@ -91,6 +100,12 @@ function H:CastEvent(event,guid,id,interruptedBy)
         elseif guid then
             -- START can arrive before the casting API publishes the new cast.
             self.pendingCastStart={guid=guid,id=id}
+            local name,_,castMS=info(id)
+            if event=="UNIT_SPELLCAST_START" and castMS and castMS>0 then
+                local t=now()
+                self.pendingCastStart.cast={id=id,name=name,guid=guid,token="cast:"..guid,
+                    start=t,finish=t+castMS/1000,remaining=castMS/1000,interruptible=true}
+            end
         end
         return
     end

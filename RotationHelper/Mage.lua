@@ -67,7 +67,10 @@ M.rules={
                 or c.spells.barrier.known and c:remaining("barrier")==0 and c.spells.barrier.cooldown>2)
             and "Reset unavailable Frost survival cooldowns"
     end),
-    rule("gem","offensive","mana",function(c) return c.combat and c.mana<0.45 and "Restore mana without a cast" end),
+    rule("gem","offensive","mana",function(c)
+        local after=c.nextPower/math.max(1,c.maxPower)
+        return c.combat and math.min(c.mana,after)<0.45 and "Restore mana before the next attack"
+    end),
     rule("arcanePower","offensive","damage",function(c)
         return combat(c) and c.targetCombat and c.targetHealth>0.7 and c.mana>0.65 and c.tough and not c.attacked and "Burst on an engaged, durable target"
     end,{frostbolt=true,fireball=true,fireblast=true,scorch=true,pyroblast=true,missiles=true}),
@@ -92,7 +95,7 @@ M.rules={
         return combat(c) and not c.tough and c.targetHealth<0.15 and c.mana>0.25 and "Finish a low-health target"
     end),
     rule("fireball","main",nil,function(c)
-        return combat(c) and (fire(c) and (c.grouped or c:remaining("slow","target")>math.max(2,c.actionDelay or 0) or c.casting=="frostbolt")
+        return combat(c) and (fire(c) and (c.grouped or c:remaining("slow","target")>2 or c.casting=="frostbolt")
             or not c.spells.frostbolt.known or c.immune.frostbolt) and "Use your Fire attack"
     end),
     rule("frostbolt","main",nil,function(c) return combat(c) and "Damage and slow your target" end),

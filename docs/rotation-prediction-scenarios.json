@@ -1,0 +1,143 @@
+{
+  "namedCount": 22,
+  "matrixCount": 0,
+  "matrixViolations": 0,
+  "cooldownMainCount": 0,
+  "suite": "prediction",
+  "cases": [
+    {
+      "passed": true,
+      "expected": "Main shoot",
+      "name": "Plan wand at START before mana falls below threshold",
+      "actual": "main:shoot"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt",
+      "name": "Do not plan an expensive finisher using pre-cast mana",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt",
+      "name": "Plan spell when confirmed regeneration covers conservation threshold",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include gem",
+      "name": "Mana gem appears at START before the mana threshold",
+      "actual": "main:frostbolt, offensive:gem"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; exclude gem",
+      "name": "Forecast cannot recommend a cooling-down mana gem",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; exclude gem",
+      "name": "Idle mana gem threshold remains unchanged",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include manashield",
+      "name": "Mana Shield keeps live emergency resources",
+      "actual": "main:frostbolt, defensive:manashield"
+    },
+    {
+      "passed": true,
+      "expected": "Main scorch",
+      "name": "Scorch refresh is planned before the current cast completes",
+      "actual": "main:scorch, offensive:combustion"
+    },
+    {
+      "passed": true,
+      "expected": "Main scorch",
+      "name": "Scorch refresh anticipates the remaining GCD too",
+      "actual": "main:scorch, offensive:combustion"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball",
+      "name": "Healthy Scorch duration does not trigger a premature refresh",
+      "actual": "main:fireball, offensive:combustion"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball",
+      "name": "A Scorch already being cast supplies its own guaranteed refresh",
+      "actual": "main:fireball, offensive:combustion"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt",
+      "name": "Plan slow refresh with a buffer after the cast ends",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball",
+      "name": "A slow that lasts through the following action permits Fireball",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt",
+      "name": "Already-paid channel mana is not reserved twice",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the advertised wand despite later mana changes",
+      "name": "Early prediction cannot switch in the queue window",
+      "actual": "main:shoot"
+    },
+    {
+      "passed": true,
+      "expected": "Keep the advertised wand",
+      "name": "Early prediction also survives cast completion",
+      "actual": "main:shoot"
+    },
+    {
+      "passed": true,
+      "expected": "Fireball sent to Glow:Apply inside START",
+      "name": "START publishes the next glow before UnitCastingInfo appears",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Same Fireball and START identity",
+      "name": "Authoritative casting data keeps the early plan",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Fireball remains Main",
+      "name": "Late finisher conditions cannot overwrite early glow",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Fireball remains Main",
+      "name": "Successful completion retains the event-start prediction",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Wand sent to Glow:Apply immediately",
+      "name": "Deferred API still reserves mana during START",
+      "actual": "main:shoot"
+    },
+    {
+      "passed": true,
+      "expected": "Frostbolt can be planned again",
+      "name": "Interrupted deferred cast releases reserved mana and plan",
+      "actual": "main:frostbolt"
+    }
+  ],
+  "findings": [],
+  "passed": 22
+}
