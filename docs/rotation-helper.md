@@ -152,3 +152,7 @@ latest results are recorded in `docs/rotation-scenario-audit.md` and its JSON fi
 cooldown scenarios: GCD normalization, readiness boundaries, emergency fallbacks,
 damage abilities, mana gems, food/water, cast transitions, previous audit fixes,
 and missing-action chat. Results are in `docs/rotation-cooldown-scenarios.json`.
+
+`tests/run_rotation_scenarios.py --suite hundred --strict` combines those 50
+cases with 50 additional safety, resource, timing and action-bar scenarios. See
+`docs/rotation-100-scenarios.md` for the current result and outstanding finding.

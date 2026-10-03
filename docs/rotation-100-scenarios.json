@@ -1,0 +1,618 @@
+{
+  "namedCount": 100,
+  "matrixCount": 0,
+  "matrixViolations": 0,
+  "cooldownMainCount": 0,
+  "suite": "hundred",
+  "cases": [
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude ",
+      "name": "Level 1 Fireball during GCD",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Level 4 Frostbolt during GCD",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireblast; include ; exclude ",
+      "name": "Finisher ready now",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireblast; include ; exclude ",
+      "name": "Finisher ready in one second",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireblast; include ; exclude ",
+      "name": "Finisher at two-second boundary",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude fireblast",
+      "name": "Finisher beyond two-second boundary",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude fireblast",
+      "name": "Finisher with long cooldown",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude fireblast",
+      "name": "Finisher cooldown disabled",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireblast; include ; exclude ",
+      "name": "Finisher cooldown expired",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireblast; include ; exclude ",
+      "name": "Finisher ready before current cast ends",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireblast; include ; exclude ",
+      "name": "Finisher ready exactly when cast ends",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude fireblast",
+      "name": "Finisher still unavailable when cast ends",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include counterspell; exclude ",
+      "name": "Counterspell ignores GCD",
+      "actual": "main:frostbolt, defensive:counterspell"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude counterspell",
+      "name": "Counterspell on long cooldown",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude counterspell",
+      "name": "Counterspell not yet ready",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include counterspell; exclude ",
+      "name": "Counterspell ready now",
+      "actual": "main:frostbolt, defensive:counterspell"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude nova",
+      "name": "Nova cooldown prevents repeat root",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include nova; exclude ",
+      "name": "Nova ignores GCD",
+      "actual": "main:frostbolt, defensive:nova"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include coldsnap; exclude iceblock",
+      "name": "Cold Snap replaces unavailable Ice Block",
+      "actual": "main:frostbolt, defensive:barrier, defensive:coldsnap"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude iceblock, coldsnap",
+      "name": "Both survival cooldowns unavailable",
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include manashield; exclude barrier",
+      "name": "Mana Shield replaces unavailable Barrier",
+      "actual": "main:frostbolt, defensive:manashield"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include barrier; exclude manashield",
+      "name": "Ready Barrier keeps priority",
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude barrier, manashield",
+      "name": "Shield fallback still respects mana",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include arcanePower; exclude ",
+      "name": "Arcane Power ready",
+      "actual": "main:fireball, offensive:arcanePower"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude arcanePower",
+      "name": "Arcane Power cooling down",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include combustion; exclude ",
+      "name": "Combustion ready",
+      "actual": "main:fireball, offensive:combustion"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude combustion",
+      "name": "Combustion cooling down",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include gem; exclude ",
+      "name": "Mana gem ready",
+      "actual": "main:frostbolt, offensive:gem"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude gem",
+      "name": "Mana gem cooling down",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude gem",
+      "name": "Mana gem cooldown disabled",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include evocation; exclude ",
+      "name": "Evocation ready out of combat",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:evocation, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude evocation",
+      "name": "Evocation unavailable out of combat",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include intellect, icearmor; exclude ",
+      "name": "Self buffs ignore GCD",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude barrier",
+      "name": "Preparation Barrier cooling down",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include food; exclude ",
+      "name": "Food ready",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem, preparation:food"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude food",
+      "name": "Food cooling down",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include water; exclude ",
+      "name": "Water ready",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem, preparation:water"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude water",
+      "name": "Water cooling down",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude fireblast",
+      "name": "Ready finisher outside its range",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude fireblast",
+      "name": "Ready finisher on controlled target",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Frostbolt first, Fire Blast with two seconds left",
+      "name": "Countdown enters the planning window",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Frostbolt stays Main through the cast",
+      "name": "Readiness change preserves committed attack",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Fire Blast becomes Main at next cast start",
+      "name": "Next cast reconsiders ready finisher",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Hide unavailable Main without switching late",
+      "name": "Committed spell starts a long cooldown",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Frostbolt becomes Main",
+      "name": "Empty plan fills after mana recovery",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Do not subtract the completed cast twice",
+      "name": "Paid cast still visible in casting API",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Replan Frostbolt immediately",
+      "name": "Matching interruption before API clear",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Keep committed Fire Blast",
+      "name": "Unrelated failed press",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Continue Scorch without assuming a fifth stack",
+      "name": "Partial Scorch talent during cast",
+      "actual": "main:scorch"
+    },
+    {
+      "passed": true,
+      "expected": "No warning for unavailable Fire Blast",
+      "name": "Gated spell does not generate missing-bar chat",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Friendly unit is not an attack target",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Player target is outside PvE advice",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Another player's tagged target",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Dead enemy target",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Combat without a target",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "No highlights",
+      "name": "Dead character clears every category",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "No highlights",
+      "name": "Taxi clears every category",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "No highlights",
+      "name": "Active Ice Block pauses every category",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Unengaged party target avoids a pull",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Engaged party target permits an attack",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude arcanePower",
+      "name": "Danger suppresses optional Arcane Power",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Unknown spell range is not assumed safe",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Enemy outside every learned spell range",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Polymorph blocks damage",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Another class's Fear blocks damage",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude nova",
+      "name": "A root permits damage but not repeat Nova",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude frostbolt",
+      "name": "Observed Frostbolt immunity uses Fireball",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude nova",
+      "name": "Root immunity does not block Frostbolt",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main missiles; include ; exclude frostbolt, fireball",
+      "name": "Both damage schools immune uses Arcane fallback",
+      "actual": "main:missiles"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Immunity on a different creature is ignored",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude intellect, icearmor",
+      "name": "Long-duration self buffs are retained",
+      "actual": "preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include intellect, icearmor; exclude ",
+      "name": "Self buffs at five-minute refresh boundary",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude intellect",
+      "name": "Stronger intellect elixir prevents refresh",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include intellect; exclude ",
+      "name": "Weaker intellect buff can be replaced",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include magearmor; exclude icearmor, frostarmor",
+      "name": "Group preparation chooses Mage Armor",
+      "actual": "preparation:intellect, preparation:magearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "No highlights",
+      "name": "Eating pauses buffs and other preparation",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude food, water",
+      "name": "No carried recovery items means no food or water",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude gem",
+      "name": "Spent mana gem is removed after bag update",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Exactly enough mana for an attack",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Guaranteed regeneration funds the next attack",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude ",
+      "name": "Insufficient predicted mana yields no attack",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main shoot; include ; exclude ",
+      "name": "Low mana conserves resources with wand",
+      "actual": "main:shoot"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude shoot",
+      "name": "Clearcasting suppresses wand conservation",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude shoot, fireblast",
+      "name": "Low-health elite is not assumed to be a finisher",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude fireblast",
+      "name": "Finisher respects the mana threshold",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude gem",
+      "name": "Mana gem threshold does not overconsume",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude iceblock",
+      "name": "Ice Block health threshold is strict",
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude iceblock",
+      "name": "Hypothermia blocks Ice Block",
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude manashield",
+      "name": "Existing Mana Shield is not reapplied",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude barrier, manashield",
+      "name": "Existing Barrier prevents a second shield",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Choose finisher for the new target",
+      "name": "Target switch releases old target's plan",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Reconsider finisher after the handoff",
+      "name": "Cast handoff expires normally",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": false,
+      "expected": "Keep Frostbolt when timing changes without a new cast",
+      "name": "Same cast GUID with revised timing",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Do not immediately repeat Intellect",
+      "name": "Successful buff waits for aura update",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "No missing-spell notice",
+      "name": "Resolved conditional macro satisfies the bar check",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "No missing-spell notice",
+      "name": "Hidden action page satisfies the bar check",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Exactly one named notice across repeated ticks",
+      "name": "Missing spell chat is suppressed after first notice",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Report the missing recommended rank",
+      "name": "Old spell rank does not conceal missing current rank",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "No Main and no notice",
+      "name": "Out-of-range advice produces no missing-spell noise",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "No rotation recommendations",
+      "name": "Unsupported class remains disabled",
+      "actual": "none"
+    }
+  ],
+  "findings": [
+    {
+      "passed": false,
+      "expected": "Keep Frostbolt when timing changes without a new cast",
+      "name": "Same cast GUID with revised timing",
+      "actual": "main:fireblast"
+    }
+  ],
+  "passed": 99
+}

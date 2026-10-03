@@ -10,21 +10,30 @@ from render_layout import boot
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--strict", action="store_true")
-parser.add_argument("--suite", choices=("audit", "cooldown"), default="audit")
+parser.add_argument("--suite", choices=("audit", "cooldown", "hundred"), default="audit")
 parser.add_argument("--output", type=Path)
 args = parser.parse_args()
 lua, addon = boot()
 lua.globals().ScenarioFixture = lua.execute((ROOT / "tests/rotation_scenario_fixture.lua").read_text(encoding="utf-8"))
-case_file = "rotation_cooldown_scenarios.lua" if args.suite == "cooldown" else "rotation_scenario_audit.lua"
-audit = lua.execute((ROOT / "tests" / case_file).read_text(encoding="utf-8"))
-
 def rows(table):
     return [dict(table[i].items()) for i in range(1, len(table) + 1)]
 
-report = {key: audit[key] or 0 for key in ("namedCount", "matrixCount", "matrixViolations", "cooldownMainCount")}
-report["suite"] = args.suite
-report["cases"] = rows(audit.cases)
-report["findings"] = rows(audit.findings)
+case_files = {
+    "audit": ("rotation_scenario_audit.lua",),
+    "cooldown": ("rotation_cooldown_scenarios.lua",),
+    "hundred": ("rotation_cooldown_scenarios.lua", "rotation_extended_scenarios.lua"),
+}[args.suite]
+report = dict.fromkeys(("namedCount", "matrixCount", "matrixViolations", "cooldownMainCount"), 0)
+report.update(suite=args.suite, cases=[], findings=[])
+for case_file in case_files:
+    audit = lua.execute((ROOT / "tests" / case_file).read_text(encoding="utf-8"))
+    for key in ("namedCount", "matrixCount", "matrixViolations", "cooldownMainCount"):
+        report[key] += audit[key] or 0
+    report["cases"].extend(rows(audit.cases))
+    report["findings"].extend(rows(audit.findings))
+assert len({case["name"] for case in report["cases"]}) == report["namedCount"], "Scenario names must be unique"
+if args.suite == "hundred":
+    assert report["namedCount"] == 100, "The requested suite must execute exactly 100 scenarios"
 report["passed"] = report["namedCount"] - len(report["findings"])
 print(f"{args.suite.upper()}: {report['passed']}/{report['namedCount']} named expectations met")
 if report["matrixCount"]:

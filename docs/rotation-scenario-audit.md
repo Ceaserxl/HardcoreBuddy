@@ -7,6 +7,9 @@ has now been restored at the user's request.
 Date: 2026-10-02.
 
 **Result: all eight original findings are resolved in the offline tests.**
+The subsequent [100-scenario run](rotation-100-scenarios.md) found one additional
+cast-timing issue: an unchanged cast GUID with a revised start time can cause a
+mid-cast recommendation change. That issue remains open.
 All 50 focused cooldown scenarios, 115 regression checks, and 75 named audit
 expectations pass, with zero
 structural violations across 3,888 combinations. The expanded audit includes
