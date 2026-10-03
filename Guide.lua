@@ -20,6 +20,28 @@ function G.EmptySupplyRow(section,item,kind)
     return {title=title,disabled=true,compactRow=true,rightColumn=true,emptySection=section}
 end
 -- Shared compact copy for selected supplies, alternatives and future ranks.
+function G.SortSupplyItems(items,context)
+    local profile=addon.Enchants.Profile(context)
+    local weights=profile and profile.weights or {}
+    local function score(item)
+        local buff=addon.Data.ConsumableBuffs.items[item.itemId]
+        if buff then
+            if buff.group=="food" then
+                return buff.power*(buff.foodType=="manafood" and (weights.mp5 or 0)
+                    or (weights.stamina or 0)+(weights.spirit or 0))
+            end
+            return buff.power*(weights[buff.group] or 0)
+        end
+        return item.ammoDPS or item.power or tonumber((item.detail or ""):match("(%d+%.?%d*)")) or 0
+    end
+    table.sort(items,function(a,b)
+        local av,bv=score(a),score(b)
+        if av~=bv then return av>bv end
+        if (a.level or 0)~=(b.level or 0) then return (a.level or 0)>(b.level or 0) end
+        if (a.ease or 0)~=(b.ease or 0) then return (a.ease or 0)<(b.ease or 0) end
+        return a.itemId<b.itemId
+    end)
+end
 function G.SupplySubtitle(item,context)
     local effect=(item.detail or item.short or ""):gsub("^Use: *","")
     if item.family=="wellfed" or item.family=="manafood" then effect=item.short or effect end

@@ -226,10 +226,13 @@ check(feetDetail.blocks[1].title=="Selected Alternative" and feetDetail.blocks[2
 local other
 for _,option in ipairs(feet.options) do if option~=feet.recommendation and option.enchantId~=1843 then other=option; break end end
 local ordered=E.Detail(A:GetContext(),{slotId=8,spellId=other.spellId})
-check(ordered.blocks[6].enchantStatus=="|cff62d79bRecommended|r" and ordered.blocks[7].enchantTooltip.enchantId==1843 and ordered.blocks[7].enchantStatus=="Enchanted","Applied enchant follows recommendation in alternatives")
+local function hasApplied(page)
+ for _,b in ipairs(page.blocks) do if b.enchantAlternative and b.enchantTooltip and b.enchantTooltip.enchantId==1843 and b.enchantStatus=="Enchanted" then return true end end
+end
+check(hasApplied(ordered),"Applied enchant retained in score-sorted alternatives")
 local recommendedDetail=E.Detail(A:GetContext(),{slotId=8,spellId=feet.recommendation.spellId})
 check(recommendedDetail.blocks[1].title=="Recommended" and recommendedDetail.blocks[2].enchantStatus=="Missing" and recommendedDetail.blocks[2].enchantTone=="missing","Selected recommendation is red and missing when an alternative is applied")
-check(recommendedDetail.blocks[6].enchantStatus=="Enchanted" and recommendedDetail.blocks[6].enchantTooltip.enchantId==1843,"Applied alternative remains enchanted beneath selected missing recommendation")
+check(hasApplied(recommendedDetail),"Applied alternative stays enchanted")
 for _,slot in ipairs(E.Scan(A:GetContext())) do
     if gear[slot.slotId] and #slot.options>0 then
         local oldEnchant=gear[slot.slotId].enchant
@@ -263,15 +266,17 @@ check(A.document.cards[1].itemLayout and A.document.cards[1].blocks[1].title=="R
 local right=false
 for _,b in ipairs(A.document.cards[1].blocks) do if b.itemId and not b.rightColumn then right=true; check(b.supply and b.target>0,"Tracked reagent rows") end end
 check(right,"Materials occupy left column")
-local before=#A.document.cards[1].blocks
-MOCK.Click(A.window.enchantRanks)
-check(A.state.showLesserEnchants and #A.document.cards[1].blocks>before,"Show Lesser Ranks expands the displayed alternatives")
-for _,b in ipairs(A.document.cards[1].blocks) do if b.action then
-    A:Activate(b.action); break
-end end
-check(A.state.showLesserEnchants,"Selecting an alternative preserves rank toggle")
-MOCK.Click(A.window.enchantRanks)
-check(not A.state.showLesserEnchants,"Hide Lesser Ranks restores compact list")
+check(not A.window.enchantRanks,"Lesser-rank toggle removed")
+local inAlternatives=false; local last=math.huge; local count=0
+for _,b in ipairs(A.document.cards[1].blocks) do
+    if b.title=="Alternatives" then inAlternatives=true end
+    if b.title=="Materials" then inAlternatives=false end
+    if inAlternatives and b.enchantRow then
+        local score=b.enchantScore or -1
+        check(score<=last,"Alternatives sorted by build score"); last=score; count=count+1
+    end
+end
+check(count>1,"Lesser ranks visible without a toggle")
 A.state={view="supplies",filter="Enchants",page=1}; A:Refresh(true)
 check(A.window.enchantMode:IsShown(),"Enchants main page has recommendation dropdown")
 MOCK.Click(A.window.enchantMode)

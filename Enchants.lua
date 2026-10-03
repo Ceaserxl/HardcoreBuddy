@@ -387,9 +387,17 @@ function E.Detail(context,action)
         if option==recommended then b.enchantStatus="|cff62d79bRecommended|r" end
         blocks[#blocks+1]=b
     end
-    alternative(recommended)
-    if g.current and (g.current.armorKit or relevant(g.current,context)) then alternative(g.current) end
-    for _,option in ipairs(A.state and A.state.showLesserEnchants and options or g.options) do alternative(option) end
+    local ranked,seen={},{}
+    for _,option in ipairs(options) do ranked[#ranked+1]=option; seen[option.spellId]=true end
+    if g.current and not seen[g.current.spellId] and (g.current.armorKit or relevant(g.current,context)) then ranked[#ranked+1]=g.current end
+    local profile=E.Profile(context)
+    table.sort(ranked,function(a,b)
+        local av,bv=E.Score(a,profile) or -1,E.Score(b,profile) or -1
+        if av~=bv then return av>bv end
+        if a.skill~=b.skill then return a.skill>b.skill end
+        return a.spellId<b.spellId
+    end)
+    for _,option in ipairs(ranked) do alternative(option) end
     if not next(listed) then blocks[#blocks+1]=A.Guide.EmptySupplyRow("Alternatives",selected,"enchant") end
     heading("Materials",false,not selected and "No compatible enchant selected" or nil)
     if selected then

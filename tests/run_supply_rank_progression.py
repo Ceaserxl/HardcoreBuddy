@@ -6,6 +6,16 @@ from render_layout import boot
 lua, addon=boot()
 lua.execute('''
 local A=TestAddon
+local originalProfile=A.Enchants.Profile
+local weights={agility=10,intellect=1}
+A.Enchants.Profile=function() return {weights=weights} end
+local choices={{itemId=3012,level=10},{itemId=955,level=5}}
+A.Guide.SortSupplyItems(choices,{})
+assert(choices[1].itemId==3012,"Agility build puts agility first")
+weights={agility=1,intellect=10}
+A.Guide.SortSupplyItems(choices,{})
+assert(choices[1].itemId==955,"Build weight changes reorder alternatives")
+A.Enchants.Profile=originalProfile
 local chains={{3382,3388,3826,20004},{5997,3389,8951,13445},{2458,3825},
     {2457,3390,8949,9187},{2454,3391,9206},{3383,9179}}
 local items={}; local audited={}; local checks=0

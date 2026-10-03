@@ -195,8 +195,9 @@ local function supplyRows(context,state,onlyFamily)
 end
 local function bandageCards(context,state)
     local plan=A.Professions.BandagePlan(context)
-    local items={}
-    for _,item in ipairs(D.Items.items) do if item.family=="bandage" then items[item.itemId]=item end end
+    local items,rankedItems={},{}
+    for _,item in ipairs(D.Items.items) do if item.family=="bandage" then items[item.itemId]=item; rankedItems[#rankedItems+1]=item end end
+    G.SortSupplyItems(rankedItems,context)
     local function bandage(id)
         local item=items[id]; if not item then return end
         local record=S.Record(context,item,"bandage")
@@ -273,9 +274,9 @@ local function bandageCards(context,state)
     local heading=row("Alternatives")
     heading.plain=true; heading.textInset=0; heading.rightColumn=true
     blocks[#blocks+1]=heading
-    for _,recipe in ipairs(A.Professions.recipes.bandage) do
-        if not used[recipe.itemId] then
-            local block=bandage(recipe.itemId); block.rightColumn=true
+    for _,item in ipairs(rankedItems) do
+        if not used[item.itemId] then
+            local block=bandage(item.itemId); block.rightColumn=true
             blocks[#blocks+1]=block
         end
     end
@@ -425,6 +426,7 @@ function C.Detail(context, action)
             for _,other in ipairs(alternatives) do
                 if other.itemId~=item.itemId and (not recommended or other.itemId~=recommended.itemId) then choices[#choices+1]=other end
             end
+            G.SortSupplyItems(choices,context)
             local nextItem=G.NextSupply(item,context)
             heading("Next",true)
             if nextItem then
@@ -444,7 +446,10 @@ function C.Detail(context, action)
             end
             if family=="bandage" then
                 heading("Alternatives",true)
-                for _,other in ipairs(D.Items.items) do
+                local ranks={}
+                for _,other in ipairs(D.Items.items) do if other.family=="bandage" then ranks[#ranks+1]=other end end
+                G.SortSupplyItems(ranks,context)
+                for _,other in ipairs(ranks) do
                     if other.family=="bandage" and other.itemId~=item.itemId and (not nextItem or other.itemId~=nextItem.itemId) then
                         local block=itemRow(other); block.body=G.SupplySubtitle(other,context)
                         block.rightColumn=true; block.plain=true; block.supplyDetail=true

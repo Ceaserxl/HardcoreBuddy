@@ -890,10 +890,6 @@ function addon:CreateWindow()
         local b=button(f,tab[2],tab[3],function() self:Navigate(id) end); b.view=id; Skin.Button(b,"tab"); f.tabs[#f.tabs+1]=b
     end
     f.back=button(f,"< Back",80,function() self:Back() end)
-    f.enchantRanks=button(f,"Show Lesser Ranks",160,function()
-        self.state.showLesserEnchants=not self.state.showLesserEnchants
-        self:Refresh(true)
-    end)
     f.enchantMode=button(f,"",300,function()
         f.enchantModeMenu:SetShown(not f.enchantModeMenu:IsShown())
     end)
@@ -1131,9 +1127,7 @@ function addon:Activate(action)
         self.state={view="instances",instance=g.id,filter=self.state.filter,showAllInstances=self.state.showAllInstances,page=1}
     elseif action.view then self.state={view=action.view,filter=action.filter,query=action.query,page=1}
     else
-        local keepRanks=action.kind=="enchantRecipe" and self.state.detail
-            and self.state.detail.slotId==action.slotId and self.state.showLesserEnchants
-        self.state={view=self.state.view,filter=self.state.filter,query=self.state.query,detail=action,page=1,showLesserEnchants=keepRanks}
+        self.state={view=self.state.view,filter=self.state.filter,query=self.state.query,detail=action,page=1}
     end
     self.window.search:ClearFocus(); self:Refresh(true)
 end
@@ -1388,13 +1382,6 @@ local function layoutDocument(self)
     for i=#navigation+1,#f.filters do f.filters[i]:Hide() end
     if doc.filters and not sidebar then y=y+34 end
     Skin.PlaceBackButton(f.back,f,y,left)
-    local enchantDetail=self.state.detail and (self.state.detail.kind=="enchantSlot" or self.state.detail.kind=="enchantRecipe")
-    f.enchantRanks:SetShown(not not enchantDetail)
-    if enchantDetail then
-        f.enchantRanks:ClearAllPoints(); f.enchantRanks:SetPoint("TOPRIGHT",-52,-y)
-        f.enchantRanks.label:SetText(self.state.showLesserEnchants and "Hide Lesser Ranks" or "Show Lesser Ranks")
-        active(f.enchantRanks,not not self.state.showLesserEnchants)
-    end
     local enchantsPage=doc.view=="supplies" and self.state.filter=="Enchants" and not doc.isDetail
     f.enchantMode:SetShown(enchantsPage)
     if enchantsPage then
