@@ -189,49 +189,49 @@
       "passed": true,
       "expected": "Main none; include evocation; exclude ",
       "name": "Evocation ready out of combat",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:evocation, preparation:conjureGem"
+      "actual": "preparation:icearmor, preparation:evocation, preparation:conjureGem, preparation:intellect"
     },
     {
       "passed": true,
       "expected": "Main none; include ; exclude evocation",
       "name": "Evocation unavailable out of combat",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
     },
     {
       "passed": true,
       "expected": "Main none; include intellect, icearmor; exclude ",
       "name": "Self buffs ignore GCD",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
     },
     {
       "passed": true,
       "expected": "Main none; include ; exclude barrier",
       "name": "Preparation Barrier cooling down",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
     },
     {
       "passed": true,
       "expected": "Main none; include food; exclude ",
       "name": "Food ready",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem, preparation:food"
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:food, preparation:intellect"
     },
     {
       "passed": true,
       "expected": "Main none; include ; exclude food",
       "name": "Food cooling down",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
     },
     {
       "passed": true,
       "expected": "Main none; include water; exclude ",
       "name": "Water ready",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem, preparation:water"
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:water, preparation:intellect"
     },
     {
       "passed": true,
       "expected": "Main none; include ; exclude water",
       "name": "Water cooling down",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
     },
     {
       "passed": true,
@@ -435,7 +435,7 @@
       "passed": true,
       "expected": "Main none; include intellect, icearmor; exclude ",
       "name": "Self buffs at five-minute refresh boundary",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
     },
     {
       "passed": true,
@@ -447,13 +447,13 @@
       "passed": true,
       "expected": "Main none; include intellect; exclude ",
       "name": "Weaker intellect buff can be replaced",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
     },
     {
       "passed": true,
       "expected": "Main none; include magearmor; exclude icearmor, frostarmor",
       "name": "Group preparation chooses Mage Armor",
-      "actual": "preparation:intellect, preparation:magearmor, preparation:conjureGem"
+      "actual": "preparation:magearmor, preparation:conjureGem, preparation:intellect"
     },
     {
       "passed": true,
@@ -465,7 +465,7 @@
       "passed": true,
       "expected": "Main none; include ; exclude food, water",
       "name": "No carried recovery items means no food or water",
-      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
     },
     {
       "passed": true,
@@ -601,8 +601,8 @@
     },
     {
       "passed": true,
-      "expected": "No rotation recommendations",
-      "name": "Unsupported class remains disabled",
+      "expected": "No combat rotation recommendations",
+      "name": "Other classes receive preparation only",
       "actual": "none"
     },
     {

@@ -46,7 +46,7 @@ scenario("Player in Ice Block",{playerAuras={{spellId=11958,expirationTime=110}}
 scenario("Missing self buffs",{combat=false,target=false},"Intellect and armor",function(p) return F.find(p,"intellect") and F.find(p,"icearmor") end)
 scenario("Healthy long buffs",{combat=false,target=false,playerAuras={{spellId=1461,expirationTime=700},{spellId=7302,expirationTime=700}}},"No Intellect or armor refresh",function(p) return not F.find(p,"intellect") and not F.find(p,"icearmor") end)
 scenario("Buffs expire in five minutes",{combat=false,target=false,playerAuras={{spellId=1461,expirationTime=400},{spellId=7302,expirationTime=400}}},"Intellect and armor refresh",function(p) return F.find(p,"intellect") and F.find(p,"icearmor") end)
-scenario("Stronger intellect elixir",{level=20,combat=false,target=false,playerAuras={{spellId=11390,expirationTime=400}}},"No weaker Intellect",function(p) return not F.find(p,"intellect") end)
+scenario("Stronger intellect elixir",{level=20,combat=false,target=false,playerAuras={{spellId=11396,expirationTime=400}}},"No weaker Intellect",function(p) return not F.find(p,"intellect") end)
 scenario("Carried recovery supplies",{combat=false,target=false,health=700,power=500,inventory={[117]=5,[159]=5}},"Food and water",function(p) return F.find(p,"food") and F.find(p,"water") end)
 scenario("Bank-only supplies",{combat=false,target=false,health=700,power=500},"No unowned food/water",function(p) return not F.find(p,"food") and not F.find(p,"water") end)
 scenario("Drinking",{combat=false,target=false,power=200,names={[430]="Drink"},playerAuras={{spellId=430,name="Drink",expirationTime=120}}},"No preparation interruptions",function(p) return #p==0 end)

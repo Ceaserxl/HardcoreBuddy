@@ -41,6 +41,7 @@ function H.Select(c,module,state)
     local rules={}
     for _,rule in ipairs(module.rules) do rules[#rules+1]=rule end
     for _,rule in ipairs(H.sharedRules or {}) do rules[#rules+1]=rule end
+    for _,rule in ipairs(c.buffRules or {}) do rules[#rules+1]=rule end
     for _,rule in ipairs(rules) do
         local main=rule.category=="main"
         local preparing=rule.category=="preparation"

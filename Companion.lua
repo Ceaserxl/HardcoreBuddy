@@ -56,11 +56,11 @@ end
 function C.Tabs(context)
     local tabs=context.characterClass=="Hunter" and {"Overview","Zone Advisor","Gear","Talents","Spells","Pet Training","Pet Guide","First Aid","Engineering","Cooking"}
         or {"Overview","Zone Advisor","Gear","Talents","Spells","First Aid","Engineering","Cooking"}
-    if context.characterClass=="Mage" then table.insert(tabs,5,"Rotation Helper") end
+    table.insert(tabs,5,"Rotation Helper")
     return tabs
 end
 local tabDescriptions={["Zone Advisor"]="Recommended leveling zones, dangerous NPCs and maps.",Spells="Untrained spells, current trainer spells and future class and pet training.",
-    ["Rotation Helper"]="Mage combat and preparation highlights.",
+    ["Rotation Helper"]="Shared buff and consumable highlights. Mage combat advice.",
     Gear="Equipment scoring and upgrade advice.",Talents="Your next talent and point-by-point build path.",
     ["Pet Training"]="Learn and teach pet abilities.",["Pet Guide"]="Pet families, abilities, taming sources and care.",
     ["First Aid"]="Bandages, anti-venom and profession training.",Engineering="Target dummy recipes and profession training.",

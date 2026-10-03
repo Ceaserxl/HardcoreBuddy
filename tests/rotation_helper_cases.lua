@@ -127,7 +127,7 @@ check(find(p,"intellect") and find(p,"frostarmor"),"Preparation can show multipl
 X.auras.player={{spellId=1459,expirationTime=401},{spellId=168,expirationTime=401}}; p=evaluate()
 check(not find(p,"intellect") and not find(p,"frostarmor"),"Buffs above five minutes are not refreshed")
 X.time=101; p=evaluate(); check(find(p,"intellect") and find(p,"frostarmor"),"Five-minute refresh threshold")
-X.auras.player={{spellId=11390,expirationTime=400}}; p=evaluate(); check(not find(p,"intellect"),"Stronger intellect elixir suppresses weak self buff")
+X.auras.player={{spellId=11396,expirationTime=400}}; p=evaluate(); check(not find(p,"intellect"),"Stronger intellect elixir suppresses weak self buff")
 X.inventory={[159]=5,[117]=5}; H.supplyItems=nil; X.power=100; X.health=700; p=evaluate()
 check(find(p,"water") and find(p,"food"),"Shared recovery suggests carried food and drink")
 X.auras.player={{spellId=430,name="Spell430",expirationTime=130}}; p=evaluate()
@@ -283,5 +283,5 @@ UnitAura=function(u,i,filter)
 end
 p=evaluate(); check(not main(p),"Legacy UnitAura preserves control detection")
 C_UnitAuras=modernAuras
-MOCK.class="ROGUE"; H:Rebuild(); check(not H.module,"Unsupported classes have no pretend rotation")
+MOCK.class="ROGUE"; H:Rebuild(); check(H.module.suppliesOnly and #H.module.rules==0,"Other classes have preparation without a pretend combat rotation")
 print("PASS: "..checks.." rotation scenario, cast-commitment, macro, lifecycle and native-glow checks")

@@ -1,0 +1,359 @@
+{
+  "namedCount": 58,
+  "matrixCount": 540,
+  "matrixViolations": 0,
+  "cooldownMainCount": 0,
+  "suite": "buffs",
+  "cases": [
+    {
+      "passed": true,
+      "expected": "Include buffItem:9179; exclude intellect",
+      "name": "Carried Greater Intellect wins over level-40 Intellect",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:buffItem:9179"
+    },
+    {
+      "passed": true,
+      "expected": "Include intellect; exclude buffItem:9179",
+      "name": "Learned highest Intellect wins over carried elixir",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude intellect",
+      "name": "Active Greater Intellect suppresses weaker Mage spell",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude intellect",
+      "name": "Expiring stronger elixir still cannot be downgraded",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:9179; exclude intellect",
+      "name": "Expiring stronger elixir highlights its own refill",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:buffItem:9179"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude intellect,buffItem:9179",
+      "name": "Healthy active elixir does not waste another dose",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Include intellect; exclude ",
+      "name": "Weaker Wisdom is upgraded without waiting for expiry",
+      "actual": "preparation:frostarmor, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude intellect",
+      "name": "Wisdom aura blocks rank-one Intellect",
+      "actual": "preparation:frostarmor"
+    },
+    {
+      "passed": true,
+      "expected": "Include intellect; exclude ",
+      "name": "Agility aura cannot be mistaken for Intellect",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "Include intellect; exclude ",
+      "name": "Arcane Elixir cannot be mistaken for Intellect",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude intellect",
+      "name": "Sages actual 18 Intellect blocks the 15-point spell",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:9179",
+      "name": "Received Arcane Brilliance suppresses consumable Intellect",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Include intellect; exclude ",
+      "name": "Expired stronger buff releases the weaker available option",
+      "actual": "preparation:frostarmor, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude intellect,buffItem:9179",
+      "name": "Unknown aura duration does not prompt a replacement",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Include intellect; exclude buffItem:9179",
+      "name": "Stronger unavailable-level elixir is not advertised",
+      "actual": "preparation:frostarmor, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude intellect,buffItem:9179,buffItem:3383",
+      "name": "Cooldown waits for the strongest source without consuming a weaker one",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:9179",
+      "name": "Disabled item cooldown prevents a marker",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude intellect,buffItem:9179,buffItem:8951,buffItem:21217",
+      "name": "No routine buff consumption during combat",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:3825; exclude buffItem:10307",
+      "name": "Health elixir stacks independently with Fortitude",
+      "actual": "preparation:fortitude, preparation:buffItem:3825"
+    },
+    {
+      "passed": true,
+      "expected": "Include fortitude; exclude buffItem:10307",
+      "name": "Priest learned Fortitude beats carried stamina scroll",
+      "actual": "preparation:fortitude"
+    },
+    {
+      "passed": true,
+      "expected": "Include fortitude; exclude buffItem:1711",
+      "name": "Equal-strength free Fortitude beats a scroll",
+      "actual": "preparation:fortitude"
+    },
+    {
+      "passed": true,
+      "expected": "Include divineSpirit; exclude buffItem:10306",
+      "name": "Priest Divine Spirit beats a spirit scroll",
+      "actual": "preparation:divineSpirit"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:10306",
+      "name": "Received Prayer of Spirit suppresses a weaker scroll",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:10307",
+      "name": "Received Fortitude suppresses stamina scroll on Warrior",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:1711,fortitude",
+      "name": "Stronger talent-modified active value is preserved",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:1477; exclude buffItem:3390",
+      "name": "Stronger Agility scroll wins over weaker elixir",
+      "actual": "preparation:buffItem:1477"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:9187; exclude buffItem:4425",
+      "name": "Stronger Agility elixir wins over scroll",
+      "actual": "preparation:buffItem:9187"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:9187",
+      "name": "Mongoose is not replaced by equal Agility without its crit",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:8951; exclude buffItem:4421",
+      "name": "Defense elixir and armor scroll choose one strongest source",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect, preparation:buffItem:8951"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:8951; exclude ",
+      "name": "Mage physical armor does not conflict with armor elixirs",
+      "actual": "preparation:conjureGem, preparation:intellect, preparation:buffItem:8951"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:9179,buffItem:4419",
+      "name": "Rogue receives no Intellect consumable marker",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:9187",
+      "name": "Mage receives no Agility consumable marker",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:21217; exclude ",
+      "name": "Buff food is suggested even at full health and mana",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect, preparation:buffItem:21217"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:21217; exclude buffItem:17222",
+      "name": "Caster food preference selects carried mana food",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect, preparation:buffItem:21217"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:17222; exclude buffItem:21217",
+      "name": "Rogue food preference selects stat food",
+      "actual": "preparation:buffItem:17222"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:21217",
+      "name": "Healthy Well Fed prevents another meal",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:21217; exclude ",
+      "name": "Well Fed refresh starts at five minutes",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect, preparation:buffItem:21217"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:21217",
+      "name": "Stronger mana food prevents a downgrade near expiry",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:17222",
+      "name": "Higher stat food suppresses a weaker meal",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Include buffItem:21217; exclude food",
+      "name": "Buff meal takes precedence over a second recovery meal",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect, preparation:buffItem:21217"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:21217,buffItem:9179,water,intellect",
+      "name": "Brain Food eating aura suppresses all preparation",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Include none required; exclude buffItem:1710",
+      "name": "Recovery potions are not routine buff markers",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "No repeat dose or weaker spell",
+      "name": "Successful use hides the marker before aura propagation",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "No Intellect downgrade",
+      "name": "Consumed last dose is removed without prompting a weaker buff",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Learned Intellect",
+      "name": "No carried refill falls back once the stronger buff is gone",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:intellect"
+    },
+    {
+      "passed": true,
+      "expected": "Greater Intellect appears only at its use level",
+      "name": "Level-up unlocks an already carried elixir without a bag event",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:buffItem:9179"
+    },
+    {
+      "passed": true,
+      "expected": "No unverified item, then recover the carried elixir",
+      "name": "Temporary inventory failure is retried instead of caching empty bags",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:buffItem:9179"
+    },
+    {
+      "passed": true,
+      "expected": "Direct item and macro glow; conflicting spell stays dark",
+      "name": "Chosen consumable gets the actual native item glow",
+      "actual": "preparation:icearmor, preparation:conjureGem, preparation:buffItem:9179"
+    },
+    {
+      "passed": true,
+      "expected": "Both consumable glows stop; weaker spell stays dark",
+      "name": "Aura event immediately clears both item and macro markers",
+      "actual": "preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "One source per group; accessible enable page; only Mage has combat advice",
+      "name": "WARRIOR has shared buffs without conflicts from level 1 to 60",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "One source per group; accessible enable page; only Mage has combat advice",
+      "name": "PALADIN has shared buffs without conflicts from level 1 to 60",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "One source per group; accessible enable page; only Mage has combat advice",
+      "name": "HUNTER has shared buffs without conflicts from level 1 to 60",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "One source per group; accessible enable page; only Mage has combat advice",
+      "name": "ROGUE has shared buffs without conflicts from level 1 to 60",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "One source per group; accessible enable page; only Mage has combat advice",
+      "name": "PRIEST has shared buffs without conflicts from level 1 to 60",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "One source per group; accessible enable page; only Mage has combat advice",
+      "name": "SHAMAN has shared buffs without conflicts from level 1 to 60",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "One source per group; accessible enable page; only Mage has combat advice",
+      "name": "MAGE has shared buffs without conflicts from level 1 to 60",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "One source per group; accessible enable page; only Mage has combat advice",
+      "name": "WARLOCK has shared buffs without conflicts from level 1 to 60",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "One source per group; accessible enable page; only Mage has combat advice",
+      "name": "DRUID has shared buffs without conflicts from level 1 to 60",
+      "actual": "none"
+    }
+  ],
+  "findings": [],
+  "passed": 58
+}

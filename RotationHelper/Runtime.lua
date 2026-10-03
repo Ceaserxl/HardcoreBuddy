@@ -151,7 +151,9 @@ local function hasControl(list)
 end
 
 function H:Rebuild(preservePlan)
-    local _,class=UnitClass("player"); self.module=self.classes[class]
+    local _,class=UnitClass("player"); self.class=class
+    self.module=self.classes[class] or self.Buffs and self.Buffs:Module(class)
+    if self.Buffs then self.Buffs:Invalidate() end
     self.definitions={}; self.byID={}; self.talents={}; self.treePoints={0,0,0}
     if not preservePlan then self.state={} end
     if not self.module then return end
@@ -208,18 +210,10 @@ function C:stacks(group,unit)
     end
     return n
 end
-function C:strength(group)
-    local value=0
-    for id,strength in pairs(self.module.strengths and self.module.strengths[group] or {}) do
-        if self.auras.player[id] then value=math.max(value,strength) end
-    end
-    return value
-end
-
 function H:Snapshot()
     if not self.module then return end
     local t=now()
-    local c=setmetatable({now=t,module=self.module,spells={},immune={},auras={player={},target={}},talents=self.talents,treePoints=self.treePoints},{__index=C})
+    local c=setmetatable({now=t,class=self.class,level=UnitLevel("player"),module=self.module,spells={},immune={},auras={player={},target={}},talents=self.talents,treePoints=self.treePoints},{__index=C})
     c.dead=UnitIsDeadOrGhost and UnitIsDeadOrGhost("player") or false
     c.taxi=UnitOnTaxi and UnitOnTaxi("player") or false
     c.combat=UnitAffectingCombat and UnitAffectingCombat("player") or false
@@ -272,6 +266,7 @@ function H:Snapshot()
     for _,id in ipairs(self.module.pauseAuras or {}) do if c.auras.player[id] then c.paused=true end end
     local foodName=info(433); local drinkName=info(430)
     for _,a in pairs(c.auras.player) do if a.name==foodName or a.name==drinkName then c.recovering=true end end
+    if self.Buffs and self.Buffs:IsEating(c) then c.recovering=true end
     for _,id in ipairs(self.module.recoveryChannels or {}) do
         if c.cast and c.cast.channel and c.cast.id==id then c.recovering=true end
     end
@@ -329,6 +324,7 @@ function H:Snapshot()
         c.spells[key]=s
     end
     if self.AddSupplies then self:AddSupplies(c) end
+    if self.Buffs then self.Buffs:Add(c) end
     return c
 end
 
@@ -369,7 +365,7 @@ H.frame=CreateFrame("Frame")
 for _,event in ipairs({"PLAYER_ENTERING_WORLD","PLAYER_LEAVING_WORLD","PLAYER_REGEN_ENABLED","PLAYER_TALENT_UPDATE","SPELLS_CHANGED",
     "ACTIONBAR_SLOT_CHANGED","UPDATE_MACROS","ACTIONBAR_PAGE_CHANGED","MODIFIER_STATE_CHANGED","UPDATE_SHAPESHIFT_FORM",
     "UNIT_SPELLCAST_START","UNIT_SPELLCAST_CHANNEL_START","UNIT_SPELLCAST_CHANNEL_STOP",
-    "UNIT_SPELLCAST_SUCCEEDED","UNIT_SPELLCAST_INTERRUPTED","UNIT_SPELLCAST_FAILED","BAG_UPDATE_DELAYED"}) do H.frame:RegisterEvent(event) end
+    "UNIT_SPELLCAST_SUCCEEDED","UNIT_SPELLCAST_INTERRUPTED","UNIT_SPELLCAST_FAILED","UNIT_AURA","BAG_UPDATE_DELAYED"}) do H.frame:RegisterEvent(event) end
 H.frame:SetScript("OnEvent",function(_,event,unit,castGUID,spellID,interruptedBy)
     if event=="PLAYER_LEAVING_WORLD" then
         H.suspended=true; H.frame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED"); H.frame:SetScript("OnUpdate",nil); H:Clear(); return
@@ -397,10 +393,11 @@ H.frame:SetScript("OnEvent",function(_,event,unit,castGUID,spellID,interruptedBy
         H:CastEvent(event,castGUID,spellID,interruptedBy)
     elseif event=="UNIT_SPELLCAST_SUCCEEDED" then
         local key=H.byID[spellID]; if key then H.recent[key]=now() end
+        if H.Buffs then H.Buffs:Used(spellID,now()) end
         H:CastEvent(event,castGUID,spellID)
     elseif event=="UNIT_SPELLCAST_INTERRUPTED" or event=="UNIT_SPELLCAST_FAILED" then
         H:CastEvent(event,castGUID,spellID)
-    elseif event=="BAG_UPDATE_DELAYED" then H.supplyItems=nil
+    elseif event=="BAG_UPDATE_DELAYED" then H.supplyItems=nil; if H.Buffs then H.Buffs:Invalidate() end
     elseif event=="PLAYER_REGEN_ENABLED" or event=="ACTIONBAR_SLOT_CHANGED" or event=="UPDATE_MACROS" then H:Rebuild(true); H.Glow:Discover() end
     H:Tick()
 end)

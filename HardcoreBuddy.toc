@@ -9,6 +9,7 @@
 
 Data\Items.lua
 Data\Scrolls.lua
+Data\ConsumableBuffs.lua
 Data\Companions.lua
 Data\Quivers.lua
 Data\Presentation.lua
@@ -67,6 +68,7 @@ RotationHelper\Engine.lua
 RotationHelper\Mage.lua
 RotationHelper\Runtime.lua
 RotationHelper\Supplies.lua
+RotationHelper\Buffs.lua
 RotationHelper\Glow.lua
 RotationHelper\UI.lua
 MapAdvisor.lua

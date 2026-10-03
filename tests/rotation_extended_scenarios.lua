@@ -48,8 +48,8 @@ scenario("Immunity on a different creature is ignored",{},"frostbolt",nil,nil,fu
 -- 21-40: buffs, exact resource thresholds and survival conditions.
 scenario("Long-duration self buffs are retained",{combat=false,target=false,playerAuras={{spellId=1461,expirationTime=701},{spellId=7302,expirationTime=701}}},false,nil,{"intellect","icearmor"})
 scenario("Self buffs at five-minute refresh boundary",{combat=false,target=false,playerAuras={{spellId=1461,expirationTime=400},{spellId=7302,expirationTime=400}}},false,{"intellect","icearmor"})
-scenario("Stronger intellect elixir prevents refresh",{combat=false,target=false,playerAuras={{spellId=11390,expirationTime=200}}},false,nil,{"intellect"})
-scenario("Weaker intellect buff can be replaced",{combat=false,target=false,playerAuras={{spellId=3160,expirationTime=200}}},false,{"intellect"})
+scenario("Stronger intellect elixir prevents refresh",{combat=false,target=false,playerAuras={{spellId=11396,expirationTime=200}}},false,nil,{"intellect"})
+scenario("Weaker intellect buff can be replaced",{combat=false,target=false,playerAuras={{spellId=3166,expirationTime=200}}},false,{"intellect"})
 scenario("Group preparation chooses Mage Armor",{combat=false,target=false,grouped=true},false,{"magearmor"},{"icearmor","frostarmor"})
 paused("Eating pauses buffs and other preparation",{combat=false,target=false,health=500,power=400,names={[433]="Food"},playerAuras={{spellId=433,name="Food",expirationTime=120}}})
 scenario("No carried recovery items means no food or water",{combat=false,target=false,health=500,power=400},false,nil,{"food","water"})
@@ -110,7 +110,7 @@ p,context=notices({distance=50})
 record("Out-of-range advice produces no missing-spell noise","No Main and no notice",not F.main(p) and #context==0,p)
 
 F.reset({}); MOCK.class="ROGUE"; H:SetEnabled(true)
-record("Unsupported class remains disabled","No rotation recommendations",not H:Enabled() and #H.picks==0,H.picks)
+record("Other classes receive preparation only","No combat rotation recommendations",H:Enabled() and H.module.suppliesOnly and #H.picks==0,H.picks)
 
 assert(#results==50,"Extended suite must contain exactly 50 additional scenarios")
 return {cases=results,findings=findings,namedCount=#results}

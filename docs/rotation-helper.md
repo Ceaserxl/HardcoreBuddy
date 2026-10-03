@@ -1,7 +1,8 @@
 # Rotation Helper: shared rules, Mage policy
 
-Enable it in **Companion > Rotation Helper** on a Mage. It starts disabled per
-character. This is a new assistant, independent of the retired prototype. It
+Enable it in **Companion > Rotation Helper**. It starts disabled per character.
+Shared buff and consumable preparation supports all nine Classic classes;
+combat rotation advice currently supports Mage. This assistant is independent of the retired prototype. It
 highlights actions; it never casts, edits a macro, or changes an action slot.
 There is no combat-history recorder or saved diagnostic log.
 
@@ -12,7 +13,7 @@ There is no combat-history recorder or saved diagnostic log.
 | Gold | Main: the next attack | One at a time |
 | Red | Defensive: interrupts, roots, shields, dispels, emergency immunity | Separate from Main |
 | Violet | Offensive: ready optional damage abilities or a carried mana gem | Separate from Main |
-| Blue | Preparation: buffs, food, water, conjuring a mana gem | Several may appear together out of combat |
+| Blue | Preparation: class buffs, elixirs, scrolls, buff food, water, conjuring a mana gem | Several non-conflicting buffs may appear together out of combat |
 
 All use a private copy of Blizzard's native spell-alert animation. The loop
 starts directly, so there is no oversized birth animation or repeating restart.
@@ -84,10 +85,22 @@ trigger a missing-spell notice. Items do not trigger these spell notices.
 - Short-lived immunity evidence is limited to the spell that failed. A creature
   immune to Nova is not assumed immune to Frostbolt damage.
 - Supported self buffs refresh at five minutes remaining. A stronger intellect
-  elixir suppresses a weaker Arcane Intellect recommendation. Preparation pauses
+  elixir suppresses a weaker Arcane Intellect recommendation. The shared catalog
+  compares actual stat amounts across learned spells, carried consumables and
+  active buffs received from any player. Only the strongest carried/learned
+  source in each conflict group is highlighted; free class spells win ties.
+  Stronger active buffs are never downgraded, even inside the refresh window.
+  Items on cooldown wait without prompting a weaker consumable.
+  Preparation pauses
   while eating, drinking, channeling Evocation, casting an attack, or casting a
   spell the helper does not model. Carried, usable water takes precedence over
   Evocation; food and water can still appear together.
+- Buff food has its own missing/expiring buff check and can be suggested at full
+  health. Mage/Priest/Warlock prefer carried mana food; other classes use the
+  supplies catalog's stat-food preference. All consumables respect catalog class
+  and use-level filters. Buff meals take precedence over another recovery meal.
+  Eating a meal suppresses further preparation until eating ends.
+  See [shared buff coverage and verified identities](consumable-buffs.md).
 
 ## Mage policy
 
@@ -134,6 +147,8 @@ outside observable unit tokens. These remain player decisions.
 | `RotationHelper/Runtime.lua` | Live API snapshot, learned ranks, events, lifecycle |
 | `RotationHelper/Glow.lua` | Action/macro matching and cosmetic native animation |
 | `RotationHelper/Supplies.lua` | Shared carried food and drink selection |
+| `RotationHelper/Buffs.lua` | Shared strongest-buff selection and consumable preparation |
+| `Data/ConsumableBuffs.lua` | Verified Classic item/aura identities and conflict strengths |
 | `RotationHelper/Mage.lua` | Spell definitions, aura definitions and ordered conditions only |
 | `RotationHelper/UI.lua` | Compact enable control and explanation |
 
@@ -213,3 +228,8 @@ failures and the revised completion contract.
 `tests/run_rotation_scenarios.py --suite prediction --strict` checks 22 early
 prediction cases, including the value sent to the glow during START before the
 casting API appears. See `docs/rotation-prediction-timing.md`.
+
+`tests/run_rotation_scenarios.py --suite buffs --strict` checks conflict
+selection, active stronger buffs, item/macro glows, aura propagation and all nine
+classes from level 1 to 60. Its data checks use the actual Classic aura IDs;
+the older tests that incorrectly labeled 11390 as Intellect were corrected.

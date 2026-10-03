@@ -20,10 +20,8 @@ local M={name="Mage",pauseAuras={11958},recoveryChannels={12051},spells={
     iceblock={11958},hypothermia={41425},combustion={11129},
     armor={168,7300,7301,7302,7320,10219,10220,6117,22782,22783},
     manaArmor={6117,22782,22783},
-    intellect={1459,1460,1461,10156,10157,23028,3160,11390,17535,8096,8097,8098,12176},
     scorch={22959},clearcasting={12536},presence={12043},
-},strengths={intellect={[1459]=2,[1460]=7,[1461]=15,[10156]=22,[10157]=31,[23028]=31,
-    [3160]=8,[11390]=25,[17535]=25,[8096]=4,[8097]=8,[8098]=12,[12176]=16}}}
+}}
 A.RotationHelper.classes.MAGE=M
 
 local function combat(c) return c.hostile and not c.recovering and (not c.grouped or c.targetCombat) end
@@ -104,10 +102,6 @@ M.rules={
     rule("shoot","main",nil,function(c) return combat(c) and c.targetCombat and "Wand while conserving mana" end),
     rule("barrier","preparation","shield",function(c)
         return not c.combat and not c.recovering and c:remaining("barrier")==0 and "Prepare Ice Barrier before pulling"
-    end),
-    rule("intellect","preparation","intellect",function(c)
-        return refresh(c,"intellect") and c:strength("intellect")<=(M.strengths.intellect[c.spells.intellect.id] or 0)
-            and "Refresh Arcane Intellect"
     end),
     rule("magearmor","preparation","armor",function(c) return manaArmor(c) and refresh(c,"armor") and "Maintain your mana-regeneration armor" end),
     rule("icearmor","preparation","armor",function(c) return refresh(c,"armor") and "Maintain physical protection while leveling" end),

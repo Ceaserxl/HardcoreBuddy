@@ -37,7 +37,7 @@ function H:AddSupplies(c)
 end
 H.sharedRules={
     {spell="food",category="preparation",when=function(c)
-        return not c.combat and not c.recovering and not c.cast and c.health<0.85 and "Recover health before pulling"
+        return not c.combat and not c.recovering and not c.cast and not c.buffFoodPending and c.health<0.85 and "Recover health before pulling"
     end},
     {spell="water",category="preparation",when=function(c)
         return not c.combat and not c.recovering and not c.cast and c.powerType==0 and c.mana<0.65 and "Recover mana before pulling"
