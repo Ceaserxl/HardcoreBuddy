@@ -11,6 +11,8 @@ The subsequent [100-scenario run](rotation-100-scenarios.md) found an additional
 cast-timing issue, now resolved: timing revisions preserve the cast identity and
 committed recommendation. The [200-scenario follow-up](rotation-200-scenarios.md)
 passes all cases, including 100 timing and lifecycle combinations.
+The later [choice review](rotation-clarity-review.md) adds 64 cases and revises
+the idle-cooldown, recovery, talent and finisher priorities.
 All 50 focused cooldown scenarios, 115 regression checks, and 75 named audit
 expectations pass, with zero
 structural violations across 3,888 combinations. The expanded audit includes
@@ -53,8 +55,9 @@ live testing.
 | Resolved | A cast begins with insufficient mana for a next action, then mana recovers | The empty plan fills once and becomes committed. Further threshold changes cannot replace it mid-cast. |
 | Resolved | Frostbolt is preferred but only Fireball is on the action bar | Local chat identifies the missing Frostbolt rank once per session; hidden/paged slots and resolved macros are checked. |
 
-Cooldowns are checked in generic eligibility. Main readiness uses the two-second
-planning window or the current cast's remaining time, whichever is longer.
+Cooldowns are checked in generic eligibility. Main cooldowns must finish by the
+end of the current cast or GCD; an idle player uses an attack ready now. A
+two-second mana forecast is a fallback when no attack is already affordable.
 Defensive, offensive and preparation actions must be ready now. The spell GCD is
 ignored. An existing Main stays committed through the cast even when a different
 ability becomes ready. If the committed action becomes unavailable, it is hidden

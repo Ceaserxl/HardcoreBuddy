@@ -2,6 +2,8 @@
 
 Date: 2026-10-02. **200/200 scenario expectations pass.** The cast identity fix
 resolves the timing finding from the previous 100-scenario run.
+Policy expectations now include the subsequent [choice review](rotation-clarity-review.md),
+which adds 64 separate checks. The two-hundred suite retains exactly 200 cases.
 
 ## Fix
 

@@ -27,7 +27,7 @@
       "name": "Fire group fight",
       "expected": "Main Fireball",
       "passed": true,
-      "actual": "main:fireball, offensive:combustion"
+      "actual": "main:fireball"
     },
     {
       "name": "Arcane leveling fallback",
@@ -39,13 +39,13 @@
       "name": "Fire solo opener",
       "expected": "Main Pyroblast",
       "passed": true,
-      "actual": "main:pyroblast, offensive:combustion, preparation:intellect, preparation:icearmor, preparation:conjureGem"
+      "actual": "main:pyroblast, preparation:intellect, preparation:icearmor, preparation:conjureGem"
     },
     {
       "name": "Fire solo slowed target",
       "expected": "Main Fireball",
       "passed": true,
-      "actual": "main:fireball, offensive:combustion"
+      "actual": "main:fireball"
     },
     {
       "name": "Improved Scorch on elite",
@@ -57,7 +57,7 @@
       "name": "No Scorch ramp on normal mob",
       "expected": "Main Fireball",
       "passed": true,
-      "actual": "main:fireball, offensive:combustion"
+      "actual": "main:fireball"
     },
     {
       "name": "Scorch already stacked",
@@ -249,10 +249,10 @@
       "actual": "main:frostbolt"
     },
     {
-      "name": "Finisher ready within two-second lead",
-      "expected": "Main Fire Blast",
+      "name": "Idle finisher inside two-second lead still requires waiting",
+      "expected": "Main Frostbolt",
       "passed": true,
-      "actual": "main:fireblast"
+      "actual": "main:frostbolt"
     },
     {
       "name": "Finisher ready by cast completion",

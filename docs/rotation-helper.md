@@ -37,16 +37,17 @@ trigger a missing-spell notice. Items do not trigger these spell notices.
   talent changes refresh the available actions. Actual player data is used even
   if the field kit is previewing another character.
 - The shared cooldown gate applies to spells and items in all four categories.
-  Main attacks may be highlighted up to two seconds before becoming ready, or
-  when they will be ready at the current cast's completion, whichever is later.
+  Main attacks must be ready now, or by the end of the current cast or GCD.
+  A cooldown inside two seconds does not displace a ready attack while idle.
   Other categories require a ready cooldown now. The GCD is ignored for spells.
   Unavailable choices are hidden, allowing the next eligible action in their
   group to appear, such as Cold Snap instead of Ice Block or Mana Shield instead
   of Barrier. No extra violet hint is shown for a cooling-down Main attack.
-  Main plans mana up to two seconds ahead.
-  At cast start it plans for that cast's completion, reserving its mana
-  cost and crediting only reported casting regeneration. It does not predict
-  random procs, damage, or uncertain future resource gains.
+  Main prefers an attack affordable at the next action. Only if none is
+  affordable does it anticipate mana recovery up to two seconds ahead.
+  At cast start it plans for completion, reserving that cast's mana cost and
+  crediting only reported casting regeneration. It does not predict random
+  procs, damage, or uncertain future resource gains.
 - The next Main action is committed at cast start and survives a short completion
   handoff. An empty plan may fill when mana recovers; once filled, it stays
   committed. Success events prevent reserving an already-paid cast cost again.
@@ -55,6 +56,10 @@ trigger a missing-spell notice. Items do not trigger these spell notices.
   keypresses and late events from cancelling a different cast. Target changes
   also permit a new plan. Range loss or breakable crowd control hides a committed
   action without substituting another spell near the end of the cast.
+  Action-bar updates and macro edits preserve the plan. Using a held instant
+  attack clears that handoff; a brief success guard prevents repeat advice
+  before cooldown data catches up. Group pull safety and recovery still apply
+  to an existing plan.
 - Defensive and preparation advice updates independently. There is no movement
   sampling, movement gate, or mounted gate. Death, flight and an active
   incapacitating class immunity clear recommendations.
@@ -68,25 +73,40 @@ trigger a missing-spell notice. Items do not trigger these spell notices.
   immune to Nova is not assumed immune to Frostbolt damage.
 - Supported self buffs refresh at five minutes remaining. A stronger intellect
   elixir suppresses a weaker Arcane Intellect recommendation. Preparation pauses
-  while eating or drinking.
+  while eating, drinking, channeling Evocation, casting an attack, or casting a
+  spell the helper does not model. Carried, usable water takes precedence over
+  Evocation; food and water can still appear together.
 
 ## Mage policy
 
 Frostbolt is the safe single-target baseline as soon as learned; Fireball covers
 the opening levels and unavailable Frost damage. Fire investments favor
 Fireball after establishing a solo slow, and directly on engaged group targets.
+This compares learned damage-focused talents in each school; utility/range/AoE
+points alone do not change the filler. It is a policy heuristic, not a DPS score.
+Solo Fire renews a slow that would expire before the next action, with a minimum
+two-second refresh window.
 Pyroblast is a Fire opener. Improved Scorch is reserved for durable targets and
 only anticipates a pending stack or refresh at 3/3 talent rank. Lower ranks keep
-planning from confirmed stacks and expiration times. Wanding conserves low mana; Fire Blast is a
-low-health finishing option. Neither finisher claims a guaranteed killing blow.
+planning from confirmed stacks and expiration times. Scorch does not start or
+refresh its ramp below 20% target health. Wanding conserves mana below 15%,
+continuing until 25% to avoid oscillation on each mana tick. It requires an
+engaged target and stops for Clearcasting. Low enemy health alone never causes
+a switch to wanding. Fire Blast remains a low-health finishing option when
+affordable and ready for the next action; it does not claim a guaranteed kill.
 
 Counterspell, Nova, shields, Remove Lesser Curse, Ice Block and Cold Snap are
 independent defensive suggestions. Nova prefers the lowest learned rank actually
 on a bar, otherwise the highest learned rank. Mana Shield is for emergencies,
 not routine maintenance. Cold Snap is suggested only under pressure with a
-survival cooldown unavailable. Damage cooldowns and mana gems remain optional.
-Solo preparation favors Ice/Frost Armor; groups favor Mage Armor. An existing
-armor buff is respected until its refresh threshold.
+survival cooldown unavailable. Hypothermia is read from harmful auras; Cold Snap
+does not treat it as a cooldown it can reset. An active Barrier does not need a
+reset. Damage cooldowns and mana gems remain optional. Damage boosts require a
+compatible Main attack on an engaged, durable target; Combustion does not
+accompany Frost or wand attacks.
+With no armor, solo preparation favors Ice/Frost Armor and groups favor Mage
+Armor. Refreshes preserve the existing armor type, including after joining or
+leaving a group; physical armor can upgrade to the highest learned rank.
 
 This first version deliberately concentrates on solo Hardcore leveling and
 conservative group support, not a dungeon AoE or raid damage optimizer. It does
@@ -165,3 +185,8 @@ Channels and casts without an API ID retain their START-event identity while
 their observed intervals overlap. A new START replaces that identity, including
 when a channel is clipped. Without either identifier, the fallback uses spell
 and start time. Results and limitations are in `docs/rotation-200-scenarios.md`.
+
+`tests/run_rotation_scenarios.py --suite clarity --strict` exercises 64 additional
+choice and transition cases, including readiness, mana ticks, instant spell
+handoffs, recovery, buff choices, and action-bar changes during a cast. See
+`docs/rotation-clarity-review.md` for the revised priorities and validation.

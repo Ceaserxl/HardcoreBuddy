@@ -10,7 +10,7 @@ from render_layout import boot
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--strict", action="store_true")
-parser.add_argument("--suite", choices=("audit", "cooldown", "hundred", "two_hundred"), default="audit")
+parser.add_argument("--suite", choices=("audit", "cooldown", "hundred", "two_hundred", "clarity"), default="audit")
 parser.add_argument("--output", type=Path)
 args = parser.parse_args()
 lua, addon = boot()
@@ -23,6 +23,7 @@ case_files = {
     "cooldown": ("rotation_cooldown_scenarios.lua",),
     "hundred": ("rotation_cooldown_scenarios.lua", "rotation_extended_scenarios.lua"),
     "two_hundred": ("rotation_cooldown_scenarios.lua", "rotation_extended_scenarios.lua", "rotation_identity_scenarios.lua"),
+    "clarity": ("rotation_clarity_scenarios.lua",),
 }[args.suite]
 report = dict.fromkeys(("namedCount", "matrixCount", "matrixViolations", "cooldownMainCount"), 0)
 report.update(suite=args.suite, cases=[], findings=[])

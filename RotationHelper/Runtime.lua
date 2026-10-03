@@ -83,6 +83,10 @@ function H:CastEvent(event,guid,id)
         end
         return
     end
+    -- A successful instant can consume the held next action after the previous
+    -- cast has ended. It has no casting API entry to match against lastCast.
+    if event=="UNIT_SPELLCAST_SUCCEEDED" and not current and self.state.lock
+        and self.state.lock.id==id and not matchesCast(self.lastCast,guid,id) then self.state={} end
     -- Never match a failed extra press by spell alone.
     local ended=current or self.lastCast
     if not matchesCast(ended,guid,id) then return end
@@ -113,9 +117,10 @@ local function hasControl(list)
     return false
 end
 
-function H:Rebuild()
+function H:Rebuild(preservePlan)
     local _,class=UnitClass("player"); self.module=self.classes[class]
-    self.definitions={}; self.byID={}; self.talents={}; self.treePoints={0,0,0}; self.state={}
+    self.definitions={}; self.byID={}; self.talents={}; self.treePoints={0,0,0}
+    if not preservePlan then self.state={} end
     if not self.module then return end
     if self.Glow and A.characterDB and A.characterDB.rotationHelperEnabled then self.Glow:Discover() end
     local catalog=A.Data.ClassSpells[self.module.name] or {}
@@ -201,12 +206,16 @@ function H:Snapshot()
         end
     end
     c.casting=c.cast and self.byID[c.cast.id]
+    local gcd,gcdStart,gcdDuration=cooldown(61304,false,t)
+    c.actionDelay=math.max(c.cast and c.cast.remaining or 0,gcd==math.huge and 0 or gcd)
     local pending=c.cast and not c.cast.paid and not c.cast.channel and c.cast.id and cost(c.cast.id,c.powerType) or 0
     local regen=0
     if c.powerType==0 and GetManaRegen then local _; _,regen=GetManaRegen()
     elseif c.powerType~=0 and GetPowerRegen then regen=GetPowerRegen() end
     -- Only guaranteed casting regeneration, after reserving this cast's cost.
-    c.futurePower=math.min(c.maxPower,math.max(0,c.power-pending)+(regen or 0)*math.max(self.lead,c.cast and c.cast.remaining or 0))
+    local available=math.max(0,c.power-pending)
+    c.nextPower=math.min(c.maxPower,available+(regen or 0)*c.actionDelay)
+    c.futurePower=math.min(c.maxPower,available+(regen or 0)*math.max(self.lead,c.actionDelay))
     c.targetGUID=UnitGUID and UnitGUID("target")
     c.hostile=c.targetGUID and UnitCanAttack and UnitCanAttack("player","target")
         and not (UnitIsDeadOrGhost and UnitIsDeadOrGhost("target")) and not (UnitIsPlayer and UnitIsPlayer("target"))
@@ -215,11 +224,14 @@ function H:Snapshot()
     c.targetHealth=c.hostile and UnitHealth("target")/math.max(1,UnitHealthMax("target")) or 1
     local classification=c.hostile and UnitClassification and UnitClassification("target")
     c.tough=classification=="elite" or classification=="rareelite" or classification=="worldboss"
-    c.targetAttacking=c.hostile and UnitIsUnit and UnitIsUnit("targettarget","player") or false
+    c.targetAttacking=c.hostile and c.targetCombat and UnitIsUnit and UnitIsUnit("targettarget","player") or false
     c.attacked=c.targetAttacking
     c.targetCast=c.hostile and cast("target",t)
     local harmful=auraList("player","HARMFUL")
-    for _,a in ipairs(harmful) do if a.dispelName=="Curse" then c.cursed=true end end
+    for _,a in ipairs(harmful) do
+        if a.dispelName=="Curse" then c.cursed=true end
+        if a.spellId then c.auras.player[a.spellId]=a end
+    end
     for _,unit in ipairs({"player","target"}) do
         local list=auraList(unit,unit=="player" and "HELPFUL" or "HARMFUL")
         if unit=="target" then c.controlled=hasControl(list) end
@@ -228,6 +240,11 @@ function H:Snapshot()
     for _,id in ipairs(self.module.pauseAuras or {}) do if c.auras.player[id] then c.paused=true end end
     local foodName=info(433); local drinkName=info(430)
     for _,a in pairs(c.auras.player) do if a.name==foodName or a.name==drinkName then c.recovering=true end end
+    for _,id in ipairs(self.module.recoveryChannels or {}) do
+        if c.cast and c.cast.channel and c.cast.id==id then c.recovering=true end
+    end
+    local castingDef=c.casting and self.definitions[c.casting]
+    c.preparationBlocked=c.recovering or c.cast and (not castingDef or castingDef.def.enemy) or false
     c.nearbyCC=c.controlled
     -- Observed units only. This does not claim to count unseen enemies.
     local seen={}
@@ -249,7 +266,6 @@ function H:Snapshot()
             if hasControl(auraList(unit,"HARMFUL")) then c.nearbyCC=true end
         end
     end end
-    local _,gcdStart,gcdDuration=cooldown(61304,false,t)
     for key,entry in pairs(self.definitions) do
         local def=entry.def
         local id=entry.id
@@ -273,7 +289,7 @@ function H:Snapshot()
             if link and GetItemInfoInstant then local a,b,d; a,b,d,equip=GetItemInfoInstant(link) end
             s.known=s.known and equip=="INVTYPE_RANGEDRIGHT"
         end
-        s.blocked=self.recent[key] and t-self.recent[key]<0.6 and (item or not def.enemy) or false
+        s.blocked=self.recent[key] and t-self.recent[key]<0.6 and (item or not def.enemy or def.hasCooldown) or false
         if c.casting==key and not def.enemy then s.blocked=true end
         if def.creates then s.createdCount=count(def.creates[entry.index or 1]) end
         local immunity=self.immunities[c.targetGUID or ""]
@@ -351,6 +367,6 @@ H.frame:SetScript("OnEvent",function(_,event,unit,castGUID,spellID)
     elseif event=="UNIT_SPELLCAST_INTERRUPTED" or event=="UNIT_SPELLCAST_FAILED" then
         H:CastEvent(event,castGUID,spellID)
     elseif event=="BAG_UPDATE_DELAYED" then H.supplyItems=nil
-    elseif event=="PLAYER_REGEN_ENABLED" or event=="ACTIONBAR_SLOT_CHANGED" or event=="UPDATE_MACROS" then H:Rebuild(); H.Glow:Discover() end
+    elseif event=="PLAYER_REGEN_ENABLED" or event=="ACTIONBAR_SLOT_CHANGED" or event=="UPDATE_MACROS" then H:Rebuild(true); H.Glow:Discover() end
     H:Tick()
 end)

@@ -25,15 +25,15 @@
     },
     {
       "passed": true,
-      "expected": "Main fireblast; include ; exclude ",
-      "name": "Finisher ready in one second",
-      "actual": "main:fireblast"
+      "expected": "Main frostbolt; include ; exclude fireblast",
+      "name": "Idle finisher still has one second left",
+      "actual": "main:frostbolt"
     },
     {
       "passed": true,
-      "expected": "Main fireblast; include ; exclude ",
-      "name": "Finisher at two-second boundary",
-      "actual": "main:fireblast"
+      "expected": "Main frostbolt; include ; exclude fireblast",
+      "name": "Idle finisher still has two seconds left",
+      "actual": "main:frostbolt"
     },
     {
       "passed": true,
@@ -145,21 +145,21 @@
     },
     {
       "passed": true,
-      "expected": "Main fireball; include arcanePower; exclude ",
+      "expected": "Main frostbolt; include arcanePower; exclude ",
       "name": "Arcane Power ready",
-      "actual": "main:fireball, offensive:arcanePower"
+      "actual": "main:frostbolt, offensive:arcanePower"
     },
     {
       "passed": true,
-      "expected": "Main fireball; include ; exclude arcanePower",
+      "expected": "Main frostbolt; include ; exclude arcanePower",
       "name": "Arcane Power cooling down",
-      "actual": "main:fireball"
+      "actual": "main:frostbolt"
     },
     {
       "passed": true,
-      "expected": "Main fireball; include combustion; exclude ",
-      "name": "Combustion ready",
-      "actual": "main:fireball, offensive:combustion"
+      "expected": "Main scorch; include combustion; exclude ",
+      "name": "Combustion ready on a durable target",
+      "actual": "main:scorch, offensive:combustion"
     },
     {
       "passed": true,
@@ -247,9 +247,9 @@
     },
     {
       "passed": true,
-      "expected": "Frostbolt first, Fire Blast with two seconds left",
-      "name": "Countdown enters the planning window",
-      "actual": "main:fireblast"
+      "expected": "Frostbolt remains Main while Fire Blast has two seconds left",
+      "name": "Countdown does not make an idle player wait",
+      "actual": "main:frostbolt"
     },
     {
       "passed": true,

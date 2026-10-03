@@ -61,7 +61,7 @@ end
 function F.reset(options)
     x={time=100,level=40,health=1000,maxHealth=1000,power=1000,maxPower=1000,targetHealth=1000,targetMax=1000,
         target=true,combat=true,targetCombat=true,grouped=false,distance=25,classification="normal",attacked=false,
-        targetGUID="Creature-A",playerAuras={},targetAuras={},inventory={},talents={},cooldowns={},costs={},defaultCost=50,
+        targetGUID="Creature-A",playerAuras={},playerHarmful={},targetAuras={},inventory={},talents={},cooldowns={},costs={},defaultCost=50,
         actionSlots={},macroSpells={},names={},regen=0}
     for k,v in pairs(options or {}) do x[k]=v end
     local talents={}; for k,v in pairs(x.talents) do talents[k]=v end; x.talents=talents
@@ -142,7 +142,9 @@ UnitChannelInfo=function(u)
     if c then return x.byID[c.id] or "Channel",nil,nil,c.start*1000,c.finish*1000,false,false,c.id end
 end
 C_UnitAuras={GetAuraDataByIndex=function(u,i,filter)
-    if u=="player" and filter=="HARMFUL" then return x.cursed and i==1 and {spellId=999,dispelName="Curse"} or nil end
+    if u=="player" and filter=="HARMFUL" then
+        return x.playerHarmful[i] or x.cursed and i==1 and {spellId=999,dispelName="Curse"} or nil
+    end
     return (u=="player" and x.playerAuras or x.targetAuras)[i]
 end}
 C_NamePlate=nil

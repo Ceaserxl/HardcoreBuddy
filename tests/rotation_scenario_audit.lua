@@ -62,8 +62,8 @@ scenario("Unavailable Fire Blast replaces usable main",{targetHealth=140,distanc
     "Main is a usable filler or there is a separately visible usable fallback",function(p) return F.main(p)~="fireblast" end,"high")
 scenario("Cooling-down finisher is hidden",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=7}},
     "Gold Frostbolt without unavailable Fire Blast",function(p) return F.main(p)=="frostbolt" and not F.find(p,"fireblast") end)
-scenario("Finisher ready within two-second lead",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=1.5}},
-    "Main Fire Blast",function(p) return F.main(p)=="fireblast" end)
+scenario("Idle finisher inside two-second lead still requires waiting",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=1.5}},
+    "Main Frostbolt",function(p) return F.main(p)=="frostbolt" end)
 scenario("Finisher ready by cast completion",{targetHealth=140,distance=15,wand=false,cooldowns={fireblast=2.5},cast={id=116,start=100,finish=103}},
     "Main Fire Blast at the start of the current cast",function(p) return F.main(p)=="fireblast" end)
 scenario("Ready emergency options replace unavailable choices",{health=150,attacked=true,talents=frost,cooldowns={iceblock=120,barrier=20}},
@@ -184,7 +184,7 @@ for _,cd in ipairs({0,5}) do
         local spell=c.spells[pick.key]
         if pick.category=="main" then mains=mains+1; if spell.cooldown>0 then unavailableMain=unavailableMain+1 end end
         local unique=pick.kind..":"..pick.id
-        local lead=pick.category=="main" and math.max(H.lead,c.cast and c.cast.remaining or 0) or 0
+        local lead=pick.category=="main" and c.actionDelay or 0
         if seen[unique] or not spell.known or spell.enemy and spell.range~=true or spell.cooldown>lead then violations=violations+1 end
         seen[unique]=true
     end

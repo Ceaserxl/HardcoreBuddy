@@ -1,0 +1,395 @@
+{
+  "namedCount": 64,
+  "matrixCount": 0,
+  "matrixViolations": 0,
+  "cooldownMainCount": 0,
+  "suite": "clarity",
+  "cases": [
+    {
+      "passed": true,
+      "expected": "Main fireblast; include ; exclude shoot",
+      "name": "Healthy mana does not wand at eleven percent target health",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude shoot",
+      "name": "Healthy mana does not wand when finisher is out of range",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main shoot; include ; exclude ",
+      "name": "Low mana still conserves during a finish",
+      "actual": "main:shoot"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Idle player does not wait for a one-second finisher cooldown",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Idle player does not wait for a two-second finisher cooldown",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireblast; include ; exclude ",
+      "name": "Finisher is ready by the remaining GCD",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Finisher is not ready by the remaining GCD",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Short cast does not extend cooldown eligibility to two seconds",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireblast; include ; exclude ",
+      "name": "Long cast plans a finisher ready at completion",
+      "actual": "main:fireblast"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude ",
+      "name": "Affordable attack beats a resource forecast",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Two-second resource forecast remains when no attack is affordable",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude ",
+      "name": "Resource forecast cannot bypass a cooldown",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Full cast window includes confirmed regeneration",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Shoot",
+      "name": "Enter wand conservation below fifteen percent",
+      "actual": "main:shoot"
+    },
+    {
+      "passed": true,
+      "expected": "Main Shoot until twenty-five percent",
+      "name": "Mana tick across fifteen percent does not bounce to a spell",
+      "actual": "main:shoot"
+    },
+    {
+      "passed": true,
+      "expected": "Main Shoot",
+      "name": "Wand conservation remains stable below recovery threshold",
+      "actual": "main:shoot"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt",
+      "name": "Recovered mana returns to the normal filler",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt",
+      "name": "Small mana loss does not immediately re-enter wand mode",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt",
+      "name": "New target does not inherit previous target's conservation state",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt",
+      "name": "Clearcasting ends wand conservation",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude shoot",
+      "name": "No automatic wand pull with insufficient spell mana",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude shoot",
+      "name": "Low mana but affordable slow still opens safely",
+      "actual": "main:frostbolt, preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Fire utility points alone do not switch the filler",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude ",
+      "name": "Actual Fire damage investments choose Fireball in a group",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Actual Frost damage investments retain Frostbolt",
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude ",
+      "name": "Fire solo retains a healthy existing slow",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude ",
+      "name": "Fire solo renews a slow about to expire",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude scorch",
+      "name": "Do not build Scorch stacks on a nearly dead elite",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main scorch; include ; exclude ",
+      "name": "Build Scorch on a healthy durable target",
+      "actual": "main:scorch, offensive:combustion"
+    },
+    {
+      "passed": true,
+      "expected": "Main pyroblast; include ; exclude combustion",
+      "name": "Do not suggest Combustion before a pull",
+      "actual": "main:pyroblast, preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main fireball; include ; exclude combustion",
+      "name": "Do not spend Combustion on routine leveling targets",
+      "actual": "main:fireball"
+    },
+    {
+      "passed": true,
+      "expected": "Main scorch; include combustion; exclude ",
+      "name": "Combustion remains available on an engaged durable target",
+      "actual": "main:scorch, offensive:combustion"
+    },
+    {
+      "passed": true,
+      "expected": "Main scorch; include ; exclude combustion",
+      "name": "Combustion is not a low-mana suggestion",
+      "actual": "main:scorch"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude arcanePower",
+      "name": "No damage cooldown on a controlled target",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude combustion",
+      "name": "No damage cooldown outside attack range",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude combustion",
+      "name": "No Combustion for a committed Frost attack",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Shoot without Arcane Power",
+      "name": "Arcane Power does not accompany a wand fallback",
+      "actual": "main:shoot"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include magearmor; exclude icearmor, frostarmor",
+      "name": "Solo refresh respects existing Mage Armor",
+      "actual": "preparation:intellect, preparation:magearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include icearmor; exclude magearmor",
+      "name": "Group refresh respects existing physical armor",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include magearmor; exclude icearmor",
+      "name": "No armor in a group defaults to Mage Armor",
+      "actual": "preparation:intellect, preparation:magearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include icearmor; exclude magearmor, frostarmor",
+      "name": "Older physical armor can refresh with learned Ice Armor",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude intellect, icearmor, conjureGem",
+      "name": "Hostile opener hides preparation until it completes",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude intellect, icearmor, conjureGem",
+      "name": "Unknown cast does not invite preparation interruptions",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude water, food, intellect, icearmor, conjureGem, evocation",
+      "name": "Evocation channel hides preparation and attacks",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include water; exclude evocation",
+      "name": "Carried water takes precedence over Evocation",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem, preparation:water"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include evocation; exclude water",
+      "name": "Evocation remains a fallback without water",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:evocation, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include evocation; exclude water",
+      "name": "Water on cooldown permits Evocation fallback",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:evocation, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include food, water; exclude evocation",
+      "name": "Food and water still coexist",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem, preparation:food, preparation:water"
+    },
+    {
+      "passed": true,
+      "expected": "Main none; include ; exclude water, food",
+      "name": "Disabled recovery items are not suggested",
+      "actual": "preparation:intellect, preparation:icearmor, preparation:conjureGem"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude iceblock",
+      "name": "Real harmful Hypothermia blocks Ice Block",
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude iceblock, coldsnap",
+      "name": "Cold Snap does not promise to remove Hypothermia",
+      "actual": "main:frostbolt, defensive:barrier"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include coldsnap; exclude iceblock",
+      "name": "Cold Snap can still reset a missing Barrier with Hypothermia",
+      "actual": "main:frostbolt, defensive:manashield, defensive:coldsnap"
+    },
+    {
+      "passed": true,
+      "expected": "Main frostbolt; include ; exclude coldsnap",
+      "name": "Cold Snap is unnecessary when Barrier remains active",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt, despite new finisher conditions",
+      "name": "ACTIONBAR_SLOT_CHANGED does not replace a committed attack",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt, despite new finisher conditions",
+      "name": "UPDATE_MACROS does not replace a committed attack",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt, despite new finisher conditions",
+      "name": "PLAYER_REGEN_ENABLED does not replace a committed attack",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "No Main when target is no longer engaged",
+      "name": "Commitment cannot bypass group pull safety",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "No Main while drinking",
+      "name": "Handoff cannot recommend breaking newly started recovery",
+      "actual": "none"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt, no repeat Fire Blast",
+      "name": "Successful finisher waits for the cooldown API update",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt",
+      "name": "Finisher does not flash during cooldown propagation",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt",
+      "name": "Reported cooldown replaces the brief success guard",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "Main Frostbolt without a blank handoff",
+      "name": "Using the held instant clears the old cast handoff",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "No Nova; Main remains",
+      "name": "Successful Nova is not repeated before its aura arrives",
+      "actual": "main:frostbolt"
+    },
+    {
+      "passed": true,
+      "expected": "No Counterspell; Main remains",
+      "name": "Successful interrupt is not repeated on a stale target cast",
+      "actual": "main:frostbolt"
+    }
+  ],
+  "findings": [],
+  "passed": 64
+}

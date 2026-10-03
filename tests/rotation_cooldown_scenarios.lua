@@ -21,8 +21,8 @@ end
 scenario("Level 1 Fireball during GCD",{level=1,gcd=1.5,gcdSpells=true},"fireball")
 scenario("Level 4 Frostbolt during GCD",{level=4,gcd=1.5,gcdSpells=true},"frostbolt")
 scenario("Finisher ready now",{targetHealth=140,distance=15},"fireblast")
-scenario("Finisher ready in one second",{targetHealth=140,distance=15,cooldowns={fireblast=1}},"fireblast")
-scenario("Finisher at two-second boundary",{targetHealth=140,distance=15,cooldowns={fireblast=2}},"fireblast")
+scenario("Idle finisher still has one second left",{targetHealth=140,distance=15,cooldowns={fireblast=1}},"frostbolt",nil,{"fireblast"})
+scenario("Idle finisher still has two seconds left",{targetHealth=140,distance=15,cooldowns={fireblast=2}},"frostbolt",nil,{"fireblast"})
 scenario("Finisher beyond two-second boundary",{targetHealth=140,distance=15,cooldowns={fireblast=2.01}},"frostbolt",nil,{"fireblast"})
 scenario("Finisher with long cooldown",{targetHealth=140,distance=15,cooldowns={fireblast=7}},"frostbolt",nil,{"fireblast"})
 scenario("Finisher cooldown disabled",{targetHealth=140,distance=15,cooldowns={fireblast={enabled=0}}},"frostbolt",nil,{"fireblast"})
@@ -45,9 +45,9 @@ scenario("Ready Barrier keeps priority",{health=300,attacked=true,talents=frost}
 scenario("Shield fallback still respects mana",{health=300,power=300,attacked=true,talents=frost,cooldowns={barrier=20}},"frostbolt",nil,{"barrier","manashield"})
 
 -- 24-38: optional damage, item cooldowns, recovery and preparation.
-scenario("Arcane Power ready",{level=60,talents=arcane,classification="elite",grouped=true},"fireball",{"arcanePower"})
-scenario("Arcane Power cooling down",{level=60,talents=arcane,classification="elite",grouped=true,cooldowns={arcanePower=180}},"fireball",nil,{"arcanePower"})
-scenario("Combustion ready",{talents=fire,grouped=true},"fireball",{"combustion"})
+scenario("Arcane Power ready",{level=60,talents=arcane,classification="elite",grouped=true},"frostbolt",{"arcanePower"})
+scenario("Arcane Power cooling down",{level=60,talents=arcane,classification="elite",grouped=true,cooldowns={arcanePower=180}},"frostbolt",nil,{"arcanePower"})
+scenario("Combustion ready on a durable target",{talents=fire,grouped=true,classification="elite"},"scorch",{"combustion"})
 scenario("Combustion cooling down",{talents=fire,grouped=true,cooldowns={combustion=180}},"fireball",nil,{"combustion"})
 scenario("Mana gem ready",{power=400,inventory={[5514]=1}},"frostbolt",{"gem"})
 scenario("Mana gem cooling down",{power=400,inventory={[5514]=1},itemCooldown=120},"frostbolt",nil,{"gem"})
@@ -68,7 +68,7 @@ scenario("Ready finisher on controlled target",{targetHealth=140,distance=15,tar
 -- 41-50: time-ordered transitions and the previous audit fixes.
 local x=F.reset({targetHealth=140,distance=15,cooldowns={fireblast={start=100,duration=7}}})
 local before=F.evaluate(); x.time=105; local p=F.evaluate()
-record("Countdown enters the planning window","Frostbolt first, Fire Blast with two seconds left",F.main(before)=="frostbolt" and F.main(p)=="fireblast",p)
+record("Countdown does not make an idle player wait","Frostbolt remains Main while Fire Blast has two seconds left",F.main(before)=="frostbolt" and F.main(p)=="frostbolt",p)
 
 x=F.reset({targetHealth=140,distance=15,cooldowns={fireblast={start=100,duration=7}},cast={id=116,start=100,finish=103}})
 F.evaluate(); x.time=102.9; x.cooldowns.fireblast=0; p=F.evaluate()

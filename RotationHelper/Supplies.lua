@@ -30,7 +30,7 @@ function H:AddSupplies(c)
         local cd=0
         if item then
             local f=C_Container and C_Container.GetItemCooldown or GetItemCooldown
-            if f then local start,duration,enabled=f(item.itemId); cd=enabled==0 and math.huge or math.max(0,(start or 0)+(duration or 0)-c.now) end
+            if f then local start,duration,enabled=f(item.itemId); cd=(enabled==0 or enabled==false) and math.huge or math.max(0,(start or 0)+(duration or 0)-c.now) end
         end
         c.spells[key]={known=item~=nil,id=item and item.itemId,kind="item",cost=0,cooldown=cd,range=true}
     end

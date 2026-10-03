@@ -4,6 +4,7 @@ Date: 2026-10-02. **100/100 pass after the cast identity fix.** The original run
 against `2ea21af` passed 99 and found the timing issue described below. The
 [200-scenario follow-up](rotation-200-scenarios.md) includes this suite and 100
 additional timing and lifecycle combinations.
+Policy expectations now include the subsequent [choice review](rotation-clarity-review.md).
 
 This suite combines the 50 cooldown scenarios with 50
 additional scenarios. All case names are unique, and the runner asserts that

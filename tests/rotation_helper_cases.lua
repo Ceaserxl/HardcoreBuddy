@@ -75,7 +75,7 @@ check(p[1].id==205,"Highest LEARNED rank, not character level")
 X.learned[205]=nil; X.learned[7322]=nil; rebuild()
 
 X.gcd=true; p=evaluate(); check(main(p)=="frostbolt","GCD must not hide the next action")
-X.gcd=false; X.cooldowns[116]={100,2}; p=evaluate(); check(main(p)=="frostbolt","Short cooldown does not gate Main")
+X.gcd=false; X.cooldowns[116]={100,2}; p=evaluate(); check(main(p)=="fireball","A ready attack beats waiting on a short cooldown")
 X.cooldowns[116]={100,60}; p=evaluate(); check(main(p)=="fireball" and not find(p,"frostbolt"),"Long cooldown is gated so a usable Main is selected")
 X.cooldowns[116]={100,60,0}; p=evaluate(); check(main(p)=="fireball" and not find(p,"frostbolt"),"Disabled cooldown state is gated")
 X.cooldowns[116]=nil
@@ -241,7 +241,7 @@ H.Glow.HasSpell=has
 reset(); X.combat=false; X.target=false; X.learned[11958]=true; X.auras.player={{spellId=11958,expirationTime=105}}; rebuild()
 p=evaluate(); check(#p==0,"An active Ice Block pauses suggestions until usable again")
 reset(); X.grouped=true; X.talents={criticalMass=3,improvedScorch=3,improvedFrostbolt=5}; rebuild(); p=evaluate()
-check(main(p)=="fireball","Specialization considers the entire tree, not only selected damage talents")
+check(main(p)=="fireball","Fire damage investments include Improved Scorch")
 reset(); X.learned[5019]=true; X.wand=true; X.targetHealth=100; X.elite=true; rebuild(); p=evaluate()
 check(main(p)=="frostbolt","Ten percent of an elite is not assumed to be wand/Fire Blast finishing range")
 local legacyInfo,legacyCooldown=GetSpellInfo,GetSpellCooldown
