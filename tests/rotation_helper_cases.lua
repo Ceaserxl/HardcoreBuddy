@@ -74,8 +74,9 @@ check(p[1].id==205,"Highest LEARNED rank, not character level")
 X.learned[205]=nil; X.learned[7322]=nil; rebuild()
 
 X.gcd=true; p=evaluate(); check(main(p)=="frostbolt","GCD must not hide the next action")
-X.gcd=false; X.cooldowns[116]={100,2}; p=evaluate(); check(main(p)=="frostbolt","Two-second cooldown preview")
-X.cooldowns[116]={100,2.1}; p=evaluate(); check(main(p)=="fireball","Longer true cooldown is not ready")
+X.gcd=false; X.cooldowns[116]={100,2}; p=evaluate(); check(main(p)=="frostbolt","Short cooldown does not gate Main")
+X.cooldowns[116]={100,60}; p=evaluate(); check(main(p)=="frostbolt","Long cooldown does not replace Main with a fallback")
+X.cooldowns[116]={100,60,0}; p=evaluate(); check(main(p)=="frostbolt","Disabled cooldown state does not gate Main")
 X.cooldowns[116]=nil
 X.power=30; X.regen=10; p,c=evaluate(); check(main(p)=="frostbolt" and c.futurePower==50,"Forecast confirmed casting regen")
 X.regen=0; p=evaluate(); check(main(p)==nil,"Cannot spend unknown future mana")
@@ -200,6 +201,15 @@ C_Spell={GetSpellInfo=function(id) local name,_,icon,cast=legacyInfo(id); return
 X.gcd=true; p=evaluate(); check(main(p)=="frostbolt","Modern C_Spell API path respects GCD and boolean range")
 X.range=nil; p=evaluate(); check(not main(p),"Modern unknown range is rejected")
 C_Spell=nil; X.range=true; X.gcd=false
+-- The shared change applies to every lane and to item actions, not just Main.
+local gateContext=H:Snapshot()
+for _,category in ipairs({"main","defensive","offensive","preparation"}) do
+    for _,kind in ipairs({"spell","item"}) do
+        gateContext.spells.probe={id=999,kind=kind,known=true,cost=0,cooldown=math.huge,range=true}
+        local picks=H.Select(gateContext,{rules={{spell="probe",category=category,when=function() return "Needed" end}}},{})
+        check(find(picks,"probe"),category.." "..kind.." highlight ignores cooldown duration")
+    end
+end
 local action=GetActionInfo
 GetActionInfo=function() return "macro",116,"spell" end
 local kind,id=H.Glow.Action(macro); check(kind=="spell" and id==116,"Resolved modern macro actions do not interpret a spell ID as a macro index")

@@ -28,8 +28,10 @@ spell to highlight. The ability must be on a visible action bar.
 - Only learned spells and carried recovery items are eligible. Rank changes and
   talent changes refresh the available actions. Actual player data is used even
   if the field kit is previewing another character.
-- Main previews true cooldowns up to two seconds ahead and ignores the global
-  cooldown. At cast start it plans for that cast's completion, reserving its mana
+- Cooldowns do not gate highlights in any category, including item highlights.
+  Cooldown information still informs class rules such as whether Cold Snap can
+  reset an unavailable survival spell. Main plans mana up to two seconds ahead.
+  At cast start it plans for that cast's completion, reserving its mana
   cost and crediting only reported casting regeneration. It does not predict
   random procs, damage, or uncertain future resource gains.
 - The next Main action is committed at cast start, including an empty plan.
@@ -109,8 +111,8 @@ damage formulas. No retired rotation implementation was restored.
 ## Verification
 
 `tests/run_rotation_helper.py` checks scenario sequences rather than isolated
-spell priorities: late target-health changes, committed mana, GCDs, cooldown
-lead, range changes, macros, roots versus immunity, stronger buffs, recovery,
+spell priorities: late target-health changes, committed mana, cooldown-independent
+highlights, range changes, macros, roots versus immunity, stronger buffs, recovery,
 disabled state, unsupported classes and native-glow ownership. The legacy
 cleanup test still verifies that old saved traces are discarded.
 

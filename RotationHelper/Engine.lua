@@ -8,8 +8,6 @@ function H.Eligible(c,key,immediate)
     if not s or not s.known or s.blocked or c.dead or c.taxi then return false end
     if s.enemy and (not c.hostile or c.controlled or s.range~=true or c.immune[key]) then return false end
     if s.range==false then return false end
-    local lead=immediate and 0 or math.max(H.lead,c.cast and c.cast.remaining or 0)
-    if s.cooldown>lead then return false end
     local power=immediate and c.power or c.futurePower
     return s.cost<=power
 end

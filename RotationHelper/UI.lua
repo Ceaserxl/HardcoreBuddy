@@ -16,6 +16,6 @@ function H:Document(context)
     return {context=context,view="training",continuous=true,page=1,pages=1,cards={card,
         {title="Shared rules",fullWidth=true,blocks={
             {title="Your action bars",body="Highlights learned spells and carried items already on your bars, including spell macros. Enable separately on each Mage."},
-            {title="Timing & safety",body="Previews cooldowns and mana up to 2 seconds ahead. Respects range, crowd control and learned talents. Group attacks require an engaged target."},
+            {title="Timing & safety",body="Plans mana up to 2 seconds ahead. Cooldowns do not suppress highlights. Respects range, crowd control and learned talents. Group attacks require an engaged target."},
         }}}}
 end
