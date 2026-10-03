@@ -43,6 +43,11 @@ for _,id in ipairs({117,159,118,8951,21217,1251,2581}) do
     end
     assert(headings.Materials and not headings.Materials.rightColumn)
     assert(headings.Alternatives.rightColumn and headings.Next.rightColumn)
+    local rightHeadings={}
+    for _,b in ipairs(detail.blocks) do
+        if b.rightColumn and b.plain and not b.itemId then rightHeadings[#rightHeadings+1]=b.title end
+    end
+    assert(rightHeadings[1]=="Next" and rightHeadings[2]=="Alternatives","Right sections use a consistent order")
     local recipe=A.Data.AuctionRecipes[id]
     if recipe then
         for _,pair in ipairs(recipe.reagents) do

@@ -245,6 +245,7 @@ local function bandageCards(context,state)
     end
     local nextId=nextBlocks[2] and nextBlocks[2].itemId
     if nextId then nextBlocks[2]=bandage(nextId); nextBlocks[2].rightColumn=true end
+    local rankSections={}
     for _,section in ipairs(cards) do
         local remaining={}
         for _,block in ipairs(section.blocks) do
@@ -260,14 +261,15 @@ local function bandageCards(context,state)
         if #remaining>0 then
             local heading=row(section.title,section.note)
             heading.plain=true; heading.textInset=0; heading.rightColumn=true
-            blocks[#blocks+1]=heading
-            for _,block in ipairs(remaining) do block.rightColumn=true; blocks[#blocks+1]=block end
+            rankSections[#rankSections+1]=heading
+            for _,block in ipairs(remaining) do block.rightColumn=true; rankSections[#rankSections+1]=block end
         end
     end
     if nextBlocks[1] then nextBlocks[1].body=nil end
     for _,block in ipairs(nextBlocks) do blocks[#blocks+1]=block end
     local used={}
     for _,block in ipairs(blocks) do if block.itemId then used[block.itemId]=true end end
+    for _,block in ipairs(rankSections) do if block.itemId then used[block.itemId]=true end end
     local heading=row("Alternatives")
     heading.plain=true; heading.textInset=0; heading.rightColumn=true
     blocks[#blocks+1]=heading
@@ -277,6 +279,7 @@ local function bandageCards(context,state)
             blocks[#blocks+1]=block
         end
     end
+    for _,block in ipairs(rankSections) do blocks[#blocks+1]=block end
     out.blocks=blocks
     return {out}
 end
@@ -422,6 +425,14 @@ function C.Detail(context, action)
             for _,other in ipairs(alternatives) do
                 if other.itemId~=item.itemId and (not recommended or other.itemId~=recommended.itemId) then choices[#choices+1]=other end
             end
+            local nextItem=G.NextSupply(item,context)
+            heading("Next",true)
+            if nextItem then
+                local block=itemRow(nextItem); block.body=G.SupplySubtitle(nextItem,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
+                blocks[#blocks+1]=block
+            else
+                blocks[#blocks+1]=G.EmptySupplyRow("Next",item)
+            end
             if family~="bandage" then
                 heading("Alternatives",true)
                 if #choices==0 then blocks[#blocks+1]=G.EmptySupplyRow("Alternatives",item) end
@@ -430,14 +441,6 @@ function C.Detail(context, action)
                 local block=itemRow(other); block.body=G.SupplySubtitle(other,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
                 block.recommendedAlternative=recommended and other.itemId==recommended.itemId
                 blocks[#blocks+1]=block
-            end
-            local nextItem=G.NextSupply(item,context)
-            heading("Next",true)
-            if nextItem then
-                local block=itemRow(nextItem); block.body=G.SupplySubtitle(nextItem,context); block.rightColumn=true; block.plain=true; block.supplyDetail=true
-                blocks[#blocks+1]=block
-            else
-                blocks[#blocks+1]=G.EmptySupplyRow("Next",item)
             end
             if family=="bandage" then
                 heading("Alternatives",true)

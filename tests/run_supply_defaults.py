@@ -49,7 +49,7 @@ card=A.window.cards[1]
 assert(A.document.cards[1].itemSectionTitle=="Selected Alternative","Alternative heading matches enchants")
 local recommendedRow
 for _,b in ipairs(A.document.cards[1].blocks) do
-    if b.rightColumn and b.itemId then recommendedRow=b; break end
+    if b.recommendedAlternative then recommendedRow=b; break end
 end
 assert(recommendedRow.itemId==group.itemId and recommendedRow.recommendedAlternative,"Recommended item is first and marked")
 assert(card.defaultChoice:IsShown() and card.defaultChoice:IsEnabled() and card.defaultChoice.label:GetText()=="Set as default")
