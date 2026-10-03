@@ -6,7 +6,7 @@ addon.Guide = G
 function G.EmptySupplyRow(section,item,kind)
     local title
     if kind=="enchant" then
-        title=section=="Next" and "No Higher Compatible Enchant" or "No Compatible Alternatives"
+        title=section=="Next" and "No Better Compatible Augment" or "No Compatible Alternatives"
     elseif section=="Alternatives" then
         title="No Alternatives Available"
     else

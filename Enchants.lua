@@ -341,13 +341,30 @@ function E.Detail(context,action)
         selectedBlock.enchantTone="missing"
     end
     blocks[#blocks+1]=selectedBlock
-    local nextRank
+    local nextRank,nextLevel,nextScore
     if selected then
+        local profile=E.Profile(context)
+        local selectedScore=E.Score(selected,profile) or 0
+        local future={}; for key,value in pairs(context) do future[key]=value end
         for _,catalog in ipairs({D.recipes,kits}) do
             for _,candidate in ipairs(catalog) do
-                if rankKey(candidate)==rankKey(selected) and candidate.skill>selected.skill
-                    and E.Compatible(candidate,g) and (candidate.armorKit or relevant(candidate,context))
-                    and (not nextRank or candidate.skill<nextRank.skill) then nextRank=candidate end
+                local score=E.Score(candidate,profile)
+                if candidate~=selected and score and score>selectedScore and E.Compatible(candidate,g) then
+                    -- Find the next recommendation tier across BOTH enhancement types.
+                    -- Enchanting and Leatherworking skill numbers are not comparable ranks.
+                    for level=context.level,60 do
+                        future.level=level
+                        local eligible=candidate.armorKit and candidate.level<=level
+                            or not candidate.armorKit and relevant(candidate,future,profile) and withinRecommendationTier(candidate,future)
+                        if eligible then
+                            if not nextRank or level<nextLevel or level==nextLevel and (score>nextScore
+                                or score==nextScore and candidate.spellId<nextRank.spellId) then
+                                nextRank,nextLevel,nextScore=candidate,level,score
+                            end
+                            break
+                        end
+                    end
+                end
             end
         end
     end
