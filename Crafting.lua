@@ -2,6 +2,39 @@ local _, addon = ...
 local C = {}
 addon.Crafting = C
 
+-- Exact quantities come from the reviewed recipe catalog, independent of
+-- whether this character has learned the recipe. Counts are bag stock only.
+function C.MaterialBlocks(item,context)
+    local recipe=(addon.Data.AuctionRecipes or {})[item.itemId]
+        or addon.characterDB and addon.characterDB.auctionRecipes and addon.characterDB.auctionRecipes[item.itemId]
+    local reagents=item.reagents or recipe and recipe.reagents
+    local info=C.GetInfo(item,context)
+    if not reagents and info.craftKind=="classSpell" and info.className=="Warlock" and item.ingredients=="Soul Shard" then
+        reagents={{6265,1,"Soul Shard"}}
+    end
+    local blocks={}
+    for _,pair in ipairs(reagents or {}) do
+        local id,target=pair[1],pair[2]
+        local material=addon.Data.Enchants.materials[id]
+        local get=C_Item and C_Item.GetItemInfo or GetItemInfo
+        local name=get and get(id)
+        if not name and C_Item and C_Item.RequestLoadItemDataByID then C_Item.RequestLoadItemDataByID(id) end
+        local inventory=context.inventory or {}
+        local count=inventory.available and inventory.counts and (inventory.counts[id] or 0) or nil
+        blocks[#blocks+1]={title=name or pair[3] or material and material.name or ("Item "..id),
+            itemId=id,icon=material and material.icon,supply=true,materialCount=true,readOnlyTarget=true,
+            count=count,target=target,rightColumn=false,
+            status=count==nil and "unknown" or count>=target and "ready" or count==0 and "missing" or "low"}
+    end
+    local note
+    if #blocks==0 then
+        note=info.craftKind=="classSpell" and info.className=="Mage" and "No materials required."
+            or info.craftable and "Recipe materials unavailable."
+            or info.craftable==false and "Not crafted; no materials required." or "No recipe materials listed."
+    end
+    return blocks,note
+end
+
 local ranks = {
     Leatherworking={{"Apprentice",75,0,5},{"Journeyman",150,50,10},{"Expert",225,125,20},{"Artisan",300,200,35}},
     Alchemy={{"Apprentice",75,0,5},{"Journeyman",150,50,10},{"Expert",225,125,20},{"Artisan",300,200,35}},

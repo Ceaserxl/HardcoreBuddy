@@ -3,6 +3,42 @@ local _, addon = ...
 local P, D = addon.Planner, addon.Data
 local G = {}
 addon.Guide = G
+-- Shared compact copy for selected supplies, alternatives and future ranks.
+function G.SupplySubtitle(item,context)
+    local effect=(item.detail or item.short or ""):gsub("^Use: *","")
+    if item.family=="wellfed" or item.family=="manafood" then effect=item.short or effect end
+    effect=effect:gsub("Must remain seated while %a+%.",""):gsub("%s*%([^)]*[Cc]ooldown%)","")
+        :gsub("^Restores ","+"):gsub("^Instantly restores ","+"):gsub("^Heals ","+")
+        :gsub("(%d+) to (%d+)","%1–%2"):gsub(" over "," / ")
+        :gsub("^Increases your (.-) by ([%d%.]+)","+%2 %1")
+        :gsub("^Increases (.-) by ([%d%.]+)","+%2 %1")
+    if item.family=="bandage" then effect=effect:gsub(" damage"," health") end
+    effect=effect:match("^(.-)%.%s") or effect
+    effect=effect:gsub("%s+$",""):gsub("%.$","")
+    local info=addon.Crafting.GetInfo(item,context)
+    if info.craftable and info.profession and info.skill then effect=effect.." - "..info.profession.." "..info.skill end
+    return effect
+end
+function G.NextSupply(item,context)
+    if item.next and item.next.itemId~=item.itemId then return item.next end
+    local grouped=addon.Planner.grouped[item.family]
+    local function rank(i)
+        local info=addon.Crafting.GetInfo(i,context)
+        return grouped and (info.skill or i.power or 0) or addon.Planner.AvailableAt(i)
+    end
+    local minimum=rank(item)
+    if not grouped then minimum=math.max(minimum,context.level or 1) end
+    local nextItem
+    for _,catalog in ipairs({addon.Data.Items.items,addon.Data.Scrolls.items}) do
+        for _,other in ipairs(catalog) do
+            if other.family==item.family and other.itemId~=item.itemId and not other.alternative
+                and addon.Planner.MatchesClass(other,context.characterClass)
+                and addon.Planner.MatchesFaction(other,addon.Planner.ContextFaction(context)) and rank(other)>minimum
+                and (not nextItem or rank(other)<rank(nextItem)) then nextItem=other end
+        end
+    end
+    return nextItem
+end
 local function add(card, block) card.blocks[#card.blocks + 1] = block; return block end
 local function text(card, title, body, meta)
     return add(card, {title=title, body=body, meta=meta})

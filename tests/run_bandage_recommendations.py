@@ -20,7 +20,7 @@ local state={view="supplies",detail={kind="supplyFamily",family="bandage"}}
 local function doc() return A.Companion.Build(context,state) end
 local function ids(d)
     local ids={}; local count=0
-    for _,c in ipairs(d.cards) do for _,b in ipairs(c.blocks) do if b.supply then
+    for _,c in ipairs(d.cards) do for _,b in ipairs(c.blocks) do if b.supply and not b.materialCount then
         assert(not ids[b.itemId],"No duplicate bandage rows")
         ids[b.itemId]=b; count=count+1
     end end end

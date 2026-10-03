@@ -520,6 +520,14 @@ local function renderBlock(frame, block, width)
         frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-26); frame.stock:SetSize(stockWidth,16); frame.stock:SetJustifyH("RIGHT")
         frame.choose:ClearAllPoints(); frame.choose:SetPoint("TOPRIGHT",-8,-30)
         frame.stockTrack:ClearAllPoints(); frame.stockTrack:SetPoint("BOTTOMRIGHT",-8,7)
+        if block.supplyDetail then
+            frame.priority:Hide()
+            local titleHeight=measure(frame.title,block.title,width-66-stockWidth,52,7)
+            local bodyHeight=measure(frame.body,block.body,width-64,52,9+titleHeight)
+            frame.title:SetWordWrap(true); frame.body:SetWordWrap(true)
+            y=math.max(56,21+titleHeight+bodyHeight); frame:SetHeight(y)
+            frame.stock:ClearAllPoints(); frame.stock:SetPoint("TOPRIGHT",-8,-7)
+        end
         Skin.RowArtwork(frame)
     elseif frame.carryLabel then frame.carryLabel:Hide() end
     if block.recommendation then

@@ -327,6 +327,9 @@ function E.Detail(context,action)
     local recommended=g.recommendation
     local options=E.Options(context,g,true)
     for _,option in ipairs(options) do if option.spellId==action.spellId then selected=option end end
+    -- Future ranks are browsable, but still obey class and equipped-item rules.
+    local requested=byId[action.spellId]
+    if requested and E.Compatible(requested,g) and (requested.armorKit or relevant(requested,context)) then selected=requested end
     local blocks={}
     local function heading(title,right,body)
         local b=row(title,body); b.plain=true; b.textInset=0; b.rightColumn=right; blocks[#blocks+1]=b
@@ -364,6 +367,21 @@ function E.Detail(context,action)
             b.status=count==nil and "unknown" or count>=pair[2] and "ready" or count==0 and "missing" or "low"
             blocks[#blocks+1]=b
         end
+    end
+    local nextRank
+    if selected then
+        for _,catalog in ipairs({D.recipes,kits}) do
+            for _,candidate in ipairs(catalog) do
+                if rankKey(candidate)==rankKey(selected) and candidate.skill>selected.skill
+                    and E.Compatible(candidate,g) and (candidate.armorKit or relevant(candidate,context))
+                    and (not nextRank or candidate.skill<nextRank.skill) then nextRank=candidate end
+            end
+        end
+    end
+    heading("Next",true,not nextRank and "No higher compatible rank listed." or nil)
+    if nextRank then
+        local b=enchantBlock(g,nextRank,{kind="enchantRecipe",slotId=g.slotId,spellId=nextRank.spellId})
+        b.enchantAlternative=true; b.rightColumn=true; blocks[#blocks+1]=b
     end
     return {title=g.name.." enchants",blocks=blocks,itemLayout=true,fullWidth=true}
 end
