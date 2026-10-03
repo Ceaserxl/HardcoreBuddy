@@ -1,141 +1,81 @@
-"""Essentials filtering, matching AH bounds, native searches and tab isolation."""
+"""Refill eligibility, per-row purchases, saved prices, and compact table layout."""
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from render_layout import boot, ROOT
-
 lua, addon = boot()
-lua.execute((ROOT / 'tests/gear_advisor.lua').read_text())
-lua.execute((ROOT / 'tests/auction_upgrades.lua').read_text())
-lua.execute('''
-local A=TestAddon; local E=A.AuctionEssentials; local U=A.AuctionUpgrades
-local original=A.Supplies.Build
-local function record(id,name,missing,extra)
-    local item={itemId=id,name=name}; for k,v in pairs(extra or {}) do item[k]=v end
-    local target=math.max(20,missing)
-    return {itemId=id,name=name,item=item,count=target-missing,target=target,missing=missing,tracking=true}
-end
-A.Supplies.Build=function(_,state)
-    assert(state.filter=="Essentials")
-    return {record(117,"Vendor food",20),record(2512,"Vendor arrows",20),
-        record(10513,"Crafted ammo",200),record(999901,"User item",0),
-        record(999902,"Limited stock potion",4),record(999903,"Bound item",4,{binding=true})}
-end
-local rows=E:Items({})
-assert(#rows==2 and rows[1].name=="Crafted ammo" and rows[2].name=="Limited stock potion","Fulfilled items are omitted")
-E:Attach(); E.open=true
-AuctionFrameTab_OnClick(E.tab)
-assert(E.panel:IsShown() and not U.panel:IsShown(),"Tabs are exclusive")
-assert(E.panel:GetWidth()==U.panel:GetWidth() and E.panel:GetHeight()==U.panel:GetHeight(),"Same dimensions")
-assert(E.rows[1].record.itemId==10513)
-local calls=0; local page=0; local ready=false; local empty=false; local bought; local queryName
-local clock=100; GetTime=function() return clock end
-local originalQuery=QueryAuctionItems
-QueryAuctionItems=function(name,minimum,maximum,p,usable,quality,all,exact,filters)
-    calls=calls+1; page=p; queryName=name
-    assert(not minimum and not maximum and not usable and exact and not filters)
-end
-CanSendAuctionQuery=function() return ready end
-GetNumAuctionItems=function()
-    local noResults=empty or queryName~='Crafted ammo'
-    return noResults and 0 or 2,noResults and 0 or 51
-end
-GetAuctionItemLink=function(_,index) return "item:10513:0:0:0" end
-UnitName=function() return "Player" end
-GetAuctionItemInfo=function(_,index)
-    -- Page 0: lower stack total but worse per item. Page 1: cheapest unit price.
-    local count=page==0 and 1 or 10
-    local price=page==0 and 100 or 500
-    return "Crafted ammo",nil,count,nil,nil,nil,nil,nil,nil,index==2 and 1 or price,nil,nil,nil,index==2 and "Player" or "Seller"
-end
-GetMoney=function() return 100000 end
-StaticPopupDialogs=StaticPopupDialogs or {}; StaticPopupDialogs.BUYOUT_AUCTION={}
-StaticPopup_Show=function(_,text,_,data) E.testPopup=data; E.popupText=text end
-StaticPopup_Hide=function() E.testPopup=nil end
-PlaceAuctionBid=function(_,index,price) bought={index,price} end
-local function step()
-    clock=clock+.25
-    E:Tick()
-    if E.scan and E.scan.phase=="waiting" then E.scan.phase="reading" end
-end
-local function finish()
-    for i=1,100 do if not E.scan then return end; step() end
-    error("scan did not finish")
-end
-E:Search(rows[1]); step(); assert(calls==0 and E.panel:IsShown(),"Throttle respected")
-ready=true; finish()
-assert(E.confirmation.count==10 and E.confirmation.buyout==500 and page==1,"Cheapest unit price across all pages, excluding own auctions")
-assert(E.popupText=="10 x Crafted ammo" and E.panel:IsShown(),"Confirm whole stack in Essentials tab")
-assert(E.rows[1].cells[6]:GetText()=="10","Separate stack column")
+for name in ('gear_advisor.lua', 'auction_upgrades.lua', 'auction_essentials_fixture.lua'):
+    lua.execute((ROOT / 'tests' / name).read_text(encoding='utf-8'))
+lua.execute(r'''
+local A,E,F=TestAddon,TestAddon.AuctionEssentials,ESSENTIAL_FIXTURE
+F.stock={
+ [117]={name='Vendor food',target=20}, [2512]={name='Vendor arrows',target=1000},
+ [10513]={name='Crafted ammo',target=200}, [999901]={name='User item',target=20,count=0},
+ [999902]={name='Above refill amount',target=20,count=6,refillNeeded=false},
+ [999903]={name='Bound item',target=1,item={itemId=999903,binding=true}},
+ [999904]={name='Refill disabled',target=20,refillNeeded=false},
+ [999905]={name='Fully covered',target=20,count=0},
+}
+A.characterDB.auctionBank={counts={[999905]=20}}
+E:Refresh()
+assert(#E.items==2 and E.items[1].itemId==10513 and E.items[2].itemId==999901,'Only low-stock, tradeable, non-vendor Essentials, including user items')
+assert(E.panel:GetWidth()==A.AuctionUpgrades.panel:GetWidth() and E.panel:GetHeight()==A.AuctionUpgrades.panel:GetHeight())
+assert(#E.headers==7 and E.headers[2]:GetText()=='OWNED' and E.headers[7]:GetText()=='BUY')
+assert(not E.buy and not E.total and not E.rows[1].craft,'No basket footer or Craft column')
+assert(E.rows[1].buy.label:GetText()=='Buy' and not E.rows[1].buy:IsEnabled(),'Unscanned Buy is disabled')
+assert(select(5,E.rows[1]:GetPoint())==-72 and select(5,E.headers[1]:GetPoint())==-50,'Table moved up ten pixels')
+F.auctions={
+ [10513]={[0]={{count=1,price=100},{count=200,price=1,owner='Player'}},[1]={{count=10,price=500}},total=51},
+ [999901]={[0]={}},
+}
+F.ready=false; E:Start(); F.tick(); assert(#F.queries==0,'Respect throttle')
+F.ready=true; F.finish()
+assert(E.complete and #F.queries==3,'Scan each needed item and every price page exactly once')
+assert(E:RowPlan(E.items[1]).cost==600 and E:RowPlan(E.items[1]).units==11,'Cheapest available whole stacks, excluding player auctions')
+assert(E.rows[1].cells[5]:GetText()=='11','Quantity covers the complete saved plan')
+assert(E.rows[1].buy:IsEnabled() and not E.rows[2].buy:IsEnabled())
+local calls=#F.queries
+MOCK.Click(E.rows[1].buy); F.finish()
+assert(#F.queries==calls+1 and F.queries[#F.queries].page==1,'Buy loads only the saved offer page, never rescans')
+assert(E.confirmation.count==10 and E.confirmation.buyout==500 and F.popupText=='10 x Crafted ammo')
+F.accept(); assert(E:MailCount(10513)==0,'Only confirmed purchases count as stock')
+F.ack(); F.finish()
+assert(E.confirmation.count==1 and E.confirmation.buyout==100 and #F.queries==calls+2,'Next saved stack prompts without a new search plan')
+F.accept(); F.ack(true); F.finish()
+assert(not E.batch and E:MailCount(10513)==11 and #F.purchases==2)
+assert(not E.rows[1].buy:IsEnabled(),'Consumed cached offers cannot be purchased twice')
+
+-- Buy the current page directly, rechecking the exact listing at both click and accept.
+F.reset(); F.stock={[900001]={name='Potion',target=5}}
+F.auctions={[900001]={[0]={{count=5,price=50}}}}
+E:Start(); F.finish(); calls=#F.queries
+E:BuyRow(E.items[1]); assert(E.confirmation and #F.queries==calls,'Already loaded listing needs no query')
+F.auctions[900001][0][1].price=500
 StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnAccept(nil,E.confirmation)
-assert(bought[2]==500 and not E.results[10513],"Confirmed stack buyout invalidates cached result")
-assert(E:MailCount(10513)==0,"A requested buyout is not yet owned")
-E:PurchaseSucceeded()
-assert(E:MailCount(10513)==10,"Successful buyout cached in mail")
-E:Start(); finish(); assert(E.complete and E.results[10513].buyout==500,"Scan all finishes")
-assert(not E.results[999901] and E.results[999902].plan.units==0,"Fulfilled items aren't scanned; only exact item IDs accepted")
-MOCK.Click(E.rows[1])
-assert(E.selected[10513] and E.rows[1].buy:GetChecked(),"Row toggles its checkbox without purchasing")
-local cost,units,need,unknown=E:Estimate()
-assert(cost==600 and units==11 and need==190 and not unknown,"Whole-stack refill estimate deducts pending mail")
-MOCK.Click(E.rows[1].buy)
-assert(not E.selected[10513],"Checkbox toggles same selection")
-E:Toggle(rows[1]); E:BuySelected(); finish()
-assert(E.batch and E.confirmation and E.confirmation.count==10,"Buy starts selected refill")
-StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnAccept(nil,E.confirmation)
-assert(E.awaitingBuy and not E.scan,"Waits for success before another purchase")
-E:PurchaseSucceeded(); finish()
-assert(E.batch[1].remaining==1 and E.confirmation and E.confirmation.count==1 and E.confirmation.buyout==100,
-    "Replans the remainder: a single costs less than another cheaper-per-item stack")
-StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnAccept(nil,E.confirmation)
-assert(E.awaitingBuy and bought[2]==100,"Second popup buys remainder without another Buy click")
-E:PurchaseSucceeded()
-assert(not E.batch and not E.confirmation and not E.awaitingBuy,"One Buy click finishes queue through successive confirmations")
-E:Start(); finish(); E.selected[10513]=true; E:BuySelected(); finish()
-StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnCancel()
-assert(not E.batch and not E.confirmation,"Cancel halts the refill queue")
-E:Search(rows[1]); finish(); assert(E.confirmation)
-E.events.scripts.OnEvent(nil,"AUCTION_ITEM_LIST_UPDATE")
-assert(not E.confirmation,"Changed listings cancel popup")
-empty=true; E:Search(rows[1]); finish(); assert(not E.confirmation and E.results[10513].plan.units==0,"No buyouts never prompts")
--- A previously saved skip preference must no longer bypass the popup.
+assert(not E.confirmation and #F.purchases==0,'Price changed after prompt: never buy')
+E:Start(); F.finish(); E:BuyRow(E.items[1]); F.finish()
+F.event('AUCTION_ITEM_LIST_UPDATE'); assert(not E.confirmation,'New server listing update invalidates prompt')
+E:BuyRow(E.items[1]); F.finish()
+StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnCancel(); assert(not E.batch and not E.confirmation)
+-- Existing skip-confirmation preference cannot bypass standard confirmation.
 A.characterDB.essentialSkipConfirmation=true
-empty=false; bought=nil; E:Search(rows[1]); finish()
-assert(E.confirmation and E.testPopup and not bought,"Regular confirmation always shown")
-E:Stop()
-ERR_AUCTION_BID_OWN="Cannot buy own auction"
-local info=GetAuctionItemInfo
-GetAuctionItemInfo=function(...)
- local values={info(...)}
- if page==0 and values[14]=='Seller' then values[14]='OtherSeller' end
- return unpack(values)
-end
-E.batch={{record=rows[1],remaining=11,ceiling=500}}
-E:Start(rows[1],true); finish()
-StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnAccept(nil,E.confirmation)
-E.events.scripts.OnEvent(nil,'UI_ERROR_MESSAGE',1,ERR_AUCTION_BID_OWN)
-assert(E.batch[1].remaining==11 and not E.awaitingBuy and E.scan,'Own-auction failure replans without reducing remaining quantity')
-finish()
-assert(E.confirmation and E.confirmation.owner=='OtherSeller','Next confirmation uses another seller')
-E:Stop()
-GetAuctionItemInfo=info
-E.batch={{record=rows[1],remaining=11,ceiling=500,ownRejected=true},{record=rows[2],remaining=4,ceiling=500}}
-E:Start(rows[1],true)
-for i=1,100 do
- if E.batch and #E.batch==1 then break end
- step()
-end
-assert(E.batch and #E.batch==1 and E.batch[1].record==rows[2] and E.scan,'If only own auctions remain, next queued item continues')
-E:Stop(); E.ownSellers=nil
-E.awaitingBuy={listing={owner='Seller'}}
-E.events.scripts.OnEvent(nil,'UI_ERROR_MESSAGE',2,'Not enough money')
-assert(not E.awaitingBuy and not E.scan,'Unrelated purchase errors still stop')
-AuctionFrame:SetSize(900,500); U:Layout(); E:Refresh()
-assert(E.panel:GetWidth()==U.panel:GetWidth() and E.panel:GetHeight()==U.panel:GetHeight())
-E:Start(); AuctionFrameTab_OnClick(U.tab)
-assert(not E.panel:IsShown() and U.panel:IsShown() and not E.scan,"Switching tabs stops scan")
-E.open=false; local before=calls; E:Search(rows[1]); assert(calls==before,"Closed AH cannot query")
-QueryAuctionItems=originalQuery
-A.Supplies.Build=original
-print("PASS: Essentials vendor filtering, tradeable items, sorting, tab isolation, geometry, throttling and exact native searches")
+E:BuyRow(E.items[1]); F.finish(); assert(E.confirmation and #F.purchases==0)
+E:Stop(); F.auctions[900001][0]={}
+E:BuyRow(E.items[1]); F.finish()
+assert(not E.confirmation and E.message:find('no longer available',1,true),'Sold listing never substitutes a more expensive one')
+E:Start(); F.finish(); assert(not E.rows[1].buy:IsEnabled(),'No results never offers Buy')
+
+-- Latest stock supersedes an old row and forces cost review before purchase.
+F.auctions[900001][0]={{count=5,price=50},{count=1,price=10}}
+E:Start(); F.finish(); local old=E.items[1]
+F.stock[900001].count=4; E:BuyRow(old); F.finish()
+assert(not E.confirmation and E.items[1].missing==1,'Changed stock updates cached price without buying old quantity')
+F.stock[900001].refillNeeded=false; E:BuyRow(old); assert(#E.items==0)
+F.stock[900001].refillNeeded=true
+E:Start(); AuctionFrameTab_OnClick(A.AuctionUpgrades.tab)
+assert(not E.panel:IsShown() and A.AuctionUpgrades.panel:IsShown() and not E.scan,'Tab switch stops pending action')
+E.open=false; calls=#F.queries; E:BuyRow(old); E:Start(); assert(#F.queries==calls)
+AuctionFrame:SetSize(900,500); A.AuctionUpgrades:Layout(); E:Refresh()
+assert(E.panel:GetWidth()==A.AuctionUpgrades.panel:GetWidth() and E.panel:GetHeight()==A.AuctionUpgrades.panel:GetHeight(),'Resize remains aligned with Upgrades')
+print('PASS: Essentials refill gate, user items, table layout, per-row Buy, cached plans, native confirmation and stale-listing protection')
 ''')

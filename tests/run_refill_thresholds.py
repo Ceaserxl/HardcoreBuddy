@@ -48,6 +48,22 @@ end
 assert(not missingCustom(),'Optional custom items do not trigger reminders')
 userContext.priorities[custom.family]='Essentials'
 assert(missingCustom(),'Custom items marked Essentials do trigger reminders')
+local function auctionCustom()
+ for _,record in ipairs(A.AuctionEssentials:Items(userContext)) do if record.itemId==custom.itemId then return record end end
+end
+userContext.inventory.counts[custom.itemId]=6
+assert(not auctionCustom(),'AH Essentials uses the same refill trigger as reminders')
+userContext.inventory.counts[custom.itemId]=5
+assert(auctionCustom().missing==15,'AH includes exactly the refill amount and refills to the target')
+A.characterDB.auctionBank={counts={[custom.itemId]=4}}
+A.AuctionEssentials:RecordMailPurchase({itemId=custom.itemId,name=custom.name,count=11})
+assert(not auctionCustom(),'Bank and confirmed mail cover an otherwise eligible refill')
+A.characterDB.auctionBank=nil; A.characterDB.auctionMail=nil
+userContext.refillThresholds[custom.itemId]=0
+assert(not auctionCustom(),'Disabled restocking is also excluded from AH Essentials')
+userContext.refillThresholds[custom.itemId]=5
+userContext.inventory.available=false
+assert(not auctionCustom(),'Unavailable bag counts cannot start an AH refill')
 
 -- Every restockable built-in item uses the same inclusive boundary.
 for _,supply in ipairs(A.Data.Items.items) do

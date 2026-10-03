@@ -1,53 +1,52 @@
-"""Learned recipes, yields, stock allocation, mutually exclusive choices and price plans."""
+"""Global craft preference, recipe eligibility, shared materials and cached row purchases."""
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from render_layout import boot, ROOT
 lua, addon = boot()
-lua.execute((ROOT / 'tests/gear_advisor.lua').read_text())
-lua.execute((ROOT / 'tests/auction_upgrades.lua').read_text())
-lua.execute('''
-local A=TestAddon; local E=A.AuctionEssentials
-local refresh=E.Refresh
-local records={
- {itemId=900001,name="A Food",item={itemId=900001},missing=5,count=0,target=5,tracking=true},
- {itemId=900002,name="Z Bandages",item={itemId=900002},missing=4,count=0,target=4,tracking=true}}
-A.Supplies.Build=function() return records end
-A.Data.AuctionRecipes[900001]={spellId=1001,output=2,reagents={{900010,3}}}
-A.Data.AuctionRecipes[900002]={spellId=1002,output=1,reagents={{900010,2},{900011,1}}}
+for name in ('gear_advisor.lua', 'auction_upgrades.lua', 'auction_essentials_fixture.lua'):
+    lua.execute((ROOT / 'tests' / name).read_text(encoding='utf-8'))
+lua.execute(r'''
+local A,E,F=TestAddon,TestAddon.AuctionEssentials,ESSENTIAL_FIXTURE
+F.stock={[900001]={name='A Food',target=5},[900002]={name='Z Bandages',target=4}}
+A.Data.AuctionRecipes[900001]={spellId=1001,output=2,reagents={{900010,3,'Material A'}}}
+A.Data.AuctionRecipes[900002]={spellId=1002,output=1,reagents={{900010,2,'Material A'},{900011,1,'Material B'}}}
 local learned=true
 C_SpellBook={IsSpellKnown=function(id) return learned and (id==1001 or id==1002) end}
-C_Item.GetItemInfo=function(id) return "Material "..id end
-local ctx={inventory={available=true,counts={[900010]=5,[900011]=4}}}
-A.characterDB.auctionBank={counts={[900010]=2}}
-A.GetContext=function() return ctx end
-E.Refresh=function(self) self.items=self:Items(ctx) end
+C_Item.GetItemInfo=function(id) return id==900010 and 'Material A' or 'Material B' end
+F.bags={[900010]=5,[900011]=4}; A.characterDB.auctionBank={counts={[900010]=2}}
+F.auctions={
+ [900001]={[0]={{count=5,price=1000}}}, [900002]={[0]={{count=4,price=10}}},
+ [900010]={name='Material A',[0]={{count=2,price=20},{count=8,price=80}}},
+ [900011]={name='Material B',[0]={{count=4,price=40}}},
+}
 E:Refresh()
-assert(not E.items[1].crafting and not E.selected[900001] and not E.selected[900010],"Craft and Buy default off")
-E.craftChoices[900001]=true; E.craftChoices[900002]=true; E:Refresh()
+assert(not E:PreferCraft() and #E.items==2 and E.rows[1].buy:IsShown(),'Craft preference defaults off; only finished rows shown')
+E:Start(); F.finish(); local sent=#F.queries
+assert(sent==4 and not E:PreferCraft(),'Prices never turn a manual preference on automatically')
+E:SetPreferCraft(true); F.finish()
+assert(#F.queries==sent and A.characterDB.auctionEssentialsPreferCraft,'Preference saved without rescanning')
 assert(#E.items==4 and E.items[1].craftable and E.items[1].crafting)
-assert(not E.selected[900001] and not E.selected[900002] and E.selected[900010])
-assert(E.items[2].target==9 and E.items[2].missing==2,"Round crafts up for two-item output")
-assert(E.materialRecords[900010].target==17 and E.materialRecords[900010].missing==10,"Shared bag/bank stock is deducted once")
-assert(E.items[3].children[2].missing==0 and E.items[3].children[2].bagUsed==4 and not E.selected[900011],"Fully owned materials stay in the recipe but are hidden from refill rows")
-E:Toggle(E.items[1])
-assert(E.selected[900001] and not E.craftChoices[900001] and E.selected[900010],"Buy clears Craft but keeps other recipe's shared material")
-assert(E.materialRecords[900010].missing==1)
-E:Toggle(E.items[3])
-assert(E.selected[900002] and not E.selected[900010],"No selected crafts leaves materials unchecked")
-E:ToggleCraft(E.items[1]); assert(E.craftChoices[900001] and not E.selected[900001] and E.selected[900010])
-E.results[900010]={offers={{count=2,buyout=20}},plans={[2]={need=2,units=2,cost=20,ceiling=50}}}
-E.results[900002]={plans={[4]={need=4,units=4,cost=70,ceiling=100}}}
+assert(E.items[2].target==9 and E.items[2].missing==2,'Minimum recipe yield rounds number of crafts up')
+assert(E.materialRecords[900010].target==17 and E.materialRecords[900010].missing==10,'Shared bag/bank materials allocated once')
+assert(E.items[3].children[2].missing==0 and E.items[3].children[2].bagUsed==4,'Fully owned reagent hidden but retained in recipe')
+assert(not E.rows[1].buy:IsShown() and E.rows[2].buy:IsShown() and E.rows[2].buy:IsEnabled(),'Craftable parents have no Buy; material rows have Buy')
+assert(not E.rows[3].buy:IsShown(),'Preference applies even when the finished item is cheaper')
 assert(E:CraftCost(E.items[1])==20)
-local cost,units,need,unknown=E:Estimate()
-assert(cost==90 and units==6 and need==6 and not unknown,"Basket uses net reagent cost plus selected finished item")
-local queue=E:ScanItems(); local seen={}
-for _,r in ipairs(queue) do assert(not seen[r.itemId]); seen[r.itemId]=true end
-assert(seen[900001] and seen[900010] and seen[900011],"Scan finished and material prices once per item, including hidden stock shared between recipes")
 local message
 DEFAULT_CHAT_FRAME={AddMessage=function(_,text) message=text end}
-assert(E:CraftNotice():find("bags and bank",1,true) and message,"Partial stock combination notice")
-learned=false; E:Refresh(); assert(not E.items[1].craftable and #E.items==2,"Unlearned recipes never marked craftable")
+assert(E:CraftNotice():find('bags and bank',1,true) and message)
+E:BuyRow(E.items[1]); assert(not E.batch and not E.confirmation,'Hidden parent button cannot buy through backend')
+MOCK.Click(E.rows[2].buy); F.finish(); assert(E.confirmation.count==2 and #F.queries==sent+1)
+F.accept(); F.ack(); F.finish()
+assert(E:MailCount(900010)==2 and E.craftParents[1].readyToCraft,'Purchased materials fill first craft')
+assert(#E.items==2 and E.items[1].itemId==900002 and E.items[2].missing==8,'Ready craft disappears while reserving its material stock')
+assert(E.rows[2].buy:IsEnabled(),'Other recipe can use remaining saved offers without rescan')
+MOCK.Click(E.rows[2].buy); F.finish(); F.accept(); F.ack(true); F.finish()
+assert(#E.items==0 and E:MailCount(900010)==10,'Last reagent purchase removes completed parent and material rows')
+E:SetPreferCraft(false); F.finish()
+assert(#E.items==2 and E.rows[1].buy:IsShown() and E.rows[2].buy:IsShown(),'Unchecked preference restores finished-item buying')
+learned=false; E:Refresh(); assert(not E.items[1].craftable and #E.items==2,'Unlearned recipes never marked craftable')
 -- Cache a custom learned recipe, with its real minimum yield and reagent count.
 GetNumTradeSkills=function() return 1 end
 GetTradeSkillItemLink=function() return "item:900003:0" end
@@ -73,43 +72,10 @@ E.craftingEvents.scripts.OnEvent(nil,"BANKFRAME_OPENED")
 C_Container.GetContainerNumSlots=function() return 0 end
 E.craftingEvents.scripts.OnEvent(nil,"BANKFRAME_CLOSED")
 assert(A.characterDB.auctionBank==persisted,"Unavailable bank API preserves saved snapshot")
-learned=true; E.Refresh=refresh; E:Attach(); E.open=true
-A.characterDB.auctionBank={counts={[900010]=2}}
-E.craftChoices={[900001]=true,[900002]=true}; E.materialOverrides={}; E:Refresh()
-assert(E.rows[1].cells[1]:GetText():find("|cff62d79b(Craftable)|r",1,true),"Green inline Craftable label")
-assert(E.rows[1].craft:GetChecked() and not E.rows[1].buy:GetChecked(),"Craft checked, finished Buy unchecked")
-assert(not E.rows[5]:IsShown() and not E.selected[900011],"Covered materials are hidden and remain unchecked")
-MOCK.Click(E.rows[1])
-assert(not E.rows[1].craft:GetChecked() and E.rows[1].buy:GetChecked() and not E.rows[2].buy:GetChecked(),"Row click switches finished item to Buy and clears its material row")
-ctx.inventory.counts[900010]=0; A.characterDB.auctionBank.counts[900010]=9
-E:ToggleCraft(E.items[1])
-assert(E.craftParents[1].children[1].bankUsed==9 and E.craftParents[1].readyToCraft,"Bank fully covers required amount")
-assert(E.rows[1].record.itemId==900002,"Fulfilled craft and material rows are both omitted")
-assert(E.materialRecords[900010].missing==8,"Hidden craft still reserves shared materials for itself")
-E.craftChoices={}; E.craftManual={}; E.selected={}; E.materialOverrides={}
-ctx.inventory.counts[900010]=0; A.characterDB.auctionBank.counts[900010]=0
-E.results={
- [900001]={offers={{count=5,buyout=1000}}},
- [900002]={offers={{count=4,buyout=1}}},
- [900010]={offers={{count=20,buyout=100}}},
-}
-local co=coroutine.create(function() E:SelectCheaperCrafts() end)
-repeat local ok,err=coroutine.resume(co); assert(ok,err) until coroutine.status(co)=='dead'
-assert(E.craftChoices[900001] and not E.craftChoices[900002],"Auto craft only when strictly cheaper")
-assert(not E.selected[900001] and not E.selected[900002] and E.selected[900010],"Only chosen crafting materials auto select Buy")
-E:ToggleCraft(E.items[1]); assert(not E.selected[900001],"Unchecking Craft leaves Buy off")
-co=coroutine.create(function() E:SelectCheaperCrafts() end)
-repeat local ok,err=coroutine.resume(co); assert(ok,err) until coroutine.status(co)=='dead'
-assert(not E.craftChoices[900001],"Manual opt-out survives price comparison")
-E.craftManual={}; E.craftChoices={}; E.selected={}
-E.results[900001]={offers={{count=5,buyout=100}}}
-co=coroutine.create(function() E:SelectCheaperCrafts() end)
-repeat local ok,err=coroutine.resume(co); assert(ok,err) until coroutine.status(co)=='dead'
-assert(not E.craftChoices[900001],"Equal costs do not auto select craft")
-E.results[900001]={offers={{count=5,buyout=1000}}}; E.results[900010]=nil
-co=coroutine.create(function() E:SelectCheaperCrafts() end)
-repeat local ok,err=coroutine.resume(co); assert(ok,err) until coroutine.status(co)=='dead'
-assert(not E.craftChoices[900001],"Missing material prices do not auto select craft")
 
-print("PASS: recipe eligibility/cache, output rounding, shared stock, bank capture, linked selections, cost comparison and scan deduplication")
+learned=true
+-- A reload uses the saved per-character choice, independent of transient UI state.
+A.characterDB.auctionEssentialsPreferCraft=true
+E:Refresh(); assert(E:PreferCraft() and E.preferCraft:GetChecked())
+print('PASS: global craft preference, material-only purchases, recipe yields, shared stock, cached plans and bank persistence')
 ''')

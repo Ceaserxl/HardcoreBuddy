@@ -2,7 +2,6 @@
 local _,A=...
 local E=A.AuctionEssentials
 local baseItems=E.Items
-E.craftChoices={}; E.craftManual={}; E.materialOverrides={}; E.autoMaterials={}
 local function id(link) return type(link)=="string" and tonumber(link:match("item:(%d+)")) end
 local function db() return A.characterDB end
 function E:CaptureRecipes()
@@ -65,7 +64,7 @@ function E:Items(context)
     for _,parent in ipairs(parents) do
         local recipe=self:Recipe(parent.itemId)
         parent.craftable=recipe~=nil; parent.children={}
-        parent.crafting=recipe and self.craftChoices[parent.itemId]==true
+        parent.crafting=recipe~=nil and self:PreferCraft()
         if recipe and (parent.missing or 0)>0 then
             local crafts=math.ceil(parent.missing/recipe.output)
             for _,pair in ipairs(recipe.reagents) do
@@ -106,58 +105,21 @@ function E:Items(context)
         if not parent.readyToCraft then
             out[#out+1]=parent
             for _,child in ipairs(parent.children) do
-                if child.missing==nil or child.missing>0 then out[#out+1]=child end
+                if parent.crafting and (child.missing==nil or child.missing>0) then out[#out+1]=child end
             end
         end
     end
-    for mid in pairs(self.autoMaterials) do if not demands[mid] then self.selected[mid]=nil end end
-    self.autoMaterials={}; self.materialRecords=demands
-    for mid,r in pairs(demands) do
-        self.autoMaterials[mid]=true
-        self.selected[mid]=(r.missing or 0)>0 and self.materialOverrides[mid]~=false or nil
-    end
+    self.materialRecords=demands
     return out
 end
-function E:ToggleCraft(record)
-    if not record or not record.craftable or self.scan or self.batch or self.confirmation or self.awaitingBuy then return end
-    self.craftManual[record.itemId]=true
-    local enabled=not self.craftChoices[record.itemId]
-    self.craftChoices[record.itemId]=enabled
-    self.selected[record.itemId]=nil
-    for _,child in ipairs(record.children) do self.materialOverrides[child.itemId]=nil end
-    self:Refresh()
+function E:PreferCraft()
+    return db() and db().auctionEssentialsPreferCraft==true or false
 end
-local toggle=E.Toggle
-function E:Toggle(record)
-    if not record or self.scan or self.batch or self.confirmation or self.awaitingBuy then return end
-    if record.craftParent then
-        if not record.craftActive or not record.missing or record.missing<=0 then return end
-        self.materialOverrides[record.itemId]=not self.selected[record.itemId]
-        self:Refresh()
-    else
-        if record.craftable then self.craftManual[record.itemId]=true end
-        if record.craftable and not self.selected[record.itemId] then self.craftChoices[record.itemId]=false end
-        toggle(self,record)
-    end
-end
-function E:PurchaseRecords()
-    local out,seen={},{}
-    for _,r in ipairs(self.items or {}) do
-        if not r.craftParent then
-            local material=self.materialRecords and self.materialRecords[r.itemId]
-            if material then
-                local copy={}; for k,v in pairs(material) do copy[k]=v end
-                if not r.crafting and self.selected[r.itemId] then
-                    copy.target=copy.target+r.target
-                    copy.missing=copy.count and math.max(0,copy.target-copy.count)
-                end
-                out[#out+1]=copy
-            else out[#out+1]=r end
-            seen[r.itemId]=true
-        end
-    end
-    for mid,r in pairs(self.materialRecords or {}) do if not seen[mid] then out[#out+1]=r end end
-    return out
+function E:SetPreferCraft(enabled)
+    if self:Busy() or not db() then self:Refresh(); return end
+    db().auctionEssentialsPreferCraft=enabled==true
+    self.offset=0
+    self:Replan("Craft preference updated.")
 end
 function E:ScanItems()
     self.items=self:Items(A:GetContext())
@@ -178,11 +140,15 @@ function E:ScanItems()
 end
 function E:PlanNeeds(itemID)
     local needs,seen={},{}
-    for _,list in ipairs({self.items or {},self:PurchaseRecords()}) do
-        for _,r in ipairs(list) do
-            if r.itemId==itemID and r.missing~=nil and not seen[r.missing] then
-                seen[r.missing]=true; needs[#needs+1]=r.missing
-            end
+    local records={}
+    for _,parent in ipairs(self.craftParents or {}) do
+        records[#records+1]=parent
+        for _,child in ipairs(parent.children or {}) do records[#records+1]=child end
+    end
+    for _,material in pairs(self.materialRecords or {}) do records[#records+1]=material end
+    for _,r in ipairs(records) do
+        if r.itemId==itemID and r.missing~=nil and not seen[r.missing] then
+            seen[r.missing]=true; needs[#needs+1]=r.missing
         end
     end
     return needs
@@ -200,41 +166,25 @@ function E:CraftCost(parent)
     end
     return cost
 end
--- Runs in the scan coroutine so larger whole-stack plans can yield.
-function E:SelectCheaperCrafts()
-    local context=A:GetContext()
-    self.items=self:Items(context)
-    local ready={}
-    for _,parent in ipairs(self.craftParents) do if parent.readyToCraft then ready[parent.itemId]=true end end
-    for id in pairs(self.craftChoices) do
-        if not self.craftManual[id] and not ready[id] then self.craftChoices[id]=nil end
-    end
-    local function plan(id,need)
-        local result=self.results[id]
-        if not result then return end
+-- Rebuild plans from saved offers only; changing craft preference never queries the AH.
+-- Yield during large whole-stack calculations to keep the interface responsive.
+function E:PreparePlans()
+    self.items=self:Items(A:GetContext())
+    for id,result in pairs(self.results) do
         result.plans=result.plans or {}
-        if not result.plans[need] then result.plans[need]=self:RefillPlan(result.offers or {},need,nil,true) end
-        return result.plans[need]
+        for _,need in ipairs(self:PlanNeeds(id)) do
+            if not result.plans[need] then
+                result.plans[need]=self:RefillPlan(result.offers or {},need,result.ceiling,true)
+            end
+        end
     end
-    self.items=self:Items(context)
-    local candidates={}
-    for _,r in ipairs(self.items) do
-        if r.craftable and not self.craftManual[r.itemId] and not self.selected[r.itemId] and (r.missing or 0)>0 then candidates[#candidates+1]=r.itemId end
-    end
-    for _,id in ipairs(candidates) do
-        self.craftChoices[id]=true
-        self.items=self:Items(context)
-        local parent
-        for _,r in ipairs(self.craftParents) do if r.itemId==id then parent=r; break end end
-        if parent then
-            local buy=plan(id,parent.missing)
-            for _,child in ipairs(parent.children) do if child.missing and child.missing>0 then plan(child.itemId,child.missing) end end
-            local cost=self:CraftCost(parent)
-            if not parent.readyToCraft and (not buy or buy.units<parent.missing or not cost or cost>=buy.cost) then self.craftChoices[id]=nil end
-        else self.craftChoices[id]=nil end
-    end
-    self.items=self:Items(context)
-    for _,r in ipairs(self:PurchaseRecords()) do if r.missing and r.missing>0 then plan(r.itemId,r.missing) end end
+end
+function E:Replan(message)
+    self:Refresh()
+    if not next(self.results) then self.message=message; self:Refresh(); return end
+    self.scan={phase="craftPlanning",since=GetTime(),message=message,
+        planner=coroutine.create(function() self:PreparePlans() end)}
+    self:Refresh()
 end
 function E:CraftNotice()
     local bags,bank,mail,craftable=false,false,false,false
@@ -247,7 +197,7 @@ function E:CraftNotice()
         local demand=r.craftParent and self.materialRecords[r.itemId]
         local result=demand and self.results[r.itemId]
         local plan=result and result.plans and result.plans[demand.missing]
-        if r.craftActive and self.selected[r.itemId] and plan and plan.units>=demand.missing and plan.units<demand.target then
+        if r.craftActive and plan and plan.units>=demand.missing and plan.units<demand.target then
             bags=bags or r.bagUsed>0; bank=bank or r.bankUsed>0; mail=mail or r.mailUsed>0
         end
     end

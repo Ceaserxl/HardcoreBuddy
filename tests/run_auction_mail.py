@@ -20,7 +20,7 @@ local function context() local c=originalContext(A); c.inventory={available=true
 A.GetContext=context
 local target=20
 A.Supplies.Build=function()
- return {{itemId=900001,name='Test Potion',item={itemId=900001},count=bags[900001] or 0,target=target,missing=target-(bags[900001] or 0),tracking=true}}
+ return {{itemId=900001,name='Test Potion',item={itemId=900001},count=bags[900001] or 0,target=target,missing=target-(bags[900001] or 0),tracking=true,refillNeeded=true}}
 end
 A.characterDB.auctionMail=nil; A.characterDB.auctionBank=nil
 E:Attach(); E.open=true; AuctionFrameTab_OnClick(E.tab)
@@ -37,7 +37,7 @@ E:PurchaseSucceeded(); check(E:MailCount(900001)==8,'Duplicate success cannot co
 bags[900001]=3; A.characterDB.auctionBank={counts={[900001]=4}}
 E:Refresh()
 check(E.items[1].count==15 and E.items[1].missing==5,'Bags, bank and pending mail cover refill')
-check(E.rows[1].cells[3]:GetText()=='15\nMail 8','Partial refill visibly notes mail stock')
+check(E.rows[1].cells[2]:GetText()=='15\nMail 8','Partial refill visibly notes mail stock')
 check(E.mailStatus:IsShown() and E.mailStatus.label:GetText()=='In Mail: 8','Mail summary visible')
 receipt(900001,5)
 check(#E.items==0 and not E.rows[1]:IsShown(),'Fulfilled purchase row disappears immediately')
@@ -117,13 +117,13 @@ bags={}; A.characterDB.auctionMail=nil
 A.Data.AuctionRecipes[900001]={spellId=1001,output=1,reagents={{900010,1,'Material'}}}
 C_SpellBook={IsSpellKnown=function(id) return id==1001 end}
 C_Item.GetItemInfo=function(id) return 'Material' end
-E.craftChoices[900001]=true; receipt(900010,20); E:Refresh()
+A.characterDB.auctionEssentialsPreferCraft=true; receipt(900010,20); E:Refresh()
 check(#E.items==0 and #E.craftParents[1].children==1,'Fully covered material and finished craft are hidden together')
 check(E.craftParents[1].children[1].mailUsed==20 and E:CraftCost(E.craftParents[1])==0,'Mail materials reduce crafting cost')
-check(not E.selected[900010],'Materials in mail are not selected again')
-local co=coroutine.create(function() E:SelectCheaperCrafts() end)
+check(not E.rows[1]:IsShown(),'Materials in mail cannot be bought again')
+local co=coroutine.create(function() E:PreparePlans() end)
 repeat local ok,err=coroutine.resume(co); assert(ok,err) until coroutine.status(co)=='dead'
-check(#E.items==0 and E.craftChoices[900001],'A subsequent cost comparison does not resurrect a ready craft')
+check(#E.items==0 and E:PreferCraft(),'A subsequent cost comparison does not resurrect a ready craft')
 E:RecordMailPurchase({itemId=900010,count=5,name='Material'})
 E.mailEvents.scripts.OnEvent(nil,'MAIL_CLOSED')
 local character=A.characterDB

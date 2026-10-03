@@ -1,111 +1,60 @@
-"""Multiple-item refills with delayed native bid/query events and throttling."""
+"""Saved multi-stack refills: event ordering, own auctions, throttles and timeouts."""
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from render_layout import boot, ROOT
-
 lua, addon = boot()
-lua.execute((ROOT / 'tests/gear_advisor.lua').read_text())
-lua.execute((ROOT / 'tests/auction_upgrades.lua').read_text())
+for name in ('gear_advisor.lua', 'auction_upgrades.lua', 'auction_essentials_fixture.lua'):
+    lua.execute((ROOT / 'tests' / name).read_text(encoding='utf-8'))
 lua.execute(r'''
-local A,E=TestAddon,TestAddon.AuctionEssentials
-local clock=100
-GetTime=function() return clock end
-local stock={
- [900001]={name='A Potion',count=5,price=50},
- [900002]={name='B Potion',count=8,price=80},
-}
-local function records()
- local rows={}
- for id,s in pairs(stock) do
-  rows[#rows+1]={itemId=id,name=s.name,item={itemId=id},count=0,target=s.count,missing=s.count,tracking=true}
- end
- return rows
+local A,E,F=TestAddon,TestAddon.AuctionEssentials,ESSENTIAL_FIXTURE
+local function setup()
+ F.reset()
+ F.stock={[900001]={name='A Potion',target=10},[900002]={name='B Potion',target=8}}
+ F.auctions={[900001]={[0]={{count=5,price=50,owner='AltSeller'},{count=5,price=60,owner='Seller'}}},
+             [900002]={[0]={{count=8,price=80}}}}
+ E:Start(); F.finish(); E:BuyRow(E.items[1]); F.finish(); F.accept()
 end
-A.Supplies.Build=records
-A.GetContext=function() return {inventory={available=true,counts={}}} end
-A.characterDB.auctionMail=nil; A.characterDB.auctionBank=nil
-local ready,wanted,displayed=true,nil,nil
-local queries,purchases={},{}
-CanSendAuctionQuery=function() return ready end
-QueryAuctionItems=function(name,_,_,page)
- assert(ready and page==0)
- queries[#queries+1]=name
- for id,s in pairs(stock) do if s.name==name then wanted=id; return end end
- error('Unexpected query')
-end
-GetNumAuctionItems=function() return displayed and 1 or 0,displayed and 1 or 0 end
-GetAuctionItemLink=function() return displayed and 'item:'..displayed..':0' end
-GetAuctionItemInfo=function()
- local s=displayed and stock[displayed]
- if s then return s.name,nil,s.count,nil,nil,nil,nil,nil,nil,s.price,nil,nil,nil,'Seller' end
-end
-GetMoney=function() return 100000 end
-PlaceAuctionBid=function(_,index,price)
- assert(index==1 and stock[displayed].price==price)
- purchases[#purchases+1]=displayed
-end
-StaticPopupDialogs=StaticPopupDialogs or {}; StaticPopupDialogs.BUYOUT_AUCTION={}
-StaticPopup_Show=function() end; StaticPopup_Hide=function() end
-ERR_AUCTION_BID_PLACED='Bid accepted'
-local function event(name,...) E.events.scripts.OnEvent(E.events,name,...) end
-local function tick(seconds) clock=clock+(seconds or .25); E.events.scripts.OnUpdate(E.events) end
-local function deliver()
- displayed=wanted; event('AUCTION_ITEM_LIST_UPDATE')
-end
-local function finish()
- for i=1,100 do
-  if not E.scan then return end
-  tick()
-  if E.scan and E.scan.phase=='waiting' then deliver() end
- end
- error('Queue did not reach confirmation')
-end
-local function accept()
- StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnAccept(nil,E.confirmation)
- assert(E.awaitingBuy)
-end
-E:Attach(); E.open=true; AuctionFrameTab_OnClick(E.tab)
-E:Start(); finish()
-E.selected[900001]=true; E.selected[900002]=true
-E:BuySelected(); finish()
-assert(E.confirmation.itemId==900001)
-accept(); local sent=#queries
-event('CHAT_MSG_SYSTEM',ERR_AUCTION_BID_PLACED)
-assert(E.scan.phase=='settling' and E.batch[1].record.itemId==900002)
-assert(#E.items==1 and E.items[1].itemId==900002,'Completed first row disappears without invalidating queued second row')
-tick(.1); assert(#queries==sent,'Acknowledgement alone does not immediately send the next query')
-event('AUCTION_ITEM_LIST_UPDATE'); tick(.6)
-ready=false; tick(); tick(25)
-assert(E.scan and E.scan.phase=='query' and #queries==sent,'Normal query throttling does not trigger a 20-second response timeout')
-ready=true; tick()
-assert(E.scan.phase=='waiting' and wanted==900002 and #queries==sent+1)
--- A late page from the previous item cannot become the new item's empty result.
-displayed=900001; event('AUCTION_ITEM_LIST_UPDATE'); tick()
-assert(E.scan.phase=='reading' and not E.confirmation,'Stale preceding result page is ignored')
-deliver(); finish(); assert(E.confirmation.itemId==900002)
-accept()
--- The server can send the list update before, or after, the bid acknowledgement.
-event('AUCTION_ITEM_LIST_UPDATE'); event('CHAT_MSG_SYSTEM',ERR_AUCTION_BID_PLACED)
-assert(#purchases==2 and purchases[1]==900001 and purchases[2]==900002)
-assert(not E.batch and not E.scan and not E.awaitingBuy and #E.items==0,'One Buy click completes different rows through native confirmations')
-assert(E:MailCount(900001)==5 and E:MailCount(900002)==8,'Each receipt counts exactly once')
-event('CHAT_MSG_SYSTEM',ERR_AUCTION_BID_PLACED)
-assert(E:MailCount(900002)==8,'Repeated acknowledgement cannot double-count')
+setup(); local sent=#F.queries
+F.ack()
+assert(E.scan.phase=='settling' and E.batch.remaining==5)
+F.tick(.1); assert(#F.queries==sent)
+F.event('AUCTION_ITEM_LIST_UPDATE'); F.tick(.6)
+F.ready=false; F.tick(); F.tick(25)
+assert(E.scan and E.scan.phase=='query' and #F.queries==sent,'Long throttle does not trigger response timeout')
+F.ready=true; F.tick()
+assert(E.scan.phase=='waiting' and #F.queries==sent+1)
+F.displayed={id=900002,page=0}; F.event('AUCTION_ITEM_LIST_UPDATE'); F.tick()
+assert(E.scan.phase=='reading' and not E.confirmation,'Ignore stale different item page')
+F.deliver(); F.finish(); assert(E.confirmation.itemId==900001 and E.confirmation.buyout==60)
+F.accept(); F.ack(true); F.finish()
+assert(#F.purchases==2 and not E.batch and not E.scan and #E.items==1 and E.items[1].itemId==900002,'One row never purchases another row')
+assert(E:MailCount(900001)==10 and E:MailCount(900002)==0)
+F.event('CHAT_MSG_SYSTEM',ERR_AUCTION_BID_PLACED); assert(E:MailCount(900001)==10)
+E:BuyRow(E.items[1]); F.finish(); F.accept(); F.ack(); F.finish()
+assert(E:MailCount(900002)==8 and #E.items==0,'Another row can buy its own cached plan')
 
--- Reversed event ordering with another queued row and no duplicate purchases.
-A.characterDB.auctionMail=nil; E.selected={}; E:Start(); finish()
-E.selected[900001]=true; E.selected[900002]=true; E:BuySelected(); finish(); accept()
-event('AUCTION_ITEM_LIST_UPDATE'); event('CHAT_MSG_SYSTEM',ERR_AUCTION_BID_PLACED)
-sent=#queries; tick(.25); assert(#queries==sent)
-finish(); assert(E.confirmation.itemId==900002)
+setup(); F.ack(true); sent=#F.queries; F.tick(.25); assert(#F.queries==sent)
+F.finish(); assert(E.confirmation.buyout==60)
 StaticPopupDialogs.HARDCOREBUDDY_ESSENTIAL_BUYOUT.OnCancel()
-assert(not E.batch and not E.scan and not E.confirmation,'Cancel still stops the remaining purchases')
+assert(not E.batch and not E.scan and not E.confirmation,'Cancel stops remaining saved stacks')
 
--- A genuinely missing reply still times out after a query was actually sent.
-E:Start(records()[1]); tick(); assert(E.scan.phase=='waiting')
-tick(21); assert(not E.scan and E.message:find('Scan timed out',1,true))
-ready=false; E:Start(records()[1]); tick(61)
-assert(not E.scan and E.message:find('still busy',1,true),'A permanently blocked throttle has a bounded, separate timeout')
-print('PASS: multi-row purchase queue, both server event orders, stale pages, long throttles, mail receipts, cancellation and bounded timeouts')
+setup(); sent=#F.queries
+F.event('UI_ERROR_MESSAGE',1,ERR_AUCTION_BID_OWN)
+assert(E.batch.remaining==10 and not E.awaitingBuy and E:MailCount(900001)==0,'Rejected own auction fills nothing')
+F.finish(); assert(E.confirmation.owner=='Seller' and #F.queries==sent+1,'Continue remaining saved offers, without rescanning')
+F.accept(); F.ack(); F.finish()
+assert(E:MailCount(900001)==5 and not E.batch and E.message:find('incomplete',1,true))
+
+setup(); F.event('UI_ERROR_MESSAGE',2,'Not enough money')
+F.event('CHAT_MSG_SYSTEM',ERR_AUCTION_BID_PLACED)
+assert(not E.awaitingBuy and not E.scan and E:MailCount(900001)==0,'Unrelated error stops and clears receipt')
+setup(); F.tick(21)
+assert(not E.awaitingBuy and not E.batch and E.message:find('timed out',1,true),'Unacknowledged bid has bounded timeout')
+F.reset(); F.stock={[900001]={name='Potion',target=1}}; F.auctions={[900001]={[0]={{count=1,price=10}}}}
+E:Start(); F.tick(); assert(E.scan.phase=='waiting'); F.tick(21)
+assert(not E.scan and E.message:find('Scan timed out',1,true))
+F.ready=false; E:Start(); F.tick(61)
+assert(not E.scan and E.message:find('still busy',1,true))
+print('PASS: saved multi-stack queue, both event orders, stale pages, long throttles, own-auction skip, mail accounting and timeouts')
 ''')

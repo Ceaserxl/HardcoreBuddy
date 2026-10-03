@@ -1,25 +1,24 @@
--- Page every exact-item query before selecting a buyout. Never buy from cached indices.
+-- Scan prices once; buying loads only the saved offer's page and verifies its price.
 local _,A=...
 local E=A.AuctionEssentials
 local popup="HARDCOREBUDDY_ESSENTIAL_BUYOUT"
-function E:Stop(message,keepBatch)
+function E:Stop(message)
     self.scan=nil; self.confirmation=nil
-    if not keepBatch then self.batch=nil; self.awaitingBuy=nil end
+    self.batch=nil; self.awaitingBuy=nil
     if StaticPopup_Hide then StaticPopup_Hide(popup) end
     if message then self.message=message end
     self:Refresh()
 end
-function E:Start(record,keepBatch,settle)
-    if not self.open or not self.panel:IsShown() then return end
-    self:Stop(nil,keepBatch)
+function E:Start()
+    if self:Busy() or not self.open or not self.panel:IsShown() then return end
+    self:Stop()
     self.complete=false
-    local queue,message
-    if record then queue={record} else queue,message=self:ScanItems() end
+    local queue,message=self:ScanItems()
     if not queue then self.message=message; self:Refresh(); return end
-    if not record then self.results={} end
+    self.results={}
     if #queue==0 then self.message="No Essentials to scan."; self:Refresh(); return end
-    self.scan={queue=queue,item=1,page=0,phase=settle and "settling" or "query",since=GetTime(),purchase=record~=nil,settle=settle}
-    self.message=record and "Checking the cheapest current buyout..." or "Scanning Essentials..."
+    self.scan={queue=queue,item=1,page=0,phase="query",since=GetTime()}
+    self.message="Scanning Essentials..."
     self:Refresh()
 end
 local function cheaper(a,b)
@@ -41,14 +40,14 @@ function E:AcceptPurchase(data)
     local current,loaded=self:Listing(data.index,data.itemId)
     if not loaded or not current or current.link~=data.link or current.count~=data.count
         or current.buyout~=data.buyout or current.owner~=data.owner then
-        self:Stop("Listing changed. Click the item to check again."); return
+        self:Stop("Listing changed. Scan again for current offers."); return
     end
     if GetMoney()<data.buyout then self:Stop("Not enough money for this stack."); return end
     self.confirmation=nil
     self.awaitingBuy={listing=data,since=GetTime()}
     self.purchaseReceipt=self.awaitingBuy
+    self.loadedPage=nil
     PlaceAuctionBid("list",data.index,data.buyout)
-    self.results[data.itemId]=nil; self.complete=false
     self.message="Waiting for the auction house to confirm the purchase."; self:Refresh()
 end
 function E:Confirm(listing)
@@ -77,10 +76,10 @@ function E:Tick()
     if GetTime()-s.since>(s.phase=="query" and 60 or 20) then
         self:Stop(s.phase=="query" and "Auction house is still busy. Try the remaining refills again." or "Scan timed out. Rescan before buying."); return
     end
-    local record=s.queue[s.item]
+    local record=s.queue and s.queue[s.item]
     if s.phase=="settling" then
         -- The bid acknowledgement can precede the old result-page update.
-        -- Drain that update before sending the next item's query; otherwise it
+        -- Drain that update before requesting the next stack's page; otherwise it
         -- can be mistaken for the response to the new search.
         local updated=s.settle.listUpdated
         if updated and GetTime()-updated>=.5 or not updated and GetTime()-s.since>=2 then
@@ -91,7 +90,7 @@ function E:Tick()
         if not ok then self:Stop("Unable to compare crafting costs. Scan again."); return end
         if coroutine.status(s.planner)~="dead" then s.since=GetTime(); return end
         self.scan=nil; self.complete=true
-        self.message="Scan complete. Refills use the lowest total cost."..self:CraftNotice()
+        self.message=s.message or ("Scan complete. Refills use the lowest total cost."..self:CraftNotice())
         self:Refresh()
     elseif s.phase=="planning" then
         local ok,calculated=coroutine.resume(s.planner)
@@ -100,22 +99,14 @@ function E:Tick()
         local plan=calculated.plan
         local result=self.results[record.itemId]
         result.plan=plan; result.plans=calculated.plans
+        result.ceiling=plan.ceiling
         if plan.offers[1] then
             result.count=plan.offers[1].count; result.buyout=plan.offers[1].buyout
         else result.count=nil; result.buyout=nil end
-        if s.purchase then
-            s.best=plan.offers[1]
-            if not s.best then
-                if self.batch and self.batch[1].ownRejected then self:SkipOwnAuctionItem()
-                else self:Stop("No reasonably priced refill is available.") end
-                return
-            end
-            s.page=s.best.page; s.verify=true; s.phase="query"; s.since=GetTime(); self:Refresh(); return
-        end
         s.item=s.item+1; s.page=0; s.best=nil; s.offers=nil; s.phase="query"; s.since=GetTime()
         if s.item>#s.queue then
-            s.phase="craftPlanning"; s.planner=coroutine.create(function() self:SelectCheaperCrafts() end)
-            self.message="Comparing crafting costs..."
+            s.phase="craftPlanning"; s.planner=coroutine.create(function() self:PreparePlans() end)
+            self.message="Preparing refill costs..."
         else self.message="Scanning "..s.item.." / "..#s.queue..": "..s.queue[s.item].name end
         self:Refresh()
     elseif s.phase=="query" then
@@ -126,6 +117,7 @@ function E:Tick()
             return
         end
         s.throttled=nil
+        self.loadedPage=nil
         s.phase="waiting"; s.since=GetTime(); self.sending=true
         QueryAuctionItems(record.name,nil,nil,s.page,false,nil,false,true,nil)
         self.sending=false
@@ -151,9 +143,10 @@ function E:Tick()
                 if cheaper(listing,pageBest) then pageBest=listing end
             end
         end
+        self.loadedPage={itemId=record.itemId,page=s.page}
         if s.verify then
-            if verified then self:Confirm(verified)
-            else self:Stop("Cheapest listing changed. Click the item to check again.") end
+            if verified then verified.savedOffer=s.best; self:Confirm(verified)
+            else self:Stop("Saved listing is no longer available. Scan again for current offers.") end
             return
         end
         s.offers=s.offers or {}
@@ -168,13 +161,12 @@ function E:Tick()
         end
         self.results=self.results or {}; self.results[record.itemId]=result
         if not result then result={offers={}}; self.results[record.itemId]=result end
-        local batch=s.purchase and self.batch and self.batch[1]
-        local need=batch and batch.remaining or record.missing or 0
-        local needs=s.purchase and {need} or self:PlanNeeds(record.itemId)
+        local need=record.missing or 0
+        local needs=self:PlanNeeds(record.itemId)
         s.planner=coroutine.create(function()
             local plans={}
-            for _,quantity in ipairs(needs) do plans[quantity]=self:RefillPlan(result.offers,quantity,batch and batch.ceiling,true) end
-            local plan=plans[need] or self:RefillPlan(result.offers,need,batch and batch.ceiling,true)
+            for _,quantity in ipairs(needs) do plans[quantity]=self:RefillPlan(result.offers,quantity,nil,true) end
+            local plan=plans[need] or self:RefillPlan(result.offers,need,nil,true)
             plans[need]=plan
             return {plan=plan,plans=plans}
         end)

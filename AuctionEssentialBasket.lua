@@ -1,71 +1,79 @@
+-- A row buys only its saved refill plan, one native confirmation per stack.
 local _,A=...
 local E=A.AuctionEssentials
-E.selected={}
-function E:Toggle(record)
-    if not record or self.scan or self.batch or self.confirmation or self.awaitingBuy then return end
-    local id=record.itemId
-    self.selected[id]=not self.selected[id] or nil
+function E:Busy()
+    return self.scan or self.batch or self.confirmation or self.awaitingBuy or self.purchaseReceipt
+end
+function E:RowPlan(record)
+    local result=record and self.results[record.itemId]
+    return result and result.plans and result.plans[record.missing]
+end
+function E:BuyRow(record)
+    if not record or self:Busy() or not self.open or not self.panel:IsShown() then return end
+    -- Recheck stock and craft preference before using a potentially stale row.
+    local current
+    for _,r in ipairs(self:Items(A:GetContext())) do
+        if r.itemId==record.itemId and r.craftParent==record.craftParent then current=r; break end
+    end
+    if not current or current.crafting then self:Refresh(); return end
+    if current.missing~=record.missing then self:Replan("Stock changed. Review the updated refill before buying."); return end
+    local plan=self:RowPlan(current)
+    if not plan or plan.units<=0 then self.message="Scan Essentials to find a refill for this item."; self:Refresh(); return end
+    local offers={}; for _,offer in ipairs(plan.offers) do offers[#offers+1]=offer end
+    self.batch={record=current,offers=offers,remaining=current.missing}
+    self:NextPurchase()
+end
+function E:NextPurchase(settle)
+    local batch=self.batch; if not batch then return end
+    local best=batch.offers[1]
+    if not best or batch.remaining<=0 then
+        local missing=batch.remaining>0
+        self.batch=nil
+        self:Replan(missing and "Available stacks finished. Refill is incomplete; scan again for more listings."
+            or "Refill purchased. Collect your items from the mailbox.")
+        return
+    end
+    self.message="Loading the saved listing: "..batch.record.name
+    self.scan={queue={batch.record},item=1,best=best,page=best.page,verify=true,
+        phase=settle and "settling" or "query",since=GetTime(),settle=settle}
+    -- If the exact query page is already loaded, no query is needed at all.
+    if not settle and self.loadedPage and self.loadedPage.itemId==best.itemId and self.loadedPage.page==best.page then
+        self.scan.phase="reading"
+        self:Tick()
+    end
     self:Refresh()
 end
-function E:Estimate()
-    local cost,units,need,unknown,queue=0,0,0,false,{}
-    for _,record in ipairs(self:PurchaseRecords()) do
-        if self.selected[record.itemId] and (record.missing or 0)>0 then
-            local result=self.results[record.itemId]
-            need=need+record.missing
-            if result==nil then unknown=true
-            elseif result then
-                local plan=result.plans and result.plans[record.missing] or result.plan
-                if not plan or plan.need~=record.missing then unknown=true
-                else
-                    cost=cost+plan.cost; units=units+plan.units
-                    if plan.units>0 then queue[#queue+1]={record=record,remaining=math.min(record.missing,plan.units),ceiling=plan.ceiling} end
-                end
-            end
+function E:RemovePurchasedOffer(listing,ownSeller)
+    local result=self.results[listing.itemId]
+    if not result then return end
+    for i=#result.offers,1,-1 do
+        local offer=result.offers[i]
+        if ownSeller and offer.owner==listing.owner or not ownSeller and offer==listing.savedOffer then
+            table.remove(result.offers,i)
         end
     end
-    return cost,units,need,unknown,queue
-end
-function E:BuySelected()
-    if self.scan or self.batch or self.awaitingBuy or self.purchaseReceipt or self.confirmation or not self.open then return end
-    local _,_,_,unknown,queue=self:Estimate()
-    if unknown or #queue==0 then return end
-    self.skippedOwn=false
-    self.batch=queue
-    self:Start(queue[1].record,true)
+    result.plans={}; result.plan=nil
 end
 function E:PurchaseSucceeded()
     local waiting=self.awaitingBuy or self.purchaseReceipt; if not waiting then return end
-    self.awaitingBuy=nil; self.purchaseReceipt=nil
+    self.awaitingBuy=nil; self.purchaseReceipt=nil; self.loadedPage=nil
     self:RecordMailPurchase(waiting.listing)
+    self:RemovePurchasedOffer(waiting.listing)
     if not self.batch then self.message="Buyout confirmed. Your items will arrive by mail."; self:Refresh(); return end
-    local current=self.batch[1]
-    current.remaining=current.remaining-waiting.listing.count
-    if current.remaining<=0 then
-        self.selected[current.record.itemId]=nil
-        if current.record.material then self.materialOverrides[current.record.itemId]=false end
-        table.remove(self.batch,1)
-    end
-    if #self.batch>0 then self:Start(self.batch[1].record,true,waiting)
-    else self:Stop(self.skippedOwn and "Purchases complete. Some refills were skipped because your own auctions were excluded. Collect purchased items from the mailbox." or "Selected refill purchases complete. Collect your items from the mailbox.") end
+    self.batch.remaining=self.batch.remaining-waiting.listing.count
+    table.remove(self.batch.offers,1)
+    self:NextPurchase(waiting)
 end
-
 function E:OwnAuctionRejected()
     local waiting=self.awaitingBuy; if not waiting then return end
-    self.awaitingBuy=nil; self.purchaseReceipt=nil
+    self.awaitingBuy=nil; self.purchaseReceipt=nil; self.loadedPage=nil
     self.ownSellers=self.ownSellers or {}
     self.ownSellers[waiting.listing.owner]=true
-    self.results[waiting.listing.itemId]=nil
-    -- The failed buy filled nothing. Replan the unchanged remainder without this seller.
-    if self.batch and self.batch[1] then
-        self.batch[1].ownRejected=true
-        self:Start(self.batch[1].record,true)
-    else self:Stop("Your own auction was skipped. Scan again to find another seller.") end
-end
-function E:SkipOwnAuctionItem()
-    if not self.batch then return end
-    self.skippedOwn=true
-    table.remove(self.batch,1)
-    if #self.batch>0 then self:Start(self.batch[1].record,true)
-    else self:Stop("Queue finished. Some refills were skipped because your own auctions were excluded.") end
+    self:RemovePurchasedOffer(waiting.listing,true)
+    if not self.batch then self:Stop("Your own auction was skipped. Scan again to find another seller."); return end
+    -- Skip this seller's planned stacks without substituting an unreviewed listing.
+    for i=#self.batch.offers,1,-1 do
+        if self.batch.offers[i].owner==waiting.listing.owner then table.remove(self.batch.offers,i) end
+    end
+    self:NextPurchase(waiting)
 end
